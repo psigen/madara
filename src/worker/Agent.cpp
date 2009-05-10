@@ -18,7 +18,7 @@ Madara::discoverPortOnHost(const std::string & host,
 {
   // more than enough room for a stringenized port
   //char port_buf[16];
-  u_short server_port;
+  u_short server_port = 0;
   int ret = 1;
   std::string key;
 
@@ -30,6 +30,9 @@ Madara::discoverPortOnHost(const std::string & host,
         ret = 4;
       }
 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) discover loop stopped on %s:%d\n", 
+      host.c_str (), server_port));
+  
 
   // setup a connector to this potential new agent port
   ACE_SOCK_Connector connector;
@@ -37,8 +40,11 @@ Madara::discoverPortOnHost(const std::string & host,
   ACE_INET_Addr addr (server_port, host.c_str ());
 
   // attempt to connect to port. If it works, we've discovered an agent
-  if (server_port = connector.connect (server, addr) != -1)
+  if (ret = connector.connect (server, addr) != -1)
   {
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) discovered %s:%d\n", 
+      host.c_str (), server_port));
+  
     Madara::merge_key (key, host, server_port);
     context.addLatency (key, -1);
 
