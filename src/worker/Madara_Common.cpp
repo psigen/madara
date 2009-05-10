@@ -2,6 +2,8 @@
 
 volatile int Madara::finished_ = 0;
 
+const int Madara::BROKER_PORT_START = 49995;
+const int Madara::BROKER_PORT_END = 49999;
 const int Madara::ACCEPTOR_PORT_START = 50000;
 
 // split a key into a corresponding host and port

@@ -47,7 +47,7 @@ int Client_Acceptor::open( const ACE_INET_Addr & _addr,
     {
       thread_pool()->open(_pool_size);
     }
-
+//  return ACE_Acceptor::open (_addr,_reactor);
   return inherited::open(_addr,_reactor);
 }
 

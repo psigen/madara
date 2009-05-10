@@ -5,6 +5,8 @@
 
 namespace Madara
 {
+  extern const int BROKER_PORT_START;
+  extern const int BROKER_PORT_END;
   extern const int ACCEPTOR_PORT_START;
 
   // split a key into a corresponding host and port

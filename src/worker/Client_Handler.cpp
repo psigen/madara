@@ -277,6 +277,47 @@ int Client_Handler::process_dump (Madara::Agent_Ping& from)
   return 0;
 }
 
+int Client_Handler::process_latency_query (Madara::Agent_Ping& from)
+{
+  Madara::Agent_Ping reply;
+  std::string key;
+  std::string host;
+  std::string port;
+
+  // fill in our host information
+  strcpy(reply.host, context_->getHost ().c_str ()); 
+  reply.port = atoi (context_->getPort ().c_str ());
+  reply.size = context_->getNumKeys ();
+
+  // construct a latency array for our average latencies
+  Madara::Agent_Latency * latencies = (Madara::Agent_Latency *)
+    malloc (sizeof (Madara::Agent_Latency) * reply.size);
+
+  // fill in average latency information
+  for (unsigned int i = 0; i < reply.size; ++i)
+    {
+      key = context_->getKey (i);
+
+      // fill in host / port
+      Madara::split_key (key, host, port);
+
+      strcpy (latencies[i].host, host.c_str ());
+      latencies[i].port = atoi (port.c_str ());
+
+      // fill in latency
+      latencies[i].latency = context_->getAverageLatency (key);
+    }
+
+  // send the ping with the number of latencies
+  this->peer ().send_n (&reply, sizeof(Madara::Agent_Ping));
+
+  // send the full average latency list
+  this->peer ().send_n (latencies, 
+    sizeof (Madara::Agent_Latency) * reply.size);
+
+  return 0;
+}
+
 /*
 Once again, we see that the application-level logic has not been at all affected
 by our choice of threading models.  Of course, I'm not sharing data between threads
@@ -296,6 +337,8 @@ int Client_Handler::process (char *_rdbuf, int _rdbuf_len)
       if (from->type == Madara::AGENT_PING)
         this->process_ping (*from);
       else if (from->type == Madara::AGENT_DUMP_CONTEXT)
+        this->process_dump (*from);
+      else if (from->type == Madara::BROKER_LATENCY_QUERY)
         this->process_dump (*from);
     }
 

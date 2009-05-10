@@ -112,6 +112,7 @@ class Client_Handler : public ACE_Svc_Handler < ACE_SOCK_STREAM, ACE_NULL_SYNCH 
     int process (char *_rdbuf, int _rdbuf_len);
     int process_ping (Madara::Agent_Ping& from);
     int process_dump (Madara::Agent_Ping& from);
+    int process_latency_query (Madara::Agent_Ping& from);
     /*
     We don't really do anything in our destructor but we've declared it to be
     protected to prevent casual deletion of this object.  As I said above, I
