@@ -5,13 +5,16 @@
 #include "Madara_Common.h"
 #include "Agent_Context.h"
 
+const int Madara::NUM_CLIENT_LATENCIES = 5;
+
 Madara::Agent_Context::Agent_Context()
-: num_latencies_ (5)
+: num_latencies_ (Madara::NUM_CLIENT_LATENCIES)
 {
 }
 
-Madara::Agent_Context::Agent_Context(const std::string& host, const std::string& port)
-: host_ (host), port_ (port), num_latencies_ (5)
+Madara::Agent_Context::Agent_Context(const std::string& host, 
+                                     const std::string& port)
+: host_ (host), port_ (port), num_latencies_ (Madara::NUM_CLIENT_LATENCIES)
 {
 }
 
@@ -72,10 +75,37 @@ Madara::Agent_Context::addLatency (const std::string& key, int latency)
   createEntry (key);
   LatencyTable& table = map_[key];
 
+  // add the latency and update cur
   table.latencies[table.cur] = latency;
   table.cur = table.cur == num_latencies_-1 ? 0 : table.cur+1;
+
+  // update the total recorded
+  ++table.total_recorded;
 }
 
+
+int 
+Madara::Agent_Context::getAverageLatency (const std::string& key)
+{
+  Context_Guard guard (mutex_);
+  createEntry (key);
+
+  // grab the latency table
+  Madara::LatencyTable& table = map_[key];
+
+  // calculate the sum
+  int sum = 0;
+  int num_latencies = min(Madara::NUM_CLIENT_LATENCIES, table.total_recorded);
+
+  for (::size_t i = 0; i < num_latencies; ++i)
+    {
+      if (table.latencies[i] != -1)
+        sum += table.latencies[i];
+    }
+
+  // return the avg
+  return sum / num_latencies;
+}
 
 void 
 Madara::Agent_Context::createEntry (const std::string& key)

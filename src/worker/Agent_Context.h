@@ -13,6 +13,8 @@
 
 namespace Madara
   {
+    extern const int NUM_CLIENT_LATENCIES;
+
     typedef struct
     {
       std::vector<int> latencies;
@@ -31,6 +33,7 @@ namespace Madara
       void write (std::ostream& output);
       void write (const std::string& filename);
       void addLatency (const std::string&, int latency);
+      int getAverageLatency (const std::string& key);
       const std::string& getHost ();
       void setHost (const std::string& host);
       const std::string& getPort ();
