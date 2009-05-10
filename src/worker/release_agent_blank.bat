@@ -1,1 +1,1 @@
-Release\Madara_Server 127.0.0.1
+Release\worker 127.0.0.1
