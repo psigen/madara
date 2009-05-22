@@ -6,9 +6,11 @@
 
 namespace Madara
 {
-  int bindToFirstAvailablePort (Client_Acceptor & peer_acceptor,
+  int bindToFirstAvailableWorkerPort (Client_Acceptor & peer_acceptor,
                            Agent_Context & context);
-  int discoverPortOnHost(const std::string & host,
+  int bindToFirstAvailableBrokerPort (Client_Acceptor & peer_acceptor,
+                           Agent_Context & context);
+  int discoverWorkerPortOnHost(const std::string & host,
                            Agent_Context & context);
 }
 

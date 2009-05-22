@@ -65,6 +65,11 @@ namespace Madara
 
       void clearRequirements ();
 
+      const std::string& getHost ();
+      void setHost (const std::string& host);
+      const std::string& getPort ();
+      void setPort (const std::string& port);
+
       bool peerExists (const std::string& key);
       bool peerExists (const std::string& host, u_short port);
       bool peerExists (const std::string& host, const std::string& port);
@@ -100,6 +105,9 @@ namespace Madara
       int nerd_lookahead_;
       bool average_all_;
       int deployment_degree_;
+      std::string host_;
+      std::string port_;
+
       ACE_Recursive_Thread_Mutex mutex_;
     };
 

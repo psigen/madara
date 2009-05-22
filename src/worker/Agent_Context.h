@@ -18,8 +18,8 @@ namespace Madara
     typedef struct
     {
       std::vector<int> latencies;
-      int cur;
-      int total_recorded;
+      unsigned cur;
+      unsigned int total_recorded;
     } LatencyTable;
 
     typedef std::map <std::string,LatencyTable> LatencyMap;

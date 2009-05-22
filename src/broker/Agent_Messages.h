@@ -10,7 +10,8 @@ namespace Madara
       {
         AGENT_PING = 1,
         AGENT_DISCOVER = 2,
-        AGENT_LATENCY_QUERY_RESPONSE = 3,
+        AGENT_DISCOVER_HOST = 3,
+        AGENT_LATENCY_QUERY_RESPONSE = 5,
         AGENT_LATENCY_DESCRIBE = 10,
         AGENT_DUMP_CONTEXT = 20,
         BROKER_LATENCY_QUERY = 100

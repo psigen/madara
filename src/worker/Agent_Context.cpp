@@ -120,6 +120,7 @@ Madara::Agent_Context::createEntry (const std::string& key)
         table.latencies[i] = 0 - 1;
 
       table.cur = 0;
+      table.total_recorded = 0;
       map_[key] = table;
     }
 }

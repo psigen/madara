@@ -13,7 +13,7 @@
 #include "Madara_Common.h"
 
 int
-Madara::discoverPortOnHost(const std::string & host,
+Madara::discoverWorkerPortOnHost(const std::string & host,
                            Agent_Context & context)
 {
   // more than enough room for a stringenized port
@@ -22,17 +22,13 @@ Madara::discoverPortOnHost(const std::string & host,
   int ret = 1;
   std::string key;
 
-  for (server_port = Madara::ACCEPTOR_PORT_START;
+  for (server_port = Madara::WORKER_PORT_START;
     context.peerExists (host, server_port) || 
     context.selfCheck (host, server_port); 
     ++server_port)
       {
         ret = 4;
       }
-
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) discover loop stopped on %s:%d\n", 
-      host.c_str (), server_port));
-  
 
   // setup a connector to this potential new agent port
   ACE_SOCK_Connector connector;
@@ -56,17 +52,41 @@ Madara::discoverPortOnHost(const std::string & host,
 }
 
 int 
-Madara::bindToFirstAvailablePort (Client_Acceptor & peer_acceptor,
+Madara::bindToFirstAvailableWorkerPort (Client_Acceptor & peer_acceptor,
                            Agent_Context & context)
 {
   // more than enough room for a stringenized port
   char port_buf[16];
   u_short server_port;
 
-  // attempt to open a port from ACCEPTOR_PORT_START to the first available one
-  for (server_port = Madara::ACCEPTOR_PORT_START;
+  // attempt to open a port from WORKER_PORT_START to the first available one
+  for (server_port = Madara::WORKER_PORT_START;
        peer_acceptor.open (ACE_INET_Addr (server_port), 
                                 ACE_Reactor::instance ()) == -1; ++server_port);
+
+  // convert the server_port into string form for our context
+  itoa (server_port, port_buf, 10);
+
+  // update context for caller to know the bound port
+  context.setPort (port_buf);
+
+  return 0;
+}
+
+int 
+Madara::bindToFirstAvailableBrokerPort (Client_Acceptor & peer_acceptor,
+                           Agent_Context & context)
+{
+  // more than enough room for a stringenized port
+  char port_buf[16];
+  u_short server_port;
+
+  // attempt to open a port from WORKER_PORT_START to the first available one
+  for (server_port = Madara::BROKER_PORT_START;
+         server_port <= Madara::BROKER_PORT_END && 
+         peer_acceptor.open (ACE_INET_Addr (server_port), 
+                                ACE_Reactor::instance ()) == -1; 
+       ++server_port);
 
   // convert the server_port into string form for our context
   itoa (server_port, port_buf, 10);

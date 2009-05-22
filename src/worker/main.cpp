@@ -69,7 +69,7 @@ int main (int argc, char *argv[])
 
   // if no port is provided, then bind to the first available
   if (port_str == "")
-    Madara::bindToFirstAvailablePort (peer_acceptor, context);
+    Madara::bindToFirstAvailableWorkerPort (peer_acceptor, context);
   else if (peer_acceptor.open (ACE_INET_Addr (server_port), ACE_Reactor::instance ()) == -1)
     ACE_ERROR_RETURN ((LM_ERROR, "%p\n", "open"), -1);
 

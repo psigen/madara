@@ -289,9 +289,17 @@ int Client_Handler::process_latency_query (Madara::Agent_Ping& from)
   reply.port = atoi (context_->getPort ().c_str ());
   reply.size = context_->getNumKeys ();
 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Received broker latency query\n"));
+  
   // construct a latency array for our average latencies
   Madara::Agent_Latency * latencies = (Madara::Agent_Latency *)
     malloc (sizeof (Madara::Agent_Latency) * reply.size);
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Composing reply with %d latencies\n", 
+    reply.size));
+  
+  
+  reply.type = Madara::AGENT_LATENCY_QUERY_RESPONSE;
 
   // fill in average latency information
   for (unsigned int i = 0; i < reply.size; ++i)
@@ -306,15 +314,29 @@ int Client_Handler::process_latency_query (Madara::Agent_Ping& from)
 
       // fill in latency
       latencies[i].latency = context_->getAverageLatency (key);
+
+      
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Latency[%d] = %d\n", 
+    i, latencies[i].latency));
+  
     }
 
+  ACE_Time_Value timeout (4);
+
   // send the ping with the number of latencies
-  this->peer ().send_n (&reply, sizeof(Madara::Agent_Ping));
+  this->peer ().send_n (&reply, sizeof(Madara::Agent_Ping), &timeout);
+   
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) LATENCIES REPLY\n"));
+  
+  ::size_t bytes_transferred = 0;
 
   // send the full average latency list
   this->peer ().send_n (latencies, 
-    sizeof (Madara::Agent_Latency) * reply.size);
+    sizeof (Madara::Agent_Latency) * reply.size, 
+    &timeout, &bytes_transferred);
 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) LATENCIES REPLIED %d bytes\n", bytes_transferred));
+  
   return 0;
 }
 
@@ -339,7 +361,8 @@ int Client_Handler::process (char *_rdbuf, int _rdbuf_len)
       else if (from->type == Madara::AGENT_DUMP_CONTEXT)
         this->process_dump (*from);
       else if (from->type == Madara::BROKER_LATENCY_QUERY)
-        this->process_dump (*from);
+        this->process_latency_query (*from);
+ 
     }
 
   return 0;

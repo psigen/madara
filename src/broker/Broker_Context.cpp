@@ -368,6 +368,34 @@ Madara::Broker_Context::getKey (unsigned int pos)
   return unfound;
 }
 
+const std::string&  
+Madara::Broker_Context::getHost ()
+{
+  Context_Guard guard (mutex_);
+  return host_;
+}
+
+void 
+Madara::Broker_Context::setHost (const std::string& host)
+{
+  Context_Guard guard (mutex_);
+  host_ = host;
+}
+
+const std::string&  
+Madara::Broker_Context::getPort ()
+{
+  Context_Guard guard (mutex_);
+  return port_;
+}
+
+void 
+Madara::Broker_Context::setPort (const std::string& port)
+{
+  Context_Guard guard (mutex_);
+  port_ = port;
+}
+
 Madara::PeerLatency
 Madara::Broker_Context::getLatencyMap (unsigned int pos)
 {

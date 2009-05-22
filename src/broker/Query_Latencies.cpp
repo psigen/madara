@@ -34,51 +34,76 @@ int Madara::query_latencies_by_key (
   ACE_SOCK_Stream worker;
   ACE_SOCK_Connector connector;
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Attempting worker latency query (host %p, port %d)\n", 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Attempting worker latency query (host %s, port %d)\n", 
     host.c_str (), server_port));
   
   if (connector.connect (worker, addr) == -1)
     {
-      ACE_DEBUG ((LM_DEBUG, "%p\n", "open"));
+      ACE_DEBUG ((LM_DEBUG, "%s\n", "open"));
       return result;
     }
 
   query.size = 0;
   query.type = Madara::BROKER_LATENCY_QUERY;
 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Attempting query send (host %s, port %d)\n", 
+    host.c_str (), server_port));
+  
   // send a latency query to the worker at the host/port
   result = worker.send_n (&query, sizeof (query));
 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Completed query send (host %s, port %d)\n", 
+    host.c_str (), server_port));
+  
   if (result == -1)
     {
-      ACE_DEBUG ((LM_DEBUG, "Problem sending query to %p\n", key.c_str ()));
+      ACE_DEBUG ((LM_DEBUG, "Problem sending query to %s\n", key.c_str ()));
       return result;
     }
 
+  ACE_Time_Value timeout (10, 0);
+
   // recv reply back
 
-  result = worker.recv_n (&response, sizeof(response));
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Awaiting response (host %s, port %d)\n", 
+    host.c_str (), server_port));
+  
+  result = worker.recv_n (&response, sizeof(response), &timeout);
 
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Received response (host %s, port %d)\n", 
+    host.c_str (), server_port));
+  
   if (result == -1)
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "Madara::QLBK. Never heard back from %p\n", key.c_str ()));
+        "Madara::QLBK. Never heard back from %s\n", key.c_str ()));
       return result;
     }
 
   if (response.type == Madara::AGENT_LATENCY_QUERY_RESPONSE)
     {
       num_latencies = response.size;
+      ::size_t bytes_transferred = 0;
 
       latencies = (Madara::Agent_Latency *)
         malloc (sizeof (Agent_Latency) * num_latencies);
 
-      result = worker.recv_n (latencies, sizeof (Agent_Latency) * num_latencies);
+      ACE_DEBUG ((LM_DEBUG, 
+        "(%P|%t) Received latency query reponse (host %s, port %d)\n", 
+        host.c_str (), server_port));
+      
+      result = worker.recv_n 
+        (latencies, sizeof (Agent_Latency) * num_latencies, 
+         &timeout, &bytes_transferred);
 
+      ACE_DEBUG ((LM_DEBUG, 
+        "(%P|%t) Received response (host %s, port %d, actual bytes = %d, latencies = %d)\n", 
+        host.c_str (), server_port, bytes_transferred, latencies));
+      
       if (result == -1)
         {
           ACE_DEBUG ((LM_DEBUG, 
-            "Madara::QLBK. Failed while receiving latencies from %p\n", 
+            "Madara::QLBK. Failed while receiving latencies from %s\n", 
             key.c_str ()));
           return result;
         }
@@ -86,9 +111,20 @@ int Madara::query_latencies_by_key (
       for (::size_t i = 0; i < num_latencies; ++i)
         {
           Madara::merge_key (target, latencies[i].host, latencies[i].port);
+          ACE_DEBUG ((LM_DEBUG, 
+            "Madara::QLBK. Adding latency %d of %d. %s -> %s\n", 
+            i, num_latencies, key.c_str (), target.c_str ()));
           context.addLatency (key, target, latencies[i].latency);
         }
     }
+ 
+  else
+    {
+
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) ERROR: Received type %d instead of %d.\n", 
+    response.type, Madara::AGENT_LATENCY_QUERY_RESPONSE));
   
+    }
+
   return 0;
 }

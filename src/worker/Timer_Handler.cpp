@@ -117,7 +117,7 @@ Timeout_Handler::random_discover (void)
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Attempting to discover an agent on %s\n", 
     host.c_str ()));
 
-  return Madara::discoverPortOnHost (host, context_);
+  return Madara::discoverWorkerPortOnHost (host, context_);
 }
 
 int 
