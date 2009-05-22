@@ -14,7 +14,9 @@ namespace Madara
         AGENT_LATENCY_QUERY_RESPONSE = 5,
         AGENT_LATENCY_DESCRIBE = 10,
         AGENT_DUMP_CONTEXT = 20,
-        BROKER_LATENCY_QUERY = 100
+        BROKER_LATENCY_QUERY = 100,
+        BROKER_DEPLOYMENT_OFFER = 101,
+        BROKER_DEPLOYMENT_PRINT = 102
       };
 
     typedef struct
@@ -31,6 +33,18 @@ namespace Madara
       unsigned int port;
       unsigned int latency;
     } Agent_Latency;
+
+    typedef struct
+    {
+      char host[256];
+    } Agent_FileName;
+
+    typedef struct
+    {
+      unsigned int rank;
+      char host[16];
+      unsigned int port;
+    } Agent_DeploymentRank;
 
     void fillPingFromContext (Agent_Ping & ping, 
                               Agent_Context & context);
