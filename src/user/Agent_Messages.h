@@ -46,7 +46,7 @@ namespace Madara
       unsigned int port;
     } Agent_DeploymentRank;
 
-    void fillPingFromContext (Agent_Ping & ping, 
-                              Agent_Context & context);
+ //   void fillPingFromContext (Agent_Ping & ping, 
+ //                             Agent_Context & context);
   }
 #endif

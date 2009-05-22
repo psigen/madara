@@ -1,8 +1,12 @@
 #ifndef DEPLOYMENT_H
 #define DEPLOYMENT_H
 
+#include <utility>
+#include <vector>
 #include <string>
 #include <map>
+#include <fstream>
+#include <iostream>
 
 namespace Madara
 {
@@ -10,10 +14,11 @@ namespace Madara
   namespace Deployment
     {
 
-      typedef std::vector <std::string> DeploymentCandidate;
+      typedef std::vector <std::string> Candidate;
       typedef std::map <int, std::map <int,bool>> Deployment;
-      Deployment read (std::string filename);
-
+      Deployment read (std::string filename, int & num_ranks);
+      void write (Deployment & deployment, std::ostream& output);
+      ::size_t add (Deployment & deployment, int source, int target);
     }
 }
 

@@ -20,9 +20,6 @@ namespace Madara
     typedef std::map <std::string,int> PeerLatencyMap;
     typedef std::vector <LatencyPair> PeerLatencyVector;
 
-    typedef std::vector <std::string> DeploymentCandidate;
-    typedef std::map <int, std::map <int,bool>> Deployment;
-
     typedef std::map <std::string, bool> EliminationList;
     typedef std::map <int, bool> DeploymentEliminationList;
 
@@ -60,7 +57,7 @@ namespace Madara
       void removeRequirement (int source, int target);
       void writeRequirements (std::ostream& output);
       void writeDeploymentCandidate (std::ostream& output, 
-                              DeploymentCandidate & candidate);
+                              Madara::Deployment::Candidate & candidate);
       void writeRequirementsLegible (std::ostream& output);
       void writeRequirements (const std::string& filename);
 
@@ -75,14 +72,14 @@ namespace Madara
       bool peerExists (const std::string& host, u_short port);
       bool peerExists (const std::string& host, const std::string& port);
 
-      Madara::DeploymentCandidate learnDeployment (void);
+      Madara::Deployment::Candidate learnDeployment (void);
 
       unsigned int getNumKeys (void);
       std::string getKey (unsigned int pos);
       Madara::PeerLatency getLatencyMap (unsigned int pos);
       Madara::PeerLatency getLatencyMap (const std::string & key);
 
-      int calculateUtility (DeploymentCandidate & candidate);
+      int calculateUtility (Madara::Deployment::Candidate & candidate);
 
     private:
       std::string getNextLowestLatencyAvailable (
@@ -91,18 +88,18 @@ namespace Madara
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
       void createEntry (const std::string&);
 
-      int getHighestDegreeNode (Madara::Deployment & deployment,
+      int getHighestDegreeNode (Madara::Deployment::Deployment & deployment,
         DeploymentEliminationList & remainingRanks);
 
       int averageLatency (Madara::PeerLatency & list, int degree);
-      void generateBestGuess (Madara::DeploymentCandidate & best, 
+      void generateBestGuess (Madara::Deployment::Candidate & best, 
                       Madara::TopNerds & nerds);
-      void generateDeployment ( Madara::DeploymentCandidate & best, 
-        Madara::DeploymentCandidate & last,
+      void generateDeployment ( Madara::Deployment::Candidate & best, 
+        Madara::Deployment::Candidate & last,
         Madara::TopNerds & nerds);
 
       Madara::BrokerMap map_;
-      Madara::Deployment deployment_;
+      Madara::Deployment::Deployment deployment_;
       int nerd_lookahead_;
       bool average_all_;
       int deployment_degree_;

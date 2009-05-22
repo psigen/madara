@@ -16,31 +16,9 @@ void
 Madara::Broker_Context::read (const std::string& filename)
 {
   Context_Guard guard (mutex_);
-  std::ifstream input (filename.c_str ());
-
-  if (input.is_open ())
-    {
-      while (input)
-        {
-          std::string key;
-          std::string target;
-          int latency;
-          int targets;
-
-          input >> key;
-          input >> targets;
-
-          for (int i = 0; i < targets && input; ++i)
-            {
-              input >> target;
-              input >> latency;
-
-              if (input)
-                addLatency (key, target, latency);
-            }
-        }
-      input.close ();
-    }
+  
+  int num_ranks = 0;
+  deployment_ = Madara::Deployment::read (filename, num_ranks);
 }
 
 void
@@ -77,12 +55,12 @@ Madara::Broker_Context::averageLatency (Madara::PeerLatency & list, int degree)
   return list.avg = total / min;
 }
 
-Madara::DeploymentCandidate
+Madara::Deployment::Candidate
 Madara::Broker_Context::learnDeployment (void)
 {
-  DeploymentCandidate best (map_.size ());
-  DeploymentCandidate last (map_.size ());
-  DeploymentCandidate cur (map_.size ());
+  Madara::Deployment::Candidate best (map_.size ());
+  Madara::Deployment::Candidate last (map_.size ());
+  Madara::Deployment::Candidate cur (map_.size ());
   Madara::BrokerMap::iterator i;
   Madara::TopNerds nerds (map_.size ());
   int lookahead = nerd_lookahead_ * deployment_.size ();
@@ -116,11 +94,11 @@ Madara::Broker_Context::learnDeployment (void)
 
 void
 Madara::Broker_Context::generateBestGuess (
-  Madara::DeploymentCandidate & cur,
+  Madara::Deployment::Candidate & cur,
   Madara::TopNerds & nerds)
 {
-  //DeploymentCandidate cur (map_.size ());
-  Deployment leftoverReqs = deployment_;
+  //Madara::Deployment::Candidate cur (map_.size ());
+  Madara::Deployment::Deployment leftoverReqs = deployment_;
   EliminationList leftoverNodes;
   DeploymentEliminationList leftoverRanks;
 
@@ -172,7 +150,7 @@ Madara::Broker_Context::generateBestGuess (
 
 void
 Madara::Broker_Context::generateDeployment (
-  Madara::DeploymentCandidate & best, Madara::DeploymentCandidate & last,
+  Madara::Deployment::Candidate & best, Madara::Deployment::Candidate & last,
   Madara::TopNerds & nerds)
 {
 
@@ -194,7 +172,7 @@ std::string Madara::Broker_Context::getNextLowestLatencyAvailable (
   return remainingNodes.begin ()->first;
 }
 
-int Madara::Broker_Context::getHighestDegreeNode (Madara::Deployment & deployment,
+int Madara::Broker_Context::getHighestDegreeNode (Madara::Deployment::Deployment & deployment,
         DeploymentEliminationList & remainingRanks)
 {
   if (remainingRanks.size () == 0)
@@ -202,7 +180,7 @@ int Madara::Broker_Context::getHighestDegreeNode (Madara::Deployment & deploymen
 
   int j, cur_max_node = remainingRanks.begin()->first, cur_max = 0;
 
-  for (Deployment::iterator i = deployment.begin (); 
+  for (Madara::Deployment::Deployment::iterator i = deployment.begin (); 
        i != deployment.end (); ++i)
     {
       if (i->second.size () > cur_max)
@@ -245,12 +223,10 @@ Madara::Broker_Context::addRequirement (int source, int target)
 {
   Context_Guard guard (mutex_);
 
-  if (source != target)
-    {
-      deployment_[source][target] = true;
-      if (deployment_[source].size () > deployment_degree_)
-        deployment_degree_ = deployment_[source].size ();
-    }
+  Madara::Deployment::add (deployment_, source, target);
+
+  if (deployment_[source].size () > deployment_degree_)
+    deployment_degree_ = deployment_[source].size ();
 }
 
 void 
@@ -272,11 +248,11 @@ Madara::Broker_Context::clearRequirements (void)
   deployment_.erase (deployment_.begin (), deployment_.end ());
 }
 
-int Madara::Broker_Context::calculateUtility (DeploymentCandidate & candidate)
+int Madara::Broker_Context::calculateUtility (Madara::Deployment::Candidate & candidate)
 {
   int utility = 0;
   int subutility = 0;
-  for (Deployment::iterator i = deployment_.begin (); 
+  for (Madara::Deployment::Deployment::iterator i = deployment_.begin (); 
        i != deployment_.end (); ++i)
     {
       std::map <int, bool>::iterator j = i->second.begin ();
@@ -296,7 +272,7 @@ Madara::Broker_Context::writeRequirements (std::ostream& output)
 {
   Context_Guard guard (mutex_);
 
-  for (Deployment::iterator i = deployment_.begin (); 
+  for (Madara::Deployment::Deployment::iterator i = deployment_.begin (); 
        i != deployment_.end (); ++i)
     {
       output << i->first << " " << i->second.size () << "\n";
@@ -326,18 +302,20 @@ Madara::Broker_Context::writeRequirementsLegible (std::ostream& output)
 
   output << "\nOptimize the following links\n";
 
-  for (Deployment::iterator i = deployment_.begin (); 
-       i != deployment_.end (); ++i)
-    {
-      std::map <int, bool>::iterator j = i->second.begin ();
-      for (; j != i->second.end (); ++j)
-        output << "  " << i->first << " -> " <<  j->first << "\n";
-    }
+  Madara::Deployment::write (deployment_, output);
+
+  //for (Madara::Deployment::Deployment::iterator i = deployment_.begin (); 
+  //     i != deployment_.end (); ++i)
+  //  {
+  //    std::map <int, bool>::iterator j = i->second.begin ();
+  //    for (; j != i->second.end (); ++j)
+  //      output << "  " << i->first << " -> " <<  j->first << "\n";
+  //  }
 }
 
 void 
 Madara::Broker_Context::writeDeploymentCandidate (std::ostream& output, 
-                              DeploymentCandidate & candidate)
+                              Madara::Deployment::Candidate & candidate)
 {
   Context_Guard guard (mutex_);
 

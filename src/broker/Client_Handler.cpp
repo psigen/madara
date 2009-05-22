@@ -13,6 +13,7 @@ new items.
 #include "Agent_Messages.h"
 #include "Madara_Common.h"
 #include "Broker_Context.h"
+#include "Deployment.h"
 
 /*
 We're going to be registering and unregistering a couple of times.  To make sure that
@@ -227,6 +228,16 @@ int Client_Handler::process_deployment_offer (Madara::Agent_Ping& from)
   // just dump the context to STDERR
   //this->context_->write (std::cerr);
 
+  ACE_Time_Value timeout (4);
+  Madara::Agent_File deployment_file;
+
+  // send the ping with the number of latencies
+  this->peer ().recv_n (&deployment_file, sizeof(deployment_file), &timeout);
+
+  context_->read (deployment_file.name);
+
+  context_->writeRequirementsLegible (std::cerr);
+
   return 0;
 }
 
@@ -236,12 +247,14 @@ int Client_Handler::process_deployment_print (Madara::Agent_Ping& from)
   //this->context_->write (std::cerr);
 
   // printout the deployment requirements
+//  context_->writeRequirementsLegible (std::cerr);
+
   context_->writeRequirementsLegible (std::cerr);
 
   // generate current best candidate
-  Madara::DeploymentCandidate best = context_->learnDeployment ();
+  Madara::Deployment::Candidate best = context_->learnDeployment ();
 
-  context.writeDeploymentCandidate (output, deployment);
+  context_->writeDeploymentCandidate (std::cerr, best);
 
   return 0;
 }
@@ -264,9 +277,9 @@ int Client_Handler::process (char *_rdbuf, int _rdbuf_len)
 
       if (from->type == Madara::AGENT_DUMP_CONTEXT)
         this->process_dump (*from);
-      else if (from->type == Madara::BROKER_OFFER_DEPLOYMENT)
+      else if (from->type == Madara::BROKER_DEPLOYMENT_OFFER)
         this->process_deployment_offer (*from);
-      else if (from->type == Madara::BROKER_PRINT_DEPLOYMENT)
+      else if (from->type == Madara::BROKER_DEPLOYMENT_PRINT)
         this->process_deployment_print (*from);
     }
 

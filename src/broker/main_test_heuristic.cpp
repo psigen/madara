@@ -15,7 +15,7 @@
 void testDeploymentSize (int size, std::ostream & output)
 {
   Madara::Broker_Context context;
-  Madara::DeploymentCandidate deployment;
+  Madara::Deployment::Candidate deployment;
   ACE_hrtime_t start, end;
   unsigned int total;
   int i = 0, j = 0;
@@ -66,7 +66,7 @@ int main (int argc, char *argv[])
 {
   std::ofstream output ("test_results.txt");
   Madara::Broker_Context context;
-  Madara::DeploymentCandidate deployment;
+  Madara::Deployment::Candidate deployment;
   ACE_hrtime_t start, end;
   unsigned int total;
   int i = 20;
