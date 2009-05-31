@@ -248,23 +248,11 @@ Madara::Broker_Context::clearRequirements (void)
   deployment_.erase (deployment_.begin (), deployment_.end ());
 }
 
-int Madara::Broker_Context::calculateUtility (Madara::Deployment::Candidate & candidate)
+Madara::Deployment::Candidate &
+Madara::Broker_Context::mutate (Madara::Deployment::Candidate & candidate)
 {
-  int utility = 0;
-  int subutility = 0;
-  for (Madara::Deployment::Deployment::iterator i = deployment_.begin (); 
-       i != deployment_.end (); ++i)
-    {
-      std::map <int, bool>::iterator j = i->second.begin ();
-      for (; j != i->second.end (); ++j)
-        {
-          //Madara::PeerLatencyMap latencies = map_[candidate[i->first]].latencies;
-          subutility = map_[candidate[i->first]].latencies[candidate[j->first]];
-          utility += 1000 / subutility;
-        }
-        //output << "  " << i->first << " -> " <<  j->first << "\n";
-    }
-  return utility;
+  return Madara::Deployment::mutate (deployment_, candidate,
+    map_);
 }
 
 void 
@@ -303,14 +291,6 @@ Madara::Broker_Context::writeRequirementsLegible (std::ostream& output)
   output << "\nOptimize the following links\n";
 
   Madara::Deployment::write (deployment_, output);
-
-  //for (Madara::Deployment::Deployment::iterator i = deployment_.begin (); 
-  //     i != deployment_.end (); ++i)
-  //  {
-  //    std::map <int, bool>::iterator j = i->second.begin ();
-  //    for (; j != i->second.end (); ++j)
-  //      output << "  " << i->first << " -> " <<  j->first << "\n";
-  //  }
 }
 
 void 

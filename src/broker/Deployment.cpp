@@ -1,6 +1,7 @@
 #ifndef DEPLOYMENT_CPP
 #define DEPLOYMENT_CPP
 
+#include "stdlib.h"
 #include "Deployment.h"
 
 Madara::Deployment::Deployment 
@@ -66,6 +67,60 @@ Madara::Deployment::add (Madara::Deployment::Deployment & deployment,
     }
 
   return size;
+}
+
+int 
+Madara::Deployment::calculateUtility (
+  const Madara::Deployment::Deployment& deployment,
+  Madara::Deployment::Candidate & candidate, 
+  Madara::BrokerMap & map)
+{
+  int utility = 0;
+  int subutility = 0;
+  for (Madara::Deployment::Deployment::const_iterator i = deployment.begin (); 
+       i != deployment.end (); ++i)
+    {
+      std::map <int, bool>::const_iterator j = i->second.begin ();
+      for (; j != i->second.end (); ++j)
+        {
+          //Madara::PeerLatencyMap latencies = map_[candidate[i->first]].latencies;
+          subutility = map[candidate[i->first]].latencies[candidate[j->first]];
+          utility += 1000 / subutility;
+        }
+        //output << "  " << i->first << " -> " <<  j->first << "\n";
+    }
+  return utility;
+}
+
+Madara::Deployment::Candidate &
+Madara::Deployment::mutate (const Madara::Deployment::Deployment & deployment,
+           Madara::Deployment::Candidate & candidate,
+           Madara::BrokerMap & map)
+{
+  int cur_best = calculateUtility (deployment, candidate, map);
+
+  Candidate next_gen (candidate);
+
+  int num_changes = rand () % candidate.size ();
+  int source = rand () % candidate.size ();
+  int dest = rand () % candidate.size ();
+
+  for (int i = 0; i < num_changes; 
+    ++i, source = rand () % candidate.size (), 
+    dest = rand () % candidate.size ())
+    {
+      if (dest != source)
+        std::swap (next_gen[source], next_gen[dest]);
+    }
+
+  int next_gen_utility = calculateUtility (deployment, next_gen, map);
+
+  if (next_gen_utility > cur_best)
+    {
+      candidate = next_gen;
+    }
+
+  return candidate;
 }
 
 void

@@ -11,38 +11,18 @@
 #include "ace/Guard_T.h"
 #include "ace/Recursive_Thread_Mutex.h"
 
+#include "Madara_Common.h"
 #include "Deployment.h"
 
 namespace Madara
   {
   
-    typedef std::pair <std::string, int> LatencyPair;
-    typedef std::map <std::string,int> PeerLatencyMap;
-    typedef std::vector <LatencyPair> PeerLatencyVector;
-
-    typedef std::map <std::string, bool> EliminationList;
-    typedef std::map <int, bool> DeploymentEliminationList;
-
-    // my lol heuristic
-    typedef PeerLatencyVector TopNerds;
-
 
     static bool SortByPairValue (LatencyPair u, LatencyPair v)
     {
       return u.second < v.second;
     }
 
-
-    typedef struct
-    {
-      Madara::PeerLatencyMap latencies;
-      Madara::PeerLatencyVector vector;
-
-      double classifier;
-      int avg;
-    } PeerLatency;
-
-    typedef std::map <std::string,Madara::PeerLatency> BrokerMap;
 
     class Broker_Context
     {
@@ -73,13 +53,14 @@ namespace Madara
       bool peerExists (const std::string& host, const std::string& port);
 
       Madara::Deployment::Candidate learnDeployment (void);
+      Madara::Deployment::Candidate & mutate (
+        Madara::Deployment::Candidate & candidate);
 
       unsigned int getNumKeys (void);
       std::string getKey (unsigned int pos);
       Madara::PeerLatency getLatencyMap (unsigned int pos);
       Madara::PeerLatency getLatencyMap (const std::string & key);
 
-      int calculateUtility (Madara::Deployment::Candidate & candidate);
 
     private:
       std::string getNextLowestLatencyAvailable (
