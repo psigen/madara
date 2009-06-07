@@ -248,11 +248,23 @@ Madara::Broker_Context::clearRequirements (void)
   deployment_.erase (deployment_.begin (), deployment_.end ());
 }
 
-Madara::Deployment::Candidate &
+int
 Madara::Broker_Context::mutate (Madara::Deployment::Candidate & candidate)
 {
   return Madara::Deployment::mutate (deployment_, candidate,
     map_);
+}
+
+Madara::Deployment::Deployment &
+Madara::Broker_Context::getDeployment (void)
+{
+  return deployment_;
+}
+
+Madara::BrokerMap & 
+Madara::Broker_Context::getBrokerMap (void)
+{
+  return map_;
 }
 
 void 

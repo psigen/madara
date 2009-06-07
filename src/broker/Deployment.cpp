@@ -69,6 +69,9 @@ Madara::Deployment::add (Madara::Deployment::Deployment & deployment,
   return size;
 }
 
+// currently this just adds all latencies and that is the utility
+// thus the lower the utility the better total performance of the deployment
+
 int 
 Madara::Deployment::calculateUtility (
   const Madara::Deployment::Deployment& deployment,
@@ -85,14 +88,14 @@ Madara::Deployment::calculateUtility (
         {
           //Madara::PeerLatencyMap latencies = map_[candidate[i->first]].latencies;
           subutility = map[candidate[i->first]].latencies[candidate[j->first]];
-          utility += 1000 / subutility;
+          utility += subutility; //1000 / subutility;
         }
         //output << "  " << i->first << " -> " <<  j->first << "\n";
     }
   return utility;
 }
 
-Madara::Deployment::Candidate &
+int
 Madara::Deployment::mutate (const Madara::Deployment::Deployment & deployment,
            Madara::Deployment::Candidate & candidate,
            Madara::BrokerMap & map)
@@ -115,12 +118,13 @@ Madara::Deployment::mutate (const Madara::Deployment::Deployment & deployment,
 
   int next_gen_utility = calculateUtility (deployment, next_gen, map);
 
-  if (next_gen_utility > cur_best)
+  if (next_gen_utility < cur_best)
     {
       candidate = next_gen;
+      return next_gen_utility;
     }
 
-  return candidate;
+  return cur_best;
 }
 
 void

@@ -53,7 +53,7 @@ namespace Madara
       bool peerExists (const std::string& host, const std::string& port);
 
       Madara::Deployment::Candidate learnDeployment (void);
-      Madara::Deployment::Candidate & mutate (
+      int mutate (
         Madara::Deployment::Candidate & candidate);
 
       unsigned int getNumKeys (void);
@@ -61,6 +61,8 @@ namespace Madara
       Madara::PeerLatency getLatencyMap (unsigned int pos);
       Madara::PeerLatency getLatencyMap (const std::string & key);
 
+      Madara::Deployment::Deployment & getDeployment (void);
+      Madara::BrokerMap & getBrokerMap (void);
 
     private:
       std::string getNextLowestLatencyAvailable (

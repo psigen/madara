@@ -21,7 +21,8 @@ namespace Madara
 
       int calculateUtility (const Deployment & deployment,
         Candidate & candidate, Madara::BrokerMap & map);
-      Candidate & mutate (const Deployment & deployment, 
+      
+      int mutate (const Deployment & deployment, 
         Candidate & candidate, Madara::BrokerMap & map);
 
       Deployment read (std::string filename, int & num_ranks);
