@@ -30,7 +30,7 @@ void testDeploymentSize (int size, std::ostream & output)
   for (i = 1; i < size; ++i)
     context.addRequirement (0, i);
 
-  for (i = Madara::ACCEPTOR_PORT_START + 0, j = 0; j < size; ++i, ++j)
+  for (i = Madara::WORKER_PORT_START + 0, j = 0; j < size; ++i, ++j)
     {
       itoa (i, buf + 10, 10);
       keys[j] = buf;
