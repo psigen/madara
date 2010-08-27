@@ -1,0 +1,15 @@
+
+project (Tests) : using_madara, using_ace, using_splice {
+  exeout = bin
+  exename = driver
+  after += Madara
+  
+  pure_libs += Splice_DDS_Transportd.dll
+
+  Header_Files {
+  }
+
+  Source_Files {
+    driver.cpp
+  }
+}

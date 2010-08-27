@@ -1,0 +1,25 @@
+
+project (Splice_DDS_Transport) : using_splice, using_splice_idl {
+  sharedname = Splice_DDS_Transport
+  staticname = 
+  libout = $(MADARA_ROOT)/lib
+
+  SpliceTypeSupport_Files {
+    Splice_Knowledge_Update.idl
+  }
+
+  Source_Files {
+    Splice_Knowledge_Update.cpp
+    Splice_Knowledge_UpdateDcps.cpp
+    Splice_Knowledge_UpdateDcps_impl.cpp
+    Splice_Knowledge_UpdateSplDcps.cpp
+  }
+
+  Header_Files {
+    ccpp_Splice_Knowledge_Update.h 
+    Splice_Knowledge_Update.h
+    Splice_Knowledge_UpdateDcps_impl.h
+    Splice_Knowledge_UpdateSplDcps.h
+    Splice_Knowledge_UpdateDcps.h
+  }
+}

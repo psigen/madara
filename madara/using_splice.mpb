@@ -1,0 +1,9 @@
+project {
+
+  lit_libs    += dcpsgapi ddsdatabase ddsos dcpssacpp
+  libpaths    += $(OSPL_HOME)/lib
+  includes    += $(OSPL_HOME)/include \
+                 $(OSPL_HOME)/include/sys \
+                 $(OSPL_HOME)\include\dcps\C++\SACPP
+
+}

@@ -1,0 +1,29 @@
+
+project (Madara) : madara_library {
+  //after += Splice_DDS_Transport
+  sharedname = Madara
+  staticname = 
+  libout = $(MADARA_ROOT)/lib
+  
+  pure_libs += Splice_DDS_Transportd.dll
+
+  Source_Files {
+    expression_tree
+    transport
+    utility
+    Knowledge_Base.cpp
+    Refcounter.cpp
+    Thread_Pool.cpp
+    Thread_Safe_Context.cpp
+  }
+
+  Header_Files {
+    expression_tree
+    transport
+    utility
+    Knowledge_Base.h
+    Refcounter.h
+    Thread_Pool.h
+    Thread_Safe_Context.h
+  }
+}

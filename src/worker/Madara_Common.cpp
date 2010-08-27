@@ -49,7 +49,7 @@ int Madara::merge_key (std::string & key,
   std::string port;
 
   // convert the server_port into string form for our context
-  itoa (u_port, port_buf, 10);
+  _itoa (u_port, port_buf, 10);
 
   port = port_buf;
 

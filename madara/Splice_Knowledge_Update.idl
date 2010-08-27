@@ -1,0 +1,12 @@
+
+module Knowledge
+{
+    struct Update
+    {
+      string                            key;
+      long                              value;
+    };
+    
+    //#pragma keylist Update
+    #pragma keylist    Update     key     
+};
