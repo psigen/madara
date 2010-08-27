@@ -5,7 +5,7 @@ project (Madara) : madara_library {
   staticname = 
   libout = $(MADARA_ROOT)/lib
   
-  libs += Splice_DDS_Transportd
+  libs += Splice_DDS_Transport
 
   Source_Files {
     expression_tree

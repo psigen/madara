@@ -1,5 +1,2 @@
-project {
-  includes += $(ACE_ROOT)
-  libpaths += $(ACE_ROOT)/lib
-  lit_libs += ACEd
+project : acelib {
 }
