@@ -4,7 +4,7 @@ project (Tests) : using_madara, using_ace, using_splice {
   exename = driver
   after += Madara
   
-  pure_libs += Splice_DDS_Transportd.dll
+  libs += Splice_DDS_Transport
 
   Header_Files {
   }

@@ -1,11 +1,11 @@
 
 project (Madara) : madara_library {
-  //after += Splice_DDS_Transport
+  after += Splice_DDS_Transport
   sharedname = Madara
   staticname = 
   libout = $(MADARA_ROOT)/lib
   
-  pure_libs += Splice_DDS_Transportd.dll
+  libs += Splice_DDS_Transportd
 
   Source_Files {
     expression_tree
