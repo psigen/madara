@@ -1,4 +1,9 @@
 
 workspace {
-  madara
+  madara/Madara.mpc
+  madara/SpliceDDSTransport.mpc
+
+//  excludes {
+//    madara/Tests.mpc
+//  }
 }

@@ -142,7 +142,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   {
     pub_qos_.presentation.access_scope = DDS::TOPIC_PRESENTATION_QOS;
     pub_qos_.presentation.coherent_access = true;
-    pub_qos_.presentation.ordered_access = true;
+    pub_qos_.presentation.ordered_access = false;
     //topic_qos_.
   }
 
@@ -162,7 +162,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   {
     sub_qos_.presentation.access_scope = DDS::TOPIC_PRESENTATION_QOS;
     sub_qos_.presentation.coherent_access = true;
-    sub_qos_.presentation.ordered_access = true;
+    sub_qos_.presentation.ordered_access = false;
   }
 
   sub_qos_.partition.name.length (1);

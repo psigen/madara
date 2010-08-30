@@ -1,7 +1,7 @@
 
 project (Splice_DDS_Transport) : using_splice, using_splice_idl {
-  sharedname = Splice_DDS_Transport
-  staticname = 
+  sharedname = 
+  staticname = Splice_DDS_Transport
   libout = $(MADARA_ROOT)/lib
 
   SpliceTypeSupport_Files {

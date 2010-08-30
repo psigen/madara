@@ -1,9 +1,9 @@
 
 project (Madara) : madara_library {
   after += Splice_DDS_Transport
-  sharedname = Madara
-  staticname = 
-  libout = $(MADARA_ROOT)/lib
+  exename = Madara
+//  staticname = 
+  exeout = $(MADARA_ROOT)/bin
   
   libs += Splice_DDS_Transport
 
@@ -11,6 +11,7 @@ project (Madara) : madara_library {
     expression_tree
     transport
     utility
+    driver.cpp
     Knowledge_Base.cpp
     Refcounter.cpp
     Thread_Pool.cpp
