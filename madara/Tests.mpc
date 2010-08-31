@@ -6,10 +6,14 @@ project (Tests) : using_madara, using_ace, using_splice {
   
   libs += Splice_DDS_Transport
 
+  Build_Files {
+    Tests.mpc
+  }
+
   Header_Files {
   }
 
   Source_Files {
-//    driver.cpp
+    driver.cpp
   }
 }

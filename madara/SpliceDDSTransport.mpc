@@ -3,6 +3,7 @@ project (Splice_DDS_Transport) : using_splice, using_splice_idl {
   libout = $(MADARA_ROOT)/lib
   dynamicflags += OSPL_TRANSPORT_BUILD_DLL
   includes += $(ACE_ROOT)
+  
   SpliceTypeSupport_Files {
     splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
     Splice_Knowledge_Update.idl
