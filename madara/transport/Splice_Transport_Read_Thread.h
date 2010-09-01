@@ -1,7 +1,7 @@
 #ifndef SPLICE_TRANSPORT_READ_THREAD_H
 #define SPLICE_TRANSPORT_READ_THREAD_H
 
-#include "madara/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 
 
 #include "ccpp_dds_dcps.h"
@@ -19,8 +19,9 @@ namespace Madara
     class Splice_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
     {
     public:
-      Splice_Read_Thread (Madara::Thread_Safe_Context & context, 
-                          Knowledge::UpdateDataReader_ptr & update_reader);
+      Splice_Read_Thread (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context, 
+        Knowledge::UpdateDataReader_ptr & update_reader);
       ~Splice_Read_Thread ();
 
       /// service exit point for thread

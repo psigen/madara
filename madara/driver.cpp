@@ -11,18 +11,18 @@
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
 
-#include "madara/Knowledge_Base.h"
+#include "madara/knowledge_engine/Knowledge_Base.h"
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 // test functions
-void test_logicals (Madara::Knowledge_Base & knowledge);
-void test_implies (Madara::Knowledge_Base & knowledge);
-void test_conditionals (Madara::Knowledge_Base & knowledge);
-void test_assignments (Madara::Knowledge_Base & knowledge);
-void test_unaries (Madara::Knowledge_Base & knowledge);
-void test_mathops (Madara::Knowledge_Base & knowledge);
+void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_conditionals (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -31,7 +31,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   ACE_TRACE (ACE_TEXT ("main"));
 
-  Madara::Knowledge_Base knowledge;
+  Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
   // run tests
   test_assignments (knowledge);
@@ -68,7 +68,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 }
 
 /// Tests logicals operators (&&, ||)
-void test_logicals (Madara::Knowledge_Base & knowledge)
+void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_assignments"));
 
@@ -116,7 +116,7 @@ void test_logicals (Madara::Knowledge_Base & knowledge)
 }
 
 /// Tests assignment operator (=)
-void test_assignments (Madara::Knowledge_Base & knowledge)
+void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_assignments"));
 
@@ -135,7 +135,7 @@ void test_assignments (Madara::Knowledge_Base & knowledge)
 }
 
 /// Tests the unaries (++, --, -, !)
-void test_unaries (Madara::Knowledge_Base & knowledge)
+void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_unaries"));
 
@@ -192,7 +192,7 @@ void test_unaries (Madara::Knowledge_Base & knowledge)
 }
 
 /// Tests the conditionals (==, !=, <, <=, >, >=)
-void test_conditionals (Madara::Knowledge_Base & knowledge)
+void test_conditionals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_conditionals"));
 
@@ -240,7 +240,7 @@ void test_conditionals (Madara::Knowledge_Base & knowledge)
 
 
 /// Tests the implication ops (+, -, *, /)
-void test_implies (Madara::Knowledge_Base & knowledge)
+void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   knowledge.clear ();
 
@@ -253,7 +253,7 @@ void test_implies (Madara::Knowledge_Base & knowledge)
 }
 
 /// Tests the math ops (+, -, *, /)
-void test_mathops (Madara::Knowledge_Base & knowledge)
+void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   knowledge.clear ();
 

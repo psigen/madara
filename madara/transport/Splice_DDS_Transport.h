@@ -2,7 +2,7 @@
 #define SPLICE_DDS_TRANSPORT_H
 
 #include "madara/transport/Splice_Transport_Read_Thread.h"
-#include "madara/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include "ccpp_dds_dcps.h"
 #include "madara/ccpp_Splice_Knowledge_Update.h"
@@ -28,7 +28,7 @@ namespace Madara
 
       static const int PROFILES = 2;
 
-      Splice_DDS_Transport (Madara::Thread_Safe_Context & context, 
+      Splice_DDS_Transport (Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const int & reliability = BEST_EFFORT);
       ~Splice_DDS_Transport ();
       virtual long send (const std::string & key, const long & value);
@@ -40,7 +40,7 @@ namespace Madara
     protected:
     private:
       // context for knowledge base
-      Madara::Thread_Safe_Context & context_;
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
 
       const static char * topic_names_[];
       const static char * partition_;

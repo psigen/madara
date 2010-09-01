@@ -15,10 +15,8 @@ project (Madara) : using_ace, using_splice {
     expression_tree
     transport
     utility
-    Knowledge_Base.cpp
     Refcounter.cpp
     Thread_Pool.cpp
-    Thread_Safe_Context.cpp
   }
 
   Header_Files {

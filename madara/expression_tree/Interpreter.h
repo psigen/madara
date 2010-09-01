@@ -17,7 +17,7 @@
 
 #include "madara/Globals.h"
 #include "madara/expression_tree/Expression_Tree.h"
-#include "madara/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 
 namespace Madara
 {
@@ -46,7 +46,8 @@ namespace Madara
 
       /// Converts a string and context into a parse tree, and builds an
       /// expression tree out of the parse tree.
-      Expression_Tree interpret (Madara::Thread_Safe_Context &context, 
+      Expression_Tree interpret (
+        Madara::Knowledge_Engine::Thread_Safe_Context &context, 
                                  const ::std::string &input);
 
       /// Method for checking if a character is a valid operator.
@@ -65,7 +66,7 @@ namespace Madara
                            ::std::list<Symbol *>& list);
 
       /// Inserts a variable (leaf node / number) into the parse tree.
-      void variable_insert (Madara::Thread_Safe_Context &context,
+      void variable_insert (Madara::Knowledge_Engine::Thread_Safe_Context &context,
                             const ::std::string &input,
                             ::std::string::size_type &i,
                           int & accumulated_precedence,
@@ -85,7 +86,7 @@ namespace Madara
       /// Inserts an assignment into the parse tree.
       void assignment_insert (Symbol *op, ::std::list<Symbol *>& list);
 
-      void main_loop (Madara::Thread_Safe_Context & context,
+      void main_loop (Madara::Knowledge_Engine::Thread_Safe_Context & context,
                            const ::std::string &input,
                            ::std::string::size_type &i,
                            Symbol *& lastValidInput,
@@ -93,7 +94,7 @@ namespace Madara
                            int & accumulated_precedence,
                            ::std::list<Symbol *>& list);
 
-      void handle_parenthesis (Madara::Thread_Safe_Context & context,
+      void handle_parenthesis (Madara::Knowledge_Engine::Thread_Safe_Context & context,
                            const ::std::string &input,
                            ::std::string::size_type &i,
                            Symbol *& lastValidInput,

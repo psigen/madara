@@ -4,7 +4,7 @@
 
 #include <string>
 #include "madara/expression_tree/Component_Node.h"
-#include "madara/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 
 namespace Madara
 {
@@ -24,7 +24,7 @@ namespace Madara
     public:
       /// Ctor.
       Variable_Node (const ::std::string &key, 
-        Madara::Thread_Safe_Context & context);
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
       /// Dtor.
       virtual ~Variable_Node (void);
@@ -52,7 +52,7 @@ namespace Madara
       const ::std::string key_;
 
       /// Reference to context for variable retrieval
-      Madara::Thread_Safe_Context & context_;
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
   }
 }

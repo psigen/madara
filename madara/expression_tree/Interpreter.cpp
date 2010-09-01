@@ -142,7 +142,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable (const ::std::string & key, Madara::Thread_Safe_Context & context);
+      Variable (const ::std::string & key, 
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
       /// destructor
       virtual ~Variable (void);
@@ -158,7 +159,7 @@ namespace Madara
       const ::std::string key_;
 
       /// Context for variables
-      Madara::Thread_Safe_Context & context_;
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
 
 
@@ -713,7 +714,7 @@ Madara::Expression_Tree::Not::build ()
 
 // constructor
 Madara::Expression_Tree::Variable::Variable (const ::std::string & key, 
-                    Madara::Thread_Safe_Context & context)
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Symbol (0, 0, VARIABLE_PRECEDENCE), key_(key), context_ (context)
 {
 }
@@ -1138,7 +1139,7 @@ Madara::Expression_Tree::Interpreter::terminal_insert (Madara::Expression_Tree::
 
 // inserts a variable (leaf node / number) into the parse tree
 void
-Madara::Expression_Tree::Interpreter::variable_insert (Madara::Thread_Safe_Context &context,
+Madara::Expression_Tree::Interpreter::variable_insert (Madara::Knowledge_Engine::Thread_Safe_Context &context,
                                                        const ::std::string &input,
                                                        ::std::string::size_type &i,
                                                        int & accumulated_precedence,
@@ -1341,7 +1342,7 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
 }
 
 void
-Madara::Expression_Tree::Interpreter::main_loop (Madara::Thread_Safe_Context & context,
+Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Thread_Safe_Context & context,
        const ::std::string &input, ::std::string::size_type &i,
        Madara::Expression_Tree::Symbol *& lastValidInput,
        bool & handled, int & accumulated_precedence,
@@ -1564,7 +1565,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Thread_Safe_Context & c
 
 void 
 Madara::Expression_Tree::Interpreter::handle_parenthesis (
-  Madara::Thread_Safe_Context & context,
+  Madara::Knowledge_Engine::Thread_Safe_Context & context,
   const ::std::string &input, ::std::string::size_type &i,
   Madara::Expression_Tree::Symbol *& lastValidInput,
   bool & handled, int & accumulated_precedence,
@@ -1630,7 +1631,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
 // converts a string and context into a parse tree, and builds an
 // expression tree out of the parse tree
 Madara::Expression_Tree::Expression_Tree 
-Madara::Expression_Tree::Interpreter::interpret (Madara::Thread_Safe_Context &context, 
+Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Thread_Safe_Context &context, 
                                                  const ::std::string &input)
 {
   ::std::list<Symbol *> list;

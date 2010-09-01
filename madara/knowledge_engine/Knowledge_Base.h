@@ -15,9 +15,9 @@
 
 namespace Madara
 {
+
   namespace Knowledge_Engine
   {
-
     /**
      * @class Knowledge_Record
      * @brief This class provides a distributed knowledge base to users

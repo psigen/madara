@@ -2,7 +2,7 @@
 #include "madara/expression_tree/Variable_Node.h"
 
 Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key, 
-                              Madara::Thread_Safe_Context &context)
+                              Madara::Knowledge_Engine::Thread_Safe_Context &context)
                               : key_ (key), context_ (context)
 {
 }
