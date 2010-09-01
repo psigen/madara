@@ -5,7 +5,6 @@ project (Madara) : using_ace, using_splice {
   
   sharedname = Madara
   dynamicflags += MADARA_BUILD_DLL ACE_AS_STATIC_LIB
-  staticflags += ACE_AS_STATIC_LIB
   libout = $(MADARA_ROOT)/lib
   
   includes += $(MADARA_ROOT)

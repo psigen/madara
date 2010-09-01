@@ -9,6 +9,7 @@
  */
 
 #include "Globals.h"
+#include "MADARA_export.h"
 #include "madara/Thread_Safe_Context.h"
 #include "madara/transport/Splice_DDS_Transport.h"
 
@@ -19,7 +20,7 @@ namespace Madara
    * @class Knowledge_Record
    * @brief This class provides a distributed knowledge base to users
    */
-  class Knowledge_Base
+  class MADARA_Export Knowledge_Base
   {
   public:
     /// Default constructor

@@ -11,12 +11,7 @@
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
 
-#include "madara/expression_tree/Interpreter.h"
-#include "madara/expression_tree/Evaluation_Visitor.h"
-#include "madara/expression_tree/Expression_Tree.h"
 #include "madara/Knowledge_Base.h"
-#include "madara/utility/Utility.h"
-#include "madara/Thread_Pool.h"
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);

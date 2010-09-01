@@ -1,10 +1,10 @@
 
 project (Tests) : using_madara, using_ace, using_splice {
-  exeout = bin
+  exeout = $(MADARA_ROOT)/bin
   exename = driver
   after += Madara
   
-  libs += Splice_DDS_Transport
+  libs += Madara
 
   Build_Files {
     Tests.mpc
