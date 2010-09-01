@@ -29,7 +29,7 @@ namespace Madara
       int close (void);
       int svc (void);
     private:
-      Thread_Safe_Context &               context_;
+      ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
       ::Knowledge::UpdateDataReader_ptr   update_reader_;
       /// typdef for a threadsafe counter
       ACE_Atomic_Op<ACE_Mutex,bool> terminated_;

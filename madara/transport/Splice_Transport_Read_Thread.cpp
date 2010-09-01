@@ -4,8 +4,10 @@
 #include <iostream>
 
 Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
-  Madara::Knowledge_Engine::Thread_Safe_Context & context, Knowledge::UpdateDataReader_ptr & update_reader)
-  : context_ (context), update_reader_ (update_reader), barrier_ (2), terminated_ (false)
+  Madara::Knowledge_Engine::Thread_Safe_Context & context, 
+  Knowledge::UpdateDataReader_ptr & update_reader)
+  : context_ (context), update_reader_ (update_reader), 
+    barrier_ (2), terminated_ (false)
 {
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Splice_Read_Thread started\n"));
   

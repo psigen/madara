@@ -13,6 +13,7 @@ project (Madara) : using_ace, using_splice {
 
   Source_Files {
     expression_tree
+    knowledge_engine
     transport
     utility
     Refcounter.cpp
@@ -21,6 +22,7 @@ project (Madara) : using_ace, using_splice {
 
   Header_Files {
     expression_tree
+    knowledge_engine
     transport
     utility
     Knowledge_Base.h
