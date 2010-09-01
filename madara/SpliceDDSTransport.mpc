@@ -4,6 +4,10 @@ project (Splice_DDS_Transport) : using_splice, using_splice_idl {
   dynamicflags += OSPL_TRANSPORT_BUILD_DLL
   includes += $(ACE_ROOT)
   
+  specific(prop:microsoft) {
+    macros += _CRT_SECURE_NO_WARNINGS
+  }
+  
   SpliceTypeSupport_Files {
     splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
     Splice_Knowledge_Update.idl
