@@ -321,26 +321,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     switch (option)
     {
     case 'n':
-
-      if (arg)
-      {
-        ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("Howdy %s\n"), arg));
-      }
-      else
-      {
-        ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("Howdy\n")));
-      }
+      // boilerplate for later
       break;
     case 'j':
-
-      if (arg)
-      {
-        ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("Job is %s\n"), arg));
-      }
-      else
-      {
-        ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("You have no job\n")));
-      }
+      // boilerplate for later
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
