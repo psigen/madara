@@ -25,10 +25,8 @@ project (Madara) : using_ace, using_splice {
     knowledge_engine
     transport
     utility
-    Knowledge_Base.h
     Refcounter.h
     Thread_Pool.h
-    Thread_Safe_Context.h
     MADARA_export.h
   }
 }
