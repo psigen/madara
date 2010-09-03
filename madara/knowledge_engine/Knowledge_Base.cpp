@@ -119,11 +119,11 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expres
       //eval_visitor.reset ();
 
  
-      ACE_DEBUG ((LM_DEBUG, "\nPrinting the resulting tree:\n"));     
-      for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("in-order");
-        iter != tree.end ("in-order"); ++iter)
-        (*iter).accept (print_visitor);
-      ACE_DEBUG ((LM_DEBUG, "\n"));  
+      //ACE_DEBUG ((LM_DEBUG, "\nPrinting the resulting tree:\n"));     
+      //for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("in-order");
+      //  iter != tree.end ("in-order"); ++iter)
+      //  (*iter).accept (print_visitor);
+      //ACE_DEBUG ((LM_DEBUG, "\n"));  
 
       // iterate over the resulting tree
       //for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("post-order");

@@ -60,7 +60,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   knowledge.test (20);
 
-  ACE_OS::sleep (3);
+  ACE_OS::sleep (8);
 
   knowledge.print_knowledge ();
 
@@ -77,42 +77,42 @@ void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
 
   // test variables in conditionals
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = var1 && var2");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = var1 && var2");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = var1 || var2");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = var1 || var2");
   assert (knowledge.get ("var3") == 1);
 
 
   // test literals in conditionals
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = 1 && 0");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = 1 && 0");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = 1 || 0");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = 1 || 0");
   assert (knowledge.get ("var3") == 1);
 
 
   // test assignments in conditionals
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = (var1 = 1) && (var2 = 0)");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = (var1 = 1) && (var2 = 0)");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = (var1 = 1) || (var2 = 0)");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = (var1 = 1) || (var2 = 0)");
   assert (knowledge.get ("var3") == 1);
   
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = (var1 = 1 && 0) || (var2 = 0)");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = (var1 = 1 && 0) || (var2 = 0)");
   assert (knowledge.get ("var3") == 0);
   
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = (var1 = 1 && 0) || (var2 = 1 || 0)");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = (var1 = 1 && 0) || (var2 = 1 || 0)");
   assert (knowledge.get ("var3") == 1);
 
 
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = (++var1) || (++var2)");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = (++var1) || (++var2)");
   assert (knowledge.get ("var3") == 1);
 
-  knowledge.add_rule ("var1 = 1; var2 = 0; var3 = (++var1) && (++var2)");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var3 = (++var1) && (++var2)");
   assert (knowledge.get ("var3") == 1);
 
-  knowledge.add_rule ("var1 = 1; var2 = -1; var3 = (++var1) && (++var2)");
+  knowledge.evaluate ("var1 = 1; var2 = -1; var3 = (++var1) && (++var2)");
   assert (knowledge.get ("var3") == 0);
 
 }
@@ -124,14 +124,14 @@ void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.clear ();
   // test assignment
-  knowledge.add_rule ("var1 = 1; var2 = 0");
+  knowledge.evaluate ("var1 = 1; var2 = 0");
   assert (knowledge.get ("var1") == 1 && knowledge.get ("var2") == 0);
 
-  knowledge.add_rule ("var3 = var2 = var1 = 4");
+  knowledge.evaluate ("var3 = var2 = var1 = 4");
   assert (knowledge.get ("var1") == 4 && knowledge.get ("var2") == 4 &&
           knowledge.get ("var3") == 4);
 
-  knowledge.add_rule ("var2 = 8; var5 = var3 = var2 = var1 = -1; var2 = 0");
+  knowledge.evaluate ("var2 = 8; var5 = var3 = var2 = var1 = -1; var2 = 0");
   assert (knowledge.get ("var1") == -1 && knowledge.get ("var2") == 0 &&
           knowledge.get ("var3") == -1 && knowledge.get ("var5") == -1);
 }
@@ -144,52 +144,52 @@ void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
 
   // test increments
-  knowledge.add_rule ("++var1");
+  knowledge.evaluate ("++var1");
   assert (knowledge.get ("var1") == 1);
 
-  knowledge.add_rule ("++var1");
+  knowledge.evaluate ("++var1");
   assert (knowledge.get ("var1") == 2);
 
-  knowledge.add_rule ("++var1");
+  knowledge.evaluate ("++var1");
   assert (knowledge.get ("var1") == 3);
 
-  knowledge.add_rule ("var2 = 1 + (++var1)");
+  knowledge.evaluate ("var2 = 1 + (++var1)");
   assert (knowledge.get ("var1") == 4);
   assert (knowledge.get ("var2") == 5);
 
   // the following is not allowed
-  //knowledge.add_rule ("++++var1");
+  //knowledge.evaluate ("++++var1");
   //assert (knowledge.get ("var1") == 5);
 
   // test decrements
-  knowledge.add_rule ("--var4");
+  knowledge.evaluate ("--var4");
   assert (knowledge.get ("var4") == -1);
 
-  knowledge.add_rule ("var1 = 3; --var1");
+  knowledge.evaluate ("var1 = 3; --var1");
   assert (knowledge.get ("var1") == 2);
 
   // the following is not allowed
-  //knowledge.add_rule ("----var1");
+  //knowledge.evaluate ("----var1");
   //assert (knowledge.get ("var1") == 0);
 
   // test logical not
-  knowledge.add_rule ("var1 = !var3");
+  knowledge.evaluate ("var1 = !var3");
   assert (knowledge.get ("var1") == 1);
 
-  knowledge.add_rule ("var2 = !var1");
+  knowledge.evaluate ("var2 = !var1");
   assert (knowledge.get ("var2") == 0);
 
-  knowledge.add_rule ("var1 = 8; var2 = !var1");
+  knowledge.evaluate ("var1 = 8; var2 = !var1");
   assert (knowledge.get ("var2") == 0);
 
-  knowledge.add_rule ("var2 = !var2");
+  knowledge.evaluate ("var2 = !var2");
   assert (knowledge.get ("var2") == 1);
 
   // test negation
-  knowledge.add_rule ("var1 = 1; var2 = -var1");
+  knowledge.evaluate ("var1 = 1; var2 = -var1");
   assert (knowledge.get ("var2") == -1);
 
-  knowledge.add_rule ("var1 = -var2");
+  knowledge.evaluate ("var1 = -var2");
   assert (knowledge.get ("var1") == 1);
 
 }
@@ -202,42 +202,42 @@ void test_conditionals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
 
   // test assignment
-  knowledge.add_rule ("var1 = 1; var2 = 0");
+  knowledge.evaluate ("var1 = 1; var2 = 0");
   assert (knowledge.get ("var1") == 1 && knowledge.get ("var2") == 0);
 
   // test greater thans
-  knowledge.add_rule ("var3 = var1 > var2");
+  knowledge.evaluate ("var3 = var1 > var2");
   assert (knowledge.get ("var3") == 1);
 
-  knowledge.add_rule ("var3 = var1 >= var2");
+  knowledge.evaluate ("var3 = var1 >= var2");
   assert (knowledge.get ("var3") == 1);
 
-  knowledge.add_rule ("var3 = var2 > var1");
+  knowledge.evaluate ("var3 = var2 > var1");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var3 = var2 >= var1");
+  knowledge.evaluate ("var3 = var2 >= var1");
   assert (knowledge.get ("var3") == 0);
 
   // test lesser thans
 
-  knowledge.add_rule ("var3 = var1 < var2");
+  knowledge.evaluate ("var3 = var1 < var2");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var3 = var1 <= var2");
+  knowledge.evaluate ("var3 = var1 <= var2");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var3 = var2 < var1");
+  knowledge.evaluate ("var3 = var2 < var1");
   assert (knowledge.get ("var3") == 1);
 
-  knowledge.add_rule ("var3 = var2 <= var1");
+  knowledge.evaluate ("var3 = var2 <= var1");
   assert (knowledge.get ("var3") == 1);
 
   // test equality and inequality
 
-  knowledge.add_rule ("var3 = var1 == var2");
+  knowledge.evaluate ("var3 = var1 == var2");
   assert (knowledge.get ("var3") == 0);
 
-  knowledge.add_rule ("var3 = var1 != var2");
+  knowledge.evaluate ("var3 = var1 != var2");
   assert (knowledge.get ("var3") == 1); 
 }
 
@@ -248,10 +248,10 @@ void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
 
   // test implication
-  knowledge.add_rule ("var1 = 1; var2 = 0; var1 => var2 = 1");
+  knowledge.evaluate ("var1 = 1; var2 = 0; var1 => var2 = 1");
   assert (knowledge.get ("var2") == 1);
 
-  knowledge.add_rule ("var1 = 0; var2 = 0; var1 => var2 = 1");
+  knowledge.evaluate ("var1 = 0; var2 = 0; var1 => var2 = 1");
   assert (knowledge.get ("var2") == 0);
 }
 
@@ -261,39 +261,39 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
 
   // 
-  knowledge.add_rule ("var1 = 8; var2 = 3");
+  knowledge.evaluate ("var1 = 8; var2 = 3");
   
-  knowledge.add_rule ("var3 = var1 + var2");
+  knowledge.evaluate ("var3 = var1 + var2");
   assert (knowledge.get ("var3") == 11);
 
-  knowledge.add_rule ("var3 = var1 - var2");
+  knowledge.evaluate ("var3 = var1 - var2");
   assert (knowledge.get ("var3") == 5);
 
-  knowledge.add_rule ("var3 = var1 -- var2");
+  knowledge.evaluate ("var3 = var1 -- var2");
   assert (knowledge.get ("var3") == 11);
 
-  knowledge.add_rule ("var3 = var1 * var2");
+  knowledge.evaluate ("var3 = var1 * var2");
   assert (knowledge.get ("var3") == 24);
 
-  knowledge.add_rule ("var3 = var1 / var2");
+  knowledge.evaluate ("var3 = var1 / var2");
   assert (knowledge.get ("var3") == 2);
 
-  knowledge.add_rule ("var3 = 9 * var1 / var2");
+  knowledge.evaluate ("var3 = 9 * var1 / var2");
   assert (knowledge.get ("var3") == 24);
 
-  knowledge.add_rule ("var3 = var1 / var2 * 9");
+  knowledge.evaluate ("var3 = var1 / var2 * 9");
   assert (knowledge.get ("var3") == 18);
 
-  knowledge.add_rule ("var3 = var1 / -var2");
+  knowledge.evaluate ("var3 = var1 / -var2");
   assert (knowledge.get ("var3") == -2);
 
-  knowledge.add_rule ("var3 = -var1 / -var2");
+  knowledge.evaluate ("var3 = -var1 / -var2");
   assert (knowledge.get ("var3") == 2);
 
-  knowledge.add_rule ("var3 = -var1 / var2");
+  knowledge.evaluate ("var3 = -var1 / var2");
   assert (knowledge.get ("var3") == -2);
 
-  knowledge.add_rule ("var2 = 2; var1 = 8; var3 = var1 + ++var2");
+  knowledge.evaluate ("var2 = 2; var1 = 8; var3 = var1 + ++var2");
   assert (knowledge.get ("var3") == 11);
 
 
