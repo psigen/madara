@@ -68,16 +68,17 @@ Madara::Knowledge_Engine::Knowledge_Base::add_rule (const ::std::string & expres
   rules_.push_back (expression);
 }
 
-void
+int
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expression_copy)
 {
+  int last_value = 0;
   // strip the incoming expression of white spaces
   ::std::string expression (expression_copy);
   Madara::Utility::strip_white_space (expression);
 
   // Interpreter and visitors
   Madara::Expression_Tree::Interpreter interpreter;
-  Madara::Expression_Tree::Evaluation_Visitor eval_visitor;
+  //Madara::Expression_Tree::Evaluation_Visitor eval_visitor;
   Madara::Expression_Tree::Print_Visitor print_visitor;
 
   // Statements and pivots resulting from splitting the ";"
@@ -105,28 +106,34 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expres
                       expressions, implications);
 
     for (::std::vector<::std::string>::size_type j = 0; j == 0 || 
-            (eval_visitor.total () != 0 && j < expressions.size ()); ++j)
+            (last_value != 0 && j < expressions.size ()); ++j)
     {
       // interpret the current expression
       tree = interpreter.interpret (map_, expressions[j]);
 
+      // optimize the tree
+      tree.prune ();
+      last_value = tree.evaluate ();
+
       // reset the eval_visitor
-      eval_visitor.reset ();
+      //eval_visitor.reset ();
+
+ 
+      ACE_DEBUG ((LM_DEBUG, "\nPrinting the resulting tree:\n"));     
+      for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("in-order");
+        iter != tree.end ("in-order"); ++iter)
+        (*iter).accept (print_visitor);
+      ACE_DEBUG ((LM_DEBUG, "\n"));  
 
       // iterate over the resulting tree
-      for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("post-order");
-        iter != tree.end ("post-order"); ++iter)
-        (*iter).accept (eval_visitor);
-    }
-    //Madara::Expression_Tree::Expression_Tree::iterator post_iter = 
-    //  tree.begin ("post-order");
-    //Madara::Expression_Tree::Expression_Tree::iterator order_iter = 
-    //  tree.begin ("in-order");
+      //for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("post-order");
+      //  iter != tree.end ("post-order"); ++iter)
+      //  (*iter).accept (eval_visitor);
 
-    //for (; order_iter != tree.end ("in-order"); ++order_iter)
-    //  (*order_iter).accept (print_visitor);
-    //std::cout << std::endl;
+    }
   }
+
+  return last_value;
 }
 
 void

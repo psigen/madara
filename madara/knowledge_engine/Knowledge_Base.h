@@ -44,7 +44,7 @@ namespace Madara
       void add_rule (const ::std::string & expression);
 
       /// Evaluate an expression once
-      void evaluate (const ::std::string & expression);
+      int evaluate (const ::std::string & expression);
 
       /// Block for an expression to evaluate to true (conditional mutex)
       int wait (const ::std::string & expression) const;

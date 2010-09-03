@@ -41,6 +41,15 @@ namespace Madara
       /// Atomically decrement the variable.
       int dec (void);
 
+      /// Prune the tree of unnecessary nodes. 
+      /// Returns evaluation of the node and sets can_change appropriately.
+      /// if this node can be changed, that means it shouldn't be pruned.
+      virtual int prune (bool & can_change);
+
+      /// Evaluates the node and its children. This does not prune any of
+      /// the expression tree, and is much faster than the prune function
+      virtual int evaluate (void);
+
       /// Return the variable key.
       const std::string & key (void) const;
 

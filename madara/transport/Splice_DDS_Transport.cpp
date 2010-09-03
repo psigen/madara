@@ -30,7 +30,7 @@ const char * Madara::Transport::Splice_DDS_Transport::partition_ = "Madara_knowl
 Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   Madara::Knowledge_Engine::Thread_Safe_Context & context, const int & reliability)
 : context_ (context), domain_ (NULL), domain_factory_ (NULL), 
-  domain_participant_ (NULL), subscriber_ (NULL), datawriter_ (NULL), 
+  domain_participant_ (NULL), publisher_ (NULL), subscriber_ (NULL), datawriter_ (NULL), 
   datareader_ (NULL), update_writer_ (NULL), update_reader_ (NULL),
   update_data_list_ (new Knowledge::UpdateSeq), 
   update_status_condition_ (NULL), update_topic_ (NULL), thread_ (0),

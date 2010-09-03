@@ -25,7 +25,7 @@ namespace Madara
       /// Dtor
       virtual ~Composite_Unary_Node (void);
 
-    private:
+    protected:
       /// Right child
       Component_Node *right_;
     };

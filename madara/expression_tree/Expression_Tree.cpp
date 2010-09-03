@@ -13,6 +13,7 @@
 #include "madara/expression_tree/Iterator.h"
 #include "madara/expression_tree/Iterator_Impl.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/expression_tree/Leaf_Node.h"
 
 namespace Madara
 {
@@ -194,8 +195,40 @@ Madara::Expression_Tree::Expression_Tree::is_null (void) const
   return root_.get_ptr () == 0;
 }
 
-// return root pointer
 
+/// Prune the tree of unnecessary nodes. 
+/// Returns evaluation of the node and sets can_change appropriately.
+/// if this node can be changed, that means it shouldn't be pruned.
+int
+Madara::Expression_Tree::Expression_Tree::prune (void)
+{
+  bool root_can_change = false;
+  int root_value = 0;
+
+  if (this->root_.get_ptr ())
+  {
+    root_value = this->root_->prune (root_can_change);
+    if (!root_can_change && 
+      dynamic_cast <Leaf_Node *> (this->root_.get_ptr ()) == 0)
+    {
+      root_ = new Leaf_Node (root_value);
+    }
+  }
+
+  return root_value;
+}
+
+
+/// Evaluates the node and its children. This does not prune any of
+/// the expression tree, and is much faster than the prune function
+int 
+Madara::Expression_Tree::Expression_Tree::evaluate (void)
+{
+  return root_->evaluate ();
+}
+
+
+// return root pointer
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Expression_Tree::get_root (void) 
 {

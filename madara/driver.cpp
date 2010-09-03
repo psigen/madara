@@ -23,6 +23,7 @@ void test_conditionals (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -34,6 +35,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
   // run tests
+  test_tree_compilation (knowledge);
   test_assignments (knowledge);
   test_unaries (knowledge);
   test_conditionals (knowledge);
@@ -152,6 +154,7 @@ void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   assert (knowledge.get ("var1") == 3);
 
   knowledge.add_rule ("var2 = 1 + (++var1)");
+  assert (knowledge.get ("var1") == 4);
   assert (knowledge.get ("var2") == 5);
 
   // the following is not allowed
@@ -293,6 +296,32 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.add_rule ("var2 = 2; var1 = 8; var3 = var1 + ++var2");
   assert (knowledge.get ("var3") == 11);
 
+
+}
+
+
+/// Tests the conditionals (==, !=, <, <=, >, >=)
+void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_tree_compilation"));
+  knowledge.clear ();
+  int result = 0;
+
+  knowledge.set ("var1", 5);
+
+  result = knowledge.evaluate ("1 * 1 + 2 * 2 + 3 * 3 + 4 * 4 + 5 * 5 - 18");
+  assert (result == 37);
+
+  // 15*200 = 3000 + 16 = 3016
+  result = knowledge.evaluate ("15 * 200 - 18 + 33 + (5 == 5)");
+  assert (result == 3016);
+
+  // 8*5 = 40 * 5 = 200 * (7) = 1400 - 8 = 1392
+  result = knowledge.evaluate ("(8 * 5) * 5 * (4 + 3) - 8");
+  assert (result == 1392);
+
+  result = knowledge.evaluate ("(8 * var1) * var1 * (4 + 3) - 8");
+  assert (result == 1392);
 
 }
 

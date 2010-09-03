@@ -27,7 +27,7 @@ namespace Madara
       /// Return the left child.
       virtual Component_Node *left (void) const;
 
-    private:
+    protected:
       /// left child
       Component_Node *left_;
     };

@@ -41,4 +41,5 @@ Madara::Expression_Tree::Component_Node::accept (Madara::Expression_Tree::Visito
   throw Invalid_Function_Call ("Madara::Expression_Tree::Component_Node::accept() called improperly");
 }
 
+
 #endif /* _COMPONENT_NODE_CPP_ */

@@ -70,6 +70,15 @@ namespace Madara
       /// Return the item in the tree.
       int item (void) const;
 
+      /// Prune the tree of unnecessary nodes. 
+      /// Returns evaluation of the node and sets can_change appropriately.
+      /// if this node can be changed, that means it shouldn't be pruned.
+      int prune (void);
+
+      /// Evaluates the node and its children. This does not prune any of
+      /// the expression tree, and is much faster than the prune function
+      int evaluate (void);
+
       /// Return the left child.
       Expression_Tree left (void);
 
