@@ -1,7 +1,7 @@
 
-project (Tests) : using_madara, using_ace, using_splice {
+project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
-  exename = driver
+  exename = test_basic_reasoning
   after += Madara
   
   libs += Madara
@@ -14,6 +14,44 @@ project (Tests) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    driver.cpp
+    test_basic_reasoning.cpp
+  }
+}
+
+project (Test_Wait) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_wait
+  after += Madara
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    test_wait.cpp
+  }
+}
+
+project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_wait_with_ace
+  after += Madara
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    test_wait_with_ace.cpp
   }
 }

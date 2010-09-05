@@ -47,7 +47,7 @@ namespace Madara
       int evaluate (const ::std::string & expression);
 
       /// Block for an expression to evaluate to true (conditional mutex)
-      int wait (const ::std::string & expression) const;
+      int wait (const ::std::string & expression);
 
       /// Print all rules that are continuously applied to knowledge
       void print_rules (void) const;

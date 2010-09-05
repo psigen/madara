@@ -42,29 +42,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_logicals (knowledge);
   test_implies (knowledge);
 
-  //Madara::Thread_Pool pool;
-  //pool.open (4);
-  //
-  //for (int i = 0; i < 20; ++i)
-  //{
-  //  char data [64];
-  //  sprintf (data, "data %d", i);
-  //  ACE_Message_Block * message;
-  //  ACE_NEW_RETURN (message, ACE_Message_Block (data), -1);
-  //  pool.enqueue (message);
-  //}
-
-  knowledge.clear ();
-
-  knowledge.evaluate ("bob=0; bill=1; jack=2; thomas=3");
-
-  knowledge.test (20);
-
-  ACE_OS::sleep (8);
-
   knowledge.print_knowledge ();
-
-  //pool.close ();
 
   return 0;
 }

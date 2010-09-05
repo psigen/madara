@@ -5,6 +5,7 @@
 
 // constructor
 Madara::Knowledge_Engine::Thread_Safe_Context::Thread_Safe_Context ()
+: changed_ (mutex_)
 {
 }
 
@@ -64,7 +65,13 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
   // if key is not null
   if (key != "")
   {
-    return ++(map_[key].value);
+    // because someone might be waiting on a context change, we
+    // can't just return the value
+
+    int value = ++(map_[key].value);
+    changed_.signal ();
+
+    return value;
   }
 
   // if no match, return -1 (ERROR)
@@ -80,7 +87,13 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
   // if key is not null
   if (key != "")
   {
-    return --(map_[key].value);
+    // because someone might be waiting on a context change, we
+    // can't just return the value
+
+    int value = --(map_[key].value);
+    changed_.signal ();
+
+    return value;
   }
 
   // if no match, return -1 (ERROR)
@@ -102,6 +115,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (const ::std::string & key, l
   
   // otherwise set the value
   map_[key].status = map_[key].status | Madara::Knowledge_Record::SET;
+
+  changed_.signal ();
 
   return 0;
 }
@@ -134,6 +149,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (const ::std::stri
   // otherwise set the value
   map_[key].status = map_[key].status | Madara::Knowledge_Record::SET;
 
+  changed_.signal ();
+
   // value was changed
   return 1;
 }
@@ -158,19 +175,47 @@ Madara::Knowledge_Engine::Thread_Safe_Context::clear (void)
   Context_Guard guard (mutex_);
 
   map_.clear ();
+  changed_.signal ();
 }
 
 /// Lock the mutex on this context. Warning: this will cause
 /// all operations to block until the unlock call is made.
 void
-Madara::Knowledge_Engine::Thread_Safe_Context::lock (void)
+Madara::Knowledge_Engine::Thread_Safe_Context::lock (void) const
 {
   mutex_.acquire ();
 }
 
 /// Unlock the mutex on this context.
 void
-Madara::Knowledge_Engine::Thread_Safe_Context::unlock (void)
+Madara::Knowledge_Engine::Thread_Safe_Context::unlock (void) const
 {
   mutex_.release ();
+}
+
+
+/// Make the current thread of execution wait for a change on the
+/// context
+void 
+Madara::Knowledge_Engine::Thread_Safe_Context::wait_for_change (
+  bool extra_release)
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // if the caller is relying on a recursive call (e.g. Knowlege_Base::wait),
+  // we'll need to call an extra release for this to work. Otherwise, the 
+  // context would remain locked to the calling thread - even though it will
+  // now be put to sleep
+  if (extra_release)
+    mutex_.release ();
+
+  changed_.wait ();  
+}
+
+/// Signal the condition that it can wake up someone else on changed data.
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::signal (void) const
+{
+  changed_.signal ();
 }

@@ -10,6 +10,8 @@
 
 #include "ace/Guard_T.h"
 #include "ace/Recursive_Thread_Mutex.h"
+#include "ace/Synch_T.h"
+#include "ace/Synch.h"
 
 #ifndef ACE_LACKS_PRAGMA_ONCE
 # pragma once
@@ -31,6 +33,8 @@ namespace Madara
     class Thread_Safe_Context
     {
     public:
+      typedef ACE_Condition <ACE_Recursive_Thread_Mutex> Condition;
+
       /// Constructor.
       Thread_Safe_Context ();
 
@@ -51,6 +55,10 @@ namespace Madara
       /// Atomically increment the value of the variable
       int inc (const ::std::string & key);
 
+      /// Make the current thread of execution wait for a change on the
+      /// context
+      void wait_for_change (bool extra_release = false);
+
       /// Atomically decrement the value of the variable
       int dec (const ::std::string & key);
 
@@ -65,10 +73,14 @@ namespace Madara
 
       /// Lock the mutex on this context. Warning: this will cause
       /// all operations to block until the unlock call is made.
-      void lock (void);
+      void lock (void) const;
 
       /// Unlock the mutex on this context.
-      void unlock (void);
+      void unlock (void) const;
+      
+      /// Signal the condition that it can wake up someone else 
+      /// on changed data
+      void signal (void) const;
 
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
@@ -76,6 +88,7 @@ namespace Madara
       /// Hash table containing variable names and values.
       Madara::Knowledge_Map map_;
       mutable ACE_Recursive_Thread_Mutex mutex_;
+      mutable Condition changed_;
     };
   }
 }

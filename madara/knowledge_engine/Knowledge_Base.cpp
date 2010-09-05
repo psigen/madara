@@ -52,8 +52,38 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, int va
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression) const
+Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)
 {
+  // lock the context
+  map_.lock ();
+
+  // Interpreter and resulting tree of the expression
+  Madara::Expression_Tree::Interpreter interpreter; 
+  Madara::Expression_Tree::Expression_Tree tree = interpreter.interpret (
+    map_, expression);
+
+  // optimize the tree
+  int last_value = tree.prune ();
+
+  // wait for expression to be true
+  while (!last_value)
+  {
+    // we need the context to do an additional release. If release
+    // the context lock, we may have an update event happen
+    // that we cannot be signalled on - which could lead to
+    // permanent, unnecessary deadlock
+    map_.wait_for_change (true);
+
+    // relock - basically we need to evaluate the tree again, and
+    // we can't have a bunch of people changing the variables as 
+    // while we're evaluating the tree.
+    map_.lock ();
+    last_value = tree.evaluate ();
+    map_.signal ();
+  }
+
+  // release the context lock
+  map_.unlock ();
   return 0;
 }
 
@@ -88,6 +118,8 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expres
   // Split the expression according to ";"
   Madara::Utility::tokenizer (expression, this->statement_splitters_, 
                       statements, statements_pivots);
+
+  map_.lock ();
 
   // For each resulting statement, evaluate
   for (::std::vector<::std::string>::size_type i = 0; i < statements.size (); ++i)
@@ -132,6 +164,8 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expres
 
     }
   }
+
+  map_.unlock ();
 
   return last_value;
 }
