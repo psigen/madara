@@ -28,17 +28,16 @@ namespace Madara
     enum
     {
       // note that these should be logically or'd together
-      // SET | BLOCKING = 3
-      // UNSET | BLOCKING = 2
+      // SET | MODIFIED = 3
+      // UNSET | MODIFIED = 2
       // 
-      UNSET = 0,
-      SET = 1,
-      BLOCKING = 2
+      UNMODIFIED = 0,
+      MODIFIED = 1
     };
 
     /* default constructor */
     Knowledge_Record ()
-      : status (UNSET), value (UNSET) {}
+      : status (UNMODIFIED), value (UNMODIFIED) {}
 
     int status;
     long value;
@@ -46,6 +45,7 @@ namespace Madara
 
   typedef ::std::map <::std::string, Knowledge_Record> Knowledge_Map;
   typedef ::std::vector <::std::string> Knowledge_Rules;
+  typedef ::std::vector <::std::string> String_Vector;
 
   typedef ::std::string     Knowledge_Key;
   typedef long              Knowledge_Value;

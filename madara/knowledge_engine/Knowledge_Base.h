@@ -35,7 +35,7 @@ namespace Madara
       int get (const ::std::string & key) const;
 
       /// Set the value associated with the provided key
-      void set (const ::std::string & key, int value = Madara::Knowledge_Record::SET);
+      void set (const ::std::string & key, int value = Madara::Knowledge_Record::MODIFIED);
 
       /// Check if a key exists in the knowledge base
       bool exists (const ::std::string & key) const;
@@ -45,6 +45,9 @@ namespace Madara
 
       /// Evaluate an expression once
       int evaluate (const ::std::string & expression);
+
+      /// Evaluate an expression once
+      int evaluate (const ::std::string & expression, bool send_modifieds);
 
       /// Block for an expression to evaluate to true (conditional mutex)
       int wait (const ::std::string & expression);

@@ -49,8 +49,15 @@ namespace Madara
       int set (const ::std::string & key, long value);
 
       /// Atomically set if the variable value will be different
-      /// @return   1 if the value was changed. 0 if not changed. -1 if null key
+      /// @return   1 if the value was changed. 0 if not changed.
+      ///           -1 if null key
       int set_if_unequal (const ::std::string & key, long value);
+
+      /// Return list of variables that have been modified
+      void get_modified (Madara::String_Vector & modified) const;
+
+      /// Reset all variables to unmodified
+      void reset_modified (void);
 
       /// Atomically increment the value of the variable
       int inc (const ::std::string & key);

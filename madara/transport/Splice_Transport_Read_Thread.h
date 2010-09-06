@@ -2,7 +2,7 @@
 #define SPLICE_TRANSPORT_READ_THREAD_H
 
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-
+#include "madara/transport/Transport.h"
 
 #include "ccpp_dds_dcps.h"
 #include "madara/ccpp_Splice_Knowledge_Update.h"
@@ -11,6 +11,9 @@
 #include "ace/Mutex.h"
 #include "ace/Barrier.h"
 #include "ace/Atomic_Op_T.h"
+#include "ace/Thread_Mutex.h"
+#include "ace/Synch_T.h"
+#include "ace/Synch.h"
 
 namespace Madara
 {
@@ -28,6 +31,7 @@ namespace Madara
       int enter_barrier (void);
       int close (void);
       int svc (void);
+      void wait_for_ready (void);
     private:
       ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
       ::Knowledge::UpdateDataReader_ptr   update_reader_;
@@ -38,6 +42,9 @@ namespace Madara
       //DDS::ConditionSeq_var              condition_list_;
       DDS::WaitSet                       waitset_;
       DDS::StatusCondition_ptr           condition_;
+      ACE_Thread_Mutex                   mutex_;
+      Madara::Transport::Condition       is_not_ready_;
+      bool                               is_ready_;
     };
   }
 }

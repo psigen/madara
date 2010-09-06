@@ -3,24 +3,67 @@
 
 #include <string>
 #include <vector>
+#include "ace/Thread_Mutex.h"
+#include "ace/Synch_T.h"
+#include "ace/Synch.h"
 
 namespace Madara
 {
   namespace Transport
   {
+    typedef    ACE_Condition <ACE_Thread_Mutex>    Condition;
     class Base
     {
     public:
       /// public typedef for the hosts vector
-      typedef    std::vector <std::string>    Hosts_Vector;
+      typedef    std::vector <std::string>           Hosts_Vector;
 
-      virtual long setHosts (const Hosts_Vector & hosts) { hosts_ = hosts; return 0;}
-      virtual long addHost (const std::string & host) { hosts_.push_back (host); return 0;}
-      virtual long send (const std::string & key, const long & value) = 0;
-      virtual void close (void) = 0;
+      /// default constructor
+      Base () : is_valid_ (false), valid_setup_ (mutex_) 
+      {
+      }
+
+      virtual long setHosts (const Hosts_Vector & hosts) 
+      { 
+        hosts_ = hosts; 
+        return 0;
+      }
+
+      virtual long addHost (const std::string & host) 
+      { 
+        hosts_.push_back (host); 
+        return 0;
+      }
+
+      /// all subclasses should call this method at the end of its setup
+      virtual int setup (void) 
+      { 
+        is_valid_ = true; 
+        valid_setup_.broadcast ();
+
+        return 0;
+      }
+
+      /// all subclasses should call this method at the beginning of send
+      virtual long send (const std::string & key, const long & value) 
+      {
+        if (!is_valid_)
+          valid_setup_.wait ();
+
+        return 0;
+      }
+
+      /// all subclasses should call this method at the beginning of close
+      virtual void close (void)
+      {
+        is_valid_ = false;
+      }
 
     protected:
+      bool is_valid_;
       Hosts_Vector hosts_;
+      ACE_Thread_Mutex mutex_;
+      Condition valid_setup_;
     };
   }
 }

@@ -7,7 +7,8 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Knowledge::UpdateDataReader_ptr & update_reader)
   : context_ (context), update_reader_ (update_reader), 
-    barrier_ (2), terminated_ (false)
+    barrier_ (2), terminated_ (false), 
+    mutex_ (), is_not_ready_ (mutex_), is_ready_ (false)
 {
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Splice_Read_Thread started\n"));
   
@@ -32,8 +33,14 @@ Madara::Transport::Splice_Read_Thread::close (void)
   return 0;
 }
 
+void
+Madara::Transport::Splice_Read_Thread::wait_for_ready (void)
+{
+  if (!is_ready_)
+    is_not_ready_.wait ();
+}
 
-int Madara::Transport::Splice_Read_Thread::enter_barrier ()
+int Madara::Transport::Splice_Read_Thread::enter_barrier (void)
 { 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) entering barrier.\n"));
  
@@ -65,6 +72,9 @@ Madara::Transport::Splice_Read_Thread::svc (void)
     // since we've only set up the wait
     DDS::ConditionSeq_var conditionList = new DDS::ConditionSeq();
     result = waitset_.wait (conditionList.inout (), wait_time);
+
+    is_ready_ = true;
+    is_not_ready_.broadcast ();
 
     dds_result = update_reader_->take (update_data_list_, infoList, 1, 
       DDS::ANY_SAMPLE_STATE, DDS::ANY_VIEW_STATE, DDS::ANY_INSTANCE_STATE);

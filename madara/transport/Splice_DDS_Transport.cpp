@@ -47,6 +47,8 @@ Madara::Transport::Splice_DDS_Transport::~Splice_DDS_Transport ()
 void
 Madara::Transport::Splice_DDS_Transport::close (void)
 {
+  Madara::Transport::Base::close ();
+
   if (subscriber_)
     subscriber_->delete_datareader (update_reader_);
 
@@ -221,8 +223,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   check_handle(update_reader_, "Knowledge::UpdateDataReader_ptr::narrow");
 
   thread_ = new Madara::Transport::Splice_Read_Thread (context_, update_reader_);
-
-  valid_setup_ = true;
+  
+  Madara::Transport::Base::setup ();
 
   return 0;
 }
@@ -231,8 +233,7 @@ long
 Madara::Transport::Splice_DDS_Transport::send (const std::string & key, 
                                                const long & value)
 {
-  if (!valid_setup_)
-    return -1;
+  Madara::Transport::Base::send (key, value);
 
   DDS::ReturnCode_t      dds_result;
   DDS::InstanceHandle_t  handle;

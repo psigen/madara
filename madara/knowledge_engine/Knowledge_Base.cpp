@@ -49,6 +49,7 @@ void
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, int value)
 {
   map_.set (key, value);
+  transport_->send (key, value);
 }
 
 int
@@ -99,7 +100,15 @@ Madara::Knowledge_Engine::Knowledge_Base::add_rule (const ::std::string & expres
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expression_copy)
+Madara::Knowledge_Engine::Knowledge_Base::evaluate (
+  const ::std::string & expression_copy)
+{
+  return evaluate (expression_copy, true);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::evaluate (
+  const ::std::string & expression_copy, bool send_modifieds)
 {
   int last_value = 0;
   // strip the incoming expression of white spaces
@@ -124,7 +133,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expres
   // For each resulting statement, evaluate
   for (::std::vector<::std::string>::size_type i = 0; i < statements.size (); ++i)
   {
-    ::std::cerr << "Evaluating " << statements[i] << ::std::endl;
+    ACE_DEBUG ((LM_DEBUG, "\nEvaluating %s\n", statements[i].c_str ()));
 
     // expressions are separated by implications
     ::std::vector <::std::string> expressions;
@@ -163,6 +172,19 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (const ::std::string & expres
       //  (*iter).accept (eval_visitor);
 
     }
+  }
+
+  if (send_modifieds)
+  {
+    Madara::String_Vector modified;
+    map_.get_modified (modified);
+
+    for (Madara::String_Vector::const_iterator k = modified.begin ();
+         k != modified.end (); ++k)
+    {
+      transport_->send (*k, map_.get (*k));
+    }
+    map_.reset_modified ();
   }
 
   map_.unlock ();
