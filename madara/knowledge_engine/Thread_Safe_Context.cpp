@@ -69,7 +69,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
     // can't just return the value
 
     int value = ++(map_[key].value);
-    map_[key].status = Madara::Knowledge_Record::MODIFIED;
+    if (key[0] != '.')
+      map_[key].status = Madara::Knowledge_Record::MODIFIED;
+    else
+      map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
     changed_.signal ();
 
     return value;
@@ -92,7 +95,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
     // can't just return the value
 
     int value = --(map_[key].value);
-    map_[key].status = Madara::Knowledge_Record::MODIFIED;
+    if (key[0] != '.')
+      map_[key].status = Madara::Knowledge_Record::MODIFIED;
+    else
+      map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
     changed_.signal ();
 
     return value;
@@ -116,7 +122,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (const ::std::string & key, l
   map_[key].value = value;
   
   // otherwise set the value
-  map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  if (key[0] != '.')
+    map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  else
+    map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
@@ -149,7 +158,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (const ::std::stri
   map_[key].value = value;
   
   // otherwise set the value
-  map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  if (key[0] != '.')
+    map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  else
+    map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 

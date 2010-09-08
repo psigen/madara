@@ -11,7 +11,7 @@
 #include "madara/Globals.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/transport/Splice_DDS_Transport.h"
+#include "madara/transport/Transport.h"
 
 namespace Madara
 {

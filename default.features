@@ -1,0 +1,15 @@
+///============================================================================
+///
+/// @file       default.features
+///
+/// @brief      Defines features that control project builds.
+///
+/// @author     James Edmondson
+///
+///============================================================================
+
+
+/// @feature opensplice
+/// Enable this feature if you would like to generate OpenSplice Transports
+
+opensplice              = 0

@@ -1,0 +1,16 @@
+feature (opensplice) {
+
+  after += Splice_DDS_Transport
+  libs += Splice_DDS_Transport
+  dynamicflags += _USE_OPEN_SPLICE_
+
+  Source_Files {
+      transport/Splice_DDS_Transport.cpp
+      transport/Splice_Transport_Read_Thread.cpp
+  }
+
+  Header_Files {
+      transport/Splice_DDS_Transport.h
+      transport/Splice_Transport_Read_Thread.h
+  }
+}

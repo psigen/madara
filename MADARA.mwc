@@ -1,6 +1,8 @@
 
 workspace {
+  cmdline += -feature_file $MADARA_ROOT/default.features
+
   madara/Madara.mpc
-  madara/SpliceDDSTransport.mpc
+  madara/Splice_DDS_Transport.mpc
   madara/Tests.mpc
 }

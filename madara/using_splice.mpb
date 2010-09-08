@@ -1,4 +1,6 @@
-project {
+feature (opensplice) {
+
+  requires += opensplice
 
   specific(prop:microsoft) {
     DisableSpecificWarnings += 4146

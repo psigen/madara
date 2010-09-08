@@ -1,4 +1,6 @@
 project {
+  requires += opensplice
+
   Define_Custom(SpliceTypeSupport) {
     command               = <%quote%>$(OSPL_HOME)/bin/idlpp<%quote%>
     dependent             = <%quote%>$(OSPL_HOME)/bin/idlpp<%quote%>

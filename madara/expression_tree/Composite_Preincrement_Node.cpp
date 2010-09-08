@@ -69,14 +69,13 @@ Madara::Expression_Tree::Composite_Preincrement_Node::evaluate (void)
   Variable_Node * right = dynamic_cast <Variable_Node *> (this->right_);
   if (right)
   {
-    ACE_DEBUG ((LM_DEBUG, "\nPreincrement: %s exists with value %d\n",
-      right->key ().c_str (), right->item ()));
+    //ACE_DEBUG ((LM_DEBUG, "\nPreincrement: %s exists with value %d\n",
+    //  right->key ().c_str (), right->item ()));
     return right->inc ();
   }
-  else
-  {
-    ACE_DEBUG ((LM_DEBUG, "\nPreincrement: ++%d\n", this->right_->evaluate ()));
-  }
+
+  //ACE_DEBUG ((LM_DEBUG, "\nPreincrement: ++%d\n", this->right_->evaluate ()));
+
 
   return 1 + this->right_->evaluate ();
 }

@@ -6,6 +6,10 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/expression_tree/Iterator.h"
 
+#ifdef _USE_OPEN_SPLICE_
+  #include "madara/transport/Splice_DDS_Transport.h"
+#endif // _USE_OPEN_SPLICE_
+
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()
@@ -28,15 +32,21 @@ Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()
   comparison_splitters_.push_back ("<");
   comparison_splitters_.push_back (">");
 
+#ifdef _USE_OPEN_SPLICE_
   transport_ = new Madara::Transport::Splice_DDS_Transport (map_,
     Madara::Transport::Splice_DDS_Transport::RELIABLE);
-  //Madara::Transport::Splice_DDS_Transport::BEST_EFFORT);
+#endif
+
 }
 
 Madara::Knowledge_Engine::Knowledge_Base::~Knowledge_Base ()
 {
-  transport_->close ();
-  delete transport_;
+  if (transport_)
+  {
+    transport_->close ();
+    delete transport_;
+    transport_ = 0;
+  }
 }
 
 int
@@ -49,7 +59,13 @@ void
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, int value)
 {
   map_.set (key, value);
-  transport_->send (key, value);
+
+  // only try to send this update if the key is valid, is not local ('.var') and
+  // the transport is valid
+  if (key.length () > 0 && key[0] != '.' && transport_)
+  {
+    transport_->send (key, value);
+  }
 }
 
 int
@@ -133,7 +149,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   // For each resulting statement, evaluate
   for (::std::vector<::std::string>::size_type i = 0; i < statements.size (); ++i)
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEvaluating %s\n", statements[i].c_str ()));
+    ACE_DEBUG ((LM_DEBUG, "Evaluating %s\n", statements[i].c_str ()));
 
     // expressions are separated by implications
     ::std::vector <::std::string> expressions;
@@ -174,7 +190,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
     }
   }
 
-  if (send_modifieds)
+  if (transport_ && send_modifieds)
   {
     Madara::String_Vector modified;
     map_.get_modified (modified);
@@ -222,6 +238,9 @@ Madara::Knowledge_Engine::Knowledge_Base::clear (void)
 void
 Madara::Knowledge_Engine::Knowledge_Base::test(const long & iterations)
 {
+  if (!transport_)
+    return;
+
   char * keys [] = {
     "bob",
     "bill",

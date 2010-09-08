@@ -35,12 +35,19 @@ namespace Madara
       MODIFIED = 1
     };
 
+    enum
+    {
+      GLOBAL_SCOPE = 0,
+      LOCAL_SCOPE = 1
+    };
+
     /* default constructor */
     Knowledge_Record ()
-      : status (UNMODIFIED), value (UNMODIFIED) {}
+      : status (UNMODIFIED), value (UNMODIFIED), scope (LOCAL_SCOPE) {}
 
     int status;
     long value;
+    int scope;
   };
 
   typedef ::std::map <::std::string, Knowledge_Record> Knowledge_Map;

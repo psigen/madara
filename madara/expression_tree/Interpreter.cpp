@@ -1107,7 +1107,7 @@ Madara::Expression_Tree::Interpreter::is_alphanumeric (char input)
   return (input >= 'a' && input <= 'z') 
     || (input >= 'A' && input <= 'Z') 
     || (input == '_') 
-    || (input >= '0' && input <= '9');
+    || (input >= '0' && input <= '9') || input == '.';
 }
 
 // inserts a terminal into the parse tree

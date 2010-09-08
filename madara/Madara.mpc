@@ -1,20 +1,28 @@
 
-project (Madara) : using_ace, using_splice {
+project (Madara) : using_ace, using_splice, splice_transport {
 
-  after += Splice_DDS_Transport
-  
   sharedname = Madara
-  dynamicflags += MADARA_BUILD_DLL ACE_AS_STATIC_LIB
+  dynamicflags += MADARA_BUILD_DLL
   libout = $(MADARA_ROOT)/lib
   
   includes += $(MADARA_ROOT)
   libpaths += $(MADARA_ROOT)/lib 
-  libs += Splice_DDS_Transport
+
+  Build_Files {
+    $(MADARA_ROOT)/Madara.mwc
+    $(MADARA_ROOT)/default.features
+    Madara.mpc
+    Splice_DDS_Transport.mpc
+    splice_transport.mpb
+    using_ace.mpb
+    using_madara.mpb
+    using_splice.mpb
+    using_splice_idl.mpb
+  }
 
   Source_Files {
     expression_tree
     knowledge_engine
-    transport
     utility
     Refcounter.cpp
     Thread_Pool.cpp
@@ -23,8 +31,9 @@ project (Madara) : using_ace, using_splice {
   Header_Files {
     expression_tree
     knowledge_engine
-    transport
     utility
+    transport/Transport.h
+    Globals.h
     Refcounter.h
     Thread_Pool.h
     MADARA_export.h
