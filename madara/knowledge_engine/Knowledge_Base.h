@@ -25,11 +25,27 @@ namespace Madara
     class MADARA_Export Knowledge_Base
     {
     public:
+      /// Transport type enumeration
+
+      enum {
+        TCP_TRANSPORT = 0,
+        OPEN_SPLICE_TRANSPORT = 1
+      };
+
       /// Default constructor
       Knowledge_Base ();
 
+      /// Constructor for transport
+      Knowledge_Base (int transport);
+
       /// Destructor
       ~Knowledge_Base ();
+
+      /// activate the transport for sending and receiving
+      void activate_transport (void);
+
+      /// close and cleanup the transport
+      void close_transport (void);
 
       /// Retrieve the value associated with the provided key
       int get (const ::std::string & key) const;
@@ -72,6 +88,8 @@ namespace Madara
 
     private:
 
+      void setup_splitters (void);
+
       ::std::vector<::std::string> statement_splitters_;
       ::std::vector<::std::string> assignment_splitters_;
       ::std::vector<::std::string> implies_splitters_;
@@ -82,6 +100,7 @@ namespace Madara
       Thread_Safe_Context map_;
       Knowledge_Rules rules_;
       Madara::Transport::Base * transport_;
+      int transport_type_;
     };
   }
 }

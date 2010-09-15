@@ -44,8 +44,22 @@ namespace Madara
         return 0;
       }
 
-      /// all subclasses should call this method at the beginning of send
-      virtual long send (const std::string & key, const long & value) 
+      /// all subclasses should call this method at the beginning of send_data
+      virtual long send_data (const std::string & key, const long & value) 
+      {
+        if (!is_valid_)
+          valid_setup_.wait ();
+
+        return 0;
+      }
+
+      /// all subclasses should call this method at the beginning of send_mutex
+      /// @param key        resource to lock (e.g. variable name)
+      /// @param requester  requester id (e.g. host:port for unique id of requester)
+      /// @param time       lamport clock value, preferably synchronized globally
+      /// @param type       mutex message type identifier (
+      virtual long send_mutex (const std::string & key, 
+        const std::string & requester, const long & time, const long & type) 
       {
         if (!is_valid_)
           valid_setup_.wait ();

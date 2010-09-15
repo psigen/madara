@@ -31,7 +31,7 @@ namespace Madara
       Splice_DDS_Transport (Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const int & reliability = BEST_EFFORT);
       ~Splice_DDS_Transport ();
-      virtual long send (const std::string & key, const long & value);
+      virtual long send_data (const std::string & key, const long & value);
       int reliability (void) const;
       int reliability (const int & setting);
       long read (void);

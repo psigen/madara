@@ -65,9 +65,9 @@ class Client_Acceptor : public Client_Acceptor_Base
     */
     enum concurrency_t
       {
-      single_threaded_,
-      thread_per_connection_,
-      thread_pool_
+        single_threaded_,
+        thread_per_connection_,
+        thread_pool_
       };
 
     /*

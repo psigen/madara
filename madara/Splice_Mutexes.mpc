@@ -1,0 +1,50 @@
+
+project (Splice_Mutexes) : using_splice, using_splice_idl, build_files {
+
+  requires += opensplice
+
+  libout = $(MADARA_ROOT)/lib
+  dynamicflags += OSPL_TRANSPORT_BUILD_DLL
+  includes += $(ACE_ROOT)
+  
+  after += Splice_Mutexes_IDL
+  
+  specific(prop:microsoft) {
+    macros += _CRT_SECURE_NO_WARNINGS
+  }
+  
+  Build_Files {
+    $(MADARA_ROOT)/default.features
+    Splice_Mutexes.mpc
+    using_splice.mpb
+    using_splice_idl.mpb
+  }
+
+  Source_Files {
+    Splice_Mutex_Message.cpp
+    Splice_Mutex_MessageDcps.cpp
+    Splice_Mutex_MessageDcps_impl.cpp
+    Splice_Mutex_MessageSplDcps.cpp
+  }
+
+  Header_Files {
+    ccpp_Splice_Mutex_Message.h 
+    Splice_Mutex_Message.h
+    Splice_Mutex_MessageDcps_impl.h
+    Splice_Mutex_MessageSplDcps.h
+    Splice_Mutex_MessageDcps.h
+  }
+}
+
+project (Splice_Mutexes_IDL) : using_splice, using_splice_idl, build_files {
+
+  requires += opensplice
+
+  custom_only = 1
+
+  SpliceTypeSupport_Files {
+    splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
+    Splice_Mutex_Message.idl
+  }
+
+}

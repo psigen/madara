@@ -4,5 +4,6 @@ workspace {
 
   madara/Madara.mpc
   madara/Splice_DDS_Transport.mpc
+  madara/Splice_Mutexes.mpc
   madara/Tests.mpc
 }

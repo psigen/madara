@@ -5,6 +5,7 @@
 #include "madara/expression_tree/Print_Visitor.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/expression_tree/Iterator.h"
+#include "madara/transport/TCP_Transport.h"
 
 #ifdef _USE_OPEN_SPLICE_
   #include "madara/transport/Splice_DDS_Transport.h"
@@ -13,7 +14,26 @@
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()
-: transport_ (0)
+: transport_ (0), transport_type_ (0)
+{
+  setup_splitters ();
+  activate_transport ();
+}
+
+Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (int transport)
+: transport_type_ (transport)
+{
+  setup_splitters ();
+  activate_transport ();
+}
+
+Madara::Knowledge_Engine::Knowledge_Base::~Knowledge_Base ()
+{
+  close_transport ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::setup_splitters (void)
 {
   statement_splitters_.push_back (";");
 
@@ -31,15 +51,27 @@ Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()
   comparison_splitters_.push_back ("<=");
   comparison_splitters_.push_back ("<");
   comparison_splitters_.push_back (">");
-
-#ifdef _USE_OPEN_SPLICE_
-  transport_ = new Madara::Transport::Splice_DDS_Transport (map_,
-    Madara::Transport::Splice_DDS_Transport::RELIABLE);
-#endif
-
 }
 
-Madara::Knowledge_Engine::Knowledge_Base::~Knowledge_Base ()
+void
+Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)
+{
+  if (transport_type_)
+  {
+  #ifdef _USE_OPEN_SPLICE_
+    transport_ = new Madara::Transport::Splice_DDS_Transport (map_,
+    Madara::Transport::Splice_DDS_Transport::RELIABLE);
+  #endif
+  }
+  else
+  {
+    transport_ = new Madara::Transport::TCP_Transport (map_,
+      Madara::Transport::TCP_Transport::RELIABLE);
+  }
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
 {
   if (transport_)
   {
@@ -64,7 +96,7 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, int va
   // the transport is valid
   if (key.length () > 0 && key[0] != '.' && transport_)
   {
-    transport_->send (key, value);
+    transport_->send_data (key, value);
   }
 }
 
@@ -198,7 +230,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
     for (Madara::String_Vector::const_iterator k = modified.begin ();
          k != modified.end (); ++k)
     {
-      transport_->send (*k, map_.get (*k));
+      transport_->send_data (*k, map_.get (*k));
     }
     map_.reset_modified ();
   }
@@ -249,7 +281,7 @@ Madara::Knowledge_Engine::Knowledge_Base::test(const long & iterations)
 
   for (long i = 0; i < iterations; ++i)
   {
-    transport_->send (keys[i % 4], i);
+    transport_->send_data (keys[i % 4], i);
   }
 }
 

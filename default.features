@@ -12,4 +12,4 @@
 /// @feature opensplice
 /// Enable this feature if you would like to generate OpenSplice Transports
 
-opensplice              = 0
+opensplice              = 1

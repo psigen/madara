@@ -230,10 +230,10 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 }
 
 long
-Madara::Transport::Splice_DDS_Transport::send (const std::string & key, 
+Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key, 
                                                const long & value)
 {
-  Madara::Transport::Base::send (key, value);
+  Madara::Transport::Base::send_data (key, value);
 
   DDS::ReturnCode_t      dds_result;
   DDS::InstanceHandle_t  handle;
