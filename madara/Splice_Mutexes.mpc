@@ -4,7 +4,7 @@ project (Splice_Mutexes) : using_splice, using_splice_idl, build_files {
   requires += opensplice
 
   libout = $(MADARA_ROOT)/lib
-  dynamicflags += OSPL_TRANSPORT_BUILD_DLL
+  dynamicflags += SPLICE_MUTEX_BUILD_DLL
   includes += $(ACE_ROOT)
   
   after += Splice_Mutexes_IDL
@@ -33,6 +33,7 @@ project (Splice_Mutexes) : using_splice, using_splice_idl, build_files {
     Splice_Mutex_MessageDcps_impl.h
     Splice_Mutex_MessageSplDcps.h
     Splice_Mutex_MessageDcps.h
+    Splice_Mutex_export.h
   }
 }
 
@@ -43,7 +44,7 @@ project (Splice_Mutexes_IDL) : using_splice, using_splice_idl, build_files {
   custom_only = 1
 
   SpliceTypeSupport_Files {
-    splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
+    splice_ts_flags += -P Splice_Mutex_Export,Splice_Mutex_export.h
     Splice_Mutex_Message.idl
   }
 

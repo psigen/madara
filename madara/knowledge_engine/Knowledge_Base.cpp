@@ -60,7 +60,7 @@ Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)
   {
   #ifdef _USE_OPEN_SPLICE_
     transport_ = new Madara::Transport::Splice_DDS_Transport (map_,
-    Madara::Transport::Splice_DDS_Transport::RELIABLE);
+    Madara::Transport::Splice_DDS_Transport::RELIABLE, true);
   #endif
   }
   else

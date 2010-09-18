@@ -6,6 +6,7 @@
 #include "madara/transport/Transport.h"
 #include "ccpp_dds_dcps.h"
 #include "madara/ccpp_Splice_Knowledge_Update.h"
+#include "madara/ccpp_Splice_Mutex_Message.h"
 
 namespace Madara
 {
@@ -29,12 +30,11 @@ namespace Madara
       static const int PROFILES = 2;
 
       Splice_DDS_Transport (Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-        const int & reliability = BEST_EFFORT);
+        const int & reliability, bool enable_mutexing);
       ~Splice_DDS_Transport ();
       virtual long send_data (const std::string & key, const long & value);
       int reliability (void) const;
       int reliability (const int & setting);
-      long read (void);
       void close (void);
       int setup (void);
     protected:
@@ -65,14 +65,22 @@ namespace Madara
       Knowledge::UpdateDataWriter_ptr    update_writer_;
       Knowledge::UpdateDataReader_ptr    update_reader_;
       Knowledge::UpdateTypeSupport       update_type_support_;
-      Knowledge::UpdateSeq_var           update_data_list_;
-      DDS::StatusCondition_ptr           update_status_condition_;
+//      Knowledge::UpdateSeq_var           update_data_list_;
+
+      Knowledge::MutexDataWriter_ptr     mutex_writer_;
+      Knowledge::MutexDataReader_ptr     mutex_reader_;
+      Knowledge::MutexTypeSupport        mutex_type_support_;
+//      Knowledge::MutexSeq_var            mutex_data_list_;
+
+      //DDS::StatusCondition_ptr           update_status_condition_;
       DDS::Topic_ptr                     update_topic_;
+      DDS::Topic_ptr                     mutex_topic_;
 
       Splice_Read_Thread *               thread_;
 
       int reliability_;
       bool valid_setup_;
+      bool enable_mutexing_;
 
       /// Splice handle checker
       void check_handle (void * handle, char *info);

@@ -6,6 +6,7 @@
 
 #include "ccpp_dds_dcps.h"
 #include "madara/ccpp_Splice_Knowledge_Update.h"
+#include "madara/ccpp_Splice_Mutex_Message.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"
@@ -24,7 +25,8 @@ namespace Madara
     public:
       Splice_Read_Thread (
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-        Knowledge::UpdateDataReader_ptr & update_reader);
+        Knowledge::UpdateDataReader_ptr & update_reader, 
+        Knowledge::MutexDataReader_ptr & mutex_reader, bool enable_mutexing);
       ~Splice_Read_Thread ();
 
       /// service exit point for thread
@@ -35,6 +37,7 @@ namespace Madara
     private:
       ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
       ::Knowledge::UpdateDataReader_ptr   update_reader_;
+      ::Knowledge::MutexDataReader_ptr   mutex_reader_;
       /// typdef for a threadsafe counter
       ACE_Atomic_Op<ACE_Mutex,bool> terminated_;
       ACE_Barrier barrier_;
@@ -45,6 +48,7 @@ namespace Madara
       ACE_Thread_Mutex                   mutex_;
       Madara::Transport::Condition       is_not_ready_;
       bool                               is_ready_;
+      bool                               enable_mutexing_;
     };
   }
 }

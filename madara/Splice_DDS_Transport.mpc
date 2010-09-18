@@ -33,6 +33,7 @@ project (Splice_DDS_Transport) : using_splice, using_splice_idl, build_files {
     Splice_Knowledge_UpdateDcps_impl.h
     Splice_Knowledge_UpdateSplDcps.h
     Splice_Knowledge_UpdateDcps.h
+    OSPL_Transport_Export.h
   }
 }
 

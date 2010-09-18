@@ -5,8 +5,8 @@
 #include <iostream>
 
 const char * Madara::Transport::Splice_DDS_Transport::topic_names_[] = {
-  "Madara_knowledge_best_effort",
-  "Madara_knowledge_reliable"
+  "MADARA_KaRL_Data",
+  "MADARA_KaRL_Mutex"
 };
 
 /* Array to hold the names for all ReturnCodes. */
@@ -28,13 +28,19 @@ char * ret_code_names[13] = {
 const char * Madara::Transport::Splice_DDS_Transport::partition_ = "Madara_knowledge";
 
 Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
-  Madara::Knowledge_Engine::Thread_Safe_Context & context, const int & reliability)
+  Madara::Knowledge_Engine::Thread_Safe_Context & context, 
+  const int & reliability, bool enable_mutexing)
 : context_ (context), domain_ (NULL), domain_factory_ (NULL), 
-  domain_participant_ (NULL), publisher_ (NULL), subscriber_ (NULL), datawriter_ (NULL), 
-  datareader_ (NULL), update_writer_ (NULL), update_reader_ (NULL),
-  update_data_list_ (new Knowledge::UpdateSeq), 
-  update_status_condition_ (NULL), update_topic_ (NULL), thread_ (0),
-  reliability_ (reliability), valid_setup_ (false)
+  domain_participant_ (NULL), publisher_ (NULL), subscriber_ (NULL), 
+  datawriter_ (NULL), datareader_ (NULL), 
+  update_writer_ (NULL), update_reader_ (NULL),
+//  update_data_list_ (new Knowledge::UpdateSeq), 
+  update_topic_ (NULL), 
+  mutex_writer_ (NULL), mutex_reader_ (NULL),
+//  mutex_data_list_ (new Knowledge::MutexSeq), 
+  mutex_topic_ (NULL), thread_ (0),
+  reliability_ (reliability), valid_setup_ (false), 
+  enable_mutexing_ (enable_mutexing)
 {
   setup ();
 }
@@ -50,16 +56,24 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   Madara::Transport::Base::close ();
 
   if (subscriber_)
+  {
     subscriber_->delete_datareader (update_reader_);
+    subscriber_->delete_datareader (mutex_reader_);
+  }
 
   if (publisher_)
+  {
     publisher_->delete_datawriter (update_writer_);
+    publisher_->delete_datawriter (mutex_writer_);
+  }
+
 
   if (domain_participant_)
   {
     domain_participant_->delete_subscriber (subscriber_);
     domain_participant_->delete_publisher (publisher_);
     domain_participant_->delete_topic (update_topic_);
+    domain_participant_->delete_topic (mutex_topic_);
     domain_factory_->delete_participant (domain_participant_);
   }
 
@@ -72,9 +86,12 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   thread_ = 0;
   update_reader_ = 0;
   update_writer_ = 0;
+  update_topic_ = 0;
+  mutex_reader_ = 0;
+  mutex_writer_ = 0;
+  mutex_topic_ = 0;
   subscriber_ = 0;
   publisher_ = 0;
-  update_topic_ = 0;
   domain_participant_ = 0;
 }
 
@@ -124,16 +141,25 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //topic_qos_.resource_limits.max_samples_per_instance= 10;
   domain_participant_->set_default_topic_qos(topic_qos_);
 
-  //  Register type
+  //  Register Update type
   status = this->update_type_support_.register_type (
     domain_participant_, "Knowledge::Update");
   check_status(status, "Knowledge::UpdateTypeSupport::register_type");
 
-  // Create topic
+  //  Register Mutex type
+  status = this->mutex_type_support_.register_type (
+    domain_participant_, "Knowledge::Mutex");
+  check_status(status, "Knowledge::MutexTypeSupport::register_type");
+
+  // Create Update topic
   update_topic_ = domain_participant_->create_topic (
-    topic_names_ [reliability_], "Knowledge::Update", topic_qos_, NULL, DDS::STATUS_MASK_NONE);
+    topic_names_ [0], "Knowledge::Update", topic_qos_, NULL, DDS::STATUS_MASK_NONE);
   check_handle(update_topic_, "DDS::DomainParticipant::create_topic (Knowledge_Update)");
 
+  // Create Mutex topic
+  mutex_topic_ = domain_participant_->create_topic (
+    topic_names_ [1], "Knowledge::Mutex", topic_qos_, NULL, DDS::STATUS_MASK_NONE);
+  check_handle(mutex_topic_, "DDS::DomainParticipant::create_topic (Knowledge_Mutex)");
 
   // Get default qos for publisher
   status = domain_participant_->get_default_publisher_qos (pub_qos_);
@@ -196,11 +222,21 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datawriter_qos_.destination_order.kind = DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
+  // Create Update writer
   datawriter_ = publisher_->create_datawriter (update_topic_, 
     datawriter_qos_, NULL, DDS::STATUS_MASK_NONE);
   check_handle(datawriter_, "DDS::Publisher::create_datawriter (Update)");
   update_writer_ = dynamic_cast<Knowledge::UpdateDataWriter_ptr> (datawriter_);
   check_handle(update_writer_, "Knowledge::UpdateDataWriter_ptr::narrow");
+
+  // Create Mutex writer
+  datawriter_ = publisher_->create_datawriter (mutex_topic_, 
+    datawriter_qos_, NULL, DDS::STATUS_MASK_NONE);
+  check_handle(datawriter_, "DDS::Publisher::create_datawriter (Mutex)");
+  mutex_writer_ = dynamic_cast<Knowledge::MutexDataWriter_ptr> (datawriter_);
+  check_handle(mutex_writer_, "Knowledge::MutexDataWriter_ptr::narrow");
+
+
 
   // Create datareader
   status = subscriber_->get_default_datareader_qos (datareader_qos_);
@@ -215,14 +251,23 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datareader_qos_.resource_limits.max_samples = 100000;
     datareader_qos_.destination_order.kind = DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
+
+  // Create Update datareader
   datareader_ = subscriber_->create_datareader (update_topic_, 
     datareader_qos_, NULL, DDS::STATUS_MASK_NONE);
   check_handle(datareader_, "DDS::Subscriber::create_datareader (Update)");
-
   update_reader_ = dynamic_cast<Knowledge::UpdateDataReader_ptr>(datareader_);
   check_handle(update_reader_, "Knowledge::UpdateDataReader_ptr::narrow");
 
-  thread_ = new Madara::Transport::Splice_Read_Thread (context_, update_reader_);
+  // Create Mutex datareader
+  datareader_ = subscriber_->create_datareader (mutex_topic_, 
+    datareader_qos_, NULL, DDS::STATUS_MASK_NONE);
+  check_handle(datareader_, "DDS::Subscriber::create_datareader (Mutex)");
+  mutex_reader_ = dynamic_cast<Knowledge::MutexDataReader_ptr>(datareader_);
+  check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
+
+  thread_ = new Madara::Transport::Splice_Read_Thread (context_, 
+    update_reader_, mutex_reader_, enable_mutexing_);
   
   Madara::Transport::Base::setup ();
 
@@ -252,26 +297,6 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   
 
   return dds_result;
-}
-
-long
-Madara::Transport::Splice_DDS_Transport::read (void)
-{
-  DDS::SampleInfoSeq_var infoList = new DDS::SampleInfoSeq;
-  DDS::ReturnCode_t      dds_result;
-  int                    amount;
-  DDS::Boolean           result = false;
-
-  dds_result = update_reader_->take (update_data_list_, infoList, 1, 
-    DDS::ANY_SAMPLE_STATE, DDS::ANY_VIEW_STATE, DDS::ANY_INSTANCE_STATE);
-
-  amount = update_data_list_->length ();
-  if (amount != 0)
-  {
-
-  }
-
-  return 0;
 }
 
 void
