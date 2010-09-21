@@ -5,6 +5,8 @@ module Knowledge
     {
       string                            key;
       long                              value;
+      long                              priority;
+      string                            originator;
     };
     
     //#pragma keylist Update

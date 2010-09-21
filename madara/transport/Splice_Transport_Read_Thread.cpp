@@ -86,10 +86,16 @@ Madara::Transport::Splice_Read_Thread::svc (void)
     is_ready_ = true;
     is_not_ready_.broadcast ();
 
+    //ACE_DEBUG ((LM_DEBUG, "(%P|%t) Read thread take.\n"));
+
     dds_result = update_reader_->take (update_data_list_, infoList, 1, 
       DDS::ANY_SAMPLE_STATE, DDS::ANY_VIEW_STATE, DDS::ANY_INSTANCE_STATE);
 
     amount = update_data_list_->length ();
+    
+    //ACE_DEBUG ((LM_DEBUG, "(%P|%t) Returning from take with %d items.\n",  
+    //        amount));
+
     if (amount != 0)
     {
       for (int i = 0; i < amount; ++i)

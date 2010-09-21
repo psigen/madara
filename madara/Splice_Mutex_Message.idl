@@ -4,9 +4,10 @@ module Knowledge
     struct Mutex
     {
       string                            key;
-      string                            requester;
+      string                            originator;
       long                              time;
       long                              type;
+      long                              priority;
     };
     
     //#pragma keylist Mutex

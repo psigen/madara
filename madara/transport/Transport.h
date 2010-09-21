@@ -11,6 +11,10 @@ namespace Madara
 {
   namespace Transport
   {
+    enum {
+      NONE = 0,
+      SPLICE = 1
+    };
     typedef    ACE_Condition <ACE_Thread_Mutex>    Condition;
     class Base
     {

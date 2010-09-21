@@ -26,7 +26,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   ACE_TRACE (ACE_TEXT ("main"));
 
-  Madara::Knowledge_Engine::Knowledge_Base knowledge;
+  Madara::Knowledge_Engine::Knowledge_Base knowledge(Madara::Transport::SPLICE);
 
   if (finisher_mode)
   {
@@ -42,7 +42,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Knowledge\n"));
   knowledge.print_knowledge ();
 
-  //ACE_OS::sleep (20);
+  ACE_OS::sleep (3);
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Exiting\n"));
   return 0;
