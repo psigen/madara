@@ -90,11 +90,11 @@ namespace Madara
 
       void setup_splitters (void);
 
-      ::std::vector<::std::string> statement_splitters_;
-      ::std::vector<::std::string> assignment_splitters_;
-      ::std::vector<::std::string> implies_splitters_;
-      ::std::vector<::std::string> conditional_splitters_;
-      ::std::vector<::std::string> comparison_splitters_;
+      ::std::vector< ::std::string> statement_splitters_;
+      ::std::vector< ::std::string> assignment_splitters_;
+      ::std::vector< ::std::string> implies_splitters_;
+      ::std::vector< ::std::string> conditional_splitters_;
+      ::std::vector< ::std::string> comparison_splitters_;
 
 
       Thread_Safe_Context map_;

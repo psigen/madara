@@ -3,6 +3,7 @@
 #define _EVALUATION_VISITOR_CPP_
 
 #include <iostream>
+#include <typeinfo>
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"

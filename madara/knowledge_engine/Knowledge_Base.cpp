@@ -169,8 +169,8 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   Madara::Expression_Tree::Print_Visitor print_visitor;
 
   // Statements and pivots resulting from splitting the ";"
-  ::std::vector <::std::string> statements;
-  ::std::vector <::std::string> statements_pivots;
+  ::std::vector < ::std::string> statements;
+  ::std::vector < ::std::string> statements_pivots;
 
   // Split the expression according to ";"
   Madara::Utility::tokenizer (expression, this->statement_splitters_, 
@@ -179,13 +179,13 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   map_.lock ();
 
   // For each resulting statement, evaluate
-  for (::std::vector<::std::string>::size_type i = 0; i < statements.size (); ++i)
+  for (::std::vector< ::std::string>::size_type i = 0; i < statements.size (); ++i)
   {
     ACE_DEBUG ((LM_DEBUG, "Evaluating %s\n", statements[i].c_str ()));
 
     // expressions are separated by implications
-    ::std::vector <::std::string> expressions;
-    ::std::vector <::std::string> implications;
+    ::std::vector < ::std::string> expressions;
+    ::std::vector < ::std::string> implications;
 
     // iterators and tree for evaluation of interpreter results
     Madara::Expression_Tree::Expression_Tree tree;
@@ -194,7 +194,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
     Madara::Utility::tokenizer (statements[i], this->implies_splitters_, 
                       expressions, implications);
 
-    for (::std::vector<::std::string>::size_type j = 0; j == 0 || 
+    for (::std::vector< ::std::string>::size_type j = 0; j == 0 || 
             (last_value != 0 && j < expressions.size ()); ++j)
     {
       // interpret the current expression

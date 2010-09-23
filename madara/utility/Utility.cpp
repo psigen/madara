@@ -97,9 +97,9 @@ Madara::Utility::strip_white_space (::std::string & input)
 /// Split a string into tokens 
 void 
 Madara::Utility::tokenizer (const ::std::string & input, 
-    const ::std::vector<::std::string> & splitters,
-    ::std::vector<::std::string> & tokens,
-    ::std::vector<::std::string> & pivots)
+    const ::std::vector< ::std::string> & splitters,
+    ::std::vector< ::std::string> & tokens,
+    ::std::vector< ::std::string> & pivots)
 {
   ::std::string::size_type last = 0;
   ::std::string::size_type cur = 0;

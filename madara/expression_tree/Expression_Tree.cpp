@@ -79,7 +79,7 @@ namespace Madara
 
       typedef Iterator_Impl *(Expression_Tree_Iterator_Factory::*TRAVERSAL_PTMF)
         (Expression_Tree &tree, bool end_iter);
-      typedef ::std::map <::std::string, TRAVERSAL_PTMF> TRAVERSAL_MAP;
+      typedef ::std::map < ::std::string, TRAVERSAL_PTMF> TRAVERSAL_MAP;
 
       TRAVERSAL_MAP traversal_map_;
     };
