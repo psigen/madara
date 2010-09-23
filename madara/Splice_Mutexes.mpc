@@ -43,8 +43,11 @@ project (Splice_Mutexes_IDL) : using_splice, using_splice_idl, build_files {
 
   custom_only = 1
 
-  SpliceTypeSupport_Files {
+  specific(prop:microsoft) {
     splice_ts_flags += -P Splice_Mutex_Export,Splice_Mutex_export.h
+  }
+
+  SpliceTypeSupport_Files {
     Splice_Mutex_Message.idl
   }
 

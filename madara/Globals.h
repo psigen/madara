@@ -50,9 +50,9 @@ namespace Madara
     int scope;
   };
 
-  typedef ::std::map <::std::string, Knowledge_Record> Knowledge_Map;
-  typedef ::std::vector <::std::string> Knowledge_Rules;
-  typedef ::std::vector <::std::string> String_Vector;
+  typedef ::std::map < ::std::string, Knowledge_Record> Knowledge_Map;
+  typedef ::std::vector < ::std::string> Knowledge_Rules;
+  typedef ::std::vector < ::std::string> String_Vector;
 
   typedef ::std::string     Knowledge_Key;
   typedef long              Knowledge_Value;
