@@ -4,10 +4,11 @@
 #include <iostream>
 
 Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
+  const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Knowledge::UpdateDataReader_ptr & update_reader, 
   Knowledge::MutexDataReader_ptr & mutex_reader, bool enable_mutexing)
-  : context_ (context), update_reader_ (update_reader), 
+  : id_ (id), context_ (context), update_reader_ (update_reader), 
     mutex_reader_ (mutex_reader), 
     barrier_ (2), terminated_ (false), 
     mutex_ (), is_not_ready_ (mutex_), is_ready_ (false),
@@ -100,16 +101,34 @@ Madara::Transport::Splice_Read_Thread::svc (void)
     {
       for (int i = 0; i < amount; ++i)
       {
+        // if we are evaluating a message from ourselves, just continue
+        // to the next one
+        if (update_data_list_[i].originator.val () && 
+            id_ == update_data_list_[i].originator.val ())
+        {
+          // if we don't check originator for null, we get phantom sends
+          // when the program exits.
+          ACE_DEBUG ((LM_DEBUG, "(%P|%t) Discarding data from %s.\n", 
+            id_.c_str ()));
+          continue;
+        }
+        else
+        {
+          //ACE_DEBUG ((LM_DEBUG, "(%P|%t) Received data from %s.\n", 
+          //  update_data_list_[i].originator.val ()));
+        }
+
+        // if we aren't evaluating a message from ourselves, process it
         std::string key = update_data_list_[i].key.val ();
         long value = update_data_list_[i].value;
 
-        int result = context_.set_if_unequal (key, value);
+        int result = context_.set_if_unequal (key, value, false);
 
         // if we actually updated the value
         if (result == 1)
         {
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d.\n", 
-            key.c_str (), value));
+          ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
+            key.c_str (), value, update_data_list_[i].originator.val ()));
         }
         // if the data was already current
         else if (result == 0)

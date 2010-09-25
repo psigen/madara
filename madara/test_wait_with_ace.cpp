@@ -16,7 +16,8 @@
 
 ACE_Atomic_Op<ACE_Mutex,int> thread_count (0);
 static int max_threads = 2;
-static Madara::Knowledge_Engine::Knowledge_Base knowledge (Madara::Transport::SPLICE);
+static Madara::Knowledge_Engine::Knowledge_Base knowledge (
+  "localhost", Madara::Transport::SPLICE);
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);

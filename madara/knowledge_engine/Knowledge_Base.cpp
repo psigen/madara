@@ -6,6 +6,8 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/expression_tree/Iterator.h"
 #include "madara/transport/TCP_Transport.h"
+#include "madara/utility/Utility.h"
+
 
 #ifdef _USE_OPEN_SPLICE_
   #include "madara/transport/Splice_DDS_Transport.h"
@@ -18,11 +20,14 @@ Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()
 {
   setup_splitters ();
   activate_transport ();
+  // no hope of transporting, so don't setup uniquehostport
 }
 
-Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (int transport)
+Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (
+  const std::string & host, int transport)
 : transport_type_ (transport)
 {
+  setup_uniquehostport (host);
   setup_splitters ();
   activate_transport ();
 }
@@ -30,6 +35,31 @@ Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (int transport)
 Madara::Knowledge_Engine::Knowledge_Base::~Knowledge_Base ()
 {
   close_transport ();
+  unique_bind_.close ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::setup_uniquehostport (
+  const std::string & host)
+{
+  // start from 50k, which is just above the bottom of the user
+  // definable port range (hopefully avoid conflicts with 49152-49999
+  unsigned short port =  50000;
+
+  if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, port) == -1)
+  {
+    ACE_DEBUG ((LM_DEBUG, 
+      "MADARA ERROR: Unable to bind to any ephemeral port\n"));
+    return;
+  }
+ 
+  // we were able to bind to an ephemeral port
+  Madara::Utility::merge_hostport_identifier (id_, host, port);
+
+  ACE_DEBUG ((LM_DEBUG, 
+      "MADARA: Unable to bind to any ephemeral port\n"));
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Unique bind to %s\n", id_.c_str ()));
+
 }
 
 void
@@ -59,13 +89,13 @@ Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)
   if (transport_type_)
   {
   #ifdef _USE_OPEN_SPLICE_
-    transport_ = new Madara::Transport::Splice_DDS_Transport (map_,
+    transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
     Madara::Transport::Splice_DDS_Transport::RELIABLE, true);
   #endif
   }
   else
   {
-    transport_ = new Madara::Transport::TCP_Transport (map_,
+    transport_ = new Madara::Transport::TCP_Transport (id_, map_,
       Madara::Transport::TCP_Transport::RELIABLE);
   }
 }
@@ -88,20 +118,35 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, int value)
+Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
+                                               int value)
+{
+  set (key, value, true);
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
+                                               int value, bool send_modifieds)
 {
   map_.set (key, value);
 
-  // only try to send this update if the key is valid, is not local ('.var') and
-  // the transport is valid
-  if (key.length () > 0 && key[0] != '.' && transport_)
+  if (transport_ && send_modifieds)
   {
     transport_->send_data (key, value);
+    map_.reset_modified (key);
   }
 }
 
+
 int
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)
+{
+  return wait (expression, true);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression, 
+                                                bool send_modifieds)
 {
   // lock the context
   map_.lock ();
@@ -112,7 +157,8 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
     map_, expression);
 
   // optimize the tree
-  int last_value = tree.prune ();
+  tree.prune ();
+  int last_value = tree.evaluate ();
 
   // wait for expression to be true
   while (!last_value)
@@ -128,6 +174,22 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
     // while we're evaluating the tree.
     map_.lock ();
     last_value = tree.evaluate ();
+
+
+    if (transport_ && send_modifieds)
+    {
+      Madara::String_Vector modified;
+      map_.get_modified (modified);
+
+      for (Madara::String_Vector::const_iterator k = modified.begin ();
+           k != modified.end (); ++k)
+      {
+        transport_->send_data (*k, map_.get (*k));
+      }
+      map_.reset_modified ();
+    }
+
+
     map_.signal ();
   }
 

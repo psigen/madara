@@ -110,7 +110,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
 
 // set the value of a variable
 int
-Madara::Knowledge_Engine::Thread_Safe_Context::set (const ::std::string & key, long value)
+Madara::Knowledge_Engine::Thread_Safe_Context::set (
+  const ::std::string & key, long value, bool modified)
 {
   // check for null key
   if (key == "")
@@ -123,7 +124,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (const ::std::string & key, l
   
   // otherwise set the value
   if (key[0] != '.')
-    map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  {
+    if (modified)
+      map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  }
   else
     map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
@@ -135,8 +139,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (const ::std::string & key, l
 /// Set if the variable value will be different
 /// @return   1 if the value was changed. 0 if not changed. -1 if null key
 int
-Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (const ::std::string & key, 
-                                             long value)
+Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
+  const ::std::string & key, long value, bool modified)
 {
   // check for null key
   if (key == "")
@@ -159,7 +163,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (const ::std::stri
   
   // otherwise set the value
   if (key[0] != '.')
-    map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  {
+    if (modified)
+      map_[key].status = Madara::Knowledge_Record::MODIFIED;
+  }
   else
     map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
@@ -257,9 +264,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (void)
   }
 }
 
+/// Reset a variable to unmodified
+void 
+Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (
+  const std::string & variable)
+{
+  Context_Guard guard (mutex_);
+  Madara::Knowledge_Map::iterator i = map_.find (variable);
+  
+  if (i->second.status == Madara::Knowledge_Record::MODIFIED)
+    i->second.status = Madara::Knowledge_Record::UNMODIFIED;
+}
+
+
 /// Signal the condition that it can wake up someone else on changed data.
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::signal (void) const
 {
+  Context_Guard guard (mutex_);
   changed_.signal ();
 }

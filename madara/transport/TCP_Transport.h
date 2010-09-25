@@ -1,6 +1,8 @@
 #ifndef TCP_TRANSPORT_H
 #define TCP_TRANSPORT_H
 
+#include <string>
+
 #include "madara/transport/TCP_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
@@ -23,7 +25,8 @@ namespace Madara
 
       static const int PROFILES = 1;
 
-      TCP_Transport (Madara::Knowledge_Engine::Thread_Safe_Context & context, 
+      TCP_Transport (const std::string & id,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const int & reliability);
       ~TCP_Transport ();
       virtual long send_data (const std::string & key, const long & value);
@@ -34,6 +37,7 @@ namespace Madara
       int setup (void);
     protected:
     private:
+      const std::string                               id_;
       // context for knowledge base
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
 

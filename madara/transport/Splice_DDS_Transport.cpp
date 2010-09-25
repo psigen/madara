@@ -28,9 +28,10 @@ char * ret_code_names[13] = {
 const char * Madara::Transport::Splice_DDS_Transport::partition_ = "Madara_knowledge";
 
 Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
+  const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   const int & reliability, bool enable_mutexing)
-: context_ (context), domain_ (NULL), domain_factory_ (NULL), 
+: id_ (id), context_ (context), domain_ (NULL), domain_factory_ (NULL), 
   domain_participant_ (NULL), publisher_ (NULL), subscriber_ (NULL), 
   datawriter_ (NULL), datareader_ (NULL), 
   update_writer_ (NULL), update_reader_ (NULL),
@@ -266,7 +267,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   mutex_reader_ = dynamic_cast<Knowledge::MutexDataReader_ptr>(datareader_);
   check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
 
-  thread_ = new Madara::Transport::Splice_Read_Thread (context_, 
+  thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
     update_reader_, mutex_reader_, enable_mutexing_);
   
   Madara::Transport::Base::setup ();
@@ -286,6 +287,7 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   Knowledge::Update data;
   data.key = key.c_str ();
   data.value = value;
+  data.originator = id_.c_str ();
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) SENDING data: %s=%d\n", key.c_str (), data.value));
 

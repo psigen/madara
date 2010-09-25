@@ -1,6 +1,8 @@
 #ifndef TCP_TRANSPORT_READ_THREAD_H
 #define TCP_TRANSPORT_READ_THREAD_H
 
+#include <string>
+
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 
@@ -20,6 +22,7 @@ namespace Madara
     {
     public:
       TCP_Transport_Read_Thread (
+        const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
       ~TCP_Transport_Read_Thread ();
 
@@ -29,6 +32,7 @@ namespace Madara
       int svc (void);
       void wait_for_ready (void);
     private:
+      const std::string                                 id_;
       ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
       /// typdef for a threadsafe counter
       ACE_Atomic_Op<ACE_Mutex,bool> terminated_;

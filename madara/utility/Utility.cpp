@@ -1,6 +1,8 @@
 #include "ctype.h"
 #include "madara/utility/Utility.h"
 #include <iostream>
+#include "ace/INET_Addr.h"
+#include "ace/Log_Msg.h"
 
 /// Convert string to uppercase
 ::std::string &
@@ -143,4 +145,90 @@ Madara::Utility::tokenizer (const ::std::string & input,
   {
     tokens.push_back (input.substr (last, cur - last));
   }
+}
+
+// split a key into a corresponding host and port
+int 
+Madara::Utility::split_hostport_identifier (const std::string & key, 
+    std::string & host, std::string & port)
+{
+  // delimeter is either a : or an @
+  std::string::size_type delim = key.rfind (':');
+  delim = delim == key.npos ? key.rfind ('@') : delim;
+
+  // no delimeter found
+  if (delim == key.npos)
+    {
+      host = key;
+      port = "";
+      
+      return 1;
+    }
+
+  // otherwise, set the host and port appropriately
+  host = key.substr (0, delim);
+  port = key.substr (delim + 1, key.size () - delim);
+
+  return 0;
+}
+
+// merge a host and port into a key
+int 
+Madara::Utility::merge_hostport_identifier (std::string & key, 
+  const std::string & host, const std::string & port)
+{
+  key = host;
+  key += ':';
+  key += port;
+
+  return 0;
+}
+
+// merge a host and ushort port into a key
+int 
+Madara::Utility::merge_hostport_identifier (std::string & key, 
+  const std::string & host, unsigned short u_port)
+{
+  char port_buf[16];
+  std::string port;
+
+  // convert the server_port into string form for our context
+  itoa (u_port, port_buf, 10);
+
+  port = port_buf;
+
+  return merge_hostport_identifier (key, host, port);
+}
+
+/// Bind to an ephemeral port
+int 
+Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
+              unsigned short & port, bool increase_until_bound)
+{
+  //ACE_DEBUG ((LM_DEBUG, 
+  //    "(%P|%t) Binding starting with %d\n",
+  //            port));
+  // start with the initial port provided
+  // increase port each time we don't properly bind
+  
+  for (ACE_INET_Addr addr (port); port < 65535; ++port, addr.set (port))
+  {
+    //ACE_DEBUG ((LM_DEBUG, 
+    //  "(%P|%t) Attempting bind of %d\n",
+    //  addr.get_port_number ()));
+    // Output some debugging information so we know how far we had to go
+    // to get a port
+    // return correct if we are able to open the port
+    if (acceptor.open (addr) != -1)
+      return 0;     
+
+    // failed to get port
+    //ACE_DEBUG ((LM_DEBUG, 
+    //          "(%P|%t) failed to acquire port %d: addr reporting %d\n",
+    //          port, addr.get_port_number ()));
+    if (!increase_until_bound)
+      break;
+  }
+
+  return -1;
 }

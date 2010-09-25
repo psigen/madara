@@ -14,54 +14,66 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
-int id = 1;
+int id = 0;
 int left = 0;
 int processes = 1;
 int stop = 10;
+std::string host = "localhost";
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  parse_args (argc, argv);
+  int retcode = parse_args (argc, argv);
+
+  if (retcode < 0)
+    return retcode;
+
   ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
-  Madara::Knowledge_Engine::Knowledge_Base knowledge(Madara::Transport::SPLICE);
+  Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
 
   char s_id [64];
   char s_left [64];
   char expression [128];
   char continue_condition [128];
 
-  ACE_OS::sprintf (s_id, "%d", id);
-  ACE_OS::sprintf (s_left, "%d", id+1);
-  ACE_OS::sprintf (continue_condition, "S%s <= 10", s_id);
+  ACE_OS::sprintf (s_id, "S%d", id);
+  ACE_OS::sprintf (s_left, "S%d", id ? id - 1 : processes - 1);
+  ACE_OS::sprintf (continue_condition, "%s < 10", s_id);
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) synchronizing to %d\n",
                         id, processes, stop));
 
+  // set the state to 0
+  knowledge.set (s_id, 0);
+
   if (id == 0)
   {
-    ACE_OS::sprintf (expression, "S%s == S%s && ++S%s", 
+    ACE_OS::sprintf (expression, "%s == %s && ++%s", 
            s_id, s_left, s_id);   
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) expression: %s\n",
-                        id, processes, expression));
   }
   else
   {
-    ACE_OS::sprintf (expression, "S%s != S%s && S%s = S%s", 
+    ACE_OS::sprintf (expression, "%s != %s && (%s = %s)", 
             s_id, s_left, s_id, s_left);   
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) expression: %s\n",
-                        id, processes, expression));
   }
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) expression: %s\n",
+              id, processes, expression));
 
-  while (knowledge.evaluate (continue_condition)
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
+  knowledge.print_knowledge ();
+
+  while (knowledge.evaluate (continue_condition))
   {
     knowledge.wait (expression);
     knowledge.print_knowledge ();
+
+    ACE_OS::sleep (1);
   }
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
@@ -76,7 +88,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -86,6 +98,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -109,19 +122,24 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       processes = atoi (cmd_opts.opt_arg ());
       break;
+    case 'o':
+      host = cmd_opts.opt_arg ();
+      ACE_DEBUG ((LM_DEBUG, "(%P|%t) host set to %s\n", host.c_str ()));
+      break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("ERROR: -%c requires an argument"), 
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_DEBUG, "
-Program Options:
-      -h (--help)      print this menu
-      -i (--id)        set process id (0 default)
-      -s (--stop)      stop condition (10 default)
-      -p (--processes) number of processes that will be running
-"));
+      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      -h (--help)      print this menu             \n\
+      -i (--id)        set process id (0 default)  \n\
+      -s (--stop)      stop condition (10 default) \n\
+      -o (--host)      this host ip/name (localhost default) \n\
+      -p (--processes) number of processes that will be running\n"));
+      ACE_ERROR_RETURN ((LM_ERROR, 
+        ACE_TEXT ("Returning from Help Menu")), -1); 
       break;
     }
   }

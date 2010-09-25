@@ -4,8 +4,9 @@
 #include <iostream>
 
 Madara::Transport::TCP_Transport_Read_Thread::TCP_Transport_Read_Thread (
+  const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
-  : context_ (context),
+  : id_ (id), context_ (context),
     barrier_ (2), terminated_ (false), 
     mutex_ (), is_not_ready_ (mutex_), is_ready_ (false)
 {

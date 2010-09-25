@@ -46,18 +46,21 @@ namespace Madara
 
       /// Atomically set the value of a variable.
       /// @return   0 if the value was set. -1 if null key
-      int set (const ::std::string & key, long value);
+      int set (const ::std::string & key, long value, bool modified = true);
 
       /// Atomically set if the variable value will be different
       /// @return   1 if the value was changed. 0 if not changed.
       ///           -1 if null key
-      int set_if_unequal (const ::std::string & key, long value);
+      int set_if_unequal (const ::std::string & key, long value, bool modified = true);
 
       /// Return list of variables that have been modified
       void get_modified (Madara::String_Vector & modified) const;
 
       /// Reset all variables to unmodified
       void reset_modified (void);
+
+      /// Reset a variable to unmodified
+      void reset_modified (const ::std::string & key);
 
       /// Atomically increment the value of the variable
       int inc (const ::std::string & key);

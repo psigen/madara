@@ -1,6 +1,8 @@
 #ifndef SPLICE_TRANSPORT_READ_THREAD_H
 #define SPLICE_TRANSPORT_READ_THREAD_H
 
+#include <string>
+
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 
@@ -24,6 +26,7 @@ namespace Madara
     {
     public:
       Splice_Read_Thread (
+        const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Knowledge::UpdateDataReader_ptr & update_reader, 
         Knowledge::MutexDataReader_ptr & mutex_reader, bool enable_mutexing);
@@ -35,11 +38,12 @@ namespace Madara
       int svc (void);
       void wait_for_ready (void);
     private:
-      ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-      ::Knowledge::UpdateDataReader_ptr   update_reader_;
-      ::Knowledge::MutexDataReader_ptr   mutex_reader_;
+      const std::string                                    id_;
+      ::Madara::Knowledge_Engine::Thread_Safe_Context &    context_;
+      ::Knowledge::UpdateDataReader_ptr                    update_reader_;
+      ::Knowledge::MutexDataReader_ptr                     mutex_reader_;
       /// typdef for a threadsafe counter
-      ACE_Atomic_Op<ACE_Mutex,bool> terminated_;
+      ACE_Atomic_Op<ACE_Mutex,bool>                        terminated_;
       ACE_Barrier barrier_;
 
       //DDS::ConditionSeq_var              condition_list_;

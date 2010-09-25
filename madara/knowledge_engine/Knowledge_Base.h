@@ -12,6 +12,7 @@
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
+#include "ace/SOCK_Acceptor.h"
 
 namespace Madara
 {
@@ -36,7 +37,7 @@ namespace Madara
       Knowledge_Base ();
 
       /// Constructor for transport
-      Knowledge_Base (int transport);
+      Knowledge_Base (const std::string & host, int transport);
 
       /// Destructor
       ~Knowledge_Base ();
@@ -53,6 +54,9 @@ namespace Madara
       /// Set the value associated with the provided key
       void set (const ::std::string & key, int value = Madara::Knowledge_Record::MODIFIED);
 
+      /// Set the value associated with the provided key
+      void set (const ::std::string & key, int value, bool send_modifieds);
+
       /// Check if a key exists in the knowledge base
       bool exists (const ::std::string & key) const;
 
@@ -67,6 +71,9 @@ namespace Madara
 
       /// Block for an expression to evaluate to true (conditional mutex)
       int wait (const ::std::string & expression);
+
+      /// Block for an expression to evaluate to true (conditional mutex)
+      int wait (const ::std::string & expression, bool send_modifieds);
 
       /// Print all rules that are continuously applied to knowledge
       void print_rules (void) const;
@@ -87,7 +94,7 @@ namespace Madara
       void clear_rules (void);
 
     private:
-
+      void setup_uniquehostport (const std::string & host);
       void setup_splitters (void);
 
       ::std::vector< ::std::string> statement_splitters_;
@@ -97,10 +104,12 @@ namespace Madara
       ::std::vector< ::std::string> comparison_splitters_;
 
 
-      Thread_Safe_Context map_;
-      Knowledge_Rules rules_;
-      Madara::Transport::Base * transport_;
-      int transport_type_;
+      Thread_Safe_Context           map_;
+      Knowledge_Rules               rules_;
+      Madara::Transport::Base *     transport_;
+      int                           transport_type_;
+      ACE_SOCK_Acceptor             unique_bind_;
+      std::string                   id_;
     };
   }
 }

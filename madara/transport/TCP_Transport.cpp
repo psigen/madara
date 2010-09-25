@@ -5,8 +5,9 @@
 #include <iostream>
 
 Madara::Transport::TCP_Transport::TCP_Transport (
+  const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, const int & reliability)
-: context_ (context), thread_ (0), valid_setup_ (false)
+: id_ (id), context_ (context), thread_ (0), valid_setup_ (false)
 {
   this->setup ();
 }
@@ -46,7 +47,7 @@ Madara::Transport::TCP_Transport::setup (void)
   
   // TO DO
   
-  thread_ = new Madara::Transport::TCP_Transport_Read_Thread (context_);
+  thread_ = new Madara::Transport::TCP_Transport_Read_Thread (id_, context_);
   
   Madara::Transport::Base::setup ();
 
