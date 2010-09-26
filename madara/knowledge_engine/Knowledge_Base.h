@@ -13,6 +13,7 @@
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include "ace/SOCK_Acceptor.h"
+#include "madara/expression_tree/Interpreter.h"
 
 namespace Madara
 {
@@ -110,6 +111,8 @@ namespace Madara
       int                           transport_type_;
       ACE_SOCK_Acceptor             unique_bind_;
       std::string                   id_;
+
+      Madara::Expression_Tree::Interpreter     interpreter_;
     };
   }
 }

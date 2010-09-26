@@ -26,6 +26,9 @@ namespace Madara
     // Forward declaration.
     class Symbol;
 
+    typedef std::map <std::string, 
+      Madara::Expression_Tree::Expression_Tree> ExpressionTreeMap;
+
     /**
      * @class Interpreter
      * @brief Parses incoming expression strings into a parse tree and
@@ -101,6 +104,8 @@ namespace Madara
                            bool & handled,
                            int & accumulated_precedence,
                            ::std::list<Symbol *>& list);
+
+      ExpressionTreeMap cache_;
 
       /// Stores the parse tree. isn't entirely necessary right now, but
       /// is kept as a list for future expansion (parentheses).

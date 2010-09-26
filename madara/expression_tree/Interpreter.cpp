@@ -1634,6 +1634,12 @@ Madara::Expression_Tree::Expression_Tree
 Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Thread_Safe_Context &context, 
                                                  const ::std::string &input)
 {
+  // return the cached expression tree if it exists
+  ExpressionTreeMap::const_iterator found = cache_.find (input);
+  if (found != cache_.end ())
+    return found->second;
+
+
   ::std::list<Symbol *> list;
   //list.clear ();
   Symbol * lastValidInput = 0;
@@ -1661,6 +1667,11 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
 
     Expression_Tree tree = Expression_Tree (list.back ()->build ());
     delete list.back ();
+
+    // store this input = tree into cached memory
+    if (cache_.find (input) == cache_.end ())
+      cache_[input] = tree;
+
     return tree;
   }
 

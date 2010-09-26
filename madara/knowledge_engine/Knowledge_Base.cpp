@@ -151,9 +151,8 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
   // lock the context
   map_.lock ();
 
-  // Interpreter and resulting tree of the expression
-  Madara::Expression_Tree::Interpreter interpreter; 
-  Madara::Expression_Tree::Expression_Tree tree = interpreter.interpret (
+  // resulting tree of the expression
+  Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
     map_, expression);
 
   // optimize the tree
@@ -226,9 +225,8 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   Madara::Utility::strip_white_space (expression);
 
   // Interpreter and visitors
-  Madara::Expression_Tree::Interpreter interpreter;
   //Madara::Expression_Tree::Evaluation_Visitor eval_visitor;
-  Madara::Expression_Tree::Print_Visitor print_visitor;
+  //Madara::Expression_Tree::Print_Visitor print_visitor;
 
   // Statements and pivots resulting from splitting the ";"
   ::std::vector < ::std::string> statements;
@@ -260,7 +258,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
             (last_value != 0 && j < expressions.size ()); ++j)
     {
       // interpret the current expression
-      tree = interpreter.interpret (map_, expressions[j]);
+      tree = interpreter_.interpret (map_, expressions[j]);
 
       // optimize the tree
       tree.prune ();
