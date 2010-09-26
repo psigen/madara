@@ -18,6 +18,7 @@ int id = 0;
 int left = 0;
 int processes = 1;
 int stop = 10;
+long value = 0;
 std::string host = "localhost";
 
 // command line arguments
@@ -49,7 +50,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
                         id, processes, stop));
 
   // set the state to 0
-  knowledge.set (s_id, 0);
+  knowledge.set (s_id, value);
 
   if (id == 0)
   {
@@ -88,7 +89,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -99,6 +100,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("value"), 'v', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -122,6 +124,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       processes = atoi (cmd_opts.opt_arg ());
       break;
+    case 'v':
+      // thread number
+      value = atoi (cmd_opts.opt_arg ());
+      break;
     case 'o':
       host = cmd_opts.opt_arg ();
       ACE_DEBUG ((LM_DEBUG, "(%P|%t) host set to %s\n", host.c_str ()));
@@ -137,6 +143,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -i (--id)        set process id (0 default)  \n\
       -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
+      -v (--value)     start process with a certain value (0 default) \n\
       -p (--processes) number of processes that will be running\n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 

@@ -102,20 +102,16 @@ Madara::Transport::Splice_Read_Thread::svc (void)
       for (int i = 0; i < amount; ++i)
       {
         // if we are evaluating a message from ourselves, just continue
-        // to the next one
-        if (update_data_list_[i].originator.val () && 
+        // to the next one. It's also possible to receive null originators
+        // from what I can only guess is the ospl daemon messing up
+        if (!update_data_list_[i].originator.val () || 
             id_ == update_data_list_[i].originator.val ())
         {
           // if we don't check originator for null, we get phantom sends
           // when the program exits.
           ACE_DEBUG ((LM_DEBUG, "(%P|%t) Discarding data from %s.\n", 
-            id_.c_str ()));
+            update_data_list_[i].originator.val ()));
           continue;
-        }
-        else
-        {
-          //ACE_DEBUG ((LM_DEBUG, "(%P|%t) Received data from %s.\n", 
-          //  update_data_list_[i].originator.val ()));
         }
 
         // if we aren't evaluating a message from ourselves, process it
