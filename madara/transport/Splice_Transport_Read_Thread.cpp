@@ -1,7 +1,10 @@
 #include "madara/transport/Splice_Transport_Read_Thread.h"
 #include "ace/Log_Msg.h"
+#include "madara/knowledge_engine/Update_Types.h"
+#include "madara/utility/Utility.h"
 
 #include <iostream>
+#include <sstream>
 
 Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
   const std::string & id,
@@ -16,6 +19,9 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
 {
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Splice_Read_Thread started\n"));
   
+  assignment_symbols_.push_back ("=");
+  assignment_symbols_.push_back (";");
+
   // Add update datareader statuscondition to waitset
   condition_ = update_reader_->get_statuscondition ();
   condition_->set_enabled_statuses (DDS::DATA_AVAILABLE_STATUS);
@@ -60,6 +66,63 @@ int Madara::Transport::Splice_Read_Thread::enter_barrier (void)
   return 0;
 }
 
+void Madara::Transport::Splice_Read_Thread::handle_assignment (
+  Knowledge::Update & data)
+{
+  // if we aren't evaluating a message from ourselves, process it
+  std::string key = data.key.val ();
+  long value = data.value;
+
+  int result = context_.set_if_unequal (key, value, false);
+
+  // if we actually updated the value
+  if (result == 1)
+  {
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
+      key.c_str (), value, data.originator.val ()));
+  }
+  // if the data was already current
+  else if (result == 0)
+  {
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
+      key.c_str (), value));
+  }
+}
+
+void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
+  Knowledge::Update & data)
+{
+  std::string key;
+  char symbol;
+  long value;
+  std::stringstream stream (data.key.val ());
+
+  context_.lock ();
+  
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Processing multiassignment (%s).\n", 
+        data.key.val ()));
+
+  while (!stream.eof ())
+  {
+    stream >> key >> symbol >> value >> symbol;
+
+    int result = context_.set_if_unequal (key, value, false);    
+    // if we actually updated the value
+    if (result == 1)
+    {
+      ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
+        key.c_str (), value, data.originator.val ()));
+    }
+    // if the data was already current
+    else if (result == 0)
+    {
+      ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
+        key.c_str (), value));
+    }
+  }
+  
+  context_.unlock ();
+}
 
 int
 Madara::Transport::Splice_Read_Thread::svc (void)
@@ -114,24 +177,15 @@ Madara::Transport::Splice_Read_Thread::svc (void)
           continue;
         }
 
-        // if we aren't evaluating a message from ourselves, process it
-        std::string key = update_data_list_[i].key.val ();
-        long value = update_data_list_[i].value;
-
-        int result = context_.set_if_unequal (key, value, false);
-
-        // if we actually updated the value
-        if (result == 1)
+        if (Madara::Knowledge_Engine::ASSIGNMENT == update_data_list_[i].type)
         {
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
-            key.c_str (), value, update_data_list_[i].originator.val ()));
+          handle_assignment (update_data_list_[i]);
         }
-        // if the data was already current
-        else if (result == 0)
+        else if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list_[i].type)
         {
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
-            key.c_str (), value));
+          handle_multiassignment (update_data_list_[i]);
         }
+
         // otherwise the key was null, which is unusable
       }
     }

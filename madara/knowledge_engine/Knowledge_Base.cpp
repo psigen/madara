@@ -8,6 +8,8 @@
 #include "madara/transport/TCP_Transport.h"
 #include "madara/utility/Utility.h"
 
+#include <sstream>
+
 
 #ifdef _USE_OPEN_SPLICE_
   #include "madara/transport/Splice_DDS_Transport.h"
@@ -174,20 +176,23 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
     map_.lock ();
     last_value = tree.evaluate ();
 
-
     if (transport_ && send_modifieds)
     {
       Madara::String_Vector modified;
       map_.get_modified (modified);
+      std::stringstream string_builder;
 
       for (Madara::String_Vector::const_iterator k = modified.begin ();
            k != modified.end (); ++k)
       {
-        transport_->send_data (*k, map_.get (*k));
+        string_builder << *k << " = " << map_.get (*k) << " ; ";
+        //transport_->send_data (*k, map_.get (*k));
       }
+
+      if (modified.size () > 0)
+        transport_->send_multiassignment (string_builder.str ());
       map_.reset_modified ();
     }
-
 
     map_.signal ();
   }
@@ -286,12 +291,16 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   {
     Madara::String_Vector modified;
     map_.get_modified (modified);
+    std::stringstream string_builder;
 
     for (Madara::String_Vector::const_iterator k = modified.begin ();
          k != modified.end (); ++k)
     {
-      transport_->send_data (*k, map_.get (*k));
+      string_builder << *k << " = " << map_.get (*k) << " ; ";
     }
+
+    if (modified.size () > 0)
+      transport_->send_multiassignment (string_builder.str ());
     map_.reset_modified ();
   }
 

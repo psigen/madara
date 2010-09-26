@@ -1,6 +1,7 @@
 #include "madara/transport/Splice_DDS_Transport.h"
 #include "madara/transport/Splice_Transport_Read_Thread.h"
 #include "ace/Log_Msg.h"
+#include "madara/knowledge_engine/Update_Types.h"
 
 #include <iostream>
 
@@ -288,6 +289,7 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   data.key = key.c_str ();
   data.value = value;
   data.originator = id_.c_str ();
+  data.type = Madara::Knowledge_Engine::ASSIGNMENT;
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) SENDING data: %s=%d\n", key.c_str (), data.value));
 
@@ -296,7 +298,31 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 
 
-  
+  return dds_result;
+}
+
+long
+Madara::Transport::Splice_DDS_Transport::send_multiassignment (
+  const std::string & expression)
+{
+  Madara::Transport::Base::send_multiassignment (expression);
+
+  DDS::ReturnCode_t      dds_result;
+  DDS::InstanceHandle_t  handle;
+
+  Knowledge::Update data;
+  data.key = expression.c_str ();
+  data.value = 0;
+  data.originator = id_.c_str ();
+  data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) SENDING multiassignment: %s\n", 
+    expression.c_str ()));
+
+  //std::cout << "Sending data: " << key << "=" << value << std::endl;
+
+  handle = update_writer_->register_instance (data);
+  dds_result = update_writer_->write (data, handle); 
 
   return dds_result;
 }

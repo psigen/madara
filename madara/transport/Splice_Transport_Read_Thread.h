@@ -38,6 +38,11 @@ namespace Madara
       int svc (void);
       void wait_for_ready (void);
     private:
+      void handle_assignment (Knowledge::Update & data);
+      void handle_multiassignment (Knowledge::Update & data);
+
+      ::std::vector< ::std::string>                        assignment_symbols_;
+
       const std::string                                    id_;
       ::Madara::Knowledge_Engine::Thread_Safe_Context &    context_;
       ::Knowledge::UpdateDataReader_ptr                    update_reader_;

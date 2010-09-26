@@ -4,6 +4,8 @@ project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   exename = test_basic_reasoning
   after += Madara
   
+  requires += tests
+  
   libs += Madara
 
   Build_Files {
@@ -22,6 +24,8 @@ project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_wait_with_ace
   after += Madara
+  
+  requires += tests
   
   libs += Madara
 
@@ -43,6 +47,8 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   exename = test_distributed_finisher
   after += Madara
   
+  requires += tests
+  
   libs += Madara
 
   Build_Files {
@@ -62,6 +68,8 @@ project (Test_Synchronization) : using_madara, using_ace, using_splice {
   exename = test_synchronization
   after += Madara
   
+  requires += tests
+  
   libs += Madara
 
   Build_Files {
@@ -80,7 +88,9 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
   exeout = $(MADARA_ROOT)/bin
   exename = test_distributed_finisher_with_set
   after += Madara
-  
+
+  requires += tests
+    
   libs += Madara
 
   Build_Files {

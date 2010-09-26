@@ -57,6 +57,16 @@ namespace Madara
         return 0;
       }
 
+      /// all subclasses should call this method at the beginning of 
+      /// a call to send_multiassignment of the derived class
+      virtual long send_multiassignment (const std::string & expression) 
+      {
+        if (!is_valid_)
+          valid_setup_.wait ();
+
+        return 0;
+      }
+
       /// all subclasses should call this method at the beginning of send_mutex
       /// @param key        resource to lock (e.g. variable name)
       /// @param requester  requester id (e.g. host:port for unique id of requester)
