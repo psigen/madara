@@ -27,7 +27,11 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  parse_args (argc, argv);
+  int retcode = parse_args (argc, argv);
+
+  if (retcode < 0)
+    return retcode;
+
   ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
@@ -315,42 +319,38 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  // here 'n' would be called -n and can be called with or without
-  // a parameter. So, -n James and -n are both valid
-  ACE_TCHAR options [] = ACE_TEXT ("n:j:");
+  ACE_TCHAR options [] = ACE_TEXT ("h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
-  cmd_opts.long_option (ACE_TEXT ("name"), 'n', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("job"), 'j', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
-  ACE_TCHAR * arg;
+//  ACE_TCHAR * arg;
 
   // iterate through the options until done
   while ((option = cmd_opts ()) != EOF)
   {
-    arg = cmd_opts.opt_arg ();
+    //arg = cmd_opts.opt_arg ();
     switch (option)
     {
-    case 'n':
-      // boilerplate for later
-      break;
-    case 'j':
-      // boilerplate for later
-      break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("ERROR: -%c requires an argument"), cmd_opts.opt_opt ()), -2); 
+        ACE_TEXT ("ERROR: -%c requires an argument"), 
+           cmd_opts.opt_opt ()), -2); 
+    case 'h':
     default:
+      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("ERROR: Bad argument. -%c is unknown"), cmd_opts.opt_opt ()), -1); 
+        ACE_TEXT ("Returning from Help Menu")), -1); 
       break;
     }
   }
 
   return 0;
 }
+

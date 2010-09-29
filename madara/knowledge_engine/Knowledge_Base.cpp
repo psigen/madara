@@ -130,9 +130,17 @@ void
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
                                                int value, bool send_modifieds)
 {
+  // return if the key is null
+  if (key == "")
+    return;
+
+  // everything after this point is done on a string with at least 1 char
+
   map_.set (key, value);
 
-  if (transport_ && send_modifieds)
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+  if (transport_ && send_modifieds && key[0] != '.')
   {
     transport_->send_data (key, value);
     map_.reset_modified (key);
@@ -157,8 +165,6 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
   Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
     map_, expression);
 
-  // optimize the tree
-  tree.prune ();
   int last_value = tree.evaluate ();
 
   // wait for expression to be true
@@ -265,8 +271,6 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
       // interpret the current expression
       tree = interpreter_.interpret (map_, expressions[j]);
 
-      // optimize the tree
-      tree.prune ();
       last_value = tree.evaluate ();
 
       // reset the eval_visitor

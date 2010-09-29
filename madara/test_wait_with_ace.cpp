@@ -60,7 +60,11 @@ static void * worker(void * args)
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  parse_args (argc, argv);
+  int retcode = parse_args (argc, argv);
+
+  if (retcode < 0)
+    return retcode;
+
   ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
@@ -87,13 +91,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("t:");
+  ACE_TCHAR options [] = ACE_TEXT ("t:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("threads"), 't', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -111,11 +116,15 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("ERROR: -%c requires an argument"), cmd_opts.opt_opt ()), -2); 
+        ACE_TEXT ("ERROR: -%c requires an argument"), cmd_opts.opt_opt ()), -2);
+    case 'h':
     default:
+      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      -t (--threads)    number of threads to launch \n\
+      -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("ERROR: Bad argument. -%c is unknown"), cmd_opts.opt_opt ()), -1); 
-      break;
+        ACE_TEXT ("Returning from Help Menu")), -1); 
+      break; 
     }
   }
 

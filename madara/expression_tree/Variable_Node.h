@@ -3,6 +3,8 @@
 #define _VARIABLE_NODE_H_
 
 #include <string>
+#include <vector>
+
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 
@@ -50,6 +52,11 @@ namespace Madara
       /// the expression tree, and is much faster than the prune function
       virtual int evaluate (void);
 
+      /// Expands the key (if necessary). This allow for keys to be defined
+      /// with other variables inserted (e.g. var{.id} with .id = 2 expands
+      /// to var2)
+      std::string expand_key (void) const;
+
       /// Return the variable key.
       const std::string & key (void) const;
 
@@ -59,6 +66,13 @@ namespace Madara
     private:
       /// Key for retrieving value of this variable.
       const ::std::string key_;
+
+      /// Expansion necessary
+      bool key_expansion_necessary_;
+
+      std::vector< std::string> splitters_;
+      std::vector< std::string> tokens_;
+      std::vector< std::string> pivot_list_;
 
       /// Reference to context for variable retrieval
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;

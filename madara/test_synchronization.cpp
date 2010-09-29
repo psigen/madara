@@ -37,39 +37,46 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
 
-  char s_id [64];
-  char s_left [64];
-  char expression [128];
-  char continue_condition [128];
-
-  ACE_OS::sprintf (s_id, "S%d", id);
-  ACE_OS::sprintf (s_left, "S%d", id ? id - 1 : processes - 1);
-  ACE_OS::sprintf (continue_condition, "%s < 10", s_id);
-
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) synchronizing to %d\n",
                         id, processes, stop));
 
-  // set the state to 0
-  knowledge.set (s_id, value);
+  // set my id
+  knowledge.set (".self", id);
 
+  // The state of the process to my left dictates my next state
+  // if I am the bottom process, I look at the last process
+  knowledge.set (".left", id ? id - 1 : processes - 1);
+
+  // set my stop state
+  knowledge.set (".stop", stop);
+  // set my initial value
+  knowledge.set (".init", value);
+
+
+  // set my state to an initial value (see command line args to change)
+  knowledge.evaluate ("S{.self}=.init");
+
+  // by default, the expression to evaluate is for a non-bottom process
+  // if my state does not equal the left state, change my state to left state
+  std::string expression ("S{.self} != S{.left} && (S{.self} = S{.left})");
+
+  // if I am the bottom process, however, I do NOT want to be my left state
+  // so if the top process becomes my state, I move on to my next state
+  // this allows for a ring of legitimate states that progress towards an
+  // end goal (in our case the .stop condition)
   if (id == 0)
   {
-    ACE_OS::sprintf (expression, "%s == %s && ++%s", 
-           s_id, s_left, s_id);   
+    expression = "S{.self} == S{.left} && ++S{.self}";   
   }
-  else
-  {
-    ACE_OS::sprintf (expression, "%s != %s && (%s = %s)", 
-            s_id, s_left, s_id, s_left);   
-  }
+
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) expression: %s\n",
-              id, processes, expression));
+    id, processes, expression.c_str ()));
 
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
   knowledge.print_knowledge ();
 
-  while (knowledge.evaluate (continue_condition))
+  while (knowledge.evaluate ("S{.self} < .stop"))
   {
     knowledge.wait (expression);
     knowledge.print_knowledge ();
@@ -139,12 +146,12 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
-      -h (--help)      print this menu             \n\
+      -p (--processes) number of processes that will be running\n\
       -i (--id)        set process id (0 default)  \n\
       -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
-      -p (--processes) number of processes that will be running\n"));
+      -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
       break;

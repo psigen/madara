@@ -22,7 +22,11 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  parse_args (argc, argv);
+  int retcode = parse_args (argc, argv);
+
+  if (retcode < 0)
+    return retcode;
+
   ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
@@ -85,9 +89,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
-      -h (--help)      print this menu             \n\
+      -o (--host)      this host ip/name (localhost default) \n\
       -f (--finisher)  signal finish               \n\
-      -o (--host)      this host ip/name (localhost default) \n"));
+      -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
       break;

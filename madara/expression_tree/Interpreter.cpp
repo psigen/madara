@@ -1107,7 +1107,8 @@ Madara::Expression_Tree::Interpreter::is_alphanumeric (char input)
   return (input >= 'a' && input <= 'z') 
     || (input >= 'A' && input <= 'Z') 
     || (input == '_') 
-    || (input >= '0' && input <= '9') || input == '.';
+    || (input >= '0' && input <= '9') || input == '.' 
+    || input == '{' || input == '}';
 }
 
 // inserts a terminal into the parse tree
@@ -1666,9 +1667,12 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
     // in GoF book.
 
     Expression_Tree tree = Expression_Tree (list.back ()->build ());
+
+    // optimize the tree
+    tree.prune ();
     delete list.back ();
 
-    // store this input = tree into cached memory
+    // store this optimized tree into cached memory
     if (cache_.find (input) == cache_.end ())
       cache_[input] = tree;
 

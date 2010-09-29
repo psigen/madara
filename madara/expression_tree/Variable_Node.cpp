@@ -1,17 +1,89 @@
 #include "madara/expression_tree/Visitor.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/utility/Utility.h"
 
 #include "ace/Log_Msg.h"
+#include <string>
+#include <sstream>
 
 Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key, 
                               Madara::Knowledge_Engine::Thread_Safe_Context &context)
-                              : key_ (key), context_ (context)
+: key_ (key), context_ (context), key_expansion_necessary_ (false)
 {
+  // this key requires expansion. We do the compilation and error checking here
+  // as the key shouldn't change, and this allows us to only have to do this
+  // once
+  if (key.find ("{") != key.npos)
+  {
+    unsigned int count = 1;
+    key_expansion_necessary_ = true;
+    splitters_.push_back ("{");
+    splitters_.push_back ("}");
+
+    Utility::tokenizer (key, splitters_, tokens_, pivot_list_);
+
+    if (pivot_list_.size () % 2 != 0)
+    {
+      ACE_DEBUG ((LM_DEBUG, "COMPILE_ERROR: Not enough matching end braces " \
+        "for a valid expression in %s\n", key_.c_str ()));
+    }
+
+    // check for braces that are not properly closed
+    std::vector< std::string>::const_iterator pivot = pivot_list_.begin ();
+
+    for (; count < pivot_list_.size () && pivot != pivot_list_.end (); 
+           pivot+=2, count+=2)
+    {
+      if (pivot_list_[count-1] != "{" || pivot_list_[count] != "}")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "COMPILE_ERROR: Improperly matched braces in %s\n", key_.c_str ()));
+      }
+    }
+  }
 }
 
 Madara::Expression_Tree::Variable_Node::~Variable_Node ()
 {
 }
+
+std::string
+Madara::Expression_Tree::Variable_Node::expand_key (void) const
+{
+  if (key_expansion_necessary_)
+  {
+    unsigned int count = 0;
+
+    // add the first token into a string builder
+    std::stringstream builder;
+    std::vector< std::string>::const_iterator token = tokens_.begin ();
+    builder << *token;
+
+    // move the token to the next in the list.
+    for (++token, ++count; token != tokens_.end (); ++token, ++count)
+    {
+      if (*token != "")
+      {
+        // is the current token a variable to lookup?
+        if (pivot_list_[count] == "}")
+        {
+          builder << context_.get (*token);
+        }
+        else
+        {
+          builder << *token;
+        }
+      }
+    }
+
+    return builder.str ();
+  }
+  // if there was no need to expand the key, just return
+  // the key
+  else
+    return key_;
+}
+
 
 void
 Madara::Expression_Tree::Variable_Node::accept (Visitor &visitor) const
@@ -22,7 +94,7 @@ Madara::Expression_Tree::Variable_Node::accept (Visitor &visitor) const
 int
 Madara::Expression_Tree::Variable_Node::item () const
 {
-  return context_.get (key_);
+  return context_.get (expand_key ());
 }
 
 /// Prune the tree of unnecessary nodes. 
@@ -37,7 +109,7 @@ Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
 
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
-  return context_.get (key_);
+  return context_.get (expand_key ());
 }
 
 /// Evaluates the node and its children. This does not prune any of
@@ -47,7 +119,7 @@ Madara::Expression_Tree::Variable_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
-  return context_.get (key_);
+  return context_.get (expand_key ());
 }
 
 const std::string &
@@ -59,18 +131,18 @@ Madara::Expression_Tree::Variable_Node::key () const
 int
 Madara::Expression_Tree::Variable_Node::set (const int & value)
 {
-  return context_.set (key_, value);
+  return context_.set (expand_key (), value);
 }
 
 int
 Madara::Expression_Tree::Variable_Node::dec (void)
 {
-  return context_.dec (key_);
+  return context_.dec (expand_key ());
 }
 
 int
 Madara::Expression_Tree::Variable_Node::inc (void)
 {
-  return context_.inc (key_);
+  return context_.inc (expand_key ());
 }
 

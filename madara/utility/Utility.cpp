@@ -128,12 +128,17 @@ Madara::Utility::tokenizer (const ::std::string & input,
           // we have found a splitter. Tokenize from last to splitter.
           if (j == splitters[i].size ())
           {
-              // need to update this to only have as many pivots as tokens - 1
-              pivots.push_back (input.substr (cur, j));
-              tokens.push_back (input.substr (last, cur - last));
+            // need to update this to only have as many pivots as tokens - 1
+            pivots.push_back (input.substr (cur, j));
 
-                 
-            last = cur = checker;
+            if (cur - last >= j)
+              tokens.push_back (input.substr (last, cur - last));
+            else
+              tokens.push_back ("");
+
+            // we want last to point to the last valid token begin
+            cur = checker - 1;
+            last = checker;
           } // if found a splitter
         } // if first char == splitter first char
       } // if splitter length >= 1

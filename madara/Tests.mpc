@@ -20,6 +20,27 @@ project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Key_Expansion) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_key_expansion
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    test_key_expansion.cpp
+  }
+}
+
 project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_wait_with_ace
@@ -81,6 +102,27 @@ project (Test_Synchronization) : using_madara, using_ace, using_splice {
 
   Source_Files {
     test_synchronization.cpp
+  }
+}
+
+project (Test_Synchronization_Without_Key_Expansion) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_synchronization_without_key_expansion
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    test_synchronization_without_key_expansion.cpp
   }
 }
 
