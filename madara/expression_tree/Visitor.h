@@ -25,6 +25,7 @@ namespace Madara
     class Composite_Subtract_Node;
     class Composite_Divide_Node;
     class Composite_Multiply_Node;
+    class Composite_Modulus_Node;
 
     /**
      * @class Visitor
@@ -93,6 +94,9 @@ namespace Madara
 
       /// Visit a Composite_Multiply_Node.
       virtual void visit (const Composite_Multiply_Node &node) = 0;
+
+      /// Visit a Composite_Modulus_Node.
+      virtual void visit (const Composite_Modulus_Node &node) = 0;
 
       /// No-op destructor to hold things together.
       virtual ~Visitor (void) = 0;

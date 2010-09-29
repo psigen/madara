@@ -76,6 +76,9 @@ namespace Madara
       /// Visit a @a Composite_Multiply_Node.
       virtual void visit (const Composite_Multiply_Node &node);
 
+      /// Visit a @a Composite_Modulus_Node.
+      virtual void visit (const Composite_Modulus_Node &node);
+
       /// Print the total of the evaluation.
       int total (void);
 

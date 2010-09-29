@@ -73,6 +73,9 @@ namespace Madara
       
       /// visit function - prints Composite_Multiply_Node contents to std::cout
       virtual void visit (const Composite_Multiply_Node &node);
+
+      /// Visit a @a Composite_Modulus_Node.
+      virtual void visit (const Composite_Modulus_Node &node);
     };  
   }
 }

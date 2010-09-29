@@ -65,7 +65,8 @@ Madara::Expression_Tree::Variable_Node::expand_key (void) const
       if (*token != "")
       {
         // is the current token a variable to lookup?
-        if (pivot_list_[count] == "}")
+        if (count < pivot_list_.size () 
+          && pivot_list_[count] == "}")
         {
           builder << context_.get (*token);
         }

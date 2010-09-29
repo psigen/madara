@@ -44,6 +44,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_unaries (knowledge);
   test_conditionals (knowledge);
   test_logicals (knowledge);
+  test_mathops (knowledge);
   test_implies (knowledge);
 
   knowledge.print_knowledge ();
@@ -260,7 +261,7 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate (".var3 = .var1 - .var2");
   assert (knowledge.get (".var3") == 5);
 
-  knowledge.evaluate (".var3 = .var1 -- .var2");
+  knowledge.evaluate (".var3 = .var1 -(- .var2)");
   assert (knowledge.get (".var3") == 11);
 
   knowledge.evaluate (".var3 = .var1 * .var2");
@@ -284,9 +285,14 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate (".var3 = -.var1 / .var2");
   assert (knowledge.get (".var3") == -2);
 
-  knowledge.evaluate (".var2 = 2; .var1 = 8; .var3 = .var1 + ++.var2");
+  knowledge.evaluate (".var2 = 2; .var1 = 8; .var3 = .var1 + (++.var2)");
   assert (knowledge.get (".var3") == 11);
 
+  knowledge.evaluate (".var2 = 2; .var1 = 8; .var3 = .var1 % .var2");
+  assert (knowledge.get (".var3") == 0);
+
+  knowledge.evaluate (".var2 = 3; .var1 = 8; .var3 = .var1 % .var2");
+  assert (knowledge.get (".var3") == 2);
 
 }
 

@@ -105,6 +105,27 @@ project (Test_Synchronization) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Synchronization_Three_State) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_synchronization_three_state
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    test_synchronization_three_state.cpp
+  }
+}
+
 project (Test_Synchronization_Without_Key_Expansion) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_synchronization_without_key_expansion

@@ -23,6 +23,7 @@
 #include "madara/expression_tree/Composite_Subtract_Node.h"
 #include "madara/expression_tree/Composite_Divide_Node.h"
 #include "madara/expression_tree/Composite_Multiply_Node.h"
+#include "madara/expression_tree/Composite_Modulus_Node.h"
 #include "madara/expression_tree/Interpreter.h"
 
 namespace Madara
@@ -38,6 +39,7 @@ namespace Madara
       ADD_PRECEDENCE = 5,
       SUBTRACT_PRECEDENCE = 5,
       MULTIPLY_PRECEDENCE = 6,
+      MODULUS_PRECEDENCE = 6,
       DIVIDE_PRECEDENCE = 6,
       NEGATE_PRECEDENCE = 7,
       NUMBER_PRECEDENCE = 8,
@@ -507,6 +509,28 @@ namespace Madara
 
       /// destructor
       virtual ~Multiply (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    };
+
+    /**
+    * @class Modulus
+    * @brief Modulus node of the parse tree (10 % 4 == 2)
+    */
+
+    class Modulus : public Operator
+    {
+    public:
+      /// constructor
+      Modulus (void);
+
+      /// destructor
+      virtual ~Modulus (void);
 
       /// returns the precedence level
       //virtual int precedence (void);
@@ -1048,6 +1072,31 @@ Madara::Expression_Tree::Multiply::build (void)
 }
 
 // constructor
+Madara::Expression_Tree::Modulus::Modulus (void)
+: Operator (0, 0, MODULUS_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Modulus::~Modulus (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Modulus::add_precedence (int precedence)
+{
+  return this->precedence_ = MODULUS_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Modulus::build (void)
+{
+  return new Composite_Modulus_Node (left_->build (), right_->build ());
+}
+
+// constructor
 Madara::Expression_Tree::Divide::Divide (void)
 : Operator (0, 0, DIVIDE_PRECEDENCE)
 {
@@ -1089,7 +1138,7 @@ Madara::Expression_Tree::Interpreter::is_operator (char input)
   return input == '+' 
     || input == '-' 
     || input == '*' 
-    || input == '/';
+    || input == '/' || input == '%';
 }
 
 // method for checking if a character is a number
@@ -1411,6 +1460,17 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     // multiplication operation
     handled = true;
     Multiply *op = new Multiply ();
+
+    // insert the op according to precedence relationships
+    op->add_precedence (accumulated_precedence);
+    lastValidInput = 0;
+    precedence_insert (op, list);
+  }
+  else if (input[i] == '%')
+  {
+    // multiplication operation
+    handled = true;
+    Modulus *op = new Modulus ();
 
     // insert the op according to precedence relationships
     op->add_precedence (accumulated_precedence);

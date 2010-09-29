@@ -24,6 +24,7 @@
 #include "madara/expression_tree/Composite_Subtract_Node.h"
 #include "madara/expression_tree/Composite_Divide_Node.h"
 #include "madara/expression_tree/Composite_Multiply_Node.h"
+#include "madara/expression_tree/Composite_Modulus_Node.h"
 
 #include "madara/expression_tree/Evaluation_Visitor.h"
 
@@ -305,6 +306,15 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () * stack_.pop ());
+}
+
+/// evaluations of a division (Composite_Modulus_Node)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Composite_Modulus_Node &node)
+{
+  if (stack_.size () >= 2)
+    stack_.push (stack_.pop () % stack_.pop ());
 }
 
 /// print a total for the evaluation
