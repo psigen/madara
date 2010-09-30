@@ -78,12 +78,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // if my state does not equal the left state, change my state to left state
   std::string expression;
 
+  std::string s0_logic = "(S0 + 1) % 3 == S1 => S0 = (S0 + 3 - 1) % 3;";
+
+  std::string s1_logic = "(S1+1) % 3 == S0 => S1 = S0; (S1+1) % 3 == S2 => S1 = S2;";
+
+  std::string s2_logic = "S1 == S0 && (S1 + 1) % 3 != S2 => S2 = (S1 + 1) % 3;";
+
   if (id == 0)
   {
     expression = 
     // if we are the bottom process, (id == 0), then logic is
     // if (S+1)     % 3 == R       then S        = (S-1)          % 3
       "(S{.self}+1) % 3 == S{.right} => S{.self} = (S{.self}+3-1) % 3";
+
+    //expression = s0_logic;
   }
   else if (id == processes - 1)
   {
@@ -91,6 +99,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     expression = 
     // if  L   == R        && (L       +l)%3 != S       then S       = (L        + 1)%3
       "S{.left}==S{.right} && (S{.left}+1)%3 != S{.self} => S{.self} = (S{.left} + 1)%3";
+
+    //expression = s2_logic;
   }
   else
   {
@@ -101,6 +111,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       "(S{.self} + 1)%3 == S{.left} => S{.self} = S{.left};" \
     // if( S      + 1) % 3 ==    R    then   S     =    R
       "(S{.self} + 1)%3 == S{.right} => S{.self} = S{.right}";
+    
+    //expression = s1_logic;
   }
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Wait expression will be %s\n", expression.c_str ()));
