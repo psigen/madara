@@ -24,6 +24,8 @@ void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -32,20 +34,23 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_INFO | LM_DEBUG, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
+
   // run tests
-  test_tree_compilation (knowledge);
+//  test_tree_compilation (knowledge);
   test_assignments (knowledge);
   test_unaries (knowledge);
   test_conditionals (knowledge);
   test_logicals (knowledge);
   test_mathops (knowledge);
   test_implies (knowledge);
+  test_both_operator (knowledge);
+  test_dijkstra_sync (knowledge);
 
   knowledge.print_knowledge ();
 
@@ -60,7 +65,7 @@ void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
 
   // test variables in conditionals
-  knowledge.evaluate ("..var1 = 1; .var2 = 0; .var3 = .var1 && .var2");
+  knowledge.evaluate (".var1 = 1; .var2 = 0; .var3 = .var1 && .var2");
   assert (knowledge.get (".var3") == 0);
 
   knowledge.evaluate (".var1 = 1; .var2 = 0; .var3 = .var1 || .var2");
@@ -100,10 +105,270 @@ void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
 }
 
+/// Tests Dijkstra Synchronization algorithms 
+void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_dijkstra_sync"));
+
+  knowledge.clear ();
+
+  std::string s0_logic = "(S0 + 1) % 3 == S1 => S0 = (S0 + 3 - 1) % 3;";
+
+  std::string s1_logic = "(S1+1) % 3 == S0 => S1 = S0; (S1+1) % 3 == S2 => S1 = S2;";
+
+  std::string s2_logic = "S1 == S0 && (S1 + 1) % 3 != S2 => S2 = (S1 + 1) % 3;";
+
+  ACE_DEBUG ((LM_INFO, 
+    "Evaluating Dijkstra 3-state Synchronizations in order: S0->S1->S2\n"));
+
+  // set the beginning state
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 0 
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 1 
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 2 
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 0 
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 1 
+                                    && knowledge.get ("S2") == 2);
+
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 2 
+                                    && knowledge.get ("S2") == 2);
+
+  knowledge.evaluate (s0_logic + s1_logic + s2_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 0 
+                                    && knowledge.get ("S2") == 1);
+
+
+
+  ACE_DEBUG ((LM_INFO, 
+    "Evaluating Dijkstra 3-state Synchronizations in order: S1->S2->S0\n"));
+
+  knowledge.clear ();
+
+  // set the beginning state
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 0 
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 1 
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 2 
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 0 
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 1 
+                                    && knowledge.get ("S2") == 2);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 2
+                                    && knowledge.get ("S2") == 2);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 0
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 1
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 2
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s1_logic + s2_logic + s0_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 0
+                                    && knowledge.get ("S2") == 0);
+
+
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  ACE_DEBUG ((LM_INFO, 
+    "Evaluating Dijkstra 3-state Synchronizations in order: S2->S0->S1\n"));
+
+  knowledge.clear ();
+
+  // set the beginning state
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 1
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 2
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 0
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 1
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 2
+                                    && knowledge.get ("S2") == 2);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 0
+                                    && knowledge.get ("S2") == 2);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 0 && knowledge.get ("S1") == 1
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 2
+                                    && knowledge.get ("S2") == 1);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 2 && knowledge.get ("S1") == 0
+                                    && knowledge.get ("S2") == 0);
+
+  knowledge.evaluate (s2_logic + s0_logic + s1_logic);
+
+  ACE_DEBUG ((LM_INFO, "  %d %d %d\n", 
+    knowledge.get ("S0"), knowledge.get ("S1"), knowledge.get ("S2")));
+
+  assert (knowledge.get ("S0") == 1 && knowledge.get ("S1") == 1
+                                    && knowledge.get ("S2") == 0);
+
+  
+  assert (knowledge.get (".var3") == 0);
+
+}
+
 /// Tests assignment operator (=)
 void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_assignments"));
+
+  ACE_DEBUG ((LM_INFO, "Testing the assignment operator\n"));
 
   knowledge.clear ();
   // test assignment
@@ -123,6 +388,8 @@ void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_unaries"));
+
+  ACE_DEBUG ((LM_INFO, "Testing unary operators\n"));
 
   int result = 0;
 
@@ -191,6 +458,8 @@ void test_conditionals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_conditionals"));
 
+  ACE_DEBUG ((LM_INFO, "Testing conditional operators\n"));
+
   knowledge.clear ();
 
   // test assignment
@@ -239,6 +508,8 @@ void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   knowledge.clear ();
 
+  ACE_DEBUG ((LM_INFO, "Testing implies operator\n"));
+
   // test implication
   knowledge.evaluate (".var1 = 1; .var2 = 0; .var1 => .var2 = 1");
   assert (knowledge.get (".var2") == 1);
@@ -251,6 +522,8 @@ void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   knowledge.clear ();
+
+  ACE_DEBUG ((LM_INFO, "Testing integer mathematical operators\n"));
 
   // 
   knowledge.evaluate (".var1 = 8; .var2 = 3");
@@ -294,8 +567,27 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate (".var2 = 3; .var1 = 8; .var3 = .var1 % .var2");
   assert (knowledge.get (".var3") == 2);
 
+  knowledge.evaluate (".var2 = 3; .var1 = 8; .var3 = (.var1 + 1 ) % .var2");
+  assert (knowledge.get (".var3") == 0);
+
+  knowledge.evaluate (".var2 = 3; .var1 = 8; .var3 = (.var1 + 1 - 1) % .var2");
+  assert (knowledge.get (".var3") == 2);
+
+
 }
 
+/// Tests the both operator (;)
+void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_both_operator"));
+
+  knowledge.clear ();
+  knowledge.evaluate (";;;;;.var2 = 3;;;.var3 = 4;;;");
+  assert (knowledge.get (".var2") == 3 && knowledge.get (".var3") == 4);
+
+  knowledge.evaluate (";.var2 == 3 => .var4 = 1; .var4 == 1 => .var5 = 10;;; ; ;");
+  assert (knowledge.get (".var4") == 1 && knowledge.get (".var5") == 10);
+}
 
 /// Tests the conditionals (==, !=, <, <=, >, >=)
 void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
@@ -303,6 +595,8 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
   ACE_TRACE (ACE_TEXT ("test_tree_compilation"));
   knowledge.clear ();
   int result = 0;
+
+  ACE_DEBUG ((LM_INFO, "Testing expression tree compilation and caching\n"));
 
   knowledge.set (".var1", 5);
 

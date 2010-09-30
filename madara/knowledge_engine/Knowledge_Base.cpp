@@ -167,6 +167,25 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
 
   int last_value = tree.evaluate ();
 
+  // check for modifications in this first pass
+  if (transport_ && send_modifieds)
+  {
+    Madara::String_Vector modified;
+    map_.get_modified (modified);
+    std::stringstream string_builder;
+
+    for (Madara::String_Vector::const_iterator k = modified.begin ();
+         k != modified.end (); ++k)
+    {
+      string_builder << *k << " = " << map_.get (*k) << " ; ";
+      //transport_->send_data (*k, map_.get (*k));
+    }
+
+    if (modified.size () > 0)
+      transport_->send_multiassignment (string_builder.str ());
+    map_.reset_modified ();
+  }
+
   // wait for expression to be true
   while (!last_value)
   {
@@ -235,62 +254,20 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   ::std::string expression (expression_copy);
   Madara::Utility::strip_white_space (expression);
 
-  // Interpreter and visitors
-  //Madara::Expression_Tree::Evaluation_Visitor eval_visitor;
-  //Madara::Expression_Tree::Print_Visitor print_visitor;
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Evaluting %s\n", expression.c_str ()));
 
-  // Statements and pivots resulting from splitting the ";"
-  ::std::vector < ::std::string> statements;
-  ::std::vector < ::std::string> statements_pivots;
+  // iterators and tree for evaluation of interpreter results
+  Madara::Expression_Tree::Expression_Tree tree;
 
-  // Split the expression according to ";"
-  Madara::Utility::tokenizer (expression, this->statement_splitters_, 
-                      statements, statements_pivots);
-
+  // lock the context from being updated by any ongoing threads
   map_.lock ();
 
-  // For each resulting statement, evaluate
-  for (::std::vector< ::std::string>::size_type i = 0; i < statements.size (); ++i)
-  {
-    ACE_DEBUG ((LM_DEBUG, "Evaluating %s\n", statements[i].c_str ()));
+  // interpret the current expression and then evaluate it
+  tree = interpreter_.interpret (map_, expression);
+  last_value = tree.evaluate ();
 
-    // expressions are separated by implications
-    ::std::vector < ::std::string> expressions;
-    ::std::vector < ::std::string> implications;
-
-    // iterators and tree for evaluation of interpreter results
-    Madara::Expression_Tree::Expression_Tree tree;
-
-    // split the current statement according to implications
-    Madara::Utility::tokenizer (statements[i], this->implies_splitters_, 
-                      expressions, implications);
-
-    for (::std::vector< ::std::string>::size_type j = 0; j == 0 || 
-            (last_value != 0 && j < expressions.size ()); ++j)
-    {
-      // interpret the current expression
-      tree = interpreter_.interpret (map_, expressions[j]);
-
-      last_value = tree.evaluate ();
-
-      // reset the eval_visitor
-      //eval_visitor.reset ();
-
- 
-      //ACE_DEBUG ((LM_DEBUG, "\nPrinting the resulting tree:\n"));     
-      //for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("in-order");
-      //  iter != tree.end ("in-order"); ++iter)
-      //  (*iter).accept (print_visitor);
-      //ACE_DEBUG ((LM_DEBUG, "\n"));  
-
-      // iterate over the resulting tree
-      //for (Madara::Expression_Tree::Expression_Tree::iterator iter = tree.begin ("post-order");
-      //  iter != tree.end ("post-order"); ++iter)
-      //  (*iter).accept (eval_visitor);
-
-    }
-  }
-
+  // if we have a transport and we've been asked to send modified knowledge
+  // to any interested parties...
   if (transport_ && send_modifieds)
   {
     Madara::String_Vector modified;

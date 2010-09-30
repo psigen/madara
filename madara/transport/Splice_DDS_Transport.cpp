@@ -32,15 +32,15 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   const int & reliability, bool enable_mutexing)
-: id_ (id), context_ (context), domain_ (NULL), domain_factory_ (NULL), 
-  domain_participant_ (NULL), publisher_ (NULL), subscriber_ (NULL), 
-  datawriter_ (NULL), datareader_ (NULL), 
-  update_writer_ (NULL), update_reader_ (NULL),
+: id_ (id), context_ (context), domain_ (0), domain_factory_ (0), 
+  domain_participant_ (0), publisher_ (0), subscriber_ (0), 
+  datawriter_ (0), datareader_ (0), 
+  update_writer_ (0), update_reader_ (0),
 //  update_data_list_ (new Knowledge::UpdateSeq), 
-  update_topic_ (NULL), 
-  mutex_writer_ (NULL), mutex_reader_ (NULL),
+  update_topic_ (0), 
+  mutex_writer_ (0), mutex_reader_ (0),
 //  mutex_data_list_ (new Knowledge::MutexSeq), 
-  mutex_topic_ (NULL), thread_ (0),
+  mutex_topic_ (0), thread_ (0),
   reliability_ (reliability), valid_setup_ (false), 
   enable_mutexing_ (enable_mutexing)
 {

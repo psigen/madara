@@ -24,7 +24,10 @@
 #include "madara/expression_tree/Composite_Divide_Node.h"
 #include "madara/expression_tree/Composite_Multiply_Node.h"
 #include "madara/expression_tree/Composite_Modulus_Node.h"
+#include "madara/expression_tree/Composite_Both_Node.h"
+#include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Interpreter.h"
+#include "ace/Log_Msg.h"
 
 namespace Madara
 {
@@ -32,6 +35,7 @@ namespace Madara
   {
     enum
     {
+      BOTH_PRECEDENCE = 0,
       IMPLIES_PRECEDENCE = 1,
       ASSIGNMENT_PRECEDENCE = 2,
       LOGICAL_PRECEDENCE = 3,
@@ -42,6 +46,7 @@ namespace Madara
       MODULUS_PRECEDENCE = 6,
       DIVIDE_PRECEDENCE = 6,
       NEGATE_PRECEDENCE = 7,
+      PARENTHESIS_PRECEDENCE = 8,
       NUMBER_PRECEDENCE = 8,
       VARIABLE_PRECEDENCE = 8
     };
@@ -245,6 +250,50 @@ namespace Madara
 
       /// destructor
       virtual ~Or (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    };
+
+    /**
+    * @class Both
+    * @brief Evaluates both left and right children, regardless of values
+    */
+
+    class Both : public Operator
+    {
+    public:
+      /// constructor
+      Both (void);
+
+      /// destructor
+      virtual ~Both (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    };
+
+    /**
+    * @class Implies
+    * @brief Assign the value of an expression to a variable
+    */
+
+    class Implies : public Operator
+    {
+    public:
+      /// constructor
+      Implies (void);
+
+      /// destructor
+      virtual ~Implies (void);
 
       /// returns the precedence level
       //virtual int precedence (void);
@@ -838,6 +887,72 @@ Madara::Expression_Tree::Or::build (void)
   return new Composite_Or_Node (left_->build (), right_->build ());
 }
 
+// constructor
+Madara::Expression_Tree::Both::Both (void)
+: Operator (0, 0, BOTH_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Both::~Both (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Both::add_precedence (int precedence)
+{
+  return this->precedence_ = BOTH_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Both::build (void)
+{
+  // Since users can say something like ";;;;;;;;", it is very possible
+  // that a both operation contains no valid children. So, we need
+  // to check whether or not we have a valid child.
+  if (left_ && right_)
+    return new Composite_Both_Node (left_->build (), right_->build ());
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node (0);
+}
+
+// constructor
+Madara::Expression_Tree::Implies::Implies (void)
+: Operator (0, 0, IMPLIES_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Implies::~Implies (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Implies::add_precedence (int precedence)
+{
+  return this->precedence_ = IMPLIES_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Implies::build (void)
+{
+  return new Composite_Implies_Node (left_->build (), right_->build ());
+}
+
 
 // constructor
 Madara::Expression_Tree::Assignment::Assignment (void)
@@ -1160,32 +1275,6 @@ Madara::Expression_Tree::Interpreter::is_alphanumeric (char input)
     || input == '{' || input == '}';
 }
 
-// inserts a terminal into the parse tree
-void
-Madara::Expression_Tree::Interpreter::terminal_insert (Madara::Expression_Tree::Symbol *terminal,
-                                                       ::std::list<Symbol *>& list)
-{
-  if (!list.empty ())
-  {
-    // Something exists in the list, so make this number the rightmost child
-
-    Symbol *symbol = list.back ();
-
-    if (symbol)
-    {
-      // while there is a right child, continue down
-      for (; symbol->right_; symbol = symbol->right_)
-        continue;
-
-      // symbol right will be this terminal and that's all we have
-      // to do.
-      symbol->right_ = terminal;
-    }
-  }
-  else
-    // a number appeared first
-    list.push_back (terminal);
-}
 
 // inserts a variable (leaf node / number) into the parse tree
 void
@@ -1212,10 +1301,9 @@ Madara::Expression_Tree::Interpreter::variable_insert (Madara::Knowledge_Engine:
 
   lastValidInput = variable;
 
-  // update i to the last character that was a number. the ++i will
-  // update the i at the end of the loop to the next check.
+  // update i to next char for main loop or handle parenthesis.
 
-  i += j - 1;
+  i += j;
 
   precedence_insert (variable, list);
 }
@@ -1241,84 +1329,13 @@ Madara::Expression_Tree::Interpreter::number_insert (const ::std::string &input,
 
   lastValidInput = number;
 
-  // update i to the last character that was a number. the ++i will
-  // update the i at the end of the loop to the next check.
+  // update i to next char for main loop or handle parenthesis.
 
-  i += j - 1;
+  i += j;
 
   precedence_insert (number, list);
 }
 
-// inserts an assignment operation into the parse tree
-void 
-Madara::Expression_Tree::Interpreter::assignment_insert (
-  Madara::Expression_Tree::Symbol *op, ::std::list<Madara::Expression_Tree::Symbol *>& list)
-{
-  if (!list.empty ())
-  {
-    // if last element was a number, then make that our left_
-
-    Symbol *parent = list.back ();
-    Symbol *child = parent->right_;
-
-    if (child)
-    {
-      // while there is a child of parent, keep going down the right side
-      for (; 
-        child && child->precedence () <= op->precedence ();
-        child = child->right_)
-        parent = child;
-    }
-
-    if (parent->precedence () <= op->precedence ())
-    {
-
-      // op left will be the old child. new parent child will be
-      // the op. To allow infinite negations, we have to check for unary_operator.
-
-      // **************** This is the culprit
-
-      if (!op->left_)
-        op->left_ = child;
-
-      parent->right_ = op;
-    }
-    else
-    {
-      // this can be one of two things, either we are the same
-      // precedence or we are less precedence than the parent.
-      // this also means different things for unary ops. The
-      // most recent unary op (negate) has a higher precedence
-
-      if (dynamic_cast <Unary_Operator *> (op))
-      {
-        for (; 
-          child && child->precedence () == op->precedence ();
-          child = child->right_)
-          parent = child;
-
-        // I can't think of a valid reason that parent->right_ would
-        // be possible !0
-
-        parent->right_ = op;
-      }
-      else
-      {
-        // everything else is evaluated the same. For instance, if
-        // this is 5 * 4 / 2, and we currently have Mult (5,4) in the
-        // list, we need to make parent our left child.
-
-        op->left_ = parent;
-        list.pop_back ();
-        list.push_back (op);
-      }
-    }
-  }
-  else
-  {
-    list.push_back (op);
-  }
-}
 
 // inserts a multiplication or division into the parse tree
 void 
@@ -1330,60 +1347,267 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
     // if last element was a number, then make that our left_
 
     Symbol *parent = list.back ();
-    Symbol *child = parent->right_;
+    Symbol *child = 0;
 
-    if (child)
-    {
-      // while there is a child of parent, keep going down the right side
-      for (; 
+    // check to see if op is an assignment or implication, which are treated
+    // uniquely
+    Assignment * op_assignment = dynamic_cast <Assignment *> (op);
+    Implies * op_implies = dynamic_cast <Implies *> (op);
+    Unary_Operator * op_unary = dynamic_cast <Unary_Operator *> (op);
+    
+    // move down the right side of the tree until we find either a null or
+    // a precedence that is >= this operation's precedence. This puts us
+    // in the situation that we know our op should be performed after child
+    // or child should be null (assignment or implication not withstanding)
+    for ( child = parent->right_; 
         child && child->precedence () < op->precedence ();
+        child = child->right_)
+        parent = child;
+
+    // parent->precedence is < op->precedence at this point
+
+    if (op_assignment || op_implies || op_unary)
+    {
+      // if we are an assignment, implies, or unary op, we actually
+      // need this op to have slightly higher precedence (it needs to be
+      // evaluated first). This situation is signified by something like this
+      // var1 = var2 = var3 = 1. In the list, will be var1 = var2 = var3, so parent will be
+      // and assignment, and parent left will be var1, right and child will be assignment
+      // and it will have a left of var2
+      // We need to push our current assignment a bit further down, to make our pointers look
+      // like this:
+      //                  =                <== current parent
+      //               /      \
+      //             var1        =               <== current child
+      //                      /      \
+      //                    var2     null
+      // What we want
+      //                  =               
+      //               /      \
+      //             var1        =               <== parent
+      //                      /      \
+      //                    var2     null          <== child
+      //
+
+      for ( child = parent->right_; 
+        child && child->precedence () <= op->precedence ();
         child = child->right_)
         parent = child;
     }
 
-    if (parent->precedence () < op->precedence ())
+    // Now that we have our parent and child setup appropriately according
+    // to precedence relationships, we should be able to modify or replace
+    // the tree in the list
+
+    if (parent->precedence() <= op->precedence ())
     {
+      // this op needs to be evaluated before the parent
 
-      // op left will be the old child. new parent child will be
-      // the op. To allow infinite negations, we have to check for unary_operator.
+      // first let's do some error checking, so we can give helpful compile errors
+      Operator * parent_binary = dynamic_cast <Operator *> (parent);
+      Unary_Operator * parent_unary = dynamic_cast <Unary_Operator *> (parent);
 
-      // **************** This is the culprit
+      // if the parent is a binary (like addition or &&), then it needs a left hand side
+      // if it doesn't have this, let's report a warning and insert a Leaf Node with a value
+      // of zero
+      if (parent_binary && !parent->left_)
+      {
+        // try to give as specific message as possible
+        Both * parent_both = dynamic_cast <Both *> (parent);
+        if (parent_both)
+        {
+          ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE WARNING: " \
+            "1.1. Empty statements between ';' may cause slower execution.\n" \
+            "     Attempting to prune away the extra statement.\n"));
+        }
+        else
+        {
+          ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE WARNING: " \
+            "1. Binary operation has no left child. Inserting a zero.\n"));
+          parent->left_ = new Number (0);
+        }
+      }
 
-      if (!op->left_)
-        op->left_ = child;
+      // if the parent is a unary operator (like negate or not), then it should
+      // NOT have a left child. This would only happen if someone input 
+      // something like 5 ! 3, which has no meaning. This is a compile error.
+      if (parent_unary && parent->left_)
+      {
+        ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
+            "2. Unary operation shouldn't have a left child.\n"));
+      }
+
+      // if we've gotten to this point, then we need to 
+      // replace the child with ourself in the tree
+      if (child)
+      {
+        if (op_unary)
+        {
+          // This is a compile error. Unary cannot have a left
+          // child, and that is the only way that being at this
+          // point would make sense.
+          ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
+            "3. Unary operation shouldn't have a left child.\n"));
+        }
+        else
+          op->left_ = child;
+      }
 
       parent->right_ = op;
     }
     else
     {
-      // this can be one of two things, either we are the same
-      // precedence or we are less precedence than the parent.
-      // this also means different things for unary ops. The
-      // most recent unary op (negate) has a higher precedence
+      // we are a lower precedence than our parent, so we need to replace
+      // the tree in the list. This typically happens with assignment, implies,
+      // logical operations (&&, ||) and equality checks
 
-      if (dynamic_cast <Unary_Operator *> (op) || dynamic_cast <Assignment *> (op))
-      {
-        for (; 
-          child && child->precedence () == op->precedence ();
-          child = child->right_)
-          parent = child;
-
-        // I can't think of a valid reason that parent->right_ would
-        // be possible !0
-
-        parent->right_ = op;
-      }
-      else
-      {
-        // everything else is evaluated the same. For instance, if
-        // this is 5 * 4 / 2, and we currently have Mult (5,4) in the
-        // list, we need to make parent our left child.
-
-        op->left_ = parent;
-        list.pop_back ();
-        list.push_back (op);
-      }
+      op->left_ = parent;
+      list.pop_back ();
+      list.push_back (op);      
     }
+    
+
+    //if (child)
+    //{
+    //  // while there is a child of parent, keep going down the right side
+    //  for (; 
+    //    child && child->precedence () < op->precedence ();
+    //    child = child->right_)
+    //    parent = child;
+    //}
+
+    //if (parent->precedence () < op->precedence ())
+    //{
+
+    //  // op left will be the old child. new parent child will be
+    //  // the op. To allow infinite negations, we have to check for unary_operator.
+
+    //  // **************** This is the culprit
+
+    //  
+    //  // Because of the inclusion of the Both and Implies operators with
+    //  // lower precedence than assignment, we can get into a pickle with
+    //  // chained assignments with a parent that is one of these.
+    //  Assignment * child_assignment = dynamic_cast <Assignment *> (child);
+    //  Implies * child_implies = dynamic_cast <Implies *> (child);
+    //  Assignment * op_assignment = dynamic_cast <Assignment *> (op);
+    //  Implies * op_implies = dynamic_cast <Implies *> (op);
+
+    //  if ((op_implies || op_assignment) && (child_assignment || child_implies))
+    //  {
+    //    for (; 
+    //      child && child->precedence () == op->precedence ();
+    //      child = child->right_)
+    //      parent = child;
+
+    //    if (child->right_)
+    //      op->left_ = child->right_;
+
+    //    child->right_ = op;
+    //  }
+    //  // otherwise, this is a normal insert
+    //  else
+    //  {
+    //    if (!op->left_)
+    //      op->left_ = child;
+
+    //    if (child && child->right_)
+    //      op->right_ = child->right_;
+
+    //    parent->right_ = op;
+    //  }
+    //}
+    //else
+    //{
+    //  // this can be one of two things, either we are the same
+    //  // precedence or we are less precedence than the parent.
+    //  // this also means different things for unary ops. The
+    //  // most recent unary op (negate) has a higher precedence
+
+    //  Unary_Operator * op_unary = dynamic_cast <Unary_Operator *> (op);
+    //  Assignment * op_assignment = dynamic_cast <Assignment *> (op);
+
+    //  if (op_unary || op_assignment)
+    //  {
+    //    for (; 
+    //      child && child->precedence () == op->precedence ();
+    //      child = child->right_)
+    //      parent = child;
+
+    //    // I can't think of a valid reason that parent->right_ would
+    //    // be possible !0
+    //    if (op_unary)
+    //      parent->right_ = op;
+    //    else
+    //    {
+    //      // This is an assignment. We should have a parent that is either a variable
+    //      // or another assignment.
+    //      // eg.  parent is    =      or    var
+    //      //                 /
+    //      //               var
+
+    //      // With the addition of the Both type, we also have to check for it
+
+    //      Variable * parnt_variable = dynamic_cast <Variable *> (parent);
+    //      Assignment * parnt_assignment = dynamic_cast <Assignment *> (parent);
+    //      Both * parnt_both = dynamic_cast <Both *> (parent);
+
+    //      if (!parnt_variable && !parnt_assignment && !parnt_both)
+    //      {
+    //        // we have an error.
+    //        ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
+    //                    "Assignment has invalid left hand operator\n"));
+
+    //      }
+    //      else
+    //      {
+    //        // all is well
+    //        if (parnt_variable)
+    //        {
+    //          // eg.  parent is var so change the situation by making
+    //          // parent our left child
+    //          //                   = 
+    //          //                 /
+    //          //               var
+    //          op->left_ = parent;
+    //          list.pop_back ();
+    //          list.push_back (op);
+    //        }// end if parnt_variable
+    //        else if (parnt_assignment)
+    //        {
+    //          if (!dynamic_cast <Variable *> (child))
+    //            // we have an error.
+    //            ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
+    //                    "To the left of assignment should be a variable\n"));
+    //          else
+    //          {
+    //            // eg.  parent is assignment so change the situation by making
+    //            // ourselves the right child of parent
+    //            //     =               = 
+    //            //   /   \    =>     /    \
+    //            // var1  var2      var1     =   <--- this is op
+    //            //                        /
+    //            //                      var2
+    //            parent->right_ = op;
+    //            op->left_ = child;
+    //          }
+    //        } // end if parnt_assignment
+
+    //      }
+
+    //    }
+    //  }
+    //  else
+    //  {
+    //    // everything else is evaluated the same. For instance, if
+    //    // this is 5 * 4 / 2, and we currently have Mult (5,4) in the
+    //    // list, we need to make parent our left child.
+
+    //    op->left_ = parent;
+    //    list.pop_back ();
+    //    list.push_back (op);
+    //  }
+    //}
   }
   else
   {
@@ -1431,6 +1655,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     op->add_precedence (accumulated_precedence);
     lastValidInput = 0;
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '-')
   {
@@ -1454,6 +1679,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     lastValidInput = 0;
     op->add_precedence (accumulated_precedence);
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '*')
   {
@@ -1465,6 +1691,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     op->add_precedence (accumulated_precedence);
     lastValidInput = 0;
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '%')
   {
@@ -1476,6 +1703,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     op->add_precedence (accumulated_precedence);
     lastValidInput = 0;
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '/')
   {
@@ -1488,6 +1716,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
 
     // insert the op according to precedence relationships
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '=')
   {
@@ -1507,6 +1736,18 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       // insert the op according to precedence relationships
       precedence_insert (op, list);
     }
+    // is this an implication?
+    else if (i+1 < input.size () && input[i+1] == '>')
+    {
+      op = new Implies ();
+      op->add_precedence (accumulated_precedence);
+
+      lastValidInput = 0;
+      ++i;
+
+      // insert the op according to precedence relationships
+      precedence_insert (op, list);
+    }
     // must be an assignment then
     else
     {
@@ -1516,8 +1757,10 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       lastValidInput = 0;
 
       // insert the op according to precedence relationships
-      assignment_insert (op, list);
+      // assignment_insert (op, list);
+      precedence_insert (op, list);
     }
+    ++i;
   }
   else if (input[i] == '!')
   {
@@ -1540,6 +1783,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     op->add_precedence (accumulated_precedence);
     lastValidInput = 0;
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '&')
   {
@@ -1555,6 +1799,11 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       lastValidInput = 0;
       precedence_insert (op, list);
     }
+    else
+    {
+      // error. We currently don't allow logical and (A & B)
+    }
+    ++i;
   }
   else if (input[i] == '|')
   {
@@ -1570,6 +1819,22 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       lastValidInput = 0;
       precedence_insert (op, list);
     }
+    else
+    {
+      // error. We don't currently support logical or
+    }
+    ++i;
+  }
+  else if (input[i] == ';')
+  {
+    handled = true;
+    Symbol * op = new Both ();
+
+    // insert the op according to precedence relationships
+    op->add_precedence (accumulated_precedence);
+    lastValidInput = 0;
+    precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '<')
   {
@@ -1590,6 +1855,7 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     op->add_precedence (accumulated_precedence);
     lastValidInput = 0;
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '>')
   {
@@ -1610,16 +1876,20 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     op->add_precedence (accumulated_precedence);
     lastValidInput = 0;
     precedence_insert (op, list);
+    ++i;
   }
   else if (input[i] == '(')
   {
     handled = true;
+    ++i;
     handle_parenthesis (context, input, i, lastValidInput, 
       handled, accumulated_precedence, list);
   }
-  else if (input[i] == ' ' || input[i] == '\n')
+  else if (input[i] == '\t' || input[i] == ' ' 
+        || input[i] == '\r' || input[i] == '\n')
   {
     handled = true;
+    ++i;
     // skip whitespace
   }
 }
@@ -1638,12 +1908,12 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
 
   //::std::cerr << "Handling an opening parenthesis.\n";
 
-  accumulated_precedence += 5;
+  accumulated_precedence += PARENTHESIS_PRECEDENCE;
 
   ::std::list<Symbol *> list;
 
   handled = false;
-  for (++i; i < input.length (); ++i)
+  while (i < input.length ())
   {
     main_loop (context, input, i, lastValidInput, 
       handled, accumulated_precedence, list);
@@ -1653,8 +1923,8 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
       //::std::cerr << "Handling a closing parenthesis.\n";
 
       handled = true;
-      //++i;
-      accumulated_precedence -= 5;
+      ++i;
+      accumulated_precedence -= PARENTHESIS_PRECEDENCE;
       break;
     }
   }
@@ -1708,10 +1978,14 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
   int accumulated_precedence = 0;
 
   for (::std::string::size_type i = 0;
-    i < input.length (); ++i)
+    i < input.length (); )
   {
+    // we took out the loop update from the for loop
+    // and the main_loop or handle_parenthesis call
+    // should now take care of this.
     main_loop (context, input, i, lastValidInput, 
       handled, accumulated_precedence, list);
+
 
     // store last valid input symbol. this is useful to the '-' operator
     // and will help us determine if '-' is a subtraction or a negation

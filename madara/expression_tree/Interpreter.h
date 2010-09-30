@@ -65,8 +65,8 @@ namespace Madara
 
     private:
       /// Inserts a terminal into the parse tree.
-      void terminal_insert (Symbol *op,
-                           ::std::list<Symbol *>& list);
+      //void terminal_insert (Symbol *op,
+      //                     ::std::list<Symbol *>& list);
 
       /// Inserts a variable (leaf node / number) into the parse tree.
       void variable_insert (Madara::Knowledge_Engine::Thread_Safe_Context &context,
@@ -87,7 +87,7 @@ namespace Madara
       void precedence_insert (Symbol *op, ::std::list<Symbol *>& list);
 
       /// Inserts an assignment into the parse tree.
-      void assignment_insert (Symbol *op, ::std::list<Symbol *>& list);
+      //void assignment_insert (Symbol *op, ::std::list<Symbol *>& list);
 
       void main_loop (Madara::Knowledge_Engine::Thread_Safe_Context & context,
                            const ::std::string &input,

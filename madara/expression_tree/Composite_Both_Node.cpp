@@ -1,36 +1,37 @@
 /* -*- C++ -*- */
 
-#ifndef COMPOSITE_OR_NODE_CPP
-#define COMPOSITE_OR_NODE_CPP
+#ifndef _COMPOSITE_BOTH_NODE_CPP
+#define _COMPOSITE_BOTH_NODE_CPP
 
 #include <iostream>
+#include <algorithm>
 
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/expression_tree/Visitor.h"
-#include "madara/expression_tree/Composite_Or_Node.h"
+#include "madara/expression_tree/Composite_Both_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
 
 #include "ace/Log_Msg.h"
 
 // Ctor
 
-Madara::Expression_Tree::Composite_Or_Node::Composite_Or_Node (
+Madara::Expression_Tree::Composite_Both_Node::Composite_Both_Node (
   Component_Node *left, Component_Node *right)
 : Madara::Expression_Tree::Composite_Binary_Node (left, right)
 {    
 }
 
 int
-Madara::Expression_Tree::Composite_Or_Node::item (void) const
+Madara::Expression_Tree::Composite_Both_Node::item (void) const
 {
-  return '|';
+  return ';';
 }
 
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
 int
-Madara::Expression_Tree::Composite_Or_Node::prune (bool & can_change)
+Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
@@ -48,7 +49,8 @@ Madara::Expression_Tree::Composite_Or_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: Or has no left operand\n"));
+    ACE_DEBUG ((LM_DEBUG, 
+      "\nEXPRESSION COMPILE ERROR: ';' has an empty left expression\n"));
     return -1;    
   }
 
@@ -63,33 +65,33 @@ Madara::Expression_Tree::Composite_Or_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: Or has no right operand\n"));
+    ACE_DEBUG ((LM_DEBUG, 
+      "\nEXPRESSION COMPILE ERROR: ';' has an empty right expression\n"));
     return -1;    
   }
 
   can_change = left_child_can_change || right_child_can_change;
 
-  return left_value || right_value;
+  return left_value > right_value ? left_value : right_value;
 }
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
+/// @ returns    maximum value of the left and right evaluations
 int 
-Madara::Expression_Tree::Composite_Or_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Both_Node::evaluate (void)
 {
-  // if left is not true, then evaluate right
-  if (!left_->evaluate ())
-    return right_->evaluate ();
+  int left_value = left_->evaluate ();
+  int right_value = right_->evaluate ();
 
-  // if left was true, then the Or returns true
-  return 1;
+  return left_value > right_value ? left_value : right_value;
 }
 
 // accept a visitor
 void 
-Madara::Expression_Tree::Composite_Or_Node::accept (Visitor &visitor) const
+Madara::Expression_Tree::Composite_Both_Node::accept (Visitor &visitor) const
 {
   visitor.visit (*this);
 }
 
-#endif /* COMPOSITE_OR_NODE_CPP */
+#endif /* _COMPOSITE_BOTH_NODE_CPP */

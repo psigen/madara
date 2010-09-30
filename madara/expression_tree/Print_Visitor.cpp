@@ -24,6 +24,8 @@
 #include "madara/expression_tree/Composite_Divide_Node.h"
 #include "madara/expression_tree/Composite_Multiply_Node.h"
 #include "madara/expression_tree/Composite_Modulus_Node.h"
+#include "madara/expression_tree/Composite_Both_Node.h"
+#include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Print_Visitor.h"
 
 /// visit function - prints Leaf_Node contents to std::cout
@@ -178,6 +180,22 @@ void
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Modulus_Node &node)
 {
   std::cout << "% ";
+}
+
+/// visit function - prints Composite_Both_Node contents to std::cout
+
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Both_Node &node)
+{
+  std::cout << "; ";
+}
+
+/// visit function - prints Composite_Implies_Node contents to std::cout
+
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Implies_Node &node)
+{
+  std::cout << "=> ";
 }
 
 #endif /* _PRINT_VISITOR_CPP_ */

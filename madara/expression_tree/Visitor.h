@@ -13,6 +13,8 @@ namespace Madara
     class Composite_Preincrement_Node;
     class Composite_Not_Node;
     class Composite_Add_Node;
+    class Composite_Both_Node;
+    class Composite_Implies_Node;
     class Composite_Assignment_Node;
     class Composite_And_Node;
     class Composite_Or_Node;
@@ -97,6 +99,12 @@ namespace Madara
 
       /// Visit a Composite_Modulus_Node.
       virtual void visit (const Composite_Modulus_Node &node) = 0;
+
+      /// Visit a Composite_Both_Node.
+      virtual void visit (const Composite_Both_Node &node) = 0;
+
+      /// Visit a Composite_Implies_Node.
+      virtual void visit (const Composite_Implies_Node &node) = 0;
 
       /// No-op destructor to hold things together.
       virtual ~Visitor (void) = 0;

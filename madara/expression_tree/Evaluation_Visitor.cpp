@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <typeinfo>
+#include <algorithm>
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
@@ -25,6 +26,8 @@
 #include "madara/expression_tree/Composite_Divide_Node.h"
 #include "madara/expression_tree/Composite_Multiply_Node.h"
 #include "madara/expression_tree/Composite_Modulus_Node.h"
+#include "madara/expression_tree/Composite_Both_Node.h"
+#include "madara/expression_tree/Composite_Implies_Node.h"
 
 #include "madara/expression_tree/Evaluation_Visitor.h"
 
@@ -176,6 +179,22 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     int left = stack_.pop ();
 
     stack_.push (left || right);
+  }
+}
+
+/// evaluation of both left and right (Composite_Both_Node)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Composite_Both_Node &node)
+{
+  if (stack_.size () >= 2)
+  {
+    int right_v = stack_.pop ();
+    int left_v = stack_.pop ();
+
+    // I was trying to use std::max, but it was giving me
+    // some grief, so I just implemented it as is
+    stack_.push (left_v > right_v ? left_v : right_v);
   }
 }
 

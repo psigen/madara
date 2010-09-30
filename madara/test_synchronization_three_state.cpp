@@ -15,10 +15,10 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
-int id = 0;
+int id = 2;
 int left = 0;
-int processes = 1;
-int stop = 10;
+int processes = 3;
+int stop = 3;
 long value = 0;
 volatile bool terminated = 0;
 std::string host = "localhost";
@@ -82,51 +82,43 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     expression = 
     // if we are the bottom process, (id == 0), then logic is
-    // if (S+1)       % 3 ==  R          then S  =  (S-1)               %  3
-      "\n  ((S{.self} + 1) % 3) == S{.right} && (S{.self} = ((S{.self} + 3 - 1) % 3))";
+    // if (S+1)     % 3 == R       then S        = (S-1)          % 3
+      "(S{.self}+1) % 3 == S{.right} => S{.self} = (S{.self}+3-1) % 3";
   }
   else if (id == processes - 1)
   {
     // top process logic
     expression = 
-    // if  L     == R         && (L        + l) % 3 != S 
-      "\n  ((S{.left} == S{.right}) && ((S{.left} + 1) % 3 != S{.self})\n" \
-    // then S       = (L        + 1) % 3 fi
-       "&& (S{.self} = (S{.left} + 1) % 3)";
+    // if  L   == R        && (L       +l)%3 != S       then S       = (L        + 1)%3
+      "S{.left}==S{.right} && (S{.left}+1)%3 != S{.self} => S{.self} = (S{.left} + 1)%3";
   }
   else
   {
     // every other process is looking at both its left and right
     // to try to synchronize with two sources. Here is the logic:
     expression = 
-    // if( S      + 1) % 3 ==    L    then   S     =    L
-      "\n  ((((S{.self} + 1) % 3) == S{.left}) && (S{.self} = S{.left}))\n" \
+    // if( S     + 1)%3 == L       then S        = L
+      "(S{.self} + 1)%3 == S{.left} => S{.self} = S{.left};" \
     // if( S      + 1) % 3 ==    R    then   S     =    R
-   "|| ((((S{.self} + 1) % 3) == S{.right}) && (S{.self} = S{.right}))";
-    // note that in Dijkstra's logic, the 2nd rule is ALWAYS evaluated
-    // after the first, but in ours, the 2nd rule is evaluated only
-    // if (S+1) % 3 != L. This implementation will result in a FSM
-    // whereas Dijkstra's has a bit of non-determinism, due to the
-    // fact that self state could change twice in the same context lock
+      "(S{.self} + 1)%3 == S{.right} => S{.self} = S{.right}";
   }
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Wait expression will be %s\n", expression.c_str ()));
 
+  knowledge.evaluate (expression);
+
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Current Knowledge\n"));
   knowledge.print_knowledge ();
+
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting on S%d.started and S%d.started\n", 
     knowledge.get (".left"), knowledge.get (".right")));
 
   // wait for left and right processes to startup before executing application logic
-  knowledge.wait ("S{.self}.started = 1 && S{.left}.started");
-  knowledge.wait ("S{.self}.started = 1 && S{.right}.started");
-
+  knowledge.wait ("(S{.self}.started = 1) && S{.left}.started && S{.right}.started");
 
   // set my state to an initial value (see command line args to change)
   knowledge.evaluate ("S{.self}=.init");
-
-  //  terminated = true;
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
