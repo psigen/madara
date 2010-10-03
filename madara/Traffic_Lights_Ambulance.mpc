@@ -4,17 +4,19 @@ project (Traffic_Light) : using_madara, using_ace, using_splice {
   exename = traffic_light
   after += Madara
   
+  requires += tests
+  
   libs += Madara
 
   Build_Files {
-    Tests.mpc
+    Traffic_Lights_Ambulance.mpc
   }
 
   Header_Files {
   }
 
   Source_Files {
-    traffic_light.cpp
+    ../tests/traffic_lights/traffic_light.cpp
   }
 }
 
@@ -23,17 +25,19 @@ project (Ambulance) : using_madara, using_ace, using_splice {
   exename = ambulance
   after += Madara
   
+  requires += tests
+  
   libs += Madara
 
   Build_Files {
-    Tests.mpc
+    Traffic_Lights_Ambulance.mpc
   }
 
   Header_Files {
   }
 
   Source_Files {
-    ambulance.cpp
+    ../tests/traffic_lights/ambulance.cpp
   }
 }
 
