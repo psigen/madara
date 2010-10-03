@@ -14,6 +14,7 @@
 #include "madara/transport/Transport.h"
 #include "ace/SOCK_Acceptor.h"
 #include "madara/expression_tree/Interpreter.h"
+#include "madara/Refcounter.h"
 
 namespace Madara
 {
