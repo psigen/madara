@@ -1,5 +1,5 @@
-#ifndef _MADARA_KNOWLEDGE_BASE_H
-#define _MADARA_KNOWLEDGE_BASE_H
+#ifndef _MADARA_KNOWLEDGE_BASE_IMPL_H
+#define _MADARA_KNOWLEDGE_BASE_IMPL_H
 
 /**
  * @file Knowledge_Base.h
@@ -20,14 +20,11 @@ namespace Madara
 
   namespace Knowledge_Engine
   {
-    // forward declaration
-    class Knowledge_Base_Impl;
-
     /**
      * @class Knowledge_Record
      * @brief This class provides a distributed knowledge base to users
      */
-    class MADARA_Export Knowledge_Base
+    class Knowledge_Base_Impl
     {
     public:
       /// Transport type enumeration
@@ -38,23 +35,17 @@ namespace Madara
       };
 
       /// Default constructor
-      Knowledge_Base ();
+      Knowledge_Base_Impl ();
 
       /// Constructor for transport
-      Knowledge_Base (const std::string & host, int transport);
+      Knowledge_Base_Impl (const std::string & host, int transport);
 
       /// Constructor for transport and knowledge realm
-      Knowledge_Base (const std::string & host, int transport,
+      Knowledge_Base_Impl (const std::string & host, int transport,
         const std::string & knowledge_realm);
 
-      /// Copy constructor
-      Knowledge_Base (const Knowledge_Base & original);
-
       /// Destructor
-      ~Knowledge_Base ();
-
-      /// Assignment operator
-      void operator= (const Knowledge_Base & original);
+      ~Knowledge_Base_Impl ();
 
       /// activate the transport for sending and receiving
       void activate_transport (void);
@@ -95,6 +86,9 @@ namespace Madara
       /// Print all knowledge (does not include rules)
       void print_knowledge (void) const;
 
+      /// Send test messages over the transport
+      void test (const long & iterations);
+
       /// Clear all knowledge and rules from the knowledge base
       void clear (void);
 
@@ -105,12 +99,26 @@ namespace Madara
       void clear_rules (void);
 
     private:
+      void setup_uniquehostport (const std::string & host);
+      void setup_splitters (void);
 
-      /// Pointer to actual implementation, i.e., the "bridge", which is
-      /// reference counted to automate memory management. 
-      Refcounter <Knowledge_Base_Impl> impl_;
+      ::std::vector< ::std::string> statement_splitters_;
+      ::std::vector< ::std::string> assignment_splitters_;
+      ::std::vector< ::std::string> implies_splitters_;
+      ::std::vector< ::std::string> conditional_splitters_;
+      ::std::vector< ::std::string> comparison_splitters_;
+
+
+      Thread_Safe_Context           map_;
+      Knowledge_Rules               rules_;
+      Madara::Transport::Base *     transport_;
+      int                           transport_type_;
+      ACE_SOCK_Acceptor             unique_bind_;
+      std::string                   id_;
+
+      Madara::Expression_Tree::Interpreter     interpreter_;
     };
   }
 }
 
-#endif   // _MADARA_KNOWLEDGE_BASE_H
+#endif  // _MADARA_KNOWLEDGE_BASE_IMPL_H
