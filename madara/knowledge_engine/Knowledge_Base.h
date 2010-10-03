@@ -44,7 +44,7 @@ namespace Madara
 
       /// Constructor for transport and knowledge realm
       Knowledge_Base (const std::string & host, int transport,
-        const std::string & knowledge_realm);
+        const std::string & knowledge_domain);
 
       /// Copy constructor
       Knowledge_Base (const Knowledge_Base & original);

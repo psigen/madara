@@ -81,6 +81,12 @@ Madara::Transport::Splice_DDS_Transport::close (void)
 {
   Madara::Transport::Base::close ();
 
+  if (thread_)
+  {
+    thread_->close ();
+    delete thread_;
+  }
+
   if (subscriber_)
   {
     subscriber_->delete_datareader (update_reader_);
@@ -104,12 +110,6 @@ Madara::Transport::Splice_DDS_Transport::close (void)
 
   if (domain_factory_)
     domain_factory_->delete_participant (domain_participant_);
-
-  if (thread_)
-  {
-    thread_->close ();
-    delete thread_;
-  }
 
   thread_ = 0;
   update_reader_ = 0;

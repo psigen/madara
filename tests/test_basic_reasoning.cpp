@@ -581,12 +581,31 @@ void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_both_operator"));
 
+  int result = 0;
+
   knowledge.clear ();
   knowledge.evaluate (";;;;;.var2 = 3;;;.var3 = 4;;;");
   assert (knowledge.get (".var2") == 3 && knowledge.get (".var3") == 4);
 
   knowledge.evaluate (";.var2 == 3 => .var4 = 1; .var4 == 1 => .var5 = 10;;; ; ;");
   assert (knowledge.get (".var4") == 1 && knowledge.get (".var5") == 10);
+
+  // test ordering to make sure separator is working properly
+  knowledge.evaluate (".var6 = (.var2; .var4; .var3)");
+  assert (knowledge.get (".var6") == 4);
+
+  knowledge.evaluate (".var6 = (.var4; .var3; .var2)");
+  assert (knowledge.get (".var6") == 4);
+
+  knowledge.evaluate (".var6 = (.var3; .var4; .var2)");
+  assert (knowledge.get (".var6") == 4);
+
+  knowledge.evaluate (".var6 = (1; 3; 5; .var5)");
+  assert (knowledge.get (".var6") == 10);
+
+  knowledge.evaluate (".id=1;Running1=0;Running2=0");
+  result = knowledge.evaluate ("(Running{.id} = 0); 1 && !Running1 && !Running2");
+  assert (result == 1);
 }
 
 /// Tests the conditionals (==, !=, <, <=, >, >=)

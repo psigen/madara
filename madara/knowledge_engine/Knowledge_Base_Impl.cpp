@@ -36,8 +36,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport,
-  const std::string & knowledge_realm)
-: transport_type_ (transport), topic_name_ (knowledge_realm)
+  const std::string & knowledge_domain)
+: transport_type_ (transport), domain_name_ (knowledge_domain)
 {
   setup_uniquehostport (host);
   setup_splitters ();
@@ -100,7 +100,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
   {
   #ifdef _USE_OPEN_SPLICE_
     transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
-    Madara::Transport::Splice_DDS_Transport::RELIABLE, true, topic_name_);
+    Madara::Transport::Splice_DDS_Transport::RELIABLE, true, domain_name_);
   #endif
   }
   else

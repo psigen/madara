@@ -30,7 +30,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_INFO | LM_DEBUG, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
@@ -52,7 +52,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   }
 
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting on %s\n",
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Waiting on %s\n",
     processes_to_wait_for.str ().c_str ()));
   knowledge.wait (processes_to_wait_for.str ());
 
@@ -61,18 +61,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   processes_to_wait_for.str ("");
   processes_to_wait_for << "(Running{.id} = 0); 1";
 
-
-
   for(int i = 0; i < processes; ++i)
   {
     processes_to_wait_for << " && !Running" << i;
   }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting on %s\n",
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Waiting on %s\n",
     processes_to_wait_for.str ().c_str ()));
 
   // need to fix this
-//  knowledge.wait (processes_to_wait_for.str ());
+  knowledge.wait (processes_to_wait_for.str ());
 
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Knowledge\n"));

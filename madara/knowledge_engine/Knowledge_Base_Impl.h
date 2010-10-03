@@ -115,7 +115,7 @@ namespace Madara
       int                           transport_type_;
       ACE_SOCK_Acceptor             unique_bind_;
       std::string                   id_;
-      std::string                   topic_name_;
+      std::string                   domain_name_;
 
       Madara::Expression_Tree::Interpreter     interpreter_;
     };

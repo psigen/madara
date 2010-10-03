@@ -84,9 +84,9 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   }
 }
 
-project (Test_Knowledge_Realms) : using_madara, using_ace, using_splice {
+project (Test_Knowledge_Domains) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
-  exename = test_knowledge_realms
+  exename = test_knowledge_domains
   after += Madara
   
   requires += tests
@@ -101,7 +101,7 @@ project (Test_Knowledge_Realms) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_knowledge_realms.cpp
+    ../tests/test_knowledge_domains.cpp
   }
 }
 

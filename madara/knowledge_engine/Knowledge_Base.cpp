@@ -31,8 +31,8 @@ Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (
 
 Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (
   const std::string & host, int transport, 
-  const std::string & knowledge_realm)
-: impl_ (new Knowledge_Base_Impl (host, transport, knowledge_realm))
+  const std::string & knowledge_domain)
+: impl_ (new Knowledge_Base_Impl (host, transport, knowledge_domain))
 {
 }
 
