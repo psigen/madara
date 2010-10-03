@@ -7,7 +7,7 @@
 
 const char * Madara::Transport::Splice_DDS_Transport::topic_names_[] = {
   "MADARA_KaRL_Data",
-  "MADARA_KaRL_Mutex"
+  "MADARA_KaRL_Control"
 };
 
 /* Array to hold the names for all ReturnCodes. */
@@ -42,7 +42,31 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
 //  mutex_data_list_ (new Knowledge::MutexSeq), 
   mutex_topic_ (0), thread_ (0),
   reliability_ (reliability), valid_setup_ (false), 
-  enable_mutexing_ (enable_mutexing)
+  enable_mutexing_ (enable_mutexing),
+  data_topic_name_ (topic_names_[0]),
+  control_topic_name_ (topic_names_[1])
+{
+  setup ();
+}
+
+Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
+  const std::string & id,
+  Madara::Knowledge_Engine::Thread_Safe_Context & context, 
+  const int & reliability, bool enable_mutexing,
+  const std::string & topic_name)
+: id_ (id), context_ (context), domain_ (0), domain_factory_ (0), 
+  domain_participant_ (0), publisher_ (0), subscriber_ (0), 
+  datawriter_ (0), datareader_ (0), 
+  update_writer_ (0), update_reader_ (0),
+//  update_data_list_ (new Knowledge::UpdateSeq), 
+  update_topic_ (0), 
+  mutex_writer_ (0), mutex_reader_ (0),
+//  mutex_data_list_ (new Knowledge::MutexSeq), 
+  mutex_topic_ (0), thread_ (0),
+  reliability_ (reliability), valid_setup_ (false), 
+  enable_mutexing_ (enable_mutexing),
+  data_topic_name_ ("MADARA_" + topic_name + "_Data"),
+  control_topic_name_ ("MADARA_" + topic_name + "_Control")
 {
   setup ();
 }
@@ -76,8 +100,10 @@ Madara::Transport::Splice_DDS_Transport::close (void)
     domain_participant_->delete_publisher (publisher_);
     domain_participant_->delete_topic (update_topic_);
     domain_participant_->delete_topic (mutex_topic_);
-    domain_factory_->delete_participant (domain_participant_);
   }
+
+  if (domain_factory_)
+    domain_factory_->delete_participant (domain_participant_);
 
   if (thread_)
   {
@@ -95,6 +121,7 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   subscriber_ = 0;
   publisher_ = 0;
   domain_participant_ = 0;
+  domain_factory_ = 0;
 }
 
 int
@@ -137,7 +164,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     topic_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     topic_qos_.history.depth = 100000;
     topic_qos_.resource_limits.max_samples = 100000;
-    topic_qos_.destination_order.kind = DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+    topic_qos_.destination_order.kind = 
+      DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
     //topic_qos_.
   }
   //topic_qos_.resource_limits.max_samples_per_instance= 10;
@@ -155,13 +183,17 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
   // Create Update topic
   update_topic_ = domain_participant_->create_topic (
-    topic_names_ [0], "Knowledge::Update", topic_qos_, NULL, DDS::STATUS_MASK_NONE);
-  check_handle(update_topic_, "DDS::DomainParticipant::create_topic (Knowledge_Update)");
+    data_topic_name_.c_str (), "Knowledge::Update", 
+    topic_qos_, NULL, DDS::STATUS_MASK_NONE);
+  check_handle(update_topic_, 
+    "DDS::DomainParticipant::create_topic (Knowledge_Update)");
 
   // Create Mutex topic
   mutex_topic_ = domain_participant_->create_topic (
-    topic_names_ [1], "Knowledge::Mutex", topic_qos_, NULL, DDS::STATUS_MASK_NONE);
-  check_handle(mutex_topic_, "DDS::DomainParticipant::create_topic (Knowledge_Mutex)");
+    control_topic_name_.c_str (), "Knowledge::Mutex", 
+    topic_qos_, NULL, DDS::STATUS_MASK_NONE);
+  check_handle(mutex_topic_, 
+    "DDS::DomainParticipant::create_topic (Knowledge_Mutex)");
 
   // Get default qos for publisher
   status = domain_participant_->get_default_publisher_qos (pub_qos_);
@@ -221,7 +253,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datawriter_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datawriter_qos_.history.depth = 100000;
     datawriter_qos_.resource_limits.max_samples = 100000;
-    datawriter_qos_.destination_order.kind = DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+    datawriter_qos_.destination_order.kind = 
+      DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
   // Create Update writer
@@ -251,7 +284,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datareader_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datareader_qos_.history.depth = 100000;
     datareader_qos_.resource_limits.max_samples = 100000;
-    datareader_qos_.destination_order.kind = DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+    datareader_qos_.destination_order.kind = 
+      DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
   // Create Update datareader

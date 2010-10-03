@@ -37,7 +37,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport,
   const std::string & knowledge_realm)
-: transport_type_ (transport)
+: transport_type_ (transport), topic_name_ (knowledge_realm)
 {
   setup_uniquehostport (host);
   setup_splitters ();
@@ -68,8 +68,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
   // we were able to bind to an ephemeral port
   Madara::Utility::merge_hostport_identifier (id_, host, port);
 
-  ACE_DEBUG ((LM_DEBUG, 
-      "MADARA: Unable to bind to any ephemeral port\n"));
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Unique bind to %s\n", id_.c_str ()));
 
 }
@@ -102,7 +100,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
   {
   #ifdef _USE_OPEN_SPLICE_
     transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
-    Madara::Transport::Splice_DDS_Transport::RELIABLE, true);
+    Madara::Transport::Splice_DDS_Transport::RELIABLE, true, topic_name_);
   #endif
   }
   else

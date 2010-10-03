@@ -34,6 +34,10 @@ namespace Madara
       Splice_DDS_Transport (const std::string & id, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const int & reliability, bool enable_mutexing);
+      Splice_DDS_Transport (const std::string & id, 
+        Madara::Knowledge_Engine::Thread_Safe_Context & context, 
+        const int & reliability, bool enable_mutexing,
+        const std::string & topic_name);
       ~Splice_DDS_Transport ();
       virtual long send_data (const std::string & key, const long & value);
       long send_multiassignment (const std::string & expression);
@@ -84,6 +88,10 @@ namespace Madara
       DDS::Topic_ptr                     mutex_topic_;
 
       Splice_Read_Thread *               thread_;
+
+      std::string                        data_topic_name_;
+      std::string                        control_topic_name_;
+
 
       int reliability_;
       bool valid_setup_;

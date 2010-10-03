@@ -84,6 +84,27 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Knowledge_Realms) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_knowledge_realms
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_knowledge_realms.cpp
+  }
+}
+
 project (Test_Synchronization) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_synchronization

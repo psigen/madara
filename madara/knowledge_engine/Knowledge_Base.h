@@ -15,15 +15,13 @@
 #include "ace/SOCK_Acceptor.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/Refcounter.h"
+#include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 
 namespace Madara
 {
 
   namespace Knowledge_Engine
   {
-    // forward declaration
-    class Knowledge_Base_Impl;
-
     /**
      * @class Knowledge_Record
      * @brief This class provides a distributed knowledge base to users
