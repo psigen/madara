@@ -15,6 +15,7 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
+bool logical_print = false;
 int id = 2;
 int left = 0;
 int processes = 3;
@@ -39,7 +40,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
@@ -115,7 +116,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     //expression = s1_logic;
   }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Wait expression will be %s\n", expression.c_str ()));
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Wait expression will be %s\n", expression.c_str ()));
 
   knowledge.evaluate (expression);
 
@@ -123,7 +124,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.print_knowledge ();
 
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting on S%d.started and S%d.started\n", 
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Waiting on S%d.started and S%d.started\n", 
     knowledge.get (".left"), knowledge.get (".right")));
 
   // wait for left and right processes to startup before executing application logic
@@ -137,6 +138,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     knowledge.wait (expression);
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) Current Knowledge\n"));
+    if (logical_print)
+    {
+      ACE_DEBUG ((LM_INFO, "  %d %d %d\n", knowledge.get ("S0"),
+        knowledge.get ("S1"), knowledge.get ("S2")));
+    }
+    else
+    {
+      ACE_DEBUG ((LM_INFO, "  %d %d %d\n", knowledge.evaluate ("S{.left}"),
+        knowledge.evaluate ("S{.self}"), knowledge.evaluate ("S{.right}")));
+    }
     knowledge.print_knowledge ();
     ACE_OS::sleep (1);
   }
@@ -155,7 +166,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:lh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -164,9 +175,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("value"), 'v', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("logical"), 'l', ACE_Get_Opt::NO_ARG);
  
   // temp for current switched option
   int option;
@@ -178,6 +190,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
+    case 'l':
+      logical_print = true;
+      break;
     case 'i':
       id = atoi (cmd_opts.opt_arg ());
       break;
@@ -209,9 +224,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
       -p (--processes) number of processes that will be running\n\
       -i (--id)        set process id (0 default)  \n\
-      -s (--stop)      stop condition (10 default) \n\
+      -s (--stop)      stop condition (3 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
+      -l (--logical)   print logical ordering of state (S0, S1, S2)\n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 

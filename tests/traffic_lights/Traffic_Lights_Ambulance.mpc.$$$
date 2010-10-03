@@ -1,0 +1,40 @@
+
+project (Traffic_Light) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = traffic_light
+  after += Madara
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    traffic_light.cpp
+  }
+}
+
+project (Ambulance) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = ambulance
+  after += Madara
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ambulance.cpp
+  }
+}
+
+
