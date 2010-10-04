@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<!DOCTYPE paradigm SYSTEM "edf.dtd">
+
+<paradigm name="MADARA" version=".002" guid="{B69301A5-45DE-4CEC-B697-C1CCEEF52EB3}" cdate="Mon Oct 04 16:53:59 2010" mdate="Mon Oct 04 16:53:59 2010" >
+
+	<comment>Initial Version</comment>
+
+	<author>James Edmondson</author>
+
+	<folder name = "RootFolder" metaref = "1000"  rootobjects = "Process" >
+		<attrdef name="code" metaref = "1001" valuetype = "string" defvalue = "">
+		</attrdef>
+		<attrdef name="host" metaref = "1002" valuetype = "string" defvalue = "localhost">
+			<regnode name="help" value = "The host that this process resides on (helps to identify the process)"></regnode>
+		</attrdef>
+		<attrdef name="mechanism" metaref = "1100" valuetype = "enum" defvalue = "evaluate">
+			<enumitem dispname = "evaluate" value = "evaluate"></enumitem>
+			<enumitem dispname = "wait" value = "wait"></enumitem>
+			<enumitem dispname = "get" value = "get"></enumitem>
+			<enumitem dispname = "set" value = "set"></enumitem>
+			<regnode name="help" value = "KaRL Engine mechanism to evaluate expression with"></regnode>
+		</attrdef>
+		<attrdef name="transport" metaref = "1003" valuetype = "enum" defvalue = "Splice">
+			<enumitem dispname = "Splice" value = "Splice"></enumitem>
+			<enumitem dispname = "TCP" value = "TCP"></enumitem>
+			<enumitem dispname = "UDP" value = "UDP"></enumitem>
+			<enumitem dispname = "Multicast" value = "Multicast"></enumitem>
+			<regnode name="help" value = "The transport to use for disseminating / gaining knowledge"></regnode>
+		</attrdef>
+		<atom name = "Value" metaref = "1004" >
+				<regnode name = "namePosition" value ="4"></regnode>
+		</atom>
+		<model name = "Add" metaref = "1005" >
+			<dispname>+</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1101" >
+			</aspect>
+		</model>
+		<model name = "Divide" metaref = "1007" >
+			<dispname>/</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1102" >
+			</aspect>
+		</model>
+		<model name = "Equality" metaref = "1009" >
+			<dispname>==</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1103" >
+			</aspect>
+		</model>
+		<model name = "Expression" metaref = "1011" attributes = "code mechanism" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "Add" metaref = "1012" kind = "Add"></role>
+			<role name = "Divide" metaref = "1013" kind = "Divide"></role>
+			<role name = "Equality" metaref = "1014" kind = "Equality"></role>
+			<role name = "Greater_Than" metaref = "1015" kind = "Greater_Than"></role>
+			<role name = "Greater_Than_Or_Equal_To" metaref = "1016" kind = "Greater_Than_Or_Equal_To"></role>
+			<role name = "Implies" metaref = "1017" kind = "Implies"></role>
+			<role name = "Inequality" metaref = "1018" kind = "Inequality"></role>
+			<role name = "Less_Than" metaref = "1019" kind = "Less_Than"></role>
+			<role name = "Less_Than_Or_Equal_To" metaref = "1020" kind = "Less_Than_Or_Equal_To"></role>
+			<role name = "Logical_And" metaref = "1021" kind = "Logical_And"></role>
+			<role name = "Logical_Both" metaref = "1022" kind = "Logical_Both"></role>
+			<role name = "Logical_Negation" metaref = "1023" kind = "Logical_Negation"></role>
+			<role name = "Logical_Or" metaref = "1025" kind = "Logical_Or"></role>
+			<role name = "Modulus" metaref = "1026" kind = "Modulus"></role>
+			<role name = "Multiply" metaref = "1027" kind = "Multiply"></role>
+			<role name = "Predecrement" metaref = "1028" kind = "Predecrement"></role>
+			<role name = "Preincrement" metaref = "1029" kind = "Preincrement"></role>
+			<role name = "Subtract" metaref = "1030" kind = "Subtract"></role>
+			<role name = "Unary_Minus" metaref = "1031" kind = "Unary_Minus"></role>
+			<role name = "Value" metaref = "1032" kind = "Value"></role>
+			<role name = "Variable" metaref = "1033" kind = "Variable"></role>
+			<aspect name = "Aspect" metaref = "1104" attributes = "code mechanism" >
+				<part metaref = "1035" role = "Add" primary = "yes" linked = "no"></part>
+				<part metaref = "1036" role = "Divide" primary = "yes" linked = "no"></part>
+				<part metaref = "1037" role = "Equality" primary = "yes" linked = "no"></part>
+				<part metaref = "1038" role = "Greater_Than" primary = "yes" linked = "no"></part>
+				<part metaref = "1039" role = "Greater_Than_Or_Equal_To" primary = "yes" linked = "no"></part>
+				<part metaref = "1040" role = "Implies" primary = "yes" linked = "no"></part>
+				<part metaref = "1041" role = "Inequality" primary = "yes" linked = "no"></part>
+				<part metaref = "1042" role = "Less_Than" primary = "yes" linked = "no"></part>
+				<part metaref = "1043" role = "Less_Than_Or_Equal_To" primary = "yes" linked = "no"></part>
+				<part metaref = "1044" role = "Logical_And" primary = "yes" linked = "no"></part>
+				<part metaref = "1045" role = "Logical_Both" primary = "yes" linked = "no"></part>
+				<part metaref = "1046" role = "Logical_Negation" primary = "yes" linked = "no"></part>
+				<part metaref = "1048" role = "Logical_Or" primary = "yes" linked = "no"></part>
+				<part metaref = "1049" role = "Modulus" primary = "yes" linked = "no"></part>
+				<part metaref = "1050" role = "Multiply" primary = "yes" linked = "no"></part>
+				<part metaref = "1051" role = "Predecrement" primary = "yes" linked = "no"></part>
+				<part metaref = "1052" role = "Preincrement" primary = "yes" linked = "no"></part>
+				<part metaref = "1053" role = "Subtract" primary = "yes" linked = "no"></part>
+				<part metaref = "1054" role = "Unary_Minus" primary = "yes" linked = "no"></part>
+				<part metaref = "1055" role = "Value" primary = "yes" linked = "no"></part>
+				<part metaref = "1056" role = "Variable" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Greater_Than" metaref = "1057" >
+			<dispname>&gt;</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1105" >
+			</aspect>
+		</model>
+		<model name = "Greater_Than_Or_Equal_To" metaref = "1059" >
+			<dispname>&gt;=</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1106" >
+			</aspect>
+		</model>
+		<model name = "Implies" metaref = "1061" >
+			<dispname>=&gt;</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1107" >
+			</aspect>
+		</model>
+		<model name = "Inequality" metaref = "1063" >
+			<dispname>!=</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1108" >
+			</aspect>
+		</model>
+		<model name = "Less_Than" metaref = "1065" >
+			<dispname>&lt;</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1109" >
+			</aspect>
+		</model>
+		<model name = "Less_Than_Or_Equal_To" metaref = "1067" >
+			<dispname>&lt;=</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1110" >
+			</aspect>
+		</model>
+		<model name = "Logical_And" metaref = "1069" >
+			<dispname>&amp;&amp;</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1111" >
+			</aspect>
+		</model>
+		<model name = "Logical_Both" metaref = "1071" >
+			<dispname>;</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1112" >
+			</aspect>
+		</model>
+		<model name = "Logical_Negation" metaref = "1073" >
+			<dispname>!</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1113" >
+			</aspect>
+		</model>
+		<model name = "Logical_Or" metaref = "1075" >
+			<dispname>||</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1114" >
+			</aspect>
+		</model>
+		<model name = "Modulus" metaref = "1077" >
+			<dispname>%</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1115" >
+			</aspect>
+		</model>
+		<model name = "Multiply" metaref = "1079" >
+			<dispname>*</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1116" >
+			</aspect>
+		</model>
+		<model name = "Predecrement" metaref = "1081" >
+			<dispname>--</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1117" >
+			</aspect>
+		</model>
+		<model name = "Preincrement" metaref = "1083" >
+			<dispname>++</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1118" >
+			</aspect>
+		</model>
+		<model name = "Process" metaref = "1085" attributes = "host transport" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "Stage" metaref = "1086" kind = "Stage"></role>
+			<aspect name = "Aspect" metaref = "1119" attributes = "host transport" >
+				<part metaref = "1088" role = "Stage" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Stage" metaref = "1089" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "Expression" metaref = "1090" kind = "Expression"></role>
+			<aspect name = "Aspect" metaref = "1120" >
+				<part metaref = "1092" role = "Expression" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "State" metaref = "1093" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1121" >
+			</aspect>
+		</model>
+		<model name = "Subtract" metaref = "1095" >
+			<dispname>-</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1122" >
+			</aspect>
+		</model>
+		<model name = "Unary_Minus" metaref = "1097" >
+			<dispname>-</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1123" >
+			</aspect>
+		</model>
+		<model name = "Variable" metaref = "1099" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1124" >
+			</aspect>
+		</model>
+	</folder>
+</paradigm>
