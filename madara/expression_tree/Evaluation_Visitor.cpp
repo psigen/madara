@@ -339,7 +339,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluations of a division (Composite_Modulus_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Modulus_Node &node)
+  const Madara::Expression_Tree::Composite_Implies_Node &node)
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () ? stack_.pop () : 0);
