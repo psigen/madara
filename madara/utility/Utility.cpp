@@ -1,7 +1,7 @@
 #include "ctype.h"
 #include "madara/utility/Utility.h"
 #include <iostream>
-#include <stdlib.h>
+#include <sstream>
 #include "ace/INET_Addr.h"
 #include "ace/Log_Msg.h"
 
@@ -195,15 +195,10 @@ int
 Madara::Utility::merge_hostport_identifier (std::string & key, 
   const std::string & host, unsigned short u_port)
 {
-  char port_buf[16];
-  std::string port;
+  std::stringstream port_stream;
+  port_stream << u_port;
 
-  // convert the server_port into string form for our context
-  itoa (u_port, port_buf, 10);
-
-  port = port_buf;
-
-  return merge_hostport_identifier (key, host, port);
+  return merge_hostport_identifier (key, host, port_stream.str ());
 }
 
 /// Bind to an ephemeral port
