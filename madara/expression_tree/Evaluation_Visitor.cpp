@@ -336,6 +336,15 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     stack_.push (stack_.pop () % stack_.pop ());
 }
 
+/// evaluations of a division (Composite_Modulus_Node)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Composite_Modulus_Node &node)
+{
+  if (stack_.size () >= 2)
+    stack_.push (stack_.pop () ? stack_.pop () : 0);
+}
+
 /// print a total for the evaluation
 int 
 Madara::Expression_Tree::Evaluation_Visitor::total (void)
