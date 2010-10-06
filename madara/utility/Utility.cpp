@@ -1,6 +1,7 @@
 #include "ctype.h"
 #include "madara/utility/Utility.h"
 #include <iostream>
+#include <stdlib.h>
 #include "ace/INET_Addr.h"
 #include "ace/Log_Msg.h"
 
