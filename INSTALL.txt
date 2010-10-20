@@ -1,5 +1,6 @@
 How to Install Madara on your system (must be done on each host)
 
+    * Latest Version
     * Introduction
     * Prerequisites
           o ACE
@@ -12,6 +13,15 @@ How to Install Madara on your system (must be done on each host)
           o Set environment variables
           o Generate the Madara project for your system
           o Compiling the Madara library on your system
+
+
+========================================================
+0. Latest Version
+
+  This file may not be up-to-date.
+
+  Please see http://code.google.com/p/madara/wiki/Installation for the
+  latest version of this document.
 
 ========================================================
 1. Introduction
@@ -77,6 +87,29 @@ ACE download and install (Windows)
 
 Open Splice Community Edition
 --------------------------------
+
+Linux
+
+  First, go ahead and setup the environment variables in your ~/.profile file 
+  or wherever your operating system loads your environment variables from.
+
+    export OSPL_HOME=/opt/splice/HDE/x86.linux2.6
+    export OSPL_TARGET=x86.linux2.6
+    export OSPL_TMPL_PATH=$OSPL_HOME/etc/idlpp
+    export OSPL_URI=file://$OSPL_HOME/etc/config/ospl.xml
+
+    export LD_LIBRARY_PATH=$OSPL_HOME/lib:$LD_LIBRARY_PATH
+    export PATH=$OSPL_HOME/bin:$PATH
+
+  The following commands extract the Open Splice download to the /opt/splice 
+  directory. Feel free to change this to whatever location you'd like splice to reside at:
+
+    cd /opt
+    wget http://www.opensplice.org/releases/downloads/releases/OpenSpliceDDSV5.2-x86.linux2.6-gcc344-gnuc23-HDE.tar.gz
+    mkdir /opt/splice
+    cd /opt/splice
+    tar xvf OpenSpliceDDSV5.2-x86.linux2.6-gcc344-gnuc23-HDE.tar.gz
+
 Windows
 
   * Download http://code.google.com/p/madara/downloads/detail?name=opensplice_community.zip
@@ -124,7 +157,7 @@ Generate the Madara project for your system
 
   * Linux
       cd $MADARA_ROOT
-      mwc.pl -type gnu.make MADARA.mwc
+      mwc.pl -type gnuace MADARA.mwc 
 
   * Windows
       cd $MADARA_ROOT
@@ -135,7 +168,7 @@ Compiling the Madara library on your system
 
   * Linux
       cd $MADARA_ROOT
-      make
+      make opensplice=1 tests=1 
 
   * Windows
       cd $MADARA_ROOT
