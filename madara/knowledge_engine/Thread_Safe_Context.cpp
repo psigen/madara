@@ -9,7 +9,7 @@
 
 // constructor
 Madara::Knowledge_Engine::Thread_Safe_Context::Thread_Safe_Context ()
-: changed_ (mutex_)
+: changed_ (mutex_), clock_ (0)
 {
   expansion_splitters_.push_back ("{");
   expansion_splitters_.push_back ("}");
@@ -251,6 +251,106 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   }
 
   return builder.str ();
+}
+
+/// set the lamport clock (updates with lamport clocks lower
+/// than our current clock get discarded)
+long 
+Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (long clock)
+{
+  Context_Guard guard (mutex_);
+
+  // clock_ is always increasing. We never reset it to a lower clock value
+  // user can check return value to see if the clock was set.
+  if (clock_ < clock)
+    clock_ = clock;
+
+  return clock_;
+}
+
+/// set the lamport clock (updates with lamport clocks lower
+/// than our current clock get discarded)
+long 
+Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
+  const std::string & key, long clock)
+{
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // if it's found, then compare the value
+  if (found != map_.end ())
+  {
+    // check for value already set
+    if (found->second.clock < clock)
+    {
+      found->second.clock = clock;
+    }
+
+    return found->second.clock;
+  }
+  else
+    // key does not exist
+    return 0;
+}
+
+/// set the lamport clock for a particular variable (updates with 
+/// lamport clocks lower than our current clock get discarded)
+long 
+Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
+  const std::string & key)
+{
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // if it's found, then compare the value
+  if (found != map_.end ())
+  {
+    return ++found->second.clock;
+  }
+  else
+    // key does not exist
+    return 0;
+}
+
+/// increment the process lamport clock
+long 
+Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (void)
+{
+  Context_Guard guard (mutex_);
+  return ++clock_;
+}
+
+/// get the lamport clock (updates with lamport clocks lower
+/// than our current clock get discarded)
+long 
+Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (void)
+{
+  Context_Guard guard (mutex_);
+  return clock_;
+}
+
+/// get the lamport clock for a particular variable
+long 
+Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (
+  const std::string & key)
+{
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // if it's found, then compare the value
+  if (found != map_.end ())
+  {
+    return found->second.clock;
+  }
+  else
+    // key does not exist
+    return 0;
 }
 
 /// Print a statement, similar to printf (variable expressions allowed)

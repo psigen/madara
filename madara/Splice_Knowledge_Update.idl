@@ -8,6 +8,7 @@ module Knowledge
       long                              priority;
       string                            originator;
       long                              type;
+      long                              clock;
     };
     
     //#pragma keylist Update

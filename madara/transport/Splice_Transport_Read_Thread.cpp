@@ -72,9 +72,24 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
   // if we aren't evaluating a message from ourselves, process it
   std::string key = data.key.val ();
   long value = data.value;
+  int result = 0;
 
-  int result = context_.set_if_unequal (key, value, false);
+  context_.lock ();
+  long cur_clock = context_.get_clock (key);
 
+  // if the data we are updating had a lower clock value
+  // then that means this update is the latest value. Among
+  // other things, this means our solution will work even
+  // without FIFO channel transports
+  if (cur_clock < data.clock)
+  {
+    result = context_.set_if_unequal (key, value, false);
+    context_.set_clock (key, data.clock);
+  }
+  else result = 2;
+
+  context_.unlock ();
+  
   // if we actually updated the value
   if (result == 1)
   {
@@ -86,6 +101,11 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
   {
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
       key.c_str (), value));
+  }
+  else if (result == 2)
+  {
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
+      key.c_str (), cur_clock, data.clock));
   }
 }
 
@@ -106,7 +126,20 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
   {
     stream >> key >> symbol >> value >> symbol;
 
-    int result = context_.set_if_unequal (key, value, false);    
+    int result = 0;
+    long cur_clock = context_.get_clock (key);
+
+    // if the data we are updating had a lower clock value
+    // then that means this update is the latest value. Among
+    // other things, this means our solution will work even
+    // without FIFO channel transports
+    if (cur_clock < data.clock)
+    {
+      result = context_.set_if_unequal (key, value, false);
+      context_.set_clock (key, data.clock);
+    }
+    else result = 2;
+
     // if we actually updated the value
     if (result == 1)
     {
@@ -119,6 +152,12 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
       ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
         key.c_str (), value));
     }
+    else if (result == 2)
+    {
+      ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
+        key.c_str (), cur_clock, data.clock));
+    }
+
   }
   
   context_.unlock ();

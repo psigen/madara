@@ -157,8 +157,19 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
   // modifieds, and this is NOT a local key
   if (transport_ && send_modifieds && key[0] != '.')
   {
+    map_.lock ();
+
+    /// generate a new clock time and set our variable's clock to
+    /// this new clock
+    long cur_clock = map_.inc_clock ();
+    map_.set_clock (key, cur_clock);
+
+    /// now send the data and reset the modified state
     transport_->send_data (key, value);
     map_.reset_modified (key);
+
+    /// unlock the knowledge map
+    map_.unlock ();
   }
 }
 
@@ -182,23 +193,28 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   int last_value = tree.evaluate ();
 
-  // check for modifications in this first pass
   if (transport_ && send_modifieds)
   {
     Madara::String_Vector modified;
     map_.get_modified (modified);
     std::stringstream string_builder;
-
-    for (Madara::String_Vector::const_iterator k = modified.begin ();
-         k != modified.end (); ++k)
-    {
-      string_builder << *k << " = " << map_.get (*k) << " ; ";
-      //transport_->send_data (*k, map_.get (*k));
-    }
-
     if (modified.size () > 0)
+    {
+      /// generate a new clock time and set our variable's clock to
+      /// this new clock
+      long cur_clock = map_.inc_clock ();
+
+      for (Madara::String_Vector::const_iterator k = modified.begin ();
+             k != modified.end (); ++k)
+      {
+        map_.set_clock (*k, cur_clock);
+        string_builder << *k << " = " << map_.get (*k) << " ; ";
+          //transport_->send_data (*k, map_.get (*k));
+      }
+
       transport_->send_multiassignment (string_builder.str ());
-    map_.reset_modified ();
+      map_.reset_modified ();
+    }
   }
 
   // wait for expression to be true
@@ -221,17 +237,23 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
       Madara::String_Vector modified;
       map_.get_modified (modified);
       std::stringstream string_builder;
-
-      for (Madara::String_Vector::const_iterator k = modified.begin ();
-           k != modified.end (); ++k)
-      {
-        string_builder << *k << " = " << map_.get (*k) << " ; ";
-        //transport_->send_data (*k, map_.get (*k));
-      }
-
       if (modified.size () > 0)
+      {
+        /// generate a new clock time and set our variable's clock to
+        /// this new clock
+        long cur_clock = map_.inc_clock ();
+
+        for (Madara::String_Vector::const_iterator k = modified.begin ();
+               k != modified.end (); ++k)
+        {
+          map_.set_clock (*k, cur_clock);
+          string_builder << *k << " = " << map_.get (*k) << " ; ";
+          //transport_->send_data (*k, map_.get (*k));
+        }
+
         transport_->send_multiassignment (string_builder.str ());
-      map_.reset_modified ();
+        map_.reset_modified ();
+      }
     }
 
     map_.signal ();
@@ -289,9 +311,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
     map_.get_modified (modified);
     std::stringstream string_builder;
 
+    /// generate a new clock time and set our variable's clock to
+    /// this new clock
+    long cur_clock = map_.inc_clock ();
+
     for (Madara::String_Vector::const_iterator k = modified.begin ();
          k != modified.end (); ++k)
     {
+      map_.set_clock (*k, cur_clock);
       string_builder << *k << " = " << map_.get (*k) << " ; ";
     }
 

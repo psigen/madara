@@ -5,7 +5,7 @@ module Knowledge
     {
       string                            key;
       string                            originator;
-      long                              time;
+      long                              clock;
       long                              type;
       long                              priority;
     };

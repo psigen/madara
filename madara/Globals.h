@@ -47,6 +47,7 @@ namespace Madara
 
     int status;
     long value;
+    long clock;
     int scope;
   };
 

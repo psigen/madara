@@ -92,6 +92,30 @@ namespace Madara
       /// Unlock the mutex on this context.
       void unlock (void) const;
       
+      /// atomically increment the lamport clock and return the new
+      /// clock time (intended for sending knowledge updates)
+      long inc_clock (void);
+
+      /// atomically increment the lamport clock of a particular variable
+      /// and return the new clock time (for sending knowledge updates)
+      long inc_clock (const std::string & key);
+
+      /// set the lamport clock (updates with lamport clocks lower
+      /// than our current clock get discarded)
+      long set_clock (long clock);
+
+      /// set the lamport clock for a particular variable (updates with 
+      /// lamport clocks lower than our current clock get discarded)
+      long set_clock (const std::string & key, long clock);
+
+      /// get the lamport clock (updates with lamport clocks lower
+      /// than our current clock get discarded)
+      long get_clock (void);
+
+      /// get the lamport clock for a particular variable (updates with
+      /// lamport clocks lower than our current clock get discarded)
+      long get_clock (const std::string & key);
+
       /// Signal the condition that it can wake up someone else 
       /// on changed data
       void signal (void) const;
@@ -107,6 +131,7 @@ namespace Madara
       mutable ACE_Recursive_Thread_Mutex mutex_;
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
+      long clock_;
     };
   }
 }
