@@ -1,4 +1,8 @@
 #include <iostream>
+#include <sstream>
+
+#include "madara/utility/Utility.h"
+
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "ace/Log_Msg.h"
 
@@ -7,6 +11,8 @@
 Madara::Knowledge_Engine::Thread_Safe_Context::Thread_Safe_Context ()
 : changed_ (mutex_)
 {
+  expansion_splitters_.push_back ("{");
+  expansion_splitters_.push_back ("}");
 }
 
 // destructor
@@ -186,6 +192,76 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (void) const
        ++i)
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) %s=%d\n", 
               i->first.c_str (), i->second.value));
+}
+
+/// Expand a string with variable expansions. This is a generic form of
+/// the function found in Variable_Node, which is optimized to never change
+/// keys.
+std::string 
+Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
+  const std::string & key) const
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // vectors for holding parsed tokens and pivot_list
+  std::vector< std::string> tokens;
+  std::vector< std::string> pivot_list;
+  unsigned int count = 1;
+  unsigned int subcount = 0;
+  unsigned int begin_exp = 0;
+
+  std::stringstream builder;
+
+  // iterate over the input string
+  for (unsigned int i = 0; i < key.size (); ++i)
+  {
+    // if this is an open brace, increase the subcount
+    if (key[i] == '{')
+    {
+      ++subcount;
+      if (subcount == 1)
+        begin_exp = i;
+    }
+    // closed brace should decrease subcount
+    else if (key[i] == '}')
+    {
+      if (subcount == 1)
+      {
+        std::string expandable = key.substr (begin_exp + 1, i - begin_exp - 1);
+        std::string results = this->expand_statement (expandable);
+        builder << this->get (results);
+      }
+      --subcount;
+    }
+    // otherwise, if this subcount is 0, then we need to add it to our output
+    // we allow anything not in subcount == 0 to be handled through recursion
+    else
+    {
+      if (subcount == 0)
+        builder << key[i];
+    }
+  }
+
+  // check to see if all brace counts are appropriate
+  if (subcount != 0)
+  {
+    ACE_DEBUG ((LM_DEBUG, 
+      "EXPAND_ERROR 1: Improperly matched braces in %s\n", key.c_str ()));
+  }
+
+  return builder.str ();
+}
+
+/// Print a statement, similar to printf (variable expressions allowed)
+/// e.g. input = "MyVar{.id} = {MyVar{.id}}\n";
+void 
+Madara::Knowledge_Engine::Thread_Safe_Context::print (
+  const std::string & statement) const
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+  ACE_DEBUG ((LM_INFO, this->expand_statement (statement).c_str ()));
 }
 
 // clear all variables and their values

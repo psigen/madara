@@ -70,6 +70,13 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
   return impl_->get (key);
 }
 
+std::string
+Madara::Knowledge_Engine::Knowledge_Base::expand_statement (
+  const ::std::string & statement) const
+{
+  return impl_->expand_statement (statement);
+}
+
 void
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
                                                int value)
@@ -131,6 +138,13 @@ Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (void) const
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Base::print (
+  const std::string & statement) const
+{
+  impl_->print (statement);
+}
+
+void
 Madara::Knowledge_Engine::Knowledge_Base::clear (void)
 {
   impl_->clear ();
@@ -146,4 +160,16 @@ void
 Madara::Knowledge_Engine::Knowledge_Base::clear_map (void)
 {
   impl_->clear_map ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::acquire (void)
+{
+  impl_->acquire ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::release (void)
+{
+  impl_->release ();
 }

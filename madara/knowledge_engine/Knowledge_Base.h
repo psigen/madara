@@ -64,6 +64,9 @@ namespace Madara
       /// Retrieve the value associated with the provided key
       int get (const ::std::string & key) const;
 
+      /// Expand a statement by variable expansions 
+      std::string expand_statement (const ::std::string & statement) const;
+
       /// Set the value associated with the provided key
       void set (const ::std::string & key, int value = Madara::Knowledge_Record::MODIFIED);
 
@@ -94,6 +97,9 @@ namespace Madara
       /// Print all knowledge (does not include rules)
       void print_knowledge (void) const;
 
+      /// Print a statement after expanding any variables (e.g. "Var{.myid}")
+      void print (const std::string & statement) const;
+
       /// Clear all knowledge and rules from the knowledge base
       void clear (void);
 
@@ -102,6 +108,13 @@ namespace Madara
 
       /// Clear all rules from the knowledge base but keep knowledge
       void clear_rules (void);
+
+      /// lock the underlying knowledge base against any updates
+      /// until we release
+      void acquire (void);
+
+      /// release the lock on the underlying knowledge base
+      void release (void);
 
     private:
 

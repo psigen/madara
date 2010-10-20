@@ -127,6 +127,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get (const ::std::string & key) c
   return map_.get (key);
 }
 
+std::string
+Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
+  const ::std::string & statement) const
+{
+  return map_.expand_statement (statement);
+}
+
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
                                                int value)
@@ -319,6 +326,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (void) const
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print (
+  const std::string & statement) const
+{
+  map_.print (statement);
+}
+
+void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::clear (void)
 {
   map_.clear ();
@@ -353,4 +367,17 @@ void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::clear_map (void)
 {
   map_.clear ();
+}
+
+/// lock the underlying knowledge base against any updates
+/// until we release
+void Madara::Knowledge_Engine::Knowledge_Base_Impl::acquire (void)
+{
+  map_.lock ();
+}
+
+/// release the lock on the underlying knowledge base
+void Madara::Knowledge_Engine::Knowledge_Base_Impl::release (void)
+{
+  map_.unlock ();
 }

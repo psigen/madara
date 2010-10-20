@@ -6,11 +6,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <assert.h>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
 #include "ace/OS.h"
+#include "ace/Signal.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
@@ -21,8 +23,16 @@ int stop = 10;
 long value = 0;
 std::string host = "localhost";
 
+volatile bool terminated = 0;
+
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
+
+// signal handler for someone hitting control+c
+extern "C" void terminate (int)
+{
+  terminated = true;
+}
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -31,13 +41,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
+  // signal handler for clean exit
+  ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
+
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) synchronizing to %d\n",
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) synchronizing to %d\n",
                         id, processes, stop));
 
   // set my id
@@ -47,13 +60,22 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // if I am the bottom process, I look at the last process
   knowledge.set (".left", id ? id - 1 : processes - 1);
 
+  // keep track of the right since they require knowledge from us
+  knowledge.set (".right", id == processes - 1 ? 0 : id + 1);
+
   // set my stop state
   knowledge.set (".stop", stop);
   // set my initial value
   knowledge.set (".init", value);
 
-  // wait for left and right processes to startup before executing application logic
-  knowledge.wait ("(S{.self}.started = 1) && S{.left}.started");
+  ACE_DEBUG ((LM_INFO, 
+    "(%P|%t) (%d of %d) Waiting on my left (S%d) and right (S%d)\n",
+    id, processes, knowledge.get (".left"), knowledge.get (".right")));
+
+  // wait for left and right processes to startup before
+  // executing application logic
+  knowledge.wait (
+    "(S{.self}.started = 1) && S{.left}.started && S{.right}.started");
 
   // set my state to an initial value (see command line args to change)
   knowledge.evaluate ("S{.self}=.init");
@@ -68,20 +90,21 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // end goal (in our case the .stop condition)
   if (id == 0)
   {
-    expression = "S{.self} == S{.left} => ++S{.self}";   
+    expression = "S{.self} == S{.left} => S{.self} = (S{.self} + 1) % .stop ";   
   }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) expression: %s\n",
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) expression: %s\n",
     id, processes, expression.c_str ()));
 
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
   knowledge.print_knowledge ();
 
-  while (knowledge.evaluate ("S{.self} < .stop"))
+  // termination is done via signalling from the user (Control+C)
+  while (!terminated)
   {
     knowledge.wait (expression);
-    knowledge.print_knowledge ();
+    knowledge.print("  {S{.left}} {S{.self}} {S{.right}}\n");
 
     ACE_OS::sleep (1);
   }

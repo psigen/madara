@@ -147,9 +147,11 @@ Madara::Transport::Splice_Read_Thread::svc (void)
     DDS::ConditionSeq_var conditionList = new DDS::ConditionSeq();
     result = waitset_.wait (conditionList.inout (), wait_time);
 
-    is_ready_ = true;
-    is_not_ready_.broadcast ();
-
+    if (!is_ready_)
+    {
+      is_ready_ = true;
+      is_not_ready_.broadcast ();
+    }
     //ACE_DEBUG ((LM_DEBUG, "(%P|%t) Read thread take.\n"));
 
     dds_result = update_reader_->take (update_data_list_, infoList, 1, 

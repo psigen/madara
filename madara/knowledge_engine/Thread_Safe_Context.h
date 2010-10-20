@@ -78,6 +78,10 @@ namespace Madara
       /// Print all variables and their values.
       void print (void) const;
 
+      /// Print a statement, similar to printf (variable expansions allowed)
+      /// e.g. input = "MyVar{.id} = {MyVar{.id}}\n";
+      void print (const std::string & statement) const;
+
       /// Clear all variables and their values.
       void clear (void);
 
@@ -92,6 +96,9 @@ namespace Madara
       /// on changed data
       void signal (void) const;
 
+      /// Expand a string with variable expansions
+      std::string expand_statement (const std::string & statement) const;
+
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
 
@@ -99,6 +106,7 @@ namespace Madara
       Madara::Knowledge_Map map_;
       mutable ACE_Recursive_Thread_Mutex mutex_;
       mutable Condition changed_;
+      std::vector< std::string> expansion_splitters_;
     };
   }
 }
