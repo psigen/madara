@@ -326,11 +326,13 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   data.key = key.c_str ();
   data.value = value;
   data.clock = cur_clock;
+  data.quality = context_.get_write_quality (key);
   data.originator = id_.c_str ();
   data.type = Madara::Knowledge_Engine::ASSIGNMENT;
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) SENDING data: %s=%d with time %d\n", 
-    key.c_str (), data.value, cur_clock));
+  ACE_DEBUG ((LM_DEBUG, 
+    "(%P|%t) SENDING data: %s=%d with time %d and quality %d\n", 
+    key.c_str (), data.value, cur_clock, data.quality));
 
   //std::cout << "Sending data: " << key << "=" << value << std::endl;
 
@@ -342,7 +344,7 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
 
 long
 Madara::Transport::Splice_DDS_Transport::send_multiassignment (
-  const std::string & expression)
+  const std::string & expression, unsigned long quality)
 {
   Madara::Transport::Base::send_multiassignment (expression);
 
@@ -356,11 +358,13 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   data.key = expression.c_str ();
   data.value = 0;
   data.clock = cur_clock;
+  data.quality = quality;
   data.originator = id_.c_str ();
   data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) SENDING multiassignment: %s with time %d\n", 
-    expression.c_str (), cur_clock));
+  ACE_DEBUG ((LM_DEBUG, 
+    "(%P|%t) SENDING multiassignment: %s with time %d and quality %d\n", 
+    expression.c_str (), cur_clock, quality));
 
   //std::cout << "Sending data: " << key << "=" << value << std::endl;
 

@@ -6,25 +6,32 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <assert.h>
-#include <stdlib.h>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
-#include "ace/OS.h"
+#include "ace/Signal.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 int id = 0;
-int pos_x = 0;
-int pos_y = 0;
-int velocity = 1;
-int emergency = 0;
-int stop = 20;
+int left = 0;
+int processes = 1;
+int stop = 10;
+long value = 0;
 std::string host = "localhost";
+
+volatile bool terminated = 0;
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
+
+// signal handler for someone hitting control+c
+extern "C" void terminate (int)
+{
+  terminated = true;
+}
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -33,52 +40,35 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
+  // signal handler for clean exit
+  ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
+
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
 
-  char expression [1024];
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) synchronizing to %d\n",
+                        id, processes, stop));
 
-  // ambulance will broadcast this information atomically
-  const char * update_expr = "ambulance%d.x=%d; \
-                              ambulance%d.y=%d; \
-                              ambulance%d.emergency=%d; \
-                              ambulance%d.velocity=%d";
+  // set my id
+  knowledge.set (".self", id);
 
-  const char * start_key = "ambulance%d.started";
-  const char * finish_key = "ambulance%d.finished";
 
-  // apply start_key to expression with current values
-  ACE_OS::sprintf (expression, start_key, id);
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
+  knowledge.print_knowledge ();
 
-  knowledge.set (expression, 1);
+  std::string expression;
 
-  for (int i = 0; i < stop; ++i)
+  // termination is done via signalling from the user (Control+C)
+  while (!terminated)
   {
-    // apply update_expr to expression with current values
-    ACE_OS::sprintf (expression, update_expr, 
-      id, pos_x, 
-      id, pos_y, 
-      id, emergency, 
-      id, velocity);
-
-    // evaluate the expression
-    knowledge.evaluate (expression);
+    knowledge.wait (expression);
+    knowledge.print("  {S{.left}} {S{.self}} {S{.right}}\n");
 
     ACE_OS::sleep (1);
-
-    pos_x += rand () % 3;
-    pos_y += rand () % 3;
-    velocity = rand () % 55;
-    emergency = rand () % 2;
   }
-
-  // apply start_key to expression with current values
-  ACE_OS::sprintf (expression, finish_key, id);
-
-  knowledge.set (expression, 1);
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();
@@ -92,19 +82,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:x:y:o:v:eh");
+  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
-  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("start.x"), 'x', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("start.y"), 'y', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("emergency"), 'e', ACE_Get_Opt::NO_ARG);
-  cmd_opts.long_option (ACE_TEXT ("velocity"), 'v', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("value"), 'v', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -120,21 +109,17 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       id = atoi (cmd_opts.opt_arg ());
       break;
-    case 'x':
+    case 's':
       // thread number
-      pos_x = atoi (cmd_opts.opt_arg ());
+      stop = atoi (cmd_opts.opt_arg ());
       break;
-    case 'y':
+    case 'p':
       // thread number
-      pos_y = atoi (cmd_opts.opt_arg ());
+      processes = atoi (cmd_opts.opt_arg ());
       break;
     case 'v':
       // thread number
-      velocity = atoi (cmd_opts.opt_arg ());
-      break;
-    case 'e':
-      // thread number
-      emergency = 1;
+      value = atoi (cmd_opts.opt_arg ());
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
@@ -146,14 +131,13 @@ int parse_args (int argc, ACE_TCHAR * argv[])
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_DEBUG, "Program Options:           \n\
-      -h (--help)      print this menu                  \n\
-      -i (--id)        set process id (0 default)       \n\
-      -x (--start.x)   ambulance start x (0 default)    \n\
-      -y (--start.y)   ambulance start y (0 default)    \n\
-      -e (--emergency) ambulance starts in emergency    \n\
-      -v (--velocity)  ambulance velocity (pos/s)       \n\
-"));
+      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      -p (--processes) number of processes that will be running\n\
+      -i (--id)        set process id (0 default)  \n\
+      -s (--stop)      stop condition (10 default) \n\
+      -o (--host)      this host ip/name (localhost default) \n\
+      -v (--value)     start process with a certain value (0 default) \n\
+      -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
       break;

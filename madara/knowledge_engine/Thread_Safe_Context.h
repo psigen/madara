@@ -10,7 +10,7 @@
 
 #include "ace/Guard_T.h"
 #include "ace/Recursive_Thread_Mutex.h"
-#include "ace/Synch_T.h"
+#include "ace/Condition_Recursive_Thread_Mutex.h"
 #include "ace/Synch.h"
 
 #ifndef ACE_LACKS_PRAGMA_ONCE
@@ -51,7 +51,21 @@ namespace Madara
       /// Atomically set if the variable value will be different
       /// @return   1 if the value was changed. 0 if not changed.
       ///           -1 if null key
-      int set_if_unequal (const ::std::string & key, long value, bool modified = true);
+      int set_if_unequal (const ::std::string & key, long value, 
+        unsigned long quality, unsigned long clock, bool modified = true);
+
+      /// Get quality of last update to a variable
+      unsigned long get_quality (const ::std::string & key);
+      
+      /// Get quality of local process updates to a variable
+      unsigned long get_write_quality (const ::std::string & key);
+      
+      /// Set quality of last update to a variable
+      unsigned long set_quality (const ::std::string & key, 
+        unsigned long quality, bool force_update);
+      
+      /// Set quality of this process writing to a variable
+      void set_write_quality (const ::std::string & key, unsigned long quality);
 
       /// Return list of variables that have been modified
       void get_modified (Madara::String_Vector & modified) const;
@@ -94,27 +108,27 @@ namespace Madara
       
       /// atomically increment the lamport clock and return the new
       /// clock time (intended for sending knowledge updates)
-      long inc_clock (void);
+      unsigned long inc_clock (void);
 
       /// atomically increment the lamport clock of a particular variable
       /// and return the new clock time (for sending knowledge updates)
-      long inc_clock (const std::string & key);
+      unsigned long inc_clock (const std::string & key);
 
       /// set the lamport clock (updates with lamport clocks lower
       /// than our current clock get discarded)
-      long set_clock (long clock);
+      unsigned long set_clock (unsigned long clock);
 
       /// set the lamport clock for a particular variable (updates with 
       /// lamport clocks lower than our current clock get discarded)
-      long set_clock (const std::string & key, long clock);
+      unsigned long set_clock (const std::string & key, unsigned long clock);
 
       /// get the lamport clock (updates with lamport clocks lower
       /// than our current clock get discarded)
-      long get_clock (void);
+      unsigned long get_clock (void);
 
       /// get the lamport clock for a particular variable (updates with
       /// lamport clocks lower than our current clock get discarded)
-      long get_clock (const std::string & key);
+      unsigned long get_clock (const std::string & key);
 
       /// Signal the condition that it can wake up someone else 
       /// on changed data
@@ -131,7 +145,7 @@ namespace Madara
       mutable ACE_Recursive_Thread_Mutex mutex_;
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
-      long clock_;
+      unsigned long clock_;
     };
   }
 }

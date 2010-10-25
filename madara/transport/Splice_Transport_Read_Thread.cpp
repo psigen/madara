@@ -75,18 +75,20 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
   int result = 0;
 
   context_.lock ();
-  long cur_clock = context_.get_clock (key);
+  unsigned long cur_clock = context_.get_clock (key);
+  unsigned long cur_quality = context_.get_quality (key);
+
+  // if the data we are updating had a lower clock value or less quality
+  // then that means this update is the latest value. Among
+  // other things, this means our solution will work even
+  // without FIFO channel transports
 
   // if the data we are updating had a lower clock value
   // then that means this update is the latest value. Among
   // other things, this means our solution will work even
   // without FIFO channel transports
-  if (cur_clock < data.clock)
-  {
-    result = context_.set_if_unequal (key, value, false);
-    context_.set_clock (key, data.clock);
-  }
-  else result = 2;
+  result = context_.set_if_unequal (key, value, 
+                                    data.quality, data.clock, false);
 
   context_.unlock ();
   
@@ -102,7 +104,18 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
       key.c_str (), value));
   }
-  else if (result == 2)
+  else if (result == -1)
+  {
+    ACE_DEBUG ((LM_DEBUG, 
+      "(%P|%t) DISCARDED data had invalid key (null variable name).\n", 
+      key.c_str (), cur_quality, data.quality));
+  }
+  else if (result == -2)
+  {
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was low quality (%d vs %d).\n", 
+      key.c_str (), cur_quality, data.quality));
+  }
+  else if (result == -3)
   {
     ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
       key.c_str (), cur_clock, data.clock));
@@ -127,18 +140,15 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
     stream >> key >> symbol >> value >> symbol;
 
     int result = 0;
-    long cur_clock = context_.get_clock (key);
+    unsigned long cur_clock = context_.get_clock (key);
+    unsigned long cur_quality = context_.get_quality (key);
 
     // if the data we are updating had a lower clock value
     // then that means this update is the latest value. Among
     // other things, this means our solution will work even
     // without FIFO channel transports
-    if (cur_clock < data.clock)
-    {
-      result = context_.set_if_unequal (key, value, false);
-      context_.set_clock (key, data.clock);
-    }
-    else result = 2;
+    result = context_.set_if_unequal (key, value, 
+                                      data.quality, data.clock, false);
 
     // if we actually updated the value
     if (result == 1)
@@ -152,7 +162,18 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
       ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
         key.c_str (), value));
     }
-    else if (result == 2)
+    else if (result == -1)
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "(%P|%t) DISCARDED data had invalid key (null variable name).\n", 
+        key.c_str (), cur_quality, data.quality));
+    }
+    else if (result == -2)
+    {
+      ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was low quality (%d vs %d).\n", 
+        key.c_str (), cur_quality, data.quality));
+    }
+    else if (result == -3)
     {
       ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
         key.c_str (), cur_clock, data.clock));
@@ -220,10 +241,19 @@ Madara::Transport::Splice_Read_Thread::svc (void)
 
         if (Madara::Knowledge_Engine::ASSIGNMENT == update_data_list_[i].type)
         {
+          ACE_DEBUG ((LM_DEBUG, 
+            "(%P|%t) Processing %s=%d from %s with time %d and quality %d.\n", 
+            update_data_list_[i].key.val (), update_data_list_[i].value, 
+            update_data_list_[i].originator.val (),
+            update_data_list_[i].clock, update_data_list_[i].quality));
           handle_assignment (update_data_list_[i]);
         }
         else if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list_[i].type)
         {
+          ACE_DEBUG ((LM_DEBUG, 
+            "(%P|%t) Processing multiassignment from %s with time %d and quality %d.\n", 
+            update_data_list_[i].originator.val (),
+            update_data_list_[i].clock, update_data_list_[i].quality));
           handle_multiassignment (update_data_list_[i]);
         }
 

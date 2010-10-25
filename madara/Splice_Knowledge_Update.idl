@@ -5,10 +5,10 @@ module Knowledge
     {
       string                            key;
       long                              value;
-      long                              priority;
+      unsigned long                     quality;
       string                            originator;
-      long                              type;
-      long                              clock;
+      unsigned long                     type;
+      unsigned long                     clock;
     };
     
     //#pragma keylist Update

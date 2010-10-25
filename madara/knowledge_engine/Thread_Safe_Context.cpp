@@ -126,7 +126,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   // enter the mutex
   Context_Guard guard (mutex_);
 
+  // check if we have the appropriate write quality
+  if (this->get_write_quality (key) < this->get_quality (key))
+    return -2;
+
   map_[key].value = value;
+  map_[key].quality = map_[key].write_quality;
   
   // otherwise set the value
   if (key[0] != '.')
@@ -142,12 +147,96 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   return 0;
 }
 
-/// Set if the variable value will be different
-/// @return   1 if the value was changed. 0 if not changed. -1 if null key
+/// get quality of last update to a variable.
+/// @return    quality of the variable 
+unsigned long 
+Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (const ::std::string & key)
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // create the variable if it has never been written to before
+  // and update its current value quality to the quality parameter
+
+  if (found != map_.end ())
+    return map_[key].quality;
+
+  // default quality is 0
+  return 0;
+}
+
+/// get quality of last update to a variable.
+/// @return    quality of the variable 
+unsigned long 
+Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (const ::std::string & key)
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // create the variable if it has never been written to before
+  // and update its current value quality to the quality parameter
+
+  if (found != map_.end ())
+    return map_[key].write_quality;
+
+  // default quality is 0
+  return 0;
+}
+
+/// Set quality of last update to a variable.
+/// @return    quality of the variable after this call
+unsigned long 
+Madara::Knowledge_Engine::Thread_Safe_Context::set_quality (
+  const ::std::string & key, unsigned long quality,
+                           bool force_update)
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // create the variable if it has never been written to before
+  // and update its current value quality to the quality parameter
+
+  if (found == map_.end () || force_update || quality > found->second.quality)
+    map_[key].quality = quality;
+
+  // return current quality
+  return map_[key].quality;
+}
+      
+/// Set quality of this process writing to a variable
+void 
+Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
+  const ::std::string & key, unsigned long quality)
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the variable if it has never been written to before
+  // and update its local process write quality to the quality parameter
+  map_[key].write_quality = quality;
+}
+
+/// Set if the variable value will be different. Always updates clock to
+/// highest value
+/// @return   1 if the value was changed. 0 if not changed. 
+///           -1 if null key, -2 if quality not high enough
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
-  const ::std::string & key, long value, bool modified)
+  const ::std::string & key, long value,
+  unsigned long quality, unsigned long clock,
+  bool modified)
 {
+  int result = 1;
+
   // check for null key
   if (key == "")
     return -1;
@@ -160,26 +249,54 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
 
   // if it's found, then compare the value
   if (found != map_.end ())
-    // check for value already set
-    if (found->second.value == value)
-      return 0;
-
-  // we have a situation where the value needs to be changed
-  map_[key].value = value;
-  
-  // otherwise set the value
-  if (key[0] != '.')
   {
-    if (modified)
-      map_[key].status = Madara::Knowledge_Record::MODIFIED;
-  }
-  else
-    map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
+    // if we do not have enough quality to update the variable
+    // return -2
+    if (quality < found->second.quality)
+      result = -2;
 
-  changed_.signal ();
+    // if we have the same quality, but our clock value
+    // is less than what we've already seen, then return -3
+    else if (quality == found->second.quality && 
+             clock < found->second.clock)
+      result = -3;
+
+    // check for value already set
+    else if (found->second.value == value)
+      result = 0;
+  }
+
+  // if we need to update quality, then update it
+  if (result != -2 && map_[key].quality != quality)
+    map_[key].quality = quality;
+
+  // if we need to update the variable clock, then update it
+  if (clock > map_[key].clock)
+    map_[key].clock = clock;
+
+  // if we need to update the global clock, then update it
+  if (clock > this->clock_)
+    this->clock_ = clock;
+
+  if (result == 1)
+  {
+    // we have a situation where the value needs to be changed
+    map_[key].value = value;
+  
+    // otherwise set the value
+    if (key[0] != '.')
+    {
+      if (modified)
+        map_[key].status = Madara::Knowledge_Record::MODIFIED;
+    }
+    else
+      map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
+
+    changed_.signal ();
+  }
 
   // value was changed
-  return 1;
+  return result;
 }
 
 // print all variables and their values
@@ -255,8 +372,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
 
 /// set the lamport clock (updates with lamport clocks lower
 /// than our current clock get discarded)
-long 
-Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (long clock)
+unsigned long  
+Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (unsigned long clock)
 {
   Context_Guard guard (mutex_);
 
@@ -270,9 +387,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (long clock)
 
 /// set the lamport clock (updates with lamport clocks lower
 /// than our current clock get discarded)
-long 
+unsigned long  
 Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
-  const std::string & key, long clock)
+  const std::string & key, unsigned long clock)
 {
   Context_Guard guard (mutex_);
 
@@ -286,6 +403,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
     if (found->second.clock < clock)
     {
       found->second.clock = clock;
+
+      // try to update the global clock as well
+      this->set_clock (clock);
     }
 
     return found->second.clock;
@@ -297,7 +417,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
 
 /// set the lamport clock for a particular variable (updates with 
 /// lamport clocks lower than our current clock get discarded)
-long 
+unsigned long  
 Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
   const std::string & key)
 {
@@ -317,7 +437,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
 }
 
 /// increment the process lamport clock
-long 
+unsigned long 
 Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (void)
 {
   Context_Guard guard (mutex_);
@@ -326,7 +446,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (void)
 
 /// get the lamport clock (updates with lamport clocks lower
 /// than our current clock get discarded)
-long 
+unsigned long 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (void)
 {
   Context_Guard guard (mutex_);
@@ -334,7 +454,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (void)
 }
 
 /// get the lamport clock for a particular variable
-long 
+unsigned long 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (
   const std::string & key)
 {

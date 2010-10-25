@@ -40,7 +40,8 @@ namespace Madara
         const std::string & topic_name);
       ~Splice_DDS_Transport ();
       virtual long send_data (const std::string & key, const long & value);
-      long send_multiassignment (const std::string & expression);
+      long send_multiassignment (const std::string & expression, 
+        unsigned long quality);
       int reliability (void) const;
       int reliability (const int & setting);
       void close (void);

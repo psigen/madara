@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 #include "ace/Thread_Mutex.h"
-#include "ace/Synch_T.h"
-#include "ace/Synch.h"
+#include "ace/Condition_T.h"
 
 namespace Madara
 {
@@ -59,7 +58,8 @@ namespace Madara
 
       /// all subclasses should call this method at the beginning of 
       /// a call to send_multiassignment of the derived class
-      virtual long send_multiassignment (const std::string & expression) 
+      virtual long send_multiassignment (const std::string & expression,
+        unsigned long quality = 0) 
       {
         if (!is_valid_)
           valid_setup_.wait ();

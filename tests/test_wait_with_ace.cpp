@@ -6,11 +6,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <assert.h>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
-#include "ace/OS.h"
+#include "ace/Thread.h"
+#include "ace/Atomic_Op_T.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
@@ -27,21 +29,26 @@ static void * worker(void * args)
   int id = ++thread_count;
   int last =  id - 1;
 
-  char buffer[64];
+  std::stringstream buffer;
 
   if (last > 0)
   {
     //ACE_OS::sleep (3);
 
     // wait for the last thread to update database
-    ACE_OS::sprintf (buffer, ACE_TEXT("thread%d"), last);
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting for %s\n", buffer));
-    knowledge.wait (buffer);
+
+	buffer << "thread";
+	buffer << last;
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting for %s\n", buffer.str ()));
+    knowledge.wait (buffer.str ());
   }
 
-  ACE_OS::sprintf (buffer, ACE_TEXT("thread%d"), id);
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Setting %s\n", buffer));
-  knowledge.set (buffer,1);
+  buffer.str ("");
+  buffer << "thread";
+  buffer << id;
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Setting %s\n", buffer.str ()));
+  knowledge.set (buffer.str (),1);
 
   if (id == max_threads)
   {

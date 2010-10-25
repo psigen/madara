@@ -77,20 +77,27 @@ Madara::Knowledge_Engine::Knowledge_Base::expand_statement (
   return impl_->expand_statement (statement);
 }
 
-void
+int
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
-                                               int value)
+                                               long value)
 {
-  impl_->set (key, value, true);
+  return impl_->set (key, value, true);
 }
 
-void
+int
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
-                                               int value, bool send_modifieds)
+                                               long value, bool send_modifieds)
 {
-  impl_->set (key, value, send_modifieds);
+  return impl_->set (key, value, send_modifieds);
 }
 
+
+/// Set quality of writing to a variable
+void Madara::Knowledge_Engine::Knowledge_Base::set_quality (
+  const ::std::string & key, unsigned long quality)
+{
+  impl_->set_quality (key, quality);
+}
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)

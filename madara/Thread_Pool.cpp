@@ -1,5 +1,4 @@
 #include "ace/Event_Handler.h"
-#include "ace/OS.h"
 #include "ace/Log_Msg.h"
 #include "ace/Barrier.h"
 

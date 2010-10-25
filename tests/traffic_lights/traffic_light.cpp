@@ -6,11 +6,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <assert.h>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
-#include "ace/OS.h"
+#include "ace/Signal.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
@@ -21,8 +22,16 @@ int stop = 10;
 long value = 0;
 std::string host = "localhost";
 
+volatile bool terminated = 0;
+
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
+
+// signal handler for someone hitting control+c
+extern "C" void terminate (int)
+{
+  terminated = true;
+}
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -31,13 +40,35 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
+  // signal handler for clean exit
+  ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
+
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
 
-  knowledge.wait ("ambulance0.finished && ambulance1.finished");
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) synchronizing to %d\n",
+                        id, processes, stop));
+
+  // set my id
+  knowledge.set (".self", id);
+
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
+  knowledge.print_knowledge ();
+
+  std::string expression;
+
+  // termination is done via signalling from the user (Control+C)
+  while (!terminated)
+  {
+    knowledge.wait (expression);
+    knowledge.print("  {S{.left}} {S{.self}} {S{.right}}\n");
+
+    ACE_OS::sleep (1);
+  }
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();
@@ -101,12 +132,12 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
-      -h (--help)      print this menu             \n\
+      -p (--processes) number of processes that will be running\n\
       -i (--id)        set process id (0 default)  \n\
       -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
-      -p (--processes) number of processes that will be running\n"));
+      -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
       break;

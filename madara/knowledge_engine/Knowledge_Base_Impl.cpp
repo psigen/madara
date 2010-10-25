@@ -134,28 +134,24 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
   return map_.expand_statement (statement);
 }
 
-void
+int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
-                                               int value)
+                                               long value)
 {
-  set (key, value, true);
+  return set (key, value, true);
 }
 
-void
+int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
-                                               int value, bool send_modifieds)
+                                               long value, bool send_modifieds)
 {
-  // return if the key is null
-  if (key == "")
-    return;
-
   // everything after this point is done on a string with at least 1 char
-
-  map_.set (key, value);
+  int result = map_.set (key, value);
 
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
-  if (transport_ && send_modifieds && key[0] != '.')
+  if (result == 0 && transport_ && send_modifieds && 
+      key.size () > 0 && key[0] != '.')
   {
     map_.lock ();
 
@@ -171,6 +167,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
     /// unlock the knowledge map
     map_.unlock ();
   }
+
+  return result;
+}
+
+
+/// Set quality of writing to a variable
+void Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
+  const ::std::string & key, unsigned long quality)
+{
+  map_.set_write_quality (key, quality);
 }
 
 
@@ -203,16 +209,26 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
       /// generate a new clock time and set our variable's clock to
       /// this new clock
       long cur_clock = map_.inc_clock ();
+      long quality = 0;
 
       for (Madara::String_Vector::const_iterator k = modified.begin ();
              k != modified.end (); ++k)
       {
         map_.set_clock (*k, cur_clock);
+        long cur_quality = map_.get_write_quality (*k);
+
+        // every knowledge update via multiassignment has the quality
+        // of the highest update. This is to ensure consistency for
+        // updating while also providing quality indicators for sensors,
+        // actuators, controllers, etc.
+        if (cur_quality > quality)
+          quality = cur_quality;
+
         string_builder << *k << " = " << map_.get (*k) << " ; ";
           //transport_->send_data (*k, map_.get (*k));
       }
 
-      transport_->send_multiassignment (string_builder.str ());
+      transport_->send_multiassignment (string_builder.str (), quality);
       map_.reset_modified ();
     }
   }

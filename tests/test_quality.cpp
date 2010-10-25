@@ -6,23 +6,32 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <assert.h>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
-#include "ace/OS.h"
+#include "ace/Signal.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 int id = 0;
 int left = 0;
 int processes = 1;
-int stop = 10;
+unsigned long quality = 0;
 long value = 0;
 std::string host = "localhost";
 
+volatile bool terminated = 0;
+
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
+
+// signal handler for someone hitting control+c
+extern "C" void terminate (int)
+{
+  terminated = true;
+}
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -31,48 +40,42 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_NOTICE, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
+  // signal handler for clean exit
+  ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
+
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
 
-  char s_id [64];
-  char s_left [64];
-  char expression [128];
-  char continue_condition [128];
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) with quality %d\n",
+                        id, processes, quality));
 
-  ACE_OS::sprintf (s_id, "S%d", id);
-  ACE_OS::sprintf (s_left, "S%d", id ? id - 1 : processes - 1);
-  ACE_OS::sprintf (continue_condition, "%s < 10", s_id);
+  // set my id
+  knowledge.set (".self", id);
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) synchronizing to %d\n",
-                        id, processes, stop));
+  // set the quality of current process in regards to updating
+  // the global important_value
+  knowledge.set_quality ("important_value", quality);
 
-  // set the state to 0
-  knowledge.set (s_id, value);
-
-  if (id == 0)
-  {
-    ACE_OS::sprintf (expression, "%s == %s && ++%s", 
-           s_id, s_left, s_id);   
-  }
-  else
-  {
-    ACE_OS::sprintf (expression, "%s != %s && (%s = %s)", 
-            s_id, s_left, s_id, s_left);   
-  }
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) expression: %s\n",
-              id, processes, expression));
+  // set the value to the initial value
+  knowledge.set ("important_value", value);
 
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
   knowledge.print_knowledge ();
 
-  while (knowledge.evaluate (continue_condition))
+  // termination is done via signalling from the user (Control+C)
+  while (!terminated)
   {
-    knowledge.wait (expression);
-    knowledge.print_knowledge ();
+    // try to set the value to the initial value
+    int result = knowledge.set ("important_value", quality);
+
+    // everyone prints out current value
+    knowledge.print("  Cur value: {important_value}\n");
+
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Also, result is %d\n", result));
 
     ACE_OS::sleep (1);
   }
@@ -89,14 +92,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:q:p:o:v:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("quality"), 'q', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
@@ -106,6 +109,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   int option;
 //  ACE_TCHAR * arg;
 
+  std::stringstream buffer;
   // iterate through the options until done
   while ((option = cmd_opts ()) != EOF)
   {
@@ -114,19 +118,23 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     {
     case 'i':
       // thread number
-      id = atoi (cmd_opts.opt_arg ());
+      buffer.str (cmd_opts.opt_arg ());
+      buffer >> id;
       break;
-    case 's':
+    case 'q':
       // thread number
-      stop = atoi (cmd_opts.opt_arg ());
+      buffer.str (cmd_opts.opt_arg ());
+      buffer >> quality;
       break;
     case 'p':
       // thread number
-      processes = atoi (cmd_opts.opt_arg ());
+      buffer.str (cmd_opts.opt_arg ());
+      buffer >> processes;
       break;
     case 'v':
       // thread number
-      value = atoi (cmd_opts.opt_arg ());
+      buffer.str (cmd_opts.opt_arg ());
+      buffer >> value;
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
@@ -141,7 +149,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
       -p (--processes) number of processes that will be running\n\
       -i (--id)        set process id (0 default)  \n\
-      -s (--stop)      stop condition (10 default) \n\
+      -q (--quality)   write quality (0 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
       -h (--help)      print this menu             \n"));

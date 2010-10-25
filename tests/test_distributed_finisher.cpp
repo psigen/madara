@@ -10,7 +10,6 @@
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
-#include "ace/OS.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 

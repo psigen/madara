@@ -168,9 +168,9 @@ project (Test_Synchronization_Three_State) : using_madara, using_ace, using_spli
   }
 }
 
-project (Test_Synchronization_Without_Key_Expansion) : using_madara, using_ace, using_splice {
+project (Test_Quality) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
-  exename = test_synchronization_without_key_expansion
+  exename = test_quality
   after += Madara
   
   requires += tests
@@ -185,7 +185,7 @@ project (Test_Synchronization_Without_Key_Expansion) : using_madara, using_ace, 
   }
 
   Source_Files {
-    ../tests/test_synchronization_without_key_expansion.cpp
+    ../tests/test_quality.cpp
   }
 }
 

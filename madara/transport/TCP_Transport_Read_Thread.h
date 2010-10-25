@@ -11,7 +11,7 @@
 #include "ace/Barrier.h"
 #include "ace/Atomic_Op_T.h"
 #include "ace/Thread_Mutex.h"
-#include "ace/Synch_T.h"
+
 #include "ace/Synch.h"
 
 namespace Madara

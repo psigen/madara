@@ -43,12 +43,19 @@ namespace Madara
 
     /* default constructor */
     Knowledge_Record ()
-      : status (UNMODIFIED), value (UNMODIFIED), scope (LOCAL_SCOPE) {}
+      : status (UNMODIFIED), value (UNMODIFIED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0) 
+    {}
 
     int status;
     long value;
-    long clock;
+    unsigned long clock;
     int scope;
+
+    // for keeping track of current high priority originator
+    unsigned long quality;
+    // for writing to this variable from this process
+    unsigned long write_quality;
   };
 
   typedef ::std::map < ::std::string, Knowledge_Record> Knowledge_Map;

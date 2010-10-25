@@ -68,10 +68,13 @@ namespace Madara
       std::string expand_statement (const ::std::string & statement) const;
 
       /// Set the value associated with the provided key
-      void set (const ::std::string & key, int value = Madara::Knowledge_Record::MODIFIED);
+      int set (const ::std::string & key, long value = Madara::Knowledge_Record::MODIFIED);
 
       /// Set the value associated with the provided key
-      void set (const ::std::string & key, int value, bool send_modifieds);
+      int set (const ::std::string & key, long value, bool send_modifieds);
+
+      /// Set quality of writing to a variable
+      void set_quality (const ::std::string & key, unsigned long quality);
 
       /// Check if a key exists in the knowledge base
       bool exists (const ::std::string & key) const;
