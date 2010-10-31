@@ -125,7 +125,11 @@ namespace Madara
       /// reference counted to automate memory management. 
       Refcounter <Knowledge_Base_Impl> impl_;
     };
+
   }
 }
+
+// include the inline functions
+#include "Knowledge_Base.inl"
 
 #endif   // _MADARA_KNOWLEDGE_BASE_H

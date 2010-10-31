@@ -20,6 +20,27 @@ project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Reasoning_Throughput) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_reasoning_throughput
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_reasoning_throughput.cpp
+  }
+}
+
 project (Test_Key_Expansion) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_key_expansion

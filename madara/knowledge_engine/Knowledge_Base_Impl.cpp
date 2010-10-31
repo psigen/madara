@@ -1,12 +1,9 @@
 #include "madara/utility/Utility.h"
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 #include "madara/expression_tree/Interpreter.h"
-#include "madara/expression_tree/Evaluation_Visitor.h"
-#include "madara/expression_tree/Print_Visitor.h"
 #include "madara/expression_tree/Expression_Tree.h"
-#include "madara/expression_tree/Iterator.h"
 #include "madara/transport/TCP_Transport.h"
-#include "madara/utility/Utility.h"
+#include "ace/Log_Msg.h"
 
 #include <sstream>
 
@@ -20,7 +17,7 @@
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
 : transport_ (0), transport_type_ (0)
 {
-  setup_splitters ();
+  //setup_splitters ();
   activate_transport ();
   // no hope of transporting, so don't setup uniquehostport
 }
@@ -30,7 +27,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 : transport_type_ (transport)
 {
   setup_uniquehostport (host);
-  setup_splitters ();
+//  setup_splitters ();    // only used for debugging
   activate_transport ();
 }
 
@@ -40,7 +37,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 : transport_type_ (transport), domain_name_ (knowledge_domain)
 {
   setup_uniquehostport (host);
-  setup_splitters ();
+//  setup_splitters ();   // only used for debugging
   activate_transport ();
 }
 
@@ -75,22 +72,22 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_splitters (void)
 {
-  statement_splitters_.push_back (";");
+  //statement_splitters_.push_back (";");
 
-  implies_splitters_.push_back ("=>");
-  implies_splitters_.push_back ("->");
+  //implies_splitters_.push_back ("=>");
+  //implies_splitters_.push_back ("->");
 
-  assignment_splitters_.push_back ("=");
+  //assignment_splitters_.push_back ("=");
 
-  conditional_splitters_.push_back ("&&");
-  conditional_splitters_.push_back ("||");
+  //conditional_splitters_.push_back ("&&");
+  //conditional_splitters_.push_back ("||");
 
-  comparison_splitters_.push_back ("==");
-  comparison_splitters_.push_back ("!=");
-  comparison_splitters_.push_back (">=");
-  comparison_splitters_.push_back ("<=");
-  comparison_splitters_.push_back ("<");
-  comparison_splitters_.push_back (">");
+  //comparison_splitters_.push_back ("==");
+  //comparison_splitters_.push_back ("!=");
+  //comparison_splitters_.push_back (">=");
+  //comparison_splitters_.push_back ("<=");
+  //comparison_splitters_.push_back ("<");
+  //comparison_splitters_.push_back (">");
 }
 
 void
@@ -121,25 +118,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
   }
 }
 
-int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::get (const ::std::string & key) const
-{
-  return map_.get (key);
-}
-
-std::string
-Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
-  const ::std::string & statement) const
-{
-  return map_.expand_statement (statement);
-}
-
-int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
-                                               long value)
-{
-  return set (key, value, true);
-}
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
@@ -171,20 +149,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
   return result;
 }
 
-
-/// Set quality of writing to a variable
-void Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
-  const ::std::string & key, unsigned long quality)
-{
-  map_.set_write_quality (key, quality);
-}
-
-
-int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression)
-{
-  return wait (expression, true);
-}
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
@@ -293,13 +257,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const ::std::string & e
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const ::std::string & expression_copy)
-{
-  return evaluate (expression_copy, true);
-}
-
-int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const ::std::string & expression_copy, bool send_modifieds)
 {
   int last_value = 0;
@@ -362,27 +319,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (void) const
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (void) const
-{
-  ACE_DEBUG ((LM_DEBUG, "\nKnowledge in Knowledge Base:\n"));
-  map_.print ();
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print (
-  const std::string & statement) const
-{
-  map_.print (statement);
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::clear (void)
-{
-  map_.clear ();
-  rules_.clear ();
-}
-
-void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::test(const long & iterations)
 {
   if (!transport_)
@@ -398,29 +334,4 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::test(const long & iterations)
   {
     transport_->send_data (keys[i % 4], i);
   }
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::clear_rules (void)
-{
-  rules_.clear ();
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::clear_map (void)
-{
-  map_.clear ();
-}
-
-/// lock the underlying knowledge base against any updates
-/// until we release
-void Madara::Knowledge_Engine::Knowledge_Base_Impl::acquire (void)
-{
-  map_.lock ();
-}
-
-/// release the lock on the underlying knowledge base
-void Madara::Knowledge_Engine::Knowledge_Base_Impl::release (void)
-{
-  map_.unlock ();
 }

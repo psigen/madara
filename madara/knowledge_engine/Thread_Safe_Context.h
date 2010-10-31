@@ -150,4 +150,6 @@ namespace Madara
   }
 }
 
+#include "Thread_Safe_Context.inl"
+
 #endif

@@ -137,5 +137,8 @@ namespace Madara
     };
   }
 }
+    
+// include the inline functions
+#include "Knowledge_Base_Impl.inl"
 
 #endif  // _MADARA_KNOWLEDGE_BASE_IMPL_H
