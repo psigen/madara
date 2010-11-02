@@ -2,6 +2,7 @@
 #include "madara/utility/Utility.h"
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "ace/INET_Addr.h"
 #include "ace/Log_Msg.h"
 

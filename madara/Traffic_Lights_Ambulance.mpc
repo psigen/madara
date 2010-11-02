@@ -1,5 +1,5 @@
 
-project (Traffic_Light) : using_madara, using_ace, using_splice {
+project (Traffic_Light) : using_madara, using_ace, using_splice, logic_files, map_files {
   exeout = $(MADARA_ROOT)/bin
   exename = traffic_light
   after += Madara
@@ -8,6 +8,14 @@ project (Traffic_Light) : using_madara, using_ace, using_splice {
   
   libs += Madara
 
+  Logic_Files {
+    ../configs/logics/traffic_light.klf
+  }
+  
+  Map_Files {
+    ../configs/maps
+  }
+  
   Build_Files {
     Traffic_Lights_Ambulance.mpc
   }
@@ -20,7 +28,36 @@ project (Traffic_Light) : using_madara, using_ace, using_splice {
   }
 }
 
-project (Ambulance) : using_madara, using_ace, using_splice {
+project (Traffic_Simulator) : using_madara, using_ace, using_splice, logic_files, map_files {
+  exeout = $(MADARA_ROOT)/bin
+  exename = traffic_simulator
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Logic_Files {
+    ../configs/logics/traffic_simulator.klf
+  }
+  
+  Map_Files {
+    ../configs/maps
+  }
+  
+  Build_Files {
+    Traffic_Lights_Ambulance.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/traffic_lights/traffic_simulator.cpp
+  }
+}
+
+project (Ambulance) : using_madara, using_ace, using_splice, logic_files, map_files {
   exeout = $(MADARA_ROOT)/bin
   exename = ambulance
   after += Madara
@@ -29,6 +66,14 @@ project (Ambulance) : using_madara, using_ace, using_splice {
   
   libs += Madara
 
+  Logic_Files {
+    ../configs/logics/ambulance.klf
+  }
+  
+  Map_Files {
+    ../configs/maps
+  }
+  
   Build_Files {
     Traffic_Lights_Ambulance.mpc
   }

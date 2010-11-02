@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "ace/SOCK_Acceptor.h"
+#include "madara/MADARA_export.h"
 
 namespace Madara
 {
@@ -44,7 +45,8 @@ namespace Madara
     int bind_to_ephemeral_port (ACE_SOCK_Acceptor & acceptor,
       unsigned short & port, bool increase_until_bound = true);
 
-    std::string file_to_string (const std::string & filename);
+    /// Return file contents as a string
+     MADARA_Export std::string file_to_string (const std::string & filename);
   }
 }
 #endif
