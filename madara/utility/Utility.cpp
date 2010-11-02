@@ -233,3 +233,24 @@ Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
 
   return -1;
 }
+
+std::string
+Madara::Utility::file_to_string (const std::string & filename)
+{
+  std::string line;
+  std::stringstream buffer;
+
+  std::ifstream file (filename.c_str ());
+
+  // if the file was able to open
+  if (file.is_open ())
+  {
+    // while there is still a line left in the file, read that line
+    // into our stringstream buffer
+    while (std::getline (file, line))
+      buffer << line << "\n";
+    file.close ();
+  }
+
+  return buffer.str ();
+}

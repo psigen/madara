@@ -58,7 +58,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (void) const
 {
-  ACE_DEBUG ((LM_DEBUG, "\nKnowledge in Knowledge Base:\n"));
+  ACE_DEBUG ((LM_INFO, "\nKnowledge in Knowledge Base:\n"));
   map_.print ();
 }
 

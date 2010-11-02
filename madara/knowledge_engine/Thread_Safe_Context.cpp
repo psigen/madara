@@ -247,7 +247,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (void) const
   for (Madara::Knowledge_Map::const_iterator i = map_.begin ();
        i != map_.end (); 
        ++i)
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) %s=%d\n", 
+  ACE_DEBUG ((LM_INFO, "(%P|%t) %s=%d\n", 
               i->first.c_str (), i->second.value));
 }
 

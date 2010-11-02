@@ -40,7 +40,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
@@ -64,10 +64,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
   {
-    knowledge.wait (expression);
-    knowledge.print("  {S{.left}} {S{.self}} {S{.right}}\n");
+    std::getline (std::cin, expression);
 
-    ACE_OS::sleep (1);
+    if (expression != "quit")
+      knowledge.evaluate (expression);
+    else
+      terminated = true;
+
+    knowledge.print_knowledge ();
   }
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));

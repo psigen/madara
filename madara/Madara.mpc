@@ -20,6 +20,10 @@ project (Madara) : using_ace, using_splice, splice_transport {
     using_splice_idl.mpb
   }
 
+  Inline_Files {
+    knowledge_engine
+  }
+
   Template_Files {
     utility/LQueue.cpp
     utility/LStack.cpp

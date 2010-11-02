@@ -314,7 +314,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (void) const
   for (Knowledge_Rules::const_iterator i = rules_.begin ();
        i != rules_.end (); ++i)
   {
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) %s\n", (*i).c_str ()));
+    ACE_DEBUG ((LM_INFO, "(%P|%t) %s\n", (*i).c_str ()));
   }
 }
 
