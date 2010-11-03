@@ -50,9 +50,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const ::std::string & expression_copy)
+  const ::std::string & expression)
 {
-  return evaluate (expression_copy, true);
+  return evaluate (expression, true);
 }
 
 inline void

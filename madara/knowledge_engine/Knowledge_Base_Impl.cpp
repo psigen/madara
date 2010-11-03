@@ -257,12 +257,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const ::std::string & e
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const ::std::string & expression_copy, bool send_modifieds)
+  const ::std::string & expression, bool send_modifieds)
 {
   int last_value = 0;
   // strip the incoming expression of white spaces
-  ::std::string expression (expression_copy);
-  Madara::Utility::strip_white_space (expression);
+  //::std::string expression (expression_copy);
+  //Madara::Utility::strip_white_space (expression);
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Evaluting %s\n", expression.c_str ()));
 
