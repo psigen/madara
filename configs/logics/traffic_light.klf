@@ -1,4 +1,5 @@
- ++.time_in_phase;
+.cur_time = simulation_time;
+++.time_in_phase;
 .switching_yellow => --.time_left_in_yellow;
 tl{.id}.south.reinforcement = tl{.id}.south.inbound - tl{.id}.south.outbound;
 tl{.id}.north.reinforcement = tl{.id}.north.inbound - tl{.id}.north.outbound;

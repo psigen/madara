@@ -39,6 +39,7 @@ project (Traffic_Simulator) : using_madara, using_ace, using_splice, logic_files
 
   Logic_Files {
     ../configs/logics/traffic_simulator.klf
+    ../configs/settings/default_simulation.klf
   }
   
   Map_Files {

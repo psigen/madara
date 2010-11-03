@@ -20,9 +20,12 @@
 
 int id = 0;
 int left = 0;
-int processes = 1;
+int cars = 1;
 int stop = 10;
 long value = 0;
+std::string mapfile = "/configs/maps/7x7_1hospital.map";
+std::string logicfile = "/configs/logics/traffic_simulator.klf";
+std::string settingsfile = "/configs/settings/default_simulation.klf";
 std::string host = "localhost";
 
 
@@ -51,37 +54,41 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // signal handler for clean exit
   ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
 
-  Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
+  Madara::Knowledge_Engine::Knowledge_Base knowledge(
+    host, Madara::Transport::SPLICE);
 
-  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) synchronizing to %d\n",
-                        id, processes, stop));
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Starting traffic simulation...\n" \
+    "  logic: %s\n  map: %s\n  settings: %s\n",
+    logicfile.c_str (), mapfile.c_str (), settingsfile.c_str ()));
 
   // set my id
   knowledge.set (".id", id);
 
   // time related knowledge values
-  // .time_left_in_yellow              // time left in yellow light
-  // .time_in_phase                    // time that has been spent in phased
-  // .cut_off_time                     // cutoff time for being in phase  
-  // .braking_time                     // time required to come to a stop
-  // .time_min                         // minimum time in a phase
+  // simulation_time = current time step in the simulation
 
-  knowledge.set (".cut_off_time", 20);   // 3 minutes (180 seconds)
-  knowledge.set (".braking_time", 5);    // 5 seconds for breaking time
-  knowledge.set (".time_min", 5);        // 1 minute (60 seconds) phase min
-  knowledge.set (".time_left_in_yellow", 0);  // default for yellow
-  knowledge.evaluate ("tl{.id}.phase = 1");    // start in north/south green
+  knowledge.set ("simulation_time", 0);   // 3 minutes (180 seconds)
 
   std::stringstream main_logic;
 
   std::string filename = getenv ("MADARA_ROOT");
-  filename += "/configs/logics/traffic_light.klf";
+  filename += mapfile;
+
+  std::string map = Madara::Utility::file_to_string (filename);
+
+  filename = getenv ("MADARA_ROOT");
+  filename += logicfile;
 
   std::string logic = Madara::Utility::file_to_string (filename);
 
+  filename = getenv ("MADARA_ROOT");
+  filename += settingsfile;
+
+  std::string settings = Madara::Utility::file_to_string (filename);
+
   std::ofstream main_logic_file;
 
-  main_logic_file.open ("tl_main_logic.klf");
+  main_logic_file.open ("ts_main_logic.klf");
 
   if (main_logic_file.is_open ())
   {
@@ -92,26 +99,31 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_DEBUG ((LM_INFO, "(%P|%t) Main logic is the following:\n%s\n\n",
     logic.c_str ()));
 
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Map is the following:\n%s\n\n",
+    map.c_str ()));
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Simulation settings are the following:\n%s\n\n",
+    settings.c_str ()));
+
+  knowledge.evaluate (settings);
+
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
   knowledge.print_knowledge ();
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
   {
-    knowledge.wait (".cur_time < simulation_time || simulation_finished");
+    knowledge.evaluate (logic);
+    knowledge.print("time: {simulation_time} of {simulation_cutoff}\n");
 
-    if (knowledge.get ("simulation_finished"))
+    // cutoff the simulation if we have passed the cutoff
+    if (knowledge.get ("simulation_time") >= knowledge.get ("simulation_cutoff"))
     {
       terminated = true;
+      knowledge.set ("simulation_finished");
     }
-    else
-    {
-      knowledge.evaluate (logic);
-      knowledge.print("{.cur_time} RULE: {.rule}  P:{tl{.id}.phase}.{.time_in_phase} "\
-        "Y:{.switching_yellow}.{.time_left_in_yellow} " \
-        "NSR: {tl{.id}.northsouth.reinforcement}, " \
-        "EWR: {tl{.id}.eastwest.reinforcement}\n");
-    }
+
+    ACE_OS::sleep (1);
   }
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
@@ -126,18 +138,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:m:s:l:o:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("start"), 's', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("map"), 'm', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("settings"), 's', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("logic"), 'l', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("value"), 'v', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -153,17 +165,17 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       id = atoi (cmd_opts.opt_arg ());
       break;
+    case 'm':
+      // thread number
+      mapfile = cmd_opts.opt_arg ();
+      break;
+    case 'l':
+      // thread number
+      logicfile = cmd_opts.opt_arg ();
+      break;
     case 's':
       // thread number
-      stop = atoi (cmd_opts.opt_arg ());
-      break;
-    case 'p':
-      // thread number
-      processes = atoi (cmd_opts.opt_arg ());
-      break;
-    case 'v':
-      // thread number
-      value = atoi (cmd_opts.opt_arg ());
+      settingsfile = cmd_opts.opt_arg ();
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
@@ -176,11 +188,12 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
-      -p (--processes) number of processes that will be running\n\
       -i (--id)        set process id (0 default)  \n\
-      -s (--start)     start condition (10 default) \n\
+      -m (--map)       map file name for traffic lights/hospitals/streets \n\
+                       note that this path will start from $MADARA_ROOT \n\
+      -l (--logic)     logic file name from $MADARA_ROOT \n\
+      -s (--settings)  configuration for simulation from $MADARA_ROOT\n\
       -o (--host)      this host ip/name (localhost default) \n\
-      -v (--value)     start process with a certain value (0 default) \n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
