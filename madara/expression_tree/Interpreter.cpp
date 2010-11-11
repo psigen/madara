@@ -1707,15 +1707,40 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
   }
   else if (input[i] == '/')
   {
-    // division operation
-    handled = true;
-    Divide *op = new Divide ();
-    op->add_precedence (accumulated_precedence);
+    // is this a one line comment?
+    if (i+1 < input.size () && input[i+1] == '/')
+    {
+      // we have a one line comment
+      for (; i < input.size () && input[i] != '\n'; ++i);
+    }
+    // is this a multi-line comment?
+    else if (i+1 < input.size () && input[i+1] == '*')
+    {
+      // find the matching close
+      std::string::size_type found = input.find ("*/",i+1);
 
-    lastValidInput = 0;
+      // if we were able to find the matching close,
+      // then set i to the '/' in '*/'
+      if (found != std::string::npos)
+        i = found + 1;
 
-    // insert the op according to precedence relationships
-    precedence_insert (op, list);
+      // otherwise, the user apparently wanted to
+      // comment out the rest of the file
+      else
+        i = input.size ();
+    }
+    else
+    {
+      // division operation
+      handled = true;
+      Divide *op = new Divide ();
+      op->add_precedence (accumulated_precedence);
+
+      lastValidInput = 0;
+
+      // insert the op according to precedence relationships
+      precedence_insert (op, list);
+    }
     ++i;
   }
   else if (input[i] == '=')

@@ -66,18 +66,19 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // .braking_time                     // time required to come to a stop
   // .time_min                         // minimum time in a phase
 
-  knowledge.set (".cut_off_time", 20);   // 3 minutes (180 seconds)
-  knowledge.set (".braking_time", 5);    // 5 seconds for breaking time
-  knowledge.set (".time_min", 5);        // 1 minute (60 seconds) phase min
-  knowledge.set (".time_left_in_yellow", 0);  // default for yellow
-  knowledge.evaluate ("tl{.id}.phase = 1");    // start in north/south green
-
   std::stringstream main_logic;
 
+  // main logic file
   std::string filename = getenv ("MADARA_ROOT");
   filename += "/configs/logics/traffic_light.klf";
 
   std::string logic = Madara::Utility::file_to_string (filename);
+
+  // setup file for the lights
+  filename = getenv ("MADARA_ROOT");
+  filename += "/configs/logics/traffic_light_setup.klf";
+
+  std::string setup = Madara::Utility::file_to_string (filename);
 
   std::ofstream main_logic_file;
 

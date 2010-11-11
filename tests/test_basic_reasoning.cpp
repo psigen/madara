@@ -26,6 +26,7 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_comments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -43,6 +44,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_comments (knowledge);
   test_assignments (knowledge);
   test_unaries (knowledge);
   test_conditionals (knowledge);
@@ -606,6 +608,46 @@ void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate (".id=1;Running1=0;Running2=0");
   result = knowledge.evaluate ("(Running{.id} = 0); 1 && !Running1 && !Running2");
   assert (result == 1);
+}
+
+/// Tests the both operator (;)
+void test_comments (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  knowledge.clear ();
+  std::string expression;
+  expression = "\
+               ++.i;\
+               // this should still be 1. \n";
+
+  knowledge.evaluate (expression);
+  assert (knowledge.get (".i") == 1);
+
+  expression = "\
+               // this should still be 1\n \
+               // ++.i; \
+               // but this should be 2\n \
+               ++.i;";
+
+  knowledge.evaluate (expression);
+  assert (knowledge.get (".i") == 2);
+
+  expression = "\
+               /* \n \
+                 we are going to take out this old code\n \
+                 that added 4 extra increments\n \
+                 ++.i; \n \
+                 ++.i; \n \
+                 ++.i; \n \
+                 ++.i; \n \
+               */ \n\n \
+               // but we leave this one to make it 3 \n \
+               ++.i;";
+
+  knowledge.evaluate (expression);
+  assert (knowledge.get (".i") == 3);
+
+
+
 }
 
 /// Tests the conditionals (==, !=, <, <=, >, >=)

@@ -21,6 +21,12 @@
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 // test functions
+unsigned long long test_optimal_reinforcement (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned int iterations);
+unsigned long long test_optimal_inference (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned int iterations);
 unsigned long long test_simple_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      unsigned int iterations);
@@ -66,6 +72,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   unsigned long long lr_result = 0;
   unsigned long long si_result = 0;
   unsigned long long li_result = 0;
+  unsigned long long or_result = 0;
+  unsigned long long oi_result = 0;
 
   if (num_runs == 0 || num_iterations == 0)
   {
@@ -86,6 +94,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       knowledge, num_iterations);
     li_result += test_large_inference (
       knowledge, num_iterations);
+    or_result += test_optimal_reinforcement (
+      knowledge, num_iterations);
+    oi_result += test_optimal_inference (
+      knowledge, num_iterations);
   }
 
   // to find out the number of iterations per second, we need to 
@@ -95,10 +107,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   double lr_avg = (double) 1000000 * num_iterations * num_runs / lr_result;
   double si_avg = (double) 1000000 * num_iterations * num_runs / si_result;
   double li_avg = (double) 1000000 * num_iterations * num_runs / li_result;
+  double oi_avg = (double) 1000000 * num_iterations * num_runs / oi_result;
+  double or_avg = (double) 1000000 * num_iterations * num_runs / or_result;
 
   ACE_DEBUG ((LM_INFO, 
     "\nResults for tests with %d iterations were:\n", num_iterations));
 
+  ACE_DEBUG ((LM_INFO, 
+    "  Optimal C++ reinforcement avg:           %.2f per second\n", or_avg));
+  ACE_DEBUG ((LM_INFO, 
+    "  Optimal C++ inf w/reinforcement avg:     %.2f per second\n\n", oi_avg));
   ACE_DEBUG ((LM_INFO, 
     "  Simple reinforcement avg:                %.2f per second\n", sr_avg));
   ACE_DEBUG ((LM_INFO, 
@@ -257,6 +275,76 @@ unsigned long long test_large_inference (
   ACE_DEBUG ((LM_INFO, 
     "(%P|%t)   Final value of large inference eval was %d\n",
     knowledge.get (".var1")));
+
+  return stop - start;
+}
+
+/// Tests logicals operators (&&, ||)
+unsigned long long test_optimal_reinforcement (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     unsigned int iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_optimal_reinforcement"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t start, stop;
+
+  long var1 = 0;
+
+  start = ACE_OS::gethrtime ();
+
+  for (unsigned int i = 0; i < iterations; ++i)
+  {
+    ++var1;
+  }
+
+  stop = ACE_OS::gethrtime ();
+
+  ACE_DEBUG ((LM_INFO, 
+    "(%P|%t) Time for %d optimal C++ reinforcements was %d\n",
+    iterations, stop - start));
+
+  ACE_DEBUG ((LM_INFO, 
+    "(%P|%t)   Final value of optimal C++ reinforcements was %d\n",
+    var1));
+
+  return stop - start;
+}
+
+/// Tests logicals operators (&&, ||)
+unsigned long long test_optimal_inference (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     unsigned int iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_optimal_inference"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t start, stop;
+
+  long var1 = 0;
+  long conditional = 1;
+
+  start = ACE_OS::gethrtime ();
+
+  for (unsigned int i = 0; i < iterations; ++i)
+  {
+    if (conditional)
+      ++var1;
+  }
+
+  stop = ACE_OS::gethrtime ();
+
+  ACE_DEBUG ((LM_INFO, 
+    "(%P|%t) Time for %d optimal C++ inferences was %d\n",
+    iterations, stop - start));
+
+  ACE_DEBUG ((LM_INFO, 
+    "(%P|%t)   Final value of optimal C++ inferences was %d\n",
+    var1));
 
   return stop - start;
 }

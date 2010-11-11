@@ -66,7 +66,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     std::getline (std::cin, expression);
 
-    if (expression != "quit")
+    if (expression != "" && expression != "quit")
       knowledge.evaluate (expression);
     else
       terminated = true;

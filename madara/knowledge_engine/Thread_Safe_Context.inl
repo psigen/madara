@@ -28,7 +28,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
   // enter the mutex
   Context_Guard guard (mutex_);
 
-  // creat the key if it didn't exist
+  // create the key if it didn't exist
   map_[key];
 
   // find the key in the knowledge base. It will be
