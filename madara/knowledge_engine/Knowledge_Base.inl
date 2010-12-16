@@ -27,7 +27,7 @@ Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
   impl_->close_transport ();
 }
 
-inline int
+inline long
 Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
 {
   return impl_->get (key);

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <set>
 #include <assert.h>
 #include <stdlib.h>
 
@@ -31,8 +32,37 @@ std::string trafficlight_setupfile = "/configs/logics/traffic_light_setup.klf";
 std::string settingsfile = "/configs/settings/default_simulation.klf";
 std::string host = "localhost";
 
+typedef std::set < std::string >                 Vertices;
+
+
+typedef std::map < std::string, long >              Distance_Map;
+typedef std::map < std::string, Distance_Map >      Connectivity_Map; 
+
+typedef std::vector <std::vector <char>>            Logical_Map;
 
 volatile bool terminated = 0;
+
+typedef std::vector <std::string>                   Path;
+
+class Route
+{
+public:
+  Path path;
+  long distance;
+};
+
+class Route_Comparator
+{
+  public:
+    bool operator () (const Route &s1, const Route &s2) const
+    {
+      return s1.distance < s2.distance;
+    }
+};
+
+typedef std::vector <Route>                        Route_Vector;
+typedef std::map <std::string, Route>              Route_Target_Map;
+typedef std::map <std::string, Route_Target_Map>   Route_Map;
 
 
 // command line arguments
@@ -44,13 +74,372 @@ extern "C" void terminate (int)
   terminated = true;
 }
 
+void build_route_map (Route_Map & route_map,
+                Connectivity_Map & connectivity_map,
+                Vertices & vertices_orig,
+                std::string & source)
+{
+  // get the available connected vertices from source
+  Route_Target_Map & targets = route_map[source];
+
+  // we need our own copy of the vertices because we
+  // will be deleting a vertex at each iteration,
+  // starting with ourself
+  Vertices vertices = vertices_orig;
+
+  // erase our vertex. It's always distance 0.
+  vertices.erase (source);
+
+  // from wikipedia:
+// 1  function Dijkstra(Graph, source):
+// 2      for each vertex v in Graph:           
+// 3          dist[v] := infinity ;              
+// 4          previous[v] := undefined ;         
+// 5      end for ;
+// 6      dist[source] := 0 ;                    
+// 7      Q := the set of all nodes in Graph ;
+//        
+
+// at this point, we are up to line 8 in implementation. route_map[source] is 
+// our list of distances, and if it doesn't exist in the map, then we
+// effectively have infinite distance
+// We force source to be evaluated, so we step over step 8-12. Distance
+// to closest neighbors of current source is also already included from
+// building the connectivity graph. At this point, what we need to do is
+// 
+
+// 8      while Q is not empty:                 // The main loop
+// 9          u := vertex in Q with smallest dist[] ;
+//10          if dist[u] = infinity:
+//11              break ;                        // all remaining vertices are inaccessible from source
+//12          fi ;
+//13          remove u from Q ;
+//14          for each neighbor v of u:         // where v has not yet been removed from Q.
+//15              alt := dist[u] + dist_between(u, v) ;
+//16              if alt < dist[v]:             // Relax (u,v,a)
+//17                  dist[v] := alt ;
+//18                  previous[v] := u ;
+//19              fi  ;
+//20          end for ;
+//21      end while ;
+//22      return dist[] ;
+//23  end Dijkstra.
+
+  std::string current;
+
+  while (vertices.size () > 0)
+  {
+    Route_Vector targets_list;
+
+    // build a list of targets from source since we can't sort a map
+    for (Route_Target_Map::iterator i = targets.begin ();
+         i != targets.end (); ++i)
+    {
+      targets_list.push_back (i->second);
+    }
+
+    // sort the current targets list from source
+    std::sort (targets_list.begin (), targets_list.end (), Route_Comparator ());
+
+    current = "";
+
+    // find the vertex with the shortest length that hasn't been visited
+    // if the vertex is in vertices, then it hasn't been visited
+    for (Route_Vector::iterator i = targets_list.begin (); 
+         i != targets_list.end (); ++i)
+    {
+      if (vertices.find (i->path.back ()) != vertices.end ())
+      {
+        // we've found a vertex that needs expanding. Let's setup the current
+        // vertex to be evaluated and remove it from the vertex list
+        current = i->path.back ();
+        vertices.erase (current);
+        break;
+      }
+    } // end for all sorted targets
+    
+    // if current is still null, then the vertices that remain are unreachable
+    if (current == "")
+      break;
+
+    // at this point, we should have a valid current;
+    // Let's see what it is connected to
+
+    Route_Target_Map & cur_targets = route_map[current];
+
+    Route_Vector cur_targets_list;
+
+    // build a list of targets so we can actually sort them
+    // we can't sort a map
+    for (Route_Target_Map::iterator i = cur_targets.begin ();
+         i != cur_targets.end (); ++i)
+    {
+      cur_targets_list.push_back (i->second);
+    }
+
+    // sort the intermediate targets list from current
+    std::sort (cur_targets_list.begin (), cur_targets_list.end (), 
+      Route_Comparator ());
+
+    for (Route_Vector::iterator i = cur_targets_list.begin (); 
+         i != cur_targets_list.end (); ++i)
+    {
+      // the route target map might have been filled for this target,
+      // so we are specifically looking for paths from current that
+      // are equal to 2 (source to target for path vertex size of 2)
+      if (i->path.size () > 2)
+        continue;
+
+      std::string last = i->path.back ();
+
+      // we really don't want to create a uturn
+      if (last == source)
+        continue;
+
+      // what would this new distance be?
+      long new_distance = targets[current].distance + i->distance;
+
+      // is this new target already in our map or at a distance greater
+      // than our new distance?
+      if (targets.find (last) == targets.end () || 
+          new_distance < targets[last].distance)
+      {
+        // so, at this point, we have a valid ith element that can
+        // be added to our targets map. We'll already have the path to
+        // this point stored in targets[current].path and distance
+        // to this point in targets[current].distance
+        targets[last].distance = new_distance;
+
+        // our path is going to be the current path plus this new element
+        targets[last].path = targets[current].path;
+        targets[last].path.push_back (last);
+      }
+    }
+  }
+
+}
+
+
+void build_route_map (Route_Map & route_map, 
+                Connectivity_Map & connectivity_map)
+{
+  // build a vertex vector
+  Vertices vertices;
+  for (Route_Map::iterator vertex = route_map.begin ();
+       vertex != route_map.end (); ++vertex)
+  {
+    vertices.insert (vertex->first);
+  }
+  
+
+  // use dijkstras on each 
+  for (Vertices::iterator i = vertices.begin ();
+       i != vertices.end (); ++i)
+  {
+    build_route_map (route_map, connectivity_map, vertices, *i);
+  }
+}
+
+void print_logical_map (Logical_Map & logical_map)
+{
+  ACE_DEBUG ((LM_INFO, "Printing logical map...\n"));
+
+  long max_y = logical_map[0].size ();
+  long max_x = logical_map.size ();
+
+  for (long y = 0; y < max_y; ++y)
+  {
+    for (long x = 0; x < max_x; ++x)
+    {
+      // we store nulls in the logical map if the position has
+      // no street or light, so print a space instead
+
+      char printable = logical_map[x][y] ? logical_map[x][y] : ' ';
+
+      ACE_DEBUG ((LM_INFO, "%c ", printable));
+    }
+    // print a line when we cross the x boundary
+    ACE_DEBUG ((LM_INFO, "\n"));
+  }
+}
+
+void print_connectivity_map (Connectivity_Map & connectivity_map)
+{
+  ACE_DEBUG ((LM_INFO, "Printing connectivity map...\n"));
+
+  for (Connectivity_Map::const_iterator i = connectivity_map.begin ();
+       i != connectivity_map.end (); ++i)
+  {
+    ACE_DEBUG ((LM_INFO, "  %s\n", i->first.c_str ()));
+
+    for (Distance_Map::const_iterator j = (*i).second.begin ();
+       j != (*i).second.end (); ++j)
+    {
+      ACE_DEBUG ((LM_INFO, "   -> %s with distance %d\n", 
+        j->first.c_str (), j->second));
+    }
+  }
+}
+
+void print_path (const Path & path)
+{
+  std::stringstream buffer;
+  for (unsigned long i = 0; i < path.size (); ++i)
+  {
+    buffer << path[i];
+    if (i != path.size () - 1)
+      buffer << "->";
+  }
+  ACE_DEBUG ((LM_INFO, "%s\n", buffer.str ().c_str ()));
+}
+
+void print_route_map (Route_Map & route_map)
+{
+  ACE_DEBUG ((LM_INFO, "Printing route map...\n"));
+
+  for (Route_Map::const_iterator i = route_map.begin ();
+       i != route_map.end (); ++i)
+  {
+    ACE_DEBUG ((LM_INFO, "  %s\n", i->first.c_str ()));
+
+    for (Route_Target_Map::const_iterator j = (*i).second.begin ();
+       j != (*i).second.end (); ++j)
+    {
+      ACE_DEBUG ((LM_INFO, "   -> %s (%d) : ", 
+        j->first.c_str (), j->second.distance));
+      print_path (j->second.path);
+    }
+  }
+}
+
+void update_connectivity (Connectivity_Map & connectivity_map,
+                          Route_Map & route_map,
+                          std::string source, long dest_x, long dest_y)
+{
+  std::stringstream dest_buffer;
+
+//  ACE_DEBUG ((LM_INFO, "  -> [%d:%d], val=%c\n", 
+//    dest_x, dest_y, logical_map[x][y]));
+  dest_buffer << dest_x;
+  dest_buffer << ".";
+  dest_buffer << dest_y;
+
+  std::string dest = dest_buffer.str ();
+
+  // update connectivity map. This may never actually
+  // be used as the route map provides the same functionality
+  // and a bit more
+  connectivity_map [source][dest] = 1;
+
+  // grab a reference to the route_map for source to dest
+  Route & route = route_map [source][dest];
+
+  // create a path directly from source to dest
+  Path path;
+  path.push_back (source);
+  path.push_back (dest);
+
+  // distance is 1. I may need this same code
+  // some other time for distances that are not
+  // just equal to path.size () - 1, so I'm making
+  // the structure a bit more robust.
+  route.distance = 1;
+
+  // route
+  route.path = path;
+}
+
+
+void build_connectivity (Logical_Map & logical_map, Connectivity_Map & connectivity_map,
+                         Route_Map & route_map,
+                         long cur_x, long cur_y, long max_x, long max_y)
+{
+  // look around the current location for connectivity (roads/light)
+  // 1 2 3         C 1    1 2     1 2      1 2
+  // 4 C 5         2 3    3 C     C 3      3 C
+  // 6 7 8                        4 5      4 5
+             
+  // compute starting x and y, see ascii outline above
+  long x;
+  long y;
+
+  char printable = logical_map[cur_x][cur_y];
+
+  ACE_DEBUG ((LM_INFO, "Looking for connections from [%d:%d], val=%c\n", 
+    cur_x, cur_y, printable));
+
+  // build the source string (x:y)
+  std::stringstream source_buffer;
+  source_buffer << cur_x;
+  source_buffer << ".";
+  source_buffer << cur_y;
+  std::string source = source_buffer.str ();
+
+  // We should really only have to look at the cardinal directions
+  // let's check north first
+  if (cur_y > 0)
+  {
+    x = cur_x;
+    y = cur_y - 1;
+    if (logical_map[x][y] == 'r' || 
+        logical_map[x][y] == 't' || 
+        logical_map[x][y] == 'h')
+    {
+      update_connectivity (connectivity_map, route_map, source, x, y);
+    }
+  }
+
+  // check south
+  if (cur_y < max_y)
+  {
+    x = cur_x;
+    y = cur_y + 1;
+    if (logical_map[x][y] == 'r' || 
+        logical_map[x][y] == 't' || 
+        logical_map[x][y] == 'h')
+    {
+      update_connectivity (connectivity_map, route_map, source, x, y);
+    }
+  }
+
+  // check west
+  if (cur_x > 0)
+  {
+    x = cur_x - 1;
+    y = cur_y;
+    if (logical_map[x][y] == 'r' || 
+        logical_map[x][y] == 't' || 
+        logical_map[x][y] == 'h')
+    {
+      update_connectivity (connectivity_map, route_map, source, x, y);
+    }
+  }
+
+  // check east
+  if (cur_x < max_x)
+  {
+    x = cur_x + 1;
+    y = cur_y;
+    if (logical_map[x][y] == 'r' || 
+        logical_map[x][y] == 't' || 
+        logical_map[x][y] == 'h')
+    {
+      update_connectivity (connectivity_map, route_map, source, x, y);
+    }
+  }
+}
+
 void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Base & knowledge,
                 std::vector <std::pair <long, long> > & spawn_points,
                 std::vector <std::pair <long, long> > & hospitals,
-                std::vector <std::pair <long, long> > & traffic_lights)
+                std::vector <std::pair <long, long> > & traffic_lights,
+                Logical_Map & logical_map, Connectivity_Map & connectivity_map,
+                Route_Map & route_map)
 {
   long x = 0, y = 0;
   long max_x = 0, max_y = 0;
+
+  logical_map.clear ();
 
   for (unsigned long i = 0; i < map.size (); ++i)
   {
@@ -61,8 +450,9 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
     if (map[i] == '\n')
     {
       if (x > max_x)
-        max_x = x - 1;
+        max_x = x;
 
+      //logical_map[x][y] = 0;
       x = 0;
       ++y;
     }
@@ -82,52 +472,52 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
 .light{.light_num}.y=.y;\
 ");
       }
-      if (map[i] != '\r')
-      {
-        ++x;
-      }
+
+      ++x;
     }
   }
 
   max_y = y - 1;
 
-  knowledge.set (".max_x", max_x);
-  knowledge.set (".max_y", max_y);
+  // doing a bunch of "pushes" in the first loop was getting annoying.
+  // since this is a one time setup, we'll just resize the arrays here
+  // and then fill the logical_map with r, t, or 0
+
+  std::vector <char> dummy;
+  dummy.reserve (max_y + 2);
+  dummy.insert (dummy.end (), max_y + 2, 0);
+
+  logical_map.reserve (max_x + 2);
+  logical_map.insert (logical_map.end (), max_x + 2, dummy);
+
+  ACE_DEBUG ((LM_INFO, 
+    "After resizing, logical map now has size of %d. max_y = %d\n", 
+    logical_map.size (), max_y + 1));
+
+  for (unsigned long i = 0; i < logical_map.size (); ++i)
+  {
+    ACE_DEBUG ((LM_INFO, 
+      " logical_map[%d].size = %d\n", 
+      i, logical_map[i].size ()));
+  }
 
   x = 0;
   y = 0;
-
-  ACE_DEBUG ((LM_INFO, "(%P|%t)   Found boundaries ([%d:%d])\n", max_x, max_y));
-
+  // build a logical map so we can reference coordinates in [x][y]
   for (unsigned long i = 0; i < map.size (); ++i)
   {
-    // 
-    knowledge.set (".x", x);
-    knowledge.set (".y", y);
+    ACE_DEBUG ((LM_INFO, "Evaluating %d:%d\n", x, y));
 
-    //ACE_DEBUG ((LM_INFO, "(%P|%t) Evaluating point ([%d:%d])\n", x, y));
-    // update the x and y coordinates
+    std::pair <long, long> current (x, y);
     if (map[i] == '\n')
     {
       x = 0;
       ++y;
     }
-    else
+    else if (map[i] == '|' || map[i] == '_' || 
+      map[i] == '-' || map[i] == '/' || map[i] == '\\')
     {
-      std::pair <long, long> current (x, y);
-
-      if      (map[i] == 'H' || map[i] == 'h')
-      {
-        hospitals.push_back (current);
-        ACE_DEBUG ((LM_INFO, "(%P|%t)   Found hospital ([%d:%d])\n", x, y));
-        knowledge.evaluate (".map.{.x}.{.y}.type=.hospital_type");
-      }
-      else if (map[i] == 'T' || map[i] == 't')
-      {
-        traffic_lights.push_back (current);
-        ACE_DEBUG ((LM_INFO, "(%P|%t)   Found traffic_light ([%d:%d])\n", x, y));
-      }
-      else if (map[i] == '|' && (y == 0 || y == max_y))
+      if (map[i] == '|' && (y == 0 || y == max_y))
       {
         spawn_points.push_back (current);
         ACE_DEBUG ((LM_INFO, "(%P|%t)   Found spawn point ([%d:%d])\n", x, y));
@@ -137,73 +527,101 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
         spawn_points.push_back (current);
         ACE_DEBUG ((LM_INFO, "(%P|%t)   Found spawn point ([%d:%d])\n", x, y));
       }
-      
-      // all streets need their types updated
-      if (map[i] == '|')
-      {
-        // it is not a coincidence that phase == 1 is a northsouth green phase
-        knowledge.evaluate (".map.{.x}.{.y}.type=.northsouth_road_type");
-      }
+      logical_map[x][y] = 'r';
+    }
+    else if (map[i] == 'T' || map[i] == 'T')
+    {
+      traffic_lights.push_back (current);
+      logical_map[x][y] = 't';
+    }
+    else if (map[i] == 'H' || map[i] == 'h')
+    {
+      hospitals.push_back (current);
+      logical_map[x][y] = 'h';
+    }
+    else
+      logical_map[x][y] = 0;
 
-      // all streets need their types updated
-      if (map[i] == '_' || map[i] == '|')
-      {
-        // it is not a coincidence that phase == 2 is a eastwest green phase
-        knowledge.evaluate (".map.{.x}.{.y}.type=.eastwest_road_type");
-      }
+    ++x;
+  }
+
+  knowledge.set (".max_x", max_x);
+  knowledge.set (".max_y", max_y);
+
+  x = 0;
+  y = 0;
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t)   Found boundaries ([%d:%d])\n", max_x, max_y));
+
+  // now that we've built a logical map, let's use it to figure out hospitals,
+  // spawn locations, etc. and also build the connectivity map
+  for (y = 0; y <= max_y; ++y)
+  {
+    for (x = 0; x <= max_x; ++x)
+    {
+      std::pair <long, long> current (x, y);
 
       // streets AND traffic lights also need information concerning the next
       // traffic light in either direction. This will help us figure out
       // whether or not we have green lights based on the car pos and allows
       // us to use KaRL to look up light info (even reinforcement values)
-      if (map[i] == '_' || map[i] == '|' || map[i] == 'T' || map[i] == 't')
+      if (logical_map[x][y] == 'r' || logical_map[x][y] == 't')
       {
         long i = y-1;
         // try to find next light to the north
-        for (knowledge.set (".i", i); knowledge.get (".i") >= 0; --i, knowledge.set (".i", i))
+        for (knowledge.set (".i", i); 
+           knowledge.get (".i") >= 0; 
+           --i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.x}.{.i}.type == .light_type => \
-                                ( .map.{.x}.{.y}.light.north = .map.{.x}.{.i}.id; \
-                                  .i = -1 \
-                                )");
+                   ( .map.{.x}.{.y}.light.north = .map.{.x}.{.i}.id; \
+                     .i = -1 \
+                   )");
         }
 
         i = y + 1;
         // try to find next light to the south
-        for (knowledge.set (".i", i); knowledge.get (".i") < max_y + 1; ++i, knowledge.set (".i", i))
+        for (knowledge.set (".i", i); 
+           knowledge.get (".i") < max_y + 1; 
+           ++i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.x}.{.i}.type == .light_type => \
-                                ( .map.{.x}.{.y}.light.south = .map.{.x}.{.i}.id; \
-                                  .i = .max_y + 1 \
-                                )");
+                  ( .map.{.x}.{.y}.light.south = .map.{.x}.{.i}.id; \
+                    .i = .max_y + 1 \
+                  )");
         }
 
         i = x + 1;
         // try to find next light to the east
-        for (knowledge.set (".i", i); knowledge.get (".i") < max_x + 1; ++i, knowledge.set (".i", i))
+        for (knowledge.set (".i", i); 
+          knowledge.get (".i") < max_x + 1; 
+          ++i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.i}.{.y}.type == .light_type => \
-                                ( .map.{.x}.{.y}.light.east = .map.{.i}.{.y}.id; \
-                                  .i = .max_x + 1 \
-                                )");
+                  ( .map.{.x}.{.y}.light.east = .map.{.i}.{.y}.id; \
+                    .i = .max_x + 1 \
+                  )");
         }
 
         i = x - 1;
         // try to find next light to the west
-        for (knowledge.set (".i", i); knowledge.get (".i") >= 0; --i, knowledge.set (".i", i))
+        for (knowledge.set (".i", i); 
+             knowledge.get (".i") >= 0; 
+             --i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.i}.{.y}.type == .light_type => \
-                                ( .map.{.x}.{.y}.light.west = .map.{.i}.{.y}.id; \
-                                  .i = -1 \
-                                )");
+                 ( .map.{.x}.{.y}.light.west = .map.{.i}.{.y}.id; \
+                   .i = -1 \
+                 )");
         }
-      }
-      
-      if (map[i] != '\r')
-        ++x;
-    }
 
+        build_connectivity (logical_map, connectivity_map, route_map, x, y, max_x, max_y);
+      } // end if the segment is road or traffic light
+    }
   }
+
+  build_route_map (route_map, connectivity_map);
+
   ACE_DEBUG ((LM_INFO, 
     "(%P|%t) Map contains the following properties:\n"));
   ACE_DEBUG ((LM_INFO, 
@@ -212,6 +630,119 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
     "(%P|%t)   Traffic lights:  %d\n", traffic_lights.size ()));
   ACE_DEBUG ((LM_INFO, 
     "(%P|%t)   Hospitals:       %d\n", hospitals.size ()));
+
+  print_logical_map (logical_map);
+  print_connectivity_map (connectivity_map);
+  print_route_map (route_map);
+}
+
+inline void process_car (
+  Madara::Knowledge_Engine::Knowledge_Base & knowledge, Route_Map & route_map,
+  const std::string & logic)
+{
+  // we're going to cheat a bit since KaRL does not support
+  // for loops yet. Loopmain is going to setup a few variables
+  // for us: 
+  // .finished = .car{.i}.finish_time;
+  //
+  // if !.finished, then we set up the following
+  // .cur_x = .car{.i}.cur.x;
+  // .cur_y = .car{.i}.cur.y;
+  // .dest_x = .car{.i}.dest.x;
+  // .dest_y = .car{.i}.dest.y;
+  // .velocity = .car{.i}.velocity;
+
+  knowledge.evaluate ("\
+.cur_x = .car{.i}.cur.x;\
+.cur_y = .car{.i}.cur.y;\
+.dest_x = .car{.i}.dest.x;\
+.dest_y = .car{.i}.dest.y;\
+.velocity = .car{.i}.velocity;");
+
+  long cur_x = knowledge.get (".cur_x");
+  long cur_y = knowledge.get (".cur_y");
+
+  long dest_x = knowledge.get (".dest_x");
+  long dest_y = knowledge.get (".dest_y");
+
+
+  std::stringstream source_stream;
+  std::stringstream dest_stream;
+
+  source_stream << cur_x;
+  source_stream << ".";
+  source_stream << cur_y;
+
+  dest_stream << dest_x;
+  dest_stream << ".";
+  dest_stream << dest_y;
+
+  std::string source = source_stream.str ();
+  std::string dest = dest_stream.str ();
+
+  Route route = route_map [source][dest];
+  Path path = route.path;
+
+  long max_speed = knowledge.get ("max_speed");
+  unsigned long j;
+
+  for (j = 0; j < path.size () && j <= max_speed; ++j)
+  {
+    // j is the path point on the way to destination
+    knowledge.set (".j", j);
+    long x;
+    long y;
+    char separator;
+
+    // buffer splits from a coord in the form of x.y
+    std::stringstream buffer (path[j]);
+    buffer >> x;
+    buffer >> separator;
+    buffer >> y;
+
+    // set a temporary variable so we can go 
+    knowledge.set (".x", x);
+    knowledge.set (".y", y);
+
+    // setup the path entry for this car. 
+    knowledge.evaluate (".path.{.j}.x = .x; .path.{.j}.y = .y");
+  }
+
+  // fill up the path entries up to max_speed, to simplify the
+  // job of the KaRL logic
+  for (; j <= max_speed; ++j)
+  {
+    // j is the path point on the way to destination
+    knowledge.set (".j", j);
+
+    // setup the path entry for this car. 
+    knowledge.evaluate (".path.{.j}.x = .x; .path.{.j}.y = .y");
+  }
+  
+  knowledge.evaluate (logic);
+
+  // .y_abs_diff = .y_diff = .cur_y - .dest_y;
+  // .y_diff < 0 => .y_abs_diff = -.y_diff;
+
+  // .x_abs_diff = .x_diff = .cur_x - .dest_x;
+  // .x_diff < 0 => .x_abs_diff = -.x_diff;
+
+  // .cur.vel.{0}.x = 
+  
+}
+
+void process_cars (
+  Madara::Knowledge_Engine::Knowledge_Base & knowledge, Route_Map & route_map,
+  const std::string & logic)
+{
+  knowledge.set (".i", 0);
+  // run the main logic on the cars that currently exist
+  for (knowledge.set (".i", 0); 
+         knowledge.get (".i") < knowledge.get (".num_cars"); 
+         knowledge.evaluate ("++.i"))
+  {
+    process_car (knowledge, route_map, logic);
+  }
 }
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
@@ -317,13 +848,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   long num_cars = 0;
 
+  Logical_Map logical_map;
+  Connectivity_Map connectivity_map;
+  Route_Map route_map;
+
   std::vector <std::pair <long, long> > spawn_points;
   std::vector <std::pair <long, long> > hospitals;
   std::vector <std::pair <long, long> > traffic_lights;
   
   std::vector <std::vector <long> >     map_lookup;
 
-  parse_map (map, knowledge, spawn_points, hospitals, traffic_lights);
+  parse_map (map, knowledge, spawn_points, hospitals, 
+    traffic_lights, logical_map, connectivity_map, route_map);
+
+  //return 0;
 
   // setup traffic light defaults (like braking time)
   // note that these setup statements should be setup so that
@@ -347,32 +885,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       knowledge.evaluate (light_logic);
     }
 
-    knowledge.set (".i", 0);
-    // run the main logic on the cars that currently exist
-    for (knowledge.set (".i", 0); 
-           knowledge.get (".i") < knowledge.get (".num_cars"); 
-           knowledge.evaluate ("++.i"))
-    {
-      // we're going to cheat a bit since KaRL does not support
-      // for loops yet. Loopmain is going to setup a few variables
-      // for us: 
-      // .finished = .car{.i}.finish_time;
-      //
-      // if !.finished, then we set up the following
-      // .cur_x = .car{.i}.cur.x;
-      // .cur_y = .car{.i}.cur.y;
-      // .dest_x = .car{.i}.dest.x;
-      // .dest_y = .car{.i}.dest.y;
-      // .velocity = .car{.i}.velocity;
-  
-      // .y_abs_diff = .y_diff = .cur_y - .dest_y;
-      // .y_diff < 0 => .y_abs_diff = -.y_diff;
-  
-      // .x_abs_diff = .x_diff = .cur_x - .dest_x;
-      // .x_diff < 0 => .x_abs_diff = -.x_diff;
-      knowledge.evaluate (loopmain_logic);
-
-    }
+    // process cars that are in play
+    process_cars (knowledge, route_map, loopmain_logic);
 
     // spawn new cars
     for (long i = 0; i < spawn_rate; ++i, ++num_cars)

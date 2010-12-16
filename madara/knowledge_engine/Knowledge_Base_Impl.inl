@@ -13,7 +13,7 @@
  * This file contains the inline functions for Knowledge_Base_Impl class
  */
 
-inline int
+inline long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::get (const ::std::string & key) const
 {
   return map_.get (key);

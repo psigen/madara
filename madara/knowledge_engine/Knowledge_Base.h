@@ -62,7 +62,7 @@ namespace Madara
       void close_transport (void);
 
       /// Retrieve the value associated with the provided key
-      int get (const ::std::string & key) const;
+      long get (const ::std::string & key) const;
 
       /// Expand a statement by variable expansions 
       std::string expand_statement (const ::std::string & statement) const;
