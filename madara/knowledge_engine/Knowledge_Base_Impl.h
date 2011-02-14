@@ -11,6 +11,7 @@
 #include "madara/Globals.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Files.h"
 #include "madara/transport/Transport.h"
 #include "ace/SOCK_Acceptor.h"
 #include "madara/expression_tree/Interpreter.h"
@@ -21,8 +22,8 @@ namespace Madara
   namespace Knowledge_Engine
   {
     /**
-     * @class Knowledge_Record
-     * @brief This class provides a distributed knowledge base to users
+     * @class Knowledge_Base_Impl
+     * @brief This class provides a distributed knowledge base implementation
      */
     class Knowledge_Base_Impl
     {
@@ -30,7 +31,7 @@ namespace Madara
       /// Transport type enumeration
 
       enum {
-        TCP_TRANSPORT = 0,
+        TCP_TRANSPORT = 2,
         OPEN_SPLICE_TRANSPORT = 1
       };
 
@@ -58,6 +59,10 @@ namespace Madara
 
       /// Expand a statement by variable expansions 
       std::string expand_statement (const ::std::string & statement) const;
+
+      /// Read file into the knowledge base
+      int read_file (const std::string & file_name, 
+                     const std::string & knowledge_key);
 
       /// Set the value associated with the provided key
       int set (const ::std::string & key, long value = Madara::Knowledge_Record::MODIFIED);
@@ -132,6 +137,7 @@ namespace Madara
       ACE_SOCK_Acceptor             unique_bind_;
       std::string                   id_;
       std::string                   domain_name_;
+      Files                         files_;
 
       Madara::Expression_Tree::Interpreter     interpreter_;
     };

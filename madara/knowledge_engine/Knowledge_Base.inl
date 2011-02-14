@@ -33,6 +33,15 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
   return impl_->get (key);
 }
 
+
+inline int
+Madara::Knowledge_Engine::Knowledge_Base::read_file (const std::string & file_name, 
+                     const std::string & knowledge_key)
+{
+  return impl_->read_file (file_name, knowledge_key);
+}
+
+
 inline std::string
 Madara::Knowledge_Engine::Knowledge_Base::expand_statement (
   const ::std::string & statement) const

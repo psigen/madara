@@ -20,9 +20,9 @@ project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   }
 }
 
-project (Test_Reasoning_Throughput) : using_madara, using_ace, using_splice {
+project (Test_Files) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
-  exename = test_reasoning_throughput
+  exename = test_files
   after += Madara
   
   requires += tests
@@ -37,7 +37,7 @@ project (Test_Reasoning_Throughput) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_reasoning_throughput.cpp
+    ../tests/test_files.cpp
   }
 }
 

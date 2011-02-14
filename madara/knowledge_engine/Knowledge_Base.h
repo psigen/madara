@@ -23,7 +23,7 @@ namespace Madara
   namespace Knowledge_Engine
   {
     /**
-     * @class Knowledge_Record
+     * @class Knowledge_Base
      * @brief This class provides a distributed knowledge base to users
      */
     class MADARA_Export Knowledge_Base
@@ -63,6 +63,10 @@ namespace Madara
 
       /// Retrieve the value associated with the provided key
       long get (const ::std::string & key) const;
+
+      /// Read file into the knowledge base
+      int read_file (const std::string & file_name, 
+                     const std::string & knowledge_key);
 
       /// Expand a statement by variable expansions 
       std::string expand_statement (const ::std::string & statement) const;

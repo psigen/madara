@@ -683,7 +683,7 @@ inline void process_car (
   Route route = route_map [source][dest];
   Path path = route.path;
 
-  long max_speed = knowledge.get ("max_speed");
+  unsigned long max_speed = knowledge.get ("max_speed");
   unsigned long j;
 
   for (j = 0; j < path.size () && j <= max_speed; ++j)

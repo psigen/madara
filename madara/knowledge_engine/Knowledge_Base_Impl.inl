@@ -26,6 +26,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
   return map_.expand_statement (statement);
 }
 
+/// Read file into the knowledge base
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::read_file (
+  const std::string & file_name, const std::string & knowledge_key)
+{
+  return files_.read_file (file_name, knowledge_key);
+}
+
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
                                                long value)
