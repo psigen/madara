@@ -49,7 +49,9 @@ void test_read_file (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.clear ();
 
-  knowledge.read_file ("/files/question.jpg", "question.jpg");
+  knowledge.read_file ("question.jpg", "/files/question.jpg");
+  knowledge.write_file ("question.jpg", "/files/question_copy.jpg");
+  knowledge.read_policy ("shape_images.small","/files/shaping.policy");
 
 }
 

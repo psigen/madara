@@ -64,9 +64,29 @@ namespace Madara
       /// Retrieve the value associated with the provided key
       long get (const ::std::string & key) const;
 
-      /// Read file into the knowledge base
-      int read_file (const std::string & file_name, 
-                     const std::string & knowledge_key);
+      /**
+       * Read a file into the knowledge base
+       * @param file_name           file to read
+       * @param knowledge_key       key to store the file into
+       */
+      int read_file (const std::string & knowledge_key, 
+                     const std::string & file_name);
+
+      /**
+       * Write a file from the knowledge base to a specified location
+       * @param file_name           file to write to
+       * @param knowledge_key       key to read the file from
+       */
+      int write_file (const std::string & knowledge_key, 
+                      const std::string & file_name);
+
+      /**
+       * Read a policy into the knowledge base
+       * @param policy_key          key to read the policy into
+       * @param policy_file         file to read the policy from
+       */
+      int read_policy (const std::string & policy_key, 
+                       const std::string & policy_file);
 
       /// Expand a statement by variable expansions 
       std::string expand_statement (const ::std::string & statement) const;

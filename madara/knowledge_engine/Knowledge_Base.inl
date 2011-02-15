@@ -35,10 +35,24 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
 
 
 inline int
-Madara::Knowledge_Engine::Knowledge_Base::read_file (const std::string & file_name, 
-                     const std::string & knowledge_key)
+Madara::Knowledge_Engine::Knowledge_Base::read_file (const std::string & knowledge_key, 
+                     const std::string & file_name)
 {
-  return impl_->read_file (file_name, knowledge_key);
+  return impl_->read_file (knowledge_key, file_name);
+}
+
+inline int
+Madara::Knowledge_Engine::Knowledge_Base::read_policy (const std::string & knowledge_key, 
+                     const std::string & file_name)
+{
+  return impl_->read_policy (knowledge_key, file_name);
+}
+
+inline int
+Madara::Knowledge_Engine::Knowledge_Base::write_file (const std::string & knowledge_key, 
+                     const std::string & file_name)
+{
+  return impl_->write_file (knowledge_key, file_name);
 }
 
 

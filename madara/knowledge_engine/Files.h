@@ -10,6 +10,7 @@
 
 #include <string>
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "ace/Mem_Map.h"
 
 namespace Madara
 {
@@ -32,22 +33,40 @@ namespace Madara
        * @param file_name           file to read
        * @param knowledge_key       key to store the file into
        */
-      int read_file (const std::string & file_name, 
-                     const std::string & knowledge_key);
+      int read_file (const std::string & knowledge_key,
+                     const std::string & file_name);
+      
+      /**
+       * Read a file into an ACE_Mem_Map
+       * @param file_name           file to read
+       * @param mem_map             memory map of file
+       * @return                    
+       */
+      int read_file (const char * filename, ACE_Mem_Map & mem_map);
       
       /**
        * Write a file from the knowledge base to a specified location
        * @param file_name           file to write to
        * @param knowledge_key       key to read the file from
        */
-      int write_file (const std::string & file_name, 
-                      const std::string & knowledge_key);
+      int write_file (const std::string & knowledge_key,
+                      const std::string & file_name);
 
+      /**
+       * Write a memory buffer to file
+       * @param file_name           file to write to
+       * @param buffer              pointer to buffer
+       * @param size                size of the buffer
+       * @return                    amount written to file (-1 if error)
+       */
+      int write_file (const char * filename, 
+                     void *& buffer, size_t & size);
+      
       
       /**
        * Read a policy into the knowledge base
-       * @param policy_file         file to read the policy from
        * @param policy_key          key to read the policy into
+       * @param policy_file         file to read the policy from
        */
       int read_policy (const std::string & policy_key, 
                        const std::string & policy_file);

@@ -26,12 +26,28 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
   return map_.expand_statement (statement);
 }
 
-/// Read file into the knowledge base
+/// Read a file into the knowledge base
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::read_file (
-  const std::string & file_name, const std::string & knowledge_key)
+  const std::string & knowledge_key, const std::string & file_name)
 {
-  return files_.read_file (file_name, knowledge_key);
+  return files_.read_file (knowledge_key, file_name);
+}
+
+/// Read a policy into the knowledge base
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::read_policy (
+  const std::string & knowledge_key, const std::string & file_name)
+{
+  return files_.read_policy (knowledge_key, file_name);
+}
+
+/// Write file from the knowledge base to a specified file
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
+  const std::string & knowledge_key, const std::string & file_name)
+{
+  return files_.write_file (knowledge_key, file_name);
 }
 
 inline int
