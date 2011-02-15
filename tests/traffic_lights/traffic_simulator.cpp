@@ -38,7 +38,7 @@ typedef std::set < std::string >                 Vertices;
 typedef std::map < std::string, long >              Distance_Map;
 typedef std::map < std::string, Distance_Map >      Connectivity_Map; 
 
-typedef std::vector <std::vector <char>>            Logical_Map;
+typedef std::vector <std::vector <char> >           Logical_Map;
 
 volatile bool terminated = 0;
 
@@ -77,7 +77,7 @@ extern "C" void terminate (int)
 void build_route_map (Route_Map & route_map,
                 Connectivity_Map & connectivity_map,
                 Vertices & vertices_orig,
-                std::string & source)
+                const std::string & source)
 {
   // get the available connected vertices from source
   Route_Target_Map & targets = route_map[source];
