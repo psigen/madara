@@ -89,7 +89,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // end goal (in our case the .stop condition)
   if (id == 0)
   {
-    expression = "S{.self} == S{.left} => S{.self} = (S{.self} + 1) % .stop ";   
+    expression = "S{.self} == S{.left} => S{.self} = (S{.self} + 1) % .stop";   
   }
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) expression: %s\n",
