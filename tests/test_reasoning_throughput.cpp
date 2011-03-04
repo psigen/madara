@@ -21,10 +21,10 @@
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 // test functions
-unsigned long long test_function_reinforcement (
+unsigned long long test_volatile_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      unsigned long iterations);
-unsigned long long test_function_inference (
+unsigned long long test_volatile_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      unsigned long iterations);
 unsigned long long test_optimal_reinforcement (
@@ -58,7 +58,7 @@ long increment (long value);
 
 
 // default iterations
-unsigned long num_iterations = 10000000;
+unsigned long num_iterations = 100000;
 unsigned long num_runs = 10;
 
 // still trying to stop this darn thing from optimizing the increments
@@ -110,18 +110,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
 
-  unsigned long long sr_result = 0;
-  unsigned long long lr_result = 0;
-  unsigned long long si_result = 0;
-  unsigned long long li_result = 0;
-  unsigned long long or_result = 0;
-  unsigned long long oi_result = 0;
-  unsigned long long fr_result = 0;
-  unsigned long long fi_result = 0;
-  unsigned long long full_li_result = 0;
-  unsigned long long full_lr_result = 0;
-  unsigned long long full_si_result = 0;
-  unsigned long long full_sr_result = 0;
+  //unsigned long long sr_result = 0;
+  //unsigned long long lr_result = 0;
+  //unsigned long long si_result = 0;
+  //unsigned long long li_result = 0;
+  //unsigned long long or_result = 0;
+  //unsigned long long oi_result = 0;
+  //unsigned long long fr_result = 0;
+  //unsigned long long fi_result = 0;
+  //unsigned long long full_li_result = 0;
+  //unsigned long long full_lr_result = 0;
+  //unsigned long long full_si_result = 0;
+  //unsigned long long full_sr_result = 0;
 
   if (num_runs == 0 || num_iterations == 0)
   {
@@ -131,88 +131,170 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
+  const int num_test_types = 8;
+
+  // make everything all pretty and for-loopy
+  unsigned long long results[num_test_types];
+  unsigned long long averages[num_test_types];
+  unsigned long long (* test_functions [num_test_types]) (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned long iterations);
+  char * printouts [num_test_types] = {
+    "KaRL: Simple Reinforcements   ",
+    "KaRL: 10,000 Reinforcements   ",
+    "KaRL: Simple Inference        ",
+    "KaRL: Large Inference         ",
+    "C++: Optimized Reinforcements ",
+    "C++: Optimized Inferences     ",
+    "C++: Volatile Reinforcements  ",
+    "C++: Volatile Inferences      "
+  };
+
+  // enums for referencing 
+  enum {
+    SimpleReinforcement,
+    LargeReinforcement,
+    SimpleInference,
+    LargeInference,
+    OptimizedReinforcement,
+    OptimizedInference,
+    VolatileReinforcement,
+    VolatileInference
+  };
+
+  // start from zero
+  memset ((void *)results, 0, sizeof (unsigned long long) * 8);
+  memset ((void *)averages, 0, sizeof (unsigned long long) * 8);
+
+  test_functions[SimpleReinforcement] = test_simple_reinforcement;
+  test_functions[LargeReinforcement] = test_large_reinforcement;
+  test_functions[SimpleInference] = test_simple_inference;
+  test_functions[LargeInference] = test_large_inference;
+
+  test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
+  test_functions[OptimizedInference] = test_optimal_inference;
+  test_functions[VolatileReinforcement] = test_volatile_reinforcement;
+  test_functions[VolatileInference] = test_volatile_inference;
+
   for (unsigned long i = 0; i < num_runs; ++i)
   {
     // run tests
-    sr_result += test_simple_reinforcement (
-      knowledge, num_iterations);
-    lr_result += test_large_reinforcement (
-      knowledge, num_iterations);
-    si_result += test_simple_inference (
-      knowledge, num_iterations);
-    li_result += test_large_inference (
-      knowledge, num_iterations);
+    for (int j = 0; j < num_test_types; ++j)
+    {
+      results[j] = test_functions[j] (knowledge, num_iterations);
+    }
+    //sr_result += test_simple_reinforcement (
+    //  knowledge, num_iterations);
+    //lr_result += test_large_reinforcement (
+    //  knowledge, num_iterations);
+    //si_result += test_simple_inference (
+    //  knowledge, num_iterations);
+    //li_result += test_large_inference (
+    //  knowledge, num_iterations);
 
     // instead of running smaller iterations per run. Let's see how well
     // ACE high res timers handle a 1,000,000 batch
-    full_sr_result += test_simple_reinforcement (
-      knowledge, 1000000);
-    full_lr_result += test_large_reinforcement (
-      knowledge, 1000000);
-    full_si_result += test_simple_inference (
-      knowledge, 1000000);
-    full_li_result += test_large_inference (
-      knowledge, 1000000);
+    //full_sr_result += test_simple_reinforcement (
+    //  knowledge, 1000000);
+    //full_lr_result += test_large_reinforcement (
+    //  knowledge, 1000000);
+    //full_si_result += test_simple_inference (
+    //  knowledge, 1000000);
+    //full_li_result += test_large_inference (
+    //  knowledge, 1000000);
 
-    or_result += test_optimal_reinforcement (
-      knowledge, num_iterations);
-    oi_result += test_optimal_inference (
-      knowledge, num_iterations);
-    fr_result += test_function_reinforcement (
-      knowledge, num_iterations);
-    fi_result += test_function_inference (
-      knowledge, num_iterations);
+    //or_result += test_optimal_reinforcement (
+    //  knowledge, num_iterations);
+    //oi_result += test_optimal_inference (
+    //  knowledge, num_iterations);
+    //fr_result += test_volatile_reinforcement (
+    //  knowledge, num_iterations);
+    //fi_result += test_volatile_inference (
+    //  knowledge, num_iterations);
   }
 
   // to find out the number of iterations per second, we need to 
   // multiply the numerator by the factor of the result, which is
   // given in microseconds.
 
-  unsigned long evaluations = num_iterations * num_runs;
-  unsigned long full_evals = 1000000 * num_runs;
+  unsigned long long evaluations = num_iterations * num_runs;
+  unsigned long long full_evals = 1000000 * num_runs;
 
   // evaluations / sr_result == operations / ns
   // evaluations / second == operations / ns * 1,000,000,000 ns / s
 
-  double sr_avg = (double) 1000000000 * evaluations / sr_result;
-  double lr_avg = (double) 1000000000 * evaluations / lr_result;
-  double si_avg = (double) 1000000000 * evaluations / si_result;
-  double li_avg = (double) 1000000000 * evaluations / li_result;
-  double oi_avg = (double) 1000000000 * evaluations / oi_result;
-  double or_avg = (double) 1000000000 * evaluations / or_result;
-  double fi_avg = (double) 1000000000 * evaluations / fi_result;
-  double fr_avg = (double) 1000000000 * evaluations / fr_result;
+  for (int i = 0; i < num_test_types; ++i)
+    averages[i] = (1000000000 * evaluations) / results[i];
 
-  double full_sr_avg = (double) 1000000000 * full_evals / full_sr_result;
-  double full_si_avg = (double) 1000000000 * full_evals / full_si_result;
-  double full_lr_avg = (double) 1000000000 * full_evals / full_lr_result;
-  double full_li_avg = (double) 1000000000 * full_evals / full_li_result;
+  //unsigned long long  sr_avg = (1000000000 * evaluations / sr_result;
+  //unsigned long long  lr_avg = (1000000000 * evaluations / lr_result;
+  //unsigned long long  si_avg = 1000000000 * evaluations / si_result;
+  //unsigned long long  li_avg = 1000000000 * evaluations / li_result;
+  //unsigned long long  oi_avg = 1000000000 * evaluations / oi_result;
+  //unsigned long long  or_avg = 1000000000 * evaluations / or_result;
+  //unsigned long long  fi_avg = 1000000000 * evaluations / fi_result;
+  //unsigned long long  fr_avg = 1000000000 * evaluations / fr_result;
 
-  ACE_DEBUG ((LM_INFO, 
-    "\nResults for tests with %d iterations were:\n", num_iterations));
-
-  ACE_DEBUG ((LM_INFO, 
-    "  Optimal C++ reinforcement avg:           %.2f per second\n", or_avg));
-  ACE_DEBUG ((LM_INFO, 
-    "  Optimal C++ inf w/reinforcement avg:     %.2f per second\n\n", oi_avg));
+  //unsigned long long  full_sr_avg = 1000000000 * full_evals / full_sr_result;
+  //unsigned long long  full_si_avg = 1000000000 * full_evals / full_si_result;
+  //unsigned long long  full_lr_avg = 1000000000 * full_evals / full_lr_result;
+  //unsigned long long  full_li_avg = 1000000000 * full_evals / full_li_result;
 
   ACE_DEBUG ((LM_INFO, 
-    "  Function C++ reinforcement avg:           %.2f per second\n", fr_avg));
-  ACE_DEBUG ((LM_INFO, 
-    "  Function C++ inf w/reinforcement avg:     %.2f per second\n\n", fi_avg));
+    "\nTotal time taken for each test with %d iterations * %d tests were:\n", 
+        num_iterations, num_runs));
+
+  for (int i = 0; i < num_test_types; ++i)
+  {
+    std::stringstream buffer;
+    buffer << " ";
+    buffer << printouts[i];
+    buffer << "\t\t";
+    buffer << results[i];
+    buffer << " ns\n";
+
+    ACE_DEBUG ((LM_INFO, 
+      buffer.str ().c_str ()));
+  }
 
   ACE_DEBUG ((LM_INFO, 
-    "  Simple reinforcement avg:\n" \
-    "     %.2f/s\t\t %.2f/s\n", sr_avg, full_sr_avg));
-  ACE_DEBUG ((LM_INFO, 
-    "  Large reinforcement avg:\n" \
-    "    %.2f/s\t\t%.2f/s\n", lr_avg, full_lr_avg));
-  ACE_DEBUG ((LM_INFO, 
-    "  Simple inference with reinforcement avg:\n" \
-    "     %.2f/s\t\t %.2f/s\n", si_avg, full_si_avg));
-  ACE_DEBUG ((LM_INFO, 
-    "  Large inference with reinforcement avg:\n" \
-    "    %.2f/s\t\t%.2f/s\n\n", li_avg, full_li_avg));
+    "\nHertz for each test with %d iterations * %d tests were:\n", num_iterations, num_runs));
+
+  for (int i = 0; i < num_test_types; ++i)
+  {
+    std::stringstream buffer;
+    buffer << " ";
+    buffer << printouts[i];
+    buffer << "\t\t";
+    buffer << averages[i];
+    buffer << "\n";
+
+    ACE_DEBUG ((LM_INFO, 
+      buffer.str ().c_str ()));
+  }
+
+
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Optimal C++ reinforcement avg:           %.2f per second\n", or_avg));
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Optimal C++ inf w/reinforcement avg:     %.2f per second\n\n", oi_avg));
+
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Function C++ reinforcement avg:           %.2f per second\n", fr_avg));
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Function C++ inf w/reinforcement avg:     %.2f per second\n\n", fi_avg));
+
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Simple reinforcement avg:\n" \
+  //  "     %.2f/s\t\t %.2f/s\n", sr_avg, full_sr_avg));
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Large reinforcement avg:\n" \
+  //  "    %.2f/s\t\t%.2f/s\n", lr_avg, full_lr_avg));
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Simple inference with reinforcement avg:\n" \
+  //  "     %.2f/s\t\t %.2f/s\n", si_avg, full_si_avg));
+  //ACE_DEBUG ((LM_INFO, 
+  //  "  Large inference with reinforcement avg:\n" \
+  //  "    %.2f/s\t\t%.2f/s\n\n", li_avg, full_li_avg));
 
   return 0;
 }
@@ -463,11 +545,11 @@ unsigned long long test_optimal_reinforcement (
 }
 
 /// Tests C++ function inference
-unsigned long long test_function_inference (
+unsigned long long test_volatile_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
      unsigned long iterations)
 {
-  ACE_TRACE (ACE_TEXT ("test_function_inference"));
+  ACE_TRACE (ACE_TEXT ("test_volatile_inference"));
 
   knowledge.clear ();
   Incrementer accumulator;
@@ -505,11 +587,11 @@ unsigned long long test_function_inference (
 }
 
 /// Tests C++ function inference
-unsigned long long test_function_reinforcement (
+unsigned long long test_volatile_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
      unsigned long iterations)
 {
-  ACE_TRACE (ACE_TEXT ("test_function_reinforcement"));
+  ACE_TRACE (ACE_TEXT ("test_volatile_reinforcement"));
 
   knowledge.clear ();
   Incrementer accumulator;
