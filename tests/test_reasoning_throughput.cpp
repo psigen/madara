@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <assert.h>
+#include <iomanip>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
@@ -87,6 +88,53 @@ private:
   volatile long value_;
 };
 
+std::string 
+to_legible_hertz (unsigned long long hertz)
+{
+  std::stringstream buffer;
+
+  const int ghz_mark = 1000000000;
+  const int mhz_mark = 1000000;
+  const int khz_mark = 1000;
+
+  double freq = (double) hertz / ghz_mark;
+
+  if (freq >= 1)
+  {
+    buffer << std::setprecision (2) << std::fixed;
+    buffer << freq;
+    buffer << " ghz";
+    return buffer.str ().c_str ();
+  }
+
+  freq = (double) hertz / mhz_mark;
+
+  if (freq >= 1)
+  {
+    buffer << std::setprecision (2) << std::fixed;
+    buffer << freq;
+    buffer << " mhz";
+    return buffer.str ().c_str ();
+  }
+
+  freq = (double) hertz / khz_mark;
+
+  if (freq >= 1)
+  {
+    buffer << std::setprecision (2) << std::fixed;
+    buffer << freq;
+    buffer << " khz";
+    return buffer.str ().c_str ();
+  }
+
+  freq = (double) hertz;
+
+  buffer << std::setprecision (2) << std::fixed;
+  buffer << freq;
+  buffer << "  hz";
+  return buffer.str ().c_str ();
+  
+}
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -106,22 +154,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
      ACE_SCOPE_THREAD);
   ACE_OS::thr_setprio (prio);
 
-
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
-
-
-  //unsigned long long sr_result = 0;
-  //unsigned long long lr_result = 0;
-  //unsigned long long si_result = 0;
-  //unsigned long long li_result = 0;
-  //unsigned long long or_result = 0;
-  //unsigned long long oi_result = 0;
-  //unsigned long long fr_result = 0;
-  //unsigned long long fi_result = 0;
-  //unsigned long long full_li_result = 0;
-  //unsigned long long full_lr_result = 0;
-  //unsigned long long full_si_result = 0;
-  //unsigned long long full_sr_result = 0;
 
   if (num_runs == 0 || num_iterations == 0)
   {
@@ -180,36 +213,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     // run tests
     for (int j = 0; j < num_test_types; ++j)
     {
-      results[j] = test_functions[j] (knowledge, num_iterations);
+      results[j] += test_functions[j] (knowledge, num_iterations);
     }
-    //sr_result += test_simple_reinforcement (
-    //  knowledge, num_iterations);
-    //lr_result += test_large_reinforcement (
-    //  knowledge, num_iterations);
-    //si_result += test_simple_inference (
-    //  knowledge, num_iterations);
-    //li_result += test_large_inference (
-    //  knowledge, num_iterations);
-
-    // instead of running smaller iterations per run. Let's see how well
-    // ACE high res timers handle a 1,000,000 batch
-    //full_sr_result += test_simple_reinforcement (
-    //  knowledge, 1000000);
-    //full_lr_result += test_large_reinforcement (
-    //  knowledge, 1000000);
-    //full_si_result += test_simple_inference (
-    //  knowledge, 1000000);
-    //full_li_result += test_large_inference (
-    //  knowledge, 1000000);
-
-    //or_result += test_optimal_reinforcement (
-    //  knowledge, num_iterations);
-    //oi_result += test_optimal_inference (
-    //  knowledge, num_iterations);
-    //fr_result += test_volatile_reinforcement (
-    //  knowledge, num_iterations);
-    //fi_result += test_volatile_inference (
-    //  knowledge, num_iterations);
   }
 
   // to find out the number of iterations per second, we need to 
@@ -217,27 +222,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // given in microseconds.
 
   unsigned long long evaluations = num_iterations * num_runs;
-  unsigned long long full_evals = 1000000 * num_runs;
-
-  // evaluations / sr_result == operations / ns
-  // evaluations / second == operations / ns * 1,000,000,000 ns / s
 
   for (int i = 0; i < num_test_types; ++i)
     averages[i] = (1000000000 * evaluations) / results[i];
-
-  //unsigned long long  sr_avg = (1000000000 * evaluations / sr_result;
-  //unsigned long long  lr_avg = (1000000000 * evaluations / lr_result;
-  //unsigned long long  si_avg = 1000000000 * evaluations / si_result;
-  //unsigned long long  li_avg = 1000000000 * evaluations / li_result;
-  //unsigned long long  oi_avg = 1000000000 * evaluations / oi_result;
-  //unsigned long long  or_avg = 1000000000 * evaluations / or_result;
-  //unsigned long long  fi_avg = 1000000000 * evaluations / fi_result;
-  //unsigned long long  fr_avg = 1000000000 * evaluations / fr_result;
-
-  //unsigned long long  full_sr_avg = 1000000000 * full_evals / full_sr_result;
-  //unsigned long long  full_si_avg = 1000000000 * full_evals / full_si_result;
-  //unsigned long long  full_lr_avg = 1000000000 * full_evals / full_lr_result;
-  //unsigned long long  full_li_avg = 1000000000 * full_evals / full_li_result;
 
   ACE_DEBUG ((LM_INFO, 
     "\nTotal time taken for each test with %d iterations * %d tests were:\n", 
@@ -265,36 +252,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << " ";
     buffer << printouts[i];
     buffer << "\t\t";
-    buffer << averages[i];
+    buffer << std::setw (15);
+    buffer << to_legible_hertz (averages[i]);
     buffer << "\n";
 
     ACE_DEBUG ((LM_INFO, 
       buffer.str ().c_str ()));
   }
-
-
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Optimal C++ reinforcement avg:           %.2f per second\n", or_avg));
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Optimal C++ inf w/reinforcement avg:     %.2f per second\n\n", oi_avg));
-
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Function C++ reinforcement avg:           %.2f per second\n", fr_avg));
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Function C++ inf w/reinforcement avg:     %.2f per second\n\n", fi_avg));
-
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Simple reinforcement avg:\n" \
-  //  "     %.2f/s\t\t %.2f/s\n", sr_avg, full_sr_avg));
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Large reinforcement avg:\n" \
-  //  "    %.2f/s\t\t%.2f/s\n", lr_avg, full_lr_avg));
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Simple inference with reinforcement avg:\n" \
-  //  "     %.2f/s\t\t %.2f/s\n", si_avg, full_si_avg));
-  //ACE_DEBUG ((LM_INFO, 
-  //  "  Large inference with reinforcement avg:\n" \
-  //  "    %.2f/s\t\t%.2f/s\n\n", li_avg, full_li_avg));
 
   return 0;
 }
