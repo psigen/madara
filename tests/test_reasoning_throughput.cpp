@@ -453,7 +453,19 @@ unsigned long long test_optimal_inference (
   {
     // don't use the var1 by reference because the compiler appears
     // to optimize it to a register still
-    var1 = increment (conditional, var1);
+    if (conditional)
+      ++var1;
+    
+    // force the compiler to play nice. Both g++ and VS 2008
+    // will try to compile away the entire for loop unless
+    // we add something to the loop here and force it to
+    // do the work.
+    __asm 
+    {
+      nop;
+    }
+    // of course, if you don't believe me, comment the above assembly
+    // no-op operation (really just an XCHG EAX, EAX)
   }
 
   timer.stop ();
@@ -487,11 +499,22 @@ unsigned long long test_optimal_reinforcement (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  unsigned long i = 0;
+
+  for (; i < iterations; ++i)
   {
     // use a function so var1 isn't put into a processor register
     // and super-optimized
-    var1 = increment(var1);
+    ++var1;
+
+    // force compiler to do an operation here so it doesn't just
+    // add all the iterations up and set var1 to that count
+    __asm 
+    {
+      nop;
+    }
+    // of course, if you don't believe me, comment the above assembly
+    // no-op operation (really just an XCHG EAX, EAX)
   }
 
   timer.stop ();
