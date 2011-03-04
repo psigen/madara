@@ -58,7 +58,7 @@ long increment (long value);
 
 
 // default iterations
-unsigned long num_iterations = 100000;
+unsigned long num_iterations = 10000000;
 unsigned long num_runs = 10;
 
 // still trying to stop this darn thing from optimizing the increments
@@ -118,6 +118,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   unsigned long long oi_result = 0;
   unsigned long long fr_result = 0;
   unsigned long long fi_result = 0;
+  unsigned long long full_li_result = 0;
+  unsigned long long full_lr_result = 0;
+  unsigned long long full_si_result = 0;
+  unsigned long long full_sr_result = 0;
 
   if (num_runs == 0 || num_iterations == 0)
   {
@@ -138,6 +142,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       knowledge, num_iterations);
     li_result += test_large_inference (
       knowledge, num_iterations);
+
+    // instead of running smaller iterations per run. Let's see how well
+    // ACE high res timers handle a 1,000,000 batch
+    full_sr_result += test_simple_reinforcement (
+      knowledge, 1000000);
+    full_lr_result += test_large_reinforcement (
+      knowledge, 1000000);
+    full_si_result += test_simple_inference (
+      knowledge, 1000000);
+    full_li_result += test_large_inference (
+      knowledge, 1000000);
+
     or_result += test_optimal_reinforcement (
       knowledge, num_iterations);
     oi_result += test_optimal_inference (
@@ -153,6 +169,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // given in microseconds.
 
   unsigned long evaluations = num_iterations * num_runs;
+  unsigned long full_evals = 1000000 * num_runs;
 
   // evaluations / sr_result == operations / ns
   // evaluations / second == operations / ns * 1,000,000,000 ns / s
@@ -165,6 +182,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   double or_avg = (double) 1000000000 * evaluations / or_result;
   double fi_avg = (double) 1000000000 * evaluations / fi_result;
   double fr_avg = (double) 1000000000 * evaluations / fr_result;
+
+  double full_sr_avg = (double) 1000000000 * full_evals / full_sr_result;
+  double full_si_avg = (double) 1000000000 * full_evals / full_si_result;
+  double full_lr_avg = (double) 1000000000 * full_evals / full_lr_result;
+  double full_li_avg = (double) 1000000000 * full_evals / full_li_result;
 
   ACE_DEBUG ((LM_INFO, 
     "\nResults for tests with %d iterations were:\n", num_iterations));
@@ -180,13 +202,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "  Function C++ inf w/reinforcement avg:     %.2f per second\n\n", fi_avg));
 
   ACE_DEBUG ((LM_INFO, 
-    "  Simple reinforcement avg:                %.2f per second\n", sr_avg));
+    "  Simple reinforcement avg:\n" \
+    "     %.2f/s\t\t %.2f/s\n", sr_avg, full_sr_avg));
   ACE_DEBUG ((LM_INFO, 
-    "  Large reinforcement avg:                 %.2f per second\n\n", lr_avg));
+    "  Large reinforcement avg:\n" \
+    "    %.2f/s\t\t%.2f/s\n", lr_avg, full_lr_avg));
   ACE_DEBUG ((LM_INFO, 
-    "  Simple inference with reinforcement avg: %.2f per second\n", si_avg));
+    "  Simple inference with reinforcement avg:\n" \
+    "     %.2f/s\t\t %.2f/s\n", si_avg, full_si_avg));
   ACE_DEBUG ((LM_INFO, 
-    "  Large inference with reinforcement avg:  %.2f per second\n", li_avg));
+    "  Large inference with reinforcement avg:\n" \
+    "    %.2f/s\t\t%.2f/s\n\n", li_avg, full_li_avg));
 
   return 0;
 }
