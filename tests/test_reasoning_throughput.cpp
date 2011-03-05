@@ -61,7 +61,7 @@ long increment (long value);
 // default iterations
 unsigned long num_iterations = 100000;
 unsigned long num_runs = 10;
-unsigned bool conditional = true;
+bool conditional = true;
 unsigned long step = 1;
 
 // still trying to stop this darn thing from optimizing the increments
@@ -492,7 +492,7 @@ unsigned long long test_optimal_reinforcement (
   ACE_hrtime_t measured = 0;
   ACE_High_Res_Timer timer;
 
-  long var1 = 0, var2 = 0;
+  long var1 = 0;
 
   timer.start ();
 
