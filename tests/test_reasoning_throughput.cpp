@@ -90,7 +90,7 @@ private:
 
 void
 print (unsigned long long time, long value,
-       unsigned long iterations, char * type)
+       unsigned long iterations, const std::string & type)
 {
   std::stringstream buffer;
 
