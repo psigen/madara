@@ -501,19 +501,18 @@ unsigned long long test_optimal_reinforcement (
     // I'm going to have to admit defeat. I can't use __asm because
     // it's non-portable. The compiler will compile this away
     // with either a mov of the final value or imul (if I try using a step
-    // to confused the compiler). If I add in a print statement or something
-    // else, the loop will of course be altered and time is horribly wrong.
-    // So, we're going to just do a check here for conditional and make this
-    // function the equivalent of inference. 
+    // to confuse the compiler). If I add in a print statement or something
+    // else, the loop will of course be altered and time is wasted.
+
     // 
     // I understand that compilers don't care if we are trying to do 
     // performance testing of loops without resorting to volatile which
     // means drastic performance decrease (at least 1/3), but there should
     // be some way to portably force a compiler to NOT optimize away this
-    // loop without causing speed decrease.
+    // loop without causing speed decrease via printing, outputting to a file,
+    // synchronizing, library calls, or using volatile on the accumulator
     //
     // 
-    if (conditional)
       ++var1;
 
     // the following works but is non-portable to non-VS
