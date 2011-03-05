@@ -604,7 +604,7 @@ unsigned long long test_volatile_reinforcement (
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("n:r:h");
+  ACE_TCHAR options [] = ACE_TEXT ("n:r:c:s:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -613,6 +613,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("iterations"), 'i', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("runs"), 'r', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("step"), 'i', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("conditional"), 'r', ACE_Get_Opt::ARG_REQUIRED);
  
   std::stringstream buffer;
 
@@ -665,6 +667,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
       -n (--iterations)  number of iterations      \n\
       -r (--runs)        number of runs            \n\
+      -s (--step)        number of iterations      \n\
+      -c (--conditional) false if guard==false     \n\
+      -- author's note. The last two are only necessary \n\
+      -- because C++ compilers are trying to opimize \n\
+      -- away the loops we are trying to test \n\
       -h (--help)        print this menu           \n"
       ));
       ACE_ERROR_RETURN ((LM_ERROR, 
