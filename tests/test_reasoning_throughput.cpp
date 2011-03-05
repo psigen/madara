@@ -61,6 +61,8 @@ long increment (long value);
 // default iterations
 unsigned long num_iterations = 100000;
 unsigned long num_runs = 10;
+unsigned bool conditional = true;
+unsigned long step = 1;
 
 // still trying to stop this darn thing from optimizing the increments
 class Incrementer
@@ -456,27 +458,16 @@ unsigned long long test_optimal_inference (
   ACE_High_Res_Timer timer;
 
   long var1 = 0;
-  bool conditional = true;
 
   timer.start ();
 
   for (unsigned long i = 0; i < iterations; ++i)
   {
-    // don't use the var1 by reference because the compiler appears
-    // to optimize it to a register still
+    // we use a global var that can be changed from the command
+    // line to trick the compiler into not optimizing out this
+    // loop
     if (conditional)
       ++var1;
-    
-    // force the compiler to play nice. Both g++ and VS 2008
-    // will try to compile away the entire for loop unless
-    // we add something to the loop here and force it to
-    // do the work.
-    __asm 
-    {
-      nop;
-    }
-    // of course, if you don't believe me, comment the above assembly
-    // no-op operation (really just an XCHG EAX, EAX)
   }
 
   timer.stop ();
@@ -498,29 +489,40 @@ unsigned long long test_optimal_reinforcement (
   knowledge.clear ();
 
   // keep track of time
-  ACE_hrtime_t measured;
+  ACE_hrtime_t measured = 0;
   ACE_High_Res_Timer timer;
 
-  long var1 = 0;
+  long var1 = 0, var2 = 0;
 
   timer.start ();
 
-  unsigned long i = 0;
-
-  for (; i < iterations; ++i)
+  for (unsigned long i = 0; i < iterations; ++i)
   {
-    // use a function so var1 isn't put into a processor register
-    // and super-optimized
-    ++var1;
+    // I'm going to have to admit defeat. I can't use __asm because
+    // it's non-portable. The compiler will compile this away
+    // with either a mov of the final value or imul (if I try using a step
+    // to confused the compiler). If I add in a print statement or something
+    // else, the loop will of course be altered and time is horribly wrong.
+    // So, we're going to just do a check here for conditional and make this
+    // function the equivalent of inference. 
+    // 
+    // I understand that compilers don't care if we are trying to do 
+    // performance testing of loops without resorting to volatile which
+    // means drastic performance decrease (at least 1/3), but there should
+    // be some way to portably force a compiler to NOT optimize away this
+    // loop without causing speed decrease.
+    //
+    // 
+    if (conditional)
+      ++var1;
 
+    // the following works but is non-portable to non-VS
     // force compiler to do an operation here so it doesn't just
     // add all the iterations up and set var1 to that count
-    __asm 
-    {
-      nop;
-    }
-    // of course, if you don't believe me, comment the above assembly
-    // no-op operation (really just an XCHG EAX, EAX)
+    //__asm 
+    //{
+    //  nop;
+    //}
   }
 
   timer.stop ();
@@ -540,28 +542,24 @@ unsigned long long test_volatile_inference (
   ACE_TRACE (ACE_TEXT ("test_volatile_inference"));
 
   knowledge.clear ();
-  Incrementer accumulator;
 
   // keep track of time
   ACE_hrtime_t measured;
   ACE_High_Res_Timer timer;
 
-  long var1 = 0;
-  bool conditional = true;
+  volatile long var1 = 0;
 
   timer.start ();
 
   for (unsigned long i = 0; i < iterations; ++i)
   {
-    // don't use the var1 by reference because the compiler appears
-    // to optimize it to a register still
-    accumulator.increment (conditional);
+    // guarded increment of the volatile variable
+    if (conditional)
+      ++var1;
   }
 
   timer.stop ();
   timer.elapsed_time (measured);
-
-  var1 = accumulator.value ();
 
   print (measured, var1, iterations,
     "Volatile Inference: ");
@@ -583,22 +581,18 @@ unsigned long long test_volatile_reinforcement (
   ACE_hrtime_t measured;
   ACE_High_Res_Timer timer;
 
-  long var1 = 0;
+  volatile long var1 = 0;
 
   timer.start ();
 
   for (unsigned long i = 0; i < iterations; ++i)
   {
-    // don't use the var1 by reference because the compiler appears
-    // to optimize it to a register still
-    accumulator.increment ();
+    // increment the volatile variable
+    ++var1;
   }
 
   timer.stop ();
   timer.elapsed_time (measured);
-
-
-  var1 = accumulator.value ();
 
   print (measured, var1, iterations,
     "Volatile Reinforcement: ");
@@ -643,6 +637,24 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       buffer.str ("");
       buffer << cmd_opts.opt_arg ();
       buffer >> num_runs;
+      break;
+    case 'c':
+      // thread number
+      buffer.str ("");
+      buffer << cmd_opts.opt_arg ();
+
+      if (buffer.str () == "false")
+        conditional = false;
+
+      break;
+    case 's':
+      // step of the optimized function
+      // we have to do this because the C++ compiler
+      // will try to compile away the loop otherwise...
+      // Very frustrating
+      buffer.str ("");
+      buffer << cmd_opts.opt_arg ();
+      buffer >> step;
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
