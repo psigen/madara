@@ -88,10 +88,36 @@ private:
   volatile long value_;
 };
 
+void
+print (unsigned long long time, long value,
+       unsigned long iterations, char * type)
+{
+  std::stringstream buffer;
+
+  std::locale loc(""); 
+  buffer.imbue (loc); 
+
+  buffer << type;
+  buffer << "\n  ops=";
+  buffer << iterations;
+  buffer << ", time=";
+  buffer << time;
+  buffer << " ns, value=";
+  buffer << value;
+  buffer << "\n";
+
+  ACE_DEBUG ((LM_INFO, 
+    buffer.str ().c_str ()));
+}
+
+
 std::string 
 to_legible_hertz (unsigned long long hertz)
 {
   std::stringstream buffer;
+
+  std::locale loc(""); 
+  buffer.imbue (loc); 
 
   const int ghz_mark = 1000000000;
   const int mhz_mark = 1000000;
@@ -227,15 +253,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     averages[i] = (1000000000 * evaluations) / results[i];
 
   ACE_DEBUG ((LM_INFO, 
-    "\nTotal time taken for each test with %d iterations * %d tests were:\n", 
+    "\nTotal time taken for each test with %d iterations * %d tests was:\n", 
         num_iterations, num_runs));
 
   for (int i = 0; i < num_test_types; ++i)
   {
     std::stringstream buffer;
+    
+    std::locale loc(""); 
+    buffer.imbue (loc); 
+
     buffer << " ";
     buffer << printouts[i];
     buffer << "\t\t";
+    buffer << std::setw (30);
     buffer << results[i];
     buffer << " ns\n";
 
@@ -244,7 +275,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   }
 
   ACE_DEBUG ((LM_INFO, 
-    "\nHertz for each test with %d iterations * %d tests were:\n", num_iterations, num_runs));
+    "\nHertz for each test with %d iterations * %d tests was:\n", num_iterations, num_runs));
 
   for (int i = 0; i < num_test_types; ++i)
   {
@@ -252,7 +283,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << " ";
     buffer << printouts[i];
     buffer << "\t\t";
-    buffer << std::setw (15);
+    buffer << std::setw (33);
     buffer << to_legible_hertz (averages[i]);
     buffer << "\n";
 
@@ -297,13 +328,8 @@ unsigned long long test_simple_reinforcement (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d iter of eval(\"++.var1\") was %d\n", 
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of eval(\"++.var1\") was %d\n", 
-    knowledge.get (".var1")));
+  print (measured, knowledge.get (".var1"), iterations,
+    "Simple Reinforcement: ");
 
   return measured;
 }
@@ -341,13 +367,8 @@ unsigned long long test_large_reinforcement (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d length reinforcement chain in eval was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of large reinforcement eval was %d\n",
-    knowledge.get (".var1")));
+  print (measured, knowledge.get (".var1"), iterations,
+    "Large Reinforcement: ");
 
   return measured;
 }
@@ -376,13 +397,8 @@ unsigned long long test_simple_inference (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d iter of eval(\"1 => ++.var1\") was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of eval(\"1 => ++.var1\") was %d\n",
-    knowledge.get (".var1")));
+  print (measured, knowledge.get (".var1"), iterations,
+    "Simple Inference: ");
 
   return measured;
 }
@@ -420,13 +436,8 @@ unsigned long long test_large_inference (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d length inference chain in eval was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of large inference eval was %d\n",
-    knowledge.get (".var1")));
+  print (measured, knowledge.get (".var1"), iterations,
+    "Large Inference: ");
 
   return measured;
 }
@@ -471,13 +482,8 @@ unsigned long long test_optimal_inference (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d optimal C++ inferences was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of optimal C++ inferences was %d\n",
-    var1));
+  print (measured, var1, iterations,
+    "Optimal Inference: ");
 
   return measured;
 }
@@ -520,13 +526,8 @@ unsigned long long test_optimal_reinforcement (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d optimal C++ reinforcements was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of optimal C++ reinforcements was %d\n",
-    var1));
+  print (measured, var1, iterations,
+    "Optimal Reinforcement: ");
 
   return measured;
 }
@@ -562,13 +563,8 @@ unsigned long long test_volatile_inference (
 
   var1 = accumulator.value ();
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d functional C++ inferences was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of functional C++ inferences was %d\n",
-    var1));
+  print (measured, var1, iterations,
+    "Volatile Inference: ");
 
   return measured;
 }
@@ -604,13 +600,8 @@ unsigned long long test_volatile_reinforcement (
 
   var1 = accumulator.value ();
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) Time for %d functional C++ reinforcements was %d\n",
-    iterations, measured));
-
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t)   Final value of functional C++ reinforcements was %d\n",
-    var1));
+  print (measured, var1, iterations,
+    "Volatile Reinforcement: ");
 
   return measured;
 }
