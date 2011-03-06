@@ -30,6 +30,12 @@ Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (
 }
 
 Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (
+  const std::string & host, const Madara::Transport::Settings & settings)
+: impl_ (new Knowledge_Base_Impl (host, settings))
+{
+}
+
+Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base (
   const Knowledge_Base & original)
 : impl_ (original.impl_)
 {

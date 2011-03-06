@@ -46,6 +46,10 @@ namespace Madara
       Knowledge_Base (const std::string & host, int transport,
         const std::string & knowledge_domain);
 
+      /// Constructor for transport and transport settings
+      Knowledge_Base (const std::string & host, 
+        const Madara::Transport::Settings & config);
+
       /// Copy constructor
       Knowledge_Base (const Knowledge_Base & original);
 

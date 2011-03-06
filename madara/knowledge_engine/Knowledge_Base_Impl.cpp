@@ -15,26 +15,40 @@
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
-: transport_ (0), transport_type_ (0), files_ (map_)
+: files_ (map_)
 {
-  //setup_splitters ();
   activate_transport ();
   // no hope of transporting, so don't setup uniquehostport
 }
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport)
-: transport_type_ (transport), files_ (map_)
+: settings_ (), files_ (map_)
 {
+  // override default settings for the arguments
+  settings_.type = transport;
+
   setup_uniquehostport (host);
-//  setup_splitters ();    // only used for debugging
   activate_transport ();
 }
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport,
   const std::string & knowledge_domain)
-: transport_type_ (transport), domain_name_ (knowledge_domain), files_ (map_)
+: settings_ (), files_ (map_)
+{
+  // override default settings for the arguments
+  settings_.type = transport;
+  settings_.domains = knowledge_domain;
+
+  setup_uniquehostport (host);
+//  setup_splitters ();   // only used for debugging
+  activate_transport ();
+}
+
+Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
+  const std::string & host, const Madara::Transport::Settings & config)
+: settings_ (config), files_ (map_)
 {
   setup_uniquehostport (host);
 //  setup_splitters ();   // only used for debugging
@@ -93,14 +107,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_splitters (void)
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 {
-  if (transport_type_ == OPEN_SPLICE_TRANSPORT)
+  if (settings_.type == Madara::Transport::SPLICE)
   {
   #ifdef _USE_OPEN_SPLICE_
+
     transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
-    Madara::Transport::Splice_DDS_Transport::RELIABLE, true, domain_name_);
+                       settings_, true);
   #endif
   }
-  else if (transport_type_ == TCP_TRANSPORT)
+  else if (settings_.type == Madara::Transport::TCP)
   {
     transport_ = new Madara::Transport::TCP_Transport (id_, map_,
       Madara::Transport::TCP_Transport::RELIABLE);

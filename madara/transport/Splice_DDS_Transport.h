@@ -18,10 +18,10 @@ namespace Madara
     {
     public:
   
-      enum {
-        BEST_EFFORT = 0,
-        RELIABLE = 1
-      };
+      //enum {
+      //  BEST_EFFORT = 0,
+      //  RELIABLE = 1
+      //};
 
       enum {
         ERROR_OSPL_NOT_STARTED = -1,
@@ -33,11 +33,7 @@ namespace Madara
 
       Splice_DDS_Transport (const std::string & id, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-        const int & reliability, bool enable_mutexing);
-      Splice_DDS_Transport (const std::string & id, 
-        Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-        const int & reliability, bool enable_mutexing,
-        const std::string & topic_name);
+        const Settings & config, bool launch_transport);
       ~Splice_DDS_Transport ();
       virtual long send_data (const std::string & key, const long & value);
       long send_multiassignment (const std::string & expression, 
@@ -90,11 +86,11 @@ namespace Madara
 
       Splice_Read_Thread *               thread_;
 
-      std::string                        data_topic_name_;
-      std::string                        control_topic_name_;
+      //std::string                        data_topic_name_;
+      //std::string                        control_topic_name_;
 
 
-      int reliability_;
+      //int reliability_;
       bool valid_setup_;
       bool enable_mutexing_;
 

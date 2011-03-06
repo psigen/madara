@@ -28,12 +28,6 @@ namespace Madara
     class Knowledge_Base_Impl
     {
     public:
-      /// Transport type enumeration
-
-      enum {
-        TCP_TRANSPORT = 2,
-        OPEN_SPLICE_TRANSPORT = 1
-      };
 
       /// Default constructor
       Knowledge_Base_Impl ();
@@ -41,9 +35,13 @@ namespace Madara
       /// Constructor for transport
       Knowledge_Base_Impl (const std::string & host, int transport);
 
-      /// Constructor for transport and knowledge realm
+      ///// Constructor for transport and knowledge realm
       Knowledge_Base_Impl (const std::string & host, int transport,
         const std::string & knowledge_realm);
+
+      /// Constructor for transport and transport settings
+      Knowledge_Base_Impl (const std::string & host, 
+        const Madara::Transport::Settings & config);
 
       /// Destructor
       ~Knowledge_Base_Impl ();
@@ -153,12 +151,13 @@ namespace Madara
       Thread_Safe_Context           map_;
       Knowledge_Rules               rules_;
       Madara::Transport::Base *     transport_;
-      int                           transport_type_;
       ACE_SOCK_Acceptor             unique_bind_;
       std::string                   id_;
-      std::string                   domain_name_;
+      //std::string                   domain_name_;
+      //int                           transport_type_;
       Files                         files_;
 
+      Madara::Transport::Settings              settings_;
       Madara::Expression_Tree::Interpreter     interpreter_;
     };
   }
