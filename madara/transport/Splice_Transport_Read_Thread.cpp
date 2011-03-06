@@ -69,79 +69,21 @@ int Madara::Transport::Splice_Read_Thread::enter_barrier (void)
 void Madara::Transport::Splice_Read_Thread::handle_assignment (
   Knowledge::Update & data)
 {
-  // if we aren't evaluating a message from ourselves, process it
-  std::string key = data.key.val ();
-  long value = data.value;
-  int result = 0;
-
-  context_.lock ();
-  unsigned long cur_clock = context_.get_clock (key);
-  unsigned long cur_quality = context_.get_quality (key);
-
-  // if the data we are updating had a lower clock value or less quality
-  // then that means this update is the latest value. Among
-  // other things, this means our solution will work even
-  // without FIFO channel transports
-
-  // if the data we are updating had a lower clock value
-  // then that means this update is the latest value. Among
-  // other things, this means our solution will work even
-  // without FIFO channel transports
-  result = context_.set_if_unequal (key, value, 
-                                    data.quality, data.clock, false);
-
-  context_.unlock ();
-  
-  // if we actually updated the value
-  if (result == 1)
+  if (data.key.val ())
   {
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
-      key.c_str (), value, data.originator.val ()));
-  }
-  // if the data was already current
-  else if (result == 0)
-  {
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
-      key.c_str (), value));
-  }
-  else if (result == -1)
-  {
-    ACE_DEBUG ((LM_DEBUG, 
-      "(%P|%t) DISCARDED data had invalid key (null variable name).\n", 
-      key.c_str (), cur_quality, data.quality));
-  }
-  else if (result == -2)
-  {
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was low quality (%d vs %d).\n", 
-      key.c_str (), cur_quality, data.quality));
-  }
-  else if (result == -3)
-  {
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
-      key.c_str (), cur_clock, data.clock));
-  }
-}
-
-void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
-  Knowledge::Update & data)
-{
-  std::string key;
-  char symbol;
-  long value;
-  std::stringstream stream (data.key.val ());
-
-  context_.lock ();
-  
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Processing multiassignment (%s).\n", 
-        data.key.val ()));
-
-  while (!stream.eof ())
-  {
-    stream >> key >> symbol >> value >> symbol;
-
+    // if we aren't evaluating a message from ourselves, process it
+    std::string key = data.key.val ();
+    long value = data.value;
     int result = 0;
+
+    context_.lock ();
     unsigned long cur_clock = context_.get_clock (key);
     unsigned long cur_quality = context_.get_quality (key);
+
+    // if the data we are updating had a lower clock value or less quality
+    // then that means this update is the latest value. Among
+    // other things, this means our solution will work even
+    // without FIFO channel transports
 
     // if the data we are updating had a lower clock value
     // then that means this update is the latest value. Among
@@ -150,6 +92,8 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
     result = context_.set_if_unequal (key, value, 
                                       data.quality, data.clock, false);
 
+    context_.unlock ();
+    
     // if we actually updated the value
     if (result == 1)
     {
@@ -178,10 +122,72 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
       ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
         key.c_str (), cur_clock, data.clock));
     }
-
   }
-  
-  context_.unlock ();
+}
+
+void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
+  Knowledge::Update & data)
+{
+  if (data.key.val ())
+  {
+    std::string key;
+    char symbol;
+    long value;
+    std::stringstream stream (data.key.val ());
+
+    context_.lock ();
+    
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Processing multiassignment (%s).\n", 
+          data.key.val ()));
+
+    while (!stream.eof ())
+    {
+      stream >> key >> symbol >> value >> symbol;
+
+      int result = 0;
+      unsigned long cur_clock = context_.get_clock (key);
+      unsigned long cur_quality = context_.get_quality (key);
+
+      // if the data we are updating had a lower clock value
+      // then that means this update is the latest value. Among
+      // other things, this means our solution will work even
+      // without FIFO channel transports
+      result = context_.set_if_unequal (key, value, 
+                                        data.quality, data.clock, false);
+
+      // if we actually updated the value
+      if (result == 1)
+      {
+        ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
+          key.c_str (), value, data.originator.val ()));
+      }
+      // if the data was already current
+      else if (result == 0)
+      {
+        ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
+          key.c_str (), value));
+      }
+      else if (result == -1)
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "(%P|%t) DISCARDED data had invalid key (null variable name).\n", 
+          key.c_str (), cur_quality, data.quality));
+      }
+      else if (result == -2)
+      {
+        ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was low quality (%d vs %d).\n", 
+          key.c_str (), cur_quality, data.quality));
+      }
+      else if (result == -3)
+      {
+        ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
+          key.c_str (), cur_clock, data.clock));
+      }
+
+    }
+    
+    context_.unlock ();
+  }
 }
 
 int

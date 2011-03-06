@@ -19,6 +19,7 @@
 #include "ace/Signal.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/transport/Transport.h"
 
 int id = 0;
 int left = 0;

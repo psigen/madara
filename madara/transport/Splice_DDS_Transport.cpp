@@ -164,6 +164,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   {
     topic_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     topic_qos_.history.depth = this->settings_.queue_length;
+    topic_qos_.resource_limits.max_samples_per_instance = 
+      this->settings_.queue_length;
     topic_qos_.resource_limits.max_samples = this->settings_.queue_length;
     topic_qos_.destination_order.kind = 
       DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
@@ -254,6 +256,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datawriter_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datawriter_qos_.history.depth = this->settings_.queue_length;
     datawriter_qos_.resource_limits.max_samples = this->settings_.queue_length;
+    datawriter_qos_.resource_limits.max_samples_per_instance = 
+      this->settings_.queue_length;
     datawriter_qos_.destination_order.kind = 
       DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
@@ -287,6 +291,9 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datareader_qos_.resource_limits.max_samples = this->settings_.queue_length;
     datareader_qos_.destination_order.kind = 
       DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+
+    // unlike the other qos, we do not set max_samples_per_instance here.
+    // that shouldn't be as necessary, since we are using take on the reader
   }
 
   // Create Update datareader
@@ -332,7 +339,7 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   data.type = Madara::Knowledge_Engine::ASSIGNMENT;
 
   ACE_DEBUG ((LM_DEBUG, 
-    "(%P|%t) SENDING data: %s=%d with time %d and quality %d\n", 
+    "(%P|%t) SENDING data: %s=%d, time=%d, quality=%d\n", 
     key.c_str (), data.value, cur_clock, data.quality));
 
   //std::cout << "Sending data: " << key << "=" << value << std::endl;
@@ -365,7 +372,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
 
   ACE_DEBUG ((LM_DEBUG, 
-    "(%P|%t) SENDING multiassignment: %s with time %d and quality %d\n", 
+    "(%P|%t) SENDING multiassignment: %s, time=%d, quality=%d\n", 
     expression.c_str (), cur_clock, quality));
 
   //std::cout << "Sending data: " << key << "=" << value << std::endl;
