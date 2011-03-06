@@ -44,6 +44,9 @@ namespace Madara
       int setup (void);
     protected:
     private:
+
+      std::string pad_key (const std::string & input, size_t length);
+
       // identifier of this knowledge base
       const std::string                               id_;
 

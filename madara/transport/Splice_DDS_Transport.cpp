@@ -4,6 +4,7 @@
 #include "madara/knowledge_engine/Update_Types.h"
 
 #include <iostream>
+#include <sstream>
 
 const char * Madara::Transport::Splice_DDS_Transport::topic_names_[] = {
   "MADARA_KaRL_Data",
@@ -54,6 +55,26 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
 Madara::Transport::Splice_DDS_Transport::~Splice_DDS_Transport ()
 {
   close ();
+}
+
+std::string
+Madara::Transport::Splice_DDS_Transport::pad_key (const std::string & input,
+                                                  size_t length)
+{
+  // pad if we need to
+  if (input.size () < length)
+  {
+    std::string padding (' ', length - input.size ());
+
+    std::stringstream buffer;
+    buffer << input;
+    buffer << padding;
+
+    return buffer.str ();
+  }
+
+  // otherwise just return the input
+  return input;
 }
 
 void
@@ -318,6 +339,8 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 
+
+  update_writer_->unregister_instance (data, handle);
 
   return dds_result;
 }

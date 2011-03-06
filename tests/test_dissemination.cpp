@@ -127,9 +127,9 @@ void
 broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
            unsigned long iterations)
 {
-  for (unsigned long i = 0; i < iterations && !terminated; ++i)
+  for (unsigned long i = 1; i <= iterations && !terminated; ++i)
   {
-    knowledge.evaluate ("++info");
+    knowledge.set ("info", i);
   }
 
   if (terminated)
@@ -140,7 +140,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   int retcode = parse_args (argc, argv);
 
-  unsigned long iterations = 100000;
+  unsigned long iterations = 1000000;
 
   if (retcode < 0)
     return retcode;
