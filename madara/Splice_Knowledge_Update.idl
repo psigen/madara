@@ -12,5 +12,5 @@ module Knowledge
     };
     
     //#pragma keylist Update
-    #pragma keylist    Update     key     
+    #pragma keylist    Update     originator     
 };

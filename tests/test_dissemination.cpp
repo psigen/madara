@@ -25,6 +25,7 @@ int left = 0;
 int processes = 1;
 int stop = 10;
 long value = 0;
+unsigned long iterations = 100000;
 
 // test is 3 minutes long
 unsigned long long time_limit = 3 * 60 * (unsigned long long) 1000000000;
@@ -140,12 +141,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   int retcode = parse_args (argc, argv);
 
-  unsigned long iterations = 1000000;
-
   if (retcode < 0)
     return retcode;
 
   ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  //ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
@@ -160,9 +160,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, settings);
 
-  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) synchronizing to %d\n",
-                        id, processes, stop));
-
   // set my id
   knowledge.set (".self", id);
   knowledge.set (".processes", processes);
@@ -170,9 +167,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   std::string type;
 
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to join\n",
+                        id, processes, iterations));
+
   // build a logic based on the started attribute and then wait
   // for all processes to start
   knowledge.wait (build_wait_string (id, "started", processes));
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) starting dissemination of %d events\n",
+                        id, processes, iterations));
 
   // at this point, all processes are accounted for. Let's begin our tests.
 
@@ -200,11 +203,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   timer.stop ();
   timer.elapsed_time (measured);
 
-  // wait for everyone to stop
-  knowledge.wait (build_wait_string (id, "stopped", processes));
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) finished dissemination of %d events\n",
+                        id, processes, iterations));
+
+  //ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to stop\n",
+  //                      id, processes, iterations));
 
   // find the dissemination rate per process
-  unsigned long long hertz = (1000000000 * iterations) / measured;
+  unsigned long long hertz = ((unsigned long long) 1000000000 * iterations)
+                               / measured;
 
   {
     std::stringstream buffer;
@@ -219,10 +226,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       buffer.str ().c_str ()));
   }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to stop\n",
+                        id, processes, iterations));
+
+  // wait for everyone to stop
+  knowledge.wait (build_wait_string (id, "stopped", processes));
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Exiting\n"));
+  ACE_DEBUG ((LM_INFO, "(%P|%t) Exiting\n"));
   return 0;
 }
 
@@ -231,13 +244,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:n:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("iterations"), 'n', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
@@ -258,6 +272,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       id = atoi (cmd_opts.opt_arg ());
       break;
+    case 'n':
+      // thread number
+      iterations = atoi (cmd_opts.opt_arg ());
+      break;
     case 's':
       // thread number
       stop = atoi (cmd_opts.opt_arg ());
@@ -272,7 +290,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
-      ACE_DEBUG ((LM_DEBUG, "(%P|%t) host set to %s\n", host.c_str ()));
+      ACE_DEBUG ((LM_INFO, "(%P|%t) host set to %s\n", host.c_str ()));
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
@@ -280,9 +298,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      ACE_DEBUG ((LM_INFO, "Program Options:      \n\
       -p (--processes) number of processes that will be running\n\
       -i (--id)        set process id (0 default)  \n\
+      -n (--iterations) set number of iterations (100,000 by default)  \n\
       -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -v (--value)     start process with a certain value (0 default) \n\

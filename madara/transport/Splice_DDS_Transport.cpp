@@ -165,8 +165,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     topic_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     topic_qos_.history.depth = this->settings_.queue_length;
     topic_qos_.resource_limits.max_samples = this->settings_.queue_length;
-    //topic_qos_.destination_order.kind = 
-    //  DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+    topic_qos_.destination_order.kind = 
+      DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
     //topic_qos_.
   }
   //topic_qos_.resource_limits.max_samples_per_instance= 10;
@@ -254,8 +254,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datawriter_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datawriter_qos_.history.depth = this->settings_.queue_length;
     datawriter_qos_.resource_limits.max_samples = this->settings_.queue_length;
-    //datawriter_qos_.destination_order.kind = 
-    //  DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+    datawriter_qos_.destination_order.kind = 
+      DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
   // Create Update writer
@@ -285,8 +285,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     datareader_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datareader_qos_.history.depth = this->settings_.queue_length;
     datareader_qos_.resource_limits.max_samples = this->settings_.queue_length;
-    //datareader_qos_.destination_order.kind = 
-    //  DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+    datareader_qos_.destination_order.kind = 
+      DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
   // Create Update datareader
@@ -331,16 +331,15 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   data.originator = id_.c_str ();
   data.type = Madara::Knowledge_Engine::ASSIGNMENT;
 
-  //ACE_DEBUG ((LM_DEBUG, 
-  //  "(%P|%t) SENDING data: %s=%d with time %d and quality %d\n", 
-  //  key.c_str (), data.value, cur_clock, data.quality));
+  ACE_DEBUG ((LM_DEBUG, 
+    "(%P|%t) SENDING data: %s=%d with time %d and quality %d\n", 
+    key.c_str (), data.value, cur_clock, data.quality));
 
   //std::cout << "Sending data: " << key << "=" << value << std::endl;
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 
-
-  update_writer_->unregister_instance (data, handle);
+  //update_writer_->unregister_instance (data, handle);
 
   return dds_result;
 }
@@ -365,14 +364,15 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   data.originator = id_.c_str ();
   data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
 
-  //ACE_DEBUG ((LM_DEBUG, 
-  //  "(%P|%t) SENDING multiassignment: %s with time %d and quality %d\n", 
-  //  expression.c_str (), cur_clock, quality));
+  ACE_DEBUG ((LM_DEBUG, 
+    "(%P|%t) SENDING multiassignment: %s with time %d and quality %d\n", 
+    expression.c_str (), cur_clock, quality));
 
   //std::cout << "Sending data: " << key << "=" << value << std::endl;
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 
+  //update_writer_->unregister_instance (data, handle);
 
   return dds_result;
 }
