@@ -150,6 +150,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   ACE_TRACE (ACE_TEXT ("main"));
 
+  // use ACE real time scheduling class
+  int prio  = ACE_Sched_Params::next_priority
+    (ACE_SCHED_FIFO,
+     ACE_Sched_Params::priority_max (ACE_SCHED_FIFO),
+     ACE_SCOPE_THREAD);
+  ACE_OS::thr_setprio (prio);
+
   // signal handler for clean exit
   ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
 
