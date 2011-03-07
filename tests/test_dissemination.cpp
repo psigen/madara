@@ -319,7 +319,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
 
   ACE_DEBUG ((LM_INFO, 
-    "==============================================================\n\n"));
+    "\n=========================================================================\n\n"));
 
 
   {
@@ -336,7 +336,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   }
 
   ACE_DEBUG ((LM_INFO, 
-    "==============================================================\n\n"));
+    "\n=========================================================================\n\n"));
+
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to stop\n",
                         id, processes, iterations));

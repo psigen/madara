@@ -279,6 +279,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_DEBUG ((LM_INFO, 
     "\nHertz for each test with %d iterations * %d tests was:\n", num_iterations, num_runs));
 
+  
+  ACE_DEBUG ((LM_INFO, 
+    "=========================================================================\n\n"));
+
+
   for (int i = 0; i < num_test_types; ++i)
   {
     std::stringstream buffer;
@@ -292,6 +297,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     ACE_DEBUG ((LM_INFO, 
       buffer.str ().c_str ()));
   }
+
+  ACE_DEBUG ((LM_INFO, 
+    "\n=========================================================================\n\n"));
+
 
   return 0;
 }
