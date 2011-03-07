@@ -20,6 +20,7 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/transport/Transport.h"
+#include "madara/Utility/Utility.h"
 
 int id = 0;
 int left = 0;
@@ -27,6 +28,8 @@ int processes = 1;
 int stop = 10;
 long value = 0;
 unsigned long iterations = 100000;
+// 1Mhz rate
+unsigned long rate = 1000000;
 
 // test is 3 minutes long
 unsigned long long time_limit = 3 * 60 * (unsigned long long) 1000000000;
@@ -95,6 +98,39 @@ to_legible_hertz (unsigned long long hertz)
   
 }
 
+ACE_Time_Value
+rate_to_sleep_time (unsigned long long rate)
+{
+  ACE_Time_Value sleep_time (0, 0);
+  
+  // 1,000,000,000 ns in 1 second. This should be the best number
+  // to divide by. 
+  unsigned long nanoseconds = 100000000 / (unsigned long)rate;
+  unsigned long microseconds = nanoseconds / 1000;
+
+  // if rate was too fast, make it at least 1 microsecond
+  if (microseconds == 0)
+    ++microseconds;
+
+  // setup the microseconds
+  sleep_time.usec (microseconds);
+
+  std::stringstream buffer;
+
+  // set our attribute to 1
+  buffer << "Rate ";
+  buffer << rate;
+  buffer << " hz >> ";
+  buffer << microseconds;
+  buffer << " us";
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t) %s\n",
+    buffer.str ().c_str ()));
+
+  return sleep_time;
+}
+
+
 /**
  * Build a wait string based on some attribute
  * @param    attribute     extension added to P0 on which to build checks for
@@ -129,9 +165,60 @@ void
 broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
            unsigned long iterations)
 {
+  ACE_Time_Value sleep_time = rate_to_sleep_time (rate);
+
+
+  #ifdef WIN32
+    // windows does not have microsecond timer precision so we have to improvise
+    // j is used to accumulate the number of microsecond sleeps that we've missed
+    // until we reach 1ms in time that should be slept
+
+    // so, we're supposed to sleep "backed_inc" every time we publish something.
+    // "backed_cur" is the amount of sleep we haven't taken that we need to
+    // "backed_limit is 1,000 microseconds (i.e. 1ms), the upper limit
+
+    unsigned long long backed_cur = 0;
+    unsigned long long backed_inc;
+    unsigned long long backed_limit = 1000;
+
+    // store the microseconds per publish into backed_inc
+    sleep_time.to_usec (backed_inc);
+
+    // reset the sleep time to 1ms, since Windows can't be any more precise
+    sleep_time.sec (0);
+    sleep_time.usec (0);
+    sleep_time.set_msec (1);
+
+    ACE_DEBUG ((LM_DEBUG, 
+      "(%P|%t) Windows detected. Running in bursty mode\n"));
+  #endif
+
   for (unsigned long i = 1; i <= iterations && !terminated; ++i)
   {
     knowledge.set ("info", i);
+
+    // if we're on windows, only sleep if we're over the 1ms limit 
+    #ifdef WIN32
+      if (backed_cur >= backed_limit)
+      {
+    #endif // if WIN32
+
+    ACE_OS::sleep (sleep_time);
+
+    // if we're on windows, reset the backed_cur to 0, since we just
+    // slept, or increment the backed_cur by backed_inc
+    #ifdef WIN32
+        backed_cur = 0;
+        ACE_DEBUG ((LM_DEBUG, 
+          "(%P|%t) Windows detected. Sleeping and resetting backed_cur.\n"));
+      }
+      else
+      {
+        backed_cur += backed_inc;
+        ACE_DEBUG ((LM_DEBUG, 
+          "(%P|%t) Windows detected. backed_cur = %d\n", backed_cur));
+      }
+    #endif // if WIN32
   }
 
   if (terminated)
@@ -145,8 +232,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
-  //ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
+  //ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
@@ -221,6 +308,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   unsigned long long hertz = ((unsigned long long) 1000000000 * iterations)
                                / measured;
 
+
+  ACE_DEBUG ((LM_INFO, 
+    "==============================================================\n\n"));
+
+
   {
     std::stringstream buffer;
     buffer << " ";
@@ -228,11 +320,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << "\t\t";
     buffer << std::setw (33);
     buffer << to_legible_hertz (hertz);
-    buffer << "\n";
+    buffer << "\n\n";
 
     ACE_DEBUG ((LM_INFO, 
       buffer.str ().c_str ()));
   }
+
+  ACE_DEBUG ((LM_INFO, 
+    "==============================================================\n\n"));
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to stop\n",
                         id, processes, iterations));
@@ -264,37 +359,84 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("value"), 'v', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("rate"), 'r', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
+
+  // used in processing std::stringstream stuff
+  std::string extra;
 //  ACE_TCHAR * arg;
 
   // iterate through the options until done
   while ((option = cmd_opts ()) != EOF)
   {
+    std::stringstream buffer;
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
     case 'i':
       // thread number
-      id = atoi (cmd_opts.opt_arg ());
+      buffer << cmd_opts.opt_arg ();
+      buffer >> id;
       break;
     case 'n':
       // thread number
-      iterations = atoi (cmd_opts.opt_arg ());
+      buffer << cmd_opts.opt_arg ();
+      buffer >> iterations;
       break;
     case 's':
-      // thread number
-      stop = atoi (cmd_opts.opt_arg ());
+      // stop value
+      buffer << cmd_opts.opt_arg ();
+      buffer >> stop;
       break;
     case 'p':
-      // thread number
-      processes = atoi (cmd_opts.opt_arg ());
+      // processes
+      buffer << cmd_opts.opt_arg ();
+      buffer >> processes;
       break;
-    case 'v':
-      // thread number
-      value = atoi (cmd_opts.opt_arg ());
+    case 'r':
+
+
+      ACE_DEBUG ((LM_INFO, "(%P|%t) Changing rate\n"));
+
+      // publication rate
+      buffer << cmd_opts.opt_arg ();
+
+      ACE_DEBUG ((LM_INFO, "(%P|%t) Rate string is %s\n", 
+        buffer.str ().c_str ()));
+
+      buffer >> rate;
+      buffer >> extra;
+
+      ACE_DEBUG ((LM_INFO, "(%P|%t) Rate is %u, extra is %s\n", 
+        rate, extra.c_str ()));
+
+      // convert the extra into lowercase
+      extra = Madara::Utility::lower (extra);
+
+      if (extra != "")
+      {
+        if      (extra == "ghz")
+        {
+          ACE_DEBUG ((LM_INFO, "(%P|%t) ghz change rate detected\n"));
+
+          rate *= 1000000000;
+        }
+        else if (extra == "mhz")
+        {
+          ACE_DEBUG ((LM_INFO, "(%P|%t) mhz change rate detected\n"));
+
+          rate *= 1000000;
+        }
+        else if (extra == "khz")
+        {
+          ACE_DEBUG ((LM_INFO, "(%P|%t) khz change rate detected\n"));
+
+          rate *= 1000;
+        }
+      }
+
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
@@ -312,7 +454,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -n (--iterations) set number of iterations (100,000 by default)  \n\
       -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
-      -v (--value)     start process with a certain value (0 default) \n\
+      -r (--rate)      the publication rate \n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
