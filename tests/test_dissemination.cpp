@@ -142,7 +142,7 @@ build_wait_string (int id, const std::string & attribute, int count)
   std::stringstream buffer;
 
   // set our attribute to 1
-  buffer << "(P";
+  buffer << "((P";
   buffer << id;
   buffer << ".";
   buffer << attribute;
@@ -157,6 +157,13 @@ build_wait_string (int id, const std::string & attribute, int count)
     buffer << ".";
     buffer << attribute;
   }
+
+  // make an escape clause due to our usage of best_effort
+  // if we see the attribute set globally, then move on because
+  // we have missed a message, even though we know everyone has
+  // arrived
+  buffer << ") || ";
+  buffer << attribute;
 
   return buffer.str ();
 }
@@ -221,8 +228,9 @@ broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
     #endif // if WIN32
   }
 
-  if (terminated)
-    knowledge.set ("terminated",1);
+  //if (terminated)
+  // set terminated just in case, so everyone cleans up cleanly
+  knowledge.set ("terminated",1);
 }
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
