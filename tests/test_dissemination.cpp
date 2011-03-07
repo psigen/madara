@@ -276,6 +276,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // build a logic based on the started attribute and then wait
   // for all processes to start
   knowledge.wait (build_wait_string (id, "started", processes));
+  knowledge.set ("started",1);
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) starting dissemination of %d events\n",
                         id, processes, iterations));
@@ -342,6 +343,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // wait for everyone to stop
   knowledge.wait (build_wait_string (id, "stopped", processes));
+  knowledge.set ("stopped",1);
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();
