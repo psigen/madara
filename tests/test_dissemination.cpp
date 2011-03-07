@@ -20,7 +20,7 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/transport/Transport.h"
-#include "madara/Utility/Utility.h"
+#include "madara/utility/Utility.h"
 
 int id = 0;
 int left = 0;
