@@ -24,15 +24,10 @@
 
 int id = 0;
 int left = 0;
-int processes = 1;
+int processes = 2;
 int stop = 10;
 long value = 0;
 unsigned long iterations = 100000;
-// 1Mhz rate
-unsigned long rate = 1000000;
-
-// test is 3 minutes long
-unsigned long long time_limit = 3 * 60 * (unsigned long long) 1000000000;
 
 std::string host = "localhost";
 
@@ -47,89 +42,27 @@ extern "C" void terminate (int)
   terminated = true;
 }
 
-std::string 
-to_legible_hertz (unsigned long long hertz)
+
+/**
+ * Converts an unsigned long long into a string
+ * @param   source   parameter to convert into a string
+ * @return  comma separated version of the source in a string
+ */
+std::string
+ull_to_string (unsigned long long source)
 {
   std::stringstream buffer;
 
+  // add commas
   std::locale loc(""); 
   buffer.imbue (loc); 
 
-  const int ghz_mark = 1000000000;
-  const int mhz_mark = 1000000;
-  const int khz_mark = 1000;
+  // stream the source into the buffer
+  buffer << source;
 
-  double freq = (double) hertz / ghz_mark;
-
-  if (freq >= 1)
-  {
-    buffer << std::setprecision (2) << std::fixed;
-    buffer << freq;
-    buffer << " ghz";
-    return buffer.str ().c_str ();
-  }
-
-  freq = (double) hertz / mhz_mark;
-
-  if (freq >= 1)
-  {
-    buffer << std::setprecision (2) << std::fixed;
-    buffer << freq;
-    buffer << " mhz";
-    return buffer.str ().c_str ();
-  }
-
-  freq = (double) hertz / khz_mark;
-
-  if (freq >= 1)
-  {
-    buffer << std::setprecision (2) << std::fixed;
-    buffer << freq;
-    buffer << " khz";
-    return buffer.str ().c_str ();
-  }
-
-  freq = (double) hertz;
-
-  buffer << std::setprecision (2) << std::fixed;
-  buffer << freq;
-  buffer << "  hz";
+  // return the string representation
   return buffer.str ().c_str ();
-  
 }
-
-ACE_Time_Value
-rate_to_sleep_time (unsigned long long rate)
-{
-  ACE_Time_Value sleep_time (0, 0);
-  
-  // 1,000,000,000 ns in 1 second. This should be the best number
-  // to divide by. 
-  unsigned long nanoseconds = 100000000 / (unsigned long)rate;
-  unsigned long microseconds = nanoseconds / 1000;
-
-  // if rate was too fast, make it at least 1 microsecond
-  if (microseconds == 0)
-    ++microseconds;
-
-  // setup the microseconds
-  sleep_time.usec (microseconds);
-
-  std::stringstream buffer;
-
-  // set our attribute to 1
-  buffer << "Rate ";
-  buffer << rate;
-  buffer << " hz >> ";
-  buffer << microseconds;
-  buffer << " us";
-
-  ACE_DEBUG ((LM_INFO, "(%P|%t) %s\n",
-    buffer.str ().c_str ()));
-
-  return sleep_time;
-}
-
 
 /**
  * Build a wait string based on some attribute
@@ -168,70 +101,71 @@ build_wait_string (int id, const std::string & attribute, int count)
   return buffer.str ();
 }
 
-void
-broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-           unsigned long iterations)
+/**
+ * Runs a series of latency tests.
+ * @param     knowledge      the knowledge base
+ * @param     iterations     the number of iterations to run
+ * @return    total latency for all iterations
+ */
+unsigned long long test_latency (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+                     unsigned long iterations)
 {
-  ACE_Time_Value sleep_time = rate_to_sleep_time (rate);
+  std::string expression;
 
+  // reset the counter to 0, in case test_latencies has been called before
+  // do not send out modifieds or this may cause issues because the
+  // expression to be evaluated requires this count to start at 0 for it
+  // to make sense. .old on the other hand is a local variable, so there is
+  // no need to be cautious.
+  knowledge.set ("P0", 0, false);
+  knowledge.set ("P1", 0, false);
 
-  #ifdef WIN32
-    // windows does not have microsecond timer precision so we have to improvise
-    // j is used to accumulate the number of microsecond sleeps that we've missed
-    // until we reach 1ms in time that should be slept
-
-    // so, we're supposed to sleep "backed_inc" every time we publish something.
-    // "backed_cur" is the amount of sleep we haven't taken that we need to
-    // "backed_limit is 1,000 microseconds (i.e. 1ms), the upper limit
-
-    unsigned long long backed_cur = 0;
-    unsigned long long backed_inc;
-    unsigned long long backed_limit = 1000;
-
-    // store the microseconds per publish into backed_inc
-    sleep_time.to_usec (backed_inc);
-
-    // reset the sleep time to 1ms, since Windows can't be any more precise
-    sleep_time.sec (0);
-    sleep_time.usec (0);
-    sleep_time.set_msec (1);
-
-    ACE_DEBUG ((LM_DEBUG, 
-      "(%P|%t) Windows detected. Running in bursty mode\n"));
-  #endif
-
-  for (unsigned long i = 1; i <= iterations && !terminated; ++i)
+  // make the processes play tag
+  if (id == 0)
   {
-    knowledge.set ("info", i);
-
-    // if we're on windows, only sleep if we're over the 1ms limit 
-    #ifdef WIN32
-      if (backed_cur >= backed_limit)
-      {
-    #endif // if WIN32
-
-    ACE_OS::sleep (sleep_time);
-
-    // if we're on windows, reset the backed_cur to 0, since we just
-    // slept, or increment the backed_cur by backed_inc
-    #ifdef WIN32
-        backed_cur = 0;
-        ACE_DEBUG ((LM_DEBUG, 
-          "(%P|%t) Windows detected. Sleeping and resetting backed_cur.\n"));
-      }
-      else
-      {
-        backed_cur += backed_inc;
-        ACE_DEBUG ((LM_DEBUG, 
-          "(%P|%t) Windows detected. backed_cur = %d\n", backed_cur));
-      }
-    #endif // if WIN32
+    // p0 gets started early. Make him stay for the return trip.
+    ++iterations;
+    // if p1 has the same value as p0, then p0 increments
+    expression = "P0 == P1 => ++P0";
+  }
+  else if (id == 1)
+  {
+    // if p0 does not equal p1, then make it so!
+    expression = "P0 != P1 => P1 = P0";
   }
 
-  //if (terminated)
-  // set terminated just in case, so everyone cleans up cleanly
-  knowledge.set ("terminated",1);
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic will be %s\n",
+    id, processes, expression.c_str ()));
+
+  // keep track of time
+  ACE_hrtime_t count = 0;
+  ACE_High_Res_Timer timer;
+
+  ACE_hrtime_t total_latency = 0;
+
+  timer.start ();
+
+  for (unsigned long i = 0; i < iterations; ++i)
+  {
+    knowledge.wait (expression);
+    timer.stop ();
+  
+    // note that the first loop results in no time change
+    // also, this is roundtrip latency.
+    timer.elapsed_time (count);
+    total_latency += count;
+
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) Latency test: i = %d, round trip = %d\n",
+      id, processes, i, count));
+
+    // start the next timer
+    timer.start ();
+  }
+
+  timer.stop ();
+  return total_latency;
 }
+
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -240,8 +174,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  //ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
-  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
+  // role of process in this test
+  std::string type;
+
+  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  //ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
@@ -255,20 +192,23 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // signal handler for clean exit
   ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
 
+  // this test is specifically for 2 processes. If we have an id
+  // that is greater than 2, return and let process id 0 and 1 do their jobs
+
+  if (id >= 2)
+    return 0;
+
   Madara::Transport::Settings settings;
   settings.type = Madara::Transport::SPLICE;
-  settings.domains = "KaRL_Dissemination";
-  settings.queue_length = 12000000;
-  settings.reliability = Madara::Transport::BEST_EFFORT;
+  settings.domains = "KaRL_Latency";
+  settings.reliability = Madara::Transport::RELIABLE;
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge(host, settings);
 
   // set my id
   knowledge.set (".self", id);
-  knowledge.set (".processes", processes);
+  knowledge.set (".processes", 2);
   knowledge.set (".iterations", iterations);
-
-  std::string type;
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to join\n",
                         id, processes, iterations));
@@ -278,45 +218,29 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.wait (build_wait_string (id, "started", processes));
   knowledge.set ("started",1);
 
-  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) starting dissemination of %d events\n",
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) starting latency tests for %d events\n",
                         id, processes, iterations));
 
   // at this point, all processes are accounted for. Let's begin our tests.
 
   // keep track of time
-  ACE_hrtime_t measured;
-  ACE_High_Res_Timer timer;
-
-  // everyone starts their timer
-  timer.start ();
-
-  if (id == 0)
-  {
-    type = "Publisher";
-    // root process is the broadcaster
-    // Let's make 1,000,000 modifications and broadcast to everyone
-    broadcast (knowledge, iterations);
-  }
-  else
-  {
-    type = "Subscriber";
-    // everyone else is a receiver
-    knowledge.wait ("info >= .iterations || terminated");
-  }
-
-  timer.stop ();
-  timer.elapsed_time (measured);
-
-  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) finished dissemination of %d events\n",
+  ACE_hrtime_t total = test_latency (knowledge, iterations);
+  
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) finished dissemination of %d * 2 events\n",
                         id, processes, iterations));
 
   //ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to stop\n",
   //                      id, processes, iterations));
 
-  // find the dissemination rate per process
-  unsigned long long hertz = ((unsigned long long) 1000000000 * iterations)
-                               / measured;
+  // find the average event latency. Since round trips were used, this is total latencies
+  // divided by iterations divided by 2.
+  unsigned long long latency_avg = (total / iterations) / 2;
 
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) Total latency was %s ns\n",
+                        id, processes, ull_to_string (total).c_str ()));
+
+  // set the role
+  type = id == 0 ? "P0" : "P1";
 
   ACE_DEBUG ((LM_INFO, 
     "\n=========================================================================\n\n"));
@@ -324,12 +248,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   {
     std::stringstream buffer;
+
+    std::locale loc(""); 
+    buffer.imbue (loc); 
+
     buffer << " ";
     buffer << type;
     buffer << "\t\t";
     buffer << std::setw (33);
-    buffer << to_legible_hertz (hertz);
-    buffer << "\n\n";
+    buffer << latency_avg;
+    buffer << " ns\n\n";
 
     ACE_DEBUG ((LM_INFO, 
       buffer.str ().c_str ()));
@@ -358,7 +286,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:n:r:h");
+  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:n:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -370,7 +298,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("rate"), 'r', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -402,52 +329,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       buffer >> stop;
       break;
     case 'p':
-      // processes
-      buffer << cmd_opts.opt_arg ();
-      buffer >> processes;
-      break;
-    case 'r':
-
-
-      ACE_DEBUG ((LM_INFO, "(%P|%t) Changing rate\n"));
-
-      // publication rate
-      buffer << cmd_opts.opt_arg ();
-
-      ACE_DEBUG ((LM_INFO, "(%P|%t) Rate string is %s\n", 
-        buffer.str ().c_str ()));
-
-      buffer >> rate;
-      buffer >> extra;
-
-      ACE_DEBUG ((LM_INFO, "(%P|%t) Rate is %u, extra is %s\n", 
-        rate, extra.c_str ()));
-
-      // convert the extra into lowercase
-      extra = Madara::Utility::lower (extra);
-
-      if (extra != "")
-      {
-        if      (extra == "ghz")
-        {
-          ACE_DEBUG ((LM_INFO, "(%P|%t) ghz change rate detected\n"));
-
-          rate *= 1000000000;
-        }
-        else if (extra == "mhz")
-        {
-          ACE_DEBUG ((LM_INFO, "(%P|%t) mhz change rate detected\n"));
-
-          rate *= 1000000;
-        }
-        else if (extra == "khz")
-        {
-          ACE_DEBUG ((LM_INFO, "(%P|%t) khz change rate detected\n"));
-
-          rate *= 1000;
-        }
-      }
-
+      // changing the processes is not allowed
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
@@ -460,12 +342,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       ACE_DEBUG ((LM_INFO, "Program Options:      \n\
-      -p (--processes) number of processes that will be running\n\
+      -p (--processes) number of processes (disabled - always 2) \n\
       -i (--id)        set process id (0 default)  \n\
       -n (--iterations) set number of iterations (100,000 by default)  \n\
       -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
-      -r (--rate)      the publication rate \n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
