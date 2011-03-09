@@ -108,8 +108,12 @@ build_wait_string (int id, const std::string & attribute, int count)
  * @param     compile_latency   return value of compile time
  * @return    total latency for all iterations
  */
-unsigned long long test_latency (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-                     unsigned long iterations, unsigned long long & compile_latency)
+unsigned long long test_latency (
+                     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+                     unsigned long iterations, 
+                     unsigned long long & compile_latency,
+                     unsigned long long & eval_latency,
+                     )
 {
   std::string expression;
 
@@ -143,6 +147,17 @@ unsigned long long test_latency (Madara::Knowledge_Engine::Knowledge_Base & know
   // reset the timer
   timer.reset ();
 
+  // test evaluation latency
+  timer.start ();
+  knowledge.evaluate (expression, false);
+  timer.stop ();
+
+  // get the amount of time it took
+  timer.elapsed_time (eval_latency);
+
+  // reset the timer
+  timer.reset ();
+  
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic compile latency was %s ns\n",
     id, processes, ull_to_string (compile_latency).c_str ()));
 
@@ -273,6 +288,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << " ";
     buffer << type;
     buffer << " Compile time";
+    buffer << "\t\t";
+    buffer << std::setw (33);
+    buffer << compile_time;
+    buffer << " ns\n";
+
+    buffer << " ";
+    buffer << type;
+    buffer << " Eval time   ";
     buffer << "\t\t";
     buffer << std::setw (33);
     buffer << compile_time;
