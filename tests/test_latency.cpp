@@ -105,20 +105,18 @@ build_wait_string (int id, const std::string & attribute, int count)
  * Runs a series of latency tests.
  * @param     knowledge      the knowledge base
  * @param     iterations     the number of iterations to run
+ * @param     compile_latency   return value of compile time
  * @return    total latency for all iterations
  */
 unsigned long long test_latency (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-                     unsigned long iterations)
+                     unsigned long iterations, unsigned long long & compile_latency)
 {
   std::string expression;
 
-  // reset the counter to 0, in case test_latencies has been called before
-  // do not send out modifieds or this may cause issues because the
-  // expression to be evaluated requires this count to start at 0 for it
-  // to make sense. .old on the other hand is a local variable, so there is
-  // no need to be cautious.
-  knowledge.set ("P0", 0, false);
-  knowledge.set ("P1", 0, false);
+  // keep track of time
+  ACE_hrtime_t count = 0;
+  ACE_High_Res_Timer timer;
+
 
   // make the processes play tag
   if (id == 0)
@@ -134,12 +132,31 @@ unsigned long long test_latency (Madara::Knowledge_Engine::Knowledge_Base & know
     expression = "P0 != P1 => P1 = P0";
   }
 
+  // test compilation latency
+  timer.start ();
+  knowledge.evaluate (expression, false);
+  timer.stop ();
+
+  // get the amount of time it took
+  timer.elapsed_time (compile_latency);
+
+  // reset the timer
+  timer.reset ();
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic compile latency was %s ns\n",
+    id, processes, ull_to_string (compile_latency).c_str ()));
+
+  // reset the counter to 0, in case test_latencies has been called before
+  // do not send out modifieds or this may cause issues because the
+  // expression to be evaluated requires this count to start at 0 for it
+  // to make sense. .old on the other hand is a local variable, so there is
+  // no need to be cautious.
+  knowledge.set ("P0", 0, false);
+  knowledge.set ("P1", 0, false);
+
+
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic will be %s\n",
     id, processes, expression.c_str ()));
-
-  // keep track of time
-  ACE_hrtime_t count = 0;
-  ACE_High_Res_Timer timer;
 
   ACE_hrtime_t total_latency = 0;
 
@@ -224,7 +241,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // at this point, all processes are accounted for. Let's begin our tests.
 
   // keep track of time
-  ACE_hrtime_t total = test_latency (knowledge, iterations);
+  ACE_hrtime_t compile_time;
+  ACE_hrtime_t total = test_latency (knowledge, iterations, compile_time);
   
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) finished dissemination of %d * 2 events\n",
                         id, processes, iterations));
@@ -254,6 +272,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
     buffer << " ";
     buffer << type;
+    buffer << " Compile time";
+    buffer << "\t\t";
+    buffer << std::setw (33);
+    buffer << compile_time;
+    buffer << " ns\n";
+
+    buffer << " ";
+    buffer << type;
+    buffer << " Diss Latency";
     buffer << "\t\t";
     buffer << std::setw (33);
     buffer << latency_avg;
