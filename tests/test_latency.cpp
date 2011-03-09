@@ -177,8 +177,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // role of process in this test
   std::string type;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
-  //ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
+  //ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   ACE_TRACE (ACE_TEXT ("main"));
 
