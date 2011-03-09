@@ -112,7 +112,7 @@ unsigned long long test_latency (
                      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
                      unsigned long iterations, 
                      unsigned long long & compile_latency,
-                     unsigned long long & eval_latency,
+                     unsigned long long & eval_latency
                      )
 {
   std::string expression;
@@ -160,6 +160,9 @@ unsigned long long test_latency (
   
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic compile latency was %s ns\n",
     id, processes, ull_to_string (compile_latency).c_str ()));
+
+  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic post-compile latency was %s ns\n",
+    id, processes, ull_to_string (eval_latency).c_str ()));
 
   // reset the counter to 0, in case test_latencies has been called before
   // do not send out modifieds or this may cause issues because the
@@ -257,7 +260,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // keep track of time
   ACE_hrtime_t compile_time;
-  ACE_hrtime_t total = test_latency (knowledge, iterations, compile_time);
+  ACE_hrtime_t eval_time;
+  ACE_hrtime_t total = test_latency (knowledge, iterations, compile_time, eval_time);
   
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) finished dissemination of %d * 2 events\n",
                         id, processes, iterations));
@@ -298,7 +302,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << " Eval time   ";
     buffer << "\t\t";
     buffer << std::setw (33);
-    buffer << compile_time;
+    buffer << eval_time;
     buffer << " ns\n";
 
     buffer << " ";
