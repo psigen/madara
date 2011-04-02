@@ -3,6 +3,7 @@ workspace {
   cmdline += -feature_file $MADARA_ROOT/default.features
 
   madara/Madara.mpc
+  madara/Kats.mpc
   madara/Splice_DDS_Transport.mpc
   madara/Splice_Mutexes.mpc
   madara/Tests.mpc

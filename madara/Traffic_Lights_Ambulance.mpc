@@ -6,8 +6,6 @@ project (Traffic_Light) : using_madara, using_ace, using_splice, logic_files, ma
   
   requires += tests
   
-  libs += Madara
-
   Logic_Files {
     ../configs/logics/traffic_light.klf
   }

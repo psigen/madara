@@ -17,3 +17,9 @@ opensplice              = 1
 /// @feature tests
 /// Enable this feature if you want to generate test applications
 tests                   = 1
+
+
+/// @feature kats
+/// Enable this feature if you would like to build the 
+/// KaRL Automated Testing System
+kats                    = 0
