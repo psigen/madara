@@ -9,8 +9,9 @@
  */
 
 #include <string>
-#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "ace/Mem_Map.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/MADARA_export.h"
 
 namespace Madara
 {
@@ -33,7 +34,7 @@ namespace Madara
        * @param file_name           file to read
        * @param knowledge_key       key to store the file into
        */
-      int read_file (const std::string & knowledge_key,
+      MADARA_Export int read_file (const std::string & knowledge_key,
                      const std::string & file_name);
       
       /**
@@ -42,14 +43,14 @@ namespace Madara
        * @param mem_map             memory map of file
        * @return                    
        */
-      int read_file (const char * filename, ACE_Mem_Map & mem_map);
+      MADARA_Export int read_file (const char * filename, ACE_Mem_Map & mem_map);
       
       /**
        * Write a file from the knowledge base to a specified location
        * @param file_name           file to write to
        * @param knowledge_key       key to read the file from
        */
-      int write_file (const std::string & knowledge_key,
+      MADARA_Export int write_file (const std::string & knowledge_key,
                       const std::string & file_name);
 
       /**
@@ -59,7 +60,7 @@ namespace Madara
        * @param size                size of the buffer
        * @return                    amount written to file (-1 if error)
        */
-      int write_file (const char * filename, 
+      MADARA_Export int write_file (const char * filename, 
                      void *& buffer, size_t & size);
       
       
@@ -68,7 +69,7 @@ namespace Madara
        * @param policy_key          key to read the policy into
        * @param policy_file         file to read the policy from
        */
-      int read_policy (const std::string & policy_key, 
+      MADARA_Export int read_policy (const std::string & policy_key, 
                        const std::string & policy_file);
 
       /**
@@ -77,7 +78,7 @@ namespace Madara
        * @param target_key          target key to save the shaped file into
        * @param policy_key          policy to use for shaping the file
        */
-      int shape_file (const std::string & source_key, 
+      MADARA_Export int shape_file (const std::string & source_key, 
                       const std::string & target_key, 
                       const std::string & policy_key);
 
