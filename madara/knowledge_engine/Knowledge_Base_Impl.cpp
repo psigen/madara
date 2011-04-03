@@ -15,7 +15,7 @@
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
-: files_ (map_)
+: files_ (map_), transport_ (0)
 {
   activate_transport ();
   // no hope of transporting, so don't setup uniquehostport
@@ -23,7 +23,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport)
-: settings_ (), files_ (map_)
+: settings_ (), files_ (map_), transport_ (0)
 {
   // override default settings for the arguments
   settings_.type = transport;
@@ -35,7 +35,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport,
   const std::string & knowledge_domain)
-: settings_ (), files_ (map_)
+: settings_ (), files_ (map_), transport_ (0)
 {
   // override default settings for the arguments
   settings_.type = transport;
@@ -48,7 +48,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, const Madara::Transport::Settings & config)
-: settings_ (config), files_ (map_)
+: settings_ (config), files_ (map_), transport_ (0)
 {
   setup_uniquehostport (host);
 //  setup_splitters ();   // only used for debugging
@@ -93,6 +93,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 {
   if (!transport_)
   {
+    ACE_DEBUG ((LM_DEBUG,
+      "(%P|%t) ACTIVATING TRANSPORT %d\n", settings_.type));
     if (settings_.type == Madara::Transport::SPLICE)
     {
     #ifdef _USE_OPEN_SPLICE_
@@ -160,14 +162,23 @@ long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
                                                 bool send_modifieds)
 {
+  // return an error message
+  if (expression == "")
+    return 0;
+
   // lock the context
   map_.lock ();
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting on %s\n", expression.c_str ()));
 
   // resulting tree of the expression
   Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
     map_, expression);
 
   long long last_value = tree.evaluate ();
+
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Completed first eval to get %d",
+    last_value));
 
   if (transport_ && send_modifieds)
   {
@@ -202,10 +213,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
       map_.reset_modified ();
     }
   }
+  else
+  {
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) NOT TRANSPORTING: \n"));
+  }
 
   // wait for expression to be true
   while (!last_value)
   {
+    ACE_DEBUG ((LM_DEBUG,
+      "(%P|%t) Wait: last value doesn't result in success\n"));
+
     // we need the context to do an additional release. If release
     // the context lock, we may have an update event happen
     // that we cannot be signalled on - which could lead to
@@ -247,7 +265,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   // release the context lock
   map_.unlock ();
-  return 0;
+  return last_value;
 }
 
 void
@@ -265,6 +283,9 @@ long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const ::std::string & expression, bool send_modifieds)
 {
+  if (expression == "")
+    return 0;
+
   long long last_value = 0;
   // strip the incoming expression of white spaces
   //::std::string expression (expression_copy);

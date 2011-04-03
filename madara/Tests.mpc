@@ -293,3 +293,24 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
     ../tests/test_distributed_finisher_with_set.cpp
   }
 }
+
+
+project (Test_KATS_barriers) : using_kats, using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = kats_barriers
+  
+  // libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_kats_barriers.cpp
+  }
+}

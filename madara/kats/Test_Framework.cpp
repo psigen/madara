@@ -19,6 +19,8 @@ Madara::KATS::Test_Framework::Test_Framework (
 {
   knowledge_.set (".madara.id", settings.id);
   knowledge_.set (".madara.processes", settings.processes);
+
+  knowledge_.print_knowledge ();
 }
 
 /// Copy constructor
@@ -38,12 +40,13 @@ long long
 Madara::KATS::Test_Framework::barrier (const std::string & event_name)
 {
   std::stringstream buffer;
+  std::stringstream log_message;
+
   long long id = knowledge_.get (".madara.id");
   long long processes = knowledge_.get (".madara.processes");
 
   // set our attribute to 1
-  buffer << "((madara";
-  buffer << ".";
+  buffer << "((MADARA.BARRIER.";
   buffer << event_name;
   buffer << ".";
   buffer << id;
@@ -53,8 +56,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   // attribute to not-zero
   for (long long i = 0; i < processes; ++i)
   {
-    buffer << " && madara";
-    buffer << ".";
+    buffer << " && MADARA.BARRIER.";
     buffer << event_name;
     buffer << ".";
     buffer << i;
@@ -64,8 +66,14 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   // if we see the attribute set globally, then move on because
   // we have missed a message, even though we know everyone has
   // arrived
-  buffer << ") || ";
+  buffer << ") || MADARA.BARRIER.";
   buffer << event_name;
+
+  log_message << "Barrier started: ";
+  log_message << buffer.str ();
+  log_message << "\n";
+
+  log (log_message.str ());
 
   return knowledge_.wait (buffer.str ());
 }
@@ -79,7 +87,8 @@ Madara::KATS::Test_Framework::event (const std::string & name,
         const std::string & continue_condition,
         bool barrier_this_event, bool close_transport)
 {
-  assert (name != "");
+  if (name == "")
+    return -1;
 
   // default result is 
   int result = 0;
@@ -91,12 +100,12 @@ Madara::KATS::Test_Framework::event (const std::string & name,
 
   // check if we should be aborting
   eval_result = knowledge_.evaluate (fail_condition);
-  if (eval_result != 0)
+  if (fail_condition == "" || eval_result == 0)
   {
     // check if we should be skipping over a pre and post condition
     eval_result = knowledge_.evaluate (continue_condition);
 
-    if (eval_result != 0)
+    if (continue_condition == "" || eval_result == 0)
     {
       // if the user wants us to barrier, then do so on the event
       if (barrier_this_event)
@@ -151,18 +160,24 @@ Madara::KATS::Test_Framework::event (const std::string & name,
   if (result || close_transport)
     knowledge_.close_transport ();
 
+  if (result == -1)
+  {
+    dump ();
+    exit (result);
+  }
+
   return result;
 }
 
 /// Logs according to a severity level
 void 
-Madara::KATS::Test_Framework::log (int level, const std::string & statement)
+Madara::KATS::Test_Framework::log (const std::string & statement, int level)
 {
-
+  knowledge_.print (statement);
 }
 
 /// Dumps all knowledge to std::err
 void Madara::KATS::Test_Framework::dump (int level)
 {
-
+  knowledge_.print_knowledge ();
 }

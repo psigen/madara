@@ -5,7 +5,7 @@
 
 #include <string>
 #include <stdexcept>
-#include "madara/Refcounter.h"
+#include "madara/utility/Refcounter.h"
 
 #include "madara/expression_tree/Component_Node.h"
 
@@ -107,7 +107,7 @@ namespace Madara
     private:
       /// Pointer to actual implementation, i.e., the "bridge", which is
       /// reference counted to automate memory management. 
-      Refcounter <Component_Node> root_;
+      Madara::Utility::Refcounter <Component_Node> root_;
     };
 
   }

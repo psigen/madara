@@ -14,7 +14,7 @@
 #include "madara/transport/Transport.h"
 #include "ace/SOCK_Acceptor.h"
 #include "madara/expression_tree/Interpreter.h"
-#include "madara/Refcounter.h"
+#include "madara/utility/Refcounter.h"
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 
 namespace Madara
@@ -153,7 +153,7 @@ namespace Madara
 
       /// Pointer to actual implementation, i.e., the "bridge", which is
       /// reference counted to automate memory management. 
-      Refcounter <Knowledge_Base_Impl> impl_;
+      Madara::Utility::Refcounter <Knowledge_Base_Impl> impl_;
     };
 
   }

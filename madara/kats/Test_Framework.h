@@ -21,10 +21,11 @@ namespace Madara
     {
     public:
       /// Default knowledge domain
-      #define DEFAULT_KATS_DOMAIN "KATS"
-      #define DEFAULT_ID          0
-      #define DEFAULT_PROCESSES   1
-      #define DEFAULT_HOST        "localhost"
+      #define DEFAULT_KATS_DOMAIN       "KATS"
+      #define DEFAULT_KATS_TRANSPORT    Madara::Transport::SPLICE
+      #define DEFAULT_ID                0
+      #define DEFAULT_PROCESSES         1
+      #define DEFAULT_HOST              "localhost"
 
     /**
      * @class Settings
@@ -35,6 +36,7 @@ namespace Madara
       {
         // set the underlying members
         this->domains = DEFAULT_KATS_DOMAIN;
+        this->type = DEFAULT_KATS_TRANSPORT;
 
         // set our local members
         id = DEFAULT_ID;
@@ -115,13 +117,13 @@ namespace Madara
        * @param statement  statement to print (can contain variable expansion
        *                   from the knowledge base)
        **/
-      void log (int level, const std::string & statement);
+      void log (const std::string & statement, int level = 0);
 
       /**
        * Dumps all knowledge to std::err
        * @param level      level of severity
        **/
-      void dump (int level);
+      void dump (int level = 0);
 
     private:
       Madara::Knowledge_Engine::Knowledge_Base knowledge_;

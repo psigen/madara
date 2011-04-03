@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <sstream>
 
-#include "madara/Refcounter.h"
+#include "madara/utility/Refcounter.h"
 #include "madara/expression_tree/Iterator.h"
 #include "madara/expression_tree/Expression_Tree.h"
 

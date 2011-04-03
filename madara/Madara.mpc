@@ -33,9 +33,9 @@ project (Madara) : using_ace, using_splice, splice_transport {
     expression_tree
     knowledge_engine
     utility/Utility.cpp
+    utility/Refcounter.cpp
     transport/TCP_Transport.cpp
     transport/TCP_Transport_Read_Thread.cpp
-    Refcounter.cpp
     Thread_Pool.cpp
   }
 
@@ -47,7 +47,6 @@ project (Madara) : using_ace, using_splice, splice_transport {
     transport/TCP_Transport.h
     transport/TCP_Transport_Read_Thread.h
     Globals.h
-    Refcounter.h
     Thread_Pool.h
     MADARA_export.h
   }

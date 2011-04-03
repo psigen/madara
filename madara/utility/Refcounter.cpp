@@ -2,18 +2,18 @@
 #ifndef _REFCOUNTER_CPP_
 #define _REFCOUNTER_CPP_
 
-#include "madara/Refcounter.h"
+#include "madara/utility/Refcounter.h"
 
 /// default Ctor
 template <typename T>
-Refcounter<T>::Refcounter (void)
+Madara::Utility::Refcounter<T>::Refcounter (void)
   : ptr_ (0)
 {
 }
 
 /// Ctor with refcounting functionality
 template <typename T>
-Refcounter<T>::Refcounter (T *ptr, bool increase_count)
+Madara::Utility::Refcounter<T>::Refcounter (T *ptr, bool increase_count)
   : ptr_ (new Shim (ptr))
 {
   if (increase_count)
@@ -22,7 +22,7 @@ Refcounter<T>::Refcounter (T *ptr, bool increase_count)
 
   /// copy Ctor
 template <typename T>
-Refcounter<T>::Refcounter (const Refcounter &rhs)
+Madara::Utility::Refcounter<T>::Refcounter (const Refcounter &rhs)
   : ptr_ (rhs.ptr_)
 {
   increment ();
@@ -30,7 +30,7 @@ Refcounter<T>::Refcounter (const Refcounter &rhs)
 
   /// Dtor will delete pointer if refcount becomes 0
 template <typename T>
-Refcounter<T>::~Refcounter (void)
+Madara::Utility::Refcounter<T>::~Refcounter (void)
 {
   decrement ();
 }
@@ -39,7 +39,7 @@ Refcounter<T>::~Refcounter (void)
 /// increased for incoming ptr.
 template <typename T>
 void 
-Refcounter<T>::operator= (T *ptr)
+Madara::Utility::Refcounter<T>::operator= (T *ptr)
 {
   decrement ();
   ptr_ = new Shim (ptr);
@@ -48,7 +48,7 @@ Refcounter<T>::operator= (T *ptr)
   /// assignment operator
 template <typename T>
 void
-Refcounter<T>::operator= (const Refcounter& rhs)
+Madara::Utility::Refcounter<T>::operator= (const Refcounter& rhs)
 {
   decrement ();
   ptr_ = rhs.ptr_;
@@ -58,7 +58,7 @@ Refcounter<T>::operator= (const Refcounter& rhs)
 /// get the underlying pointer
 template <typename T>
 T * 
-Refcounter<T>::get_ptr (void)
+Madara::Utility::Refcounter<T>::get_ptr (void)
 {
   return ptr_->t_;
 }
@@ -66,7 +66,7 @@ Refcounter<T>::get_ptr (void)
 /// get the underlying pointer
 template <typename T>
 const T *
-Refcounter<T>::get_ptr (void) const
+Madara::Utility::Refcounter<T>::get_ptr (void) const
 {
   return ptr_->t_;
 }
@@ -75,7 +75,7 @@ Refcounter<T>::get_ptr (void) const
 /// dereference operator
 template <typename T>
 T & 
-Refcounter<T>::operator* (void)
+Madara::Utility::Refcounter<T>::operator* (void)
 {
   return *ptr_->t_;
 }
@@ -84,7 +84,7 @@ Refcounter<T>::operator* (void)
 template <typename T>
 const 
 T &
-Refcounter<T>::operator* (void) const
+Madara::Utility::Refcounter<T>::operator* (void) const
 {
   return *ptr_->t_;
 }
@@ -92,7 +92,7 @@ Refcounter<T>::operator* (void) const
 /// mimic pointer dereferencing
 template <typename T>
 T *
-Refcounter<T>::operator-> (void)
+Madara::Utility::Refcounter<T>::operator-> (void)
 {
   return ptr_->t_;
 }
@@ -100,7 +100,7 @@ Refcounter<T>::operator-> (void)
 /// mimic pointer dereferencing
 template <typename T>
 const T *
-Refcounter<T>::operator-> (void) const
+Madara::Utility::Refcounter<T>::operator-> (void) const
 {
   return ptr_->t_;
 }
@@ -108,7 +108,7 @@ Refcounter<T>::operator-> (void) const
 /// implementation of the increment operation
 template <typename T>
 void 
-Refcounter<T>::increment (void)
+Madara::Utility::Refcounter<T>::increment (void)
 {
   if (ptr_)
     ++ptr_->refcount_;
@@ -117,7 +117,7 @@ Refcounter<T>::increment (void)
   /// implementation of the decrement operation
 template <typename T>
 void 
-Refcounter<T>::decrement (void)
+Madara::Utility::Refcounter<T>::decrement (void)
 {
   if (ptr_)
     {
@@ -131,13 +131,13 @@ Refcounter<T>::decrement (void)
 }
 
 template <typename T>
-Refcounter<T>::Shim::Shim (T *t)
+Madara::Utility::Refcounter<T>::Shim::Shim (T *t)
   : t_ (t), refcount_ (1) 
 {
 }
 
 template <typename T>
-Refcounter<T>::Shim::~Shim (void) 
+Madara::Utility::Refcounter<T>::Shim::~Shim (void) 
 { 
   delete t_; 
 }

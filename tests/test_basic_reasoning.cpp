@@ -41,6 +41,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
+  //knowledge.evaluate ("");
 
   // run tests
 //  test_tree_compilation (knowledge);
