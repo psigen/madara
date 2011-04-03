@@ -393,7 +393,7 @@ void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   ACE_DEBUG ((LM_INFO, "Testing unary operators\n"));
 
-  int result = 0;
+  long long result = 0;
 
   knowledge.clear ();
 
@@ -583,7 +583,7 @@ void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_both_operator"));
 
-  int result = 0;
+  long long result = 0;
 
   knowledge.clear ();
   knowledge.evaluate (";;;;;.var2 = 3;;;.var3 = 4;;;");
@@ -655,7 +655,7 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
 {
   ACE_TRACE (ACE_TEXT ("test_tree_compilation"));
   knowledge.clear ();
-  int result = 0;
+  long long result = 0;
 
   ACE_DEBUG ((LM_INFO, "Testing expression tree compilation and caching\n"));
 

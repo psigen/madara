@@ -32,25 +32,25 @@ namespace Madara
       virtual ~Variable_Node (void);
 
       /// Return the item stored in the node.
-      virtual int item (void) const;
+      virtual long long item (void) const;
 
       /// Return the item stored in the node.
-      int set (const int & value);
+      long long set (const long long & value);
 
       /// Atomically increment the variable.
-      int inc (void);
+      long long inc (void);
 
       /// Atomically decrement the variable.
-      int dec (void);
+      long long dec (void);
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual int prune (bool & can_change);
+      virtual long long prune (bool & can_change);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual int evaluate (void);
+      virtual long long evaluate (void);
 
       /// Expands the key (if necessary). This allow for keys to be defined
       /// with other variables inserted (e.g. var{.id} with .id = 2 expands

@@ -81,7 +81,7 @@ Madara::Knowledge_Engine::Files::read_file (
     // knowledge key
     if (actual > 0)
     {
-      map_.set (knowledge_key, (long) actual);
+      map_.set (knowledge_key, (long long) actual);
 
       ACE_DEBUG ((LM_DEBUG, "Files::read_file : file imported with %d bytes\n", actual));
     }
@@ -144,7 +144,7 @@ Madara::Knowledge_Engine::Files::write_file (
     // knowledge key
     if (actual > 0)
     {
-      map_.set (knowledge_key, (long) actual);
+      map_.set (knowledge_key, (long long) actual);
 
       ACE_DEBUG ((LM_DEBUG, "Files::write_file : file saved with %d bytes\n", actual));
     }

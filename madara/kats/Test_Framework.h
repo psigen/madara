@@ -21,11 +21,15 @@ namespace Madara
     {
     public:
       /// Default knowledge domain
-      #define DEFAULT_KATS_DOMAIN      "KATS"
+      #define DEFAULT_KATS_DOMAIN "KATS"
       #define DEFAULT_ID          0
       #define DEFAULT_PROCESSES   1
       #define DEFAULT_HOST        "localhost"
 
+    /**
+     * @class Settings
+     * @brief Provides a testing configuration to a KATS Test Framework
+     */
       Settings ()
         : Madara::Transport::Settings ()
       {
@@ -58,14 +62,66 @@ namespace Madara
     class KATS_Export Test_Framework
     {
     public:
-      /// Constructor for transport and transport settings
+      /**
+       * Constructor
+       * @param   config   framework configuration
+       **/
       Test_Framework (const Settings & config);
 
-      /// Copy constructor
+      /**
+       * Copy constructor
+       **/
       Test_Framework (const Test_Framework & original);
 
-      /// Destructor
+      /**
+       * Destructor
+       **/
       ~Test_Framework ();
+
+      /**
+       * Barriers on all processes until everyone is at the event
+       * @param    event_name    name of the event to barrier on
+       */
+      long long barrier (const std::string & event_name);
+
+      /**
+       * Creates a testing event
+       * @param name               the name of this event
+       * @param pre_condition      condition that needs to be true 
+       *                           for this event to be true
+       * @param post_condition     variables to set after the pre_condition
+       *                           is satisfied
+       * @param fail_condition     condition that would result in
+       *                           aborting the test
+       * @param continue_condition condition to skip the post_condition and
+       *                           event barrier
+       * @param barrier_this_event barrier across all processes as part
+       *                           of the pre_condition
+       * @returns          0 if all conditions passed, -1 if fail_condition
+       *                   was met
+       **/
+      int event (const std::string & name, 
+        const std::string & pre_condition,
+        const std::string & post_condition,
+        const std::string & fail_condition = "",
+        const std::string & continue_condition = "",
+        bool barrier_this_event = false,
+        bool close_transport = false
+      );
+
+      /**
+       * Logs according to a severity level
+       * @param level      level of severity
+       * @param statement  statement to print (can contain variable expansion
+       *                   from the knowledge base)
+       **/
+      void log (int level, const std::string & statement);
+
+      /**
+       * Dumps all knowledge to std::err
+       * @param level      level of severity
+       **/
+      void dump (int level);
 
     private:
       Madara::Knowledge_Engine::Knowledge_Base knowledge_;

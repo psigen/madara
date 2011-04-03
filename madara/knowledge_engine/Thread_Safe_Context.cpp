@@ -21,7 +21,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::~Thread_Safe_Context (void)
 }
 
 // return the value of a variable
-int
+long long
 Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) const
 {
   Context_Guard guard (mutex_);
@@ -45,7 +45,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) c
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const ::std::string & key, long value, bool modified)
+  const ::std::string & key, long long value, bool modified)
 {
   // check for null key
   if (key == "")
@@ -171,8 +171,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
 ///           -1 if null key, -2 if quality not high enough
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
-  const ::std::string & key, long value,
-  unsigned long quality, unsigned long clock,
+  const ::std::string & key, long long value,
+  unsigned long quality, unsigned long long clock,
   bool modified)
 {
   int result = 1;

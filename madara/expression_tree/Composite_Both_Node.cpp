@@ -21,7 +21,7 @@ Madara::Expression_Tree::Composite_Both_Node::Composite_Both_Node (
 {    
 }
 
-int
+long long
 Madara::Expression_Tree::Composite_Both_Node::item (void) const
 {
   return ';';
@@ -30,13 +30,13 @@ Madara::Expression_Tree::Composite_Both_Node::item (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-int
+long long
 Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  int left_value = 0;
-  int right_value = 0;
+  long long left_value = 0;
+  long long right_value = 0;
 
   if (this->left_)
   {
@@ -78,11 +78,11 @@ Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 /// @ returns    maximum value of the left and right evaluations
-int 
+long long 
 Madara::Expression_Tree::Composite_Both_Node::evaluate (void)
 {
-  int left_value = left_->evaluate ();
-  int right_value = right_->evaluate ();
+  long long left_value = left_->evaluate ();
+  long long right_value = right_->evaluate ();
 
   return left_value > right_value ? left_value : right_value;
 }

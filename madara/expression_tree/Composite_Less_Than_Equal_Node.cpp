@@ -20,7 +20,7 @@ Madara::Expression_Tree::Composite_Less_Than_Equal_Node::Composite_Less_Than_Equ
 {    
 }
 
-int
+long long
 Madara::Expression_Tree::Composite_Less_Than_Equal_Node::item (void) const
 {
   return '<';
@@ -30,13 +30,13 @@ Madara::Expression_Tree::Composite_Less_Than_Equal_Node::item (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-int
+long long
 Madara::Expression_Tree::Composite_Less_Than_Equal_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  int left_value = 0;
-  int right_value = 0;
+  long long left_value = 0;
+  long long right_value = 0;
 
   if (this->left_)
   {
@@ -75,7 +75,7 @@ Madara::Expression_Tree::Composite_Less_Than_Equal_Node::prune (bool & can_chang
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-int 
+long long 
 Madara::Expression_Tree::Composite_Less_Than_Equal_Node::evaluate (void)
 {
   return left_->evaluate () <= right_->evaluate ();

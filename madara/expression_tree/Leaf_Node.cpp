@@ -11,7 +11,7 @@
 #include "ace/Log_Msg.h"
 
 // Ctor
-Madara::Expression_Tree::Leaf_Node::Leaf_Node (int item)
+Madara::Expression_Tree::Leaf_Node::Leaf_Node (long long item)
   : Component_Node (),
     item_ (item)
 {    
@@ -37,7 +37,7 @@ Madara::Expression_Tree::Leaf_Node::~Leaf_Node (void)
 }
 
 // return the item
-int
+long long
 Madara::Expression_Tree::Leaf_Node::item (void) const
 {
   return item_;
@@ -47,7 +47,7 @@ Madara::Expression_Tree::Leaf_Node::item (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-int
+long long
 Madara::Expression_Tree::Leaf_Node::prune (bool & can_change)
 {
   can_change = false;
@@ -59,7 +59,7 @@ Madara::Expression_Tree::Leaf_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-int 
+long long 
 Madara::Expression_Tree::Leaf_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary

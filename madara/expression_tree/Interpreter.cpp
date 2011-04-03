@@ -2,6 +2,7 @@
 #define _INTERPRETER_CPP_
 
 #include <iostream>
+#include <sstream>
 
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
@@ -124,7 +125,7 @@ namespace Madara
     public:
       /// constructors
       Number (::std::string input);
-      Number (int input);
+      Number (long long input);
 
       /// destructor
       virtual ~Number (void);
@@ -137,7 +138,7 @@ namespace Madara
       virtual Component_Node *build (void);
     private:
       /// contains the value of the leaf node
-      int item_;
+      long long item_;
     };
 
     /**
@@ -656,11 +657,13 @@ Madara::Expression_Tree::Unary_Operator::~Unary_Operator (void)
 Madara::Expression_Tree::Number::Number (::std::string input)
 : Symbol (0, 0, NUMBER_PRECEDENCE)
 {
-  item_ = atoi (input.c_str ());
+  std::stringstream buffer (input);
+  buffer >> item_;
+  //item_ = atoi (input.c_str ());
 }
 
 // constructor
-Madara::Expression_Tree::Number::Number (int input)
+Madara::Expression_Tree::Number::Number (long long input)
 : Symbol (0, 0, NUMBER_PRECEDENCE), 
 item_ (input)
 {
@@ -925,7 +928,7 @@ Madara::Expression_Tree::Both::build (void)
   else
     // we've got nothing. This node should eventually be pruned out of the
     // picture if at all possible.
-    return new Leaf_Node (0);
+    return new Leaf_Node ((long long)0);
 }
 
 // constructor

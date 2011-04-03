@@ -42,16 +42,16 @@ namespace Madara
 
       /// Return the item stored in the node (throws ::std::domain_error if
       /// called directly).
-      virtual int item (void) const;
+      virtual long long item (void) const;
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual int prune (bool & can_change) = 0;
+      virtual long long prune (bool & can_change) = 0;
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual int evaluate (void) = 0;
+      virtual long long evaluate (void) = 0;
 
       /// Return the left child (returns 0 if called directly).
       virtual Component_Node *left (void) const;

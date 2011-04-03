@@ -86,14 +86,14 @@ namespace Madara
       virtual void visit (const Composite_Implies_Node &node);
 
       /// Print the total of the evaluation.
-      int total (void);
+      long long total (void);
 
       /// Resets the evaluation to it can be reused.
       void reset (void);
 
     private:
       /// Stack used for temporarily storing evaluations.
-      Madara::Utility::LStack<int> stack_;
+      Madara::Utility::LStack<long long> stack_;
     };  
   }
 }

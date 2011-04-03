@@ -13,7 +13,7 @@ Madara::Expression_Tree::Component_Node::~Component_Node (void)
 {
 }
 
-int
+long long
 Madara::Expression_Tree::Component_Node::item (void) const
 {
   throw Invalid_Function_Call ("Madara::Expression_Tree::Component_Node::item() called improperly");

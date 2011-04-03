@@ -18,7 +18,7 @@
 
 // Atomically increment a stored value. This function is only used in one place
 // so we will expand it into that Preincrement_Node
-inline int
+inline long long
 Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
 {
   // check for null key
@@ -81,7 +81,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::exists (const ::std::string & key
 // Atomically decrement a stored value. Only reason we are inlining this function
 // is because it is called by only one function, and we can save a bit of
 // execution time via expansion into that function call.
-inline int
+inline long long
 Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
 {
   // check for null key
@@ -122,8 +122,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
 
 /// set the lamport clock (updates with lamport clocks lower
 /// than our current clock get discarded)
-inline unsigned long  
-Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (unsigned long clock)
+inline unsigned long long
+Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
+  unsigned long long clock)
 {
   Context_Guard guard (mutex_);
 
@@ -137,9 +138,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (unsigned long clock)
 
 /// set the lamport clock (updates with lamport clocks lower
 /// than our current clock get discarded)
-inline unsigned long  
+inline unsigned long long 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
-  const std::string & key, unsigned long clock)
+  const std::string & key, unsigned long long clock)
 {
   Context_Guard guard (mutex_);
 
@@ -167,7 +168,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
 
 /// set the lamport clock for a particular variable (updates with 
 /// lamport clocks lower than our current clock get discarded)
-inline unsigned long  
+inline unsigned long long
 Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
   const std::string & key)
 {
@@ -187,7 +188,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
 }
 
 /// increment the process lamport clock
-inline unsigned long 
+inline unsigned long long
 Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (void)
 {
   Context_Guard guard (mutex_);
@@ -196,7 +197,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (void)
 
 /// get the lamport clock (updates with lamport clocks lower
 /// than our current clock get discarded)
-inline unsigned long 
+inline unsigned long long
 Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (void)
 {
   Context_Guard guard (mutex_);
@@ -204,7 +205,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (void)
 }
 
 /// get the lamport clock for a particular variable
-inline unsigned long 
+inline unsigned long long
 Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (
   const std::string & key)
 {

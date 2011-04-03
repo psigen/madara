@@ -42,17 +42,19 @@ namespace Madara
       ~Thread_Safe_Context (void);
 
       /// Atomically return the value of a variable.
-      int get (const ::std::string & key) const;
+      long long get (const ::std::string & key) const;
 
       /// Atomically set the value of a variable.
       /// @return   0 if the value was set. -1 if null key
-      int set (const ::std::string & key, long value, bool modified = true);
+      int set (const ::std::string & key, long long value, 
+        bool modified = true);
 
       /// Atomically set if the variable value will be different
       /// @return   1 if the value was changed. 0 if not changed.
       ///           -1 if null key
-      int set_if_unequal (const ::std::string & key, long value, 
-        unsigned long quality, unsigned long clock, bool modified = true);
+      int set_if_unequal (const ::std::string & key, long long value, 
+        unsigned long quality, unsigned long long clock, 
+        bool modified = true);
 
       /// Get quality of last update to a variable
       unsigned long get_quality (const ::std::string & key);
@@ -77,14 +79,14 @@ namespace Madara
       void reset_modified (const ::std::string & key);
 
       /// Atomically increment the value of the variable
-      int inc (const ::std::string & key);
+      long long inc (const ::std::string & key);
 
       /// Make the current thread of execution wait for a change on the
       /// context
       void wait_for_change (bool extra_release = false);
 
       /// Atomically decrement the value of the variable
-      int dec (const ::std::string & key);
+      long long dec (const ::std::string & key);
 
       /// Atomically check to see if a key exists
       bool exists (const ::std::string & key) const;
@@ -108,27 +110,28 @@ namespace Madara
       
       /// atomically increment the lamport clock and return the new
       /// clock time (intended for sending knowledge updates)
-      unsigned long inc_clock (void);
+      unsigned long long inc_clock (void);
 
       /// atomically increment the lamport clock of a particular variable
       /// and return the new clock time (for sending knowledge updates)
-      unsigned long inc_clock (const std::string & key);
+      unsigned long long inc_clock (const std::string & key);
 
       /// set the lamport clock (updates with lamport clocks lower
       /// than our current clock get discarded)
-      unsigned long set_clock (unsigned long clock);
+      unsigned long long set_clock (unsigned long long clock);
 
       /// set the lamport clock for a particular variable (updates with 
       /// lamport clocks lower than our current clock get discarded)
-      unsigned long set_clock (const std::string & key, unsigned long clock);
+      unsigned long long set_clock (const std::string & key, 
+        unsigned long long clock);
 
       /// get the lamport clock (updates with lamport clocks lower
       /// than our current clock get discarded)
-      unsigned long get_clock (void);
+      unsigned long long get_clock (void);
 
       /// get the lamport clock for a particular variable (updates with
       /// lamport clocks lower than our current clock get discarded)
-      unsigned long get_clock (const std::string & key);
+      unsigned long long get_clock (const std::string & key);
 
       /// Signal the condition that it can wake up someone else 
       /// on changed data
@@ -145,7 +148,7 @@ namespace Madara
       mutable ACE_Recursive_Thread_Mutex mutex_;
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
-      unsigned long clock_;
+      unsigned long long clock_;
     };
   }
 }

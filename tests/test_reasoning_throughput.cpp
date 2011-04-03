@@ -91,7 +91,7 @@ private:
 };
 
 void
-print (unsigned long long time, long value,
+print (unsigned long long time, long long value,
        unsigned long iterations, const std::string & type)
 {
   std::stringstream buffer;

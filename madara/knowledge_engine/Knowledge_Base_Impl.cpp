@@ -86,43 +86,30 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_splitters (void)
 {
-  //statement_splitters_.push_back (";");
-
-  //implies_splitters_.push_back ("=>");
-  //implies_splitters_.push_back ("->");
-
-  //assignment_splitters_.push_back ("=");
-
-  //conditional_splitters_.push_back ("&&");
-  //conditional_splitters_.push_back ("||");
-
-  //comparison_splitters_.push_back ("==");
-  //comparison_splitters_.push_back ("!=");
-  //comparison_splitters_.push_back (">=");
-  //comparison_splitters_.push_back ("<=");
-  //comparison_splitters_.push_back ("<");
-  //comparison_splitters_.push_back (">");
 }
 
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 {
-  if (settings_.type == Madara::Transport::SPLICE)
+  if (!transport_)
   {
-  #ifdef _USE_OPEN_SPLICE_
+    if (settings_.type == Madara::Transport::SPLICE)
+    {
+    #ifdef _USE_OPEN_SPLICE_
 
-    transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
-                       settings_, true);
-  #endif
-  }
-  else if (settings_.type == Madara::Transport::TCP)
-  {
-    transport_ = new Madara::Transport::TCP_Transport (id_, map_,
-      Madara::Transport::TCP_Transport::RELIABLE);
-  }
-  else
-  {
-    transport_ = 0;
+      transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
+                         settings_, true);
+    #endif
+    }
+    else if (settings_.type == Madara::Transport::TCP)
+    {
+      transport_ = new Madara::Transport::TCP_Transport (id_, map_,
+        Madara::Transport::TCP_Transport::RELIABLE);
+    }
+    else
+    {
+      transport_ = 0;
+    }
   }
 }
 
@@ -140,7 +127,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
-                                               long value, bool send_modifieds)
+                          long long value, bool send_modifieds)
 {
   // everything after this point is done on a string with at least 1 char
   int result = map_.set (key, value);
@@ -154,7 +141,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
 
     /// generate a new clock time and set our variable's clock to
     /// this new clock
-    long cur_clock = map_.inc_clock ();
+    unsigned long long cur_clock = map_.inc_clock ();
     map_.set_clock (key, cur_clock);
 
     /// now send the data and reset the modified state
@@ -169,7 +156,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
 }
 
 
-int
+long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
                                                 bool send_modifieds)
 {
@@ -180,7 +167,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
     map_, expression);
 
-  int last_value = tree.evaluate ();
+  long long last_value = tree.evaluate ();
 
   if (transport_ && send_modifieds)
   {
@@ -191,7 +178,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     {
       /// generate a new clock time and set our variable's clock to
       /// this new clock
-      long cur_clock = map_.inc_clock ();
+      unsigned long long cur_clock = map_.inc_clock ();
       long quality = 0;
 
       for (Madara::String_Vector::const_iterator k = modified.begin ();
@@ -240,7 +227,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
       {
         /// generate a new clock time and set our variable's clock to
         /// this new clock
-        long cur_clock = map_.inc_clock ();
+        unsigned long long cur_clock = map_.inc_clock ();
 
         for (Madara::String_Vector::const_iterator k = modified.begin ();
                k != modified.end (); ++k)
@@ -274,11 +261,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const ::std::string & e
   rules_.push_back (expression);
 }
 
-int
+long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const ::std::string & expression, bool send_modifieds)
 {
-  int last_value = 0;
+  long long last_value = 0;
   // strip the incoming expression of white spaces
   //::std::string expression (expression_copy);
   //Madara::Utility::strip_white_space (expression);
@@ -305,7 +292,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 
     /// generate a new clock time and set our variable's clock to
     /// this new clock
-    long cur_clock = map_.inc_clock ();
+    unsigned long long cur_clock = map_.inc_clock ();
 
     for (Madara::String_Vector::const_iterator k = modified.begin ();
          k != modified.end (); ++k)

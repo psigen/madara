@@ -29,7 +29,7 @@ namespace Madara
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const int & reliability);
       ~TCP_Transport ();
-      virtual long send_data (const std::string & key, const long & value);
+      virtual long send_data (const std::string & key, const long long & value);
       int reliability (void) const;
       int reliability (const int & setting);
       long read (void);

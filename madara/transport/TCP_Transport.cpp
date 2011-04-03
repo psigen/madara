@@ -56,7 +56,7 @@ Madara::Transport::TCP_Transport::setup (void)
 
 long
 Madara::Transport::TCP_Transport::send_data (const std::string & key, 
-                                               const long & value)
+                                               const long long & value)
 {
   Madara::Transport::Base::send_data (key, value);
 

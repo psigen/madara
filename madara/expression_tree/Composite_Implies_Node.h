@@ -24,18 +24,18 @@ namespace Madara
                           Component_Node *right);
 
       /// Return the printable character stored in the node.
-      virtual int item (void) const;
+      virtual long long item (void) const;
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual int prune (bool & can_change);
+      virtual long long prune (bool & can_change);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
       /// @returns    value of right hand side evaluation, if the condition
       //              for implication is true. Otherwise, returns 0.
-      virtual int evaluate (void);
+      virtual long long evaluate (void);
 
       /// Define the @a accept() operation used for the Visitor pattern.
       virtual void accept (Visitor &visitor) const;

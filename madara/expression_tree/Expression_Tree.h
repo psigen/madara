@@ -40,7 +40,7 @@ namespace Madara
       }; 
 
       // Define a "trait"
-      typedef long value_type;
+      typedef long long value_type;
       typedef Iterator iterator;
       typedef Expression_Tree_Const_Iterator const_iterator;
 
@@ -68,16 +68,16 @@ namespace Madara
       bool is_null (void) const;
 
       /// Return the item in the tree.
-      int item (void) const;
+      long long item (void) const;
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      int prune (void);
+      long long prune (void);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      int evaluate (void);
+      long long evaluate (void);
 
       /// Return the left child.
       Expression_Tree left (void);

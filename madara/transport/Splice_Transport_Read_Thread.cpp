@@ -73,11 +73,11 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
   {
     // if we aren't evaluating a message from ourselves, process it
     std::string key = data.key.val ();
-    long value = data.value;
+    long long value = data.value;
     int result = 0;
 
     context_.lock ();
-    unsigned long cur_clock = context_.get_clock (key);
+    unsigned long long cur_clock = context_.get_clock (key);
     unsigned long cur_quality = context_.get_quality (key);
 
     // if the data we are updating had a lower clock value or less quality
@@ -132,7 +132,7 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
   {
     std::string key;
     char symbol;
-    long value;
+    long long value;
     std::stringstream stream (data.key.val ());
 
     context_.lock ();
@@ -145,7 +145,7 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
       stream >> key >> symbol >> value >> symbol;
 
       int result = 0;
-      unsigned long cur_clock = context_.get_clock (key);
+      unsigned long long cur_clock = context_.get_clock (key);
       unsigned long cur_quality = context_.get_quality (key);
 
       // if the data we are updating had a lower clock value

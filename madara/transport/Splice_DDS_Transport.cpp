@@ -320,12 +320,12 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
 long
 Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key, 
-                                               const long & value)
+                                               const long long & value)
 {
   Madara::Transport::Base::send_data (key, value);
 
   /// get current lamport clock. 
-  long cur_clock = context_.get_clock ();
+  unsigned long long cur_clock = context_.get_clock ();
 
   DDS::ReturnCode_t      dds_result;
   DDS::InstanceHandle_t  handle;
@@ -358,7 +358,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   Madara::Transport::Base::send_multiassignment (expression);
 
   /// get current lamport clock. 
-  long cur_clock = context_.get_clock ();
+  unsigned long long cur_clock = context_.get_clock ();
 
   DDS::ReturnCode_t      dds_result;
   DDS::InstanceHandle_t  handle;

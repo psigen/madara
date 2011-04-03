@@ -48,8 +48,8 @@ namespace Madara
     {}
 
     int status;
-    long value;
-    unsigned long clock;
+    long long value;
+    unsigned long long clock;
     int scope;
 
     // for keeping track of current high priority originator

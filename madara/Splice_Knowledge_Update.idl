@@ -4,11 +4,11 @@ module Knowledge
     struct Update
     {
       string                            key;
-      long                              value;
+      long long                         value;
       unsigned long                     quality;
       string                            originator;
       unsigned long                     type;
-      unsigned long                     clock;
+      unsigned long long                clock;
     };
     
     //#pragma keylist Update

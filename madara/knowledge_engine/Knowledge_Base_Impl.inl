@@ -13,7 +13,7 @@
  * This file contains the inline functions for Knowledge_Base_Impl class
  */
 
-inline long
+inline long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::get (const ::std::string & key) const
 {
   return map_.get (key);
@@ -52,7 +52,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
 
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
-                                               long value)
+                                               long long value)
 {
   return set (key, value, true);
 }
@@ -66,13 +66,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
 }
 
 
-inline int
+inline long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression)
 {
   return wait (expression, true);
 }
 
-inline int
+inline long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const ::std::string & expression)
 {

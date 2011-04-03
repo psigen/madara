@@ -20,20 +20,20 @@ Madara::Expression_Tree::Composite_Assignment_Node::Composite_Assignment_Node (
 {    
 }
 
-int
+long long
 Madara::Expression_Tree::Composite_Assignment_Node::item (void) const
 {
   return '=';
 }
 
 
-int
+long long
 Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  int left_value = 0;
-  int right_value = 0;
+  long long left_value = 0;
+  long long right_value = 0;
 
   if (this->left_ && dynamic_cast <Variable_Node *> (left_) != 0)
     left_child_can_change = true;
@@ -66,11 +66,11 @@ Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-int 
+long long 
 Madara::Expression_Tree::Composite_Assignment_Node::evaluate (void)
 {
   // get the value from the right side and set the variable's value with it
-  int value = right_->evaluate ();
+  long long value = right_->evaluate ();
   dynamic_cast <Variable_Node *> (left_)->set (value);
 
   // return the value

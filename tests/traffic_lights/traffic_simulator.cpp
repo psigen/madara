@@ -659,11 +659,11 @@ inline void process_car (
 .dest_y = .car{.i}.dest.y;\
 .velocity = .car{.i}.velocity;");
 
-  long cur_x = knowledge.get (".cur_x");
-  long cur_y = knowledge.get (".cur_y");
+  long long cur_x = knowledge.get (".cur_x");
+  long long cur_y = knowledge.get (".cur_y");
 
-  long dest_x = knowledge.get (".dest_x");
-  long dest_y = knowledge.get (".dest_y");
+  long long dest_x = knowledge.get (".dest_x");
+  long long dest_y = knowledge.get (".dest_y");
 
 
   std::stringstream source_stream;
@@ -683,8 +683,8 @@ inline void process_car (
   Route route = route_map [source][dest];
   Path path = route.path;
 
-  unsigned long max_speed = knowledge.get ("max_speed");
-  unsigned long j;
+  unsigned long long max_speed = knowledge.get ("max_speed");
+  unsigned int j;
 
   for (j = 0; j < path.size () && j <= max_speed; ++j)
   {
@@ -838,8 +838,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.print_knowledge ();
 
   // this doesn't change from settings
-  long spawn_rate = knowledge.get ("spawn_rate");
-  long max_speed = knowledge.get ("max_speed");
+  long long spawn_rate = knowledge.get ("spawn_rate");
+  long max_speed = (long) knowledge.get ("max_speed");
 
   // can't have a max_speed that is zero or we'll have
   // floating point exceptions

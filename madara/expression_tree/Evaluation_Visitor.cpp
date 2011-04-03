@@ -63,12 +63,12 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 1)
   {
-    int old_value = stack_.pop ();
+    long long old_value = stack_.pop ();
     try
     {
       Variable_Node * right = dynamic_cast <Variable_Node *> (node.right ());
 
-      int new_value = --old_value;
+      long long new_value = --old_value;
       if (right)
       {
         new_value = right->dec ();
@@ -89,12 +89,12 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 1)
   {
-    int old_value = stack_.pop ();
+    long long old_value = stack_.pop ();
     try
     {
       Variable_Node * right = dynamic_cast <Variable_Node *> (node.right ());
 
-      int new_value = ++old_value;
+      long long new_value = ++old_value;
       if (right)
       {
         new_value = right->inc ();
@@ -140,8 +140,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     {
       // this is really backwards logic, but it was the only way I could think of
       // to allow for a = b = c with this type of tree and post-order flow
-      int right = stack_.pop ();
-      int old_value = stack_.pop ();
+      long long right = stack_.pop ();
+      long long old_value = stack_.pop ();
       Variable_Node * left = dynamic_cast <Variable_Node *> (node.left ());
       left->set (right);
       stack_.push (right);
@@ -161,8 +161,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left && right);
   }
@@ -175,8 +175,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left || right);
   }
@@ -189,8 +189,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right_v = stack_.pop ();
-    int left_v = stack_.pop ();
+    long long right_v = stack_.pop ();
+    long long left_v = stack_.pop ();
 
     // I was trying to use std::max, but it was giving me
     // some grief, so I just implemented it as is
@@ -205,8 +205,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left == right);
   }
@@ -220,8 +220,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left != right);
   }
@@ -235,8 +235,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left >= right);
   }
@@ -250,8 +250,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left > right);
   }
@@ -265,8 +265,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left <= right);
   }
@@ -280,8 +280,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    int right = stack_.pop ();
-    int left = stack_.pop ();
+    long long right = stack_.pop ();
+    long long left = stack_.pop ();
 
     stack_.push (left < right);
   }
@@ -295,7 +295,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
     {
-      int rhs = stack_.pop ();
+      long long rhs = stack_.pop ();
       stack_.push (stack_.pop () - rhs);
     }
 }
@@ -307,7 +307,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2 && stack_.top ())
     {
-      int rhs = stack_.pop ();
+      long long rhs = stack_.pop ();
       stack_.push (stack_.pop () / rhs );
     }
   else
@@ -346,7 +346,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 }
 
 /// print a total for the evaluation
-int 
+long long 
 Madara::Expression_Tree::Evaluation_Visitor::total (void)
 {
   if (!stack_.is_empty ())

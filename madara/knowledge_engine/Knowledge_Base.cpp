@@ -58,12 +58,18 @@ Madara::Knowledge_Engine::Knowledge_Base::operator= (
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)
+{
+  impl_->activate_transport ();
+}
+
+void
 Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
 {
   impl_->close_transport ();
 }
 
-long
+long long
 Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
 {
   return impl_->get (key);
@@ -101,14 +107,14 @@ Madara::Knowledge_Engine::Knowledge_Base::expand_statement (
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
-                                               long value)
+                                               long long value)
 {
   return impl_->set (key, value, true);
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
-                                               long value, bool send_modifieds)
+Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key,
+                    long long value, bool send_modifieds)
 {
   return impl_->set (key, value, send_modifieds);
 }
@@ -122,13 +128,13 @@ Madara::Knowledge_Engine::Knowledge_Base::set_quality (
   impl_->set_quality (key, quality);
 }
 
-int
+long long
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)
 {
   return impl_->wait (expression, true);
 }
 
-int
+long long
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression, 
                                                 bool send_modifieds)
 {
@@ -192,7 +198,7 @@ Madara::Knowledge_Engine::Knowledge_Base::release (void)
 }
 
 // evaluate a knowledge expression and send any modifications
-int
+long long
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   const ::std::string & expression)
 {
@@ -200,7 +206,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 }
 
 // evaluate a knowledge expression and choose to send any modifications
-int
+long long
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   const ::std::string & expression, bool send_modifieds)
 {

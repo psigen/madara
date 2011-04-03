@@ -35,7 +35,7 @@ namespace Madara
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const Settings & config, bool launch_transport);
       ~Splice_DDS_Transport ();
-      virtual long send_data (const std::string & key, const long & value);
+      virtual long send_data (const std::string & key, const long long & value);
       long send_multiassignment (const std::string & expression, 
         unsigned long quality);
       int reliability (void) const;

@@ -68,7 +68,7 @@ namespace Madara
       void close_transport (void);
 
       /// Retrieve the value associated with the provided key
-      long get (const ::std::string & key) const;
+      long long get (const ::std::string & key) const;
 
       /**
        * Read a file into the knowledge base
@@ -98,10 +98,10 @@ namespace Madara
       std::string expand_statement (const ::std::string & statement) const;
 
       /// Set the value associated with the provided key
-      int set (const ::std::string & key, long value = Madara::Knowledge_Record::MODIFIED);
+      int set (const ::std::string & key, long long value = Madara::Knowledge_Record::MODIFIED);
 
       /// Set the value associated with the provided key
-      int set (const ::std::string & key, long value, bool send_modifieds);
+      int set (const ::std::string & key, long long value, bool send_modifieds);
 
       /// Set quality of writing to a variable
       void set_quality (const ::std::string & key, unsigned long quality);
@@ -113,16 +113,16 @@ namespace Madara
       void add_rule (const ::std::string & expression);
 
       /// Evaluate an expression once
-      int evaluate (const ::std::string & expression);
+      long long evaluate (const ::std::string & expression);
 
       /// Evaluate an expression once
-      int evaluate (const ::std::string & expression, bool send_modifieds);
+      long long evaluate (const ::std::string & expression, bool send_modifieds);
 
       /// Block for an expression to evaluate to true (conditional mutex)
-      int wait (const ::std::string & expression);
+      long long wait (const ::std::string & expression);
 
       /// Block for an expression to evaluate to true (conditional mutex)
-      int wait (const ::std::string & expression, bool send_modifieds);
+      long long wait (const ::std::string & expression, bool send_modifieds);
 
       /// Print all rules that are continuously applied to knowledge
       void print_rules (void) const;

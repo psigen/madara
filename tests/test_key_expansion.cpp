@@ -46,7 +46,7 @@ void test_expansion (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_expansion"));
 
-  int result = 0;
+  long long result = 0;
   knowledge.clear ();
 
   knowledge.evaluate (

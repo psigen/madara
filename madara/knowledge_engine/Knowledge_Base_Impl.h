@@ -53,7 +53,7 @@ namespace Madara
       void close_transport (void);
 
       /// Retrieve the value associated with the provided key
-      long get (const ::std::string & key) const;
+      long long get (const ::std::string & key) const;
 
       /// Expand a statement by variable expansions 
       std::string expand_statement (const ::std::string & statement) const;
@@ -83,10 +83,12 @@ namespace Madara
                        const std::string & policy_file);
 
       /// Set the value associated with the provided key
-      int set (const ::std::string & key, long value = Madara::Knowledge_Record::MODIFIED);
+      int set (const ::std::string & key, 
+        long long value = Madara::Knowledge_Record::MODIFIED);
 
       /// Set the value associated with the provided key
-      int set (const ::std::string & key, long value, bool send_modifieds);
+      int set (const ::std::string & key, long long value, 
+        bool send_modifieds);
 
       /// Check if a key exists in the knowledge base
       bool exists (const ::std::string & key) const;
@@ -98,16 +100,17 @@ namespace Madara
       void set_quality (const ::std::string & key, unsigned long quality);
 
       /// Evaluate an expression once
-      int evaluate (const ::std::string & expression);
+      long long evaluate (const ::std::string & expression);
 
       /// Evaluate an expression once
-      int evaluate (const ::std::string & expression, bool send_modifieds);
+      long long evaluate (const ::std::string & expression,
+        bool send_modifieds);
 
       /// Block for an expression to evaluate to true (conditional mutex)
-      int wait (const ::std::string & expression);
+      long long wait (const ::std::string & expression);
 
       /// Block for an expression to evaluate to true (conditional mutex)
-      int wait (const ::std::string & expression, bool send_modifieds);
+      long long wait (const ::std::string & expression, bool send_modifieds);
 
       /// Print all rules that are continuously applied to knowledge
       void print_rules (void) const;
