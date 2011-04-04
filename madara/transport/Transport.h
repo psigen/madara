@@ -92,13 +92,15 @@ namespace Madara
       typedef    std::vector <std::string>           Hosts_Vector;
 
       /// default constructor
-      Base () : is_valid_ (false), valid_setup_ (mutex_), settings_ ()
+      Base () : is_valid_ (false), shutting_down_ (false),
+        valid_setup_ (mutex_), settings_ ()
       {
       }
 
       /// default constructor
       Base (const Settings & new_settings) 
-        : is_valid_ (false), valid_setup_ (mutex_), settings_ (new_settings)
+        : is_valid_ (false), shutting_down_ (false),
+        valid_setup_ (mutex_), settings_ (new_settings)
       {
       }
 
@@ -118,6 +120,7 @@ namespace Madara
       virtual int setup (void) 
       { 
         is_valid_ = true; 
+        shutting_down_ = false;
         valid_setup_.broadcast ();
 
         return 0;
@@ -130,6 +133,9 @@ namespace Madara
         if (!is_valid_)
           valid_setup_.wait ();
 
+        if (shutting_down_)
+          return -1;
+
         return 0;
       }
 
@@ -140,6 +146,9 @@ namespace Madara
       {
         if (!is_valid_)
           valid_setup_.wait ();
+
+        if (shutting_down_)
+          return -1;
 
         return 0;
       }
@@ -154,6 +163,9 @@ namespace Madara
       {
         if (!is_valid_)
           valid_setup_.wait ();
+
+        if (shutting_down_)
+          return -1;
 
         return 0;
       }
@@ -172,10 +184,13 @@ namespace Madara
       virtual void close (void)
       {
         is_valid_ = false;
+        shutting_down_ = true;
+        valid_setup_.broadcast ();
       }
 
     protected:
-      bool is_valid_;
+      volatile bool is_valid_;
+      volatile bool shutting_down_;
       Hosts_Vector hosts_;
       ACE_Thread_Mutex mutex_;
       Condition valid_setup_;

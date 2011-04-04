@@ -63,6 +63,14 @@ Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)
   impl_->activate_transport ();
 }
 
+/// Applies current time and modified to all global variables and tries
+/// to send them.
+int
+Madara::Knowledge_Engine::Knowledge_Base::apply_modified (void)
+{
+  return impl_->apply_modified ();
+}
+
 void
 Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
 {

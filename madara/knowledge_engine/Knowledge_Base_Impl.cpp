@@ -126,6 +126,65 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
   }
 }
 
+/**
+ * Updates all global variables to current clock and then
+ * sends them if a transport is available. This is useful
+ * when trying to synchronize to late joiners (this process
+ * will resend all global variables.
+ **/
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
+{
+  // lock the context and apply modified flags and current clock to
+  // all global variables
+  map_.lock ();
+  map_.apply_modified ();
+
+  int ret = 0;
+
+  if (transport_)
+  {
+    Madara::String_Vector modified;
+    map_.get_modified (modified);
+    std::stringstream string_builder;
+    if (modified.size () > 0)
+    {
+      /// grab the clock time that was created with the apply_modified call
+      unsigned long long cur_clock = map_.get_clock ();
+      long quality = 0;
+
+      for (Madara::String_Vector::const_iterator k = modified.begin ();
+             k != modified.end (); ++k)
+      {
+        map_.set_clock (*k, cur_clock);
+        long cur_quality = map_.get_write_quality (*k);
+
+        // every knowledge update via multiassignment has the quality
+        // of the highest update. This is to ensure consistency for
+        // updating while also providing quality indicators for sensors,
+        // actuators, controllers, etc.
+        if (cur_quality > quality)
+          quality = cur_quality;
+
+        string_builder << *k << " = " << map_.get (*k) << " ; ";
+          //transport_->send_data (*k, map_.get (*k));
+      }
+
+      transport_->send_multiassignment (string_builder.str (), quality);
+      map_.reset_modified ();
+    }
+  }
+  else
+  {
+    ret = -1;
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) APPLY_MODIFIEDS: NOT TRANSPORTING: \n"));
+  }
+
+  map_.unlock ();
+
+  return ret;
+}
+
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 

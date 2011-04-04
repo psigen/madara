@@ -75,6 +75,9 @@ namespace Madara
       /// Reset all variables to unmodified
       void reset_modified (void);
 
+      /// Changes all global variables to modified at current time
+      void apply_modified (void);
+
       /// Reset a variable to unmodified
       void reset_modified (const ::std::string & key);
 

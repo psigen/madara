@@ -90,6 +90,15 @@ namespace Madara
       int set (const ::std::string & key, long long value, 
         bool send_modifieds);
 
+      /**
+       * Updates all global variables to current clock and then
+       * sends them if a transport is available. This is useful
+       * when trying to synchronize to late joiners (this process
+       * will resend all global variables.
+       * @returns     0 if transport was available, -1 if not
+       **/
+      int apply_modified (void);
+
       /// Check if a key exists in the knowledge base
       bool exists (const ::std::string & key) const;
 

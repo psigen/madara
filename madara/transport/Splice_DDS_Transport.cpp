@@ -44,7 +44,7 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
 //  mutex_data_list_ (new Knowledge::MutexSeq), 
   mutex_topic_ (0), thread_ (0),
   //reliability_ (reliability), 
-  valid_setup_ (false),
+  //valid_setup_ (false),
   enable_mutexing_ (false)
   //data_topic_name_ (topic_names_[0]),
   //control_topic_name_ (topic_names_[1])
@@ -85,7 +85,7 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   if (thread_)
   {
     thread_->close ();
-    delete thread_;
+    //delete thread_;
   }
 
   if (subscriber_)
@@ -142,8 +142,10 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 {
   DDS::ReturnCode_t                         status;
 
+  this->is_valid_ = false;
+
   // reset the valid setup flag
-  valid_setup_ = false;
+  //valid_setup_ = false;
 
   // get the domain participant factory
   domain_factory_ = DDS::DomainParticipantFactory::get_instance ();
@@ -322,7 +324,10 @@ long
 Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key, 
                                                const long long & value)
 {
-  Madara::Transport::Base::send_data (key, value);
+  // check to see if we are shutting down
+  long ret = Madara::Transport::Base::send_data (key, value);
+  if (-1 == ret)
+    return ret;
 
   /// get current lamport clock. 
   unsigned long long cur_clock = context_.get_clock ();
@@ -355,7 +360,11 @@ long
 Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   const std::string & expression, unsigned long quality)
 {
-  Madara::Transport::Base::send_multiassignment (expression);
+  // check to see if we are shutting down
+  long ret = Madara::Transport::Base::send_multiassignment (expression);
+  if (-1 == ret)
+    return ret;
+  
 
   /// get current lamport clock. 
   unsigned long long cur_clock = context_.get_clock ();

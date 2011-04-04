@@ -124,6 +124,13 @@ namespace Madara
       /// Block for an expression to evaluate to true (conditional mutex)
       long long wait (const ::std::string & expression, bool send_modifieds);
 
+      /**
+       * Applies current time and modified to all global variables and tries
+       * to send them.
+       * @returns   0 if transport was available, -1 otherwise
+       **/
+      int apply_modified (void);
+
       /// Print all rules that are continuously applied to knowledge
       void print_rules (void) const;
 

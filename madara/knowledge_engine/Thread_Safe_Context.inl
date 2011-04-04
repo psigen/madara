@@ -288,6 +288,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (
 {
   modified.clear ();
   Context_Guard guard (mutex_);
+
   for (Madara::Knowledge_Map::const_iterator i = map_.begin ();
        i != map_.end (); 
        ++i)
@@ -308,6 +309,31 @@ Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (void)
   {
     if (Madara::Knowledge_Record::MODIFIED == i->second.status)
       i->second.status = Madara::Knowledge_Record::UNMODIFIED;
+  }
+}
+
+/// Changes all global variables to modified at current time
+inline void 
+Madara::Knowledge_Engine::Thread_Safe_Context::apply_modified (void)
+{
+  Context_Guard guard (mutex_);
+
+  // each synchronization counts as an event, since this is a
+  // pretty important networking event
+
+  ++this->clock_;
+
+  for (Madara::Knowledge_Map::iterator i = map_.begin ();
+       i != map_.end (); 
+       ++i)
+  {
+    if (i->first.size () > 0 && i->first[0] != '.')
+    {
+      // local or global doesn't matter. Clock and modification
+      // aren't really a part of local variable checking anyway
+      i->second.status = Madara::Knowledge_Record::MODIFIED;
+      i->second.clock = this->clock_;
+    }
   }
 }
 

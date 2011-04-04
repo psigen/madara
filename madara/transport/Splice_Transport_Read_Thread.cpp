@@ -39,6 +39,7 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
 
 Madara::Transport::Splice_Read_Thread::~Splice_Read_Thread ()
 {
+  close ();
 }
 
 int

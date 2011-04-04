@@ -299,7 +299,7 @@ project (Test_KATS_barriers) : using_kats, using_ace {
   requires += tests
   
   exeout = $(MADARA_ROOT)/bin
-  exename = kats_barriers
+  exename = test_kats_barriers
   
   // libs += Madara
 
@@ -312,5 +312,25 @@ project (Test_KATS_barriers) : using_kats, using_ace {
 
   Source_Files {
     ../tests/test_kats_barriers.cpp
+  }
+}
+
+project (Test_KATS_syncs) : using_kats, using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_kats_syncs
+  
+  // libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_kats_syncs.cpp
   }
 }

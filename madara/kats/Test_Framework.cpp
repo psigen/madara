@@ -39,6 +39,10 @@ Madara::KATS::Test_Framework::~Test_Framework ()
 long long
 Madara::KATS::Test_Framework::barrier (const std::string & event_name)
 {
+  // first, make sure the transport is activated or else
+  // we will be here for a long time.
+  knowledge_.activate_transport ();
+
   std::stringstream buffer;
   std::stringstream log_message;
 
@@ -78,6 +82,68 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   return knowledge_.wait (buffer.str ());
 }
 
+/// Attempts to send out all global knowledge
+void
+Madara::KATS::Test_Framework::sync (void)
+{
+  std::stringstream log_message;
+
+  log_message.str ("");
+  log_message << "TEST_FRAMEWORK.SYNC: Starting ";
+  log_message << "\n";
+
+  log (log_message.str ());
+
+  // first, make sure the transport is activated or else
+  // we will be here for a long time.
+  knowledge_.activate_transport ();
+
+  knowledge_.apply_modified ();
+
+  log_message.str ("");
+  log_message << "TEST_FRAMEWORK.SYNC: Finished ";
+  log_message << "\n";
+
+  log (log_message.str ());
+}
+
+/// Syncs on all processes until everyone is at the event and
+/// has the latest information
+void
+Madara::KATS::Test_Framework::barriered_sync (const std::string & event_name)
+{
+  std::stringstream buffer;
+  std::stringstream log_message;
+
+  log_message.str ("");
+  log_message << "TEST_FRAMEWORK.B_SYNC: Starting ";
+  log_message << event_name;
+  log_message << "\n";
+
+  log (log_message.str ());
+
+  // first, make sure the transport is activated or else
+  // we will be here for a long time.
+  knowledge_.activate_transport ();
+
+  buffer << "ENTER";
+  buffer << event_name;
+  barrier (event_name);
+
+  knowledge_.apply_modified ();
+
+  buffer.str ("");
+  buffer << "LEAVE";
+  barrier (event_name);
+
+  log_message.str ("");
+  log_message << "TEST_FRAMEWORK.B_SYNC: Finished ";
+  log_message << event_name;
+  log_message << "\n";
+
+  log (log_message.str ());
+}
+
 /// Creates a testing event
 int 
 Madara::KATS::Test_Framework::event (const std::string & name, 
@@ -95,8 +161,10 @@ Madara::KATS::Test_Framework::event (const std::string & name,
   long long eval_result = 0;
 
   // first, make sure the transport is activated or else
-  // we will be here for a long time.
-  knowledge_.activate_transport ();
+  // we will be here for a long time. Only necessary
+  // if we are 
+  if (barrier_this_event)
+    knowledge_.activate_transport ();
 
   // check if we should be aborting
   eval_result = knowledge_.evaluate (fail_condition);

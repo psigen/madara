@@ -87,6 +87,21 @@ namespace Madara
       long long barrier (const std::string & event_name);
 
       /**
+       * Attempts to send out all global knowledge
+       */
+      void sync ();
+
+      /**
+       * Syncs on all processes until everyone is at the event and
+       * has the latest information. This function does three main operations:
+       * 1) barrier on every process synchronizing on this event, 2)
+       * marking all globals as modified to current clock, and 3)
+       * barrier on every process sending their updates.
+       * @param    event_name    name of the sync event to barrier on
+       */
+      void barriered_sync (const std::string & event_name);
+
+      /**
        * Creates a testing event
        * @param name               the name of this event
        * @param pre_condition      condition that needs to be true 

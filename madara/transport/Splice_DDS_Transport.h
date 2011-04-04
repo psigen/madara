@@ -94,7 +94,7 @@ namespace Madara
 
 
       //int reliability_;
-      bool valid_setup_;
+     // bool valid_setup_;
       bool enable_mutexing_;
 
       /// Splice handle checker

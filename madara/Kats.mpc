@@ -19,10 +19,29 @@ project (Kats) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    kats
+    kats/Test_Framework.cpp
   }
 
   Header_Files {
     kats
+  }
+}
+
+
+project (Kats_Process) : using_kats, using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = kats_process
+  
+  Build_Files {
+    Kats.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    kats/Process.cpp
   }
 }
