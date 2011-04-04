@@ -16,6 +16,9 @@ namespace Madara
     /// Convert string to lowercase 
     MADARA_Export ::std::string & lower (::std::string & input);
 
+    /// Convert string to lowercase 
+    MADARA_Export ::std::string & dds_topicify (::std::string & input);
+
     /// Strip all whitespace
     MADARA_Export ::std::string & strip_white_space (::std::string & input);
 

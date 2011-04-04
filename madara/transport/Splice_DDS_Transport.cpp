@@ -2,6 +2,7 @@
 #include "madara/transport/Splice_Transport_Read_Thread.h"
 #include "ace/Log_Msg.h"
 #include "madara/knowledge_engine/Update_Types.h"
+#include "madara/utility/Utility.h"
 
 #include <iostream>
 #include <sstream>
@@ -188,7 +189,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
   // Create Update topic
   update_topic_ = domain_participant_->create_topic (
-    settings_.domains.c_str (), "Knowledge::Update", 
+    Madara::Utility::dds_topicify (settings_.domains).c_str (), 
+    "Knowledge::Update", 
     topic_qos_, NULL, DDS::STATUS_MASK_NONE);
   check_handle(update_topic_, 
     "DDS::DomainParticipant::create_topic (Knowledge_Update)");

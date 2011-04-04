@@ -73,7 +73,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   buffer << ") || MADARA.BARRIER.";
   buffer << event_name;
 
-  log_message << "Barrier started: ";
+  log_message << "\nKATS::Test_Framework::barrier: started: ";
   log_message << buffer.str ();
   log_message << "\n";
 
@@ -89,7 +89,7 @@ Madara::KATS::Test_Framework::sync (void)
   std::stringstream log_message;
 
   log_message.str ("");
-  log_message << "TEST_FRAMEWORK.SYNC: Starting ";
+  log_message << "KATS::Test_Framework::sync: Starting ";
   log_message << "\n";
 
   log (log_message.str ());
@@ -101,7 +101,7 @@ Madara::KATS::Test_Framework::sync (void)
   knowledge_.apply_modified ();
 
   log_message.str ("");
-  log_message << "TEST_FRAMEWORK.SYNC: Finished ";
+  log_message << "KATS::Test_Framework::sync: Finished ";
   log_message << "\n";
 
   log (log_message.str ());
@@ -116,7 +116,7 @@ Madara::KATS::Test_Framework::barriered_sync (const std::string & event_name)
   std::stringstream log_message;
 
   log_message.str ("");
-  log_message << "TEST_FRAMEWORK.B_SYNC: Starting ";
+  log_message << "KATS::Test_Framework::barriered_sync: Starting ";
   log_message << event_name;
   log_message << "\n";
 
@@ -137,7 +137,7 @@ Madara::KATS::Test_Framework::barriered_sync (const std::string & event_name)
   barrier (event_name);
 
   log_message.str ("");
-  log_message << "TEST_FRAMEWORK.B_SYNC: Finished ";
+  log_message << "KATS::Test_Framework::barriered_sync: Finished ";
   log_message << event_name;
   log_message << "\n";
 

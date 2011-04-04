@@ -18,6 +18,21 @@ Madara::Utility::upper (::std::string &input)
 }
 
 /// Convert string to lowercase 
+::std::string & 
+Madara::Utility::dds_topicify (::std::string & input)
+{
+  for (::std::string::iterator cur = input.begin ();
+       cur != input.end (); ++cur)
+  {
+    // change periods to _
+    if (*cur == '.')
+      *cur = '_';
+  }
+
+  return input;
+}
+
+/// Convert string to lowercase 
 ::std::string &
 Madara::Utility::lower (::std::string &input)
 {

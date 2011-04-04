@@ -28,6 +28,7 @@ bool realtime = false;
 bool process_set = false;
 bool test_set = false;
 bool kill_time_set = false;
+bool debug_printing = false;
 ACE_Time_Value kill_time (0);
 
 // command line arguments
@@ -38,7 +39,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   ACE_TRACE (ACE_TEXT ("main"));
 
-  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   // set the default working directory to the current directory
   process_options.working_directory (".");
@@ -51,6 +51,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   if (retcode < 0)
     return retcode;
+
+  if(debug_printing)
+    ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  else
+    ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
   if (!process_set)
   {
@@ -100,7 +105,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (ret == 0)
     {
       ACE_DEBUG ((LM_INFO, 
-        "KATS: Process timed out. Terminating %s\n",
+        "\n\nKATS: Process timed out. Terminating %s\n",
         process_options.process_name () ));
 
       process.terminate ();
@@ -126,17 +131,19 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:t:x:a:c:rh");
+  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:t:x:a:c:d:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
-  cmd_opts.long_option (ACE_TEXT ("environment"), 'e', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("debug"), 'g', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("realtime"), 'r', ACE_Get_Opt::NO_ARG);
+  cmd_opts.long_option (ACE_TEXT ("environment"), 'e', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("commandline"), 'c', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("executable"), 'x', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("killtime"), 't', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("working"), 'w', ACE_Get_Opt::ARG_REQUIRED);
@@ -162,7 +169,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> settings.id;
       }
 
-      ACE_DEBUG ((LM_INFO, "KATS: -i = %s; id is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -i = %s; id is now %d\n", 
       cmd_opts.opt_arg (), settings.id ));
 
       break;
@@ -174,7 +181,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> settings.processes;
       }
 
-      ACE_DEBUG ((LM_INFO, "KATS: -n = %s; processes is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -n = %s; processes is now %d\n", 
         cmd_opts.opt_arg (), settings.processes ));
 
       break;
@@ -190,7 +197,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         kill_time_set = true;
       }
 
-      ACE_DEBUG ((LM_INFO, "KATS: -t = %s; killtime is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -t = %s; killtime is now %d\n", 
         cmd_opts.opt_arg (), kill_time.sec () ));
 
       break;
@@ -200,8 +207,17 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       process_options.setenv (cmd_opts.opt_arg (), 
         strlen (cmd_opts.opt_arg ()));
 
-      ACE_DEBUG ((LM_INFO, "KATS: -e = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -e = %s\n", 
         cmd_opts.opt_arg () ));
+
+      break;
+    case 'd':
+      // the knowledge domain
+
+      settings.domains = cmd_opts.opt_arg ();
+
+      ACE_DEBUG ((LM_DEBUG, "KATS: -d = %s, knowledge domain is set to %s.\n", 
+        cmd_opts.opt_arg (), settings.domains.c_str () ));
 
       break;
     case 'x':
@@ -213,7 +229,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       process_set = true;
 
-      ACE_DEBUG ((LM_INFO, "KATS: -x = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -x = %s\n", 
       cmd_opts.opt_arg () ));
 
       break;
@@ -225,7 +241,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       if (cmd_opts.opt_arg ())
         command_line << cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_INFO, "KATS: -c = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -c = %s\n", 
         command_line.str ().c_str () ));
 
       break;
@@ -234,7 +250,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       process_options.working_directory (cmd_opts.opt_arg ());
 
-      ACE_DEBUG ((LM_INFO, "KATS: -w = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -w = %s\n", 
       cmd_opts.opt_arg () ));
 
       break;
@@ -242,7 +258,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       settings.host = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_INFO, "KATS: -o = %s; host is now %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -o = %s; host is now %s\n", 
         cmd_opts.opt_arg (), settings.host.c_str () ));
 
       break;
@@ -251,7 +267,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       test_name = cmd_opts.opt_arg ();
       test_set = true;
 
-      ACE_DEBUG ((LM_INFO, "KATS: -t = %s; test name is now %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -t = %s; test name is now %s\n", 
         cmd_opts.opt_arg (), test_name.c_str () ));
 
       break;
@@ -259,8 +275,14 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       realtime = true;
 
-      ACE_DEBUG ((LM_INFO, "KATS: Enabling realtime scheduling\n", 
-        cmd_opts.opt_arg (), settings.host.c_str () ));
+      ACE_DEBUG ((LM_DEBUG, "KATS: Enabling realtime scheduling\n"));
+
+      break;
+    case 'g':
+      // thread number
+      debug_printing = true;
+
+      ACE_DEBUG ((LM_DEBUG, "KATS: Enabling debug printing\n"));
 
       break;
     case ':':
@@ -272,8 +294,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       ACE_DEBUG ((LM_INFO, "Program Options:      \n\
       -n (--processes)   number of testing processes \n\
       -i (--id)          this process id        \n\
+      -g (--debug)       prints KATS debug messages \n\
       -o (--host)        host identifier        \n\
       -e (--environment) environment variables (\"key=value\") \n\
+      -d (--domain)      knowledge domain to isolate knowledge into \n\
       -e (--commandline) command line arguments \n\
       -x (--executable)  executable \n\
       -w (--working)     working directory (default=.) \n\
