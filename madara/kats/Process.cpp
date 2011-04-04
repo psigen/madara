@@ -33,6 +33,11 @@ bool debug_printing = false;
 ACE_Time_Value kill_time (0);
 ACE_Time_Value delay_time (0);
 
+// default is SIGTERM, though we use terminate
+// unless a signal is set to be more portable
+bool signal_set = false;
+int kill_signal = 15;
+
 std::string pre_condition;
 std::string post_condition;
 
@@ -135,7 +140,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         "\n\nKATS: Process timed out. Terminating %s\n",
         process_options.process_name () ));
 
-      process.terminate ();
+      // allow users to specify a kill signal
+      if (signal_set)
+      {
+        process.kill (kill_signal);
+        process.wait ();
+      }
+      else
+      // otherwise sigterm
+        process.terminate ();
     }
   }
 
@@ -169,7 +182,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:l:t:x:a:c:d:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:l:t:x:a:c:d:b:s:k:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -190,6 +203,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("signal"), 'k', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("killtime"), 't', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("delay"), 'l', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("working"), 'w', ACE_Get_Opt::ARG_REQUIRED);
@@ -216,6 +230,19 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       ACE_DEBUG ((LM_DEBUG, "KATS: -i = %s; id is now %d\n", 
       cmd_opts.opt_arg (), settings.id ));
+
+      break;
+    case 'k':
+      // kill signal
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> kill_signal;
+        signal_set = true;
+      }
+
+      ACE_DEBUG ((LM_DEBUG, "KATS: -k = %s; kill signal is now %d\n", 
+      cmd_opts.opt_arg (), kill_signal ));
 
       break;
     case 'n':
@@ -385,6 +412,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -w (--working)     working directory (default=.) \n\
       -a (--testname)    name of the test (for barriers) \n\
       -t (--timeout)     time in microseconds to wait before killing \n\
+         -k --signal     kill signal to send after timeout \n\
       -r (--realtime)    run the process with real time scheduling \n\
       -o (--host)        host identifier        \n\
       -h (--help)        print this menu        \n"
