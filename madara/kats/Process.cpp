@@ -28,8 +28,13 @@ bool realtime = false;
 bool process_set = false;
 bool test_set = false;
 bool kill_time_set = false;
+bool delay_time_set = false;
 bool debug_printing = false;
 ACE_Time_Value kill_time (0);
+ACE_Time_Value delay_time (0);
+
+std::string pre_condition;
+std::string post_condition;
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
@@ -92,10 +97,29 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   testing.barrier (test_name);
 
+  // Before we check for delay, we first check for a precondition
+
+  if (pre_condition != "")
+  {
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".pre.";
+    buffer << "{.madara.id}";
+
+    testing.event (buffer.str (), pre_condition, "");
+  }
+
+  // sleep for a set amount of time after the barrier (if specified)
+  if (delay_time_set)
+  {
+    ACE_OS::sleep (delay_time);
+  }
+
   ACE_Process process;
   ACE_exitcode status;
   process.spawn (process_options);
 
+  // if a kill time is set, then we use a different type of wait
   if (kill_time_set)
   {
     ACE_DEBUG ((LM_INFO, 
@@ -126,6 +150,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   return_value = process.exit_code ();
 
+  if (post_condition != "")
+  {
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".post.";
+    buffer << "{.madara.id}";
+
+    testing.event (buffer.str (), post_condition, "");
+  }
+
   if(debug_printing)
     testing.dump ();
 
@@ -135,7 +169,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:t:x:a:c:d:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:l:t:x:a:c:d:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -144,12 +178,20 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("debug"), 'g', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("realtime"), 'r', ACE_Get_Opt::NO_ARG);
-  cmd_opts.long_option (ACE_TEXT ("environment"), 'e', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("commandline"), 'c', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("executable"), 'x', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("environment"), 'e',
+      ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("commandline"), 'c',
+      ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("executable"), 'x',
+      ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("precondition"), 'b',
+      ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("postcondition"), 's',
+      ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("killtime"), 't', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("delay"), 'l', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("working"), 'w', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'n', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
@@ -157,7 +199,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
  
   // temp for current switched option
   int option;
-//  ACE_TCHAR * arg;
 
   // iterate through the options until done
   while ((option = cmd_opts ()) != EOF)
@@ -189,6 +230,22 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         cmd_opts.opt_arg (), settings.processes ));
 
       break;
+    case 'l':
+      // time to delay after barrier before starting the process
+      {
+        time_t time_in_seconds;
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> time_in_seconds;
+
+        delay_time.sec (time_in_seconds);
+        delay_time_set = true;
+      }
+
+      ACE_DEBUG ((LM_DEBUG, "KATS: -l = %s; delay time is now %d\n", 
+        cmd_opts.opt_arg (), delay_time.sec () ));
+
+      break;
     case 't':
       // time to kill the process
       {
@@ -201,7 +258,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         kill_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -t = %s; killtime is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS: -t = %s; kill time is now %d\n", 
         cmd_opts.opt_arg (), kill_time.sec () ));
 
       break;
@@ -213,6 +270,24 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       ACE_DEBUG ((LM_DEBUG, "KATS: -e = %s\n", 
         cmd_opts.opt_arg () ));
+
+      break;
+    case 'b':
+      // a precondition
+
+      pre_condition = cmd_opts.opt_arg ();
+
+      ACE_DEBUG ((LM_DEBUG, "KATS: -b = %s, precondition is set to %s.\n", 
+        cmd_opts.opt_arg (), pre_condition.c_str () ));
+
+      break;
+    case 's':
+      // a postcondition
+
+      post_condition = cmd_opts.opt_arg ();
+
+      ACE_DEBUG ((LM_DEBUG, "KATS: -s = %s, postcondition is set to %s.\n", 
+        cmd_opts.opt_arg (), post_condition.c_str () ));
 
       break;
     case 'd':
@@ -301,8 +376,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -g (--debug)       prints KATS debug messages \n\
       -o (--host)        host identifier        \n\
       -e (--environment) environment variables (\"key=value\") \n\
+      -l (--delay)       time delay (secs) after barrier to wait before spawn\n\
       -d (--domain)      knowledge domain to isolate knowledge into \n\
-      -e (--commandline) command line arguments \n\
+      -b (--precondition) precondition to wait for after barrier \n\
+      -s (--postcondition) postcondition to set after process exits \n\
+      -c (--commandline) command line arguments \n\
       -x (--executable)  executable \n\
       -w (--working)     working directory (default=.) \n\
       -a (--testname)    name of the test (for barriers) \n\
