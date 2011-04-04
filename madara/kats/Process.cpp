@@ -87,6 +87,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::KATS::Test_Framework testing (settings);
 
+  if(debug_printing)
+    testing.dump ();
+
   testing.barrier (test_name);
 
   ACE_Process process;
@@ -123,7 +126,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   return_value = process.exit_code ();
 
-  testing.dump ();
+  if(debug_printing)
+    testing.dump ();
 
   return return_value;
 }

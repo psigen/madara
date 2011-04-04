@@ -19,8 +19,6 @@ Madara::KATS::Test_Framework::Test_Framework (
 {
   knowledge_.set (".madara.id", settings.id);
   knowledge_.set (".madara.processes", settings.processes);
-
-  knowledge_.print_knowledge ();
 }
 
 /// Copy constructor
