@@ -4,24 +4,37 @@
     <domain>SpliceTests</domain>
     <host>localhost</host>
     <id>0</id>
-    <processes>2</processes>
-    <kill>
+    <processes>1</processes>
+    <!--<kill>
       <signal>15</signal>
-      <time>15</time>
-    </kill>
+      <time>25</time>
+    </kill>-->
     <precondition></precondition>
     <postcondition>SpliceTests.done = 1</postcondition>
     <!-- <realtime /> -->
     <debug />
-    <parallel />
+    <!--<parallel />-->
   </setup>
   <test>
     <name>timeout_test</name>
     <executable>timeout</executable>
-    <commandline>5</commandline>
+    <commandline>15</commandline>
     <kill>
       <time>5</time>
-      <signal>15</signal>
+      <!--<signal>15</signal>-->
     </kill>
+    <precondition></precondition>
+    <postcondition>timeout_test.done = 1</postcondition>
+  </test>
+  <test>
+    <name>timeout_test</name>
+    <executable>timeout</executable>
+    <commandline>25</commandline>
+    <kill>
+      <time>15</time>
+      <!--<signal>15</signal>-->
+    </kill>
+    <precondition></precondition>
+    <postcondition>bad_timeout_test.done = 1</postcondition>
   </test>
 </tests>

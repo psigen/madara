@@ -137,19 +137,25 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     // if return value is zero, then we have a timeout.
     if (ret == 0)
     {
-      ACE_DEBUG ((LM_INFO, 
-        "\n\nKATS: Process timed out. Terminating %s\n",
-        process_options.process_name () ));
-
       // allow users to specify a kill signal
       if (signal_set)
       {
+        ACE_DEBUG ((LM_INFO, 
+          "\n\nKATS_PROCESS: Process timed out. Sending %s a %d signal\n",
+          process_options.process_name (), kill_signal ));
+
         process.kill (kill_signal);
         process.wait ();
       }
       else
-      // otherwise sigterm
+      {
+        ACE_DEBUG ((LM_INFO, 
+          "\n\nKATS_PROCESS: Process timed out. Terminating %s\n",
+          process_options.process_name () ));
+
+        // otherwise sigterm
         process.terminate ();
+      }
     }
   }
 
@@ -280,7 +286,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 't':
       // time to kill the process
       {
-        time_t time_in_seconds;
+        int time_in_seconds;
         std::stringstream buffer;
         buffer << cmd_opts.opt_arg ();
         buffer >> time_in_seconds;

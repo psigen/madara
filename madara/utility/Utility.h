@@ -50,6 +50,12 @@ namespace Madara
 
     /// Return file contents as a string
     MADARA_Export std::string file_to_string (const std::string & filename);
+
+    /// Return the path of the provided file or directory
+    MADARA_Export std::string extract_path (const std::string & name);
+    
+    /// Return the file name of the provided file or directory
+    MADARA_Export std::string extract_filename (const std::string & name);
   }
 }
 #endif

@@ -20,11 +20,48 @@
 #include "madara/kats/Test_Framework.h"
 #include "madara/kats/tinyxml.h"
 
+Madara::KATS::Settings settings;
+
+// settings that may be true or false
+bool realtime = false;
+bool debug_printing = false;
+bool run_in_parallel = false;
+
+// flags for whether or not command line arguments
+// were supplied
+bool process_set = false;
+bool kill_time_set = false;
+bool id_set = false;
+bool processes_set = false;
+bool host_set = false;
+bool domain_set = false;
+bool realtime_set = false;
+bool debug_set = false;
+bool pre_condition_set = false;
+bool post_condition_set = false;
+bool parallel_set = false;
+bool delay_time_set = false;
+bool test_name_set = false;
+
+std::string test_name;
+std::string pre_condition;
+std::string post_condition;
+std::string tests_file;
+ACE_Time_Value kill_time (0);
+ACE_Time_Value delay_time (0);
+
+std::string path;
+
 class KATS_Process
 {
 public:
   KATS_Process ()
-  {}
+  {
+    std::stringstream buffer;
+    buffer << path;
+    buffer << "kats_process";
+    executable = buffer.str ();
+  }
 
   KATS_Process (const KATS_Process & rhs)
     : process (), process_options (),
@@ -58,19 +95,22 @@ public:
 
   void set_precondition (const std::string & value)
   {
-    command_line << " -b ";
+    command_line << " -b \"";
     command_line << value;
+    command_line << "\"";
   }
 
   void set_executable (const std::string & value)
   {
-    executable = value;
+    command_line << " -x ";
+    command_line << value;
   }
 
   void set_postcondition (const std::string & value)
   {
-    command_line << " -s ";
+    command_line << " -s \"";
     command_line << value;
+    command_line << "\"";
   }
 
   void set_commandline (const std::string & value)
@@ -175,6 +215,16 @@ public:
     return process.terminate ();
   }
 
+  pid_t wait (void)
+  {
+    return process.wait ();
+  }
+
+  pid_t wait (const ACE_Time_Value & value)
+  {
+    return process.wait (value);
+  }
+
 protected:
 
   ACE_Process process;
@@ -183,45 +233,26 @@ protected:
   std::stringstream command_line;
 };
 
-Madara::KATS::Settings settings;
+std::string
+extract_path (const std::string & name)
+{
+  std::string::size_type start = 0;
+  for (std::string::size_type i = 0; i < name.size (); ++i)
+  {
+    // check for directory delimiters and update start
+    if (name[i] == '/' || name[i] == '\\')
+    {
+      // if they have supplied a directory with an
+      // ending slash, then use the previous start
+      if (i != name.size () - 1)
+        start = i + 1;
+    }
+  }
 
-// settings that may be true or false
-bool realtime = false;
-bool debug_printing = false;
-bool run_in_parallel = false;
+  // return the substring from 0 with start number of elements
+  return name.substr (0, start);
+}
 
-// flags for whether or not command line arguments
-// were supplied
-bool process_set = false;
-bool kill_time_set = false;
-bool id_set = false;
-bool processes_set = false;
-bool host_set = false;
-bool domain_set = false;
-bool realtime_set = false;
-bool debug_set = false;
-bool pre_condition_set = false;
-bool post_condition_set = false;
-bool parallel_set = false;
-bool delay_time_set = false;
-bool test_name_set = false;
-
-std::string test_name;
-std::string pre_condition;
-std::string post_condition;
-std::string tests_file;
-ACE_Time_Value kill_time (0);
-ACE_Time_Value delay_time (0);
-//std::string process_name;
-//std::stringstream command_line;
-//bool test_set = false;
-//bool delay_time_set = false;
-
-// default is SIGTERM, though we use terminate
-// unless a signal is set to be more portable
-//bool signal_set = false;
-//int kill_signal = 15;
-//
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
@@ -230,6 +261,8 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   ACE_TRACE (ACE_TEXT ("main"));
+
+  path = extract_path (argv[0]);
 
   std::vector <KATS_Process> processes;
 
@@ -254,7 +287,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (!doc.LoadFile ())
   {
     ACE_DEBUG ((LM_INFO, 
-      "KATS_BATCH: Unable to open file %s\n", tests_file.c_str ()));
+      "KATS_BATCH:  Unable to open file %s\n", tests_file.c_str ()));
     return -2;
   }
 
@@ -270,12 +303,12 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (!el_tests)
   {
     ACE_DEBUG ((LM_INFO, 
-      "KATS_BATCH: Tests was not the root element\n"));
+      "KATS_BATCH:  Tests was not the root element\n"));
     return -2;
   }
 
   ACE_DEBUG ((LM_DEBUG, 
-    "KATS_BATCH: Reading tests setup...\n"));
+    "KATS_BATCH:  Reading tests setup...\n"));
 
   el_globals = el_tests->FirstChildElement ("setup");
 
@@ -297,7 +330,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           buffer >> settings.id;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read id = %d from tests file\n", settings.id));
+            "KATS_BATCH:    Read id = %d from tests file\n", settings.id));
         }
       } // if the id element existed
     } // if the user didn't specify id from the command line
@@ -313,7 +346,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           domain_set = true;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read domain = %s from tests file\n",
+            "KATS_BATCH:    Read domain = %s from tests file\n",
             settings.domains.c_str ()));
         }
       } // if the domain element existed
@@ -330,7 +363,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           host_set = true;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read host = %s from tests file\n",
+            "KATS_BATCH:    Read host = %s from tests file\n",
             settings.host.c_str ()));
         }
       } // if the host element existed
@@ -348,7 +381,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           buffer >> settings.processes;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read processes = %d from tests file\n",
+            "KATS_BATCH:    Read processes = %d from tests file\n",
             settings.processes));
         }
       } // if the processes element existed
@@ -373,7 +406,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
             kill_time_set = true;
 
             ACE_DEBUG ((LM_DEBUG,
-              "KATS_BATCH:   Read kill time = %d s from tests file\n",
+              "KATS_BATCH:    Read kill time = %d s from tests file\n",
               time_in_seconds));
           }
         } // if element kill/time exists
@@ -390,7 +423,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           pre_condition = element->GetText ();
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read precondition = %s from tests file\n",
+            "KATS_BATCH:    Read precondition = %s from tests file\n",
             pre_condition.c_str ()));
         }
       } // if precondition element existed
@@ -406,7 +439,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           post_condition = element->GetText ();
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read postcondition = %s from tests file\n",
+            "KATS_BATCH:    Read postcondition = %s from tests file\n",
             post_condition.c_str ()));
         }
       } // if postcondition element existed
@@ -422,7 +455,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           test_name = element->GetText ();
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:   Read test name = %s from tests file\n",
+            "KATS_BATCH:    Read test name = %s from tests file\n",
             test_name.c_str ()));
         }
       } // if name element existed
@@ -436,7 +469,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         realtime = true;
         realtime_set = true;
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:   Enabled realtime scheduling from tests file\n"));
+          "KATS_BATCH:    Enabled realtime scheduling from tests file\n"));
       } // if realtime element existed
     } // if the user didn't specify real time scheduling from the command line
 
@@ -448,13 +481,71 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         debug_printing = true;
         debug_set = true;
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:   Enabled debug mode printing from tests file\n"));
+          "KATS_BATCH:    Enabled debug mode printing from tests file\n"));
       } // if debug element existed
     } // if the user didn't specify debug mode from the command line
   }
 
   ACE_DEBUG ((LM_DEBUG, 
-    "KATS_BATCH: Finished reading tests setup. Proceeding to tests...\n"));
+    "KATS_BATCH:  Finished reading tests setup. Proceeding to KATS setup...\n"));
+
+  // *************** BEGIN KATS PRELIMINARY WORK ******************
+  if (realtime)
+  {
+    ACE_DEBUG ((LM_DEBUG, 
+      "KATS_BATCH:    Setting scheduling priority to max...\n"));
+
+    // use ACE real time scheduling class
+    int prio  = ACE_Sched_Params::next_priority
+      (ACE_SCHED_FIFO,
+       ACE_Sched_Params::priority_max (ACE_SCHED_FIFO),
+       ACE_SCOPE_THREAD);
+    ACE_OS::thr_setprio (prio);
+  }
+
+  ACE_DEBUG ((LM_DEBUG, 
+    "KATS_BATCH:    Starting framework (if hangs, check transport)...\n"));
+
+  Madara::KATS::Test_Framework testing (settings);
+
+  if(debug_printing)
+    testing.dump ();
+
+  ACE_DEBUG ((LM_DEBUG, 
+    "KATS_BATCH:    Starting barrier (if necessary)...\n"));
+
+  testing.barrier (test_name);
+
+  // Before we check for delay, we first check for a precondition
+
+  if (pre_condition != "")
+  {
+    ACE_DEBUG ((LM_DEBUG, 
+      "KATS_BATCH:    Checking precondition...\n"));
+
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".pre.";
+    buffer << "{.madara.id}";
+
+    testing.event (buffer.str (), pre_condition, "");
+  }
+
+  // sleep for a set amount of time after the barrier (if specified)
+  if (delay_time_set)
+  {
+    ACE_DEBUG ((LM_DEBUG, 
+      "KATS_BATCH:    Delaying %d s according to user preferences...\n",
+      delay_time.sec ()));
+
+    ACE_OS::sleep (delay_time);
+  }
+
+  ACE_DEBUG ((LM_DEBUG, 
+    "KATS_BATCH:  Finished KATS setup. Proceeding to tests...\n"));
+
+  // *************** END KATS PRELIMINARY WORK ******************
+
 
   size_t cur = 0;
 
@@ -462,16 +553,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         element; element = element->NextSiblingElement ("test"), ++cur);
 
   ACE_DEBUG ((LM_DEBUG, 
-    "KATS_BATCH: %d tests found in %s...\n", cur, tests_file.c_str ()));
+    "KATS_BATCH:  %d tests found in %s...\n", cur, tests_file.c_str ()));
 
   //processes.reserve (cur);
   processes.resize (cur);
+
+  ACE_High_Res_Timer timer;
+
+  timer.start ();
 
   for (cur = 0, element = el_tests->FirstChildElement ("test");
         element; element = element->NextSiblingElement ("test"), ++cur)
   {
     ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Grabbing a test...\n"));
+        "KATS_BATCH:    Grabbing a test...\n"));
     KATS_Process process;
 
     TiXmlElement * el_temp1 = element->FirstChildElement ("name");
@@ -483,7 +578,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         !el_temp1->GetText () || !el_temp2->GetText ())
     {
       ACE_DEBUG ((LM_INFO, 
-        "KATS_BATCH:   Each test must have a <name> and <executable>\n"));
+        "KATS_BATCH:    Each test must have a <name> and <executable>\n"));
       return -3;
     }
 
@@ -497,7 +592,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read host = %s from tests file\n",
+        "KATS_BATCH:    Read host = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_processes (el_temp1->GetText ());
     }
@@ -507,7 +602,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read id = %s from tests file\n",
+        "KATS_BATCH:    Read id = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_id (el_temp1->GetText ());
     }
@@ -517,7 +612,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read env = %s from tests file\n",
+        "KATS_BATCH:    Read env = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_environment (el_temp1->GetText ());
     }
@@ -527,7 +622,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read delay = %s from tests file\n",
+        "KATS_BATCH:    Read delay = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_delaytime (el_temp1->GetText ());
     }
@@ -537,7 +632,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read precondition = %s from tests file\n",
+        "KATS_BATCH:    Read precondition = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_precondition (el_temp1->GetText ());
     }
@@ -547,7 +642,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read postcondition = %s from tests file\n",
+        "KATS_BATCH:    Read postcondition = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_postcondition (el_temp1->GetText ());
     }
@@ -557,7 +652,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read commandline = %s from tests file\n",
+        "KATS_BATCH:    Read commandline = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_commandline (el_temp1->GetText ());
     }
@@ -579,6 +674,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         // we have a kill/time
         if (el_temp2->GetText ())
         {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read kill time = %s from tests file\n",
+            el_temp2->GetText ()));
           processes[cur].set_killtime (el_temp2->GetText ());
         }
       }
@@ -590,6 +688,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         // we have a kill/signal
         if (el_temp2->GetText ())
         {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read kill signal = %s from tests file\n",
+            el_temp2->GetText ()));
           processes[cur].set_killsignal (el_temp2->GetText ());
         }
       }
@@ -600,7 +701,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Read workingdir = %s from tests file\n",
+        "KATS_BATCH:    Read workingdir = %s from tests file\n",
            el_temp1->GetText ()));
       processes[cur].set_workingdir (el_temp1->GetText ());
     }
@@ -610,14 +711,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (realtime || element->FirstChildElement ("realtime"))
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Enabling real time scheduling\n"));
+        "KATS_BATCH:    Enabling real time scheduling\n"));
       processes[cur].enable_realtime (); 
     }
 
     if (debug_printing ||  element->FirstChildElement ("debug"))
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Enabling real time scheduling\n"));
+        "KATS_BATCH:    Enabling real time scheduling\n"));
       processes[cur].enable_debug ();
     }
 
@@ -628,7 +729,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       if (el_temp1 && el_temp1->GetText ())
       {
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:   Read host = %s from test entry\n",
+          "KATS_BATCH:    Read host = %s from test entry\n",
           el_temp1->GetText ()));
         processes[cur].set_id (el_temp1->GetText ());
       }
@@ -637,7 +738,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     else
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Using host = %s from globals\n",
+        "KATS_BATCH:    Using host = %s from globals\n",
         settings.host.c_str ()));
       processes[cur].set_host (settings.host);
     }
@@ -649,7 +750,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       if (el_temp1 && el_temp1->GetText ())
       {
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:   Read domain = %s from test entry\n",
+          "KATS_BATCH:    Read domain = %s from test entry\n",
           el_temp1->GetText ()));
         processes[cur].set_id (el_temp1->GetText ());
       }
@@ -658,50 +759,75 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     else
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:   Using domain = %s from globals\n",
+        "KATS_BATCH:    Using domain = %s from globals\n",
         settings.domains.c_str ()));
       processes[cur].set_domain (settings.domains);
     }
 
-    
+    // print the command line
+    ACE_DEBUG ((LM_INFO, 
+      "KATS_BATCH:  Launching %s\n",
+      processes[cur].query_setup ().c_str ()));    
+
+    processes[cur].launch ();
+
+    // this isn't going to cut it. We need to start a timer before
+    // the loop and check against it.
+    if (!run_in_parallel && !kill_time_set)
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:  Waiting on process to finish."));
+      processes[cur].wait ();
+    }
+    else if (!run_in_parallel)
+    {
+      timer.stop ();
+      // check the elapsed time
+      ACE_Time_Value elapsed;
+      timer.elapsed_time (elapsed);
+
+      // if we haven't already gone past our time limit,
+      // then wait for the process with the remaining time
+      if (elapsed.sec () <= kill_time.sec ())
+      {
+        ACE_Time_Value new_wait_time;
+        new_wait_time.sec (kill_time.sec () - elapsed.sec ());
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:  Waiting for %d s or process to finish.",
+          new_wait_time.sec ()));
+        processes[cur].wait (new_wait_time);
+      }
+
+      timer.stop ();
+      timer.elapsed_time (elapsed);
+      
+      // if we haven't already gone past our time limit,
+      // then wait for the process with the remaining time
+      if (elapsed.sec () > kill_time.sec ())
+      {
+        processes[cur].terminate ();
+      }
+    }
   }
 
-  return 0;
-
-
-  if (realtime)
+  if (run_in_parallel)
   {
-    // use ACE real time scheduling class
-    int prio  = ACE_Sched_Params::next_priority
-      (ACE_SCHED_FIFO,
-       ACE_Sched_Params::priority_max (ACE_SCHED_FIFO),
-       ACE_SCOPE_THREAD);
-    ACE_OS::thr_setprio (prio);
-  }
+    ACE_DEBUG ((LM_DEBUG, 
+      "KATS_BATCH:  Waiting for %d s before terminating all processes.",
+      kill_time.sec ()));
 
-  Madara::KATS::Test_Framework testing (settings);
+    ACE_OS::sleep (kill_time);
 
-  if(debug_printing)
-    testing.dump ();
-
-  testing.barrier (test_name);
-
-  // Before we check for delay, we first check for a precondition
-
-  if (pre_condition != "")
-  {
-    std::stringstream buffer;
-    buffer << test_name;
-    buffer << ".pre.";
-    buffer << "{.madara.id}";
-
-    testing.event (buffer.str (), pre_condition, "");
-  }
-
-  // sleep for a set amount of time after the barrier (if specified)
-  if (delay_time_set)
-  {
-    ACE_OS::sleep (delay_time);
+    for (size_t i = 0; i < cur; ++i)
+    {
+      if (kill_time_set)
+      {
+        processes[i].terminate ();
+      }
+      else
+        processes[i].wait ();
+    }
   }
 
   if (post_condition != "")
@@ -756,7 +882,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       test_name = cmd_opts.opt_arg ();
       test_name_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: test name set to %s\n",
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  test name set to %s\n",
         cmd_opts.opt_arg (), test_name.c_str () ));
 
       break;
@@ -766,7 +892,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       pre_condition = cmd_opts.opt_arg ();
       pre_condition_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: precondition set to %s.\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  precondition set to %s.\n", 
         cmd_opts.opt_arg (), pre_condition.c_str () ));
 
       break;
@@ -776,7 +902,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       settings.domains = cmd_opts.opt_arg ();
       domain_set = false;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: knowledge domain set to %s.\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  knowledge domain set to %s.\n", 
         cmd_opts.opt_arg (), settings.domains.c_str () ));
 
       break;
@@ -785,7 +911,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       tests_file = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: reading tests from %s.\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  reading tests from %s.\n", 
         cmd_opts.opt_arg (), tests_file.c_str () ));
 
       break;
@@ -794,7 +920,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       debug_printing = true;
       debug_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: enabling debug printing\n"));
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  enabling debug printing\n"));
 
       break;
     case 'i':
@@ -806,7 +932,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       }
       id_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: id set to %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  id set to %d\n", 
       cmd_opts.opt_arg (), settings.id ));
 
       break;
@@ -822,7 +948,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         delay_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: delay time set to %d seconds\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  delay time set to %d seconds\n", 
         cmd_opts.opt_arg (), delay_time.sec () ));
 
       break;
@@ -835,7 +961,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       }
       processes_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: processes set to %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  processes set to %d\n", 
         cmd_opts.opt_arg (), settings.processes ));
 
       break;
@@ -844,7 +970,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       settings.host = cmd_opts.opt_arg ();
       host_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: host set to %s\n",
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  host set to %s\n",
         cmd_opts.opt_arg (), settings.host.c_str () ));
 
       break;
@@ -854,7 +980,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       parallel_set = true;
 
       ACE_DEBUG ((LM_DEBUG,
-        "KATS_BATCH: running all batch tests in parallel\n"));
+        "KATS_BATCH:  running all batch tests in parallel\n"));
 
       break;
     case 'r':
@@ -862,7 +988,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       realtime = true;
       realtime_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: enabling realtime scheduling\n"));
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  enabling realtime scheduling\n"));
 
       break;
     case 's':
@@ -871,7 +997,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       post_condition = cmd_opts.opt_arg ();
       post_condition_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH: postcondition set to %s.\n",
+      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  postcondition set to %s.\n",
         cmd_opts.opt_arg (), post_condition.c_str () ));
 
       break;
@@ -888,13 +1014,13 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       }
 
       ACE_DEBUG ((LM_DEBUG,
-        "KATS_BATCH: -t = %s; terminate all test processes after %d seconds\n",
+        "KATS_BATCH:  terminate all test processes after %d seconds\n",
         cmd_opts.opt_arg (), kill_time.sec () ));
 
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("KATS_BATCH: ERROR: -%c requires an argument"),
+        ACE_TEXT ("KATS_BATCH:  ERROR: -%c requires an argument"),
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
