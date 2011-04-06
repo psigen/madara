@@ -1,0 +1,27 @@
+<tests>
+  <setup>
+    <name>FullTests</name>
+    <domain>SpliceTests</domain>
+    <host>localhost</host>
+    <id>0</id>
+    <processes>2</processes>
+    <kill>
+      <signal>15</signal>
+      <time>15</time>
+    </kill>
+    <precondition></precondition>
+    <postcondition>SpliceTests.done = 1</postcondition>
+    <!-- <realtime /> -->
+    <debug />
+    <parallel />
+  </setup>
+  <test>
+    <name>timeout_test</name>
+    <executable>timeout</executable>
+    <commandline>5</commandline>
+    <kill>
+      <time>5</time>
+      <signal>15</signal>
+    </kill>
+  </test>
+</tests>

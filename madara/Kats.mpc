@@ -29,7 +29,6 @@ project (Kats) : using_madara, using_ace, using_splice {
 
 
 project (Kats_Process) : using_kats, using_ace {
-  requires += tests
   
   exeout = $(MADARA_ROOT)/bin
   exename = kats_process
@@ -43,5 +42,30 @@ project (Kats_Process) : using_kats, using_ace {
 
   Source_Files {
     kats/Process.cpp
+  }
+}
+
+project (Kats_Batch) : using_kats, using_ace {
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = kats_batch
+  
+  macros += TIXML_USE_STL
+  
+  Build_Files {
+    Kats.mpc
+  }
+
+  Header_Files {
+    kats/tinyxml.h
+    kats/tinystr.h
+  }
+
+  Source_Files {
+    kats/tinyxml.cpp
+    kats/tinyxmlparser.cpp
+    kats/tinyxmlerror.cpp
+    kats/tinystr.cpp
+    kats/Batch.cpp
   }
 }

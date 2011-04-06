@@ -70,16 +70,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (!process_set)
   {
     ACE_DEBUG ((LM_INFO, 
-      "KATS: You did not specify a process name. Try -h or --help\n"));
+      "KATS_PROCESS: You did not specify a process name. Try -h or --help\n"));
     return -1;
   }
 
   if (!test_set)
   {
     ACE_DEBUG ((LM_INFO, 
-      "KATS: You did not specify a test name. Try -h or --help\n"));
+      "KATS_PROCESS: You did not specify a test name. Try -h or --help\n"));
     return -2;
   }
+
 
   // setup the process options
   process_options.command_line ("%s %s", 
@@ -128,7 +129,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (kill_time_set)
   {
     ACE_DEBUG ((LM_INFO, 
-        "KATS: User specified kill time of %d s\n",
+        "KATS_PROCESS: User specified kill time of %d s\n",
         kill_time.sec () ));
 
     pid_t ret = process.wait (kill_time, &status);
@@ -158,7 +159,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   }
 
   ACE_DEBUG ((LM_INFO, 
-    "KATS: Process returned %d\n",
+    "KATS_PROCESS: Process returned %d\n",
     process.exit_code () ));
 
   return_value = process.exit_code ();
@@ -228,7 +229,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> settings.id;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -i = %s; id is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG,
+        "KATS_PROCESS: id in test process ring set to %d\n",
       cmd_opts.opt_arg (), settings.id ));
 
       break;
@@ -241,7 +243,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         signal_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -k = %s; kill signal is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_PROCESS: signal to kill executable set to %d\n",
       cmd_opts.opt_arg (), kill_signal ));
 
       break;
@@ -253,7 +256,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> settings.processes;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -n = %s; processes is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: processes in test set to %d\n",
         cmd_opts.opt_arg (), settings.processes ));
 
       break;
@@ -269,7 +272,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         delay_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -l = %s; delay time is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG,
+        "KATS_PROCESS: -l = %s; delay executable by %d seconds\n",
         cmd_opts.opt_arg (), delay_time.sec () ));
 
       break;
@@ -285,7 +289,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         kill_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -t = %s; kill time is now %d\n", 
+      ACE_DEBUG ((LM_DEBUG,
+        "KATS_PROCESS: kill executable after %d seconds\n",
         cmd_opts.opt_arg (), kill_time.sec () ));
 
       break;
@@ -295,7 +300,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       process_options.setenv (cmd_opts.opt_arg (), 
         strlen (cmd_opts.opt_arg ()));
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -e = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: environment set to %s\n",
         cmd_opts.opt_arg () ));
 
       break;
@@ -304,7 +309,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       pre_condition = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -b = %s, precondition is set to %s.\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: precondition set to %s.\n",
         cmd_opts.opt_arg (), pre_condition.c_str () ));
 
       break;
@@ -313,7 +318,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       post_condition = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -s = %s, postcondition is set to %s.\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: postcondition set to %s.\n",
         cmd_opts.opt_arg (), post_condition.c_str () ));
 
       break;
@@ -322,7 +327,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       settings.domains = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -d = %s, knowledge domain is set to %s.\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: knowledge domain set to %s.\n",
         cmd_opts.opt_arg (), settings.domains.c_str () ));
 
       break;
@@ -335,7 +340,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       process_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -x = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: executable set to %s\n",
       cmd_opts.opt_arg () ));
 
       break;
@@ -347,7 +352,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       if (cmd_opts.opt_arg ())
         command_line << cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -c = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: command line set to %s\n",
         command_line.str ().c_str () ));
 
       break;
@@ -356,15 +361,15 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       process_options.working_directory (cmd_opts.opt_arg ());
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -w = %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: working directory is now %s\n",
       cmd_opts.opt_arg () ));
 
       break;
     case 'o':
-      // thread number
+      // host name
       settings.host = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -o = %s; host is now %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: host is now %s\n",
         cmd_opts.opt_arg (), settings.host.c_str () ));
 
       break;
@@ -373,7 +378,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       test_name = cmd_opts.opt_arg ();
       test_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: -t = %s; test name is now %s\n", 
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: test name is now %s\n",
         cmd_opts.opt_arg (), test_name.c_str () ));
 
       break;
@@ -381,19 +386,19 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       // thread number
       realtime = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: Enabling realtime scheduling\n"));
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: enabling realtime scheduling\n"));
 
       break;
     case 'g':
       // thread number
       debug_printing = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS: Enabling debug printing\n"));
+      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: enabling debug printing\n"));
 
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("KATS: ERROR: -%c requires an argument"), 
+        ACE_TEXT ("KATS_PROCESS: ERROR: -%c requires an argument"),
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
@@ -411,7 +416,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -x (--executable)  executable \n\
       -w (--working)     working directory (default=.) \n\
       -a (--testname)    name of the test (for barriers) \n\
-      -t (--timeout)     time in microseconds to wait before killing \n\
+      -t (--timeout)     time in seconds to wait before killing \n\
          -k --signal     kill signal to send after timeout \n\
       -r (--realtime)    run the process with real time scheduling \n\
       -o (--host)        host identifier        \n\
