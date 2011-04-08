@@ -28,7 +28,7 @@
 #include "madara/expression_tree/Composite_Both_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Interpreter.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 namespace Madara
 {
@@ -1419,14 +1419,16 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
         Both * parent_both = dynamic_cast <Both *> (parent);
         if (parent_both)
         {
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE WARNING: " \
-            "1.1. Empty statements between ';' may cause slower execution.\n" \
-            "     Attempting to prune away the extra statement.\n"));
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+            DLINFO "KARL COMPILE WARNING: " \
+            "Empty statements between ';' may cause slower execution.\n" \
+            "  Attempting to prune away the extra statement.\n"));
         }
         else
         {
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE WARNING: " \
-            "1. Binary operation has no left child. Inserting a zero.\n"));
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+            DLINFO "KARL COMPILE WARNING: " \
+            "Binary operation has no left child. Inserting a zero.\n"));
           parent->left_ = new Number (0);
         }
       }
@@ -1436,8 +1438,10 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
       // something like 5 ! 3, which has no meaning. This is a compile error.
       if (parent_unary && parent->left_)
       {
-        ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
-            "2. Unary operation shouldn't have a left child.\n"));
+        MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+          "\nKARL COMPILE ERROR: " \
+            "Unary operation shouldn't have a left child.\n"));
+        exit (-1);
       }
 
       // if we've gotten to this point, then we need to 
@@ -1449,8 +1453,10 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
           // This is a compile error. Unary cannot have a left
           // child, and that is the only way that being at this
           // point would make sense.
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
-            "3. Unary operation shouldn't have a left child.\n"));
+          MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+            "\nKARL COMPILE ERROR: " \
+            " unary operation shouldn't have a left child.\n"));
+          exit (-1);
         }
         else
           op->left_ = child;
@@ -1468,149 +1474,6 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
       list.pop_back ();
       list.push_back (op);      
     }
-    
-
-    //if (child)
-    //{
-    //  // while there is a child of parent, keep going down the right side
-    //  for (; 
-    //    child && child->precedence () < op->precedence ();
-    //    child = child->right_)
-    //    parent = child;
-    //}
-
-    //if (parent->precedence () < op->precedence ())
-    //{
-
-    //  // op left will be the old child. new parent child will be
-    //  // the op. To allow infinite negations, we have to check for unary_operator.
-
-    //  // **************** This is the culprit
-
-    //  
-    //  // Because of the inclusion of the Both and Implies operators with
-    //  // lower precedence than assignment, we can get into a pickle with
-    //  // chained assignments with a parent that is one of these.
-    //  Assignment * child_assignment = dynamic_cast <Assignment *> (child);
-    //  Implies * child_implies = dynamic_cast <Implies *> (child);
-    //  Assignment * op_assignment = dynamic_cast <Assignment *> (op);
-    //  Implies * op_implies = dynamic_cast <Implies *> (op);
-
-    //  if ((op_implies || op_assignment) && (child_assignment || child_implies))
-    //  {
-    //    for (; 
-    //      child && child->precedence () == op->precedence ();
-    //      child = child->right_)
-    //      parent = child;
-
-    //    if (child->right_)
-    //      op->left_ = child->right_;
-
-    //    child->right_ = op;
-    //  }
-    //  // otherwise, this is a normal insert
-    //  else
-    //  {
-    //    if (!op->left_)
-    //      op->left_ = child;
-
-    //    if (child && child->right_)
-    //      op->right_ = child->right_;
-
-    //    parent->right_ = op;
-    //  }
-    //}
-    //else
-    //{
-    //  // this can be one of two things, either we are the same
-    //  // precedence or we are less precedence than the parent.
-    //  // this also means different things for unary ops. The
-    //  // most recent unary op (negate) has a higher precedence
-
-    //  Unary_Operator * op_unary = dynamic_cast <Unary_Operator *> (op);
-    //  Assignment * op_assignment = dynamic_cast <Assignment *> (op);
-
-    //  if (op_unary || op_assignment)
-    //  {
-    //    for (; 
-    //      child && child->precedence () == op->precedence ();
-    //      child = child->right_)
-    //      parent = child;
-
-    //    // I can't think of a valid reason that parent->right_ would
-    //    // be possible !0
-    //    if (op_unary)
-    //      parent->right_ = op;
-    //    else
-    //    {
-    //      // This is an assignment. We should have a parent that is either a variable
-    //      // or another assignment.
-    //      // eg.  parent is    =      or    var
-    //      //                 /
-    //      //               var
-
-    //      // With the addition of the Both type, we also have to check for it
-
-    //      Variable * parnt_variable = dynamic_cast <Variable *> (parent);
-    //      Assignment * parnt_assignment = dynamic_cast <Assignment *> (parent);
-    //      Both * parnt_both = dynamic_cast <Both *> (parent);
-
-    //      if (!parnt_variable && !parnt_assignment && !parnt_both)
-    //      {
-    //        // we have an error.
-    //        ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
-    //                    "Assignment has invalid left hand operator\n"));
-
-    //      }
-    //      else
-    //      {
-    //        // all is well
-    //        if (parnt_variable)
-    //        {
-    //          // eg.  parent is var so change the situation by making
-    //          // parent our left child
-    //          //                   = 
-    //          //                 /
-    //          //               var
-    //          op->left_ = parent;
-    //          list.pop_back ();
-    //          list.push_back (op);
-    //        }// end if parnt_variable
-    //        else if (parnt_assignment)
-    //        {
-    //          if (!dynamic_cast <Variable *> (child))
-    //            // we have an error.
-    //            ACE_DEBUG ((LM_DEBUG, "(%P|%t) COMPILE ERROR: " \
-    //                    "To the left of assignment should be a variable\n"));
-    //          else
-    //          {
-    //            // eg.  parent is assignment so change the situation by making
-    //            // ourselves the right child of parent
-    //            //     =               = 
-    //            //   /   \    =>     /    \
-    //            // var1  var2      var1     =   <--- this is op
-    //            //                        /
-    //            //                      var2
-    //            parent->right_ = op;
-    //            op->left_ = child;
-    //          }
-    //        } // end if parnt_assignment
-
-    //      }
-
-    //    }
-    //  }
-    //  else
-    //  {
-    //    // everything else is evaluated the same. For instance, if
-    //    // this is 5 * 4 / 2, and we currently have Mult (5,4) in the
-    //    // list, we need to make parent our left child.
-
-    //    op->left_ = parent;
-    //    list.pop_back ();
-    //    list.push_back (op);
-    //  }
-    //}
   }
   else
   {
@@ -1934,8 +1797,6 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
   the difference is that we have to worry about how the calling
   function has its list setup */
 
-  //::std::cerr << "Handling an opening parenthesis.\n";
-
   accumulated_precedence += PARENTHESIS_PRECEDENCE;
 
   ::std::list<Symbol *> list;
@@ -1948,8 +1809,6 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
 
     if (input[i] == ')')
     {
-      //::std::cerr << "Handling a closing parenthesis.\n";
-
       handled = true;
       ++i;
       accumulated_precedence -= PARENTHESIS_PRECEDENCE;

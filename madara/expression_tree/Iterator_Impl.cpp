@@ -11,7 +11,8 @@ const size_t LQUEUE_SIZE = 40;
 // Constructor for Iterator_Impl that takes a tree
 // to iterate over
 
-Madara::Expression_Tree::Iterator_Impl::Iterator_Impl (const Expression_Tree &tree)
+Madara::Expression_Tree::Iterator_Impl::Iterator_Impl (
+  const Expression_Tree &tree)
   : tree_ (tree)
 {
 }
@@ -111,8 +112,10 @@ Madara::Expression_Tree::In_Order_Iterator_Impl::operator== (
       // to assume the queue at least has a front node (coupled with
       // the is_empty () function later).
 
-      Expression_Tree &t1 = const_cast <Expression_Tree &> (tree_);
-      Expression_Tree &t2 = const_cast <Expression_Tree &> (in_order_rhs->tree_);
+      Expression_Tree &t1 =
+        const_cast <Expression_Tree &> (tree_);
+      Expression_Tree &t2 =
+        const_cast <Expression_Tree &> (in_order_rhs->tree_);
 
       if (t1.get_root () == t2.get_root () 
           && stack_.size () == in_order_rhs->stack_.size ())
@@ -125,7 +128,8 @@ Madara::Expression_Tree::In_Order_Iterator_Impl::operator== (
           // equal, then both iterators are pointing to the same
           // position in the tree.
 
-          if (stack_.top ().get_root () == in_order_rhs->stack_.top ().get_root ())
+          if (stack_.top ().get_root () == 
+              in_order_rhs->stack_.top ().get_root ())
             return true;
         }
     }
@@ -155,8 +159,8 @@ Madara::Expression_Tree::In_Order_Iterator_Impl::clone (void)
   return new In_Order_Iterator_Impl (*this);
 }
 
-/// Construct an Pre_Order_Expression_Tree_Iterator. If end_iter is set to true,
-/// the iterator points to the end of the tree
+/// Construct an Pre_Order_Expression_Tree_Iterator. 
+/// If end_iter is set to true, the iterator points to the end of the tree
 
 Madara::Expression_Tree::Pre_Order_Iterator_Impl::Pre_Order_Iterator_Impl (
   const Expression_Tree &tree, bool end_iter)
@@ -171,7 +175,8 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::Pre_Order_Iterator_Impl (
 
 /// destructor - nothing to do
 
-Madara::Expression_Tree::Pre_Order_Iterator_Impl::~Pre_Order_Iterator_Impl (void)
+Madara::Expression_Tree::Pre_Order_Iterator_Impl::~Pre_Order_Iterator_Impl (
+  void)
 {
 
 }
@@ -240,7 +245,8 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::operator== (
       // the is_empty () function later).
 
       Expression_Tree &t1 = const_cast <Expression_Tree &> (tree_);
-      Expression_Tree &t2 = const_cast <Expression_Tree &> (pre_order_rhs->tree_);
+      Expression_Tree &t2 = const_cast <Expression_Tree &> (
+        pre_order_rhs->tree_);
 
       if (t1.get_root () == t2.get_root () 
           && stack_.size () == pre_order_rhs->stack_.size ())
@@ -253,7 +259,8 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::operator== (
           // are equal, then both iterators are pointing to the same
           // position in the tree.
 
-          if (stack_.top ().get_root () == pre_order_rhs->stack_.top ().get_root ())
+          if (stack_.top ().get_root () ==
+              pre_order_rhs->stack_.top ().get_root ())
             return true;
         }
     }
@@ -284,8 +291,8 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::clone (void)
   return new Pre_Order_Iterator_Impl (*this);
 }
 
-/// Construct an Post_Order_Expression_Tree_Iterator. If end_iter is set to true,
-/// the iterator points to the end of the tree
+/// Construct an Post_Order_Expression_Tree_Iterator. 
+/// If end_iter is set to true, the iterator points to the end of the tree
 
 Madara::Expression_Tree::Post_Order_Iterator_Impl::Post_Order_Iterator_Impl (
   const Expression_Tree &tree, bool end_iter)
@@ -299,8 +306,9 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::Post_Order_Iterator_Impl (
       Expression_Tree current = const_cast <Expression_Tree &> (tree);
       stack_.push (current);
 
-// the commented code does not work on unary operator nodes with no left child, but 
-// a right child - or at least, there is a certain depth that this will not go down
+      // the commented code does not work on unary operator nodes with 
+      // no left child, but a right child - or at least, there is a 
+      // certain depth that this will not go down
 
       while (!current.is_null ())
         {
@@ -323,7 +331,8 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::Post_Order_Iterator_Impl (
 
 /// destructor - nothing to do
 
-Madara::Expression_Tree::Post_Order_Iterator_Impl::~Post_Order_Iterator_Impl (void)
+Madara::Expression_Tree::Post_Order_Iterator_Impl::~Post_Order_Iterator_Impl (
+  void)
 {
 }
 
@@ -392,7 +401,8 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::operator++ (void)
 /// checks two iterators for equality
  
 bool 
-Madara::Expression_Tree::Post_Order_Iterator_Impl::operator== (const Iterator_Impl &rhs) const
+Madara::Expression_Tree::Post_Order_Iterator_Impl::operator== (
+  const Iterator_Impl &rhs) const
 {
   const Post_Order_Iterator_Impl * post_order_rhs = dynamic_cast
     <const Post_Order_Iterator_Impl *> (&rhs);
@@ -410,7 +420,8 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::operator== (const Iterator_Im
       // the is_empty () function later).
 
       Expression_Tree &t1 = const_cast <Expression_Tree &> (tree_);
-      Expression_Tree &t2 = const_cast <Expression_Tree &> (post_order_rhs->tree_);
+      Expression_Tree &t2 = const_cast <Expression_Tree &> (
+        post_order_rhs->tree_);
 
       if (t1.get_root () == t2.get_root () 
           && stack_.size () == post_order_rhs->stack_.size ())
@@ -423,7 +434,8 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::operator== (const Iterator_Im
           // equal, then both iterators are pointing to the same
           // position in the tree.
 
-          if (stack_.top ().get_root () == post_order_rhs->stack_.top ().get_root ())
+          if (stack_.top ().get_root () ==
+              post_order_rhs->stack_.top ().get_root ())
             return true;
         }
     }
@@ -469,14 +481,16 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::Level_Order_
 
 /// destructor - nothing to do
 
-Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::~Level_Order_Expression_Tree_Iterator_Impl (void)
+Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::~Level_Order_Expression_Tree_Iterator_Impl (
+  void)
 {
 }
 
 /// Returns the Node that the iterator is pointing to (non-const version)
  
 Madara::Expression_Tree::Expression_Tree 
-Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator* (void)
+Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator* (
+  void)
 {
   return queue_.front ();
 }
@@ -484,7 +498,8 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator* (v
 /// Returns the Node that the iterator is pointing to (const version)
  
 const Madara::Expression_Tree::Expression_Tree 
-Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator* (void) const
+Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator* (
+  void) const
 {
   return queue_.front ();
 }
@@ -492,7 +507,8 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator* (v
 /// moves the iterator to the next node (pre-increment)
  
 void
-Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator++ (void) 
+Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator++ (
+  void) 
 {
   if (!queue_.is_empty ())
     {
@@ -516,8 +532,8 @@ bool
 Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator== (
   const Iterator_Impl &rhs) const
 {
-  const Level_Order_Expression_Tree_Iterator_Impl * level_order_rhs = dynamic_cast
-    <const Level_Order_Expression_Tree_Iterator_Impl *> (&rhs);
+  const Level_Order_Expression_Tree_Iterator_Impl * level_order_rhs =
+    dynamic_cast<const Level_Order_Expression_Tree_Iterator_Impl *> (&rhs);
 
   // if the rhs was not a level_order iterator then we've already
   // discovered the relation is false.
@@ -532,7 +548,8 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator== (
       // the is_empty () function later).
 
       Expression_Tree &t1 = const_cast <Expression_Tree &> (tree_);
-      Expression_Tree &t2 = const_cast <Expression_Tree &> (level_order_rhs->tree_);
+      Expression_Tree &t2 = const_cast <Expression_Tree &> (
+        level_order_rhs->tree_);
 
       if (t1.get_root () == t2.get_root () 
           && queue_.size () == level_order_rhs->queue_.size ())
@@ -545,7 +562,8 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator== (
           // are equal, then both iterators are pointing to the same
           // position in the tree.
 
-          if (queue_.front ().get_root () == level_order_rhs->queue_.front ().get_root ())
+          if (queue_.front ().get_root () ==
+              level_order_rhs->queue_.front ().get_root ())
             return true;
         }
     }
@@ -570,7 +588,8 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator!= (
 /// @see Iterator
  
 Madara::Expression_Tree::Iterator_Impl * 
-Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::clone (void)
+Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::clone (
+  void)
 {
   return new Level_Order_Expression_Tree_Iterator_Impl (*this);
 }

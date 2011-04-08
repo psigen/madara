@@ -4,7 +4,7 @@
 #include "madara/utility/Utility.h"
 
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 
 // constructor
@@ -241,14 +241,15 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
 
 // print all variables and their values
 void
-Madara::Knowledge_Engine::Thread_Safe_Context::print (void) const
+Madara::Knowledge_Engine::Thread_Safe_Context::print (
+  unsigned int level) const
 {
   Context_Guard guard (mutex_);
   for (Madara::Knowledge_Map::const_iterator i = map_.begin ();
        i != map_.end (); 
        ++i)
-  ACE_DEBUG ((LM_INFO, "(%P|%t) %s=%d\n", 
-              i->first.c_str (), i->second.value));
+    MADARA_DEBUG (level, (LM_INFO, 
+      "%s=%q\n", i->first.c_str (), i->second.value));
 }
 
 /// Expand a string with variable expansions. This is a generic form of
@@ -303,8 +304,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   // check to see if all brace counts are appropriate
   if (subcount != 0)
   {
-    ACE_DEBUG ((LM_DEBUG, 
-      "EXPAND_ERROR 1: Improperly matched braces in %s\n", key.c_str ()));
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Improperly matched braces in %s\n",
+      key.c_str ()));
+    exit (-1);
   }
 
   return builder.str ();

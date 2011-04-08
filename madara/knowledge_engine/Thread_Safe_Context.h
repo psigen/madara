@@ -95,11 +95,11 @@ namespace Madara
       bool exists (const ::std::string & key) const;
 
       /// Print all variables and their values.
-      void print (void) const;
+      void print (unsigned int level) const;
 
       /// Print a statement, similar to printf (variable expansions allowed)
       /// e.g. input = "MyVar{.id} = {MyVar{.id}}\n";
-      void print (const std::string & statement) const;
+      void print (const std::string & statement, unsigned int level) const;
 
       /// Clear all variables and their values.
       void clear (void);

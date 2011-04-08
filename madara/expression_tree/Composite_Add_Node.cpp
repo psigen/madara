@@ -4,7 +4,7 @@
 #define _ADD_NODE_CPP_
 
 #include <iostream>
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/expression_tree/Visitor.h"
@@ -47,8 +47,9 @@ Madara::Expression_Tree::Composite_Add_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: Addition has no left operand\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Addition has no left expression\n"));
+    exit (-1);
   }
 
   if (this->right_)
@@ -62,8 +63,9 @@ Madara::Expression_Tree::Composite_Add_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: Addition has no right operand\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Addition has no right expression\n"));
+    exit (-1);
   }
 
   can_change = left_child_can_change || right_child_can_change;

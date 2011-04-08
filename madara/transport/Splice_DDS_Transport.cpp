@@ -1,6 +1,6 @@
 #include "madara/transport/Splice_DDS_Transport.h"
 #include "madara/transport/Splice_Transport_Read_Thread.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
 
@@ -157,8 +157,10 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   // if dp == NULL, we've got an error
   if (domain_participant_ == NULL)
   {
-    ACE_DEBUG ((LM_DEBUG, "ERROR - Splice Daemon not running\n"));
-    return -1;
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nSplice_DDS_Transport::setup:" \
+      " splice daemon not running. Try 'ospl start'...\n"));
+    exit (-2);
   }
 
   domain_participant_->get_default_topic_qos(topic_qos_);
@@ -242,13 +244,16 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
   if (!subscriber_ || !publisher_)
   {
-    ACE_DEBUG ((LM_DEBUG, 
-       "ERROR - The publisher or subscriber could not be created.\n"));
-    if (!subscriber_)
-      return Madara::Transport::Splice_DDS_Transport::ERROR_SUB_BAD_CREATE;
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nSplice_DDS_Transport::setup:" \
+      " pub or sub could not be created. Try 'ospl stop; ospl start'...\n"));
+    exit (-2);
 
-    if (!publisher_)
-      return Madara::Transport::Splice_DDS_Transport::ERROR_PUB_BAD_CREATE;
+    //if (!subscriber_)
+    //  return Madara::Transport::Splice_DDS_Transport::ERROR_SUB_BAD_CREATE;
+
+    //if (!publisher_)
+    //  return Madara::Transport::Splice_DDS_Transport::ERROR_PUB_BAD_CREATE;
   }
 
   // Create datawriter
@@ -345,11 +350,10 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   data.originator = id_.c_str ();
   data.type = Madara::Knowledge_Engine::ASSIGNMENT;
 
-  ACE_DEBUG ((LM_DEBUG, 
-    "(%P|%t) SENDING data: %s=%d, time=%d, quality=%d\n", 
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_DDS_Transport::send:" \
+    " sending data: %s=%q, time=%Q, quality=%u\n", 
     key.c_str (), data.value, cur_clock, data.quality));
-
-  //std::cout << "Sending data: " << key << "=" << value << std::endl;
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 
@@ -382,11 +386,10 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   data.originator = id_.c_str ();
   data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
 
-  ACE_DEBUG ((LM_DEBUG, 
-    "(%P|%t) SENDING multiassignment: %s, time=%d, quality=%d\n", 
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_DDS_Transport::send:" \
+    " sending multiassignment: %s, time=%Q, quality=%u\n", 
     expression.c_str (), cur_clock, quality));
-
-  //std::cout << "Sending data: " << key << "=" << value << std::endl;
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 
@@ -400,7 +403,12 @@ Madara::Transport::Splice_DDS_Transport::check_handle (void * handle,
                                                       char * info)
 {
   if (!handle)
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Error in %s: Creation failed: invalid handle\n", info));
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nSplice_DDS_Transport::check_handle:" \
+      " error in %s: Creation failed: invalid handle\n", info));
+    exit (-2);
+  }
 }
 
 void
@@ -411,8 +419,11 @@ Madara::Transport::Splice_DDS_Transport::check_status (DDS::ReturnCode_t status,
   if ((status == DDS::RETCODE_OK) || (status == DDS::RETCODE_NO_DATA)) 
     return;
   
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Error in %s: Creation failed: %s\n", 
+  MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nSplice_DDS_Transport::check_status:" \
+      " error in %s: Creation failed: %s\n", 
       info, get_error_name(status)));
+  exit (-2);
 }
 
 char *

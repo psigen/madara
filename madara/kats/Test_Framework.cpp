@@ -1,5 +1,6 @@
 
 #include "madara/kats/Test_Framework.h"
+#include "madara/utility/Log_Macros.h"
 
 #include <sstream>
 #include <iostream>
@@ -75,7 +76,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   log_message << buffer.str ();
   log_message << "\n";
 
-  log (log_message.str ());
+  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
 
   return knowledge_.wait (buffer.str ());
 }
@@ -90,7 +91,7 @@ Madara::KATS::Test_Framework::sync (void)
   log_message << "KATS::Test_Framework::sync: Starting ";
   log_message << "\n";
 
-  log (log_message.str ());
+  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
 
   // first, make sure the transport is activated or else
   // we will be here for a long time.
@@ -102,7 +103,7 @@ Madara::KATS::Test_Framework::sync (void)
   log_message << "KATS::Test_Framework::sync: Finished ";
   log_message << "\n";
 
-  log (log_message.str ());
+  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
 }
 
 /// Syncs on all processes until everyone is at the event and
@@ -118,7 +119,7 @@ Madara::KATS::Test_Framework::barriered_sync (const std::string & event_name)
   log_message << event_name;
   log_message << "\n";
 
-  log (log_message.str ());
+  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
 
   // first, make sure the transport is activated or else
   // we will be here for a long time.
@@ -139,7 +140,7 @@ Madara::KATS::Test_Framework::barriered_sync (const std::string & event_name)
   log_message << event_name;
   log_message << "\n";
 
-  log (log_message.str ());
+  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
 }
 
 /// Creates a testing event
@@ -237,13 +238,13 @@ Madara::KATS::Test_Framework::event (const std::string & name,
 
 /// Logs according to a severity level
 void 
-Madara::KATS::Test_Framework::log (const std::string & statement, int level)
+Madara::KATS::Test_Framework::log (const std::string & statement, unsigned int level)
 {
-  knowledge_.print (statement);
+  knowledge_.print (statement, level);
 }
 
 /// Dumps all knowledge to std::err
-void Madara::KATS::Test_Framework::dump (int level)
+void Madara::KATS::Test_Framework::dump (unsigned int level)
 {
-  knowledge_.print_knowledge ();
+  knowledge_.print_knowledge (level);
 }

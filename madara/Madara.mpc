@@ -2,7 +2,7 @@
 project (Madara) : using_ace, using_splice, splice_transport {
 
   sharedname = Madara
-  dynamicflags += MADARA_BUILD_DLL
+  dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL
   libout = $(MADARA_ROOT)/lib
   
   includes += $(MADARA_ROOT)
@@ -34,6 +34,7 @@ project (Madara) : using_ace, using_splice, splice_transport {
     knowledge_engine
     utility/Utility.cpp
     utility/Refcounter.cpp
+    utility/Log_Macros.cpp
     transport/TCP_Transport.cpp
     transport/TCP_Transport_Read_Thread.cpp
     Thread_Pool.cpp

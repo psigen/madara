@@ -132,13 +132,13 @@ namespace Madara
        * @param statement  statement to print (can contain variable expansion
        *                   from the knowledge base)
        **/
-      void log (const std::string & statement, int level = 0);
+      void log (const std::string & statement, unsigned int level = 0);
 
       /**
        * Dumps all knowledge to std::err
        * @param level      level of severity
        **/
-      void dump (int level = 0);
+      void dump (unsigned int level = 0);
 
     private:
       Madara::Knowledge_Engine::Knowledge_Base knowledge_;

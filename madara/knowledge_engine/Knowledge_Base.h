@@ -109,9 +109,6 @@ namespace Madara
       /// Check if a key exists in the knowledge base
       bool exists (const ::std::string & key) const;
 
-      /// Add rule to the knowledge base (preferred method for data entry)
-      void add_rule (const ::std::string & expression);
-
       /// Evaluate an expression once
       long long evaluate (const ::std::string & expression);
 
@@ -132,22 +129,20 @@ namespace Madara
       int apply_modified (void);
 
       /// Print all rules that are continuously applied to knowledge
-      void print_rules (void) const;
+      //void print_rules (int level = 0) const;
 
       /// Print all knowledge (does not include rules)
-      void print_knowledge (void) const;
+      void print_knowledge (unsigned int level = 0) const;
 
       /// Print a statement after expanding any variables (e.g. "Var{.myid}")
-      void print (const std::string & statement) const;
+      void print (const std::string & statement, 
+        unsigned int level = 0) const;
 
       /// Clear all knowledge and rules from the knowledge base
       void clear (void);
 
       /// Clear all knowledge from the knowledge base but keep rules
       void clear_map (void);
-
-      /// Clear all rules from the knowledge base but keep knowledge
-      void clear_rules (void);
 
       /// lock the underlying knowledge base against any updates
       /// until we release

@@ -1,5 +1,5 @@
 #include "ace/Event_Handler.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 #include "ace/Barrier.h"
 
 #include "madara/Thread_Pool.h"
@@ -28,8 +28,10 @@ int Madara::Thread_Pool::open (int pool_size)
 /// Close the thread pool
 int Madara::Thread_Pool::close(void)
 { 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) closing threads.\n"));
- 
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+    DLINFO "Thread_Pool::close:" \
+    " closing thread pool\n"));
+
   // enqueue hangup messages
   for (int i = 0; i < threads_.value (); ++i)
     {
@@ -40,15 +42,20 @@ int Madara::Thread_Pool::close(void)
 
   enter_barrier ();
 
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+    DLINFO "Thread_Pool::close:" \
+    " thread pool closed\n"));
+
   return 0;
 }
 
 int Madara::Thread_Pool::enter_barrier ()
 { 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) entering barrier.\n"));
- 
-  barrier_->wait ();
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+    DLINFO "Thread_Pool::enter_barrier:" \
+    " beginning thread barrier for shut down of pool\n"));
 
+  barrier_->wait ();
   return 0;
 }
 
@@ -87,11 +94,15 @@ int Madara::Thread_Pool::svc (void)
 
       // here's where we should be evaluating the types and processing data
       char * data = message->base ();
-  
-      ::std::cerr << "Data is " << data << ::std::endl;
+      
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+        DLINFO "Thread_Pool::svc:" \
+        " processing data=%s\n", data));
     }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Exiting.\n"));
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+    DLINFO "Thread_Pool::svc:" \
+    " thread exiting\n"));
  
   return 0;
 } 

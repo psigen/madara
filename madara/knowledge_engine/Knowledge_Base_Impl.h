@@ -122,16 +122,13 @@ namespace Madara
       long long wait (const ::std::string & expression, bool send_modifieds);
 
       /// Print all rules that are continuously applied to knowledge
-      void print_rules (void) const;
+      void print_rules (unsigned int level) const;
 
       /// Print all knowledge (does not include rules)
-      void print_knowledge (void) const;
+      void print_knowledge (unsigned int level) const;
 
       /// Print a statement after expanding any variables (e.g. "Var{.myid}")
-      void print (const std::string & statement) const;
-
-      /// Send test messages over the transport
-      void test (const long & iterations);
+      void print (const std::string & statement, unsigned int level) const;
 
       /// Clear all knowledge and rules from the knowledge base
       void clear (void);
@@ -151,7 +148,6 @@ namespace Madara
 
     private:
       void setup_uniquehostport (const std::string & host);
-      void setup_splitters (void);
 
       ::std::vector< ::std::string> statement_splitters_;
       ::std::vector< ::std::string> assignment_splitters_;

@@ -1,4 +1,5 @@
 
+#define MADARA_NTRACE    0
 #define ACE_NTRACE    0
 //#define ACE_NLOGGING  0
 #define ACE_NDEBUG    0
@@ -17,6 +18,7 @@
 #include "ace/Sched_Params.h"
 #include "ace/Process.h"
 
+#include "madara/utility/Log_Macros.h"
 #include "madara/kats/Test_Framework.h"
 
 Madara::KATS::Settings settings;
@@ -47,9 +49,6 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  ACE_TRACE (ACE_TEXT ("main"));
-
-
   // set the default working directory to the current directory
   process_options.working_directory (".");
 
@@ -62,23 +61,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  if(debug_printing)
-    ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
-  else
-    ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
-
   if (!process_set)
   {
-    ACE_DEBUG ((LM_INFO, 
-      "KATS_PROCESS: You did not specify a process name. Try -h or --help\n"));
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKATS_PROCESS:"\
+      " no process name was specified. Try -h or --help\n"));
     return -1;
   }
 
   if (!test_set)
   {
-    ACE_DEBUG ((LM_INFO, 
-      "KATS_PROCESS: You did not specify a test name. Try -h or --help\n"));
-    return -2;
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKATS_PROCESS:"\
+      " no test name was specified. Try -h or --help\n"));
+    return -1;
   }
 
 
@@ -128,8 +124,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // if a kill time is set, then we use a different type of wait
   if (kill_time_set)
   {
-    ACE_DEBUG ((LM_INFO, 
-        "KATS_PROCESS: User specified kill time of %d s\n",
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "KATS_PROCESS: User specified kill time of %: s\n",
         kill_time.sec () ));
 
     pid_t ret = process.wait (kill_time, &status);
@@ -140,8 +136,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       // allow users to specify a kill signal
       if (signal_set)
       {
-        ACE_DEBUG ((LM_INFO, 
-          "\n\nKATS_PROCESS: Process timed out. Sending %s a %d signal\n",
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "KATS_PROCESS: Process timed out. Sending %s a %d signal\n",
           process_options.process_name (), kill_signal ));
 
         process.kill (kill_signal);
@@ -149,8 +145,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       }
       else
       {
-        ACE_DEBUG ((LM_INFO, 
-          "\n\nKATS_PROCESS: Process timed out. Terminating %s\n",
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "KATS_PROCESS: Process timed out. Terminating %s\n",
           process_options.process_name () ));
 
         // otherwise sigterm
@@ -164,8 +160,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     process.wait ();
   }
 
-  ACE_DEBUG ((LM_INFO, 
-    "KATS_PROCESS: Process returned %d\n",
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "KATS_PROCESS: Process returned %u\n",
     process.exit_code () ));
 
   return_value = process.exit_code ();
@@ -235,9 +231,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> settings.id;
       }
 
-      ACE_DEBUG ((LM_DEBUG,
-        "KATS_PROCESS: id in test process ring set to %d\n",
-      cmd_opts.opt_arg (), settings.id ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: id in test process ring set to %u\n",
+        settings.id));
 
       break;
     case 'k':
@@ -249,9 +245,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         signal_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_PROCESS: signal to kill executable set to %d\n",
-      cmd_opts.opt_arg (), kill_signal ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: signal to kill executable set to %d\n",
+        kill_signal));
 
       break;
     case 'n':
@@ -262,8 +258,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> settings.processes;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: processes in test set to %d\n",
-        cmd_opts.opt_arg (), settings.processes ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: processes involved in test set to %u\n",
+        settings.processes));
+
 
       break;
     case 'l':
@@ -278,9 +276,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         delay_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG,
-        "KATS_PROCESS: -l = %s; delay executable by %d seconds\n",
-        cmd_opts.opt_arg (), delay_time.sec () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: delay executable by %: seconds\n",
+        delay_time.sec ()));
 
       break;
     case 't':
@@ -295,9 +293,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         kill_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG,
-        "KATS_PROCESS: kill executable after %d seconds\n",
-        cmd_opts.opt_arg (), kill_time.sec () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: kill executable after by %: seconds\n",
+        kill_time.sec ()));
 
       break;
     case 'e':
@@ -306,8 +304,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       process_options.setenv (cmd_opts.opt_arg (), 
         strlen (cmd_opts.opt_arg ()));
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: environment set to %s\n",
-        cmd_opts.opt_arg () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: environment set to %s\n",
+        cmd_opts.opt_arg ()));
 
       break;
     case 'b':
@@ -315,8 +314,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       pre_condition = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: precondition set to %s.\n",
-        cmd_opts.opt_arg (), pre_condition.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: precondition set to %s\n",
+        pre_condition.c_str ()));
 
       break;
     case 's':
@@ -324,8 +324,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       post_condition = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: postcondition set to %s.\n",
-        cmd_opts.opt_arg (), post_condition.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: postcondition set to %s\n",
+        post_condition.c_str ()));
 
       break;
     case 'd':
@@ -333,8 +334,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       settings.domains = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: knowledge domain set to %s.\n",
-        cmd_opts.opt_arg (), settings.domains.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: knowledge domain set to %s\n",
+        settings.domains.c_str ()));
 
       break;
     case 'x':
@@ -346,8 +348,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       process_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: executable set to %s\n",
-      cmd_opts.opt_arg () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: executable set to %s\n",
+        cmd_opts.opt_arg ()));
 
       break;
     case 'c':
@@ -358,8 +361,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       if (cmd_opts.opt_arg ())
         command_line << cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: command line set to %s\n",
-        command_line.str ().c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: command line set to %s\n",
+        command_line.str ().c_str ()));
 
       break;
     case 'w':
@@ -367,16 +371,18 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       process_options.working_directory (cmd_opts.opt_arg ());
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: working directory is now %s\n",
-      cmd_opts.opt_arg () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: working directory set to %s\n",
+        cmd_opts.opt_arg ()));
 
       break;
     case 'o':
       // host name
       settings.host = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: host is now %s\n",
-        cmd_opts.opt_arg (), settings.host.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: host set to %s\n",
+        settings.host.c_str ()));
 
       break;
     case 'a':
@@ -384,31 +390,39 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       test_name = cmd_opts.opt_arg ();
       test_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: test name is now %s\n",
-        cmd_opts.opt_arg (), test_name.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: test name set to %s\n",
+        test_name.c_str ()));
 
       break;
     case 'r':
       // thread number
       realtime = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: enabling realtime scheduling\n"));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: enabling realtime scheduling\n"));
 
       break;
     case 'g':
       // thread number
       debug_printing = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_PROCESS: enabling debug printing\n"));
+      if(debug_printing)
+        ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+      else
+        ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: enabling debug printing\n"));
 
       break;
     case ':':
-      ACE_ERROR_RETURN ((LM_ERROR, 
+      MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_PROCESS: ERROR: -%c requires an argument"),
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_INFO, "Program Options:      \n\
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:    \n\
       -n (--processes)   number of testing processes \n\
       -i (--id)          this process id        \n\
       -g (--debug)       prints KATS debug messages \n\
@@ -428,7 +442,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -o (--host)        host identifier        \n\
       -h (--help)        print this menu        \n"
       ));
-      ACE_ERROR_RETURN ((LM_ERROR, 
+      MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu\n")), -1); 
       break;
     }

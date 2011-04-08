@@ -1,5 +1,5 @@
 #include "madara/transport/Splice_Transport_Read_Thread.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
 
@@ -17,8 +17,6 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
     mutex_ (), is_not_ready_ (mutex_), is_ready_ (false),
     enable_mutexing_ (enable_mutexing)
 {
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Splice_Read_Thread started\n"));
-  
   assignment_symbols_.push_back ("=");
   assignment_symbols_.push_back (";");
 
@@ -35,6 +33,10 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
     waitset_.attach_condition (condition_);
   }
   this->activate (THR_NEW_LWP | THR_DETACHED, 1);
+  
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_Read_Thread::Splice_Read_Thread:" \
+    " read thread started\n"));
 }
 
 Madara::Transport::Splice_Read_Thread::~Splice_Read_Thread ()
@@ -60,10 +62,11 @@ Madara::Transport::Splice_Read_Thread::wait_for_ready (void)
 
 int Madara::Transport::Splice_Read_Thread::enter_barrier (void)
 { 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) entering barrier.\n"));
- 
-  barrier_.wait ();
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_Read_Thread::enter_barrier:" \
+    " beginning thread barrier for shut down of read thread\n"));
 
+  barrier_.wait ();
   return 0;
 }
 
@@ -98,30 +101,38 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
     // if we actually updated the value
     if (result == 1)
     {
-      ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::handle_assignment:" \
+        " received data[%s]=%q from %s.\n", 
         key.c_str (), value, data.originator.val ()));
     }
     // if the data was already current
     else if (result == 0)
     {
-      ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
-        key.c_str (), value));
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::handle_assignment:" \
+          " discarded data[%s]=%q from %s as the value was already set.\n",
+          key.c_str (), value, data.originator.val ()));
     }
     else if (result == -1)
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "(%P|%t) DISCARDED data had invalid key (null variable name).\n", 
-        key.c_str (), cur_quality, data.quality));
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::handle_assignment:" \
+        " discarded data due to null key.\n"));
     }
     else if (result == -2)
     {
-      ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was low quality (%d vs %d).\n", 
-        key.c_str (), cur_quality, data.quality));
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::handle_assignment:" \
+        " discarded data[%s]=%q due to lower quality (%u vs %u).\n",
+        key.c_str (), value, cur_quality, data.quality));
     }
     else if (result == -3)
     {
-      ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
-        key.c_str (), cur_clock, data.clock));
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::handle_assignment:" \
+        " discarded data[%s]=%q due to older timestamp (%Q vs %Q).\n",
+        key.c_str (), value, cur_clock, data.clock));
     }
   }
 }
@@ -138,7 +149,9 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
 
     context_.lock ();
     
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Processing multiassignment (%s).\n", 
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::multiassignment:" \
+        " processing multiassignment (%s).\n",
           data.key.val ()));
 
     while (!stream.eof ())
@@ -159,32 +172,39 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
       // if we actually updated the value
       if (result == 1)
       {
-        ACE_DEBUG ((LM_DEBUG, "(%P|%t) RECEIVED data[%s]=%d from %s.\n", 
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::handle_multiassignment:" \
+          " received data[%s]=%q from %s.\n",
           key.c_str (), value, data.originator.val ()));
       }
       // if the data was already current
       else if (result == 0)
       {
-        ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was already %d.\n", 
-          key.c_str (), value));
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::handle_multiassignment:" \
+          " discarded data[%s]=%q from %s as the value was already set.\n",
+          key.c_str (), value, data.originator.val ()));
       }
       else if (result == -1)
       {
-        ACE_DEBUG ((LM_DEBUG, 
-          "(%P|%t) DISCARDED data had invalid key (null variable name).\n", 
-          key.c_str (), cur_quality, data.quality));
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::handle_multiassignment:" \
+          " discarded data due to null key.\n"));
       }
       else if (result == -2)
       {
-        ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was low quality (%d vs %d).\n", 
-          key.c_str (), cur_quality, data.quality));
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::handle_multiassignment:" \
+          " discarded data[%s]=%q due to lower quality (%u vs %u).\n",
+          key.c_str (), value, cur_quality, data.quality));
       }
       else if (result == -3)
       {
-        ACE_DEBUG ((LM_DEBUG, "(%P|%t) DISCARDED data[%s] was old (%d vs %d).\n", 
-          key.c_str (), cur_clock, data.clock));
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::handle_multiassignment:" \
+          " discarded data[%s]=%q due to older timestamp (%Q vs %Q).\n",
+          key.c_str (), value, cur_clock, data.clock));
       }
-
     }
     
     context_.unlock ();
@@ -199,8 +219,6 @@ Madara::Transport::Splice_Read_Thread::svc (void)
   int                    amount;
   DDS::Boolean           result = false;
   Knowledge::UpdateSeq_var update_data_list_ = new Knowledge::UpdateSeq;
-
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Entering Splice_Read_Thread::svc.\n"));
 
   ::DDS::Duration_t wait_time;
   wait_time.sec = 3;
@@ -241,26 +259,32 @@ Madara::Transport::Splice_Read_Thread::svc (void)
         {
           // if we don't check originator for null, we get phantom sends
           // when the program exits.
-          ACE_DEBUG ((LM_DEBUG, "(%P|%t) Discarding data from %s.\n", 
-            update_data_list_[i].originator.val ()));
+          MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+            DLINFO "Splice_Read_Thread::svc:" \
+            " discarding null originator event.\n"));
+
           continue;
         }
 
         if (Madara::Knowledge_Engine::ASSIGNMENT == update_data_list_[i].type)
         {
-          ACE_DEBUG ((LM_DEBUG, 
-            "(%P|%t) Processing %s=%d from %s with time %d and quality %d.\n", 
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+            DLINFO "Splice_Read_Thread::svc:" \
+            " processing %s=%q from %s with time %Q and quality %u.\n", 
             update_data_list_[i].key.val (), update_data_list_[i].value, 
             update_data_list_[i].originator.val (),
             update_data_list_[i].clock, update_data_list_[i].quality));
+
           handle_assignment (update_data_list_[i]);
         }
         else if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list_[i].type)
         {
-          ACE_DEBUG ((LM_DEBUG, 
-            "(%P|%t) Processing multiassignment from %s with time %d and quality %d.\n", 
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+            DLINFO "Splice_Read_Thread::svc:" \
+            " processing multassignment from %s with time %Q and quality %u.\n",
             update_data_list_[i].originator.val (),
             update_data_list_[i].clock, update_data_list_[i].quality));
+
           handle_multiassignment (update_data_list_[i]);
         }
 

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include "ace/INET_Addr.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 /// Convert string to uppercase
 ::std::string &

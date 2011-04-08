@@ -2,7 +2,7 @@
 #include "madara/expression_tree/Variable_Node.h"
 #include "madara/utility/Utility.h"
 
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 #include <string>
 #include <sstream>
 
@@ -24,8 +24,10 @@ Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key,
 
     if (pivot_list_.size () % 2 != 0)
     {
-      ACE_DEBUG ((LM_DEBUG, "COMPILE_ERROR: Not enough matching end braces " \
-        "for a valid expression in %s\n", key_.c_str ()));
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL COMPILE ERROR: matching braces not found in %s\n",
+        key.c_str ()));
+      exit (-1);
     }
 
     // check for braces that are not properly closed
@@ -36,8 +38,10 @@ Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key,
     {
       if (pivot_list_[count-1] != "{" || pivot_list_[count] != "}")
       {
-        ACE_DEBUG ((LM_DEBUG, 
-          "COMPILE_ERROR: Improperly matched braces in %s\n", key_.c_str ()));
+        MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+          "\nKARL COMPILE ERROR: matching braces not found in %s\n",
+          key.c_str ()));
+        exit (-1);
       }
     }
   }

@@ -8,7 +8,7 @@
 #include "madara/expression_tree/Visitor.h"
 #include "madara/expression_tree/Leaf_Node.h"
 
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 // Ctor
 Madara::Expression_Tree::Leaf_Node::Leaf_Node (long long item)

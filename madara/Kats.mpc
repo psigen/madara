@@ -18,17 +18,18 @@ project (Kats) : using_madara, using_ace, using_splice {
     kats
   }
 
-  Source_Files {
-    kats/Test_Framework.cpp
-  }
-
   Header_Files {
     kats
+    utility/Log_Macros.h
+  }
+
+  Source_Files {
+    kats/Test_Framework.cpp
   }
 }
 
 
-project (Kats_Process) : using_kats, using_ace {
+project (Kats_Process) : using_kats, using_madara, using_ace {
   
   exeout = $(MADARA_ROOT)/bin
   exename = kats_process
@@ -38,6 +39,7 @@ project (Kats_Process) : using_kats, using_ace {
   }
 
   Header_Files {
+    utility/Log_Macros.h
   }
 
   Source_Files {
@@ -45,7 +47,7 @@ project (Kats_Process) : using_kats, using_ace {
   }
 }
 
-project (Kats_Batch) : using_kats, using_ace {
+project (Kats_Batch) : using_kats, using_madara, using_ace {
   
   exeout = $(MADARA_ROOT)/bin
   exename = kats_batch
@@ -59,6 +61,7 @@ project (Kats_Batch) : using_kats, using_ace {
   Header_Files {
     kats/tinyxml.h
     kats/tinystr.h
+    utility/Log_Macros.h
   }
 
   Source_Files {

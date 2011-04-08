@@ -3,7 +3,7 @@
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/transport/TCP_Transport.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 #include <sstream>
 
@@ -42,7 +42,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   settings_.domains = knowledge_domain;
 
   setup_uniquehostport (host);
-//  setup_splitters ();   // only used for debugging
   activate_transport ();
 }
 
@@ -51,7 +50,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 : settings_ (config), files_ (map_), transport_ (0)
 {
   setup_uniquehostport (host);
-//  setup_splitters ();   // only used for debugging
   activate_transport ();
 }
 
@@ -71,21 +69,19 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
 
   if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, port) == -1)
   {
-    ACE_DEBUG ((LM_DEBUG, 
-      "MADARA ERROR: Unable to bind to any ephemeral port\n"));
-    return;
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
+      DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
+      " unable to bind to any ephemeral port." \
+      " Check firewall.\n"));
+    exit (-1);
   }
  
   // we were able to bind to an ephemeral port
   Madara::Utility::merge_hostport_identifier (id_, host, port);
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Unique bind to %s\n", id_.c_str ()));
-
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_splitters (void)
-{
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
+    " unique bind to %s\n", id_.c_str ()));
 }
 
 void
@@ -93,8 +89,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 {
   if (!transport_)
   {
-    ACE_DEBUG ((LM_DEBUG,
-      "(%P|%t) ACTIVATING TRANSPORT %d\n", settings_.type));
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " activating transport type %d\n", settings_.type));
+
     if (settings_.type == Madara::Transport::SPLICE)
     {
     #ifdef _USE_OPEN_SPLICE_
@@ -113,6 +111,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
       transport_ = 0;
     }
   }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " transport already activated. If you need" \
+      " a new type, close transport first\n"));
+  }
 }
 
 void
@@ -123,6 +128,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
     transport_->close ();
     delete transport_;
     transport_ = 0;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::close_transport:" \
+      " transport has been closed.\n"));
   }
 }
 
@@ -167,7 +175,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
           quality = cur_quality;
 
         string_builder << *k << " = " << map_.get (*k) << " ; ";
-          //transport_->send_data (*k, map_.get (*k));
       }
 
       transport_->send_multiassignment (string_builder.str (), quality);
@@ -177,7 +184,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
   else
   {
     ret = -1;
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) APPLY_MODIFIEDS: NOT TRANSPORTING: \n"));
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::apply_modified:" \
+      " not sending changes to knowledge.\n"));
   }
 
   map_.unlock ();
@@ -228,7 +237,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   // lock the context
   map_.lock ();
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting on %s\n", expression.c_str ()));
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::wait:" \
+      " waiting on %s\n", expression.c_str ()));
 
   // resulting tree of the expression
   Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
@@ -236,7 +247,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   long long last_value = tree.evaluate ();
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Completed first eval to get %d",
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+      DLINFO "Knowledge_Base_Impl::wait:" \
+      " completed first eval to get %d",
     last_value));
 
   if (transport_ && send_modifieds)
@@ -273,15 +286,18 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     }
   }
   else
-  {
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) NOT TRANSPORTING: \n"));
+    {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " not sending knowledge mutations \n"));
   }
 
   // wait for expression to be true
   while (!last_value)
   {
-    ACE_DEBUG ((LM_DEBUG,
-      "(%P|%t) Wait: last value doesn't result in success\n"));
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " last value doesn't result in success\n"));
 
     // we need the context to do an additional release. If release
     // the context lock, we may have an update event happen
@@ -346,11 +362,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
     return 0;
 
   long long last_value = 0;
-  // strip the incoming expression of white spaces
-  //::std::string expression (expression_copy);
-  //Madara::Utility::strip_white_space (expression);
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Evaluting %s\n", expression.c_str ()));
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " evaluting %s\n", expression.c_str ()));
 
   // iterators and tree for evaluation of interpreter results
   Madara::Expression_Tree::Expression_Tree tree;
@@ -392,32 +407,18 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (void) const
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (
+  unsigned int level) const
 {
-  ACE_TRACE (ACE_TEXT ("print_rules"));
+  MADARA_TRACE (ACE_TEXT ("Knowledge_Base_Impl::print_rules"));
   
-  ::std::cout << "\nRules in Knowledge Base:\n";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+        "Rules in Knowledge Base:\n"));
+
   for (Knowledge_Rules::const_iterator i = rules_.begin ();
        i != rules_.end (); ++i)
   {
-    ACE_DEBUG ((LM_INFO, "(%P|%t) %s\n", (*i).c_str ()));
-  }
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::test(const long & iterations)
-{
-  if (!transport_)
-    return;
-
-  char * keys [] = {
-    "bob",
-    "bill",
-    "jack",
-    "thomas" };
-
-  for (long i = 0; i < iterations; ++i)
-  {
-    transport_->send_data (keys[i % 4], i);
+    MADARA_DEBUG (level, (LM_INFO,
+        "%s\n", (*i).c_str ()));
   }
 }

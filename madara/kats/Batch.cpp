@@ -1,5 +1,7 @@
 
+#define MADARA_NTRACE    0
 #define ACE_NTRACE    0
+
 //#define ACE_NLOGGING  0
 #define ACE_NDEBUG    0
 
@@ -260,8 +262,6 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  ACE_TRACE (ACE_TEXT ("main"));
-
   path = extract_path (argv[0]);
 
   std::vector <KATS_Process> processes;
@@ -274,11 +274,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   if (retcode < 0)
     return retcode;
-
-  if(debug_printing)
-    ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
-  else
-    ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
 
 
   // read the file
@@ -776,7 +771,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (!run_in_parallel && !kill_time_set)
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:  Waiting on process to finish."));
+        "KATS_BATCH:  Waiting on process to finish.\n"));
       processes[cur].wait ();
     }
     else if (!run_in_parallel)
@@ -882,8 +877,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       test_name = cmd_opts.opt_arg ();
       test_name_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  test name set to %s\n",
-        cmd_opts.opt_arg (), test_name.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: test name set to %s\n",
+        test_name.c_str ()));
 
       break;
     case 'b':
@@ -892,8 +888,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       pre_condition = cmd_opts.opt_arg ();
       pre_condition_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  precondition set to %s.\n", 
-        cmd_opts.opt_arg (), pre_condition.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: precondition set to %s\n",
+        pre_condition.c_str ()));
 
       break;
     case 'd':
@@ -902,8 +899,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       settings.domains = cmd_opts.opt_arg ();
       domain_set = false;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  knowledge domain set to %s.\n", 
-        cmd_opts.opt_arg (), settings.domains.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: knowledge domain set to %s\n",
+        settings.domains.c_str ()));
 
       break;
     case 'f':
@@ -911,8 +909,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       tests_file = cmd_opts.opt_arg ();
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  reading tests from %s.\n", 
-        cmd_opts.opt_arg (), tests_file.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
+        "KATS_BATCH:  reading tests from %s.\n",
+        tests_file.c_str () ));
 
       break;
     case 'g':
@@ -920,7 +919,13 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       debug_printing = true;
       debug_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  enabling debug printing\n"));
+      if(debug_printing)
+        ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+      else
+        ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: enabling debug printing\n"));
 
       break;
     case 'i':
@@ -932,8 +937,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       }
       id_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  id set to %d\n", 
-      cmd_opts.opt_arg (), settings.id ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: id in test process ring set to %u\n",
+        settings.id));
 
       break;
     case 'l':
@@ -948,8 +954,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         delay_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  delay time set to %d seconds\n", 
-        cmd_opts.opt_arg (), delay_time.sec () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: delay processes launch by %: seconds\n",
+        delay_time.sec ()));
 
       break;
     case 'n':
@@ -961,8 +968,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       }
       processes_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  processes set to %d\n", 
-        cmd_opts.opt_arg (), settings.processes ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: processes set to %u\n",
+        settings.processes));
 
       break;
     case 'o':
@@ -970,8 +978,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       settings.host = cmd_opts.opt_arg ();
       host_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  host set to %s\n",
-        cmd_opts.opt_arg (), settings.host.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: host set to %s\n",
+        settings.host.c_str ()));
 
       break;
     case 'p':
@@ -979,7 +988,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       run_in_parallel = true;
       parallel_set = true;
 
-      ACE_DEBUG ((LM_DEBUG,
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         "KATS_BATCH:  running all batch tests in parallel\n"));
 
       break;
@@ -988,7 +997,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       realtime = true;
       realtime_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  enabling realtime scheduling\n"));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: enabling realtime scheduling\n"));
 
       break;
     case 's':
@@ -997,8 +1007,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       post_condition = cmd_opts.opt_arg ();
       post_condition_set = true;
 
-      ACE_DEBUG ((LM_DEBUG, "KATS_BATCH:  postcondition set to %s.\n",
-        cmd_opts.opt_arg (), post_condition.c_str () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: postcondition set to %s\n",
+        post_condition.c_str ()));
 
       break;
     case 't':
@@ -1013,18 +1024,18 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         kill_time_set = true;
       }
 
-      ACE_DEBUG ((LM_DEBUG,
-        "KATS_BATCH:  terminate all test processes after %d seconds\n",
-        cmd_opts.opt_arg (), kill_time.sec () ));
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH:  terminate all test processes after %: seconds\n",
+        kill_time.sec ()));
 
       break;
     case ':':
-      ACE_ERROR_RETURN ((LM_ERROR, 
+      MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_BATCH:  ERROR: -%c requires an argument"),
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_INFO, "Program Options:      \n\
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:      \n\
       -f (--file)        xml file containing testing information \n\
       -n (--processes)   number of testing processes \n\
       -i (--id)          this process id        \n\
@@ -1040,7 +1051,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -o (--host)        host identifier        \n\
       -h (--help)        print this menu        \n"
       ));
-      ACE_ERROR_RETURN ((LM_ERROR, 
+      MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu\n")), -1); 
       break;
     }

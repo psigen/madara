@@ -54,6 +54,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 1)
     stack_.push (-stack_.pop ());
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Negate" \
+      " requires a right expression"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a decrement (Composite_Predecrement_Node)
@@ -79,6 +86,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     {
       stack_.push (--old_value);
     }
+  }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Predecrement" \
+      " requires a right expression"));
+    exit (-1);
   }
 }
 
@@ -106,6 +120,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
       stack_.push (++old_value);
     }
   }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Preincrement" \
+      " requires a right expression"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a negation (Composite_Not_Node)
@@ -115,6 +136,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 1)
     stack_.push (!stack_.pop ());
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Not" \
+      " requires a right expression"));
+    exit (-1);
+  }
 }
 
 /// evaluation of an addition (Composite_Add_Node)
@@ -124,7 +152,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () + stack_.pop ());
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Add" \
+      " requires both a left and right expression"));
+    exit (-1);
+  }
 }
 
 /// evaluation of an assignment (Composite_Assignment_Node)
@@ -148,7 +182,10 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     }
     catch (::std::bad_cast &)
     {
-      std::cerr << "ERROR: Bad cast: Assignment operation must have a Variable as left operand\n";
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL EVAL ERROR: Assignment" \
+        " must have a variable as the left expression\n"));
+      exit (-1);
     }
   }
   // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
@@ -166,6 +203,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left && right);
   }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: And" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a logical or comparison (Composite_Or_Node)
@@ -179,6 +223,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     long long left = stack_.pop ();
 
     stack_.push (left || right);
+  }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Or" \
+      " requires both a left and right expression\n"));
+    exit (-1);
   }
 }
 
@@ -196,6 +247,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     // some grief, so I just implemented it as is
     stack_.push (left_v > right_v ? left_v : right_v);
   }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: And" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of an equality comparison (Composite_Equality_Node)
@@ -210,7 +268,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left == right);
   }
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Equality" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of an inequality comparison (Composite_Inequality_Node)
@@ -225,7 +289,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left != right);
   }
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Inequality" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a greater than equal to comparison (Composite_Greater_Than_Equal_Node)
@@ -240,7 +310,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left >= right);
   }
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Greater-than-equal" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a greater than comparison (Composite_Greater_Than_Node)
@@ -255,7 +331,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left > right);
   }
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Greater-than" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a less than equal to comparison (Composite_Less_Than_Equal_Node)
@@ -270,7 +352,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left <= right);
   }
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Less-than-equal" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of a less than comparison (Composite_Less_Than_Node)
@@ -285,7 +373,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 
     stack_.push (left < right);
   }
-  // ::std::cout << "add current top: " << stack_.top () << ::std::endl;
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Less-than" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluation of an addition (Composite_Subtract_Node)
@@ -294,10 +388,17 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
   const Madara::Expression_Tree::Composite_Subtract_Node &node)
 {
   if (stack_.size () >= 2)
-    {
-      long long rhs = stack_.pop ();
-      stack_.push (stack_.pop () - rhs);
-    }
+  {
+    long long rhs = stack_.pop ();
+    stack_.push (stack_.pop () - rhs);
+  }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Subtract" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluations of a division (Composite_Divide_Node)
@@ -306,16 +407,18 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
   const Madara::Expression_Tree::Composite_Divide_Node &node)
 {
   if (stack_.size () >= 2 && stack_.top ())
-    {
-      long long rhs = stack_.pop ();
-      stack_.push (stack_.pop () / rhs );
-    }
+  {
+    long long rhs = stack_.pop ();
+    stack_.push (stack_.pop () / rhs );
+  }
   else
-    {
-      ::std::cout << "\n\n**ERROR**: Division by zero is not allowed. ";
-      ::std::cout << "Resetting evaluation visitor.\n\n";
-      reset ();
-    }
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Division" \
+      " requires both a left and right expression" \
+      " (and right must not be 0)\n"));
+    exit (-1);
+  }
 }
 
 /// evaluations of a division (Composite_Multiply_Node)
@@ -325,6 +428,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () * stack_.pop ());
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Multiply" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
 }
 
 /// evaluations of a division (Composite_Modulus_Node)
@@ -332,8 +442,19 @@ void
 Madara::Expression_Tree::Evaluation_Visitor::visit (
   const Madara::Expression_Tree::Composite_Modulus_Node &node)
 {
-  if (stack_.size () >= 2)
-    stack_.push (stack_.pop () % stack_.pop ());
+  if (stack_.size () >= 2 && stack_.top ())
+  {
+    long long rhs = stack_.pop ();
+    stack_.push (stack_.pop () / rhs );
+  }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Modulus" \
+      " requires both a left and right expression" \
+      " (and right must not be 0)\n"));
+    exit (-1);
+  }
 }
 
 /// evaluations of a division (Composite_Modulus_Node)
@@ -343,6 +464,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () ? stack_.pop () : 0);
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: Implies" \
+      " requires both a left and right expression"));
+    exit (-1);
+  }
 }
 
 /// print a total for the evaluation

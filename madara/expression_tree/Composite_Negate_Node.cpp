@@ -10,7 +10,7 @@
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
 
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 // Ctor
 
@@ -50,8 +50,10 @@ Madara::Expression_Tree::Composite_Negate_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: != has no right operand\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Negate" \
+      " has no right expression\n"));
+    exit (-1); 
   }
 
   can_change = right_child_can_change;

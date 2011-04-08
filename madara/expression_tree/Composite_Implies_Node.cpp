@@ -10,7 +10,7 @@
 #include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
 
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 // Ctor
 
 Madara::Expression_Tree::Composite_Implies_Node::Composite_Implies_Node (
@@ -48,9 +48,10 @@ Madara::Expression_Tree::Composite_Implies_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, 
-      "\nEXPRESSION COMPILE ERROR: Implies has no conditional\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Implies" \
+      " has no conditional\n"));
+    exit (-1);
   }
 
   if (this->right_)
@@ -64,9 +65,10 @@ Madara::Expression_Tree::Composite_Implies_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, 
-      "\nEXPRESSION COMPILE ERROR: Implication has no right operand\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Implies" \
+      " has no expression to evaluate if conditional is true\n"));
+    exit (-1);
   }
 
   can_change = left_child_can_change || right_child_can_change;

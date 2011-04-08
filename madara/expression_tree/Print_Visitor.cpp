@@ -33,7 +33,9 @@
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Leaf_Node &node)
 {
-  std::cout << node.item () << " ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+        "%q ", node.item ()));
+  //std::cout << node.item () << " ";
 }
 
 /// visit function - prints Variable_Node value to std::cout
@@ -41,7 +43,9 @@ Madara::Expression_Tree::Print_Visitor::visit (const Leaf_Node &node)
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Variable_Node &node)
 {
-  std::cout << node.key () << " ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "%s ", node.key ().c_str ()));
+  //std::cout << node.key () << " ";
 }
 
 /// visit function - prints Composite_Negate_Node contents to std::cout
@@ -49,7 +53,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Variable_Node &node)
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Negate_Node &node)
 {
-  std::cout.put ('-');
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "-"));
 }
 
 /// visit function - prints Composite_Negate_Node contents to std::cout
@@ -57,7 +62,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Negate_Node &node
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Predecrement_Node &node)
 {
-  std::cout << "--";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "--"));
 }
 
 /// visit function - prints Composite_Negate_Node contents to std::cout
@@ -65,7 +71,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Predecrement_Node
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Preincrement_Node &node)
 {
-  std::cout << "++";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "++"));
 }
 
 /// visit function - prints Composite_Not_Node contents to std::cout
@@ -73,7 +80,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Preincrement_Node
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Not_Node &node)
 {
-  std::cout.put ('!');
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "!"));
 }
 
 /// visit function - prints Composite_Add_Node contents to std::cout
@@ -81,7 +89,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Not_Node &node)
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Add_Node &node)
 {
-  std::cout << "+ ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "+ "));
 }
 
 /// visit function - prints Composite_And_Node contents to std::cout
@@ -89,7 +98,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Add_Node &node)
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_And_Node &node)
 {
-  std::cout << "&& ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "&& "));
 }
 
 /// visit function - prints Composite_Or_Node contents to std::cout
@@ -97,49 +107,56 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_And_Node &node)
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Or_Node &node)
 {
-  std::cout << "|| ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "|| "));
 }
 
 /// visit function - prints Composite_Equality_Node contents to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Equality_Node &node)
 {
-  std::cout << "== ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "== "));
 }
 
 /// visit function - prints Composite_Inequality_Node contents to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Inequality_Node &node)
 {
-  std::cout << "!= ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "!= "));
 }
 
 /// visit function - prints Composite_Greater_Than_Equal_Node contents to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Equal_Node &node)
 {
-  std::cout << ">= ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    ">= "));
 }
 
 /// visit function - prints Composite_Greater_Than_Node contents to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Node &node)
 {
-  std::cout << "> ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "> "));
 }
 
 /// visit function - prints Composite_Less_Than_Equal_Node contents to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Equal_Node &node)
 {
-  std::cout << "<= ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "<= "));
 }
 
 /// visit function - prints Composite_Less_Than_Node contents to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Node &node)
 {
-  std::cout << "< ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "< "));
 }
 
 /// visit function - prints Composite_Assignment_Node contents to std::cout
@@ -147,7 +164,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Node &n
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Assignment_Node &node)
 {
-  std::cout << "= ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "= "));
 }
 
 /// visit function - prints Composite_Subtract_Node contents to std::cout
@@ -155,7 +173,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Assignment_Node &
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Subtract_Node &node)
 {
-  std::cout << "- ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "- "));
 }
 
 /// visit function - prints Composite_Divide_Node contents to std::cout
@@ -163,7 +182,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Subtract_Node &no
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Divide_Node &node)
 {
-  std::cout << "/ ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "/ "));
 }
 
 /// visit function - prints Composite_Multiply_Node contents to std::cout
@@ -171,7 +191,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Divide_Node &node
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Multiply_Node &node)
 {
-  std::cout << "* ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "* "));
 }
 
 /// visit function - prints Composite_Modulus_Node contents to std::cout
@@ -179,7 +200,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Multiply_Node &no
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Modulus_Node &node)
 {
-  std::cout << "% ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "% "));
 }
 
 /// visit function - prints Composite_Both_Node contents to std::cout
@@ -187,7 +209,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Modulus_Node &nod
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Both_Node &node)
 {
-  std::cout << "; ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "; "));
 }
 
 /// visit function - prints Composite_Implies_Node contents to std::cout
@@ -195,7 +218,8 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Both_Node &node)
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Composite_Implies_Node &node)
 {
-  std::cout << "=> ";
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "=> "));
 }
 
 #endif /* _PRINT_VISITOR_CPP_ */

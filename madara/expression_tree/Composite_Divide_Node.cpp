@@ -9,7 +9,7 @@
 #include "madara/expression_tree/Visitor.h"
 #include "madara/expression_tree/Leaf_Node.h"
 
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 // Ctor
 Madara::Expression_Tree::Composite_Divide_Node::Composite_Divide_Node (Component_Node *left, 
                           Component_Node *right)
@@ -50,8 +50,9 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: Division has no left operand\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Division has no left expression\n"));
+    exit (-1);  
   }
 
   if (this->right_)
@@ -61,12 +62,22 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
     {
       delete this->right_;
       this->right_ = new Leaf_Node (right_value);
+
+      if (right_value == 0)
+      {
+        MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+          "\nKARL COMPILE ERROR: Division" \
+          " results in permanent divide by zero\n"));
+        exit (-1);
+      }
     }
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, "\nEXPRESSION COMPILE ERROR: Division has no right operand\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Division" \
+      " has no right expression (divide by zero)\n"));
+    exit (-1);
   }
 
   can_change = left_child_can_change || right_child_can_change;

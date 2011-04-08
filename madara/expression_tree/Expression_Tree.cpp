@@ -88,10 +88,14 @@ namespace Madara
 
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::Expression_Tree_Iterator_Factory (void)
 {
-  traversal_map_["in-order"] = &Expression_Tree_Iterator_Factory::make_in_order_tree_iterator;
-  traversal_map_["pre-order"] = &Expression_Tree_Iterator_Factory::make_pre_order_tree_iterator;
-  traversal_map_["post-order"] = &Expression_Tree_Iterator_Factory::make_post_order_tree_iterator;
-  traversal_map_["level-order"] = &Expression_Tree_Iterator_Factory::make_level_order_tree_iterator;
+  traversal_map_["in-order"] =
+    &Expression_Tree_Iterator_Factory::make_in_order_tree_iterator;
+  traversal_map_["pre-order"] =
+    &Expression_Tree_Iterator_Factory::make_pre_order_tree_iterator;
+  traversal_map_["post-order"] =
+    &Expression_Tree_Iterator_Factory::make_post_order_tree_iterator;
+  traversal_map_["level-order"] =
+    &Expression_Tree_Iterator_Factory::make_level_order_tree_iterator;
 }
 
 Madara::Expression_Tree::Iterator_Impl *
@@ -264,12 +268,6 @@ Madara::Expression_Tree::Expression_Tree::right (void)
 Madara::Expression_Tree::Expression_Tree::iterator
 Madara::Expression_Tree::Expression_Tree::begin (const ::std::string &traversal_order)
 {
-  /* 
-  if (traversal_order == "Pre-order")
-    return Express_Tree_Iterator (new Pre_Order_Tree_Iterator_Impl (*this, false));
-  else if (traversal_order == "Level-order")
-    return Express_Tree_Iterator (new Level_Order_Tree_Iterator_Impl (*this, false));
-  */
   return Expression_Tree::iterator 
     (tree_iterator_factory.make_tree_iterator (*this, 
                                                traversal_order, 

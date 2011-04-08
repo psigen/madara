@@ -150,41 +150,23 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base::add_rule (const ::std::string & expression)
+Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (
+  unsigned int level) const
 {
-  impl_->add_rule (expression);
-}
-
-
-void
-Madara::Knowledge_Engine::Knowledge_Base::print_rules (void) const
-{
-  impl_->print_rules ();
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (void) const
-{
-  impl_->print_knowledge ();
+  impl_->print_knowledge (level);
 }
 
 void
 Madara::Knowledge_Engine::Knowledge_Base::print (
-  const std::string & statement) const
+  const std::string & statement, unsigned int level) const
 {
-  impl_->print (statement);
+  impl_->print (statement, level);
 }
 
 void
 Madara::Knowledge_Engine::Knowledge_Base::clear (void)
 {
   impl_->clear ();
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base::clear_rules (void)
-{
-  impl_->clear_rules ();
 }
 
 void

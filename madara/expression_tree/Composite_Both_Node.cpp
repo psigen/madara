@@ -11,7 +11,7 @@
 #include "madara/expression_tree/Composite_Both_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
 
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 // Ctor
 
@@ -49,9 +49,9 @@ Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
   }
   else
   {
-    ACE_DEBUG ((LM_DEBUG, 
-      "\nEXPRESSION COMPILE ERROR: ';' has an empty left expression\n"));
-    return -1;    
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: Both has no left expression\n"));
+    exit (-1);
   }
 
   if (this->right_)
