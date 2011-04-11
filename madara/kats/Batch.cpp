@@ -1060,21 +1060,21 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:      \n\
-      -f (--file)        xml file containing testing information \n\
-      -n (--processes)   number of testing processes \n\
-      -i (--id)          this process id        \n\
-      -g (--debug)       prints KATS debug messages \n\
-      -o (--host)        host identifier        \n\
-      -l (--delay)       time delay (secs) after barrier to wait before spawn\n\
-      -d (--domain)      knowledge domain to isolate knowledge into \n\
-      -b (--precondition) precondition to wait for after barrier \n\
-      -s (--postcondition) postcondition to set after process exits \n\
       -a (--testname)    name of the test (for barriers) \n\
-      -t (--timeout)     time in seconds to wait before killing \n\
-      -r (--realtime)    run the process with real time scheduling \n\
-      -v (--loglevel)    maximum log level to print from MADARA messages\n\
+      -b (--precondition) precondition to wait for after barrier \n\
+      -d (--domain)      knowledge domain to isolate knowledge into \n\
+      -f (--file)        xml file containing testing information \n\
+      -g (--debug)       prints KATS debug messages \n\
+      -h (--help)        print this menu        \n\
+      -i (--id)          this process id        \n\
+      -l (--delay)       time delay (secs) after barrier to wait before spawn\n\
+      -n (--processes)   number of testing processes \n\
       -o (--host)        host identifier        \n\
-      -h (--help)        print this menu        \n"
+      -r (--realtime)    run the process with real time scheduling \n\
+      -s (--postcondition) postcondition to set after process exits \n\
+      -t (--timeout)     time in seconds to wait before killing \n\
+      -v (--loglevel)    maximum log level to print from MADARA messages\n\
+"
       ));
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu\n")), -1); 

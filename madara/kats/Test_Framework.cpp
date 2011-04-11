@@ -76,7 +76,8 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   log_message << buffer.str ();
   log_message << "\n";
 
-  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s", knowledge_.expand_statement (log_message.str ()).c_str ()));
 
   return knowledge_.wait (buffer.str ());
 }
@@ -103,7 +104,8 @@ Madara::KATS::Test_Framework::sync (void)
   log_message << "KATS::Test_Framework::sync: Finished ";
   log_message << "\n";
 
-  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s", knowledge_.expand_statement (log_message.str ()).c_str ()));
 }
 
 /// Syncs on all processes until everyone is at the event and
@@ -140,7 +142,8 @@ Madara::KATS::Test_Framework::barriered_sync (const std::string & event_name)
   log_message << event_name;
   log_message << "\n";
 
-  log (log_message.str (), MADARA_LOG_MAJOR_EVENT);
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s", knowledge_.expand_statement (log_message.str ()).c_str ()));
 }
 
 /// Creates a testing event
