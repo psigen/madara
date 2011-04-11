@@ -264,6 +264,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   path = extract_path (argv[0]);
 
+  // by default, see LM_INFO and LM_ERROR logging messages
+  // the user has to provide -g to see LM_DEBUG
+  ACE_LOG_MSG->priority_mask (LM_INFO | LM_ERROR, ACE_Log_Msg::PROCESS);
+
   std::vector <KATS_Process> processes;
 
   // parse any arguments
@@ -275,6 +279,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
+  if (tests_file == "")
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKATS_BATCH:"\
+      " no tests file was specified. Try -h or --help\n"));
+    return -1;
+
+  }
 
   // read the file
   TiXmlDocument doc (tests_file);
@@ -844,7 +856,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("f:n:i:l:o:d:a:t:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("f:n:i:l:o:d:a:t:v:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -862,7 +874,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("realtime"), 'r', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("delay"), 'l', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("killtime"), 't', ACE_Get_Opt::ARG_REQUIRED);
- 
+  cmd_opts.long_option (ACE_TEXT ("loglevel"), 'v', ACE_Get_Opt::ARG_REQUIRED); 
+
   // temp for current switched option
   int option;
 
@@ -920,9 +933,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       debug_set = true;
 
       if(debug_printing)
-        ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
-      else
-        ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
+        ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO | LM_ERROR, ACE_Log_Msg::PROCESS);
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "KATS_BATCH: enabling debug printing\n"));
@@ -1029,6 +1040,19 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         kill_time.sec ()));
 
       break;
+    case 'v':
+      // log level
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> MADARA_debug_level;
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
+        DLINFO "KATS_BATCH: logging level set to %u\n",
+        MADARA_debug_level));
+
+      break;
     case ':':
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_BATCH:  ERROR: -%c requires an argument"),
@@ -1048,6 +1072,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -a (--testname)    name of the test (for barriers) \n\
       -t (--timeout)     time in seconds to wait before killing \n\
       -r (--realtime)    run the process with real time scheduling \n\
+      -v (--loglevel)    maximum log level to print from MADARA messages\n\
       -o (--host)        host identifier        \n\
       -h (--help)        print this menu        \n"
       ));

@@ -72,3 +72,22 @@ project (Kats_Batch) : using_kats, using_madara, using_ace {
     kats/Batch.cpp
   }
 }
+
+project (Kats_Sleep) : using_kats, using_madara, using_ace {
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = kats_sleep
+  
+  Build_Files {
+    Kats.mpc
+  }
+
+  Header_Files {
+    utility/Log_Macros.h
+  }
+
+  Source_Files {
+    kats/Sleep.cpp
+  }
+}
+
