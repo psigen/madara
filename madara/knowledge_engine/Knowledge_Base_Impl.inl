@@ -5,7 +5,7 @@
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/expression_tree/Expression_Tree.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 /**
  * @file Knowledge_Base_Impl.inl
  * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
@@ -80,17 +80,18 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 }
 
 inline void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (void) const
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (unsigned int level) const
 {
-  ACE_DEBUG ((LM_INFO, "\nKnowledge in Knowledge Base:\n"));
-  map_.print ();
+  MADARA_DEBUG (level, (LM_INFO, 
+    "\nKnowledge in Knowledge Base:\n"));
+  map_.print (level);
 }
 
 inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::print (
-  const std::string & statement) const
+  const std::string & statement, unsigned int level) const
 {
-  map_.print (statement);
+  map_.print (statement, level);
 }
 
 inline void

@@ -12,7 +12,7 @@
 #include "ace/Recursive_Thread_Mutex.h"
 #include "ace/Condition_Recursive_Thread_Mutex.h"
 #include "ace/Synch.h"
-#include "ace/Log_Msg.h"
+#include "madara/utility/Log_Macros.h"
 
 
 
@@ -243,11 +243,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::unlock (void) const
 /// e.g. input = "MyVar{.id} = {MyVar{.id}}\n";
 inline void 
 Madara::Knowledge_Engine::Thread_Safe_Context::print (
-  const std::string & statement) const
+  const std::string & statement, unsigned int level) const
 {
   // enter the mutex
   Context_Guard guard (mutex_);
-  ACE_DEBUG ((LM_INFO, this->expand_statement (statement).c_str ()));
+  MADARA_DEBUG (level, (LM_INFO, 
+    this->expand_statement (statement).c_str ()));
 }
 
 // clear all variables and their values
