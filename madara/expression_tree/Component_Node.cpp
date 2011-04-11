@@ -16,7 +16,6 @@ Madara::Expression_Tree::Component_Node::~Component_Node (void)
 long long
 Madara::Expression_Tree::Component_Node::item (void) const
 {
-  //throw Invalid_Function_Call ("Madara::Expression_Tree::Component_Node::item() called improperly");
   return 0;
 }
 
@@ -38,7 +37,6 @@ Madara::Expression_Tree::Component_Node::right (void) const
 void 
 Madara::Expression_Tree::Component_Node::accept (Madara::Expression_Tree::Visitor &visitor) const
 {
-  //throw Invalid_Function_Call ("Madara::Expression_Tree::Component_Node::accept() called improperly");
 }
 
 

@@ -143,7 +143,7 @@ private:
  * @class LQueue_Iterator
  * @brief Implements a forward iterator for LQueue type classes.
  *
- * Note:  Having a const Iterator does not guarantee that the current
+ * Note:  Having a const Expression_Tree_Iterator does not guarantee that the current
  * *position* that it points to will not change, it only guarantees that
  * you cannot change the underlying queue!
  */
@@ -197,7 +197,7 @@ private:
  * @class LQueue_Const_Iterator
  * @brief Implements a forward iterator for LQueue type classes.
  *
- * Note:  Having a const Iterator does not guarantee that the current
+ * Note:  Having a const Expression_Tree_Iterator does not guarantee that the current
  * *position* that it points to will not change, it only guarantees that
  * you cannot change the underlying queue!
  */

@@ -22,7 +22,7 @@ namespace Madara
     /**
      * @class Expression_Tree_Iterator_Factory
      * @brief Implementation of a factory pattern that dynamically allocates
-     *        the appropriate @a Iterator_Impl object.
+     *        the appropriate @a Expression_Tree_Iterator_Impl object.
      * 
      *        This is a variant of the Abstract Factory pattern that
      *        has a set of related factory methods but which doesn't use
@@ -50,34 +50,34 @@ namespace Madara
       /// Constructor.
       Expression_Tree_Iterator_Factory (void);
 
-      /// Dynamically allocate a new @a Iterator_Impl
+      /// Dynamically allocate a new @a Expression_Tree_Iterator_Impl
       /// object based on the designated @a traversal_order and @a end_iter.
-      Iterator_Impl * make_tree_iterator (Expression_Tree &tree, 
+      Expression_Tree_Iterator_Impl * make_tree_iterator (Expression_Tree &tree, 
                                                          const ::std::string &traversal_order,
                                                          bool end_iter);
 
     private:
       /// Dynamically allocate a new @a Expression_Tree_Level_Order_Iterator_Impl
       /// object based on the designated @a end_iter.
-      Iterator_Impl *make_in_order_tree_iterator (Expression_Tree &tree,
+      Expression_Tree_Iterator_Impl *make_in_order_tree_iterator (Expression_Tree &tree,
                                                                   bool end_iter);
 
       /// Dynamically allocate a new @a Expression_Tree_Pre_Order_Iterator_Impl
       /// object based on the designated @a end_iter.
-      Iterator_Impl *make_pre_order_tree_iterator (Expression_Tree &tree,
+      Expression_Tree_Iterator_Impl *make_pre_order_tree_iterator (Expression_Tree &tree,
                                                                    bool end_iter);
 
       /// Dynamically allocate a new @a Expression_Tree_Post_Order_Iterator_Impl
       /// object based on the designated @a end_iter.
-      Iterator_Impl *make_post_order_tree_iterator (Expression_Tree &tree,
+      Expression_Tree_Iterator_Impl *make_post_order_tree_iterator (Expression_Tree &tree,
                                                                     bool end_iter);
 
       /// Dynamically allocate a new @a Expression_Tree_Level_Order_Iterator_Impl
       /// object based on the designated @a end_iter.
-      Iterator_Impl *make_level_order_tree_iterator (Expression_Tree &tree,
+      Expression_Tree_Iterator_Impl *make_level_order_tree_iterator (Expression_Tree &tree,
                                                                      bool end_iter);
 
-      typedef Iterator_Impl *(Expression_Tree_Iterator_Factory::*TRAVERSAL_PTMF)
+      typedef Expression_Tree_Iterator_Impl *(Expression_Tree_Iterator_Factory::*TRAVERSAL_PTMF)
         (Expression_Tree &tree, bool end_iter);
       typedef ::std::map < ::std::string, TRAVERSAL_PTMF> TRAVERSAL_MAP;
 
@@ -98,35 +98,35 @@ Madara::Expression_Tree::Expression_Tree_Iterator_Factory::Expression_Tree_Itera
     &Expression_Tree_Iterator_Factory::make_level_order_tree_iterator;
 }
 
-Madara::Expression_Tree::Iterator_Impl *
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl *
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_level_order_tree_iterator (
   Madara::Expression_Tree::Expression_Tree &tree, bool end_iter)
 { 
   return new Level_Order_Expression_Tree_Iterator_Impl (tree, end_iter);
 }
 
-Madara::Expression_Tree::Iterator_Impl *
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl *
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_in_order_tree_iterator (
   Madara::Expression_Tree::Expression_Tree &tree, bool end_iter)
 { 
   return new In_Order_Iterator_Impl (tree, end_iter);
 }
 
-Madara::Expression_Tree::Iterator_Impl *
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl *
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_pre_order_tree_iterator (
   Madara::Expression_Tree::Expression_Tree &tree, bool end_iter)
 { 
   return new Pre_Order_Iterator_Impl (tree, end_iter);
 }
 
-Madara::Expression_Tree::Iterator_Impl *
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl *
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_post_order_tree_iterator (
   Expression_Tree &tree, bool end_iter)
 { 
   return new Post_Order_Iterator_Impl (tree, end_iter);
 }
 
-Madara::Expression_Tree::Iterator_Impl *
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl *
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_tree_iterator (
   Madara::Expression_Tree::Expression_Tree &tree, const ::std::string &traversal_order,
   bool end_iter)
@@ -134,10 +134,7 @@ Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_tree_iterator (
   TRAVERSAL_MAP::iterator iter = traversal_map_.find (traversal_order);
   if (iter == traversal_map_.end ())
     {
-      // We don't understand the type. Convert the type to a string
-      // and pass it back via an exception
-
-      throw Expression_Tree::Invalid_Iterator (traversal_order);
+      return 0;
     }
   else
     {

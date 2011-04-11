@@ -6,7 +6,7 @@
  * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
  *
  * This file contains the Knowledge_Base Files class
- */
+ **/
 
 #include <string>
 #include "ace/Mem_Map.h"
@@ -20,20 +20,21 @@ namespace Madara
     /**
      * @class Files
      * @brief This class provides file repo capabilities to the knowledge base
-     */
+     **/
     class Files
     {
     public:
       /**
        * Constructor
-       */
+       * @param map                knowledge context
+       **/
       Files (Thread_Safe_Context & map);
 
       /**
        * Read a file into the knowledge base
        * @param file_name           file to read
        * @param knowledge_key       key to store the file into
-       */
+       **/
       MADARA_Export int read_file (const std::string & knowledge_key,
                      const std::string & file_name);
       
@@ -42,14 +43,14 @@ namespace Madara
        * @param file_name           file to read
        * @param mem_map             memory map of file
        * @return                    
-       */
+       **/
       MADARA_Export int read_file (const char * filename, ACE_Mem_Map & mem_map);
       
       /**
        * Write a file from the knowledge base to a specified location
        * @param file_name           file to write to
        * @param knowledge_key       key to read the file from
-       */
+       **/
       MADARA_Export int write_file (const std::string & knowledge_key,
                       const std::string & file_name);
 
@@ -59,7 +60,7 @@ namespace Madara
        * @param buffer              pointer to buffer
        * @param size                size of the buffer
        * @return                    amount written to file (-1 if error)
-       */
+       **/
       MADARA_Export int write_file (const char * filename, 
                      void *& buffer, size_t & size);
       
@@ -68,7 +69,7 @@ namespace Madara
        * Read a policy into the knowledge base
        * @param policy_key          key to read the policy into
        * @param policy_file         file to read the policy from
-       */
+       **/
       MADARA_Export int read_policy (const std::string & policy_key, 
                        const std::string & policy_file);
 
@@ -77,7 +78,7 @@ namespace Madara
        * @param source_key          file that needs to be shaped
        * @param target_key          target key to save the shaped file into
        * @param policy_key          policy to use for shaping the file
-       */
+       **/
       MADARA_Export int shape_file (const std::string & source_key, 
                       const std::string & target_key, 
                       const std::string & policy_key);

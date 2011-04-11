@@ -17,71 +17,139 @@ namespace Madara
     class Print_Visitor : public Visitor
     {
     public:
-      /// Visits a Leaf_Node and prints it contents to @a std::cout.
+      /** 
+       * Prints a constant
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Leaf_Node &node);
 
-      /// Visit a Variable_Node.
+      /** 
+       * Prints a variable
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Variable_Node &node);
 
-      /// Visit a Composite_Negate_Node and prints its contents to @a std::cout.
+      /** 
+       * Prints an integer negation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Negate_Node &node);
-      
-      /// Visit a Composite_Predecrement_Node and prints its contents to @a std::cout.
+
+      /** 
+       * Prints a predecrement
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Predecrement_Node &node);
       
-      /// Visit a Composite_Preincrement_Node and prints its contents to @a std::cout.
+      /** 
+       * Prints a preincrement
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Preincrement_Node &node);
       
-      /// Visit a Composite_Not_Node.
+      /** 
+       * Prints a logical not 
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Not_Node &node);
 
-      /// Visit a Composite_Add_Node.
+      /** 
+       * Prints an addition
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Add_Node &node);
 
-      /// Visit a Composite_Assignment_Node.
+      /** 
+       * Prints an assignment to a variable
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Assignment_Node &node);
 
-      /// Visit a Composite_And_Node.
+
+      /** 
+       * Prints a logical and
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_And_Node &node);
 
-      /// Visit a Composite_Or_Node.
+      /** 
+       * Prints a logical or
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Or_Node &node);
 
-      /// Visit a Composite_Equality_Node.
+      /** 
+       * Prints an equality operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Equality_Node &node);
 
-      /// Visit a Composite_Inequality_Node.
+      /** 
+       * Prints an inequality operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Inequality_Node &node);
 
-      /// Visit a Composite_Less_Than_Equal_Node.
+      /** 
+       * Prints a greater-than-or-equal-to operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Greater_Than_Equal_Node &node);
 
-      /// Visit a Composite_Less_Than_Node.
+      /** 
+       * Prints a less-than operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Greater_Than_Node &node);
 
-      /// Visit a Composite_Less_Than_Equal_Node.
+      /** 
+       * Prints a less-than-or-equal-to operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Less_Than_Equal_Node &node);
 
-      /// Visit a Composite_Less_Than_Node.
+      /** 
+       * Prints a less-than operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Less_Than_Node &node);
 
-      /// Visit a @a Composite_Subtract_Node and prints its contents to @a std::cout.
+      /** 
+       * Prints a subtraction
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Subtract_Node &node);
-      
-      /// Visit a @a Composite_Divide_Node and prints its contents to @a std::cout.
+
+      /** 
+       * Prints a division
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Divide_Node &node);
-      
-      /// visit function - prints Composite_Multiply_Node contents to std::cout
+
+      /** 
+       * Prints a multiplication
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Multiply_Node &node);
 
-      /// Visit a @a Composite_Modulus_Node.
+      /** 
+       * Prints a remainder operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Modulus_Node &node);
 
-      /// Visit a @a Composite_Both_Node.
+      /** 
+       * Prints a left and right expression
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Both_Node &node);
 
-      /// Visit a @a Composite_Implies_Node.
+      /** 
+       * Prints an inference rule
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Implies_Node &node);
+
     };  
   }
 }

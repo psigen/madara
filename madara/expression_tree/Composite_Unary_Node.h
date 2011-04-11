@@ -10,23 +10,31 @@ namespace Madara
   {
     /**
      * @class Composite_Unary_Node
-     * @brief Defines a right child (but not a left one) and thus is useful for unary operations.
+     * @brief Encapsulates a single expression tree
      * @see Composite_Binary_Node
      */
     class Composite_Unary_Node : public Component_Node
     {
     public:
-      /// Ctor
+      /**
+       * Constructor
+       * @param   right  right expression
+       **/
       Composite_Unary_Node (Component_Node *right);
 
-      /// Return the right child.
-      virtual Component_Node *right (void) const;
-
-      /// Dtor
+      /**
+       * Destructor
+       **/
       virtual ~Composite_Unary_Node (void);
 
+      /** 
+       * Returns the right expression. 
+       * @return    a pointer to the right expression
+       **/
+      virtual Component_Node *right (void) const;
+
     protected:
-      /// Right child
+      /// Right expression
       Component_Node *right_;
     };
   }

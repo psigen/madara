@@ -1240,12 +1240,12 @@ Madara::Expression_Tree::Divide::build (void)
 }
 
 // constructor
-Madara::Expression_Tree::Interpreter::Interpreter (void)
+Madara::Expression_Tree::Interpreter::Interpreter ()
 {
 }
 
 // destructor
-Madara::Expression_Tree::Interpreter::~Interpreter (void)
+Madara::Expression_Tree::Interpreter::~Interpreter ()
 {
 }
 

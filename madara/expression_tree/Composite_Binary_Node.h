@@ -12,23 +12,33 @@ namespace Madara
   {
     /**
      * @class Composite_Binary_Node
-     * @brief Defines a left and right node (via inheritance).
+     * @brief Defines a left and right node (via inheritance from 
+     *        Composite_Unary_Node).
      */
     class Composite_Binary_Node : public Composite_Unary_Node
     {
     public:
-      /// Ctor
+      /**
+       * Constructor
+       * @param   left   left expression
+       * @param   right  right expression
+       **/
       Composite_Binary_Node (Component_Node *left,
                              Component_Node *right);
 
-      /// Dtor
+      /**
+       * Destructor
+       **/
       virtual ~Composite_Binary_Node (void);
 
-      /// Return the left child.
+      /** 
+       * Returns the left expression. 
+       * @return    a pointer to the left expression
+       **/
       virtual Component_Node *left (void) const;
 
     protected:
-      /// left child
+      /// left expression
       Component_Node *left_;
     };
   }

@@ -13,32 +13,49 @@ namespace Madara
 
     /**
      * @class Composite_Predecrement_Node
-     * @brief A composite node containing only a right child. 
-     *        The meaning of this node is --right, eg --6 == 5.
-     *        If used with a variable, serves as a permanent decrease.
+     * @brief A composite node that decrements a right expression. If
+     *        right expression is a variable, then the variable will
+     *        be updated with the new value.
      */
     class Composite_Predecrement_Node : public Composite_Unary_Node
     {
     public:
-      /// Ctor
+      /**
+       * Constructor
+       * @param   right  right expression
+       **/
       Composite_Predecrement_Node (Component_Node *right);
 
-      /// Dtor
+      /**
+       * Destructor
+       **/
       virtual ~Composite_Predecrement_Node (void);
 
-      /// Return the printable character stored in the node.
+      /**
+       * Returns the printable character of the node
+       * @return    value of the node
+       **/
       virtual long long item (void) const;
 
-      /// Prune the tree of unnecessary nodes. 
-      /// Returns evaluation of the node and sets can_change appropriately.
-      /// if this node can be changed, that means it shouldn't be pruned.
+      /** 
+       * Prunes the expression tree of unnecessary nodes. 
+       * @param     can_change   set to true if variable nodes are contained
+       * @return    one subtracted from the value returned by 
+       *            the right expression
+       **/
       virtual long long prune (bool & can_change);
 
-      /// Evaluates the node and its children. This does not prune any of
-      /// the expression tree, and is much faster than the prune function
+      /** 
+       * Evaluates the expression tree. 
+       * @return    one subtracted from the value returned by 
+       *            the right expression
+       **/
       virtual long long evaluate (void);
 
-      /// Define the @a accept() operation used for the Visitor pattern.
+      /** 
+       * Accepts a visitor subclassed from the Visitor class
+       * @param    visitor   visitor instance to use
+       **/
       virtual void accept (Visitor &visitor) const;
     };
   }

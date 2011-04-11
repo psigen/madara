@@ -9,7 +9,7 @@
  *
  * This file contains classes and methods specific to the numerical
  * Madara::Expression_Tree::Interpreter class
- */
+ **/
 
 #include <string>
 #include <list>
@@ -41,54 +41,97 @@ namespace Madara
     class Interpreter
     {
     public:
-      /// Constructor.
-      Interpreter (void);
+      /**
+       * Constructor
+       **/
+      Interpreter ();
 
-      /// destructor
-      virtual ~Interpreter (void);
+      /**
+       * Destructor
+       **/
+      virtual ~Interpreter ();
 
-      /// Converts a string and context into a parse tree, and builds an
-      /// expression tree out of the parse tree.
+      /**
+       * Compiles an expression into an expression tree.
+       * @param    context    interpreter context
+       * @param    input      expression to compile
+       * @return   expression tree to evaluate
+       **/
       Expression_Tree interpret (
         Madara::Knowledge_Engine::Thread_Safe_Context &context, 
                                  const ::std::string &input);
 
-      /// Method for checking if a character is a valid operator.
+      /**
+       * Checks a character to see if it is a mathematical operator
+       * @param    input      char to check
+       * @return   true if the input is an operator
+       **/
       static bool is_operator (char input);
 
-      /// Method for checking if a character is a number.
+      /**
+       * Checks a character to see if it is a number
+       * @param    input      char to check
+       * @return   true if the input is a number
+       **/
       static bool is_number (char input);
       
-      /// Method for checking if a character is a candidate for a part of
-      /// a variable name.
+      /**
+       * Checks a character to see if it is alphanumeric
+       * @param    input      char to check
+       * @return   true if the input is alphanumeric
+       **/
       static bool is_alphanumeric (char input);
 
     private:
-      /// Inserts a terminal into the parse tree.
-      //void terminal_insert (Symbol *op,
-      //                     ::std::list<Symbol *>& list);
-
-      /// Inserts a variable (leaf node / number) into the parse tree.
-      void variable_insert (Madara::Knowledge_Engine::Thread_Safe_Context &context,
+      /**
+       * Inserts a variable into the tree
+       * @param    context    interpreter context
+       * @param    input      expression to compile
+       * @param    i          current position in expression
+       * @param    accumulated_precedence  current precedence
+       * @param    list       list of symbols in tree that are free
+       * @param    lastValidInput          last valid symbol that was read
+       **/
+      void variable_insert (
+        Madara::Knowledge_Engine::Thread_Safe_Context &context,
                             const ::std::string &input,
                             ::std::string::size_type &i,
                           int & accumulated_precedence,
                           ::std::list<Symbol *>& list,
                            Symbol *& lastValidInput);
 
-      /// Inserts a leaf node / number into the parse tree.
+      /**
+       * Inserts a number into the tree
+       * @param    context    interpreter context
+       * @param    input      expression to compile
+       * @param    i          current position in expression
+       * @param    accumulated_precedence  current precedence
+       * @param    list       list of symbols in tree that are free
+       * @param    lastValidInput          last valid symbol that was read
+       **/
       void number_insert (const ::std::string &input, 
                           ::std::string::size_type &i,
                           int & accumulated_precedence,
                           ::std::list<Symbol *>& list,
                            Symbol *& lastValidInput);
 
-      /// Inserts a multiplication or division into the parse tree.
+      /**
+       * Inserts a mathematical operator into the tree
+       * @param    op         symbol to insert
+       * @param    list       list of symbols in tree that are free
+       **/
       void precedence_insert (Symbol *op, ::std::list<Symbol *>& list);
 
-      /// Inserts an assignment into the parse tree.
-      //void assignment_insert (Symbol *op, ::std::list<Symbol *>& list);
-
+      /**
+       * Inserts a variable into the tree
+       * @param    context    interpreter context
+       * @param    input      expression to compile
+       * @param    i          current position in expression
+       * @param    accumulated_precedence  current precedence
+       * @param    list       list of symbols in tree that are free
+       * @param    lastValidInput          last valid symbol that was read
+       * @param    handled    whether or not the pos should be incremented
+       **/
       void main_loop (Madara::Knowledge_Engine::Thread_Safe_Context & context,
                            const ::std::string &input,
                            ::std::string::size_type &i,
@@ -96,20 +139,28 @@ namespace Madara
                            bool & handled,
                            int & accumulated_precedence,
                            ::std::list<Symbol *>& list);
-
-      void handle_parenthesis (Madara::Knowledge_Engine::Thread_Safe_Context & context,
+      /**
+       * Handles a parenthesis
+       * @param    context    interpreter context
+       * @param    input      expression to compile
+       * @param    i          current position in expression
+       * @param    accumulated_precedence  current precedence
+       * @param    list       list of symbols in tree that are free
+       * @param    lastValidInput          last valid symbol that was read
+       * @param    handled    whether or not the pos should be incremented
+       **/
+      void handle_parenthesis (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context,
                            const ::std::string &input,
                            ::std::string::size_type &i,
                            Symbol *& lastValidInput,
                            bool & handled,
                            int & accumulated_precedence,
                            ::std::list<Symbol *>& list);
-
+      /**
+       * Cache of expressions that have been previously compiled
+       **/
       ExpressionTreeMap cache_;
-
-      /// Stores the parse tree. isn't entirely necessary right now, but
-      /// is kept as a list for future expansion (parentheses).
-      //::std::list<Symbol *> list_;
     };
   }
 }

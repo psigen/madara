@@ -19,76 +19,148 @@ namespace Madara
     class Evaluation_Visitor : public Visitor
     {
     public:
-      /// Visit a Leaf_Node.
+      /** 
+       * Evaluates a constant
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Leaf_Node &node);
 
-      /// Visit a Variable_Node.
+      /** 
+       * Evaluates a variable
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Variable_Node &node);
 
-      /// Visit a Composite_Negate_Node.
+      /** 
+       * Evaluates an integer negation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Negate_Node &node);
 
-      /// Visit a Composite_Predecrement_Node.
+      /** 
+       * Evaluates a predecrement
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Predecrement_Node &node);
       
-      /// Visit a Composite_Preincrement_Node.
+      /** 
+       * Evaluates a preincrement
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Preincrement_Node &node);
       
-      /// Visit a Composite_Not_Node.
+      /** 
+       * Evaluates a logical not 
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Not_Node &node);
 
-      /// Visit a Composite_Add_Node.
+      /** 
+       * Evaluates an addition
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Add_Node &node);
 
-      /// Visit a Composite_Assignment_Node.
+      /** 
+       * Evaluates an assignment to a variable
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Assignment_Node &node);
 
-      /// Visit a Composite_And_Node.
+
+      /** 
+       * Evaluates a logical and
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_And_Node &node);
 
-      /// Visit a Composite_Or_Node.
+      /** 
+       * Evaluates a logical or
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Or_Node &node);
 
-      /// Visit a Composite_Equality_Node.
+      /** 
+       * Evaluates an equality operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Equality_Node &node);
 
-      /// Visit a Composite_Inequality_Node.
+      /** 
+       * Evaluates an inequality operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Inequality_Node &node);
 
-      /// Visit a Composite_Less_Than_Equal_Node.
+      /** 
+       * Evaluates a greater-than-or-equal-to operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Greater_Than_Equal_Node &node);
 
-      /// Visit a Composite_Less_Than_Node.
+      /** 
+       * Evaluates a less-than operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Greater_Than_Node &node);
 
-      /// Visit a Composite_Less_Than_Equal_Node.
+      /** 
+       * Evaluates a less-than-or-equal-to operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Less_Than_Equal_Node &node);
 
-      /// Visit a Composite_Less_Than_Node.
+      /** 
+       * Evaluates a less-than operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Less_Than_Node &node);
 
-      /// Visit a Composite_Subtract_Node.
+      /** 
+       * Evaluates a subtraction
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Subtract_Node &node);
 
-      /// Visit a Composite_Divide_Node.
+      /** 
+       * Evaluates a division
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Divide_Node &node);
 
-      /// Visit a @a Composite_Multiply_Node.
+      /** 
+       * Evaluates a multiplication
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Multiply_Node &node);
 
-      /// Visit a @a Composite_Modulus_Node.
+      /** 
+       * Evaluates a remainder operation
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Modulus_Node &node);
 
-      /// Visit a @a Composite_Both_Node.
+      /** 
+       * Evaluates a left and right expression
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Both_Node &node);
 
-      /// Visit a @a Composite_Implies_Node.
+      /** 
+       * Evaluates an inference rule
+       * @param     node  the node to evaluate
+       **/
       virtual void visit (const Composite_Implies_Node &node);
 
-      /// Print the total of the evaluation.
+      /** 
+       * Returns the result of the evaluation
+       * @return    result of the evaluation
+       **/
       long long total (void);
 
-      /// Resets the evaluation to it can be reused.
+      /** 
+       * Resets the evaluation
+       **/
       void reset (void);
 
     private:

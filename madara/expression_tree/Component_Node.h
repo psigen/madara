@@ -16,52 +16,53 @@ namespace Madara
      * @class Component_Node
      * @brief An abstract base class defines a simple abstract
      *        implementation of an expression tree node.
-     *
-     *        This class plays the role of the "Component" in the
-     *        Composite pattern.  The methods in this class are not
-     *        defined as pure virtual so that subclasses in the Composite
-     *        pattern don't have to implement methods they don't care
-     *        about.  All the methods (exception the destructor) throw the
-     *        @a ::std::domain_error exception if called, however.
      *        
-     * @see   See Composite_Unary_Node and Composite_Binary_Node for nodes
-     *        with right only and left and right children, respectively.
+     * @see   See Composite_Unary_Node, Composite_Binary_Node, and Leaf Node
+     *        for immediate subclasses of this class.
      */
     class Component_Node
     {
     public:
-      /// Exception classes for Component_Node exceptions
-      class Invalid_Function_Call : public ::std::domain_error
-      {
-      public:
-        Invalid_Function_Call(const ::std::string &message) : ::std::domain_error(message) {}
-      }; 
-
-      /// Dtor
+      /**
+       * Destructor
+       **/
       virtual ~Component_Node (void) = 0;
 
-      /// Return the item stored in the node (throws ::std::domain_error if
-      /// called directly).
+      /**
+       * Returns the value of the node
+       * @return    value of the node
+       **/
       virtual long long item (void) const;
 
-      /// Prune the tree of unnecessary nodes. 
-      /// Returns evaluation of the node and sets can_change appropriately.
-      /// if this node can be changed, that means it shouldn't be pruned.
+      /** 
+       * Prunes the expression tree of unnecessary nodes. 
+       * @param     can_change   set to true if variable nodes are contained
+       * @return    value of current contained expression tree
+       **/
       virtual long long prune (bool & can_change) = 0;
 
-      /// Evaluates the node and its children. This does not prune any of
-      /// the expression tree, and is much faster than the prune function
+      /** 
+       * Evaluates the expression tree. 
+       * @return    value of current contained expression tree
+       **/
       virtual long long evaluate (void) = 0;
 
-      /// Return the left child (returns 0 if called directly).
+      /** 
+       * Returns the left expression. 
+       * @return    a pointer to the left expression
+       **/
       virtual Component_Node *left (void) const;
 
-      /// Return the right child (returns 0 if called directly).
+      /** 
+       * Returns the right expression. 
+       * @return    a pointer to the right expression
+       **/
       virtual Component_Node *right (void) const;
 
-      /// Accept a visitor to perform some action on the node's item
-      /// completely arbitrary visitor template (throws ::std::domain_error
-      /// if called directly).
+      /** 
+       * Accepts a visitor subclassed from the Visitor class
+       * @param    visitor   visitor instance to use
+       **/
       virtual void accept (Visitor &visitor) const;
     };
   }

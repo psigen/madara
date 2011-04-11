@@ -18,32 +18,34 @@ namespace Madara
   namespace Expression_Tree
   {
     class Component_Node;
-    class Iterator;
+    class Expression_Tree_Iterator;
     class Expression_Tree;
 
     /**
-     * @class Iterator_Impl
-     * @brief Implementation of the Iterator pattern that is used to define 
-     *        the various iterations algorithms that can be performed to
-     *        traverse the expression tree.
+     * @class Expression_Tree_Iterator_Impl
+     * @brief Implementation of the Expression_Tree_Iterator pattern that 
+     *        is used to define the various iterations algorithms that can be
+     *        performed to traverse the expression tree.
      * 
      *        Plays the role of the "implementor" base class in the Bridge
      *        pattern that is used as the basis for the subclasses that
      *        actually define the various iteration algorithms.
      *
-     * @see   Expression_Tree_Level_Order_Iterator_Impl, Expression_Tree_In_Order_Iterator_Impl, 
-     *        Expression_Tree_Pre_Order_Iterator_Impl, Expression_Tree_Post_Order_Iterator_Impl, 
+     * @see   Expression_Tree_Level_Order_Iterator_Impl,
+     *        Expression_Tree_In_Order_Iterator_Impl, 
+     *        Expression_Tree_Pre_Order_Iterator_Impl,
+     *        Expression_Tree_Post_Order_Iterator_Impl
      */
-    class Iterator_Impl
+    class Expression_Tree_Iterator_Impl
     {
-      friend class Iterator;
+      friend class Expression_Tree_Iterator;
 
     public:
-      /// Construct an Iterator_Impl to iterate over a tree.  
-      Iterator_Impl (const Expression_Tree &tree);
+      /// Construct an Expression_Tree_Iterator_Impl to iterate over a tree.  
+      Expression_Tree_Iterator_Impl (const Expression_Tree &tree);
 
       /// Dtor.
-      virtual ~Iterator_Impl (void);
+      virtual ~Expression_Tree_Iterator_Impl (void);
 
       /// Dereference operator returns a reference to the item contained
       /// at the current position.
@@ -57,13 +59,15 @@ namespace Madara
       virtual void operator++ (void) = 0;
 
       /// Equality operator.
-      virtual bool operator== (const Iterator_Impl &rhs) const = 0;
+      virtual bool operator== (const Expression_Tree_Iterator_Impl &rhs)
+        const = 0;
 
       /// Nonequality operator.
-      virtual bool operator!= (const Iterator_Impl &rhs) const = 0;
+      virtual bool operator!= (const Expression_Tree_Iterator_Impl &rhs)
+        const = 0;
 
       /// Method for cloning an impl. Necessary for post increments.
-      virtual Iterator_Impl *clone(void) = 0;
+      virtual Expression_Tree_Iterator_Impl *clone(void) = 0;
 
       /// = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
@@ -84,10 +88,10 @@ namespace Madara
      *        Plays the role of the "implementor" class in the Bridge
      *        pattern that defines the in-order iteration algorithm.
      */
-    class In_Order_Iterator_Impl : public Iterator_Impl
+    class In_Order_Iterator_Impl : public Expression_Tree_Iterator_Impl
     {
-      friend class Iterator;
-      friend class Refcounter<Iterator_Impl>;
+      friend class Expression_Tree_Iterator;
+      friend class Refcounter<Expression_Tree_Iterator_Impl>;
     public:
       /// Construct an In_Order_Iterator_Impl. If end_iter
       /// is set to true, the iterator points to the end of the
@@ -110,13 +114,15 @@ namespace Madara
       virtual void operator++ (void);
 
       /// Equality operator.
-      virtual bool operator== (const Iterator_Impl &rhs) const;
+      virtual bool operator== (const Expression_Tree_Iterator_Impl &rhs)
+        const;
 
       /// Nonequality operator.
-      virtual bool operator!= (const Iterator_Impl &lhs) const;
+      virtual bool operator!= (const Expression_Tree_Iterator_Impl &lhs)
+        const;
 
       /// Method for cloning an impl. Necessary for post increments.
-      virtual Iterator_Impl *clone (void);
+      virtual Expression_Tree_Iterator_Impl *clone (void);
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
@@ -137,10 +143,10 @@ namespace Madara
      *        Plays the role of the "implementor" class in the Bridge
      *        pattern that defines the level-order iteration algorithm.
      */
-    class Pre_Order_Iterator_Impl : public Iterator_Impl
+    class Pre_Order_Iterator_Impl : public Expression_Tree_Iterator_Impl
     {
-      friend class Iterator;
-      friend class Refcounter<Iterator_Impl>;
+      friend class Expression_Tree_Iterator;
+      friend class Refcounter<Expression_Tree_Iterator_Impl>;
 
     public:
       /// Construct an Level_Order_Expression_Tree_Iterator. If end_iter
@@ -164,13 +170,15 @@ namespace Madara
       virtual void operator++ (void);
 
       /// Equality operator.
-      virtual bool operator== (const Iterator_Impl &rhs) const;
+      virtual bool operator== (const Expression_Tree_Iterator_Impl &rhs)
+        const;
 
       /// Nonequality operator.
-      virtual bool operator!= (const Iterator_Impl &lhs) const;
+      virtual bool operator!= (const Expression_Tree_Iterator_Impl &lhs)
+        const;
 
       /// Method for cloning an impl. Necessary for post increments.
-      virtual Iterator_Impl *clone (void);
+      virtual Expression_Tree_Iterator_Impl *clone (void);
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
@@ -191,10 +199,10 @@ namespace Madara
      *        Plays the role of the "implementor" class in the Bridge
      *        pattern that defines the post-order iteration algorithm.
      */
-    class Post_Order_Iterator_Impl : public Iterator_Impl
+    class Post_Order_Iterator_Impl : public Expression_Tree_Iterator_Impl
     {
-      friend class Iterator;
-      friend class Refcounter<Iterator_Impl>;
+      friend class Expression_Tree_Iterator;
+      friend class Refcounter<Expression_Tree_Iterator_Impl>;
     public:
 
       /// Construct an Post_Order_Iterator_Impl. If end_iter is set
@@ -218,13 +226,15 @@ namespace Madara
       virtual void operator++ (void);
 
       /// Equality operator.
-      virtual bool operator== (const Iterator_Impl &rhs) const;
+      virtual bool operator== (const Expression_Tree_Iterator_Impl &rhs)
+        const;
 
       /// Nonequality operator.
-      virtual bool operator!= (const Iterator_Impl &lhs) const;
+      virtual bool operator!= (const Expression_Tree_Iterator_Impl &lhs)
+        const;
 
       /// Method for cloning an impl. Necessary for post increments.
-      virtual Iterator_Impl *clone (void);
+      virtual Expression_Tree_Iterator_Impl *clone (void);
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
@@ -245,15 +255,16 @@ namespace Madara
      *        Plays the role of the "implementor" class in the Bridge
      *        pattern that defines the post-order iteration algorithm.
      */
-    class Level_Order_Expression_Tree_Iterator_Impl : public Iterator_Impl
+    class Level_Order_Expression_Tree_Iterator_Impl :
+      public Expression_Tree_Iterator_Impl
     {
-      friend class Iterator;
-      friend class Refcounter<Iterator_Impl>;
+      friend class Expression_Tree_Iterator;
+      friend class Refcounter<Expression_Tree_Iterator_Impl>;
     public:
 
-      /// Construct an Level_Order_Expression_Tree_Iterator. If end_iter is set to
-      /// true, the iterator points to the end of the tree. Otherwise, the
-      /// iterator starts with a free tree.
+      /// Construct an Level_Order_Expression_Tree_Iterator. If end_iter 
+      /// is set to true, the iterator points to the end of the tree. 
+      /// Otherwise, the iterator starts with a free tree.
       Level_Order_Expression_Tree_Iterator_Impl (const Expression_Tree &tree,
                                                  bool end_iter = false);
 
@@ -272,13 +283,13 @@ namespace Madara
       virtual void operator++ (void);
 
       /// Equality operator.
-      virtual bool operator== (const Iterator_Impl &rhs) const;
+      virtual bool operator== (const Expression_Tree_Iterator_Impl &rhs) const;
 
       /// Nonequality operator.
-      virtual bool operator!= (const Iterator_Impl &lhs) const;
+      virtual bool operator!= (const Expression_Tree_Iterator_Impl &lhs) const;
 
       /// Method for cloning an impl. Necessary for post increments.
-      virtual Iterator_Impl *clone (void);
+      virtual Expression_Tree_Iterator_Impl *clone (void);
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;

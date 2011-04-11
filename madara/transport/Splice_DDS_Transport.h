@@ -14,14 +14,14 @@ namespace Madara
 {
   namespace Transport
   {
+    /**
+     * @class Splice_DDS_Transport
+     * @brief This class provides an interface into the Open Splice
+     *        dissemination transport
+     */
     class Splice_DDS_Transport : public Base
     {
     public:
-  
-      //enum {
-      //  BEST_EFFORT = 0,
-      //  RELIABLE = 1
-      //};
 
       enum {
         ERROR_OSPL_NOT_STARTED = -1,
@@ -31,22 +31,64 @@ namespace Madara
 
       static const int PROFILES = 2;
 
+      /**
+       * Constructor
+       * @param   id   unique identifer - usually a combination of host:port
+       * @param   context  knowledge context
+       * @param   config   transport configuration settings
+       * @param   launch_transport  whether or not to launch this transport
+       **/
       Splice_DDS_Transport (const std::string & id, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const Settings & config, bool launch_transport);
+
+      /**
+       * Destructor
+       **/
       ~Splice_DDS_Transport ();
+
+      /**
+       * Sends a single knowledge assignment
+       * @param   key     knowledge location for global variable
+       * @param   value   value of the knowledge location
+       * @return  result of dds write operation or -1 if we are shutting down
+       **/
       virtual long send_data (const std::string & key, const long long & value);
+
+      /**
+       * Sends a multiple assignment of knowledge variables
+       * @param   expression  key=value pairings separated by commas
+       * @param   quality     maximum quality of knowledge writings
+       * @return  result of dds write operation or -1 if we are shutting down
+       **/
       long send_multiassignment (const std::string & expression, 
         unsigned long quality);
+
+      /**
+       * Accesses reliability setting
+       * @return  whether we are using reliable dissemination or not
+       **/
       int reliability (void) const;
+      
+      /**
+       * Sets the reliability setting
+       * @return  the changed setting
+       **/
       int reliability (const int & setting);
+
+      /**
+       * Closes this transport
+       **/
       void close (void);
+
+      /**
+       * Activates this transport
+       * @return  0 for success. This function may exit the process
+       *          if the OSPL daemon hasn't been started.
+       **/
       int setup (void);
     protected:
     private:
-
-      std::string pad_key (const std::string & input, size_t length);
-
       // identifier of this knowledge base
       const std::string                               id_;
 
@@ -97,13 +139,19 @@ namespace Madara
      // bool valid_setup_;
       bool enable_mutexing_;
 
-      /// Splice handle checker
+      /**
+       * Splice handle checker
+       **/
       void check_handle (void * handle, char *info);
 
-      /// Splice status checker
+      /**
+       * Splice status checker
+       **/
       void check_status (DDS::ReturnCode_t status, const char * info);
       
-      /// Return error name of the specific status
+      /**
+       * Returns error name of the specific status
+       **/
       char * get_error_name (DDS::ReturnCode_t status);
     };
   }

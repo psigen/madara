@@ -28,34 +28,65 @@ namespace Madara
     class Knowledge_Base_Impl
     {
     public:
-
-      /// Default constructor
+      /**
+       * Constructor
+       **/
       Knowledge_Base_Impl ();
 
-      /// Constructor for transport
+      /**
+       * Constructor
+       * @param   host      hostname/ip of this machine
+       * @param   transport transport to use for knowledge dissemination
+       **/
       Knowledge_Base_Impl (const std::string & host, int transport);
 
-      ///// Constructor for transport and knowledge realm
+      /**
+       * Constructor
+       * @param   host      hostname/ip of this machine
+       * @param   transport transport to use for knowledge dissemination
+       * @param   domain    knowledge domain we want to join
+       **/
       Knowledge_Base_Impl (const std::string & host, int transport,
         const std::string & knowledge_realm);
 
-      /// Constructor for transport and transport settings
+      /**
+       * Constructor
+       * @param   host      hostname/ip of this machine
+       * @param   config    transport settings to use for dissemination
+       **/
       Knowledge_Base_Impl (const std::string & host, 
         const Madara::Transport::Settings & config);
 
-      /// Destructor
+      /**
+       * Destructor
+       **/
       ~Knowledge_Base_Impl ();
 
-      /// activate the transport for sending and receiving
+      /**
+       * Starts the transport mechanism for dissemination if it is closed
+       **/
       void activate_transport (void);
 
-      /// close and cleanup the transport
+      /**
+       * Closes the transport mechanism so no dissemination is possible
+       **/
       void close_transport (void);
 
-      /// Retrieve the value associated with the provided key
+      /**
+       * Retrieves a knowledge value
+       * @param key                knowledge location
+       * @return                   value at knowledge location
+       **/
       long long get (const ::std::string & key) const;
 
-      /// Expand a statement by variable expansions 
+      /**
+       * Expands a statement using variable expansion. For example, if the
+       * statement were MyKnowledge.{.id}, and .id==1, then the statement
+       * would be expanded to MyKnowledge.1
+       *
+       * @param statement          statement to expand
+       * @return                   expanded statement
+       **/
       std::string expand_statement (const ::std::string & statement) const;
 
       /**
@@ -82,11 +113,26 @@ namespace Madara
       int read_policy (const std::string & policy_key, 
                        const std::string & policy_file);
 
-      /// Set the value associated with the provided key
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key          knowledge variable location
+       * @param value        value to set at location
+       * @return             0 if successful, -1 if key is null, and
+       *                     -2 if quality isn't high enough
+       **/
       int set (const ::std::string & key, 
         long long value = Madara::Knowledge_Record::MODIFIED);
 
-      /// Set the value associated with the provided key
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           value to set at location
+       * @param send_modifieds  whether or not to dissemination modifications
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
       int set (const ::std::string & key, long long value, 
         bool send_modifieds);
 
@@ -99,51 +145,110 @@ namespace Madara
        **/
       int apply_modified (void);
 
-      /// Check if a key exists in the knowledge base
+      /**
+       * Checks if a knowledge location exists in the context
+       *
+       * @param key             knowledge variable location
+       * @return                true if location has been set
+       **/
       bool exists (const ::std::string & key) const;
 
       /// Add rule to the knowledge base (preferred method for data entry)
       void add_rule (const ::std::string & expression);
 
-      /// Set quality of writing to a variable
+      /**
+       * Sets the quality of writing to a certain variable from this entity
+       *
+       * @param key             knowledge variable location
+       * @param quality         quality of writing to this location
+       **/
       void set_quality (const ::std::string & key, unsigned long quality);
 
-      /// Evaluate an expression once
+      /**
+       * Evaluates an expression. Always disseminates modifications.
+       *
+       * @param expression      KaRL expression to evaluate
+       * @return                value of expression
+       **/
       long long evaluate (const ::std::string & expression);
 
-      /// Evaluate an expression once
+      /**
+       * Evaluates an expression
+       *
+       * @param expression      KaRL expression to evaluate
+       * @param send_modifieds  whether or not to dissemination modifications
+       * @return                value of expression
+       **/
       long long evaluate (const ::std::string & expression,
         bool send_modifieds);
 
-      /// Block for an expression to evaluate to true (conditional mutex)
+      /**
+       * Waits for an expression to be non-zero.
+       * Always disseminates modifications.
+       *
+       * @param expression      KaRL expression to wait on
+       * @return                value of expression
+       **/
       long long wait (const ::std::string & expression);
 
-      /// Block for an expression to evaluate to true (conditional mutex)
+      /**
+       * Waits for an expression to be non-zero.
+       *
+       * @param expression      KaRL expression to wait on
+       * @param send_modifieds  whether or not to dissemination modifications
+       * @return                value of expression
+       **/
       long long wait (const ::std::string & expression, bool send_modifieds);
 
-      /// Print all rules that are continuously applied to knowledge
+      /**
+       * Prints the permanent knowledge rules (unimplemented)
+       * @param   level    level to log the knowledge at
+       **/
       void print_rules (unsigned int level) const;
 
-      /// Print all knowledge (does not include rules)
+      /**
+       * Prints knowledge variables and values at a logging level
+       * @param   level    level to log the knowledge at
+       **/
       void print_knowledge (unsigned int level) const;
 
-      /// Print a statement after expanding any variables (e.g. "Var{.myid}")
+      /**
+       * Expands and prints a user provided statement at a logging level.
+       * For example, if the statement were MyKnowledge.{.id}, and .id==1,
+       * then the statement would be expanded to MyKnowledge.1
+       * 
+       * @param   statement  statement to expand with variable values
+       * @param   level      level to log the knowledge at
+       **/
       void print (const std::string & statement, unsigned int level) const;
 
-      /// Clear all knowledge and rules from the knowledge base
+      /**
+       * Clears the knowledge base
+       **/
       void clear (void);
 
-      /// Clear all knowledge from the knowledge base but keep rules
+      /**
+       * Clears the knowledge base
+       **/
       void clear_map (void);
 
-      /// Clear all rules from the knowledge base but keep knowledge
+      /**
+       * Clears the permanent knowledge rules (unimplemented)
+       **/
       void clear_rules (void);
 
-      /// lock the underlying knowledge base against any updates
-      /// until we release
+      /**
+       * Acquires the recursive lock on the knowledge base. This will
+       * block any other thread from updating or using the knowledge
+       * base until you call @ release.
+       **/
       void acquire (void);
 
-      /// release the lock on the underlying knowledge base
+      /**
+       * Releases a recursive lock on the knowledge base. This will
+       * allow other thread to access the knowledge base if you had
+       * previously called @ acquire.
+       **/
       void release (void);
 
     private:

@@ -12,32 +12,47 @@ namespace Madara
     class Visitor;
 
     /**
-     * @class Composite_Negate_Node
-     * @brief A composite node containing only a right child. 
-     *        The meaning of this node is -right, eg -5, -7, etc.
+     * @class Composite_Not_Node
+     * @brief A composite node that logically nots a right expression.
+     *        For instance, !0 == 1. !8 == 0.
      */
     class Composite_Not_Node : public Composite_Unary_Node
     {
     public:
-      /// Ctor
+      /**
+       * Constructor
+       * @param   right  right expression
+       **/
       Composite_Not_Node (Component_Node *right);
 
-      /// Dtor
+      /**
+       * Destructor
+       **/
       virtual ~Composite_Not_Node (void);
 
-      /// Return the printable character stored in the node.
+      /**
+       * Returns the printable character of the node
+       * @return    value of the node
+       **/
       virtual long long item (void) const;
 
-      /// Prune the tree of unnecessary nodes. 
-      /// Returns evaluation of the node and sets can_change appropriately.
-      /// if this node can be changed, that means it shouldn't be pruned.
+      /** 
+       * Prunes the expression tree of unnecessary nodes. 
+       * @param     can_change   set to true if variable nodes are contained
+       * @return    0 if right expression is non-zero and 1 otherwise.
+       **/
       virtual long long prune (bool & can_change);
 
-      /// Evaluates the node and its children. This does not prune any of
-      /// the expression tree, and is much faster than the prune function
+      /** 
+       * Evaluates the expression tree. 
+       * @return    0 if right expression is non-zero and 1 otherwise.
+       **/
       virtual long long evaluate (void);
 
-      /// Define the @a accept() operation used for the Visitor pattern.
+      /** 
+       * Accepts a visitor subclassed from the Visitor class
+       * @param    visitor   visitor instance to use
+       **/
       virtual void accept (Visitor &visitor) const;
     };
   }

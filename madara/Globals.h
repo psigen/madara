@@ -8,7 +8,7 @@
  * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
  *
  * This file contains classes and variables global to Madara services
- */
+ **/
 
 #include <string>
 #include <vector>
@@ -20,7 +20,7 @@ namespace Madara
   /**
    * @class Knowledge_Record
    * @brief This class encapsulates an entry in a Knowledge_Base
-   */
+   **/
 
   class Knowledge_Record
   {
@@ -47,14 +47,34 @@ namespace Madara
         quality (0), write_quality (0) 
     {}
 
+    /**
+     * status of the knowledge record
+     **/
     int status;
+
+    /**
+     * value of the knowledge record
+     **/
     long long value;
+
+    /**
+     * last modification time
+     **/
     unsigned long long clock;
+
+    /**
+     * scope (global or local)
+     **/
     int scope;
 
-    // for keeping track of current high priority originator
+    /**
+     * priority of the update
+     **/
     unsigned long quality;
-    // for writing to this variable from this process
+
+    /**
+     * write priority for any local updates
+     **/
     unsigned long write_quality;
   };
 

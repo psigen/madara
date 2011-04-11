@@ -8,10 +8,10 @@
 
 const size_t LQUEUE_SIZE = 40;
 
-// Constructor for Iterator_Impl that takes a tree
+// Constructor for Expression_Tree_Iterator_Impl that takes a tree
 // to iterate over
 
-Madara::Expression_Tree::Iterator_Impl::Iterator_Impl (
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl::Expression_Tree_Iterator_Impl (
   const Expression_Tree &tree)
   : tree_ (tree)
 {
@@ -19,7 +19,7 @@ Madara::Expression_Tree::Iterator_Impl::Iterator_Impl (
 
 // Destructor
 
-Madara::Expression_Tree::Iterator_Impl::~Iterator_Impl (void)
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl::~Expression_Tree_Iterator_Impl (void)
 {
 }
 
@@ -28,7 +28,7 @@ Madara::Expression_Tree::Iterator_Impl::~Iterator_Impl (void)
 
 Madara::Expression_Tree::In_Order_Iterator_Impl::In_Order_Iterator_Impl (
   const Expression_Tree &tree, bool end_iter)
-  : Iterator_Impl (tree),
+  : Expression_Tree_Iterator_Impl (tree),
     stack_ ()
 {
   // if the caller doesn't want an end iterator, insert the root tree
@@ -95,7 +95,7 @@ Madara::Expression_Tree::In_Order_Iterator_Impl::operator++ (void)
  
 bool 
 Madara::Expression_Tree::In_Order_Iterator_Impl::operator== (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   const In_Order_Iterator_Impl * in_order_rhs = dynamic_cast
     <const In_Order_Iterator_Impl *> (&rhs);
@@ -145,15 +145,15 @@ Madara::Expression_Tree::In_Order_Iterator_Impl::operator== (
  
 bool 
 Madara::Expression_Tree::In_Order_Iterator_Impl::operator!= (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   return ! (*this == rhs);
 }
 
 /// Method for cloning an impl. Necessary for post increments (bridge)
-/// @see Iterator
+/// @see Expression_Tree_Iterator
  
-Madara::Expression_Tree::Iterator_Impl * 
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl * 
 Madara::Expression_Tree::In_Order_Iterator_Impl::clone (void)
 {
   return new In_Order_Iterator_Impl (*this);
@@ -164,7 +164,7 @@ Madara::Expression_Tree::In_Order_Iterator_Impl::clone (void)
 
 Madara::Expression_Tree::Pre_Order_Iterator_Impl::Pre_Order_Iterator_Impl (
   const Expression_Tree &tree, bool end_iter)
-  : Iterator_Impl (tree), 
+  : Expression_Tree_Iterator_Impl (tree), 
     stack_ ()
 {
   // if the caller doesn't want an end iterator, insert the root tree
@@ -227,7 +227,7 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::operator++ (void)
  
 bool 
 Madara::Expression_Tree::Pre_Order_Iterator_Impl::operator== (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   const Pre_Order_Iterator_Impl *pre_order_rhs = dynamic_cast
     <const Pre_Order_Iterator_Impl *> (&rhs);
@@ -276,16 +276,16 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::operator== (
  
 bool 
 Madara::Expression_Tree::Pre_Order_Iterator_Impl::operator!= (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   return ! (*this == rhs);
 }
 
 
 /// Method for cloning an impl. Necessary for post increments (bridge)
-/// @see Iterator
+/// @see Expression_Tree_Iterator
  
-Madara::Expression_Tree::Iterator_Impl * 
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl * 
 Madara::Expression_Tree::Pre_Order_Iterator_Impl::clone (void)
 {
   return new Pre_Order_Iterator_Impl (*this);
@@ -296,7 +296,7 @@ Madara::Expression_Tree::Pre_Order_Iterator_Impl::clone (void)
 
 Madara::Expression_Tree::Post_Order_Iterator_Impl::Post_Order_Iterator_Impl (
   const Expression_Tree &tree, bool end_iter)
-  : Iterator_Impl (tree), 
+  : Expression_Tree_Iterator_Impl (tree), 
     stack_ ()
 {
   // if the caller doesn't want an end iterator, insert the root tree
@@ -402,7 +402,7 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::operator++ (void)
  
 bool 
 Madara::Expression_Tree::Post_Order_Iterator_Impl::operator== (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   const Post_Order_Iterator_Impl * post_order_rhs = dynamic_cast
     <const Post_Order_Iterator_Impl *> (&rhs);
@@ -451,15 +451,15 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::operator== (
  
 bool 
 Madara::Expression_Tree::Post_Order_Iterator_Impl::operator!= (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   return ! (*this == rhs);
 }
 
 /// Method for cloning an impl. Necessary for post increments (bridge)
-/// @see Iterator
+/// @see Expression_Tree_Iterator
  
-Madara::Expression_Tree::Iterator_Impl * 
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl * 
 Madara::Expression_Tree::Post_Order_Iterator_Impl::clone (void)
 {
   return new Post_Order_Iterator_Impl (*this);
@@ -470,7 +470,7 @@ Madara::Expression_Tree::Post_Order_Iterator_Impl::clone (void)
 
 Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::Level_Order_Expression_Tree_Iterator_Impl (
   const Expression_Tree &tree, bool end_iter)
-  : Iterator_Impl (tree), 
+  : Expression_Tree_Iterator_Impl (tree), 
     queue_ (LQUEUE_SIZE)
 {
   // if the caller doesn't want an end iterator, insert the root tree
@@ -530,7 +530,7 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator++ (
  
 bool 
 Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator== (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   const Level_Order_Expression_Tree_Iterator_Impl * level_order_rhs =
     dynamic_cast<const Level_Order_Expression_Tree_Iterator_Impl *> (&rhs);
@@ -579,15 +579,15 @@ Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator== (
  
 bool 
 Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::operator!= (
-  const Iterator_Impl &rhs) const
+  const Expression_Tree_Iterator_Impl &rhs) const
 {
   return !(*this == rhs);
 }
 
 /// Method for cloning an impl. Necessary for post increments (bridge)
-/// @see Iterator
+/// @see Expression_Tree_Iterator
  
-Madara::Expression_Tree::Iterator_Impl * 
+Madara::Expression_Tree::Expression_Tree_Iterator_Impl * 
 Madara::Expression_Tree::Level_Order_Expression_Tree_Iterator_Impl::clone (
   void)
 {

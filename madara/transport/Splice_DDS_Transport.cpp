@@ -58,26 +58,6 @@ Madara::Transport::Splice_DDS_Transport::~Splice_DDS_Transport ()
   close ();
 }
 
-std::string
-Madara::Transport::Splice_DDS_Transport::pad_key (const std::string & input,
-                                                  size_t length)
-{
-  // pad if we need to
-  if (input.size () < length)
-  {
-    std::string padding (' ', length - input.size ());
-
-    std::stringstream buffer;
-    buffer << input;
-    buffer << padding;
-
-    return buffer.str ();
-  }
-
-  // otherwise just return the input
-  return input;
-}
-
 void
 Madara::Transport::Splice_DDS_Transport::close (void)
 {
