@@ -112,8 +112,8 @@ build_wait_string (int id, const std::string & attribute, int count)
 unsigned long long test_latency (
                      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
                      unsigned long iterations, 
-                     unsigned long long & compile_latency,
-                     unsigned long long & eval_latency
+                     ACE_hrtime_t & compile_latency,
+                     ACE_hrtime_t & eval_latency
                      )
 {
   std::string expression;
