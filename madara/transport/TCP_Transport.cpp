@@ -6,7 +6,7 @@
 
 Madara::Transport::TCP_Transport::TCP_Transport (
   const std::string & id,
-  Madara::Knowledge_Engine::Thread_Safe_Context & context, const int & reliability)
+  Madara::Knowledge_Engine::Thread_Safe_Context & context, const int &)
 : id_ (id), context_ (context), thread_ (0), valid_setup_ (false)
 {
   this->setup ();
@@ -36,7 +36,7 @@ Madara::Transport::TCP_Transport::reliability (void) const
 }
 
 int
-Madara::Transport::TCP_Transport::reliability (const int & setting)
+Madara::Transport::TCP_Transport::reliability (const int &)
 {
   return RELIABLE;
 }

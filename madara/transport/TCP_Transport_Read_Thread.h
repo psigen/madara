@@ -34,9 +34,8 @@ namespace Madara
     private:
       const std::string                                 id_;
       ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-      /// typdef for a threadsafe counter
-      ACE_Atomic_Op<ACE_Mutex,bool> terminated_;
       ACE_Barrier barrier_;
+      ACE_Atomic_Op<ACE_Mutex,bool> terminated_;
 
       ACE_Thread_Mutex                   mutex_;
       Madara::Transport::Condition       is_not_ready_;

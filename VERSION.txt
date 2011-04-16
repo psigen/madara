@@ -1,5 +1,1 @@
-This is MADARA version 0.5.0, released Sat Apr 04 3:30:00 CEST 2011
-
-For information on this or past versions, please see our project site
-at http://code.google.com/p/madara. If you find issues with this version,
-please submit an issue to our issue tracker at http://code.google.com/p/madara/issues/list.
+0.5.1

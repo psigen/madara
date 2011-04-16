@@ -274,7 +274,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   int retcode = parse_args (argc, argv);
 
   // for returning back to the user after process spawn
-  int return_value = 0;
 
   if (retcode < 0)
     return retcode;
@@ -298,12 +297,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     return -2;
   }
 
-  TiXmlNode * node = 0;
-	TiXmlElement * el_tests = 0; 
-	TiXmlElement * el_globals = 0; 
-	TiXmlElement * el_domain = 0; 
+  TiXmlElement * el_tests = 0; 
+  TiXmlElement * el_globals = 0; 
   TiXmlElement * element = 0;
-	TiXmlAttribute * attribute = 0; 
 
   el_tests  = doc.FirstChildElement ("tests");;
 

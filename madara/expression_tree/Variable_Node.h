@@ -67,6 +67,8 @@ namespace Madara
       /// Key for retrieving value of this variable.
       const ::std::string key_;
 
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+
       /// Expansion necessary
       bool key_expansion_necessary_;
 
@@ -75,7 +77,6 @@ namespace Madara
       std::vector< std::string> pivot_list_;
 
       /// Reference to context for variable retrieval
-      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
   }
 }

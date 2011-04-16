@@ -51,7 +51,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Variable_Node &node)
 /// visit function - prints Composite_Negate_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Negate_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Negate_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "-"));
@@ -60,7 +60,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Negate_Node &node
 /// visit function - prints Composite_Negate_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Predecrement_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Predecrement_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "--"));
@@ -69,7 +69,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Predecrement_Node
 /// visit function - prints Composite_Negate_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Preincrement_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Preincrement_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "++"));
@@ -78,7 +78,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Preincrement_Node
 /// visit function - prints Composite_Not_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Not_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Not_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "!"));
@@ -87,7 +87,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Not_Node &node)
 /// visit function - prints Composite_Add_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Add_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Add_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "+ "));
@@ -96,7 +96,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Add_Node &node)
 /// visit function - prints Composite_And_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_And_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_And_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "&& "));
@@ -105,7 +105,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_And_Node &node)
 /// visit function - prints Composite_Or_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Or_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Or_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "|| "));
@@ -113,7 +113,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Or_Node &node)
 
 /// visit function - prints Composite_Equality_Node contents to std::cout
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Equality_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Equality_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "== "));
@@ -121,7 +121,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Equality_Node &no
 
 /// visit function - prints Composite_Inequality_Node contents to std::cout
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Inequality_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Inequality_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "!= "));
@@ -129,7 +129,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Inequality_Node &
 
 /// visit function - prints Composite_Greater_Than_Equal_Node contents to std::cout
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Equal_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Equal_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     ">= "));
@@ -137,7 +137,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Equa
 
 /// visit function - prints Composite_Greater_Than_Node contents to std::cout
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "> "));
@@ -145,7 +145,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Greater_Than_Node
 
 /// visit function - prints Composite_Less_Than_Equal_Node contents to std::cout
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Equal_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Equal_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "<= "));
@@ -153,7 +153,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Equal_N
 
 /// visit function - prints Composite_Less_Than_Node contents to std::cout
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "< "));
@@ -162,7 +162,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Less_Than_Node &n
 /// visit function - prints Composite_Assignment_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Assignment_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Assignment_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "= "));
@@ -171,7 +171,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Assignment_Node &
 /// visit function - prints Composite_Subtract_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Subtract_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Subtract_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "- "));
@@ -180,7 +180,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Subtract_Node &no
 /// visit function - prints Composite_Divide_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Divide_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Divide_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "/ "));
@@ -189,7 +189,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Divide_Node &node
 /// visit function - prints Composite_Multiply_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Multiply_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Multiply_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "* "));
@@ -198,7 +198,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Multiply_Node &no
 /// visit function - prints Composite_Modulus_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Modulus_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Modulus_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "% "));
@@ -207,7 +207,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Modulus_Node &nod
 /// visit function - prints Composite_Both_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Both_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Both_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "; "));
@@ -216,7 +216,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Both_Node &node)
 /// visit function - prints Composite_Implies_Node contents to std::cout
 
 void 
-Madara::Expression_Tree::Print_Visitor::visit (const Composite_Implies_Node &node)
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_Implies_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "=> "));

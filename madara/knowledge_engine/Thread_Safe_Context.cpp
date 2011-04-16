@@ -265,7 +265,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   // vectors for holding parsed tokens and pivot_list
   std::vector< std::string> tokens;
   std::vector< std::string> pivot_list;
-  unsigned int count = 1;
   unsigned int subcount = 0;
   unsigned int begin_exp = 0;
 

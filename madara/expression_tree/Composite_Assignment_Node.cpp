@@ -32,7 +32,6 @@ Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  long long left_value = 0;
   long long right_value = 0;
 
   if (this->left_ && dynamic_cast <Variable_Node *> (left_) != 0)

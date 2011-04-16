@@ -19,8 +19,8 @@ Madara::Knowledge_Engine::Files::Files (Thread_Safe_Context & map) :
 /// Shape a file according to a shaping policy
 int 
 Madara::Knowledge_Engine::Files::shape_file (
-  const std::string & source_key, const std::string & dest_key,
-  const std::string & policy_key)
+  const std::string &, const std::string &,
+  const std::string &)
 {
 
 

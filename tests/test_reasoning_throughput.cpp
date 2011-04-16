@@ -200,7 +200,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   unsigned long long averages[num_test_types];
   unsigned long long (* test_functions [num_test_types]) (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      unsigned long iterations);
-  char * printouts [num_test_types] = {
+  const char * printouts [num_test_types] = {
     "KaRL: Simple Reinforcements   ",
     "KaRL: 10,000 Reinforcements   ",
     "KaRL: Simple Inference        ",

@@ -50,7 +50,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a negation (Composite_Negate_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Negate_Node &node)
+  const Madara::Expression_Tree::Composite_Negate_Node &)
 {
   if (stack_.size () >= 1)
     stack_.push (-stack_.pop ());
@@ -132,7 +132,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a negation (Composite_Not_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Not_Node &node)
+  const Madara::Expression_Tree::Composite_Not_Node &)
 {
   if (stack_.size () >= 1)
     stack_.push (!stack_.pop ());
@@ -148,7 +148,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of an addition (Composite_Add_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Add_Node &node)
+  const Madara::Expression_Tree::Composite_Add_Node &)
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () + stack_.pop ());
@@ -175,7 +175,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
       // this is really backwards logic, but it was the only way I could think of
       // to allow for a = b = c with this type of tree and post-order flow
       long long right = stack_.pop ();
-      long long old_value = stack_.pop ();
+      stack_.pop ();
       Variable_Node * left = dynamic_cast <Variable_Node *> (node.left ());
       left->set (right);
       stack_.push (right);
@@ -194,7 +194,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a logical and comparison (Composite_And_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_And_Node &node)
+  const Madara::Expression_Tree::Composite_And_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -215,7 +215,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a logical or comparison (Composite_Or_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Or_Node &node)
+  const Madara::Expression_Tree::Composite_Or_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -236,7 +236,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of both left and right (Composite_Both_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Both_Node &node)
+  const Madara::Expression_Tree::Composite_Both_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -259,7 +259,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of an equality comparison (Composite_Equality_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Equality_Node &node)
+  const Madara::Expression_Tree::Composite_Equality_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -280,7 +280,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of an inequality comparison (Composite_Inequality_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Inequality_Node &node)
+  const Madara::Expression_Tree::Composite_Inequality_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -301,7 +301,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a greater than equal to comparison (Composite_Greater_Than_Equal_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Greater_Than_Equal_Node &node)
+  const Madara::Expression_Tree::Composite_Greater_Than_Equal_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -322,7 +322,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a greater than comparison (Composite_Greater_Than_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Greater_Than_Node &node)
+  const Madara::Expression_Tree::Composite_Greater_Than_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -343,7 +343,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a less than equal to comparison (Composite_Less_Than_Equal_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Less_Than_Equal_Node &node)
+  const Madara::Expression_Tree::Composite_Less_Than_Equal_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -364,7 +364,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of a less than comparison (Composite_Less_Than_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Less_Than_Node &node)
+  const Madara::Expression_Tree::Composite_Less_Than_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -385,7 +385,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluation of an addition (Composite_Subtract_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Subtract_Node &node)
+  const Madara::Expression_Tree::Composite_Subtract_Node &)
 {
   if (stack_.size () >= 2)
   {
@@ -404,7 +404,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluations of a division (Composite_Divide_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Divide_Node &node)
+  const Madara::Expression_Tree::Composite_Divide_Node &)
 {
   if (stack_.size () >= 2 && stack_.top ())
   {
@@ -424,7 +424,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluations of a division (Composite_Multiply_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Multiply_Node &node)
+  const Madara::Expression_Tree::Composite_Multiply_Node &)
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () * stack_.pop ());
@@ -440,7 +440,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluations of a division (Composite_Modulus_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Modulus_Node &node)
+  const Madara::Expression_Tree::Composite_Modulus_Node &)
 {
   if (stack_.size () >= 2 && stack_.top ())
   {
@@ -460,7 +460,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 /// evaluations of a division (Composite_Modulus_Node)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
-  const Madara::Expression_Tree::Composite_Implies_Node &node)
+  const Madara::Expression_Tree::Composite_Implies_Node &)
 {
   if (stack_.size () >= 2)
     stack_.push (stack_.pop () ? stack_.pop () : 0);

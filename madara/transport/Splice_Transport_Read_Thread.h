@@ -48,8 +48,8 @@ namespace Madara
       ::Knowledge::UpdateDataReader_ptr                    update_reader_;
       ::Knowledge::MutexDataReader_ptr                     mutex_reader_;
       /// typdef for a threadsafe counter
-      ACE_Atomic_Op<ACE_Mutex,bool>                        terminated_;
       ACE_Barrier barrier_;
+      ACE_Atomic_Op<ACE_Mutex,bool>                        terminated_;
 
       //DDS::ConditionSeq_var              condition_list_;
       DDS::WaitSet                       waitset_;

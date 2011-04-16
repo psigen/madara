@@ -142,7 +142,7 @@ namespace Madara
       /**
        * Splice handle checker
        **/
-      void check_handle (void * handle, char *info);
+      void check_handle (void * handle, const char *info);
 
       /**
        * Splice status checker
@@ -152,7 +152,7 @@ namespace Madara
       /**
        * Returns error name of the specific status
        **/
-      char * get_error_name (DDS::ReturnCode_t status);
+      const char * get_error_name (DDS::ReturnCode_t status);
     };
   }
 }

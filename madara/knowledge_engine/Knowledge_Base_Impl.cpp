@@ -159,13 +159,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
     {
       /// grab the clock time that was created with the apply_modified call
       unsigned long long cur_clock = map_.get_clock ();
-      long quality = 0;
+      unsigned long quality = 0;
 
       for (Madara::String_Vector::const_iterator k = modified.begin ();
              k != modified.end (); ++k)
       {
         map_.set_clock (*k, cur_clock);
-        long cur_quality = map_.get_write_quality (*k);
+        unsigned long cur_quality = map_.get_write_quality (*k);
 
         // every knowledge update via multiassignment has the quality
         // of the highest update. This is to ensure consistency for
@@ -262,13 +262,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
       /// generate a new clock time and set our variable's clock to
       /// this new clock
       unsigned long long cur_clock = map_.inc_clock ();
-      long quality = 0;
+      unsigned long quality = 0;
 
       for (Madara::String_Vector::const_iterator k = modified.begin ();
              k != modified.end (); ++k)
       {
         map_.set_clock (*k, cur_clock);
-        long cur_quality = map_.get_write_quality (*k);
+        unsigned long cur_quality = map_.get_write_quality (*k);
 
         // every knowledge update via multiassignment has the quality
         // of the highest update. This is to ensure consistency for
@@ -321,16 +321,25 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
         /// generate a new clock time and set our variable's clock to
         /// this new clock
         unsigned long long cur_clock = map_.inc_clock ();
+        unsigned long quality = 0;
 
         for (Madara::String_Vector::const_iterator k = modified.begin ();
                k != modified.end (); ++k)
         {
           map_.set_clock (*k, cur_clock);
+          unsigned long cur_quality = map_.get_write_quality (*k);
+
+          // every knowledge update via multiassignment has the quality
+          // of the highest update. This is to ensure consistency for
+          // updating while also providing quality indicators for sensors,
+          // actuators, controllers, etc.
+          if (cur_quality > quality)
+            quality = cur_quality;
           string_builder << *k << " = " << map_.get (*k) << " ; ";
           //transport_->send_data (*k, map_.get (*k));
         }
 
-        transport_->send_multiassignment (string_builder.str ());
+        transport_->send_multiassignment (string_builder.str (), quality);
         map_.reset_modified ();
       }
     }
@@ -388,16 +397,26 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
     /// generate a new clock time and set our variable's clock to
     /// this new clock
     unsigned long long cur_clock = map_.inc_clock ();
+    unsigned long quality = 0;
 
     for (Madara::String_Vector::const_iterator k = modified.begin ();
          k != modified.end (); ++k)
     {
       map_.set_clock (*k, cur_clock);
+      unsigned long cur_quality = map_.get_write_quality (*k);
+
+      // every knowledge update via multiassignment has the quality
+      // of the highest update. This is to ensure consistency for
+      // updating while also providing quality indicators for sensors,
+      // actuators, controllers, etc.
+      if (cur_quality > quality)
+        quality = cur_quality;
+
       string_builder << *k << " = " << map_.get (*k) << " ; ";
     }
 
     if (modified.size () > 0)
-      transport_->send_multiassignment (string_builder.str ());
+      transport_->send_multiassignment (string_builder.str (), quality);
     map_.reset_modified ();
   }
 

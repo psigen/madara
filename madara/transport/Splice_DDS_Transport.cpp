@@ -13,7 +13,7 @@ const char * Madara::Transport::Splice_DDS_Transport::topic_names_[] = {
 };
 
 /* Array to hold the names for all ReturnCodes. */
-char * ret_code_names[13] = { 
+const char * ret_code_names[13] = { 
     "DDS_RETCODE_OK",
     "DDS_RETCODE_ERROR",
     "DDS_RETCODE_UNSUPPORTED",
@@ -39,11 +39,12 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   domain_participant_ (0), publisher_ (0), subscriber_ (0), 
   datawriter_ (0), datareader_ (0), 
   update_writer_ (0), update_reader_ (0),
-//  update_data_list_ (new Knowledge::UpdateSeq), 
+  //  update_data_list_ (new Knowledge::UpdateSeq), 
+    mutex_writer_ (0), mutex_reader_ (0),
+  //  mutex_data_list_ (new Knowledge::MutexSeq), 
   update_topic_ (0), 
-  mutex_writer_ (0), mutex_reader_ (0),
-//  mutex_data_list_ (new Knowledge::MutexSeq), 
-  mutex_topic_ (0), thread_ (0),
+  mutex_topic_ (0), 
+  thread_ (0),
   //reliability_ (reliability), 
   //valid_setup_ (false),
   enable_mutexing_ (false)
@@ -347,7 +348,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   const std::string & expression, unsigned long quality)
 {
   // check to see if we are shutting down
-  long ret = Madara::Transport::Base::send_multiassignment (expression);
+  long ret = Madara::Transport::Base::send_multiassignment (expression, quality);
   if (-1 == ret)
     return ret;
   
@@ -380,7 +381,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
 
 void
 Madara::Transport::Splice_DDS_Transport::check_handle (void * handle, 
-                                                      char * info)
+                                                      const char * info)
 {
   if (!handle)
   {
@@ -406,7 +407,7 @@ Madara::Transport::Splice_DDS_Transport::check_status (DDS::ReturnCode_t status,
   exit (-2);
 }
 
-char *
+const char *
 Madara::Transport::Splice_DDS_Transport::get_error_name(DDS::ReturnCode_t status)
 {
     return ret_code_names[status];

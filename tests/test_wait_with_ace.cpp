@@ -25,7 +25,7 @@ static Madara::Knowledge_Engine::Knowledge_Base knowledge (
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
-static void * worker(void * args)
+static void * worker(void * &)
 {
   int id = ++thread_count;
   int last =  id - 1;
@@ -40,7 +40,7 @@ static void * worker(void * args)
 
 	buffer << "thread";
 	buffer << last;
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting for %s\n", buffer.str ()));
+    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Waiting for %s\n", buffer.str ().c_str ()));
     knowledge.wait (buffer.str ());
   }
 
@@ -48,7 +48,7 @@ static void * worker(void * args)
   buffer << "thread";
   buffer << id;
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Setting %s\n", buffer.str ()));
+  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Setting %s\n", buffer.str ().c_str ()));
   knowledge.set (buffer.str (),1);
 
   if (id == max_threads)

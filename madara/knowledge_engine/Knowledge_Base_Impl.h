@@ -263,15 +263,15 @@ namespace Madara
 
       Thread_Safe_Context           map_;
       Knowledge_Rules               rules_;
-      Madara::Transport::Base *     transport_;
       ACE_SOCK_Acceptor             unique_bind_;
       std::string                   id_;
       //std::string                   domain_name_;
       //int                           transport_type_;
+      Madara::Transport::Settings   settings_;
       Files                         files_;
 
-      Madara::Transport::Settings              settings_;
       Madara::Expression_Tree::Interpreter     interpreter_;
+      Madara::Transport::Base *     transport_;
     };
   }
 }
