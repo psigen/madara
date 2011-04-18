@@ -852,12 +852,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("f:n:i:l:o:d:a:t:v:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("1:2:f:n:i:l:o:d:a:t:v:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
+  cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("file"), 'f', ACE_Get_Opt::ARG_REQUIRED);
@@ -881,6 +883,25 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
+    case '1':
+      // redirecting stdout
+
+      freopen (cmd_opts.opt_arg (), "w", stdout);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
+        DLINFO "KATS_PROCESS: stdout redirected to %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
+    case '2':
+      // redirecting stderr
+      freopen (cmd_opts.opt_arg (), "w", stderr);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
+        DLINFO "KATS_PROCESS: stderr redirected to %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
     case 'a':
       // thread number
       test_name = cmd_opts.opt_arg ();
@@ -1056,6 +1077,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:      \n\
+      -1 (--stdout)      redirect stdout to a file \n\
+      -2 (--stderr)      redirect stderr to a file \n\
       -a (--testname)    name of the test (for barriers) \n\
       -b (--precondition) precondition to wait for after barrier \n\
       -d (--domain)      knowledge domain to isolate knowledge into \n\
