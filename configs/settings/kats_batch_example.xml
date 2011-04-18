@@ -1,5 +1,6 @@
 <tests>
   <setup>
+    <debug />
     <name>FullTests</name>
     <domain>SpliceTests</domain>
     <host>localhost</host>
@@ -12,10 +13,10 @@
     <precondition></precondition>
     <postcondition>SpliceTests.done = 1</postcondition>
     <!-- <realtime /> -->
-    <debug />
     <!--<parallel />-->
   </setup>
   <test>
+    <debug />
     <name>timeout_test</name>
     <executable>timeout</executable>
     <commandline>15</commandline>
@@ -25,8 +26,11 @@
     </kill>
     <precondition></precondition>
     <postcondition>timeout_test.done = 1</postcondition>
+    <stdout>./test1.out</stdout>
+    <stderr>./test1.err</stderr>
   </test>
   <test>
+    <debug />
     <name>timeout_test</name>
     <executable>timeout</executable>
     <commandline>25</commandline>
@@ -36,5 +40,7 @@
     </kill>
     <precondition></precondition>
     <postcondition>bad_timeout_test.done = 1</postcondition>
+    <stdout>./test2.out</stdout>
+    <stderr>./test2.err</stderr>
   </test>
 </tests>

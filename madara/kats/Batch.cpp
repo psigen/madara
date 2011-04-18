@@ -152,6 +152,24 @@ public:
     command_line << value;
   }
 
+  void set_stdin (const std::string & value)
+  {
+    command_line << " -0 ";
+    command_line << value;
+  }
+
+  void set_stdout (const std::string & value)
+  {
+    command_line << " -1 ";
+    command_line << value;
+  }
+
+  void set_stderr (const std::string & value)
+  {
+    command_line << " -2 ";
+    command_line << value;
+  }
+
   void set_processes (const std::string & value)
   {
     command_line << " -p ";
@@ -630,6 +648,36 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       processes[cur].set_delaytime (el_temp1->GetText ());
     }
 
+    // check for stdout redirect
+    el_temp1 = element->FirstChildElement ("stdout");
+    if (el_temp1 && el_temp1->GetText ())
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Read stdout redirect = %s from tests file\n",
+           el_temp1->GetText ()));
+      processes[cur].set_stdout (el_temp1->GetText ());
+    }
+
+    // check for stderr redirect
+    el_temp1 = element->FirstChildElement ("stderr");
+    if (el_temp1 && el_temp1->GetText ())
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Read stderr redirect = %s from tests file\n",
+           el_temp1->GetText ()));
+      processes[cur].set_stderr (el_temp1->GetText ());
+    }
+
+    // check for stderr redirect
+    el_temp1 = element->FirstChildElement ("stdin");
+    if (el_temp1 && el_temp1->GetText ())
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Read stdin redirect = %s from tests file\n",
+           el_temp1->GetText ()));
+      processes[cur].set_stdin (el_temp1->GetText ());
+    }
+
     // check the precondition
     el_temp1 = element->FirstChildElement ("precondition");
     if (el_temp1 && el_temp1->GetText ())
@@ -852,12 +900,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("1:2:f:n:i:l:o:d:a:t:v:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:f:n:i:l:o:d:a:t:v:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
+  cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
@@ -883,6 +932,16 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
+    case '0':
+      // redirecting stdout
+
+      freopen (cmd_opts.opt_arg (), "r", stdin);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
+        DLINFO "KATS_PROCESS: stdin redirected from %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
     case '1':
       // redirecting stdout
 
@@ -1077,6 +1136,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:      \n\
+      -0 (--stdin)       redirect stdin from a file \n\
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\
       -a (--testname)    name of the test (for barriers) \n\
