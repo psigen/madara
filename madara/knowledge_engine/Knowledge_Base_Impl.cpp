@@ -247,9 +247,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   long long last_value = tree.evaluate ();
 
-  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
-      " completed first eval to get %d",
+      " completed first eval to get %d\n",
     last_value));
 
   if (transport_ && send_modifieds)
@@ -286,8 +286,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     }
   }
   else
-    {
-    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
         " not sending knowledge mutations \n"));
   }
@@ -295,9 +295,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   // wait for expression to be true
   while (!last_value)
   {
-    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
-        " last value doesn't result in success\n"));
+        " last value didn't result in success\n"));
 
     // we need the context to do an additional release. If release
     // the context lock, we may have an update event happen

@@ -315,7 +315,11 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   // check to see if we are shutting down
   long ret = Madara::Transport::Base::send_data (key, value);
   if (-1 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::send_data: transport not valid yet")); 
     return ret;
+  }
 
   /// get current lamport clock. 
   unsigned long long cur_clock = context_.get_clock ();
@@ -350,7 +354,11 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   // check to see if we are shutting down
   long ret = Madara::Transport::Base::send_multiassignment (expression, quality);
   if (-1 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::send_multiassignment: transport not valid yet")); 
     return ret;
+  }
   
 
   /// get current lamport clock. 

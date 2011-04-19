@@ -469,9 +469,21 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_PROCESS: ERROR: -%c requires an argument"),
            cmd_opts.opt_opt ()), -2); 
-    case 'h':
     default:
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:    \n\
+      {
+        char c_option = (char) option;
+        MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+          DLINFO "KATS_PROCESS: unrecognized argument %c\n",
+          c_option));
+
+        MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+          DLINFO "KATS_PROCESS: printing help...\n",
+          c_option));
+      }
+
+    case 'h':
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+"kats_process options:    \n\
       -0 (--stdin)       redirect stdin from a file \n\
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\

@@ -24,7 +24,8 @@ namespace Madara
 
     /// Strip whitespace from front and end of string and also
     /// condense multiple whitespace into a single space
-    MADARA_Export ::std::string & strip_extra_white_space (::std::string & input);
+    MADARA_Export ::std::string & strip_extra_white_space (
+      ::std::string & input);
 
     // split a key into a corresponding host and port
     MADARA_Export int split_hostport_identifier (const std::string & key, 
@@ -56,6 +57,15 @@ namespace Madara
     
     /// Return the file name of the provided file or directory
     MADARA_Export std::string extract_filename (const std::string & name);
+
+    /// Expand any environment variables in a string
+    MADARA_Export std::string expand_envs (
+      const std::string & source);
+
+    /// grab an environment variable value (@see expand_envs)
+    char * get_var (const std::string & source, size_t cur, size_t & end);
+
+
   }
 }
 #endif

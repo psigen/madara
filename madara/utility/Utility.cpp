@@ -1,4 +1,5 @@
-#include "ctype.h"
+#include <ctype.h>
+#include <stdlib.h>
 #include "madara/utility/Utility.h"
 #include <iostream>
 #include <sstream>
@@ -311,3 +312,39 @@ Madara::Utility::extract_filename (const std::string & name)
   // return the substring from start to the end of the filename
   return name.substr (start, name.size () - start);
 }
+
+/// Expand any environment variables in a string
+std::string
+Madara::Utility::expand_envs (const std::string & source)
+{
+  std::stringstream buffer;
+
+  for (size_t i = 0; i < source.size (); ++i)
+  {
+    // environment variable must be larger than $()
+    if (source[i] == '$' && i + 3 < source.size ())
+    {
+      buffer << get_var (source, i+2, i);
+    }
+    else
+      buffer << source[i];
+  }
+  return buffer.str ();
+}
+
+/// grab an environment variable value (@see expand_envs)
+char * 
+Madara::Utility::get_var (const std::string & source, 
+                          size_t cur, size_t & end)
+{
+  for (end = cur; end < source.size (); ++end)
+  {
+    if (source[end] == ')' || source[end] == '}')
+    {
+      return getenv (source.substr (cur, end - cur).c_str ());
+    }
+  }
+
+  return getenv (source.substr (cur,source.size () - cur).c_str ());
+}
+
