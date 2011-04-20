@@ -5,6 +5,7 @@
 #include <vector>
 #include "ace/Thread_Mutex.h"
 #include "ace/Condition_T.h"
+#include "madara/utility/Log_Macros.h"
 
 namespace Madara
 {
@@ -117,52 +118,32 @@ namespace Madara
       }
 
       /// all subclasses should call this method at the end of its setup
-      virtual int setup (void) 
+      inline int validate_transport (void) 
       { 
         is_valid_ = true; 
         shutting_down_ = false;
         valid_setup_.broadcast ();
 
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+          DLINFO "Transport::validate_transport: transport is ready"));
+
         return 0;
+      }
+
+      /// all subclasses should call this method at the end of its setup
+      inline int setup (void) 
+      { 
+        return validate_transport ();
       }
 
       /// all subclasses should call this method at the beginning of send_data
-      virtual long send_data (const std::string &, 
-                              const long long &) 
+      inline int check_transport (void) 
       {
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+          DLINFO "Transport::check_transport: checking for valid transport"));
+
         if (!is_valid_)
-          valid_setup_.wait ();
-
-        if (shutting_down_)
-          return -1;
-
-        return 0;
-      }
-
-      /// all subclasses should call this method at the beginning of 
-      /// a call to send_multiassignment of the derived class
-      virtual long send_multiassignment (const std::string &,
-        unsigned long &) 
-      {
-        if (!is_valid_)
-          valid_setup_.wait ();
-
-        if (shutting_down_)
-          return -1;
-
-        return 0;
-      }
-
-      /// all subclasses should call this method at the beginning of send_mutex
-      /// @param key        resource to lock (e.g. variable name)
-      /// @param requester  requester id (e.g. host:port for unique id of requester)
-      /// @param time       lamport clock value, preferably synchronized globally
-      /// @param type       mutex message type identifier (
-      virtual long send_mutex (const std::string &, 
-        const std::string &, const long long &, const long &) 
-      {
-        if (!is_valid_)
-          valid_setup_.wait ();
+          return -2;
 
         if (shutting_down_)
           return -1;
@@ -180,12 +161,30 @@ namespace Madara
         return settings_;
       }
 
+      virtual long send_data (const std::string &, const long long &)
+      {
+        return check_transport ();
+      }
+
+      virtual long send_multiassignment (const std::string &, unsigned long)
+      {
+        return check_transport ();
+      }
+
       /// all subclasses should call this method at the beginning of close
-      virtual void close (void)
+      inline void invalidate_transport (void)
       {
         is_valid_ = false;
         shutting_down_ = true;
         valid_setup_.broadcast ();
+
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+          DLINFO "Transport::invalidate_transport: invalidating transport"));
+      }
+
+      virtual void close (void)
+      {
+        invalidate_transport ();
       }
 
     protected:

@@ -53,7 +53,7 @@ namespace Madara
        * @param   value   value of the knowledge location
        * @return  result of dds write operation or -1 if we are shutting down
        **/
-      virtual long send_data (const std::string & key, const long long & value);
+      long send_data (const std::string & key, const long long & value);
 
       /**
        * Sends a multiple assignment of knowledge variables

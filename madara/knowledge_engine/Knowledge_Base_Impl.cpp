@@ -281,8 +281,19 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
           //transport_->send_data (*k, map_.get (*k));
       }
 
+      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " will be sending %s\n", 
+        string_builder.str ().c_str ()));
+
       transport_->send_multiassignment (string_builder.str (), quality);
       map_.reset_modified ();
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::wait:" \
+          " no modifications to send during this wait\n"));
     }
   }
   else
@@ -341,6 +352,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
         transport_->send_multiassignment (string_builder.str (), quality);
         map_.reset_modified ();
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+            DLINFO "Knowledge_Base_Impl::wait:" \
+            " no modifications to send during this wait\n"));
       }
     }
 

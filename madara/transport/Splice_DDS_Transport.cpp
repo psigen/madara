@@ -62,7 +62,7 @@ Madara::Transport::Splice_DDS_Transport::~Splice_DDS_Transport ()
 void
 Madara::Transport::Splice_DDS_Transport::close (void)
 {
-  Madara::Transport::Base::close ();
+  this->invalidate_transport ();
 
   if (thread_)
   {
@@ -105,6 +105,8 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   publisher_ = 0;
   domain_participant_ = 0;
   domain_factory_ = 0;
+
+  this->shutting_down_ = false;
 }
 
 int
@@ -169,6 +171,11 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //status = this->mutex_type_support_.register_type (
   //  domain_participant_, "Knowledge::Mutex");
   //check_status(status, "Knowledge::MutexTypeSupport::register_type");
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Setting up domain (%s)\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
   // Create Update topic
   update_topic_ = domain_participant_->create_topic (
@@ -303,7 +310,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
     update_reader_, mutex_reader_, enable_mutexing_);
   
-  Madara::Transport::Base::setup ();
+  this->validate_transport ();
 
   return 0;
 }
@@ -313,11 +320,17 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
                                                const long long & value)
 {
   // check to see if we are shutting down
-  long ret = Madara::Transport::Base::send_data (key, value);
+  long ret = this->check_transport ();
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_data: transport not valid yet")); 
+      DLINFO "Splice_DDS_Transport::send_data: transport has been told to shutdown")); 
+    return ret;
+  }
+  else if (-2 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::send_data: transport is not valid")); 
     return ret;
   }
 
@@ -352,11 +365,17 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   const std::string & expression, unsigned long quality)
 {
   // check to see if we are shutting down
-  long ret = Madara::Transport::Base::send_multiassignment (expression, quality);
+  long ret = this->check_transport ();
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport not valid yet")); 
+      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is shutting down")); 
+    return ret;
+  }
+  else if (-2 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is not valid")); 
     return ret;
   }
   

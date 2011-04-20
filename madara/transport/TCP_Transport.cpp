@@ -9,24 +9,26 @@ Madara::Transport::TCP_Transport::TCP_Transport (
   Madara::Knowledge_Engine::Thread_Safe_Context & context, const int &)
 : id_ (id), context_ (context), thread_ (0), valid_setup_ (false)
 {
-  this->setup ();
+  this->validate_transport ();
 }
 
 Madara::Transport::TCP_Transport::~TCP_Transport ()
 {
-  this->close ();
+  close ();
 }
 
 void
 Madara::Transport::TCP_Transport::close (void)
 {
-  Madara::Transport::Base::close ();
+  this->invalidate_transport ();
 
   if (thread_)
   {
     thread_->close ();
     delete thread_;
   }
+
+  this->shutting_down_ = false;
 }
 
 int
@@ -44,21 +46,30 @@ Madara::Transport::TCP_Transport::reliability (const int &)
 int
 Madara::Transport::TCP_Transport::setup (void)
 {
-  
-  // TO DO
-  
   thread_ = new Madara::Transport::TCP_Transport_Read_Thread (id_, context_);
   
-  Madara::Transport::Base::setup ();
-
-  return 0;
+  return this->validate_transport ();
 }
 
 long
 Madara::Transport::TCP_Transport::send_data (const std::string & key, 
                                                const long long & value)
 {
-  Madara::Transport::Base::send_data (key, value);
+  // check to see if we are shutting down
+  long ret = this->check_transport ();
+  if (-1 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "TCP_Transport::send_data: transport has been told to shutdown")); 
+    return ret;
+  }
+  else if (-2 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "TCP_Transport::send_data: transport is not valid")); 
+    return ret;
+  }
+
 
   // TO DO
   

@@ -80,6 +80,10 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
     long long value = data.value;
     int result = 0;
 
+    MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::handle_assignment:" \
+        " waiting to process assignment\n"));
+
     context_.lock ();
     unsigned long long cur_clock = context_.get_clock (key);
     unsigned long cur_quality = context_.get_quality (key);
@@ -146,6 +150,10 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
     char symbol;
     long long value;
     std::stringstream stream (data.key.val ());
+
+    MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::multiassignment:" \
+        " waiting to process multiassignment\n"));
 
     context_.lock ();
     
@@ -224,6 +232,12 @@ Madara::Transport::Splice_Read_Thread::svc (void)
   wait_time.sec = 3;
   wait_time.nanosec = 0;
 
+  // if we don't check originator for null, we get phantom sends
+  // when the program exits.
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_Read_Thread::svc:" \
+    " entering processing loop.\n"));
+
   while (false == terminated_.value ())
   {
     // by using conditionals, we can wait for a message for a specific time limit
@@ -234,10 +248,18 @@ Madara::Transport::Splice_Read_Thread::svc (void)
 
     if (!is_ready_)
     {
+      MADARA_DEBUG (MADARA_LOG_TRACE, (LM_DEBUG, 
+        DLINFO "Splice_Read_Thread::svc:" \
+        " waking up anyone waiting for read thread.\n"));
+
       is_ready_ = true;
       is_not_ready_.broadcast ();
     }
     //ACE_DEBUG ((LM_DEBUG, "(%P|%t) Read thread take.\n"));
+
+    MADARA_DEBUG (MADARA_LOG_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_Read_Thread::svc:" \
+      " entering a take on the DDS reader.\n"));
 
     dds_result = update_reader_->take (update_data_list_, infoList, 1, 
       DDS::ANY_SAMPLE_STATE, DDS::ANY_VIEW_STATE, DDS::ANY_INSTANCE_STATE);
@@ -259,7 +281,7 @@ Madara::Transport::Splice_Read_Thread::svc (void)
         {
           // if we don't check originator for null, we get phantom sends
           // when the program exits.
-          MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+          MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
             DLINFO "Splice_Read_Thread::svc:" \
             " discarding null originator event.\n"));
 
@@ -268,7 +290,7 @@ Madara::Transport::Splice_Read_Thread::svc (void)
 
         if (Madara::Knowledge_Engine::ASSIGNMENT == update_data_list_[i].type)
         {
-          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
             DLINFO "Splice_Read_Thread::svc:" \
             " processing %s=%q from %s with time %Q and quality %u.\n", 
             update_data_list_[i].key.val (), update_data_list_[i].value, 
@@ -279,7 +301,7 @@ Madara::Transport::Splice_Read_Thread::svc (void)
         }
         else if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list_[i].type)
         {
-          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_TRACE, 
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
             DLINFO "Splice_Read_Thread::svc:" \
             " processing multassignment from %s with time %Q and quality %u.\n",
             update_data_list_[i].originator.val (),
