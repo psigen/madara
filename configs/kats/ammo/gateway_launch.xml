@@ -1,6 +1,6 @@
 <tests>
   <setup>
-    <debug />
+    <!--<debug />-->
     <name>full_gateway</name>
     <domain>ammo_tests</domain>
     <host>localhost</host>

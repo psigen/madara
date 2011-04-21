@@ -524,6 +524,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       } // if realtime element existed
     } // if the user didn't specify real time scheduling from the command line
 
+    if (!parallel_set)
+    {
+      element = el_globals->FirstChildElement ("parallel");
+      if (element)
+      {
+        run_in_parallel = true;
+        parallel_set = true;
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Enabled parallel execution from tests file\n"));
+      } // if debug element existed
+    } // if the user didn't specify debug mode from the command line
+
     if (!debug_set)
     {
       element = el_globals->FirstChildElement ("debug");
