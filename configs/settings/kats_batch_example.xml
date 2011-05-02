@@ -6,10 +6,10 @@
     <host>localhost</host>
     <id>0</id>
     <processes>1</processes>
-    <!--<kill>
-      <signal>15</signal>
-      <time>25</time>
-    </kill>-->
+    <kill>
+      <signal>2</signal>
+      <time>35</time>
+    </kill>
     <precondition></precondition>
     <postcondition>SpliceTests.done = 1</postcondition>
     <!-- <realtime /> -->
