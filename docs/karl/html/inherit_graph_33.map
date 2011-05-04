@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$dc/d97/classMadara_1_1Transport_1_1Base.html" title="Madara::Transport::Base" alt="" coords="7,32,172,61"/>
-<area shape="rect" id="node3" href="$d0/d91/classMadara_1_1Transport_1_1Splice__DDS__Transport.html" title="This class provides an interface into the Open Splice dissemination transport." alt="" coords="223,5,492,35"/>
-<area shape="rect" id="node5" href="$d6/df1/classMadara_1_1Transport_1_1TCP__Transport.html" title="Madara::Transport::TCP_Transport" alt="" coords="245,59,469,88"/>
-</map>

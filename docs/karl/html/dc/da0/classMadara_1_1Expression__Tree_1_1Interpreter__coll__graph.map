@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node4" href="$da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree.html" title="Encapsulates a MADARA KaRL expression into an evaluatable tree." alt="" coords="43,197,320,227"/>
-<area shape="rect" id="node6" href="$d5/dfa/classMadara_1_1Utility_1_1Refcounter.html" title="Madara::Utility::Refcounter\&lt; Component_Node \&gt;" alt="" coords="5,101,312,131"/>
-<area shape="rect" id="node8" href="$d9/d46/structMadara_1_1Utility_1_1Refcounter_1_1Shim.html" title="A shim class that keeps track of the reference count and a pointer to the type T that&#39;s reference..." alt="" coords="35,5,283,35"/>
-<area shape="rect" id="node10" title="STL class." alt="" coords="372,197,452,227"/>
-<area shape="rect" id="node12" title="STL class." alt="" coords="336,101,501,131"/>
-</map>

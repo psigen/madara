@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$d0/dd7/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl.html" title="Implementation of the Expression_Tree_Iterator pattern that is used to define the various iterations ..." alt="" coords="5,85,363,115"/>
-<area shape="rect" id="node3" href="$d5/d7e/classMadara_1_1Expression__Tree_1_1In__Order__Iterator__Impl.html" title="Iterates through an Expression_Tree in in&#45;order." alt="" coords="473,5,783,35"/>
-<area shape="rect" id="node5" href="$dc/de7/classMadara_1_1Expression__Tree_1_1Level__Order__Expression__Tree__Iterator__Impl.html" title="Iterates through an Expression_Tree in level&#45;order." alt="" coords="411,59,845,88"/>
-<area shape="rect" id="node7" href="$d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl.html" title="Iterates through an Expression_Tree in post&#45;order." alt="" coords="465,112,791,141"/>
-<area shape="rect" id="node9" href="$d0/dfb/classMadara_1_1Expression__Tree_1_1Pre__Order__Iterator__Impl.html" title="Iterates through an Expression_Tree in level&#45;order." alt="" coords="469,165,787,195"/>
-</map>

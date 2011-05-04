@@ -1,9 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$d3/dd5/classTiXmlNode.html" title="The parent class for everything in the Document Object Model." alt="" coords="11,225,96,255"/>
-<area shape="rect" id="node16" href="$df/d09/classTiXmlDocument.html" title="Always the top level node." alt="" coords="59,333,173,363"/>
-<area shape="rect" id="node4" href="$d8/d47/classTiXmlBase.html" title="TiXmlBase is a base class for every class in TinyXml." alt="" coords="111,101,196,131"/>
-<area shape="rect" id="node13" href="$d4/dc1/classTiXmlAttribute.html" title="An attribute is a name&#45;value pair." alt="" coords="69,432,173,461"/>
-<area shape="rect" id="node6" href="$d7/dfc/structTiXmlCursor.html" title="TiXmlCursor" alt="" coords="215,5,308,35"/>
-<area shape="rect" id="node8" href="$d8/d33/structTiXmlBase_1_1Entity.html" title="TiXmlBase::Entity" alt="" coords="63,5,191,35"/>
-<area shape="rect" id="node11" href="$df/dda/classTiXmlAttributeSet.html" title="TiXmlAttributeSet" alt="" coords="59,531,184,560"/>
-</map>

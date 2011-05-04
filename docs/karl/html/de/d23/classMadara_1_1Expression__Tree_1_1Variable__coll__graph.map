@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$d5/d85/classMadara_1_1Expression__Tree_1_1Symbol.html" title="Abstract base class of all parse tree nodes." alt="" coords="1015,64,1236,93"/>
-<area shape="rect" id="node5" href="$d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context.html" title="This class stores variables and their values for use by any entity needing state information in a thr..." alt="" coords="967,117,1284,147"/>
-<area shape="rect" id="node9" title="STL class." alt="" coords="277,121,357,151"/>
-<area shape="rect" id="node11" title="STL class." alt="" coords="7,121,172,151"/>
-<area shape="rect" id="node13" href="$d9/dcb/classMadara_1_1Knowledge__Record.html" title="This class encapsulates an entry in a Knowledge_Base." alt="" coords="224,25,411,55"/>
-</map>
