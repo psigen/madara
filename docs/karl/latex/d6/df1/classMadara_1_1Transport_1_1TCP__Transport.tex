@@ -1,0 +1,518 @@
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport}{
+\section{Madara::Transport::TCP\_\-Transport Class Reference}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport}\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}}
+}
+
+
+{\ttfamily \#include $<$TCP\_\-Transport.h$>$}
+
+
+
+Inheritance diagram for Madara::Transport::TCP\_\-Transport:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{de/d9c/classMadara_1_1Transport_1_1TCP__Transport__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Transport::TCP\_\-Transport:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d4/d8f/classMadara_1_1Transport_1_1TCP__Transport__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a3a52ca4cbe3c568232ce3ce8a835974ca2d61332f904295fa39f255246d4dcdbc}{RELIABLE} =  0
+ \}
+\item 
+enum \{ \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a8a28c6b0246c68c91b7e7fc6c22c9dfaa808b41bfbf7b650e294ba73b83a398ee}{ERROR\_\-TCP\_\-NOT\_\-STARTED} =  -\/1
+ \}
+\item 
+typedef std::vector$<$ std::string $>$ \hyperlink{classMadara_1_1Transport_1_1Base_a2957ae0c413e07b7e276ae69ef1c320a}{Hosts\_\-Vector}
+\begin{DoxyCompactList}\small\item\em public typedef for the hosts vector \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Transport_1_1TCP__Transport_aead9acbaf54d54c8b0843c4e405a2ffa}{TCP\_\-Transport} (const std::string \&id, \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \&context, const int \&reliability)
+\item 
+\hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a332e1cc8620fe59abb7a11f3c15c0c70}{$\sim$TCP\_\-Transport} ()
+\item 
+long \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a6d6342f5e93fdf3f8915bdb1c02a34f2}{send\_\-data} (const std::string \&key, const long long \&value)
+\item 
+int \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a8eed0052fce42705a1f1733ec03a1c64}{reliability} (void) const 
+\item 
+int \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_afd7b8f4e26fbb63d9c011e138f1ecd6c}{reliability} (const int \&setting)
+\item 
+long \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_ad172a1444c1d0a84831b16ac33c29708}{read} (void)
+\item 
+void \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a1ebce86fb48cd504de1781202396e549}{close} (void)
+\item 
+int \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a689bff9ec1a91d4a550c96b9f6c17517}{setup} (void)
+\begin{DoxyCompactList}\small\item\em all subclasses should call this method at the end of its setup \item\end{DoxyCompactList}\item 
+virtual long \hyperlink{classMadara_1_1Transport_1_1Base_aede3e2606396c38455966e155875976d}{setHosts} (const \hyperlink{classMadara_1_1Transport_1_1Base_a2957ae0c413e07b7e276ae69ef1c320a}{Hosts\_\-Vector} \&hosts)
+\item 
+virtual long \hyperlink{classMadara_1_1Transport_1_1Base_ad2d54b9bb188231988a7e7ac89976d30}{addHost} (const std::string \&host)
+\item 
+int \hyperlink{classMadara_1_1Transport_1_1Base_a6d31f20d785b8b5a798c20db3975247b}{validate\_\-transport} (void)
+\begin{DoxyCompactList}\small\item\em all subclasses should call this method at the end of its setup \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Transport_1_1Base_af4ce175b7152c0c3666e128cbbe96e97}{check\_\-transport} (void)
+\begin{DoxyCompactList}\small\item\em all subclasses should call this method at the beginning of send\_\-data \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Transport_1_1Base_a3a5fdc2b43d9840dbcf48aab4bc636ac}{settings} (const \hyperlink{classMadara_1_1Transport_1_1Settings}{Settings} \&config)
+\item 
+\hyperlink{classMadara_1_1Transport_1_1Settings}{Settings} \hyperlink{classMadara_1_1Transport_1_1Base_a6febe337ae99f9376bdb3ec05899db00}{settings} (void)
+\item 
+virtual long \hyperlink{classMadara_1_1Transport_1_1Base_a5ecd1526eae6409ee19e97e8547da092}{send\_\-multiassignment} (const std::string \&, unsigned long)
+\item 
+void \hyperlink{classMadara_1_1Transport_1_1Base_a5feac684397b5098708ba9d16e8f1306}{invalidate\_\-transport} (void)
+\begin{DoxyCompactList}\small\item\em all subclasses should call this method at the beginning of close \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const int \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a927538615b34ce9fa62c571a83592974}{PROFILES} = 1
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+volatile bool \hyperlink{classMadara_1_1Transport_1_1Base_a77696ae1c39c0d0edc169882c4b82c23}{is\_\-valid\_\-}
+\item 
+volatile bool \hyperlink{classMadara_1_1Transport_1_1Base_a6c3d03895e92c93265704052ab707f8a}{shutting\_\-down\_\-}
+\item 
+\hyperlink{classMadara_1_1Transport_1_1Base_a2957ae0c413e07b7e276ae69ef1c320a}{Hosts\_\-Vector} \hyperlink{classMadara_1_1Transport_1_1Base_a19ac6cbfb41691ad4300a5e696e3b04e}{hosts\_\-}
+\item 
+ACE\_\-Thread\_\-Mutex \hyperlink{classMadara_1_1Transport_1_1Base_a81479f3b01798d0836dc44629c904450}{mutex\_\-}
+\item 
+\hyperlink{classMadara_1_1Transport_1_1Settings}{Settings} \hyperlink{classMadara_1_1Transport_1_1Base_adafa1a5641aaecae76d963748bddf8e2}{settings\_\-}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std::string \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a47c2228f55dda91ba2d554d4034cbe89}{id\_\-}
+\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \& \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_aeb128a209fbfffd97d572230d2faab99}{context\_\-}
+\item 
+\hyperlink{classMadara_1_1Transport_1_1TCP__Transport__Read__Thread}{TCP\_\-Transport\_\-Read\_\-Thread} $\ast$ \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a3786a18bcea7954c074bfc74541944bd}{thread\_\-}
+\item 
+bool \hyperlink{classMadara_1_1Transport_1_1TCP__Transport_a2d4ff7935612176cf98a4feaa9d15510}{valid\_\-setup\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 14 of file TCP\_\-Transport.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Transport_1_1Base_a2957ae0c413e07b7e276ae69ef1c320a}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!Hosts\_\-Vector@{Hosts\_\-Vector}}
+\index{Hosts\_\-Vector@{Hosts\_\-Vector}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{Hosts\_\-Vector}]{\setlength{\rightskip}{0pt plus 5cm}typedef std::vector$<$std::string$>$ {\bf Madara::Transport::Base::Hosts\_\-Vector}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a2957ae0c413e07b7e276ae69ef1c320a}
+
+
+public typedef for the hosts vector 
+
+
+
+Definition at line 93 of file Transport.h.
+
+
+
+\subsection{Member Enumeration Documentation}
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a3a52ca4cbe3c568232ce3ce8a835974c}{
+\subsubsection[{"@7}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a3a52ca4cbe3c568232ce3ce8a835974c}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{RELIABLE@{RELIABLE}!Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}}\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!RELIABLE@{RELIABLE}}\item[{\em 
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a3a52ca4cbe3c568232ce3ce8a835974ca2d61332f904295fa39f255246d4dcdbc}{
+RELIABLE}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a3a52ca4cbe3c568232ce3ce8a835974ca2d61332f904295fa39f255246d4dcdbc}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 18 of file TCP\_\-Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a8a28c6b0246c68c91b7e7fc6c22c9dfa}{
+\subsubsection[{"@8}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a8a28c6b0246c68c91b7e7fc6c22c9dfa}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{ERROR\_\-TCP\_\-NOT\_\-STARTED@{ERROR\_\-TCP\_\-NOT\_\-STARTED}!Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}}\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!ERROR\_\-TCP\_\-NOT\_\-STARTED@{ERROR\_\-TCP\_\-NOT\_\-STARTED}}\item[{\em 
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a8a28c6b0246c68c91b7e7fc6c22c9dfaa808b41bfbf7b650e294ba73b83a398ee}{
+ERROR\_\-TCP\_\-NOT\_\-STARTED}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a8a28c6b0246c68c91b7e7fc6c22c9dfaa808b41bfbf7b650e294ba73b83a398ee}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 22 of file TCP\_\-Transport.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_aead9acbaf54d54c8b0843c4e405a2ffa}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!TCP\_\-Transport@{TCP\_\-Transport}}
+\index{TCP\_\-Transport@{TCP\_\-Transport}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{TCP\_\-Transport}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Transport::TCP\_\-Transport::TCP\_\-Transport (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{id, }
+\item[{{\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \&}]{context, }
+\item[{const int \&}]{reliability}
+\end{DoxyParamCaption}
+)}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_aead9acbaf54d54c8b0843c4e405a2ffa}
+
+
+Definition at line 7 of file TCP\_\-Transport.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a332e1cc8620fe59abb7a11f3c15c0c70}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!$\sim$TCP\_\-Transport@{$\sim$TCP\_\-Transport}}
+\index{$\sim$TCP\_\-Transport@{$\sim$TCP\_\-Transport}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{$\sim$TCP\_\-Transport}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Transport::TCP\_\-Transport::$\sim$TCP\_\-Transport (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a332e1cc8620fe59abb7a11f3c15c0c70}
+
+
+Definition at line 15 of file TCP\_\-Transport.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Transport_1_1Base_ad2d54b9bb188231988a7e7ac89976d30}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!addHost@{addHost}}
+\index{addHost@{addHost}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{addHost}]{\setlength{\rightskip}{0pt plus 5cm}virtual long Madara::Transport::Base::addHost (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{host}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_ad2d54b9bb188231988a7e7ac89976d30}
+
+
+Definition at line 114 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_af4ce175b7152c0c3666e128cbbe96e97}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!check\_\-transport@{check\_\-transport}}
+\index{check\_\-transport@{check\_\-transport}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{check\_\-transport}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::Base::check\_\-transport (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_af4ce175b7152c0c3666e128cbbe96e97}
+
+
+all subclasses should call this method at the beginning of send\_\-data 
+
+
+
+Definition at line 140 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a1ebce86fb48cd504de1781202396e549}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!close@{close}}
+\index{close@{close}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{close}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Transport::TCP\_\-Transport::close (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a1ebce86fb48cd504de1781202396e549}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Transport_1_1Base_ab8101403aaecc565de66e0059e018978}{Madara::Transport::Base}.
+
+
+
+Definition at line 21 of file TCP\_\-Transport.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a5feac684397b5098708ba9d16e8f1306}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!invalidate\_\-transport@{invalidate\_\-transport}}
+\index{invalidate\_\-transport@{invalidate\_\-transport}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{invalidate\_\-transport}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Transport::Base::invalidate\_\-transport (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a5feac684397b5098708ba9d16e8f1306}
+
+
+all subclasses should call this method at the beginning of close 
+
+
+
+Definition at line 175 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_ad172a1444c1d0a84831b16ac33c29708}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!read@{read}}
+\index{read@{read}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{read}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_ad172a1444c1d0a84831b16ac33c29708}
+
+
+Definition at line 203 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a8eed0052fce42705a1f1733ec03a1c64}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!reliability@{reliability}}
+\index{reliability@{reliability}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{reliability}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::TCP\_\-Transport::reliability (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a8eed0052fce42705a1f1733ec03a1c64}
+
+
+Definition at line 35 of file TCP\_\-Transport.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_afd7b8f4e26fbb63d9c011e138f1ecd6c}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!reliability@{reliability}}
+\index{reliability@{reliability}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{reliability}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::TCP\_\-Transport::reliability (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{setting}
+\end{DoxyParamCaption}
+)}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_afd7b8f4e26fbb63d9c011e138f1ecd6c}
+
+
+Definition at line 41 of file TCP\_\-Transport.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a6d6342f5e93fdf3f8915bdb1c02a34f2}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!send\_\-data@{send\_\-data}}
+\index{send\_\-data@{send\_\-data}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{send\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}long Madara::Transport::TCP\_\-Transport::send\_\-data (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{key, }
+\item[{const long long \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a6d6342f5e93fdf3f8915bdb1c02a34f2}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Transport_1_1Base_a2c93fc45acc4f17a04f17387a4c9e18e}{Madara::Transport::Base}.
+
+
+
+Definition at line 55 of file TCP\_\-Transport.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a5ecd1526eae6409ee19e97e8547da092}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!send\_\-multiassignment@{send\_\-multiassignment}}
+\index{send\_\-multiassignment@{send\_\-multiassignment}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{send\_\-multiassignment}]{\setlength{\rightskip}{0pt plus 5cm}virtual long Madara::Transport::Base::send\_\-multiassignment (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{, }
+\item[{unsigned long}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a5ecd1526eae6409ee19e97e8547da092}
+
+
+Reimplemented in \hyperlink{classMadara_1_1Transport_1_1Splice__DDS__Transport_adb8f5f2c6ae97c68cfe1fbb9228f67c5}{Madara::Transport::Splice\_\-DDS\_\-Transport}.
+
+
+
+Definition at line 169 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_aede3e2606396c38455966e155875976d}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!setHosts@{setHosts}}
+\index{setHosts@{setHosts}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{setHosts}]{\setlength{\rightskip}{0pt plus 5cm}virtual long Madara::Transport::Base::setHosts (
+\begin{DoxyParamCaption}
+\item[{const {\bf Hosts\_\-Vector} \&}]{hosts}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_aede3e2606396c38455966e155875976d}
+
+
+Definition at line 108 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a6febe337ae99f9376bdb3ec05899db00}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!settings@{settings}}
+\index{settings@{settings}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Settings} Madara::Transport::Base::settings (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a6febe337ae99f9376bdb3ec05899db00}
+
+
+Definition at line 159 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a3a5fdc2b43d9840dbcf48aab4bc636ac}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!settings@{settings}}
+\index{settings@{settings}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Transport::Base::settings (
+\begin{DoxyParamCaption}
+\item[{const {\bf Settings} \&}]{config}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a3a5fdc2b43d9840dbcf48aab4bc636ac}
+
+
+Definition at line 154 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a689bff9ec1a91d4a550c96b9f6c17517}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!setup@{setup}}
+\index{setup@{setup}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{setup}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::TCP\_\-Transport::setup (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a689bff9ec1a91d4a550c96b9f6c17517}
+
+
+all subclasses should call this method at the end of its setup 
+
+
+
+Reimplemented from \hyperlink{classMadara_1_1Transport_1_1Base_adeef5607708f95b82b7e1968b9396daa}{Madara::Transport::Base}.
+
+
+
+Definition at line 47 of file TCP\_\-Transport.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a6d31f20d785b8b5a798c20db3975247b}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!validate\_\-transport@{validate\_\-transport}}
+\index{validate\_\-transport@{validate\_\-transport}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{validate\_\-transport}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::Base::validate\_\-transport (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a6d31f20d785b8b5a798c20db3975247b}
+
+
+all subclasses should call this method at the end of its setup 
+
+
+
+Definition at line 121 of file Transport.h.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_aeb128a209fbfffd97d572230d2faab99}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!context\_\-@{context\_\-}}
+\index{context\_\-@{context\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{context\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}\& {\bf Madara::Transport::TCP\_\-Transport::context\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_aeb128a209fbfffd97d572230d2faab99}
+
+
+Definition at line 42 of file TCP\_\-Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a19ac6cbfb41691ad4300a5e696e3b04e}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!hosts\_\-@{hosts\_\-}}
+\index{hosts\_\-@{hosts\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{hosts\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Hosts\_\-Vector} {\bf Madara::Transport::Base::hosts\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a19ac6cbfb41691ad4300a5e696e3b04e}
+
+
+Definition at line 193 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a47c2228f55dda91ba2d554d4034cbe89}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!id\_\-@{id\_\-}}
+\index{id\_\-@{id\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{id\_\-}]{\setlength{\rightskip}{0pt plus 5cm}const std::string {\bf Madara::Transport::TCP\_\-Transport::id\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a47c2228f55dda91ba2d554d4034cbe89}
+
+
+Definition at line 40 of file TCP\_\-Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a77696ae1c39c0d0edc169882c4b82c23}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!is\_\-valid\_\-@{is\_\-valid\_\-}}
+\index{is\_\-valid\_\-@{is\_\-valid\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{is\_\-valid\_\-}]{\setlength{\rightskip}{0pt plus 5cm}volatile bool {\bf Madara::Transport::Base::is\_\-valid\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a77696ae1c39c0d0edc169882c4b82c23}
+
+
+Definition at line 191 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a81479f3b01798d0836dc44629c904450}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!mutex\_\-@{mutex\_\-}}
+\index{mutex\_\-@{mutex\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{mutex\_\-}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Thread\_\-Mutex {\bf Madara::Transport::Base::mutex\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a81479f3b01798d0836dc44629c904450}
+
+
+Definition at line 194 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a927538615b34ce9fa62c571a83592974}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!PROFILES@{PROFILES}}
+\index{PROFILES@{PROFILES}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{PROFILES}]{\setlength{\rightskip}{0pt plus 5cm}const int {\bf Madara::Transport::TCP\_\-Transport::PROFILES} = 1\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a927538615b34ce9fa62c571a83592974}
+
+
+Definition at line 26 of file TCP\_\-Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_adafa1a5641aaecae76d963748bddf8e2}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!settings\_\-@{settings\_\-}}
+\index{settings\_\-@{settings\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{settings\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Settings} {\bf Madara::Transport::Base::settings\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_adafa1a5641aaecae76d963748bddf8e2}
+
+
+Definition at line 196 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Base_a6c3d03895e92c93265704052ab707f8a}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!shutting\_\-down\_\-@{shutting\_\-down\_\-}}
+\index{shutting\_\-down\_\-@{shutting\_\-down\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{shutting\_\-down\_\-}]{\setlength{\rightskip}{0pt plus 5cm}volatile bool {\bf Madara::Transport::Base::shutting\_\-down\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{dc/d97/classMadara_1_1Transport_1_1Base_a6c3d03895e92c93265704052ab707f8a}
+
+
+Definition at line 192 of file Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a3786a18bcea7954c074bfc74541944bd}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!thread\_\-@{thread\_\-}}
+\index{thread\_\-@{thread\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{thread\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TCP\_\-Transport\_\-Read\_\-Thread}$\ast$ {\bf Madara::Transport::TCP\_\-Transport::thread\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a3786a18bcea7954c074bfc74541944bd}
+
+
+Definition at line 44 of file TCP\_\-Transport.h.
+
+\hypertarget{classMadara_1_1Transport_1_1TCP__Transport_a2d4ff7935612176cf98a4feaa9d15510}{
+\index{Madara::Transport::TCP\_\-Transport@{Madara::Transport::TCP\_\-Transport}!valid\_\-setup\_\-@{valid\_\-setup\_\-}}
+\index{valid\_\-setup\_\-@{valid\_\-setup\_\-}!Madara::Transport::TCP_Transport@{Madara::Transport::TCP\_\-Transport}}
+\subsubsection[{valid\_\-setup\_\-}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Madara::Transport::TCP\_\-Transport::valid\_\-setup\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d6/df1/classMadara_1_1Transport_1_1TCP__Transport_a2d4ff7935612176cf98a4feaa9d15510}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Transport_1_1Base_a82c2a7ef9058b2c9a520d900c9a9f6e0}{Madara::Transport::Base}.
+
+
+
+Definition at line 46 of file TCP\_\-Transport.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/transport/\hyperlink{TCP__Transport_8h}{TCP\_\-Transport.h}\item 
+madara/\hyperlink{Splice__Knowledge__UpdateDcps__impl_8cpp}{Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp}\item 
+madara/\hyperlink{Splice__Mutex__MessageDcps__impl_8cpp}{Splice\_\-Mutex\_\-MessageDcps\_\-impl.cpp}\item 
+madara/transport/\hyperlink{TCP__Transport_8cpp}{TCP\_\-Transport.cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,334 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node}{
+\section{Madara::Expression\_\-Tree::Leaf\_\-Node Class Reference}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node}\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+}
+
+
+Defines a node that contains a long long value.  
+
+
+
+
+{\ttfamily \#include $<$Leaf\_\-Node.h$>$}
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Leaf\_\-Node:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=292pt]{db/d5b/classMadara_1_1Expression__Tree_1_1Leaf__Node__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Leaf\_\-Node:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=292pt]{d1/d3c/classMadara_1_1Expression__Tree_1_1Leaf__Node__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a8ba9271346a386eb746c6abd9553f635}{Leaf\_\-Node} (long long item)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_ab3f10a560c91705bd89e0d77225c15e6}{Leaf\_\-Node} (const ::std::string \&item)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a48b6cbc578ae19bd0760cd33b2f7d159}{Leaf\_\-Node} (const char $\ast$item)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_ae5b0892cb270cceac4a140bb3e59fddf}{$\sim$Leaf\_\-Node} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a1daacf407d2be4039be668fe9fcd82e5}{item} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the printable value of the node. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_ab1fb385a485b5ee6d52b66d8c3cfb835}{prune} (bool \&can\_\-change)
+\begin{DoxyCompactList}\small\item\em Prunes the expression tree of unnecessary nodes. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a4bd377264487997762d3c4e8a88a32a4}{evaluate} (void)
+\begin{DoxyCompactList}\small\item\em Evaluates the expression tree. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_aa56517272d5f33ffe766cd88bc0e502d}{accept} (\hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} \&visitor) const 
+\begin{DoxyCompactList}\small\item\em Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_abe0c7474f1af4cb06d06ab13479a89db}{left} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the left expression. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a672f2b18b4e63efda38e9063a47bc30f}{right} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the right expression. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+long long \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a5623e989280b33eca0c9ca29d490aae3}{item\_\-}
+\begin{DoxyCompactList}\small\item\em Integer value associated with the operand. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Defines a node that contains a long long value. 
+
+Definition at line 20 of file Leaf\_\-Node.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_a8ba9271346a386eb746c6abd9553f635}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!Leaf\_\-Node@{Leaf\_\-Node}}
+\index{Leaf\_\-Node@{Leaf\_\-Node}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{Leaf\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Leaf\_\-Node::Leaf\_\-Node (
+\begin{DoxyParamCaption}
+\item[{long long}]{item}
+\end{DoxyParamCaption}
+)}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_a8ba9271346a386eb746c6abd9553f635}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & value of the node \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 14 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_ab3f10a560c91705bd89e0d77225c15e6}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!Leaf\_\-Node@{Leaf\_\-Node}}
+\index{Leaf\_\-Node@{Leaf\_\-Node}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{Leaf\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Leaf\_\-Node::Leaf\_\-Node (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{item}
+\end{DoxyParamCaption}
+)}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_ab3f10a560c91705bd89e0d77225c15e6}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & value of the node \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 21 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_a48b6cbc578ae19bd0760cd33b2f7d159}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!Leaf\_\-Node@{Leaf\_\-Node}}
+\index{Leaf\_\-Node@{Leaf\_\-Node}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{Leaf\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Leaf\_\-Node::Leaf\_\-Node (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{item}
+\end{DoxyParamCaption}
+)}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_a48b6cbc578ae19bd0760cd33b2f7d159}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em item} & value of the node \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 28 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_ae5b0892cb270cceac4a140bb3e59fddf}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!$\sim$Leaf\_\-Node@{$\sim$Leaf\_\-Node}}
+\index{$\sim$Leaf\_\-Node@{$\sim$Leaf\_\-Node}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{$\sim$Leaf\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Leaf\_\-Node::$\sim$Leaf\_\-Node (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_ae5b0892cb270cceac4a140bb3e59fddf}
+
+
+Destructor. 
+
+
+
+Definition at line 35 of file Leaf\_\-Node.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_aa56517272d5f33ffe766cd88bc0e502d}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!accept@{accept}}
+\index{accept@{accept}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{accept}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Leaf\_\-Node::accept (
+\begin{DoxyParamCaption}
+\item[{{\bf Visitor} \&}]{visitor}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_aa56517272d5f33ffe766cd88bc0e502d}
+
+
+Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & visitor instance to use \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_ac3bb92d96b29f14ee23289c73a2307d1}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 72 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_a4bd377264487997762d3c4e8a88a32a4}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{evaluate}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Leaf\_\-Node::evaluate (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_a4bd377264487997762d3c4e8a88a32a4}
+
+
+Evaluates the expression tree. 
+
+Evaluates the node and its children.
+
+\begin{DoxyReturn}{Returns}
+value of this node
+\end{DoxyReturn}
+This does not prune any of the expression tree, and is much faster than the prune function 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a16c08750339b84c363e9fd0ea9858969}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 63 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_a1daacf407d2be4039be668fe9fcd82e5}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!item@{item}}
+\index{item@{item}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{item}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Leaf\_\-Node::item (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_a1daacf407d2be4039be668fe9fcd82e5}
+
+
+Returns the printable value of the node. 
+
+\begin{DoxyReturn}{Returns}
+value of the node 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_ac38c35834da00a454c8f876278ad1b99}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 41 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Component__Node_abe0c7474f1af4cb06d06ab13479a89db}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!left@{left}}
+\index{left@{left}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{left}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Component\_\-Node::left (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{de/da8/classMadara_1_1Expression__Tree_1_1Component__Node_abe0c7474f1af4cb06d06ab13479a89db}
+
+
+Returns the left expression. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the left expression 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}.
+
+
+
+Definition at line 24 of file Component\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_ab1fb385a485b5ee6d52b66d8c3cfb835}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!prune@{prune}}
+\index{prune@{prune}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{prune}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Leaf\_\-Node::prune (
+\begin{DoxyParamCaption}
+\item[{bool \&}]{can\_\-change}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_ab1fb385a485b5ee6d52b66d8c3cfb835}
+
+
+Prunes the expression tree of unnecessary nodes. 
+
+Prune the tree of unnecessary nodes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em can\_\-change} & set to true if variable nodes are contained \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of this node
+\end{DoxyReturn}
+Returns evaluation of the node and sets can\_\-change appropriately. if this node can be changed, that means it shouldn't be pruned. 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a8833adfc3e79980a90e82a68586f4300}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 51 of file Leaf\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Component__Node_a672f2b18b4e63efda38e9063a47bc30f}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!right@{right}}
+\index{right@{right}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{right}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Component\_\-Node::right (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{de/da8/classMadara_1_1Expression__Tree_1_1Component__Node_a672f2b18b4e63efda38e9063a47bc30f}
+
+
+Returns the right expression. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the right expression 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}{Madara::Expression\_\-Tree::Composite\_\-Unary\_\-Node}.
+
+
+
+Definition at line 31 of file Component\_\-Node.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Leaf__Node_a5623e989280b33eca0c9ca29d490aae3}{
+\index{Madara::Expression\_\-Tree::Leaf\_\-Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}!item\_\-@{item\_\-}}
+\index{item\_\-@{item\_\-}!Madara::Expression_Tree::Leaf_Node@{Madara::Expression\_\-Tree::Leaf\_\-Node}}
+\subsubsection[{item\_\-}]{\setlength{\rightskip}{0pt plus 5cm}long long {\bf Madara::Expression\_\-Tree::Leaf\_\-Node::item\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/de4/classMadara_1_1Expression__Tree_1_1Leaf__Node_a5623e989280b33eca0c9ca29d490aae3}
+
+
+Integer value associated with the operand. 
+
+
+
+Definition at line 73 of file Leaf\_\-Node.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Leaf__Node_8h}{Leaf\_\-Node.h}\item 
+madara/expression\_\-tree/\hyperlink{Leaf__Node_8cpp}{Leaf\_\-Node.cpp}\end{DoxyCompactItemize}

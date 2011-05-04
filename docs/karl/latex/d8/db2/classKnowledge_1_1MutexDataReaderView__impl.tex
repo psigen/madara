@@ -1,0 +1,727 @@
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl}{
+\section{Knowledge::MutexDataReaderView\_\-impl Class Reference}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl}\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}}
+}
+
+
+{\ttfamily \#include $<$Splice\_\-Mutex\_\-MessageDcps\_\-impl.h$>$}
+
+
+
+Inheritance diagram for Knowledge::MutexDataReaderView\_\-impl:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=274pt]{db/d3d/classKnowledge_1_1MutexDataReaderView__impl__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Knowledge::MutexDataReaderView\_\-impl:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=274pt]{d6/dc1/classKnowledge_1_1MutexDataReaderView__impl__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} \hyperlink{classKnowledge_1_1MutexDataReaderView_a2cd6c0b2ff9b0ecf1e4e559634b68d18}{\_\-ptr\_\-type}
+\item 
+typedef \hyperlink{namespaceKnowledge_ab5f4ad419e160a86a63a5380e0ecaeb9}{MutexDataReaderView\_\-var} \hyperlink{classKnowledge_1_1MutexDataReaderView_ab34f732879f05d51fc25bf648bb464b3}{\_\-var\_\-type}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_abea6a456967772cfaf9bce53b33871a8}{read} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::SampleStateMask sample\_\-states,::DDS::ViewStateMask view\_\-states,::DDS::InstanceStateMask instance\_\-states) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a79805fa2ac26110415f372f144c5033e}{take} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::SampleStateMask sample\_\-states,::DDS::ViewStateMask view\_\-states,::DDS::InstanceStateMask instance\_\-states) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a4311998b744f5e4c7e1183cd7c331959}{read\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::ReadCondition\_\-ptr a\_\-condition) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a51788b1c25cc2d0c1959b45c9df9dd4e}{take\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::ReadCondition\_\-ptr a\_\-condition) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_af207267c526a9b6db468528ec1384e4c}{read\_\-next\_\-sample} (\hyperlink{structKnowledge_1_1Mutex}{Mutex} \&received\_\-data,::DDS::SampleInfo \&sample\_\-info) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_ab57438634262d1d3f78b8021d54965b8}{take\_\-next\_\-sample} (\hyperlink{structKnowledge_1_1Mutex}{Mutex} \&received\_\-data,::DDS::SampleInfo \&sample\_\-info) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a4b23ab0bf64488f99f2ce1b81b7d5589}{read\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::InstanceHandle\_\-t a\_\-handle,::DDS::SampleStateMask sample\_\-states,::DDS::ViewStateMask view\_\-states,::DDS::InstanceStateMask instance\_\-states) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a21e84ee03c4e5224b604d6f36d07fd7d}{take\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::InstanceHandle\_\-t a\_\-handle,::DDS::SampleStateMask sample\_\-states,::DDS::ViewStateMask view\_\-states,::DDS::InstanceStateMask instance\_\-states) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a507c72d8f9523a4db7411a8cdefdb1e6}{read\_\-next\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::InstanceHandle\_\-t a\_\-handle,::DDS::SampleStateMask sample\_\-states,::DDS::ViewStateMask view\_\-states,::DDS::InstanceStateMask instance\_\-states) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a74e82408b5f6f4b6a7ff8d17b625bb88}{take\_\-next\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::InstanceHandle\_\-t a\_\-handle,::DDS::SampleStateMask sample\_\-states,::DDS::ViewStateMask view\_\-states,::DDS::InstanceStateMask instance\_\-states) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a4d830005b467e12fee8eb146d98e4f23}{read\_\-next\_\-instance\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::InstanceHandle\_\-t a\_\-handle,::DDS::ReadCondition\_\-ptr a\_\-condition) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a61639d368b988108260ae8b6025dc841}{take\_\-next\_\-instance\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq, CORBA::Long max\_\-samples,::DDS::InstanceHandle\_\-t a\_\-handle,::DDS::ReadCondition\_\-ptr a\_\-condition) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a8b1d7157a32a5df190f8e280be4af6bb}{return\_\-loan} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data,::DDS::SampleInfoSeq \&info\_\-seq) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a6e55a456fca63b98858946f2e3f48267}{get\_\-key\_\-value} (\hyperlink{structKnowledge_1_1Mutex}{Mutex} \&key\_\-holder,::DDS::InstanceHandle\_\-t handle) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+virtual ::DDS::InstanceHandle\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_ae35042ad5ee638609b03c37cd9f33b8f}{lookup\_\-instance} (const \hyperlink{structKnowledge_1_1Mutex}{Mutex} \&instance) THROW\_\-ORB\_\-EXCEPTIONS
+\item 
+\hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a2248a490a737655c28e5cc5f1248ba29}{MutexDataReaderView\_\-impl} (gapi\_\-dataReader handle)
+\item 
+virtual \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_ac6a74bd4b57aa1a4d24550aa2549f443}{$\sim$MutexDataReaderView\_\-impl} (void)
+\item 
+DDS::Boolean \hyperlink{classKnowledge_1_1MutexDataReaderView_ae761ad249559f3b3c39c52ffc9d2547d}{\_\-local\_\-is\_\-a} (const char $\ast$id)
+\item 
+\hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} \hyperlink{classKnowledge_1_1MutexDataReaderView_a7962b5777640ce1743eb23b1d8d2fc5c}{\_\-this} ()
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_acc93435f3bf847b12dfbaf7d660a312e}{read} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_adf68b09d49094cf08f828a2d1d66c960}{take} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_aa4c7e4993accd8e7ce7bf97a4a5fc415}{read\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_a48705feff73fc74c7c798735038e2aaa}{take\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_a9676c07ee0f092da46f349944db3b9c6}{read\_\-next\_\-sample} (\hyperlink{structKnowledge_1_1Mutex}{Mutex} \&received\_\-data, DDS::SampleInfo \&sample\_\-info)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_abc859e968b2707fc78be5f0c530db511}{take\_\-next\_\-sample} (\hyperlink{structKnowledge_1_1Mutex}{Mutex} \&received\_\-data, DDS::SampleInfo \&sample\_\-info)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_ac5e9aaab2d50448a2ee5e5c2ef5e3188}{read\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_a83f4b137ae772474c1fa5146de9ad0c8}{take\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_a86f7da40f5dd238bd7563583c3775358}{read\_\-next\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_ace1e95e5fd64380943add90a846b73f2}{take\_\-next\_\-instance} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_a5d9ca32089c731fffe4fd29c19137a77}{read\_\-next\_\-instance\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_ad3d8ffab06e256e1c132a36ab4bc3f83}{take\_\-next\_\-instance\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_a97b8e65b22267416edd526267d4d2b4f}{return\_\-loan} (\hyperlink{namespaceKnowledge_a3165529aa87299c6a92754fbd7eeeff4}{MutexSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1MutexDataReaderView_af040a4e537450dfe73da0fd928450b6d}{get\_\-key\_\-value} (\hyperlink{structKnowledge_1_1Mutex}{Mutex} \&key\_\-holder, DDS::InstanceHandle\_\-t handle)=0
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} \hyperlink{classKnowledge_1_1MutexDataReaderView_aca7755c70e87b7e9a6299d7559839b69}{\_\-duplicate} (\hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} obj)
+\item 
+static \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} \hyperlink{classKnowledge_1_1MutexDataReaderView_adaf351ff071d6efd6dbf2e012993e54c}{\_\-narrow} (DDS::Object\_\-ptr obj)
+\item 
+static \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} \hyperlink{classKnowledge_1_1MutexDataReaderView_a9a6a050952005aad67d04ef3d5f0b171}{\_\-unchecked\_\-narrow} (DDS::Object\_\-ptr obj)
+\item 
+static \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView\_\-ptr} \hyperlink{classKnowledge_1_1MutexDataReaderView_a3218115ef8ecad204d528343f33274ad}{\_\-nil} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \hyperlink{classKnowledge_1_1MutexDataReaderView_a807ab0ccc917184fa6f2ab18558fc0d5}{\_\-local\_\-id} = \char`\"{}IDL:Knowledge/MutexDataReaderView:1.0\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a391103cdb26de2ce97bacfdcb30c358e}{MutexDataReaderView\_\-impl} (const \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView} \&)
+\item 
+void \hyperlink{classKnowledge_1_1MutexDataReaderView__impl_a342f2d6dc787e2bc16580790d89d7d3c}{operator=} (const \hyperlink{classKnowledge_1_1MutexDataReaderView}{MutexDataReaderView} \&)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 239 of file Splice\_\-Mutex\_\-MessageDcps\_\-impl.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a2cd6c0b2ff9b0ecf1e4e559634b68d18}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-ptr\_\-type@{\_\-ptr\_\-type}}
+\index{\_\-ptr\_\-type@{\_\-ptr\_\-type}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-ptr\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf MutexDataReaderView\_\-ptr} {\bf Knowledge::MutexDataReaderView::\_\-ptr\_\-type}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a2cd6c0b2ff9b0ecf1e4e559634b68d18}
+
+
+Definition at line 167 of file Splice\_\-Mutex\_\-MessageDcps.h.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_ab34f732879f05d51fc25bf648bb464b3}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-var\_\-type@{\_\-var\_\-type}}
+\index{\_\-var\_\-type@{\_\-var\_\-type}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-var\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf MutexDataReaderView\_\-var} {\bf Knowledge::MutexDataReaderView::\_\-var\_\-type}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_ab34f732879f05d51fc25bf648bb464b3}
+
+
+Definition at line 168 of file Splice\_\-Mutex\_\-MessageDcps.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a2248a490a737655c28e5cc5f1248ba29}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!MutexDataReaderView\_\-impl@{MutexDataReaderView\_\-impl}}
+\index{MutexDataReaderView\_\-impl@{MutexDataReaderView\_\-impl}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{MutexDataReaderView\_\-impl}]{\setlength{\rightskip}{0pt plus 5cm}Knowledge::MutexDataReaderView\_\-impl::MutexDataReaderView\_\-impl (
+\begin{DoxyParamCaption}
+\item[{gapi\_\-dataReader}]{handle}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a2248a490a737655c28e5cc5f1248ba29}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_ac6a74bd4b57aa1a4d24550aa2549f443}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!$\sim$MutexDataReaderView\_\-impl@{$\sim$MutexDataReaderView\_\-impl}}
+\index{$\sim$MutexDataReaderView\_\-impl@{$\sim$MutexDataReaderView\_\-impl}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{$\sim$MutexDataReaderView\_\-impl}]{\setlength{\rightskip}{0pt plus 5cm}Knowledge::MutexDataReaderView\_\-impl::$\sim$MutexDataReaderView\_\-impl (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_ac6a74bd4b57aa1a4d24550aa2549f443}
+
+
+Definition at line 486 of file Splice\_\-Mutex\_\-MessageDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a391103cdb26de2ce97bacfdcb30c358e}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!MutexDataReaderView\_\-impl@{MutexDataReaderView\_\-impl}}
+\index{MutexDataReaderView\_\-impl@{MutexDataReaderView\_\-impl}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{MutexDataReaderView\_\-impl}]{\setlength{\rightskip}{0pt plus 5cm}Knowledge::MutexDataReaderView\_\-impl::MutexDataReaderView\_\-impl (
+\begin{DoxyParamCaption}
+\item[{const {\bf MutexDataReaderView} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a391103cdb26de2ce97bacfdcb30c358e}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_aca7755c70e87b7e9a6299d7559839b69}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-duplicate@{\_\-duplicate}}
+\index{\_\-duplicate@{\_\-duplicate}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-duplicate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Knowledge::MutexDataReaderView\_\-ptr} Knowledge::MutexDataReaderView::\_\-duplicate (
+\begin{DoxyParamCaption}
+\item[{{\bf Knowledge::MutexDataReaderView\_\-ptr}}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_aca7755c70e87b7e9a6299d7559839b69}
+
+
+Definition at line 152 of file Splice\_\-Mutex\_\-MessageDcps.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_ae761ad249559f3b3c39c52ffc9d2547d}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-local\_\-is\_\-a@{\_\-local\_\-is\_\-a}}
+\index{\_\-local\_\-is\_\-a@{\_\-local\_\-is\_\-a}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-local\_\-is\_\-a}]{\setlength{\rightskip}{0pt plus 5cm}DDS::Boolean Knowledge::MutexDataReaderView::\_\-local\_\-is\_\-a (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_ae761ad249559f3b3c39c52ffc9d2547d}
+
+
+Definition at line 158 of file Splice\_\-Mutex\_\-MessageDcps.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_adaf351ff071d6efd6dbf2e012993e54c}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-narrow@{\_\-narrow}}
+\index{\_\-narrow@{\_\-narrow}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-narrow}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Knowledge::MutexDataReaderView\_\-ptr} Knowledge::MutexDataReaderView::\_\-narrow (
+\begin{DoxyParamCaption}
+\item[{DDS::Object\_\-ptr}]{obj}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_adaf351ff071d6efd6dbf2e012993e54c}
+
+
+Definition at line 175 of file Splice\_\-Mutex\_\-MessageDcps.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a3218115ef8ecad204d528343f33274ad}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-nil@{\_\-nil}}
+\index{\_\-nil@{\_\-nil}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-nil}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf MutexDataReaderView\_\-ptr} Knowledge::MutexDataReaderView::\_\-nil (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a3218115ef8ecad204d528343f33274ad}
+
+
+Definition at line 175 of file Splice\_\-Mutex\_\-MessageDcps.h.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a7962b5777640ce1743eb23b1d8d2fc5c}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-this@{\_\-this}}
+\index{\_\-this@{\_\-this}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-this}]{\setlength{\rightskip}{0pt plus 5cm}{\bf MutexDataReaderView\_\-ptr} Knowledge::MutexDataReaderView::\_\-this (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a7962b5777640ce1743eb23b1d8d2fc5c}
+
+
+Definition at line 177 of file Splice\_\-Mutex\_\-MessageDcps.h.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a9a6a050952005aad67d04ef3d5f0b171}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-unchecked\_\-narrow@{\_\-unchecked\_\-narrow}}
+\index{\_\-unchecked\_\-narrow@{\_\-unchecked\_\-narrow}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-unchecked\_\-narrow}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Knowledge::MutexDataReaderView\_\-ptr} Knowledge::MutexDataReaderView::\_\-unchecked\_\-narrow (
+\begin{DoxyParamCaption}
+\item[{DDS::Object\_\-ptr}]{obj}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a9a6a050952005aad67d04ef3d5f0b171}
+
+
+Definition at line 186 of file Splice\_\-Mutex\_\-MessageDcps.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a6e55a456fca63b98858946f2e3f48267}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!get\_\-key\_\-value@{get\_\-key\_\-value}}
+\index{get\_\-key\_\-value@{get\_\-key\_\-value}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{get\_\-key\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::get\_\-key\_\-value (
+\begin{DoxyParamCaption}
+\item[{{\bf Mutex} \&}]{key\_\-holder, }
+\item[{::DDS::InstanceHandle\_\-t}]{handle}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a6e55a456fca63b98858946f2e3f48267}
+
+
+Definition at line 173 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_af040a4e537450dfe73da0fd928450b6d}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!get\_\-key\_\-value@{get\_\-key\_\-value}}
+\index{get\_\-key\_\-value@{get\_\-key\_\-value}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{get\_\-key\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::get\_\-key\_\-value (
+\begin{DoxyParamCaption}
+\item[{{\bf Mutex} \&}]{key\_\-holder, }
+\item[{DDS::InstanceHandle\_\-t}]{handle}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_af040a4e537450dfe73da0fd928450b6d}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_ae35042ad5ee638609b03c37cd9f33b8f}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!lookup\_\-instance@{lookup\_\-instance}}
+\index{lookup\_\-instance@{lookup\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{lookup\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}DDS::InstanceHandle\_\-t Knowledge::MutexDataReaderView\_\-impl::lookup\_\-instance (
+\begin{DoxyParamCaption}
+\item[{const {\bf Mutex} \&}]{instance}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_ae35042ad5ee638609b03c37cd9f33b8f}
+
+
+Implements \hyperlink{classKnowledge_1_1MutexDataReaderView_a542ba6faa6a66f682e0ac6c6707d3f4a}{Knowledge::MutexDataReaderView}.
+
+
+
+Definition at line 738 of file Splice\_\-Mutex\_\-MessageDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a342f2d6dc787e2bc16580790d89d7d3c}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!operator=@{operator=}}
+\index{operator=@{operator=}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}void Knowledge::MutexDataReaderView\_\-impl::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf MutexDataReaderView} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a342f2d6dc787e2bc16580790d89d7d3c}
+
+
+Reimplemented from \hyperlink{classKnowledge_1_1MutexDataReaderView_a936f62beb9ec33e476dd5b212e0178d7}{Knowledge::MutexDataReaderView}.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_acc93435f3bf847b12dfbaf7d660a312e}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read@{read}}
+\index{read@{read}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::read (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_acc93435f3bf847b12dfbaf7d660a312e}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_abea6a456967772cfaf9bce53b33871a8}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read@{read}}
+\index{read@{read}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read}]{\setlength{\rightskip}{0pt plus 5cm}virtual ::DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::SampleStateMask}]{sample\_\-states, }
+\item[{::DDS::ViewStateMask}]{view\_\-states, }
+\item[{::DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_abea6a456967772cfaf9bce53b33871a8}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_ac5e9aaab2d50448a2ee5e5c2ef5e3188}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-instance@{read\_\-instance}}
+\index{read\_\-instance@{read\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::read\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_ac5e9aaab2d50448a2ee5e5c2ef5e3188}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a4b23ab0bf64488f99f2ce1b81b7d5589}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-instance@{read\_\-instance}}
+\index{read\_\-instance@{read\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{::DDS::SampleStateMask}]{sample\_\-states, }
+\item[{::DDS::ViewStateMask}]{view\_\-states, }
+\item[{::DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a4b23ab0bf64488f99f2ce1b81b7d5589}
+
+
+Definition at line 290 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a507c72d8f9523a4db7411a8cdefdb1e6}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-next\_\-instance@{read\_\-next\_\-instance}}
+\index{read\_\-next\_\-instance@{read\_\-next\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-next\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read\_\-next\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{::DDS::SampleStateMask}]{sample\_\-states, }
+\item[{::DDS::ViewStateMask}]{view\_\-states, }
+\item[{::DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a507c72d8f9523a4db7411a8cdefdb1e6}
+
+
+Definition at line 328 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a86f7da40f5dd238bd7563583c3775358}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-next\_\-instance@{read\_\-next\_\-instance}}
+\index{read\_\-next\_\-instance@{read\_\-next\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-next\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::read\_\-next\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a86f7da40f5dd238bd7563583c3775358}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a5d9ca32089c731fffe4fd29c19137a77}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-next\_\-instance\_\-w\_\-condition@{read\_\-next\_\-instance\_\-w\_\-condition}}
+\index{read\_\-next\_\-instance\_\-w\_\-condition@{read\_\-next\_\-instance\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-next\_\-instance\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::read\_\-next\_\-instance\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a5d9ca32089c731fffe4fd29c19137a77}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a4d830005b467e12fee8eb146d98e4f23}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-next\_\-instance\_\-w\_\-condition@{read\_\-next\_\-instance\_\-w\_\-condition}}
+\index{read\_\-next\_\-instance\_\-w\_\-condition@{read\_\-next\_\-instance\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-next\_\-instance\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read\_\-next\_\-instance\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{::DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a4d830005b467e12fee8eb146d98e4f23}
+
+
+Definition at line 367 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_af207267c526a9b6db468528ec1384e4c}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-next\_\-sample@{read\_\-next\_\-sample}}
+\index{read\_\-next\_\-sample@{read\_\-next\_\-sample}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-next\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read\_\-next\_\-sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Mutex} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfo \&}]{sample\_\-info}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_af207267c526a9b6db468528ec1384e4c}
+
+
+Definition at line 272 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a9676c07ee0f092da46f349944db3b9c6}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-next\_\-sample@{read\_\-next\_\-sample}}
+\index{read\_\-next\_\-sample@{read\_\-next\_\-sample}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-next\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::read\_\-next\_\-sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Mutex} \&}]{received\_\-data, }
+\item[{DDS::SampleInfo \&}]{sample\_\-info}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a9676c07ee0f092da46f349944db3b9c6}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_aa4c7e4993accd8e7ce7bf97a4a5fc415}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-w\_\-condition@{read\_\-w\_\-condition}}
+\index{read\_\-w\_\-condition@{read\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::read\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_aa4c7e4993accd8e7ce7bf97a4a5fc415}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a4311998b744f5e4c7e1183cd7c331959}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!read\_\-w\_\-condition@{read\_\-w\_\-condition}}
+\index{read\_\-w\_\-condition@{read\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{read\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::read\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a4311998b744f5e4c7e1183cd7c331959}
+
+
+Definition at line 239 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a97b8e65b22267416edd526267d4d2b4f}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!return\_\-loan@{return\_\-loan}}
+\index{return\_\-loan@{return\_\-loan}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{return\_\-loan}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::return\_\-loan (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a97b8e65b22267416edd526267d4d2b4f}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a8b1d7157a32a5df190f8e280be4af6bb}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!return\_\-loan@{return\_\-loan}}
+\index{return\_\-loan@{return\_\-loan}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{return\_\-loan}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::return\_\-loan (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a8b1d7157a32a5df190f8e280be4af6bb}
+
+
+Definition at line 403 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a79805fa2ac26110415f372f144c5033e}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take@{take}}
+\index{take@{take}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::take (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::SampleStateMask}]{sample\_\-states, }
+\item[{::DDS::ViewStateMask}]{view\_\-states, }
+\item[{::DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a79805fa2ac26110415f372f144c5033e}
+
+
+Definition at line 221 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_adf68b09d49094cf08f828a2d1d66c960}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take@{take}}
+\index{take@{take}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::take (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_adf68b09d49094cf08f828a2d1d66c960}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a83f4b137ae772474c1fa5146de9ad0c8}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-instance@{take\_\-instance}}
+\index{take\_\-instance@{take\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::take\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a83f4b137ae772474c1fa5146de9ad0c8}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a21e84ee03c4e5224b604d6f36d07fd7d}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-instance@{take\_\-instance}}
+\index{take\_\-instance@{take\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::take\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{::DDS::SampleStateMask}]{sample\_\-states, }
+\item[{::DDS::ViewStateMask}]{view\_\-states, }
+\item[{::DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a21e84ee03c4e5224b604d6f36d07fd7d}
+
+
+Definition at line 309 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a74e82408b5f6f4b6a7ff8d17b625bb88}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-next\_\-instance@{take\_\-next\_\-instance}}
+\index{take\_\-next\_\-instance@{take\_\-next\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-next\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::take\_\-next\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{::DDS::SampleStateMask}]{sample\_\-states, }
+\item[{::DDS::ViewStateMask}]{view\_\-states, }
+\item[{::DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a74e82408b5f6f4b6a7ff8d17b625bb88}
+
+
+Definition at line 347 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_ace1e95e5fd64380943add90a846b73f2}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-next\_\-instance@{take\_\-next\_\-instance}}
+\index{take\_\-next\_\-instance@{take\_\-next\_\-instance}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-next\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::take\_\-next\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_ace1e95e5fd64380943add90a846b73f2}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_ad3d8ffab06e256e1c132a36ab4bc3f83}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-next\_\-instance\_\-w\_\-condition@{take\_\-next\_\-instance\_\-w\_\-condition}}
+\index{take\_\-next\_\-instance\_\-w\_\-condition@{take\_\-next\_\-instance\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-next\_\-instance\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::take\_\-next\_\-instance\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_ad3d8ffab06e256e1c132a36ab4bc3f83}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a61639d368b988108260ae8b6025dc841}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-next\_\-instance\_\-w\_\-condition@{take\_\-next\_\-instance\_\-w\_\-condition}}
+\index{take\_\-next\_\-instance\_\-w\_\-condition@{take\_\-next\_\-instance\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-next\_\-instance\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::take\_\-next\_\-instance\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{::DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a61639d368b988108260ae8b6025dc841}
+
+
+Definition at line 385 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_abc859e968b2707fc78be5f0c530db511}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-next\_\-sample@{take\_\-next\_\-sample}}
+\index{take\_\-next\_\-sample@{take\_\-next\_\-sample}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-next\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::take\_\-next\_\-sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Mutex} \&}]{received\_\-data, }
+\item[{DDS::SampleInfo \&}]{sample\_\-info}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_abc859e968b2707fc78be5f0c530db511}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_ab57438634262d1d3f78b8021d54965b8}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-next\_\-sample@{take\_\-next\_\-sample}}
+\index{take\_\-next\_\-sample@{take\_\-next\_\-sample}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-next\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::take\_\-next\_\-sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Mutex} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfo \&}]{sample\_\-info}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_ab57438634262d1d3f78b8021d54965b8}
+
+
+Definition at line 281 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a48705feff73fc74c7c798735038e2aaa}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-w\_\-condition@{take\_\-w\_\-condition}}
+\index{take\_\-w\_\-condition@{take\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView::take\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a48705feff73fc74c7c798735038e2aaa}
+\hypertarget{classKnowledge_1_1MutexDataReaderView__impl_a51788b1c25cc2d0c1959b45c9df9dd4e}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!take\_\-w\_\-condition@{take\_\-w\_\-condition}}
+\index{take\_\-w\_\-condition@{take\_\-w\_\-condition}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{take\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}DDS::ReturnCode\_\-t Knowledge::MutexDataReaderView\_\-impl::take\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf MutexSeq} \&}]{received\_\-data, }
+\item[{::DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{CORBA::Long}]{max\_\-samples, }
+\item[{::DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)}}
+\label{d8/db2/classKnowledge_1_1MutexDataReaderView__impl_a51788b1c25cc2d0c1959b45c9df9dd4e}
+
+
+Definition at line 255 of file Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classKnowledge_1_1MutexDataReaderView_a807ab0ccc917184fa6f2ab18558fc0d5}{
+\index{Knowledge::MutexDataReaderView\_\-impl@{Knowledge::MutexDataReaderView\_\-impl}!\_\-local\_\-id@{\_\-local\_\-id}}
+\index{\_\-local\_\-id@{\_\-local\_\-id}!Knowledge::MutexDataReaderView_impl@{Knowledge::MutexDataReaderView\_\-impl}}
+\subsubsection[{\_\-local\_\-id}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ {\bf Knowledge::MutexDataReaderView::\_\-local\_\-id} = \char`\"{}IDL:Knowledge/MutexDataReaderView:1.0\char`\"{}\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{db/d72/classKnowledge_1_1MutexDataReaderView_a807ab0ccc917184fa6f2ab18558fc0d5}
+
+
+Definition at line 176 of file Splice\_\-Mutex\_\-MessageDcps.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/\hyperlink{Splice__Mutex__MessageDcps__impl_8h}{Splice\_\-Mutex\_\-MessageDcps\_\-impl.h}\item 
+madara/\hyperlink{Splice__Knowledge__UpdateDcps__impl_8cpp}{Splice\_\-Knowledge\_\-UpdateDcps\_\-impl.cpp}\item 
+madara/\hyperlink{Splice__Mutex__MessageDcps__impl_8cpp}{Splice\_\-Mutex\_\-MessageDcps\_\-impl.cpp}\end{DoxyCompactItemize}

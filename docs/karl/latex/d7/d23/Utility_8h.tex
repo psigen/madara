@@ -1,0 +1,65 @@
+\hypertarget{Utility_8h}{
+\section{madara/utility/Utility.h File Reference}
+\label{d7/d23/Utility_8h}\index{madara/utility/Utility.h@{madara/utility/Utility.h}}
+}
+{\ttfamily \#include $<$vector$>$}\par
+{\ttfamily \#include $<$string$>$}\par
+{\ttfamily \#include \char`\"{}ace/SOCK\_\-Acceptor.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/MADARA\_\-export.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/MADARA\_\-export.h\char`\"{}}\par
+Include dependency graph for Utility.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{db/d1a/Utility_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=286pt]{d9/d61/Utility_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \hyperlink{namespaceMadara}{Madara}
+\item 
+namespace \hyperlink{namespaceMadara_1_1Utility}{Madara::Utility}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+MADARA\_\-Export::std::string \& \hyperlink{namespaceMadara_1_1Utility_aac788d6f61866a5df6cd3aa420952a12}{Madara::Utility::upper} (::std::string \&input)
+\begin{DoxyCompactList}\small\item\em Convert string to uppercase. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export::std::string \& \hyperlink{namespaceMadara_1_1Utility_a5940b4ae59ac2602e351119c6ae0ddb1}{Madara::Utility::lower} (::std::string \&input)
+\begin{DoxyCompactList}\small\item\em Convert string to lowercase. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export::std::string \& \hyperlink{namespaceMadara_1_1Utility_afd4c20f5264d3558c4095cd2fa3a5a6c}{Madara::Utility::dds\_\-topicify} (::std::string \&input)
+\begin{DoxyCompactList}\small\item\em Convert string to lowercase. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export::std::string \& \hyperlink{namespaceMadara_1_1Utility_a610c1c73acf6e6e8dc2494999e7b3cf1}{Madara::Utility::strip\_\-white\_\-space} (::std::string \&input)
+\begin{DoxyCompactList}\small\item\em Strip all whitespace. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export::std::string \& \hyperlink{namespaceMadara_1_1Utility_a88a2317956ea2a3b1958dcb11a3bbbac}{Madara::Utility::strip\_\-extra\_\-white\_\-space} (::std::string \&input)
+\begin{DoxyCompactList}\small\item\em Strip whitespace from front and end of string and also condense multiple whitespace into a single space. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export int \hyperlink{namespaceMadara_1_1Utility_aeda9e0110b3afac610ca2fc2b1970c7c}{Madara::Utility::split\_\-hostport\_\-identifier} (const std::string \&key, std::string \&host, std::string \&port)
+\item 
+MADARA\_\-Export int \hyperlink{namespaceMadara_1_1Utility_a3639a23c623c792e9d741365318801ab}{Madara::Utility::merge\_\-hostport\_\-identifier} (std::string \&key, const std::string \&host, const std::string \&port)
+\item 
+MADARA\_\-Export int \hyperlink{namespaceMadara_1_1Utility_aa3e90ad426a4dea4bdfb7e0e7ce6a486}{Madara::Utility::merge\_\-hostport\_\-identifier} (std::string \&key, const std::string \&host, unsigned short u\_\-port)
+\item 
+MADARA\_\-Export void \hyperlink{namespaceMadara_1_1Utility_a7bdc56f64d7849871c43eb24f4ad1854}{Madara::Utility::tokenizer} (const ::std::string \&input, const ::std::vector$<$ ::std::string $>$ \&splitters,::std::vector$<$ ::std::string $>$ \&tokens,::std::vector$<$ ::std::string $>$ \&pivot\_\-list)
+\begin{DoxyCompactList}\small\item\em Split a string into tokens. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export int \hyperlink{namespaceMadara_1_1Utility_a89cd4486ff2558f5b316d5c71c1f4cfb}{Madara::Utility::bind\_\-to\_\-ephemeral\_\-port} (ACE\_\-SOCK\_\-Acceptor \&acceptor, unsigned short \&port, bool increase\_\-until\_\-bound=true)
+\begin{DoxyCompactList}\small\item\em Bind to an ephemeral port. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export std::string \hyperlink{namespaceMadara_1_1Utility_a3e01e45acda976146faaf013596159ac}{Madara::Utility::file\_\-to\_\-string} (const std::string \&filename)
+\begin{DoxyCompactList}\small\item\em Return file contents as a string. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export std::string \hyperlink{namespaceMadara_1_1Utility_ad9561e92035daa290c5f8ad569f0cc3c}{Madara::Utility::extract\_\-path} (const std::string \&name)
+\begin{DoxyCompactList}\small\item\em Return the path of the provided file or directory. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export std::string \hyperlink{namespaceMadara_1_1Utility_acf654f7dc8674e180fa51acbfafc6ef2}{Madara::Utility::extract\_\-filename} (const std::string \&name)
+\begin{DoxyCompactList}\small\item\em Return the file name of the provided file or directory. \item\end{DoxyCompactList}\item 
+MADARA\_\-Export std::string \hyperlink{namespaceMadara_1_1Utility_a3ccf40cee4db6df9b683500ad73e9c61}{Madara::Utility::expand\_\-envs} (const std::string \&source)
+\begin{DoxyCompactList}\small\item\em Expand any environment variables in a string. \item\end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{namespaceMadara_1_1Utility_adab271c57233d4efae61c2f6053b7222}{Madara::Utility::get\_\-var} (const std::string \&source, size\_\-t cur, size\_\-t \&end)
+\begin{DoxyCompactList}\small\item\em grab an environment variable value ( \item\end{DoxyCompactList}\end{DoxyCompactItemize}

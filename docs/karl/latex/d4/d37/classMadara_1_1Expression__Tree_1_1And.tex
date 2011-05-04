@@ -1,0 +1,196 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1And}{
+\section{Madara::Expression\_\-Tree::And Class Reference}
+\label{d4/d37/classMadara_1_1Expression__Tree_1_1And}\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}}
+}
+
+
+Logically and node of the parse tree.  
+
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::And:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{d0/d72/classMadara_1_1Expression__Tree_1_1And__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::And:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=292pt]{db/d03/classMadara_1_1Expression__Tree_1_1And__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1And_a5d3a2692bc337d2ae38da0b769faa2b9}{And} (void)
+\begin{DoxyCompactList}\small\item\em constructor \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1And_acf0e8fc7b7d86ef61b341f05941b11a1}{$\sim$And} (void)
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1And_a1b69eb5e4b266406651e3aba9c7557ae}{add\_\-precedence} (int accumulated\_\-precedence)
+\begin{DoxyCompactList}\small\item\em returns the precedence level \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1And_ad5373c86239332255faa0e0cd32a65b1}{build} (void)
+\begin{DoxyCompactList}\small\item\em builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{precedence} (void)
+\begin{DoxyCompactList}\small\item\em abstract method for returning precedence level (higher value means higher precedence \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{left\_\-}
+\begin{DoxyCompactList}\small\item\em left and right pointers \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{right\_\-}
+\item 
+int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{precedence\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Logically and node of the parse tree. 
+
+Definition at line 225 of file Interpreter.cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1And_a5d3a2692bc337d2ae38da0b769faa2b9}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!And@{And}}
+\index{And@{And}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{And}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::And::And (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d4/d37/classMadara_1_1Expression__Tree_1_1And_a5d3a2692bc337d2ae38da0b769faa2b9}
+
+
+constructor 
+
+
+
+Definition at line 844 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1And_acf0e8fc7b7d86ef61b341f05941b11a1}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!$\sim$And@{$\sim$And}}
+\index{$\sim$And@{$\sim$And}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{$\sim$And}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::And::$\sim$And (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d37/classMadara_1_1Expression__Tree_1_1And_acf0e8fc7b7d86ef61b341f05941b11a1}
+
+
+destructor 
+
+
+
+Definition at line 850 of file Interpreter.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1And_a1b69eb5e4b266406651e3aba9c7557ae}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!add\_\-precedence@{add\_\-precedence}}
+\index{add\_\-precedence@{add\_\-precedence}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{add\_\-precedence}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Expression\_\-Tree::And::add\_\-precedence (
+\begin{DoxyParamCaption}
+\item[{int}]{accumulated\_\-precedence}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d37/classMadara_1_1Expression__Tree_1_1And_a1b69eb5e4b266406651e3aba9c7557ae}
+
+
+returns the precedence level 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ae16afabe3c5f9ba32d06386eb02e7e0c}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 856 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1And_ad5373c86239332255faa0e0cd32a65b1}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!build@{build}}
+\index{build@{build}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{build}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::And::build (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d37/classMadara_1_1Expression__Tree_1_1And_ad5373c86239332255faa0e0cd32a65b1}
+
+
+builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a01fdf1d8b06b3d6e49027d35b761cce4}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 863 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!precedence@{precedence}}
+\index{precedence@{precedence}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{precedence}]{\setlength{\rightskip}{0pt plus 5cm}virtual int Madara::Expression\_\-Tree::Symbol::precedence (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}
+
+
+abstract method for returning precedence level (higher value means higher precedence 
+
+
+
+Definition at line 71 of file Interpreter.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!left\_\-@{left\_\-}}
+\index{left\_\-@{left\_\-}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{left\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::left\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}
+
+
+left and right pointers 
+
+
+
+Definition at line 84 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!precedence\_\-@{precedence\_\-}}
+\index{precedence\_\-@{precedence\_\-}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{precedence\_\-}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Madara::Expression\_\-Tree::Symbol::precedence\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}
+
+
+Definition at line 86 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{
+\index{Madara::Expression\_\-Tree::And@{Madara::Expression\_\-Tree::And}!right\_\-@{right\_\-}}
+\index{right\_\-@{right\_\-}!Madara::Expression_Tree::And@{Madara::Expression\_\-Tree::And}}
+\subsubsection[{right\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::right\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}
+
+
+Definition at line 85 of file Interpreter.cpp.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Interpreter_8cpp}{Interpreter.cpp}\end{DoxyCompactItemize}

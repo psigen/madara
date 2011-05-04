@@ -1,0 +1,293 @@
+\hypertarget{Process_8cpp}{
+\section{madara/kats/Process.cpp File Reference}
+\label{d4/de8/Process_8cpp}\index{madara/kats/Process.cpp@{madara/kats/Process.cpp}}
+}
+{\ttfamily \#include $<$string$>$}\par
+{\ttfamily \#include $<$vector$>$}\par
+{\ttfamily \#include $<$iostream$>$}\par
+{\ttfamily \#include $<$sstream$>$}\par
+{\ttfamily \#include $<$assert.h$>$}\par
+{\ttfamily \#include $<$stdio.h$>$}\par
+{\ttfamily \#include $<$iomanip$>$}\par
+{\ttfamily \#include \char`\"{}ace/Log\_\-Msg.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Get\_\-Opt.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/High\_\-Res\_\-Timer.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/OS\_\-NS\_\-Thread.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Sched\_\-Params.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Process.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/utility/Log\_\-Macros.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/kats/Test\_\-Framework.h\char`\"{}}\par
+Include dependency graph for Process.cpp:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d2/de8/Process_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Process_8cpp_a39125ed59aeeb00f19cc8b2a012e133f}{MADARA\_\-NTRACE}~0
+\item 
+\#define \hyperlink{Process_8cpp_a1ba4bc2c76618489375f7c26bdcabd00}{ACE\_\-NTRACE}~0
+\item 
+\#define \hyperlink{Process_8cpp_a05d9aa98a9d73a78453489f071bdd856}{ACE\_\-NDEBUG}~0
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+ACE\_\-Time\_\-Value \hyperlink{Process_8cpp_a65e3a000b578a3ff82195d060e065ef6}{kill\_\-time} (0)
+\item 
+ACE\_\-Time\_\-Value \hyperlink{Process_8cpp_a84c32a0051fac70bfc920af20e5cf718}{delay\_\-time} (0)
+\item 
+int \hyperlink{Process_8cpp_a98bee60ff9073cffdbad017b7ccffeed}{parse\_\-args} (int argc, ACE\_\-TCHAR $\ast$argv\mbox{[}$\,$\mbox{]})
+\item 
+int \hyperlink{Process_8cpp_aa97388e555bbc18e422d02a0bac345b9}{ACE\_\-TMAIN} (int argc, ACE\_\-TCHAR $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1KATS_1_1Settings}{Madara::KATS::Settings} \hyperlink{Process_8cpp_adc540ae770c0ae35e062434a9fae2620}{settings}
+\item 
+ACE\_\-Process\_\-Options \hyperlink{Process_8cpp_a524d3b2da19513bc64e67cb2e9958e2b}{process\_\-options}
+\item 
+std::string \hyperlink{Process_8cpp_a4d9f5825bc03011a856a1aa3470ea6f4}{test\_\-name}
+\item 
+std::string \hyperlink{Process_8cpp_a2c1aad4d5cf9f98c4ad954e7a2c96c82}{process\_\-name}
+\item 
+std::stringstream \hyperlink{Process_8cpp_afb5b40b8411cf9df4cb34b9c903abbd6}{command\_\-line}
+\item 
+bool \hyperlink{Process_8cpp_ab974ed706e3afa44696c8f4e77a60e2e}{realtime} = false
+\item 
+bool \hyperlink{Process_8cpp_a87e338a8e266a28dc6f0d1a59b68afe1}{process\_\-set} = false
+\item 
+bool \hyperlink{Process_8cpp_ae167678f1ad5ae75d1cd5e50680761c7}{test\_\-set} = false
+\item 
+bool \hyperlink{Process_8cpp_ab4b8aea3196c595d51acbca0c0877a27}{kill\_\-time\_\-set} = false
+\item 
+bool \hyperlink{Process_8cpp_a7fbc4fd5b0e1f36e44573045d01c357d}{delay\_\-time\_\-set} = false
+\item 
+bool \hyperlink{Process_8cpp_a55a84c94b0b3072334906801b7e9d7de}{debug\_\-printing} = false
+\item 
+bool \hyperlink{Process_8cpp_a78336bff81a5b0d74ee06d99112d0fa3}{signal\_\-set} = false
+\item 
+int \hyperlink{Process_8cpp_a4732583508941f4b0823de304767de7c}{kill\_\-signal} = 15
+\item 
+std::string \hyperlink{Process_8cpp_a8dbeacb5625fe0926dda02ea9b2a0c14}{pre\_\-condition}
+\item 
+std::string \hyperlink{Process_8cpp_a58e2278c84957abc753d55d193f28ee5}{post\_\-condition}
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{Process_8cpp_a05d9aa98a9d73a78453489f071bdd856}{
+\index{Process.cpp@{Process.cpp}!ACE\_\-NDEBUG@{ACE\_\-NDEBUG}}
+\index{ACE\_\-NDEBUG@{ACE\_\-NDEBUG}!Process.cpp@{Process.cpp}}
+\subsubsection[{ACE\_\-NDEBUG}]{\setlength{\rightskip}{0pt plus 5cm}\#define ACE\_\-NDEBUG~0}}
+\label{d4/de8/Process_8cpp_a05d9aa98a9d73a78453489f071bdd856}
+
+
+Definition at line 5 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a1ba4bc2c76618489375f7c26bdcabd00}{
+\index{Process.cpp@{Process.cpp}!ACE\_\-NTRACE@{ACE\_\-NTRACE}}
+\index{ACE\_\-NTRACE@{ACE\_\-NTRACE}!Process.cpp@{Process.cpp}}
+\subsubsection[{ACE\_\-NTRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define ACE\_\-NTRACE~0}}
+\label{d4/de8/Process_8cpp_a1ba4bc2c76618489375f7c26bdcabd00}
+
+
+Definition at line 3 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a39125ed59aeeb00f19cc8b2a012e133f}{
+\index{Process.cpp@{Process.cpp}!MADARA\_\-NTRACE@{MADARA\_\-NTRACE}}
+\index{MADARA\_\-NTRACE@{MADARA\_\-NTRACE}!Process.cpp@{Process.cpp}}
+\subsubsection[{MADARA\_\-NTRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-NTRACE~0}}
+\label{d4/de8/Process_8cpp_a39125ed59aeeb00f19cc8b2a012e133f}
+
+
+Definition at line 2 of file Process.cpp.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{Process_8cpp_aa97388e555bbc18e422d02a0bac345b9}{
+\index{Process.cpp@{Process.cpp}!ACE\_\-TMAIN@{ACE\_\-TMAIN}}
+\index{ACE\_\-TMAIN@{ACE\_\-TMAIN}!Process.cpp@{Process.cpp}}
+\subsubsection[{ACE\_\-TMAIN}]{\setlength{\rightskip}{0pt plus 5cm}int ACE\_\-TMAIN (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{ACE\_\-TCHAR $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}
+\label{d4/de8/Process_8cpp_aa97388e555bbc18e422d02a0bac345b9}
+
+
+Definition at line 51 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a84c32a0051fac70bfc920af20e5cf718}{
+\index{Process.cpp@{Process.cpp}!delay\_\-time@{delay\_\-time}}
+\index{delay\_\-time@{delay\_\-time}!Process.cpp@{Process.cpp}}
+\subsubsection[{delay\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Time\_\-Value delay\_\-time (
+\begin{DoxyParamCaption}
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d4/de8/Process_8cpp_a84c32a0051fac70bfc920af20e5cf718}
+\hypertarget{Process_8cpp_a65e3a000b578a3ff82195d060e065ef6}{
+\index{Process.cpp@{Process.cpp}!kill\_\-time@{kill\_\-time}}
+\index{kill\_\-time@{kill\_\-time}!Process.cpp@{Process.cpp}}
+\subsubsection[{kill\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Time\_\-Value kill\_\-time (
+\begin{DoxyParamCaption}
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d4/de8/Process_8cpp_a65e3a000b578a3ff82195d060e065ef6}
+\hypertarget{Process_8cpp_a98bee60ff9073cffdbad017b7ccffeed}{
+\index{Process.cpp@{Process.cpp}!parse\_\-args@{parse\_\-args}}
+\index{parse\_\-args@{parse\_\-args}!Process.cpp@{Process.cpp}}
+\subsubsection[{parse\_\-args}]{\setlength{\rightskip}{0pt plus 5cm}int parse\_\-args (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{ACE\_\-TCHAR $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}
+\label{d4/de8/Process_8cpp_a98bee60ff9073cffdbad017b7ccffeed}
+
+
+\subsection{Variable Documentation}
+\hypertarget{Process_8cpp_afb5b40b8411cf9df4cb34b9c903abbd6}{
+\index{Process.cpp@{Process.cpp}!command\_\-line@{command\_\-line}}
+\index{command\_\-line@{command\_\-line}!Process.cpp@{Process.cpp}}
+\subsubsection[{command\_\-line}]{\setlength{\rightskip}{0pt plus 5cm}std::stringstream {\bf command\_\-line}}}
+\label{d4/de8/Process_8cpp_afb5b40b8411cf9df4cb34b9c903abbd6}
+
+
+Definition at line 29 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a55a84c94b0b3072334906801b7e9d7de}{
+\index{Process.cpp@{Process.cpp}!debug\_\-printing@{debug\_\-printing}}
+\index{debug\_\-printing@{debug\_\-printing}!Process.cpp@{Process.cpp}}
+\subsubsection[{debug\_\-printing}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf debug\_\-printing} = false}}
+\label{d4/de8/Process_8cpp_a55a84c94b0b3072334906801b7e9d7de}
+
+
+Definition at line 35 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a7fbc4fd5b0e1f36e44573045d01c357d}{
+\index{Process.cpp@{Process.cpp}!delay\_\-time\_\-set@{delay\_\-time\_\-set}}
+\index{delay\_\-time\_\-set@{delay\_\-time\_\-set}!Process.cpp@{Process.cpp}}
+\subsubsection[{delay\_\-time\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf delay\_\-time\_\-set} = false}}
+\label{d4/de8/Process_8cpp_a7fbc4fd5b0e1f36e44573045d01c357d}
+
+
+Definition at line 34 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a4732583508941f4b0823de304767de7c}{
+\index{Process.cpp@{Process.cpp}!kill\_\-signal@{kill\_\-signal}}
+\index{kill\_\-signal@{kill\_\-signal}!Process.cpp@{Process.cpp}}
+\subsubsection[{kill\_\-signal}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf kill\_\-signal} = 15}}
+\label{d4/de8/Process_8cpp_a4732583508941f4b0823de304767de7c}
+
+
+Definition at line 42 of file Process.cpp.
+
+\hypertarget{Process_8cpp_ab4b8aea3196c595d51acbca0c0877a27}{
+\index{Process.cpp@{Process.cpp}!kill\_\-time\_\-set@{kill\_\-time\_\-set}}
+\index{kill\_\-time\_\-set@{kill\_\-time\_\-set}!Process.cpp@{Process.cpp}}
+\subsubsection[{kill\_\-time\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf kill\_\-time\_\-set} = false}}
+\label{d4/de8/Process_8cpp_ab4b8aea3196c595d51acbca0c0877a27}
+
+
+Definition at line 33 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a58e2278c84957abc753d55d193f28ee5}{
+\index{Process.cpp@{Process.cpp}!post\_\-condition@{post\_\-condition}}
+\index{post\_\-condition@{post\_\-condition}!Process.cpp@{Process.cpp}}
+\subsubsection[{post\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf post\_\-condition}}}
+\label{d4/de8/Process_8cpp_a58e2278c84957abc753d55d193f28ee5}
+
+
+Definition at line 45 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a8dbeacb5625fe0926dda02ea9b2a0c14}{
+\index{Process.cpp@{Process.cpp}!pre\_\-condition@{pre\_\-condition}}
+\index{pre\_\-condition@{pre\_\-condition}!Process.cpp@{Process.cpp}}
+\subsubsection[{pre\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf pre\_\-condition}}}
+\label{d4/de8/Process_8cpp_a8dbeacb5625fe0926dda02ea9b2a0c14}
+
+
+Definition at line 44 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a2c1aad4d5cf9f98c4ad954e7a2c96c82}{
+\index{Process.cpp@{Process.cpp}!process\_\-name@{process\_\-name}}
+\index{process\_\-name@{process\_\-name}!Process.cpp@{Process.cpp}}
+\subsubsection[{process\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf process\_\-name}}}
+\label{d4/de8/Process_8cpp_a2c1aad4d5cf9f98c4ad954e7a2c96c82}
+
+
+Definition at line 28 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a524d3b2da19513bc64e67cb2e9958e2b}{
+\index{Process.cpp@{Process.cpp}!process\_\-options@{process\_\-options}}
+\index{process\_\-options@{process\_\-options}!Process.cpp@{Process.cpp}}
+\subsubsection[{process\_\-options}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Process\_\-Options {\bf process\_\-options}}}
+\label{d4/de8/Process_8cpp_a524d3b2da19513bc64e67cb2e9958e2b}
+
+
+Definition at line 26 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a87e338a8e266a28dc6f0d1a59b68afe1}{
+\index{Process.cpp@{Process.cpp}!process\_\-set@{process\_\-set}}
+\index{process\_\-set@{process\_\-set}!Process.cpp@{Process.cpp}}
+\subsubsection[{process\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf process\_\-set} = false}}
+\label{d4/de8/Process_8cpp_a87e338a8e266a28dc6f0d1a59b68afe1}
+
+
+Definition at line 31 of file Process.cpp.
+
+\hypertarget{Process_8cpp_ab974ed706e3afa44696c8f4e77a60e2e}{
+\index{Process.cpp@{Process.cpp}!realtime@{realtime}}
+\index{realtime@{realtime}!Process.cpp@{Process.cpp}}
+\subsubsection[{realtime}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf realtime} = false}}
+\label{d4/de8/Process_8cpp_ab974ed706e3afa44696c8f4e77a60e2e}
+
+
+Definition at line 30 of file Process.cpp.
+
+\hypertarget{Process_8cpp_adc540ae770c0ae35e062434a9fae2620}{
+\index{Process.cpp@{Process.cpp}!settings@{settings}}
+\index{settings@{settings}!Process.cpp@{Process.cpp}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::KATS::Settings} {\bf settings}}}
+\label{d4/de8/Process_8cpp_adc540ae770c0ae35e062434a9fae2620}
+
+
+Definition at line 25 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a78336bff81a5b0d74ee06d99112d0fa3}{
+\index{Process.cpp@{Process.cpp}!signal\_\-set@{signal\_\-set}}
+\index{signal\_\-set@{signal\_\-set}!Process.cpp@{Process.cpp}}
+\subsubsection[{signal\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf signal\_\-set} = false}}
+\label{d4/de8/Process_8cpp_a78336bff81a5b0d74ee06d99112d0fa3}
+
+
+Definition at line 41 of file Process.cpp.
+
+\hypertarget{Process_8cpp_a4d9f5825bc03011a856a1aa3470ea6f4}{
+\index{Process.cpp@{Process.cpp}!test\_\-name@{test\_\-name}}
+\index{test\_\-name@{test\_\-name}!Process.cpp@{Process.cpp}}
+\subsubsection[{test\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf test\_\-name}}}
+\label{d4/de8/Process_8cpp_a4d9f5825bc03011a856a1aa3470ea6f4}
+
+
+Definition at line 27 of file Process.cpp.
+
+\hypertarget{Process_8cpp_ae167678f1ad5ae75d1cd5e50680761c7}{
+\index{Process.cpp@{Process.cpp}!test\_\-set@{test\_\-set}}
+\index{test\_\-set@{test\_\-set}!Process.cpp@{Process.cpp}}
+\subsubsection[{test\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf test\_\-set} = false}}
+\label{d4/de8/Process_8cpp_ae167678f1ad5ae75d1cd5e50680761c7}
+
+
+Definition at line 32 of file Process.cpp.
+

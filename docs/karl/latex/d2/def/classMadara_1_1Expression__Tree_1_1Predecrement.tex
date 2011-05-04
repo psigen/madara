@@ -1,0 +1,196 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Predecrement}{
+\section{Madara::Expression\_\-Tree::Predecrement Class Reference}
+\label{d2/def/classMadara_1_1Expression__Tree_1_1Predecrement}\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+}
+
+
+\hyperlink{classMadara_1_1Expression__Tree_1_1Predecrement}{Predecrement} node of the parse tree.  
+
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Predecrement:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{d0/dea/classMadara_1_1Expression__Tree_1_1Predecrement__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Predecrement:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=307pt]{d8/dd5/classMadara_1_1Expression__Tree_1_1Predecrement__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Predecrement_aa8c3bde1626ef30b6c16c35c0a0ff934}{Predecrement} (void)
+\begin{DoxyCompactList}\small\item\em constructor \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Predecrement_ab2cd2c6ea004b541c4dd83af20dd0949}{$\sim$Predecrement} (void)
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Predecrement_a683daa4587f4a0a0842486928fdaeb81}{add\_\-precedence} (int accumulated\_\-precedence)
+\begin{DoxyCompactList}\small\item\em returns the precedence level \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Predecrement_a23c3bb7e8ce577f19ff60a4c7537e847}{build} (void)
+\begin{DoxyCompactList}\small\item\em builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{precedence} (void)
+\begin{DoxyCompactList}\small\item\em abstract method for returning precedence level (higher value means higher precedence \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{left\_\-}
+\begin{DoxyCompactList}\small\item\em left and right pointers \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{right\_\-}
+\item 
+int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{precedence\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{classMadara_1_1Expression__Tree_1_1Predecrement}{Predecrement} node of the parse tree. 
+
+Definition at line 489 of file Interpreter.cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Predecrement_aa8c3bde1626ef30b6c16c35c0a0ff934}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!Predecrement@{Predecrement}}
+\index{Predecrement@{Predecrement}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{Predecrement}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Predecrement::Predecrement (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d2/def/classMadara_1_1Expression__Tree_1_1Predecrement_aa8c3bde1626ef30b6c16c35c0a0ff934}
+
+
+constructor 
+
+
+
+Definition at line 717 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Predecrement_ab2cd2c6ea004b541c4dd83af20dd0949}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!$\sim$Predecrement@{$\sim$Predecrement}}
+\index{$\sim$Predecrement@{$\sim$Predecrement}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{$\sim$Predecrement}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Predecrement::$\sim$Predecrement (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d2/def/classMadara_1_1Expression__Tree_1_1Predecrement_ab2cd2c6ea004b541c4dd83af20dd0949}
+
+
+destructor 
+
+
+
+Definition at line 723 of file Interpreter.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Predecrement_a683daa4587f4a0a0842486928fdaeb81}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!add\_\-precedence@{add\_\-precedence}}
+\index{add\_\-precedence@{add\_\-precedence}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{add\_\-precedence}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Expression\_\-Tree::Predecrement::add\_\-precedence (
+\begin{DoxyParamCaption}
+\item[{int}]{accumulated\_\-precedence}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d2/def/classMadara_1_1Expression__Tree_1_1Predecrement_a683daa4587f4a0a0842486928fdaeb81}
+
+
+returns the precedence level 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ae16afabe3c5f9ba32d06386eb02e7e0c}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 729 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Predecrement_a23c3bb7e8ce577f19ff60a4c7537e847}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!build@{build}}
+\index{build@{build}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{build}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Predecrement::build (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d2/def/classMadara_1_1Expression__Tree_1_1Predecrement_a23c3bb7e8ce577f19ff60a4c7537e847}
+
+
+builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a01fdf1d8b06b3d6e49027d35b761cce4}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 736 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!precedence@{precedence}}
+\index{precedence@{precedence}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{precedence}]{\setlength{\rightskip}{0pt plus 5cm}virtual int Madara::Expression\_\-Tree::Symbol::precedence (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}
+
+
+abstract method for returning precedence level (higher value means higher precedence 
+
+
+
+Definition at line 71 of file Interpreter.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!left\_\-@{left\_\-}}
+\index{left\_\-@{left\_\-}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{left\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::left\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}
+
+
+left and right pointers 
+
+
+
+Definition at line 84 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!precedence\_\-@{precedence\_\-}}
+\index{precedence\_\-@{precedence\_\-}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{precedence\_\-}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Madara::Expression\_\-Tree::Symbol::precedence\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}
+
+
+Definition at line 86 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{
+\index{Madara::Expression\_\-Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}!right\_\-@{right\_\-}}
+\index{right\_\-@{right\_\-}!Madara::Expression_Tree::Predecrement@{Madara::Expression\_\-Tree::Predecrement}}
+\subsubsection[{right\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::right\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}
+
+
+Definition at line 85 of file Interpreter.cpp.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Interpreter_8cpp}{Interpreter.cpp}\end{DoxyCompactItemize}

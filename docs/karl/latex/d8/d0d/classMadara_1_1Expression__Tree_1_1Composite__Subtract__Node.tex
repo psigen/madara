@@ -1,0 +1,304 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}{
+\section{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node Class Reference}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+}
+
+
+A composite node that encompasses subtraction of a right expression from a left expression.  
+
+
+
+
+{\ttfamily \#include $<$Composite\_\-Subtract\_\-Node.h$>$}
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=332pt]{dc/d3f/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d2/d35/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a80817a2b73aeb1c253ef3d6396a14fec}{Composite\_\-Subtract\_\-Node} (\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$left, \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$right)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a49f36d917d79ad9db6e431b0f6b783b4}{$\sim$Composite\_\-Subtract\_\-Node} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a25ed90010dfa8df2d65684bf83ca7a89}{item} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the printable character of the node. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a50a0cc14511b5c33285003b4a4da74f8}{prune} (bool \&can\_\-change)
+\begin{DoxyCompactList}\small\item\em Prunes the expression tree of unnecessary nodes. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a5c6ec3403b7f4593d90204ee4c8cb588}{evaluate} (void)
+\begin{DoxyCompactList}\small\item\em Evaluates the expression tree. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a64c16017671a9f102f1b994f74f287a3}{accept} (\hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} \&visitor) const 
+\begin{DoxyCompactList}\small\item\em Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}{left} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the left expression. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}{right} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the right expression. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acac60a70beb2484737e6e7161edb2d1b}{left\_\-}
+\begin{DoxyCompactList}\small\item\em left expression \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_a077b7bd1b52df6f5c6adfde735556a68}{right\_\-}
+\begin{DoxyCompactList}\small\item\em Right expression. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A composite node that encompasses subtraction of a right expression from a left expression. 
+
+Definition at line 17 of file Composite\_\-Subtract\_\-Node.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a80817a2b73aeb1c253ef3d6396a14fec}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!Composite\_\-Subtract\_\-Node@{Composite\_\-Subtract\_\-Node}}
+\index{Composite\_\-Subtract\_\-Node@{Composite\_\-Subtract\_\-Node}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{Composite\_\-Subtract\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node::Composite\_\-Subtract\_\-Node (
+\begin{DoxyParamCaption}
+\item[{{\bf Component\_\-Node} $\ast$}]{left, }
+\item[{{\bf Component\_\-Node} $\ast$}]{right}
+\end{DoxyParamCaption}
+)}}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a80817a2b73aeb1c253ef3d6396a14fec}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & left expression \\
+\hline
+{\em right} & right expression \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 14 of file Composite\_\-Subtract\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a49f36d917d79ad9db6e431b0f6b783b4}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!$\sim$Composite\_\-Subtract\_\-Node@{$\sim$Composite\_\-Subtract\_\-Node}}
+\index{$\sim$Composite\_\-Subtract\_\-Node@{$\sim$Composite\_\-Subtract\_\-Node}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{$\sim$Composite\_\-Subtract\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node::$\sim$Composite\_\-Subtract\_\-Node (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a49f36d917d79ad9db6e431b0f6b783b4}
+
+
+Destructor. 
+
+
+
+Definition at line 21 of file Composite\_\-Subtract\_\-Node.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a64c16017671a9f102f1b994f74f287a3}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!accept@{accept}}
+\index{accept@{accept}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{accept}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node::accept (
+\begin{DoxyParamCaption}
+\item[{{\bf Visitor} \&}]{visitor}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a64c16017671a9f102f1b994f74f287a3}
+
+
+Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & visitor instance to use \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_ac3bb92d96b29f14ee23289c73a2307d1}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 93 of file Composite\_\-Subtract\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a5c6ec3403b7f4593d90204ee4c8cb588}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{evaluate}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node::evaluate (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a5c6ec3403b7f4593d90204ee4c8cb588}
+
+
+Evaluates the expression tree. 
+
+Evaluates the node and its children.
+
+\begin{DoxyReturn}{Returns}
+value of right expression subtracted from left expression
+\end{DoxyReturn}
+This does not prune any of the expression tree, and is much faster than the prune function 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a16c08750339b84c363e9fd0ea9858969}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 84 of file Composite\_\-Subtract\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a25ed90010dfa8df2d65684bf83ca7a89}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!item@{item}}
+\index{item@{item}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{item}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node::item (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a25ed90010dfa8df2d65684bf83ca7a89}
+
+
+Returns the printable character of the node. 
+
+\begin{DoxyReturn}{Returns}
+value of the node 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_ac38c35834da00a454c8f876278ad1b99}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 26 of file Composite\_\-Subtract\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!left@{left}}
+\index{left@{left}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{left}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node::left (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}
+
+
+Returns the left expression. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the left expression 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_abe0c7474f1af4cb06d06ab13479a89db}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 24 of file Composite\_\-Binary\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a50a0cc14511b5c33285003b4a4da74f8}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!prune@{prune}}
+\index{prune@{prune}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{prune}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node::prune (
+\begin{DoxyParamCaption}
+\item[{bool \&}]{can\_\-change}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d0d/classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a50a0cc14511b5c33285003b4a4da74f8}
+
+
+Prunes the expression tree of unnecessary nodes. 
+
+Prune the tree of unnecessary nodes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em can\_\-change} & set to true if variable nodes are contained \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of right expression subtracted from left expression
+\end{DoxyReturn}
+Returns evaluation of the node and sets can\_\-change appropriately. if this node can be changed, that means it shouldn't be pruned. 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a8833adfc3e79980a90e82a68586f4300}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 35 of file Composite\_\-Subtract\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!right@{right}}
+\index{right@{right}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{right}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Composite\_\-Unary\_\-Node::right (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{d3/dc7/classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}
+
+
+Returns the right expression. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the right expression 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a672f2b18b4e63efda38e9063a47bc30f}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 24 of file Composite\_\-Unary\_\-Node.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acac60a70beb2484737e6e7161edb2d1b}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!left\_\-@{left\_\-}}
+\index{left\_\-@{left\_\-}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{left\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Component\_\-Node}$\ast$ {\bf Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node::left\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acac60a70beb2484737e6e7161edb2d1b}
+
+
+left expression 
+
+
+
+Definition at line 42 of file Composite\_\-Binary\_\-Node.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_a077b7bd1b52df6f5c6adfde735556a68}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}!right\_\-@{right\_\-}}
+\index{right\_\-@{right\_\-}!Madara::Expression_Tree::Composite_Subtract_Node@{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}}
+\subsubsection[{right\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Component\_\-Node}$\ast$ {\bf Madara::Expression\_\-Tree::Composite\_\-Unary\_\-Node::right\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dc7/classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_a077b7bd1b52df6f5c6adfde735556a68}
+
+
+Right expression. 
+
+
+
+Definition at line 38 of file Composite\_\-Unary\_\-Node.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Composite__Subtract__Node_8h}{Composite\_\-Subtract\_\-Node.h}\item 
+madara/expression\_\-tree/\hyperlink{Composite__Subtract__Node_8cpp}{Composite\_\-Subtract\_\-Node.cpp}\end{DoxyCompactItemize}

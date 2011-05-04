@@ -1,0 +1,503 @@
+\hypertarget{classMadara_1_1Utility_1_1LQueue}{
+\section{Madara::Utility::LQueue$<$ T $>$ Class Template Reference}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue}\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+}
+
+
+Defines a generic \char`\"{}first-\/in/first-\/out\char`\"{} (FIFO) Abstract Data Type (ADT) using a circular linked list.  
+
+
+
+
+{\ttfamily \#include $<$LQueue.h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMadara_1_1Utility_1_1LQueue_1_1Overflow}{Overflow}
+\begin{DoxyCompactList}\small\item\em Exception thrown by methods in this class when an overflow condition occurs. \item\end{DoxyCompactList}\item 
+class \hyperlink{classMadara_1_1Utility_1_1LQueue_1_1Underflow}{Underflow}
+\begin{DoxyCompactList}\small\item\em Exception thrown by methods in this class when an underflow condition occurs. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef T \hyperlink{classMadara_1_1Utility_1_1LQueue_ae8a77794c76db8225abdfc1685ea0f9d}{value\_\-type}
+\item 
+typedef \hyperlink{classMadara_1_1Utility_1_1LQueue__Iterator}{LQueue\_\-Iterator}$<$ T $>$ \hyperlink{classMadara_1_1Utility_1_1LQueue_ae81897923a220c04feeea57192cf57bc}{iterator}
+\item 
+typedef \hyperlink{classMadara_1_1Utility_1_1LQueue__Const__Iterator}{LQueue\_\-Const\_\-Iterator}$<$ T $>$ \hyperlink{classMadara_1_1Utility_1_1LQueue_a716f1eb90f4f16f4a6df486e8613952c}{const\_\-iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue_a0b9c5bb0af453af874485f0a9af6fd13}{LQueue} (size\_\-t size\_\-hint=0)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue_a38f8c4b3f9f0c48ccd0c12aacef7bbc0}{LQueue} (const \hyperlink{classMadara_1_1Utility_1_1LQueue}{LQueue}$<$ T $>$ \&rhs)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue}{LQueue}$<$ T $>$ \& \hyperlink{classMadara_1_1Utility_1_1LQueue_a43f91565ac1ac18c7dfabc53dc205ee2}{operator=} (const \hyperlink{classMadara_1_1Utility_1_1LQueue}{LQueue}$<$ T $>$ \&rhs)
+\begin{DoxyCompactList}\small\item\em Assignment operator. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue_a918cd612c238148314c7d448a2a9f658}{$\sim$LQueue} (void)
+\begin{DoxyCompactList}\small\item\em Perform actions needed when queue goes out of scope. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Utility_1_1LQueue_afd9783b06840c1cce56c6897c7ff87c6}{enqueue} (const T \&new\_\-item)
+\begin{DoxyCompactList}\small\item\em Place a {\itshape new\_\-item\/} at the tail of the queue. \item\end{DoxyCompactList}\item 
+T \hyperlink{classMadara_1_1Utility_1_1LQueue_aba114392d71b5bdbac52232e36cbf80b}{dequeue} (void)
+\begin{DoxyCompactList}\small\item\em Remove and return the front item on the queue. \item\end{DoxyCompactList}\item 
+T \hyperlink{classMadara_1_1Utility_1_1LQueue_a5a4dc5099d2d86d5881f3e369e5e7626}{front} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the front queue item without removing it. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Utility_1_1LQueue_a6e0919d30fdb1e200525318b30b46b01}{is\_\-empty} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns 1 if the queue is empty, otherwise returns 0. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Utility_1_1LQueue_afc5bb8161fcfd3f283bc00dccce0e36f}{is\_\-full} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns 1 if the queue is full, otherwise returns 0. \item\end{DoxyCompactList}\item 
+size\_\-t \hyperlink{classMadara_1_1Utility_1_1LQueue_a384f044373b5fadd8ad2ee7a7f94b741}{size} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the current number of elements in the queue. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Utility_1_1LQueue_a4e71c42df83e2790692d0674dc43b577}{operator==} (const \hyperlink{classMadara_1_1Utility_1_1LQueue}{LQueue}$<$ T $>$ \&rhs) const 
+\begin{DoxyCompactList}\small\item\em Compare this queue with {\itshape rhs\/} for equality. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Utility_1_1LQueue_a80798044b7d5cd4fdb00e1a25bfe195d}{operator!=} (const \hyperlink{classMadara_1_1Utility_1_1LQueue}{LQueue}$<$ T $>$ \&s) const 
+\begin{DoxyCompactList}\small\item\em Compare this queue with {\itshape rhs\/} for inequality such that {\itshape this$>$!=s\/} is always the complement of the boolean return value of {\itshape $\ast$this==s\/}. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue__Iterator}{iterator} \hyperlink{classMadara_1_1Utility_1_1LQueue_a5654643d0ee0198e2f36bac1edc0fdc7}{begin} (void)
+\begin{DoxyCompactList}\small\item\em Get an iterator that points to the beginning of the queue. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue__Const__Iterator}{const\_\-iterator} \hyperlink{classMadara_1_1Utility_1_1LQueue_ac165a2dd0db172f659744141d769d435}{begin} (void) const 
+\begin{DoxyCompactList}\small\item\em Get a const iterator that points to the beginning of the queue. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue__Iterator}{iterator} \hyperlink{classMadara_1_1Utility_1_1LQueue_a8c40c0dd8f0987160ae51c710714eb1e}{end} (void)
+\begin{DoxyCompactList}\small\item\em Get an iterator that points to the end of the queue. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue__Const__Iterator}{const\_\-iterator} \hyperlink{classMadara_1_1Utility_1_1LQueue_a4ac54c75ef4373a47715b4c8d965265f}{end} (void) const 
+\begin{DoxyCompactList}\small\item\em Get a const iterator that points to the end of the queue. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classMadara_1_1Utility_1_1LQueue_abbc623b6b78bcf6fb815dab00cb7662e}{dequeue\_\-i} (void)
+\begin{DoxyCompactList}\small\item\em Remove the front item on the queue. Does not throw exceptions. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Utility_1_1LQueue_a4883f2c9831323e88daf8dd15f554aa3}{copy\_\-list} (const \hyperlink{classMadara_1_1Utility_1_1LQueue}{LQueue}$<$ T $>$ \&rhs)
+\item 
+void \hyperlink{classMadara_1_1Utility_1_1LQueue_a30e4fd6ee32b07c9c7446d90b9c57179}{delete\_\-list} (void)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Utility_1_1LQueue__Node}{LQueue\_\-Node}$<$ T $>$ $\ast$ \hyperlink{classMadara_1_1Utility_1_1LQueue_af5c1db41541efbedd186a17cc2714b66}{tail\_\-}
+\begin{DoxyCompactList}\small\item\em We only need to keep a single pointer for the circular linked list. \item\end{DoxyCompactList}\item 
+size\_\-t \hyperlink{classMadara_1_1Utility_1_1LQueue_a02709c963731b73e3a762928751a29c9}{count\_\-}
+\begin{DoxyCompactList}\small\item\em Number of items that are currently in the queue. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMadara_1_1Utility_1_1LQueue_a6b7cc6b02ab011daa89db3ab25c2d1c5}{LQueue\_\-Iterator$<$ T $>$}
+\item 
+class \hyperlink{classMadara_1_1Utility_1_1LQueue_a5375c049d93ee611e2c8b38c64dd16a8}{LQueue\_\-Const\_\-Iterator$<$ T $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T$>$ class Madara::Utility::LQueue$<$ T $>$}
+
+Defines a generic \char`\"{}first-\/in/first-\/out\char`\"{} (FIFO) Abstract Data Type (ADT) using a circular linked list. This queue is a circular linked list where the {\itshape tail\_\-\/} pointer points to a dummy node which makes implementation much easier (particularly iterator traversal). When enqueuing an item, the dummy node contains the new item and points to a new dummy node. The head of the list is thsu always {\itshape tail\_\--\/$>$next\_\-\/}. Dequeuing an object gets rid of the head node and makes the dummy node point to the new head. 
+
+Definition at line 38 of file LQueue.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a716f1eb90f4f16f4a6df486e8613952c}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!const\_\-iterator@{const\_\-iterator}}
+\index{const\_\-iterator@{const\_\-iterator}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{const\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ typedef {\bf LQueue\_\-Const\_\-Iterator}$<$T$>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf const\_\-iterator}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a716f1eb90f4f16f4a6df486e8613952c}
+
+
+Definition at line 106 of file LQueue.h.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_ae81897923a220c04feeea57192cf57bc}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!iterator@{iterator}}
+\index{iterator@{iterator}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ typedef {\bf LQueue\_\-Iterator}$<$T$>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf iterator}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_ae81897923a220c04feeea57192cf57bc}
+
+
+Definition at line 105 of file LQueue.h.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_ae8a77794c76db8225abdfc1685ea0f9d}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!value\_\-type@{value\_\-type}}
+\index{value\_\-type@{value\_\-type}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{value\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ typedef T {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf value\_\-type}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_ae8a77794c76db8225abdfc1685ea0f9d}
+
+
+Definition at line 44 of file LQueue.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a0b9c5bb0af453af874485f0a9af6fd13}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!LQueue@{LQueue}}
+\index{LQueue@{LQueue}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{LQueue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf LQueue} (
+\begin{DoxyParamCaption}
+\item[{size\_\-t}]{size\_\-hint = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a0b9c5bb0af453af874485f0a9af6fd13}
+
+
+Constructor. 
+
+
+
+Definition at line 191 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a38f8c4b3f9f0c48ccd0c12aacef7bbc0}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!LQueue@{LQueue}}
+\index{LQueue@{LQueue}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{LQueue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf LQueue} (
+\begin{DoxyParamCaption}
+\item[{const {\bf LQueue}$<$ T $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a38f8c4b3f9f0c48ccd0c12aacef7bbc0}
+
+
+Copy constructor. 
+
+
+
+Definition at line 206 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a918cd612c238148314c7d448a2a9f658}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!$\sim$LQueue@{$\sim$LQueue}}
+\index{$\sim$LQueue@{$\sim$LQueue}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{$\sim$LQueue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf Madara::Utility::LQueue}$<$ T $>$::$\sim${\bf LQueue} (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a918cd612c238148314c7d448a2a9f658}
+
+
+Perform actions needed when queue goes out of scope. 
+
+
+
+Definition at line 283 of file LQueue.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a5654643d0ee0198e2f36bac1edc0fdc7}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!begin@{begin}}
+\index{begin@{begin}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf iterator} {\bf Madara::Utility::LQueue}$<$ T $>$::begin (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a5654643d0ee0198e2f36bac1edc0fdc7}
+
+
+Get an iterator that points to the beginning of the queue. 
+
+
+
+Definition at line 419 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_ac165a2dd0db172f659744141d769d435}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!begin@{begin}}
+\index{begin@{begin}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf const\_\-iterator} {\bf Madara::Utility::LQueue}$<$ T $>$::begin (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_ac165a2dd0db172f659744141d769d435}
+
+
+Get a const iterator that points to the beginning of the queue. 
+
+
+
+Definition at line 437 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a4883f2c9831323e88daf8dd15f554aa3}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!copy\_\-list@{copy\_\-list}}
+\index{copy\_\-list@{copy\_\-list}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{copy\_\-list}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ void {\bf Madara::Utility::LQueue}$<$ T $>$::copy\_\-list (
+\begin{DoxyParamCaption}
+\item[{const {\bf LQueue}$<$ T $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a4883f2c9831323e88daf8dd15f554aa3}
+
+
+Definition at line 228 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a30e4fd6ee32b07c9c7446d90b9c57179}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!delete\_\-list@{delete\_\-list}}
+\index{delete\_\-list@{delete\_\-list}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{delete\_\-list}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ void {\bf Madara::Utility::LQueue}$<$ T $>$::delete\_\-list (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a30e4fd6ee32b07c9c7446d90b9c57179}
+
+
+Definition at line 251 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_aba114392d71b5bdbac52232e36cbf80b}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!dequeue@{dequeue}}
+\index{dequeue@{dequeue}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{dequeue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ T {\bf Madara::Utility::LQueue}$<$ T $>$::dequeue (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_aba114392d71b5bdbac52232e36cbf80b}
+
+
+Remove and return the front item on the queue. 
+
+Throws the {\itshape \hyperlink{classMadara_1_1Utility_1_1LQueue_1_1Underflow}{Underflow}\/} exception if the queue is empty. 
+
+Definition at line 347 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_abbc623b6b78bcf6fb815dab00cb7662e}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!dequeue\_\-i@{dequeue\_\-i}}
+\index{dequeue\_\-i@{dequeue\_\-i}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{dequeue\_\-i}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ void {\bf Madara::Utility::LQueue}$<$ T $>$::dequeue\_\-i (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_abbc623b6b78bcf6fb815dab00cb7662e}
+
+
+Remove the front item on the queue. Does not throw exceptions. 
+
+
+
+Definition at line 368 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a4ac54c75ef4373a47715b4c8d965265f}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!end@{end}}
+\index{end@{end}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf const\_\-iterator} {\bf Madara::Utility::LQueue}$<$ T $>$::end (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a4ac54c75ef4373a47715b4c8d965265f}
+
+
+Get a const iterator that points to the end of the queue. 
+
+
+
+Definition at line 446 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a8c40c0dd8f0987160ae51c710714eb1e}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!end@{end}}
+\index{end@{end}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf iterator} {\bf Madara::Utility::LQueue}$<$ T $>$::end (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a8c40c0dd8f0987160ae51c710714eb1e}
+
+
+Get an iterator that points to the end of the queue. 
+
+
+
+Definition at line 428 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_afd9783b06840c1cce56c6897c7ff87c6}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!enqueue@{enqueue}}
+\index{enqueue@{enqueue}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{enqueue}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ void {\bf Madara::Utility::LQueue}$<$ T $>$::enqueue (
+\begin{DoxyParamCaption}
+\item[{const T \&}]{new\_\-item}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_afd9783b06840c1cce56c6897c7ff87c6}
+
+
+Place a {\itshape new\_\-item\/} at the tail of the queue. 
+
+Throws the {\itshape \hyperlink{classMadara_1_1Utility_1_1LQueue_1_1Overflow}{Overflow}\/} exception if the queue is full, e.g., if memory is exhausted. 
+
+Definition at line 318 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a5a4dc5099d2d86d5881f3e369e5e7626}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!front@{front}}
+\index{front@{front}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{front}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ T {\bf Madara::Utility::LQueue}$<$ T $>$::front (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a5a4dc5099d2d86d5881f3e369e5e7626}
+
+
+Returns the front queue item without removing it. 
+
+Throws the {\itshape \hyperlink{classMadara_1_1Utility_1_1LQueue_1_1Underflow}{Underflow}\/} exception if the queue is empty. 
+
+Definition at line 388 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a6e0919d30fdb1e200525318b30b46b01}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!is\_\-empty@{is\_\-empty}}
+\index{is\_\-empty@{is\_\-empty}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{is\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ bool {\bf Madara::Utility::LQueue}$<$ T $>$::is\_\-empty (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a6e0919d30fdb1e200525318b30b46b01}
+
+
+Returns 1 if the queue is empty, otherwise returns 0. 
+
+
+
+Definition at line 402 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_afc5bb8161fcfd3f283bc00dccce0e36f}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!is\_\-full@{is\_\-full}}
+\index{is\_\-full@{is\_\-full}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{is\_\-full}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ bool {\bf Madara::Utility::LQueue}$<$ T $>$::is\_\-full (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_afc5bb8161fcfd3f283bc00dccce0e36f}
+
+
+Returns 1 if the queue is full, otherwise returns 0. 
+
+
+
+Definition at line 410 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a80798044b7d5cd4fdb00e1a25bfe195d}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!operator!=@{operator!=}}
+\index{operator!=@{operator!=}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{operator!=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ bool {\bf Madara::Utility::LQueue}$<$ T $>$::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf LQueue}$<$ T $>$ \&}]{s}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a80798044b7d5cd4fdb00e1a25bfe195d}
+
+
+Compare this queue with {\itshape rhs\/} for inequality such that {\itshape this$>$!=s\/} is always the complement of the boolean return value of {\itshape $\ast$this==s\/}. 
+
+
+
+Definition at line 308 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a43f91565ac1ac18c7dfabc53dc205ee2}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!operator=@{operator=}}
+\index{operator=@{operator=}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ {\bf Madara::Utility::LQueue}$<$ T $>$ \& {\bf Madara::Utility::LQueue}$<$ T $>$::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf LQueue}$<$ T $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+)}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a43f91565ac1ac18c7dfabc53dc205ee2}
+
+
+Assignment operator. 
+
+
+
+Definition at line 264 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a4e71c42df83e2790692d0674dc43b577}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!operator==@{operator==}}
+\index{operator==@{operator==}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ bool {\bf Madara::Utility::LQueue}$<$ T $>$::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf LQueue}$<$ T $>$ \&}]{rhs}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a4e71c42df83e2790692d0674dc43b577}
+
+
+Compare this queue with {\itshape rhs\/} for equality. 
+
+Returns true if the sizes of the two queues are equal and all the elements from 0 .. \hyperlink{classMadara_1_1Utility_1_1LQueue_a384f044373b5fadd8ad2ee7a7f94b741}{size()} are equal, else false. 
+
+Definition at line 296 of file LQueue.cpp.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a384f044373b5fadd8ad2ee7a7f94b741}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!size@{size}}
+\index{size@{size}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ size\_\-t {\bf Madara::Utility::LQueue}$<$ T $>$::size (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a384f044373b5fadd8ad2ee7a7f94b741}
+
+
+Returns the current number of elements in the queue. 
+
+
+
+Definition at line 183 of file LQueue.cpp.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a5375c049d93ee611e2c8b38c64dd16a8}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!LQueue\_\-Const\_\-Iterator$<$ T $>$@{LQueue\_\-Const\_\-Iterator$<$ T $>$}}
+\index{LQueue\_\-Const\_\-Iterator$<$ T $>$@{LQueue\_\-Const\_\-Iterator$<$ T $>$}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{LQueue\_\-Const\_\-Iterator$<$ T $>$}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ friend class {\bf LQueue\_\-Const\_\-Iterator}$<$ T $>$\hspace{0.3cm}{\ttfamily  \mbox{[}friend\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a5375c049d93ee611e2c8b38c64dd16a8}
+
+
+Definition at line 41 of file LQueue.h.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a6b7cc6b02ab011daa89db3ab25c2d1c5}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!LQueue\_\-Iterator$<$ T $>$@{LQueue\_\-Iterator$<$ T $>$}}
+\index{LQueue\_\-Iterator$<$ T $>$@{LQueue\_\-Iterator$<$ T $>$}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{LQueue\_\-Iterator$<$ T $>$}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ friend class {\bf LQueue\_\-Iterator}$<$ T $>$\hspace{0.3cm}{\ttfamily  \mbox{[}friend\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a6b7cc6b02ab011daa89db3ab25c2d1c5}
+
+
+Definition at line 40 of file LQueue.h.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Utility_1_1LQueue_a02709c963731b73e3a762928751a29c9}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!count\_\-@{count\_\-}}
+\index{count\_\-@{count\_\-}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{count\_\-}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ size\_\-t {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf count\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_a02709c963731b73e3a762928751a29c9}
+
+
+Number of items that are currently in the queue. 
+
+
+
+Definition at line 138 of file LQueue.h.
+
+\hypertarget{classMadara_1_1Utility_1_1LQueue_af5c1db41541efbedd186a17cc2714b66}{
+\index{Madara::Utility::LQueue@{Madara::Utility::LQueue}!tail\_\-@{tail\_\-}}
+\index{tail\_\-@{tail\_\-}!Madara::Utility::LQueue@{Madara::Utility::LQueue}}
+\subsubsection[{tail\_\-}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T$>$ {\bf LQueue\_\-Node}$<$T$>$$\ast$ {\bf Madara::Utility::LQueue}$<$ T $>$::{\bf tail\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d7/df8/classMadara_1_1Utility_1_1LQueue_af5c1db41541efbedd186a17cc2714b66}
+
+
+We only need to keep a single pointer for the circular linked list. 
+
+This points to the tail of the queue. Since the list is circular, the head of the queue is always {\itshape tail\_\--\/$>$next\_\-\/}. 
+
+Definition at line 135 of file LQueue.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/utility/\hyperlink{LQueue_8h}{LQueue.h}\item 
+madara/utility/\hyperlink{LQueue_8cpp}{LQueue.cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,387 @@
+\hypertarget{Log__Macros_8h}{
+\section{madara/utility/Log\_\-Macros.h File Reference}
+\label{d0/d92/Log__Macros_8h}\index{madara/utility/Log\_\-Macros.h@{madara/utility/Log\_\-Macros.h}}
+}
+{\ttfamily \#include \char`\"{}MADARA\_\-Logger\_\-export.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Log\_\-Msg.h\char`\"{}}\par
+Include dependency graph for Log\_\-Macros.h:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{d9/d1b/Log__Macros_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d8/dc0/Log__Macros_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Log__Macros_8h_a4f157092ca608b5f00c9d46a4c823162}{DLINFO}~ACE\_\-TEXT(\char`\"{}(\%P$|$\%t) \mbox{[}\%M\mbox{]} -\/ \%T -\/ \char`\"{})
+\item 
+\#define \hyperlink{Log__Macros_8h_a2acca011a26d74c6e9c27071e8e53a33}{MADARA\_\-LOG\_\-EMERGENCY}~0
+\begin{DoxyCompactList}\small\item\em Used for errors that cause the fatal shutdown of any portion of the infrastructure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a5ccf9a945d031f6cb47df3ecbce4a675}{MADARA\_\-LOG\_\-TERMINAL\_\-ERROR}~1
+\begin{DoxyCompactList}\small\item\em Used for MADARA errors at the point the error exits the process in question, or when a decision is made to cause the MADARA suite to fail. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a9573b3e3853bae3432f4908deb2ae8a3}{MADARA\_\-LOG\_\-NONFATAL\_\-ERROR}~2
+\begin{DoxyCompactList}\small\item\em Used for non-\/fatal deployment errors that do not cause deployment failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a7764b41eec15add23b00dd81eded1fc0}{MADARA\_\-LOG\_\-ERROR}~3
+\begin{DoxyCompactList}\small\item\em Used to log detailed error information at the point of failure. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a3df1118a5f5ecb5e6e3f97a6fdfc7570}{MADARA\_\-LOG\_\-WARNING}~4
+\begin{DoxyCompactList}\small\item\em used to indicate that a questionable situation that doesn't cause deployment failure, but can cause undefined conditions. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a5d69354780811d05fa10866b831f8194}{MADARA\_\-LOG\_\-MAJOR\_\-EVENT}~5
+\begin{DoxyCompactList}\small\item\em Used to indicate that a ``significant'' MADARA event has completed. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a891ff95ba9280fe871745d12f83caab8}{MADARA\_\-LOG\_\-MINOR\_\-EVENT}~6
+\begin{DoxyCompactList}\small\item\em Used to inficate a ``minor'' MADARA event has completed. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a96db5dfdd71276ad699bdbc9dd3784a7}{MADARA\_\-LOG\_\-EVENT\_\-TRACE}~7
+\begin{DoxyCompactList}\small\item\em Used to trace significant actions within major/minor events. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a1c40007410b578a752cae19fd41e5b8e}{MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO}~8
+\begin{DoxyCompactList}\small\item\em Used to display important configuration information that impacts major MADARA events. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a299dc728246d897513487e755870aa67}{MADARA\_\-LOG\_\-TRACE}~9
+\begin{DoxyCompactList}\small\item\em The following two statements are used to closely trace the execution of MADARA code. \item\end{DoxyCompactList}\item 
+\#define \hyperlink{Log__Macros_8h_a17fb7c09201c40eb98fb9e4de1f3651c}{MADARA\_\-LOG\_\-DETAILED\_\-TRACE}~10
+\item 
+\#define \hyperlink{Log__Macros_8h_a39125ed59aeeb00f19cc8b2a012e133f}{MADARA\_\-NTRACE}~1
+\item 
+\#define \hyperlink{Log__Macros_8h_a90386bf53496cfc83ca329acb21e9ad4}{MADARA\_\-TRACE}(X)~do \{\} while (0)
+\item 
+\#define \hyperlink{Log__Macros_8h_adb6aadf4768196e5c5f75ab4e281405b}{MADARA\_\-ENABLE\_\-TRACE}()~do \{\} while (0)
+\item 
+\#define \hyperlink{Log__Macros_8h_a5b6e517e359e052f0da85d39cf2b8177}{MADARA\_\-DISABLE\_\-TRACE}()~do \{\} while (0)
+\item 
+\#define \hyperlink{Log__Macros_8h_a63b1cc9b92bd7c9e4f9cc18e4a144e2e}{MADARA\_\-ERROR}(L, X)
+\item 
+\#define \hyperlink{Log__Macros_8h_a84e182c318b7f7fa05f1beb4115e12d8}{MADARA\_\-DEBUG}(L, X)
+\item 
+\#define \hyperlink{Log__Macros_8h_aea7a8bef0a2a65dc78a6b54f6ab44961}{MADARA\_\-ERROR\_\-RETURN}(L, X, Y)
+\item 
+\#define \hyperlink{Log__Macros_8h_a0ce2f00d3f3337b30a47bdb12178c090}{MADARA\_\-ERROR\_\-BREAK}(L, X)~\{ MADARA\_\-ERROR (L, X); break; \}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+MADARA\_\-Logger\_\-Export unsigned int \hyperlink{Log__Macros_8h_af3a0d2eed658993b9ed72884e7020c91}{MADARA\_\-debug\_\-level}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+James Edmondson $<$\href{mailto:james.r.edmondson@vanderbilt.edu}{\tt james.r.edmondson@vanderbilt.edu}$>$
+\end{DoxyAuthor}
+Macros used for logging in MADARA, based on the DAnCE Log Macros maintained by Will Otte $<$\href{mailto:wotte@dre.vanderbilt.edu}{\tt wotte@dre.vanderbilt.edu}$>$.
+
+Note that though we include MADARA\_\-Logger\_\-export for future expansion possibilities, we are simply including the \hyperlink{Log__Macros_8h}{Log\_\-Macros.h} and \hyperlink{Log__Macros_8cpp}{Log\_\-Macros.cpp} files into each project that might need these. Otherwise, KATS users would have to explicitly include Madara.dll or Madara.lib and Kats.dll or Kats.lib instead of just Kats.dll or Kats.lib. 
+
+Definition in file \hyperlink{Log__Macros_8h_source}{Log\_\-Macros.h}.
+
+
+
+\subsection{Define Documentation}
+\hypertarget{Log__Macros_8h_a4f157092ca608b5f00c9d46a4c823162}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!DLINFO@{DLINFO}}
+\index{DLINFO@{DLINFO}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{DLINFO}]{\setlength{\rightskip}{0pt plus 5cm}\#define DLINFO~ACE\_\-TEXT(\char`\"{}(\%P$|$\%t) \mbox{[}\%M\mbox{]} -\/ \%T -\/ \char`\"{})}}
+\label{d0/d92/Log__Macros_8h_a4f157092ca608b5f00c9d46a4c823162}
+
+
+Definition at line 23 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a84e182c318b7f7fa05f1beb4115e12d8}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-DEBUG@{MADARA\_\-DEBUG}}
+\index{MADARA\_\-DEBUG@{MADARA\_\-DEBUG}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-DEBUG}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-DEBUG(
+\begin{DoxyParamCaption}
+\item[{}]{L, }
+\item[{}]{X}
+\end{DoxyParamCaption}
+)}}
+\label{d0/d92/Log__Macros_8h_a84e182c318b7f7fa05f1beb4115e12d8}
+{\bfseries Value:}
+\begin{DoxyCode}
+do { \
+    if (MADARA_debug_level >= L) \
+      { \
+        int const __ace_error = ACE_Log_Msg::last_error_adapter (); \
+        ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
+        ace___->conditional_set (__FILE__, __LINE__, 0, __ace_error); \
+        ace___->log X; \
+      } \
+  } while (0)
+\end{DoxyCode}
+
+
+Definition at line 113 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a5b6e517e359e052f0da85d39cf2b8177}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-DISABLE\_\-TRACE@{MADARA\_\-DISABLE\_\-TRACE}}
+\index{MADARA\_\-DISABLE\_\-TRACE@{MADARA\_\-DISABLE\_\-TRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-DISABLE\_\-TRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-DISABLE\_\-TRACE(
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)~do \{\} while (0)}}
+\label{d0/d92/Log__Macros_8h_a5b6e517e359e052f0da85d39cf2b8177}
+
+
+Definition at line 72 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_adb6aadf4768196e5c5f75ab4e281405b}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-ENABLE\_\-TRACE@{MADARA\_\-ENABLE\_\-TRACE}}
+\index{MADARA\_\-ENABLE\_\-TRACE@{MADARA\_\-ENABLE\_\-TRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-ENABLE\_\-TRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-ENABLE\_\-TRACE(
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)~do \{\} while (0)}}
+\label{d0/d92/Log__Macros_8h_adb6aadf4768196e5c5f75ab4e281405b}
+
+
+Definition at line 71 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a63b1cc9b92bd7c9e4f9cc18e4a144e2e}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-ERROR@{MADARA\_\-ERROR}}
+\index{MADARA\_\-ERROR@{MADARA\_\-ERROR}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-ERROR}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-ERROR(
+\begin{DoxyParamCaption}
+\item[{}]{L, }
+\item[{}]{X}
+\end{DoxyParamCaption}
+)}}
+\label{d0/d92/Log__Macros_8h_a63b1cc9b92bd7c9e4f9cc18e4a144e2e}
+{\bfseries Value:}
+\begin{DoxyCode}
+do { \
+    if (MADARA_debug_level >= L) \
+      { \
+        int const __ace_error = ACE_Log_Msg::last_error_adapter (); \
+        ACE_Log_Msg *ace___ = ACE_Log_Msg::instance ();               \
+        ace___->conditional_set (__FILE__, __LINE__, -1, __ace_error); \
+        ace___->log X; \
+      } \
+  } while (0)
+\end{DoxyCode}
+
+
+Definition at line 101 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a0ce2f00d3f3337b30a47bdb12178c090}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-ERROR\_\-BREAK@{MADARA\_\-ERROR\_\-BREAK}}
+\index{MADARA\_\-ERROR\_\-BREAK@{MADARA\_\-ERROR\_\-BREAK}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-ERROR\_\-BREAK}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-ERROR\_\-BREAK(
+\begin{DoxyParamCaption}
+\item[{}]{L, }
+\item[{}]{X}
+\end{DoxyParamCaption}
+)~\{ MADARA\_\-ERROR (L, X); break; \}}}
+\label{d0/d92/Log__Macros_8h_a0ce2f00d3f3337b30a47bdb12178c090}
+
+
+Definition at line 150 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_aea7a8bef0a2a65dc78a6b54f6ab44961}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-ERROR\_\-RETURN@{MADARA\_\-ERROR\_\-RETURN}}
+\index{MADARA\_\-ERROR\_\-RETURN@{MADARA\_\-ERROR\_\-RETURN}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-ERROR\_\-RETURN}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-ERROR\_\-RETURN(
+\begin{DoxyParamCaption}
+\item[{}]{L, }
+\item[{}]{X, }
+\item[{}]{Y}
+\end{DoxyParamCaption}
+)}}
+\label{d0/d92/Log__Macros_8h_aea7a8bef0a2a65dc78a6b54f6ab44961}
+{\bfseries Value:}
+\begin{DoxyCode}
+do { \
+    if (MADARA_debug_level >= L) \
+      { \
+        int const __ace_error = ACE_Log_Msg::last_error_adapter (); \
+        ACE_Log_Msg *ace___ = ACE_Log_Msg::instance (); \
+        ace___->conditional_set (__FILE__, __LINE__, Y, __ace_error); \
+        ace___->log X; \
+        return Y; \
+      } \
+  } while (0)
+\end{DoxyCode}
+
+
+Definition at line 137 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a17fb7c09201c40eb98fb9e4de1f3651c}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-DETAILED\_\-TRACE@{MADARA\_\-LOG\_\-DETAILED\_\-TRACE}}
+\index{MADARA\_\-LOG\_\-DETAILED\_\-TRACE@{MADARA\_\-LOG\_\-DETAILED\_\-TRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-DETAILED\_\-TRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-DETAILED\_\-TRACE~10}}
+\label{d0/d92/Log__Macros_8h_a17fb7c09201c40eb98fb9e4de1f3651c}
+
+
+Definition at line 61 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a2acca011a26d74c6e9c27071e8e53a33}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-EMERGENCY@{MADARA\_\-LOG\_\-EMERGENCY}}
+\index{MADARA\_\-LOG\_\-EMERGENCY@{MADARA\_\-LOG\_\-EMERGENCY}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-EMERGENCY}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-EMERGENCY~0}}
+\label{d0/d92/Log__Macros_8h_a2acca011a26d74c6e9c27071e8e53a33}
+
+
+Used for errors that cause the fatal shutdown of any portion of the infrastructure. 
+
+
+
+Definition at line 32 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a7764b41eec15add23b00dd81eded1fc0}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-ERROR@{MADARA\_\-LOG\_\-ERROR}}
+\index{MADARA\_\-LOG\_\-ERROR@{MADARA\_\-LOG\_\-ERROR}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-ERROR}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-ERROR~3}}
+\label{d0/d92/Log__Macros_8h_a7764b41eec15add23b00dd81eded1fc0}
+
+
+Used to log detailed error information at the point of failure. 
+
+
+
+Definition at line 41 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a96db5dfdd71276ad699bdbc9dd3784a7}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-EVENT\_\-TRACE@{MADARA\_\-LOG\_\-EVENT\_\-TRACE}}
+\index{MADARA\_\-LOG\_\-EVENT\_\-TRACE@{MADARA\_\-LOG\_\-EVENT\_\-TRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-EVENT\_\-TRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-EVENT\_\-TRACE~7}}
+\label{d0/d92/Log__Macros_8h_a96db5dfdd71276ad699bdbc9dd3784a7}
+
+
+Used to trace significant actions within major/minor events. 
+
+This will usually include starts for major/minor events. 
+
+Definition at line 51 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a1c40007410b578a752cae19fd41e5b8e}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO@{MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO}}
+\index{MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO@{MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-MAJOR\_\-DEBUG\_\-INFO~8}}
+\label{d0/d92/Log__Macros_8h_a1c40007410b578a752cae19fd41e5b8e}
+
+
+Used to display important configuration information that impacts major MADARA events. 
+
+
+
+Definition at line 54 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a5d69354780811d05fa10866b831f8194}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-MAJOR\_\-EVENT@{MADARA\_\-LOG\_\-MAJOR\_\-EVENT}}
+\index{MADARA\_\-LOG\_\-MAJOR\_\-EVENT@{MADARA\_\-LOG\_\-MAJOR\_\-EVENT}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-MAJOR\_\-EVENT}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-MAJOR\_\-EVENT~5}}
+\label{d0/d92/Log__Macros_8h_a5d69354780811d05fa10866b831f8194}
+
+
+Used to indicate that a ``significant'' MADARA event has completed. 
+
+
+
+Definition at line 46 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a891ff95ba9280fe871745d12f83caab8}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-MINOR\_\-EVENT@{MADARA\_\-LOG\_\-MINOR\_\-EVENT}}
+\index{MADARA\_\-LOG\_\-MINOR\_\-EVENT@{MADARA\_\-LOG\_\-MINOR\_\-EVENT}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-MINOR\_\-EVENT}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-MINOR\_\-EVENT~6}}
+\label{d0/d92/Log__Macros_8h_a891ff95ba9280fe871745d12f83caab8}
+
+
+Used to inficate a ``minor'' MADARA event has completed. 
+
+
+
+Definition at line 48 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a9573b3e3853bae3432f4908deb2ae8a3}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-NONFATAL\_\-ERROR@{MADARA\_\-LOG\_\-NONFATAL\_\-ERROR}}
+\index{MADARA\_\-LOG\_\-NONFATAL\_\-ERROR@{MADARA\_\-LOG\_\-NONFATAL\_\-ERROR}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-NONFATAL\_\-ERROR}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-NONFATAL\_\-ERROR~2}}
+\label{d0/d92/Log__Macros_8h_a9573b3e3853bae3432f4908deb2ae8a3}
+
+
+Used for non-\/fatal deployment errors that do not cause deployment failure. 
+
+
+
+Definition at line 39 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a5ccf9a945d031f6cb47df3ecbce4a675}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-TERMINAL\_\-ERROR@{MADARA\_\-LOG\_\-TERMINAL\_\-ERROR}}
+\index{MADARA\_\-LOG\_\-TERMINAL\_\-ERROR@{MADARA\_\-LOG\_\-TERMINAL\_\-ERROR}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-TERMINAL\_\-ERROR}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-TERMINAL\_\-ERROR~1}}
+\label{d0/d92/Log__Macros_8h_a5ccf9a945d031f6cb47df3ecbce4a675}
+
+
+Used for MADARA errors at the point the error exits the process in question, or when a decision is made to cause the MADARA suite to fail. 
+
+
+
+Definition at line 36 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a299dc728246d897513487e755870aa67}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-TRACE@{MADARA\_\-LOG\_\-TRACE}}
+\index{MADARA\_\-LOG\_\-TRACE@{MADARA\_\-LOG\_\-TRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-TRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-TRACE~9}}
+\label{d0/d92/Log__Macros_8h_a299dc728246d897513487e755870aa67}
+
+
+The following two statements are used to closely trace the execution of MADARA code. 
+
+If in doubt, a message should go into these categories. The difference between a TRACE and a DETAILED\_\-TRACE will be largely a judgement call. These messages should be emitted using MADARA\_\-LOG\_\-TRACE (X, Y). 
+
+Definition at line 60 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a3df1118a5f5ecb5e6e3f97a6fdfc7570}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-LOG\_\-WARNING@{MADARA\_\-LOG\_\-WARNING}}
+\index{MADARA\_\-LOG\_\-WARNING@{MADARA\_\-LOG\_\-WARNING}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-LOG\_\-WARNING}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-LOG\_\-WARNING~4}}
+\label{d0/d92/Log__Macros_8h_a3df1118a5f5ecb5e6e3f97a6fdfc7570}
+
+
+used to indicate that a questionable situation that doesn't cause deployment failure, but can cause undefined conditions. 
+
+
+
+Definition at line 44 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a39125ed59aeeb00f19cc8b2a012e133f}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-NTRACE@{MADARA\_\-NTRACE}}
+\index{MADARA\_\-NTRACE@{MADARA\_\-NTRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-NTRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-NTRACE~1}}
+\label{d0/d92/Log__Macros_8h_a39125ed59aeeb00f19cc8b2a012e133f}
+
+
+Definition at line 65 of file Log\_\-Macros.h.
+
+\hypertarget{Log__Macros_8h_a90386bf53496cfc83ca329acb21e9ad4}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-TRACE@{MADARA\_\-TRACE}}
+\index{MADARA\_\-TRACE@{MADARA\_\-TRACE}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-TRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-TRACE(
+\begin{DoxyParamCaption}
+\item[{}]{X}
+\end{DoxyParamCaption}
+)~do \{\} while (0)}}
+\label{d0/d92/Log__Macros_8h_a90386bf53496cfc83ca329acb21e9ad4}
+
+
+Definition at line 70 of file Log\_\-Macros.h.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{Log__Macros_8h_af3a0d2eed658993b9ed72884e7020c91}{
+\index{Log\_\-Macros.h@{Log\_\-Macros.h}!MADARA\_\-debug\_\-level@{MADARA\_\-debug\_\-level}}
+\index{MADARA\_\-debug\_\-level@{MADARA\_\-debug\_\-level}!Log_Macros.h@{Log\_\-Macros.h}}
+\subsubsection[{MADARA\_\-debug\_\-level}]{\setlength{\rightskip}{0pt plus 5cm}MADARA\_\-Logger\_\-Export unsigned int {\bf MADARA\_\-debug\_\-level}}}
+\label{d0/d92/Log__Macros_8h_af3a0d2eed658993b9ed72884e7020c91}
+
+
+Definition at line 5 of file Log\_\-Macros.cpp.
+

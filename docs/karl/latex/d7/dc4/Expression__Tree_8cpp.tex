@@ -1,0 +1,78 @@
+\hypertarget{Expression__Tree_8cpp}{
+\section{madara/expression\_\-tree/Expression\_\-Tree.cpp File Reference}
+\label{d7/dc4/Expression__Tree_8cpp}\index{madara/expression\_\-tree/Expression\_\-Tree.cpp@{madara/expression\_\-tree/Expression\_\-Tree.cpp}}
+}
+{\ttfamily \#include $<$stdlib.h$>$}\par
+{\ttfamily \#include $<$algorithm$>$}\par
+{\ttfamily \#include $<$sstream$>$}\par
+{\ttfamily \#include $<$string$>$}\par
+{\ttfamily \#include $<$map$>$}\par
+{\ttfamily \#include $<$stdexcept$>$}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Component\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Iterator.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Iterator\_\-Impl.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Expression\_\-Tree.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Leaf\_\-Node.h\char`\"{}}\par
+Include dependency graph for Expression\_\-Tree.cpp:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d8/daa/Expression__Tree_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}
+\begin{DoxyCompactList}\small\item\em Implementation of a factory pattern that dynamically allocates the appropriate {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl}\/} object. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \hyperlink{namespaceMadara}{Madara}
+\item 
+namespace \hyperlink{namespaceMadara_1_1Expression__Tree}{Madara::Expression\_\-Tree}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Expression__Tree_8cpp_ab519fbc66f668537de2e7b62c17d2bec}{\_\-EXPRESSION\_\-TREE\_\-CPP\_\-}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{namespaceMadara_1_1Expression__Tree_a474cd8b95baffb199b8da76105c1e5eea6cadfa9df2886092877466adefafd93b}{Madara::Expression\_\-Tree::EQUALITY\_\-CHAR} =  0-\/1, 
+\hyperlink{namespaceMadara_1_1Expression__Tree_a474cd8b95baffb199b8da76105c1e5eea1de8fc6d07f7ce0a5e13cddd3487d71c}{Madara::Expression\_\-Tree::INEQUALITY\_\-CHAR} =  0-\/2, 
+\hyperlink{namespaceMadara_1_1Expression__Tree_a474cd8b95baffb199b8da76105c1e5eeae1a96a6b565222b8d9ae04c7c0ef41a3}{Madara::Expression\_\-Tree::GREATER\_\-THAN\_\-EQUAL} =  0-\/3, 
+\hyperlink{namespaceMadara_1_1Expression__Tree_a474cd8b95baffb199b8da76105c1e5eea8659e7714745ec569dfab19170dcffaa}{Madara::Expression\_\-Tree::LESSER\_\-THAN\_\-EQUAL} =  0-\/4
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory} \hyperlink{Expression__Tree_8cpp_a2485931e795c9970b3c2a73c04a6ed1b}{tree\_\-iterator\_\-factory}
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{Expression__Tree_8cpp_ab519fbc66f668537de2e7b62c17d2bec}{
+\index{Expression\_\-Tree.cpp@{Expression\_\-Tree.cpp}!\_\-EXPRESSION\_\-TREE\_\-CPP\_\-@{\_\-EXPRESSION\_\-TREE\_\-CPP\_\-}}
+\index{\_\-EXPRESSION\_\-TREE\_\-CPP\_\-@{\_\-EXPRESSION\_\-TREE\_\-CPP\_\-}!Expression_Tree.cpp@{Expression\_\-Tree.cpp}}
+\subsubsection[{\_\-EXPRESSION\_\-TREE\_\-CPP\_\-}]{\setlength{\rightskip}{0pt plus 5cm}\#define \_\-EXPRESSION\_\-TREE\_\-CPP\_\-}}
+\label{d7/dc4/Expression__Tree_8cpp_ab519fbc66f668537de2e7b62c17d2bec}
+
+
+Definition at line 3 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{Expression__Tree_8cpp_a2485931e795c9970b3c2a73c04a6ed1b}{
+\index{Expression\_\-Tree.cpp@{Expression\_\-Tree.cpp}!tree\_\-iterator\_\-factory@{tree\_\-iterator\_\-factory}}
+\index{tree\_\-iterator\_\-factory@{tree\_\-iterator\_\-factory}!Expression_Tree.cpp@{Expression\_\-Tree.cpp}}
+\subsubsection[{tree\_\-iterator\_\-factory}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory} {\bf tree\_\-iterator\_\-factory}\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{d7/dc4/Expression__Tree_8cpp_a2485931e795c9970b3c2a73c04a6ed1b}
+
+
+Definition at line 147 of file Expression\_\-Tree.cpp.
+

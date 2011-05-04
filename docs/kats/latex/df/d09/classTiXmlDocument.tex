@@ -1,0 +1,2545 @@
+\hypertarget{classTiXmlDocument}{
+\section{TiXmlDocument Class Reference}
+\label{df/d09/classTiXmlDocument}\index{TiXmlDocument@{TiXmlDocument}}
+}
+
+
+Always the top level node.  
+
+
+
+
+{\ttfamily \#include $<$tinyxml.h$>$}
+
+
+
+Inheritance diagram for TiXmlDocument:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=166pt]{d0/d17/classTiXmlDocument__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for TiXmlDocument:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=271pt]{d6/d1e/classTiXmlDocument__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2}{NodeType} \{ \par
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a76c4c520453398cd033e8b97ec9a0b04}{TINYXML\_\-DOCUMENT}, 
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a9ad167b17c3148d7a018fde9a41ce976}{TINYXML\_\-ELEMENT}, 
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a742eb78855db1e81614848072de03721}{TINYXML\_\-COMMENT}, 
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a7376f9420c8ab507842c8a0813bb077e}{TINYXML\_\-UNKNOWN}, 
+\par
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2aa6177e9506461cdca7062559387a2714}{TINYXML\_\-TEXT}, 
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a1e2351ad8cd0c805538d94222f3d8cd0}{TINYXML\_\-DECLARATION}, 
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a878567737ed539bd3de6a941027e9309}{TINYXML\_\-TYPECOUNT}
+ \}
+\begin{DoxyCompactList}\small\item\em The types of XML nodes supported by TinyXml. \item\end{DoxyCompactList}\item 
+enum \{ \par
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a750a76ca602241c416d5ec357d55fba1}{TIXML\_\-NO\_\-ERROR} =  0, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48abcabc1b8efabeda1cc4352aa73d64390}{TIXML\_\-ERROR}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ab803949b8f12e03b5b57f86d9c52b614}{TIXML\_\-ERROR\_\-OPENING\_\-FILE}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a5cbfcf7fe5e67f0cd1aef98deac55dd2}{TIXML\_\-ERROR\_\-PARSING\_\-ELEMENT}, 
+\par
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48adcc31ca78a9d507a88c9fafb3d18a3c4}{TIXML\_\-ERROR\_\-FAILED\_\-TO\_\-READ\_\-ELEMENT\_\-NAME}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48afefdc75db23215e846605a2b5af0c2d3}{TIXML\_\-ERROR\_\-READING\_\-ELEMENT\_\-VALUE}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a670fac23171b64829f90639cc3696d6e}{TIXML\_\-ERROR\_\-READING\_\-ATTRIBUTES}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a5f2aee664733a20f13f6f77556b9fa85}{TIXML\_\-ERROR\_\-PARSING\_\-EMPTY}, 
+\par
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a175f7c72e2f9630bb96ef5137b325502}{TIXML\_\-ERROR\_\-READING\_\-END\_\-TAG}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a24c814fdcf1d84704869e6f76b19cb6e}{TIXML\_\-ERROR\_\-PARSING\_\-UNKNOWN}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a72e3072a44be499edb89593f6ce10f6c}{TIXML\_\-ERROR\_\-PARSING\_\-COMMENT}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a4c200f9d125027ab449e2be7be471ba0}{TIXML\_\-ERROR\_\-PARSING\_\-DECLARATION}, 
+\par
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ab345f3e42e6ae9cdedee2b95e4d461b9}{TIXML\_\-ERROR\_\-DOCUMENT\_\-EMPTY}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ade7edbad3a94a6c161cac2638f380e17}{TIXML\_\-ERROR\_\-EMBEDDED\_\-NULL}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48aab2c858631b5d38eae1e6675949b9cd4}{TIXML\_\-ERROR\_\-PARSING\_\-CDATA}, 
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a679b15d950f29257700a724bb118c34d}{TIXML\_\-ERROR\_\-DOCUMENT\_\-TOP\_\-ONLY}, 
+\par
+\hyperlink{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a14552894942250efcec6b00dc52fc48a}{TIXML\_\-ERROR\_\-STRING\_\-COUNT}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classTiXmlDocument_a9f5e84335708fde98400230f9f12659c}{TiXmlDocument} ()
+\begin{DoxyCompactList}\small\item\em Create an empty document, that has no name. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlDocument_ae4508b452d0c3061db085f3db27b8396}{TiXmlDocument} (const char $\ast$documentName)
+\begin{DoxyCompactList}\small\item\em Create a document with a name. The name of the document is also the filename of the xml. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlDocument_a323a7486e7da6099cdc19a5ff7e74b07}{TiXmlDocument} (const \hyperlink{classTiXmlDocument}{TiXmlDocument} \&copy)
+\item 
+void \hyperlink{classTiXmlDocument_aafbfacc3414008f619b1345775ef12a4}{operator=} (const \hyperlink{classTiXmlDocument}{TiXmlDocument} \&copy)
+\item 
+virtual \hyperlink{classTiXmlDocument_a1b8a035c2c2aab38e4387246a0b712c5}{$\sim$TiXmlDocument} ()
+\item 
+bool \hyperlink{classTiXmlDocument_a4c852a889c02cf251117fd1d9fe1845f}{LoadFile} (\hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding=\hyperlink{tinyxml_8h_ad5b8b092878e9010d6400cb6c13d4879}{TIXML\_\-DEFAULT\_\-ENCODING})
+\begin{DoxyCompactList}\small\item\em Load a file using the current document value. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classTiXmlDocument_a21c0aeb0d0a720169ad4ac89523ebe93}{SaveFile} () const 
+\begin{DoxyCompactList}\small\item\em Save a file using the current document value. Returns true if successful. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classTiXmlDocument_a879cdf5e981b8b2d2ef82f2546dd28fb}{LoadFile} (const char $\ast$filename, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding=\hyperlink{tinyxml_8h_ad5b8b092878e9010d6400cb6c13d4879}{TIXML\_\-DEFAULT\_\-ENCODING})
+\begin{DoxyCompactList}\small\item\em Load a file using the given filename. Returns true if successful. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classTiXmlDocument_ae869f5ebf7fc54c4a1d737fb4689fd44}{SaveFile} (const char $\ast$filename) const 
+\begin{DoxyCompactList}\small\item\em Save a file using the given filename. Returns true if successful. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classTiXmlDocument_a41f6fe7200864d1dca663d230caf8db6}{LoadFile} (FILE $\ast$, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding=\hyperlink{tinyxml_8h_ad5b8b092878e9010d6400cb6c13d4879}{TIXML\_\-DEFAULT\_\-ENCODING})
+\begin{DoxyCompactList}\small\item\em Load a file using the given FILE$\ast$. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classTiXmlDocument_acf1672b4538c6d1d441f9f108aea2bf4}{SaveFile} (FILE $\ast$) const 
+\begin{DoxyCompactList}\small\item\em Save a file using the given FILE$\ast$. Returns true if successful. \item\end{DoxyCompactList}\item 
+virtual const char $\ast$ \hyperlink{classTiXmlDocument_a789ad2f06f93d52bdb5570b2f3670289}{Parse} (const char $\ast$p, \hyperlink{classTiXmlParsingData}{TiXmlParsingData} $\ast$data=0, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding=\hyperlink{tinyxml_8h_ad5b8b092878e9010d6400cb6c13d4879}{TIXML\_\-DEFAULT\_\-ENCODING})
+\begin{DoxyCompactList}\small\item\em Parse the given null terminated block of xml data. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlDocument_ad09d17927f908f40efb406af2fb873be}{RootElement} () const 
+\begin{DoxyCompactList}\small\item\em Get the root element -\/-\/ the only top level element -\/-\/ of the document. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlDocument_a0b43e762a23f938b06651bc90b8a1013}{RootElement} ()
+\item 
+bool \hyperlink{classTiXmlDocument_a6dfc01a6e5d58e56acd537dfd3bdeb29}{Error} () const 
+\begin{DoxyCompactList}\small\item\em If an error occurs, Error will be set to true. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{classTiXmlDocument_a9d0f689f6e09ea494ea547be8d79c25e}{ErrorDesc} () const 
+\begin{DoxyCompactList}\small\item\em Contains a textual (english) description of the error if one occurs. \item\end{DoxyCompactList}\item 
+int \hyperlink{classTiXmlDocument_af96fc2f3f9ec6422782bfe916c9e778f}{ErrorId} () const 
+\begin{DoxyCompactList}\small\item\em Generally, you probably want the error string ( \hyperlink{classTiXmlDocument_a9d0f689f6e09ea494ea547be8d79c25e}{ErrorDesc()} ). \item\end{DoxyCompactList}\item 
+int \hyperlink{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{ErrorRow} () const 
+\begin{DoxyCompactList}\small\item\em Returns the location (if known) of the error. \item\end{DoxyCompactList}\item 
+int \hyperlink{classTiXmlDocument_aa90bc630ee5203c6109ca5fad3323649}{ErrorCol} () const 
+\begin{DoxyCompactList}\small\item\em The column where the error occured. See \hyperlink{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{ErrorRow()} \item\end{DoxyCompactList}\item 
+void \hyperlink{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{SetTabSize} (int \_\-tabsize)
+\begin{DoxyCompactList}\small\item\em \hyperlink{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{SetTabSize()} allows the error reporting functions (\hyperlink{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{ErrorRow()} and \hyperlink{classTiXmlDocument_aa90bc630ee5203c6109ca5fad3323649}{ErrorCol()}) to report the correct values for row and column. \item\end{DoxyCompactList}\item 
+int \hyperlink{classTiXmlDocument_a612360241b85bad0826b2a9ae9cda561}{TabSize} () const 
+\item 
+void \hyperlink{classTiXmlDocument_ac66b8c28db86363315712a3574e87c35}{ClearError} ()
+\begin{DoxyCompactList}\small\item\em If you have handled the error, it can be reset with this call. \item\end{DoxyCompactList}\item 
+void \hyperlink{classTiXmlDocument_af08389ec70ee9b2de7f800e206a18510}{Print} () const 
+\begin{DoxyCompactList}\small\item\em Write the document to standard out using formatted printing (\char`\"{}pretty print\char`\"{}). \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classTiXmlDocument_a7b1aea204fee266b70b9c105c8bf2ada}{Print} (FILE $\ast$cfile, int depth=0) const 
+\begin{DoxyCompactList}\small\item\em Print this Document to a FILE stream. \item\end{DoxyCompactList}\item 
+void \hyperlink{classTiXmlDocument_a735c23e318597b920c94eae77fa206de}{SetError} (int err, const char $\ast$\hyperlink{classTiXmlDocument_aa4030f989f1549f6b897147fc2851d1a}{errorLocation}, \hyperlink{classTiXmlParsingData}{TiXmlParsingData} $\ast$prevData, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+virtual const \hyperlink{classTiXmlDocument}{TiXmlDocument} $\ast$ \hyperlink{classTiXmlDocument_a1dc977bde3e4fe85a8eb9d88a35ef5a4}{ToDocument} () const 
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classTiXmlDocument}{TiXmlDocument} $\ast$ \hyperlink{classTiXmlDocument_a1025d942a1f328fd742d545e37efdd42}{ToDocument} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null not of the requested type. \item\end{DoxyCompactList}\item 
+virtual bool \hyperlink{classTiXmlDocument_a3daab2f472418ef66315750202f762ae}{Accept} (\hyperlink{classTiXmlVisitor}{TiXmlVisitor} $\ast$content) const 
+\begin{DoxyCompactList}\small\item\em Walk the XML tree visiting this node and all of its children. \item\end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{classTiXmlNode_a77943eb90d12c2892b1337a9f5918b41}{Value} () const 
+\begin{DoxyCompactList}\small\item\em The meaning of 'value' changes for the specific type of \hyperlink{classTiXmlNode}{TiXmlNode}. \item\end{DoxyCompactList}\item 
+const TIXML\_\-STRING \& \hyperlink{classTiXmlNode_a83ece13d2ea66dac66e0b21332229239}{ValueTStr} () const 
+\item 
+void \hyperlink{classTiXmlNode_a2a38329ca5d3f28f98ce932b8299ae90}{SetValue} (const char $\ast$\_\-value)
+\begin{DoxyCompactList}\small\item\em Changes the value of the node. \item\end{DoxyCompactList}\item 
+void \hyperlink{classTiXmlNode_a708e7f953df61d4d2d12f73171550a4b}{Clear} ()
+\begin{DoxyCompactList}\small\item\em Delete all the children of this node. Does not affect 'this'. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_ab643043132ffd794f8602685d34a982e}{Parent} ()
+\begin{DoxyCompactList}\small\item\em One step up the DOM. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a78878709e53066f06eb4fcbcdd3a5260}{Parent} () const 
+\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a44c8eee26bbe2d1b2762038df9dde2f0}{FirstChild} () const 
+\begin{DoxyCompactList}\small\item\em The first child of this node. Will be null if there are no children. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a5e97d69b7c0ebd27fb7286be56559b77}{FirstChild} ()
+\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_ab5f722624113c8203227de4f56576d31}{FirstChild} (const char $\ast$\hyperlink{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}{value}) const 
+\begin{DoxyCompactList}\small\item\em The first child of this node with the matching 'value'. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_abc8bf32be6419ec453a731868de19554}{FirstChild} (const char $\ast$\_\-value)
+\begin{DoxyCompactList}\small\item\em The first child of this node with the matching 'value'. Will be null if none found. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a6d671107e00cca1d28cb2d7f3a87a21e}{LastChild} () const 
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a6432d2b2495f6caf9cb4278df706a031}{LastChild} ()
+\begin{DoxyCompactList}\small\item\em The last child of this node. Will be null if there are no children. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_acdd3fdc436aa7433023310a041e5e63f}{LastChild} (const char $\ast$\hyperlink{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}{value}) const 
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_abad5bf1059c48127b958711ef89e8e5d}{LastChild} (const char $\ast$\_\-value)
+\begin{DoxyCompactList}\small\item\em The last child of this node matching 'value'. Will be null if there are no children. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_aaef7ac3978c4bb1cc8a24ffae7bced75}{IterateChildren} (const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$previous) const 
+\begin{DoxyCompactList}\small\item\em An alternate way to walk the children of a node. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a2358e747118fdbf0e467b1e4f7d03de1}{IterateChildren} (const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$previous)
+\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_af2b86dbe25d3d26fa48180edc5e2a9fc}{IterateChildren} (const char $\ast$\hyperlink{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}{value}, const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$previous) const 
+\begin{DoxyCompactList}\small\item\em This flavor of IterateChildren searches for children with a particular 'value'. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a67ba8275e533e6f76340236c42ea0aea}{IterateChildren} (const char $\ast$\_\-value, const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$previous)
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_af287a913ce46d8dbf7ef24fec69bbaf0}{InsertEndChild} (const \hyperlink{classTiXmlNode}{TiXmlNode} \&addThis)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a1a881212554b759865f6cac79a851d38}{LinkEndChild} (\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$addThis)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a71e54e393336382bc9875f64aab5cb15}{InsertBeforeChild} (\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$beforeThis, const \hyperlink{classTiXmlNode}{TiXmlNode} \&addThis)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a274db3292218202805c093f66a964cb5}{InsertAfterChild} (\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$afterThis, const \hyperlink{classTiXmlNode}{TiXmlNode} \&addThis)
+\begin{DoxyCompactList}\small\item\em Add a new node related to this. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a543208c2c801c84a213529541e904b9f}{ReplaceChild} (\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$replaceThis, const \hyperlink{classTiXmlNode}{TiXmlNode} \&withThis)
+\begin{DoxyCompactList}\small\item\em Replace a child of this node. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classTiXmlNode_ae19d8510efc90596552f4feeac9a8fbf}{RemoveChild} (\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$removeThis)
+\begin{DoxyCompactList}\small\item\em Delete a child of this node. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_ac2cd892768726270e511b2ab32de4d10}{PreviousSibling} () const 
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_af8c0642ad6ecc03f62953e68896ed1cc}{PreviousSibling} ()
+\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_abbb3b8c1f38fa7b9e52d584a4aeca795}{PreviousSibling} (const char $\ast$) const 
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a6c977049207177ef21b51972315c2053}{PreviousSibling} (const char $\ast$\_\-prev)
+\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_af854baeba384f5fe9859f5aee03b548e}{NextSibling} () const 
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a4d05f7b1d7b470ac6887edd072d4892a}{NextSibling} ()
+\item 
+const \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_acaf9dc17531ac041f602f9ad579573ea}{NextSibling} (const char $\ast$) const 
+\begin{DoxyCompactList}\small\item\em Navigate to a sibling node with the given 'value'. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a4080bc5cc8a5c139e7cf308669e850fc}{NextSibling} (const char $\ast$\_\-next)
+\item 
+const \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a7667217e269e0da01d1f82aee94d1a3d}{NextSiblingElement} () const 
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a1b211cb5034655a04358e0e2f6fc5010}{NextSiblingElement} ()
+\item 
+const \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a3d7897999f99cf4870dd59df6331d7ff}{NextSiblingElement} (const char $\ast$) const 
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a6e1ac6b800e18049bc75e9f8e63a8e5f}{NextSiblingElement} (const char $\ast$\_\-next)
+\item 
+const \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_ab1f8d8e70d88aea4c5efedfe00862d55}{FirstChildElement} () const 
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_aa0fecff1f3866ab33a8a25506e95db1d}{FirstChildElement} ()
+\item 
+const \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a0ec361bfef1cf1978d060295f597e0d9}{FirstChildElement} (const char $\ast$\_\-value) const 
+\begin{DoxyCompactList}\small\item\em Convenience function to get through elements. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a6936ae323675071808ac4840379e57f5}{FirstChildElement} (const char $\ast$\_\-value)
+\item 
+int \hyperlink{classTiXmlNode_a57b99d5c97d67a42b9752f5210a1ba5e}{Type} () const 
+\begin{DoxyCompactList}\small\item\em Query the type (as an enumerated value, above) of this node. \item\end{DoxyCompactList}\item 
+const \hyperlink{classTiXmlDocument}{TiXmlDocument} $\ast$ \hyperlink{classTiXmlNode_aa66f4ebcd175204a168ed7c2d7b43071}{GetDocument} () const 
+\begin{DoxyCompactList}\small\item\em Return a pointer to the Document this node lives in. \item\end{DoxyCompactList}\item 
+\hyperlink{classTiXmlDocument}{TiXmlDocument} $\ast$ \hyperlink{classTiXmlNode_a7b2372c0e7adfb32f5b6902fe49a39b2}{GetDocument} ()
+\item 
+bool \hyperlink{classTiXmlNode_aeed21ad30630ef6e7faf096127edc9f3}{NoChildren} () const 
+\begin{DoxyCompactList}\small\item\em Returns true if this node has no children. \item\end{DoxyCompactList}\item 
+virtual const \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_a72abed96dc9667ab9e0a2a275301bb1c}{ToElement} () const 
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classTiXmlElement}{TiXmlElement} $\ast$ \hyperlink{classTiXmlNode_aa65d000223187d22a4dcebd7479e9ebc}{ToElement} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual const \hyperlink{classTiXmlComment}{TiXmlComment} $\ast$ \hyperlink{classTiXmlNode_aa0a5086f9eaee910bbfdc7f975e26574}{ToComment} () const 
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classTiXmlComment}{TiXmlComment} $\ast$ \hyperlink{classTiXmlNode_a383e06a0787f7063953934867990f849}{ToComment} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual const \hyperlink{classTiXmlUnknown}{TiXmlUnknown} $\ast$ \hyperlink{classTiXmlNode_afd7205cf31d7a376929f8a36930627a2}{ToUnknown} () const 
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classTiXmlUnknown}{TiXmlUnknown} $\ast$ \hyperlink{classTiXmlNode_a06de5af852668c7e4af0d09c205f0b0d}{ToUnknown} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual const \hyperlink{classTiXmlText}{TiXmlText} $\ast$ \hyperlink{classTiXmlNode_a95a46a52c525992d6b4ee08beb14cd69}{ToText} () const 
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classTiXmlText}{TiXmlText} $\ast$ \hyperlink{classTiXmlNode_a3ddfbcac78fbea041fad57e5c6d60a03}{ToText} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual const \hyperlink{classTiXmlDeclaration}{TiXmlDeclaration} $\ast$ \hyperlink{classTiXmlNode_a9f43e6984fc7d4afd6eb32714c6b7b72}{ToDeclaration} () const 
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classTiXmlDeclaration}{TiXmlDeclaration} $\ast$ \hyperlink{classTiXmlNode_a4027136ca820ff4a636b607231b6a6df}{ToDeclaration} ()
+\begin{DoxyCompactList}\small\item\em Cast to a more defined type. Will return null if not of the requested type. \item\end{DoxyCompactList}\item 
+int \hyperlink{classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}{Row} () const 
+\begin{DoxyCompactList}\small\item\em Return the position, in the original source file, of this node or attribute. \item\end{DoxyCompactList}\item 
+int \hyperlink{classTiXmlBase_ab54bfb9b70fe6dd276e7b279cab7f003}{Column} () const 
+\begin{DoxyCompactList}\small\item\em See \hyperlink{classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}{Row()} \item\end{DoxyCompactList}\item 
+void \hyperlink{classTiXmlBase_ac6b3e0f790930d4970ec30764e937b5d}{SetUserData} (void $\ast$user)
+\begin{DoxyCompactList}\small\item\em Set a pointer to arbitrary user data. \item\end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{classTiXmlBase_a6559a530ca6763fc301a14d77ed28c17}{GetUserData} ()
+\begin{DoxyCompactList}\small\item\em Get a pointer to arbitrary user data. \item\end{DoxyCompactList}\item 
+const void $\ast$ \hyperlink{classTiXmlBase_ad0120210e4680ef2088601753ce0ede4}{GetUserData} () const 
+\begin{DoxyCompactList}\small\item\em Get a pointer to arbitrary user data. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{classTiXmlBase_a0f799ec645bfb8d8a969e83478f379c1}{SetCondenseWhiteSpace} (bool condense)
+\begin{DoxyCompactList}\small\item\em The world does not agree on whether white space should be kept or not. \item\end{DoxyCompactList}\item 
+static bool \hyperlink{classTiXmlBase_ad4b1472531c647a25b1840a87ae42438}{IsWhiteSpaceCondensed} ()
+\begin{DoxyCompactList}\small\item\em Return the current white space setting. \item\end{DoxyCompactList}\item 
+static void \hyperlink{classTiXmlBase_a32ed202562b58de64c7d799ca3c9db98}{EncodeString} (const TIXML\_\-STRING \&str, TIXML\_\-STRING $\ast$out)
+\begin{DoxyCompactList}\small\item\em Expands entities in a string. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const int \hyperlink{classTiXmlBase_ac8c86058137bdb4b413c3eca58f2d467}{utf8ByteTable} \mbox{[}256\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlDocument_ac9e8f09b23454d953b32d1b65cd1409e}{Clone} () const 
+\begin{DoxyCompactList}\small\item\em Create an exact duplicate of this node and return it. \item\end{DoxyCompactList}\item 
+void \hyperlink{classTiXmlNode_ab6056978923ad8350fb5164af32d8038}{CopyTo} (\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$target) const 
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_ac1e3a8e7578be463b04617786120c2bb}{Identify} (const char $\ast$start, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\end{DoxyCompactItemize}
+\subsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \hyperlink{classTiXmlBase_ac0c3d66d8a9e6996a1fa016275e16875}{SkipWhiteSpace} (const char $\ast$, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static bool \hyperlink{classTiXmlBase_af56296d561c0bab4bc8e198cdcf5c48e}{IsWhiteSpace} (char c)
+\item 
+static bool \hyperlink{classTiXmlBase_a3de391ea9f4c4a8aa10d04480b048795}{IsWhiteSpace} (int c)
+\item 
+static const char $\ast$ \hyperlink{classTiXmlBase_a1c21a6ab5f7b503acd91f35f183734b3}{ReadName} (const char $\ast$p, TIXML\_\-STRING $\ast$name, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static const char $\ast$ \hyperlink{classTiXmlBase_aa646c74921aa33156968b802bbf5566e}{ReadText} (const char $\ast$in, TIXML\_\-STRING $\ast$text, bool ignoreWhiteSpace, const char $\ast$endTag, bool ignoreCase, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static const char $\ast$ \hyperlink{classTiXmlBase_ac5c08bf3deffcda0bf8ce2958372b584}{GetEntity} (const char $\ast$in, char $\ast$\hyperlink{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}{value}, int $\ast$length, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static const char $\ast$ \hyperlink{classTiXmlBase_a5b0fde72d6f662ae1fd6303195d2159b}{GetChar} (const char $\ast$p, char $\ast$\_\-value, int $\ast$length, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static bool \hyperlink{classTiXmlBase_a51631e6986179558b9e5850723ed165a}{StringEqual} (const char $\ast$p, const char $\ast$endTag, bool ignoreCase, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static int \hyperlink{classTiXmlBase_ae22522b2e8e1ac43102d16394f639fc8}{IsAlpha} (unsigned char anyByte, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static int \hyperlink{classTiXmlBase_a321919055c115c78ded17f85a793f368}{IsAlphaNum} (unsigned char anyByte, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static int \hyperlink{classTiXmlBase_a799f17405a86a5c2029618e85f11a097}{ToLower} (int v, \hyperlink{tinyxml_8h_a88d51847a13ee0f4b4d320d03d2c4d96}{TiXmlEncoding} encoding)
+\item 
+static void \hyperlink{classTiXmlBase_a07c765e3a7f979d343e646ea797b180b}{ConvertUTF32ToUTF8} (unsigned long input, char $\ast$output, int $\ast$length)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a662c4de61244e4fa5bd4e2d8c63143a5}{parent}
+\item 
+\hyperlink{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2}{NodeType} \hyperlink{classTiXmlNode_a2619c6379181c16ba95ae6922e2ca839}{type}
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_af749fb7f22010b80e8f904c32653d50e}{firstChild}
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a5b30756d21b304580d22a841ec9d61f8}{lastChild}
+\item 
+TIXML\_\-STRING \hyperlink{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}{value}
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a9c5370ea2cbfd9f0e0f7b30a57fd68f5}{prev}
+\item 
+\hyperlink{classTiXmlNode}{TiXmlNode} $\ast$ \hyperlink{classTiXmlNode_a2f329cc993d2d34df76e17dcbb776b45}{next}
+\item 
+\hyperlink{structTiXmlCursor}{TiXmlCursor} \hyperlink{classTiXmlBase_a0d992580f3bc264909f898e942677a3c}{location}
+\item 
+void $\ast$ \hyperlink{classTiXmlBase_ab242c01590191f644569fa89a080d97c}{userData}
+\begin{DoxyCompactList}\small\item\em Field containing a generic user pointer. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \hyperlink{classTiXmlBase_a7ac8feec4100e446b3d78e1ac0659700}{errorString} \mbox{[}TIXML\_\-ERROR\_\-STRING\_\-COUNT\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classTiXmlDocument_af69deeb984e060bd00f668460dec8ef2}{CopyTo} (\hyperlink{classTiXmlDocument}{TiXmlDocument} $\ast$target) const 
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classTiXmlDocument_a1ff6a063602f31acae6f37fc049d8bbd}{error}
+\item 
+int \hyperlink{classTiXmlDocument_acdef97a4bb80729ac6863dd54cee7eeb}{errorId}
+\item 
+TIXML\_\-STRING \hyperlink{classTiXmlDocument_a2da9a95ba3f9c895a8d7f4de7122a642}{errorDesc}
+\item 
+int \hyperlink{classTiXmlDocument_af2fa6a010b903d893d52cc6fee5575a1}{tabsize}
+\item 
+\hyperlink{structTiXmlCursor}{TiXmlCursor} \hyperlink{classTiXmlDocument_aa4030f989f1549f6b897147fc2851d1a}{errorLocation}
+\item 
+bool \hyperlink{classTiXmlDocument_a4d5400dec9bfb55c640428de33297886}{useMicrosoftBOM}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Always the top level node. A document binds together all the XML pieces. It can be saved, loaded, and printed to the screen. The 'value' of a document node is the xml file name. 
+
+Definition at line 1386 of file tinyxml.h.
+
+
+
+\subsection{Member Enumeration Documentation}
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48}{
+\subsubsection[{"@1}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{TIXML\_\-NO\_\-ERROR@{TIXML\_\-NO\_\-ERROR}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-NO\_\-ERROR@{TIXML\_\-NO\_\-ERROR}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a750a76ca602241c416d5ec357d55fba1}{
+TIXML\_\-NO\_\-ERROR}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a750a76ca602241c416d5ec357d55fba1}
+}]\index{TIXML\_\-ERROR@{TIXML\_\-ERROR}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR@{TIXML\_\-ERROR}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48abcabc1b8efabeda1cc4352aa73d64390}{
+TIXML\_\-ERROR}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48abcabc1b8efabeda1cc4352aa73d64390}
+}]\index{TIXML\_\-ERROR\_\-OPENING\_\-FILE@{TIXML\_\-ERROR\_\-OPENING\_\-FILE}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-OPENING\_\-FILE@{TIXML\_\-ERROR\_\-OPENING\_\-FILE}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ab803949b8f12e03b5b57f86d9c52b614}{
+TIXML\_\-ERROR\_\-OPENING\_\-FILE}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ab803949b8f12e03b5b57f86d9c52b614}
+}]\index{TIXML\_\-ERROR\_\-PARSING\_\-ELEMENT@{TIXML\_\-ERROR\_\-PARSING\_\-ELEMENT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-PARSING\_\-ELEMENT@{TIXML\_\-ERROR\_\-PARSING\_\-ELEMENT}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a5cbfcf7fe5e67f0cd1aef98deac55dd2}{
+TIXML\_\-ERROR\_\-PARSING\_\-ELEMENT}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a5cbfcf7fe5e67f0cd1aef98deac55dd2}
+}]\index{TIXML\_\-ERROR\_\-FAILED\_\-TO\_\-READ\_\-ELEMENT\_\-NAME@{TIXML\_\-ERROR\_\-FAILED\_\-TO\_\-READ\_\-ELEMENT\_\-NAME}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-FAILED\_\-TO\_\-READ\_\-ELEMENT\_\-NAME@{TIXML\_\-ERROR\_\-FAILED\_\-TO\_\-READ\_\-ELEMENT\_\-NAME}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48adcc31ca78a9d507a88c9fafb3d18a3c4}{
+TIXML\_\-ERROR\_\-FAILED\_\-TO\_\-READ\_\-ELEMENT\_\-NAME}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48adcc31ca78a9d507a88c9fafb3d18a3c4}
+}]\index{TIXML\_\-ERROR\_\-READING\_\-ELEMENT\_\-VALUE@{TIXML\_\-ERROR\_\-READING\_\-ELEMENT\_\-VALUE}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-READING\_\-ELEMENT\_\-VALUE@{TIXML\_\-ERROR\_\-READING\_\-ELEMENT\_\-VALUE}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48afefdc75db23215e846605a2b5af0c2d3}{
+TIXML\_\-ERROR\_\-READING\_\-ELEMENT\_\-VALUE}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48afefdc75db23215e846605a2b5af0c2d3}
+}]\index{TIXML\_\-ERROR\_\-READING\_\-ATTRIBUTES@{TIXML\_\-ERROR\_\-READING\_\-ATTRIBUTES}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-READING\_\-ATTRIBUTES@{TIXML\_\-ERROR\_\-READING\_\-ATTRIBUTES}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a670fac23171b64829f90639cc3696d6e}{
+TIXML\_\-ERROR\_\-READING\_\-ATTRIBUTES}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a670fac23171b64829f90639cc3696d6e}
+}]\index{TIXML\_\-ERROR\_\-PARSING\_\-EMPTY@{TIXML\_\-ERROR\_\-PARSING\_\-EMPTY}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-PARSING\_\-EMPTY@{TIXML\_\-ERROR\_\-PARSING\_\-EMPTY}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a5f2aee664733a20f13f6f77556b9fa85}{
+TIXML\_\-ERROR\_\-PARSING\_\-EMPTY}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a5f2aee664733a20f13f6f77556b9fa85}
+}]\index{TIXML\_\-ERROR\_\-READING\_\-END\_\-TAG@{TIXML\_\-ERROR\_\-READING\_\-END\_\-TAG}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-READING\_\-END\_\-TAG@{TIXML\_\-ERROR\_\-READING\_\-END\_\-TAG}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a175f7c72e2f9630bb96ef5137b325502}{
+TIXML\_\-ERROR\_\-READING\_\-END\_\-TAG}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a175f7c72e2f9630bb96ef5137b325502}
+}]\index{TIXML\_\-ERROR\_\-PARSING\_\-UNKNOWN@{TIXML\_\-ERROR\_\-PARSING\_\-UNKNOWN}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-PARSING\_\-UNKNOWN@{TIXML\_\-ERROR\_\-PARSING\_\-UNKNOWN}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a24c814fdcf1d84704869e6f76b19cb6e}{
+TIXML\_\-ERROR\_\-PARSING\_\-UNKNOWN}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a24c814fdcf1d84704869e6f76b19cb6e}
+}]\index{TIXML\_\-ERROR\_\-PARSING\_\-COMMENT@{TIXML\_\-ERROR\_\-PARSING\_\-COMMENT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-PARSING\_\-COMMENT@{TIXML\_\-ERROR\_\-PARSING\_\-COMMENT}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a72e3072a44be499edb89593f6ce10f6c}{
+TIXML\_\-ERROR\_\-PARSING\_\-COMMENT}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a72e3072a44be499edb89593f6ce10f6c}
+}]\index{TIXML\_\-ERROR\_\-PARSING\_\-DECLARATION@{TIXML\_\-ERROR\_\-PARSING\_\-DECLARATION}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-PARSING\_\-DECLARATION@{TIXML\_\-ERROR\_\-PARSING\_\-DECLARATION}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a4c200f9d125027ab449e2be7be471ba0}{
+TIXML\_\-ERROR\_\-PARSING\_\-DECLARATION}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a4c200f9d125027ab449e2be7be471ba0}
+}]\index{TIXML\_\-ERROR\_\-DOCUMENT\_\-EMPTY@{TIXML\_\-ERROR\_\-DOCUMENT\_\-EMPTY}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-DOCUMENT\_\-EMPTY@{TIXML\_\-ERROR\_\-DOCUMENT\_\-EMPTY}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ab345f3e42e6ae9cdedee2b95e4d461b9}{
+TIXML\_\-ERROR\_\-DOCUMENT\_\-EMPTY}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ab345f3e42e6ae9cdedee2b95e4d461b9}
+}]\index{TIXML\_\-ERROR\_\-EMBEDDED\_\-NULL@{TIXML\_\-ERROR\_\-EMBEDDED\_\-NULL}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-EMBEDDED\_\-NULL@{TIXML\_\-ERROR\_\-EMBEDDED\_\-NULL}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ade7edbad3a94a6c161cac2638f380e17}{
+TIXML\_\-ERROR\_\-EMBEDDED\_\-NULL}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48ade7edbad3a94a6c161cac2638f380e17}
+}]\index{TIXML\_\-ERROR\_\-PARSING\_\-CDATA@{TIXML\_\-ERROR\_\-PARSING\_\-CDATA}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-PARSING\_\-CDATA@{TIXML\_\-ERROR\_\-PARSING\_\-CDATA}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48aab2c858631b5d38eae1e6675949b9cd4}{
+TIXML\_\-ERROR\_\-PARSING\_\-CDATA}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48aab2c858631b5d38eae1e6675949b9cd4}
+}]\index{TIXML\_\-ERROR\_\-DOCUMENT\_\-TOP\_\-ONLY@{TIXML\_\-ERROR\_\-DOCUMENT\_\-TOP\_\-ONLY}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-DOCUMENT\_\-TOP\_\-ONLY@{TIXML\_\-ERROR\_\-DOCUMENT\_\-TOP\_\-ONLY}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a679b15d950f29257700a724bb118c34d}{
+TIXML\_\-ERROR\_\-DOCUMENT\_\-TOP\_\-ONLY}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a679b15d950f29257700a724bb118c34d}
+}]\index{TIXML\_\-ERROR\_\-STRING\_\-COUNT@{TIXML\_\-ERROR\_\-STRING\_\-COUNT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TIXML\_\-ERROR\_\-STRING\_\-COUNT@{TIXML\_\-ERROR\_\-STRING\_\-COUNT}}\item[{\em 
+\hypertarget{classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a14552894942250efcec6b00dc52fc48a}{
+TIXML\_\-ERROR\_\-STRING\_\-COUNT}
+\label{d8/d47/classTiXmlBase_a9a7e9344415956ab96e8c75f6a0bbd48a14552894942250efcec6b00dc52fc48a}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 264 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2}{
+\index{TiXmlDocument@{TiXmlDocument}!NodeType@{NodeType}}
+\index{NodeType@{NodeType}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NodeType}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf TiXmlNode::NodeType}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2}
+
+
+The types of XML nodes supported by TinyXml. 
+
+(All the unsupported types are picked up by UNKNOWN.) \begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{TINYXML\_\-DOCUMENT@{TINYXML\_\-DOCUMENT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-DOCUMENT@{TINYXML\_\-DOCUMENT}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a76c4c520453398cd033e8b97ec9a0b04}{
+TINYXML\_\-DOCUMENT}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a76c4c520453398cd033e8b97ec9a0b04}
+}]\index{TINYXML\_\-ELEMENT@{TINYXML\_\-ELEMENT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-ELEMENT@{TINYXML\_\-ELEMENT}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a9ad167b17c3148d7a018fde9a41ce976}{
+TINYXML\_\-ELEMENT}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a9ad167b17c3148d7a018fde9a41ce976}
+}]\index{TINYXML\_\-COMMENT@{TINYXML\_\-COMMENT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-COMMENT@{TINYXML\_\-COMMENT}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a742eb78855db1e81614848072de03721}{
+TINYXML\_\-COMMENT}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a742eb78855db1e81614848072de03721}
+}]\index{TINYXML\_\-UNKNOWN@{TINYXML\_\-UNKNOWN}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-UNKNOWN@{TINYXML\_\-UNKNOWN}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a7376f9420c8ab507842c8a0813bb077e}{
+TINYXML\_\-UNKNOWN}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a7376f9420c8ab507842c8a0813bb077e}
+}]\index{TINYXML\_\-TEXT@{TINYXML\_\-TEXT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-TEXT@{TINYXML\_\-TEXT}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2aa6177e9506461cdca7062559387a2714}{
+TINYXML\_\-TEXT}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2aa6177e9506461cdca7062559387a2714}
+}]\index{TINYXML\_\-DECLARATION@{TINYXML\_\-DECLARATION}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-DECLARATION@{TINYXML\_\-DECLARATION}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a1e2351ad8cd0c805538d94222f3d8cd0}{
+TINYXML\_\-DECLARATION}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a1e2351ad8cd0c805538d94222f3d8cd0}
+}]\index{TINYXML\_\-TYPECOUNT@{TINYXML\_\-TYPECOUNT}!TiXmlDocument@{TiXmlDocument}}\index{TiXmlDocument@{TiXmlDocument}!TINYXML\_\-TYPECOUNT@{TINYXML\_\-TYPECOUNT}}\item[{\em 
+\hypertarget{classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a878567737ed539bd3de6a941027e9309}{
+TINYXML\_\-TYPECOUNT}
+\label{d3/dd5/classTiXmlNode_a836eded4920ab9e9ef28496f48cd95a2a878567737ed539bd3de6a941027e9309}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 462 of file tinyxml.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classTiXmlDocument_a9f5e84335708fde98400230f9f12659c}{
+\index{TiXmlDocument@{TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\index{TiXmlDocument@{TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{TiXmlDocument}]{\setlength{\rightskip}{0pt plus 5cm}TiXmlDocument::TiXmlDocument (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_a9f5e84335708fde98400230f9f12659c}
+
+
+Create an empty document, that has no name. 
+
+
+
+Definition at line 869 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_ae4508b452d0c3061db085f3db27b8396}{
+\index{TiXmlDocument@{TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\index{TiXmlDocument@{TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{TiXmlDocument}]{\setlength{\rightskip}{0pt plus 5cm}TiXmlDocument::TiXmlDocument (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{documentName}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_ae4508b452d0c3061db085f3db27b8396}
+
+
+Create a document with a name. The name of the document is also the filename of the xml. 
+
+
+
+Definition at line 876 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a323a7486e7da6099cdc19a5ff7e74b07}{
+\index{TiXmlDocument@{TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\index{TiXmlDocument@{TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{TiXmlDocument}]{\setlength{\rightskip}{0pt plus 5cm}TiXmlDocument::TiXmlDocument (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlDocument} \&}]{copy}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_a323a7486e7da6099cdc19a5ff7e74b07}
+
+
+Definition at line 896 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a1b8a035c2c2aab38e4387246a0b712c5}{
+\index{TiXmlDocument@{TiXmlDocument}!$\sim$TiXmlDocument@{$\sim$TiXmlDocument}}
+\index{$\sim$TiXmlDocument@{$\sim$TiXmlDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{$\sim$TiXmlDocument}]{\setlength{\rightskip}{0pt plus 5cm}virtual TiXmlDocument::$\sim$TiXmlDocument (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a1b8a035c2c2aab38e4387246a0b712c5}
+
+
+Definition at line 1402 of file tinyxml.h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classTiXmlDocument_a3daab2f472418ef66315750202f762ae}{
+\index{TiXmlDocument@{TiXmlDocument}!Accept@{Accept}}
+\index{Accept@{Accept}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Accept}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::Accept (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlVisitor} $\ast$}]{content}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a3daab2f472418ef66315750202f762ae}
+
+
+Walk the XML tree visiting this node and all of its children. 
+
+
+
+Implements \hyperlink{classTiXmlNode_acc0f88b7462c6cb73809d410a4f5bb86}{TiXmlNode}.
+
+
+
+Definition at line 1111 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a708e7f953df61d4d2d12f73171550a4b}{
+\index{TiXmlDocument@{TiXmlDocument}!Clear@{Clear}}
+\index{Clear@{Clear}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Clear}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlNode::Clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a708e7f953df61d4d2d12f73171550a4b}
+
+
+Delete all the children of this node. Does not affect 'this'. 
+
+
+
+Definition at line 169 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_ac66b8c28db86363315712a3574e87c35}{
+\index{TiXmlDocument@{TiXmlDocument}!ClearError@{ClearError}}
+\index{ClearError@{ClearError}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ClearError}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::ClearError (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_ac66b8c28db86363315712a3574e87c35}
+
+
+If you have handled the error, it can be reset with this call. 
+
+The error state is automatically cleared if you Parse a new XML block. 
+
+Definition at line 1504 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_ac9e8f09b23454d953b32d1b65cd1409e}{
+\index{TiXmlDocument@{TiXmlDocument}!Clone@{Clone}}
+\index{Clone@{Clone}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Clone}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlDocument::Clone (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}protected, virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_ac9e8f09b23454d953b32d1b65cd1409e}
+
+
+Create an exact duplicate of this node and return it. 
+
+The memory must be deleted by the caller. 
+
+Implements \hyperlink{classTiXmlNode_a4508cc3a2d7a98e96a54cc09c37a78a4}{TiXmlNode}.
+
+
+
+Definition at line 1089 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlBase_ab54bfb9b70fe6dd276e7b279cab7f003}{
+\index{TiXmlDocument@{TiXmlDocument}!Column@{Column}}
+\index{Column@{Column}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Column}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlBase::Column (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ab54bfb9b70fe6dd276e7b279cab7f003}
+
+
+See \hyperlink{classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}{Row()} 
+
+
+
+Definition at line 245 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_a07c765e3a7f979d343e646ea797b180b}{
+\index{TiXmlDocument@{TiXmlDocument}!ConvertUTF32ToUTF8@{ConvertUTF32ToUTF8}}
+\index{ConvertUTF32ToUTF8@{ConvertUTF32ToUTF8}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ConvertUTF32ToUTF8}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlBase::ConvertUTF32ToUTF8 (
+\begin{DoxyParamCaption}
+\item[{unsigned long}]{input, }
+\item[{char $\ast$}]{output, }
+\item[{int $\ast$}]{length}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a07c765e3a7f979d343e646ea797b180b}
+
+
+Definition at line 88 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlNode_ab6056978923ad8350fb5164af32d8038}{
+\index{TiXmlDocument@{TiXmlDocument}!CopyTo@{CopyTo}}
+\index{CopyTo@{CopyTo}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{CopyTo}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlNode::CopyTo (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlNode} $\ast$}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ab6056978923ad8350fb5164af32d8038}
+
+
+Definition at line 161 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_af69deeb984e060bd00f668460dec8ef2}{
+\index{TiXmlDocument@{TiXmlDocument}!CopyTo@{CopyTo}}
+\index{CopyTo@{CopyTo}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{CopyTo}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::CopyTo (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlDocument} $\ast$}]{target}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_af69deeb984e060bd00f668460dec8ef2}
+
+
+Definition at line 1070 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlBase_a32ed202562b58de64c7d799ca3c9db98}{
+\index{TiXmlDocument@{TiXmlDocument}!EncodeString@{EncodeString}}
+\index{EncodeString@{EncodeString}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{EncodeString}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlBase::EncodeString (
+\begin{DoxyParamCaption}
+\item[{const TIXML\_\-STRING \&}]{str, }
+\item[{TIXML\_\-STRING $\ast$}]{out}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a32ed202562b58de64c7d799ca3c9db98}
+
+
+Expands entities in a string. 
+
+Note this should not contian the tag's '$<$', '$>$', etc, or they will be transformed into entities! 
+
+Definition at line 52 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a6dfc01a6e5d58e56acd537dfd3bdeb29}{
+\index{TiXmlDocument@{TiXmlDocument}!Error@{Error}}
+\index{Error@{Error}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Error}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::Error (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a6dfc01a6e5d58e56acd537dfd3bdeb29}
+
+
+If an error occurs, Error will be set to true. 
+
+Also,
+\begin{DoxyItemize}
+\item The \hyperlink{classTiXmlDocument_af96fc2f3f9ec6422782bfe916c9e778f}{ErrorId()} will contain the integer identifier of the error (not generally useful)
+\item The \hyperlink{classTiXmlDocument_a9d0f689f6e09ea494ea547be8d79c25e}{ErrorDesc()} method will return the name of the error. (very useful)
+\item The \hyperlink{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{ErrorRow()} and \hyperlink{classTiXmlDocument_aa90bc630ee5203c6109ca5fad3323649}{ErrorCol()} will return the location of the error (if known) 
+\end{DoxyItemize}
+
+Definition at line 1453 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_aa90bc630ee5203c6109ca5fad3323649}{
+\index{TiXmlDocument@{TiXmlDocument}!ErrorCol@{ErrorCol}}
+\index{ErrorCol@{ErrorCol}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ErrorCol}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlDocument::ErrorCol (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_aa90bc630ee5203c6109ca5fad3323649}
+
+
+The column where the error occured. See \hyperlink{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{ErrorRow()} 
+
+
+
+Definition at line 1471 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a9d0f689f6e09ea494ea547be8d79c25e}{
+\index{TiXmlDocument@{TiXmlDocument}!ErrorDesc@{ErrorDesc}}
+\index{ErrorDesc@{ErrorDesc}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ErrorDesc}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ TiXmlDocument::ErrorDesc (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a9d0f689f6e09ea494ea547be8d79c25e}
+
+
+Contains a textual (english) description of the error if one occurs. 
+
+
+
+Definition at line 1456 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_af96fc2f3f9ec6422782bfe916c9e778f}{
+\index{TiXmlDocument@{TiXmlDocument}!ErrorId@{ErrorId}}
+\index{ErrorId@{ErrorId}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ErrorId}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlDocument::ErrorId (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_af96fc2f3f9ec6422782bfe916c9e778f}
+
+
+Generally, you probably want the error string ( \hyperlink{classTiXmlDocument_a9d0f689f6e09ea494ea547be8d79c25e}{ErrorDesc()} ). 
+
+But if you prefer the ErrorId, this function will fetch it. 
+
+Definition at line 1461 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{
+\index{TiXmlDocument@{TiXmlDocument}!ErrorRow@{ErrorRow}}
+\index{ErrorRow@{ErrorRow}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ErrorRow}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlDocument::ErrorRow (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}
+
+
+Returns the location (if known) of the error. 
+
+The first column is column 1, and the first row is row 1. A value of 0 means the row and column wasn't applicable (memory errors, for example, have no row/column) or the parser lost the error. (An error in the error reporting, in that case.)
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{SetTabSize}, \hyperlink{classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}{Row}, \hyperlink{classTiXmlBase_ab54bfb9b70fe6dd276e7b279cab7f003}{Column} 
+\end{DoxySeeAlso}
+
+
+Definition at line 1470 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a44c8eee26bbe2d1b2762038df9dde2f0}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChild@{FirstChild}}
+\index{FirstChild@{FirstChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChild}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode}$\ast$ TiXmlNode::FirstChild (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a44c8eee26bbe2d1b2762038df9dde2f0}
+
+
+The first child of this node. Will be null if there are no children. 
+
+
+
+Definition at line 522 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a5e97d69b7c0ebd27fb7286be56559b77}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChild@{FirstChild}}
+\index{FirstChild@{FirstChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::FirstChild (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a5e97d69b7c0ebd27fb7286be56559b77}
+
+
+Definition at line 523 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_ab5f722624113c8203227de4f56576d31}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChild@{FirstChild}}
+\index{FirstChild@{FirstChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChild}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode} $\ast$ TiXmlNode::FirstChild (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ab5f722624113c8203227de4f56576d31}
+
+
+The first child of this node with the matching 'value'. 
+
+Will be null if none found. 
+
+Definition at line 357 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_abc8bf32be6419ec453a731868de19554}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChild@{FirstChild}}
+\index{FirstChild@{FirstChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::FirstChild (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_abc8bf32be6419ec453a731868de19554}
+
+
+The first child of this node with the matching 'value'. Will be null if none found. 
+
+
+
+Definition at line 526 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aa0fecff1f3866ab33a8a25506e95db1d}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChildElement@{FirstChildElement}}
+\index{FirstChildElement@{FirstChildElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChildElement}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlElement}$\ast$ TiXmlNode::FirstChildElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aa0fecff1f3866ab33a8a25506e95db1d}
+
+
+Definition at line 665 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a0ec361bfef1cf1978d060295f597e0d9}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChildElement@{FirstChildElement}}
+\index{FirstChildElement@{FirstChildElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChildElement}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlElement} $\ast$ TiXmlNode::FirstChildElement (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a0ec361bfef1cf1978d060295f597e0d9}
+
+
+Convenience function to get through elements. 
+
+
+
+Definition at line 463 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a6936ae323675071808ac4840379e57f5}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChildElement@{FirstChildElement}}
+\index{FirstChildElement@{FirstChildElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChildElement}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlElement}$\ast$ TiXmlNode::FirstChildElement (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a6936ae323675071808ac4840379e57f5}
+
+
+Definition at line 671 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_ab1f8d8e70d88aea4c5efedfe00862d55}{
+\index{TiXmlDocument@{TiXmlDocument}!FirstChildElement@{FirstChildElement}}
+\index{FirstChildElement@{FirstChildElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{FirstChildElement}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlElement} $\ast$ TiXmlNode::FirstChildElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ab1f8d8e70d88aea4c5efedfe00862d55}
+
+
+Convenience function to get through elements. 
+
+
+
+Definition at line 448 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlBase_a5b0fde72d6f662ae1fd6303195d2159b}{
+\index{TiXmlDocument@{TiXmlDocument}!GetChar@{GetChar}}
+\index{GetChar@{GetChar}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{GetChar}]{\setlength{\rightskip}{0pt plus 5cm}static const char$\ast$ TiXmlBase::GetChar (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{p, }
+\item[{char $\ast$}]{\_\-value, }
+\item[{int $\ast$}]{length, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a5b0fde72d6f662ae1fd6303195d2159b}
+
+
+Definition at line 327 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aa66f4ebcd175204a168ed7c2d7b43071}{
+\index{TiXmlDocument@{TiXmlDocument}!GetDocument@{GetDocument}}
+\index{GetDocument@{GetDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{GetDocument}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlDocument} $\ast$ TiXmlNode::GetDocument (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aa66f4ebcd175204a168ed7c2d7b43071}
+
+
+Return a pointer to the Document this node lives in. 
+
+Returns null if not in a document. 
+
+Definition at line 508 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a7b2372c0e7adfb32f5b6902fe49a39b2}{
+\index{TiXmlDocument@{TiXmlDocument}!GetDocument@{GetDocument}}
+\index{GetDocument@{GetDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{GetDocument}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlDocument}$\ast$ TiXmlNode::GetDocument (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a7b2372c0e7adfb32f5b6902fe49a39b2}
+
+
+Definition at line 690 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ac5c08bf3deffcda0bf8ce2958372b584}{
+\index{TiXmlDocument@{TiXmlDocument}!GetEntity@{GetEntity}}
+\index{GetEntity@{GetEntity}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{GetEntity}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlBase::GetEntity (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{in, }
+\item[{char $\ast$}]{value, }
+\item[{int $\ast$}]{length, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ac5c08bf3deffcda0bf8ce2958372b584}
+
+
+Definition at line 438 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlBase_a6559a530ca6763fc301a14d77ed28c17}{
+\index{TiXmlDocument@{TiXmlDocument}!GetUserData@{GetUserData}}
+\index{GetUserData@{GetUserData}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{GetUserData}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ TiXmlBase::GetUserData (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a6559a530ca6763fc301a14d77ed28c17}
+
+
+Get a pointer to arbitrary user data. 
+
+
+
+Definition at line 248 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ad0120210e4680ef2088601753ce0ede4}{
+\index{TiXmlDocument@{TiXmlDocument}!GetUserData@{GetUserData}}
+\index{GetUserData@{GetUserData}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{GetUserData}]{\setlength{\rightskip}{0pt plus 5cm}const void$\ast$ TiXmlBase::GetUserData (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ad0120210e4680ef2088601753ce0ede4}
+
+
+Get a pointer to arbitrary user data. 
+
+
+
+Definition at line 249 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_ac1e3a8e7578be463b04617786120c2bb}{
+\index{TiXmlDocument@{TiXmlDocument}!Identify@{Identify}}
+\index{Identify@{Identify}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Identify}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlNode::Identify (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{start, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ac1e3a8e7578be463b04617786120c2bb}
+
+
+Definition at line 818 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlNode_a274db3292218202805c093f66a964cb5}{
+\index{TiXmlDocument@{TiXmlDocument}!InsertAfterChild@{InsertAfterChild}}
+\index{InsertAfterChild@{InsertAfterChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{InsertAfterChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlNode::InsertAfterChild (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlNode} $\ast$}]{afterThis, }
+\item[{const {\bf TiXmlNode} \&}]{addThis}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a274db3292218202805c093f66a964cb5}
+
+
+Add a new node related to this. 
+
+Adds a child after the specified child. Returns a pointer to the new object or NULL if an error occured. 
+
+Definition at line 260 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a71e54e393336382bc9875f64aab5cb15}{
+\index{TiXmlDocument@{TiXmlDocument}!InsertBeforeChild@{InsertBeforeChild}}
+\index{InsertBeforeChild@{InsertBeforeChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{InsertBeforeChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlNode::InsertBeforeChild (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlNode} $\ast$}]{beforeThis, }
+\item[{const {\bf TiXmlNode} \&}]{addThis}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a71e54e393336382bc9875f64aab5cb15}
+
+
+Add a new node related to this. 
+
+Adds a child before the specified child. Returns a pointer to the new object or NULL if an error occured. 
+
+Definition at line 228 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_af287a913ce46d8dbf7ef24fec69bbaf0}{
+\index{TiXmlDocument@{TiXmlDocument}!InsertEndChild@{InsertEndChild}}
+\index{InsertEndChild@{InsertEndChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{InsertEndChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlNode::InsertEndChild (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlNode} \&}]{addThis}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_af287a913ce46d8dbf7ef24fec69bbaf0}
+
+
+Add a new node related to this. 
+
+Adds a child past the LastChild. Returns a pointer to the new object or NULL if an error occured. 
+
+Definition at line 213 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlBase_ae22522b2e8e1ac43102d16394f639fc8}{
+\index{TiXmlDocument@{TiXmlDocument}!IsAlpha@{IsAlpha}}
+\index{IsAlpha@{IsAlpha}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IsAlpha}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlBase::IsAlpha (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{anyByte, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ae22522b2e8e1ac43102d16394f639fc8}
+
+
+Definition at line 129 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlBase_a321919055c115c78ded17f85a793f368}{
+\index{TiXmlDocument@{TiXmlDocument}!IsAlphaNum@{IsAlphaNum}}
+\index{IsAlphaNum@{IsAlphaNum}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IsAlphaNum}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlBase::IsAlphaNum (
+\begin{DoxyParamCaption}
+\item[{unsigned char}]{anyByte, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a321919055c115c78ded17f85a793f368}
+
+
+Definition at line 150 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlBase_af56296d561c0bab4bc8e198cdcf5c48e}{
+\index{TiXmlDocument@{TiXmlDocument}!IsWhiteSpace@{IsWhiteSpace}}
+\index{IsWhiteSpace@{IsWhiteSpace}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IsWhiteSpace}]{\setlength{\rightskip}{0pt plus 5cm}static bool TiXmlBase::IsWhiteSpace (
+\begin{DoxyParamCaption}
+\item[{char}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_af56296d561c0bab4bc8e198cdcf5c48e}
+
+
+Definition at line 290 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_a3de391ea9f4c4a8aa10d04480b048795}{
+\index{TiXmlDocument@{TiXmlDocument}!IsWhiteSpace@{IsWhiteSpace}}
+\index{IsWhiteSpace@{IsWhiteSpace}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IsWhiteSpace}]{\setlength{\rightskip}{0pt plus 5cm}static bool TiXmlBase::IsWhiteSpace (
+\begin{DoxyParamCaption}
+\item[{int}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a3de391ea9f4c4a8aa10d04480b048795}
+
+
+Definition at line 294 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ad4b1472531c647a25b1840a87ae42438}{
+\index{TiXmlDocument@{TiXmlDocument}!IsWhiteSpaceCondensed@{IsWhiteSpaceCondensed}}
+\index{IsWhiteSpaceCondensed@{IsWhiteSpaceCondensed}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IsWhiteSpaceCondensed}]{\setlength{\rightskip}{0pt plus 5cm}static bool TiXmlBase::IsWhiteSpaceCondensed (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ad4b1472531c647a25b1840a87ae42438}
+
+
+Return the current white space setting. 
+
+
+
+Definition at line 224 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a2358e747118fdbf0e467b1e4f7d03de1}{
+\index{TiXmlDocument@{TiXmlDocument}!IterateChildren@{IterateChildren}}
+\index{IterateChildren@{IterateChildren}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IterateChildren}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::IterateChildren (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlNode} $\ast$}]{previous}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a2358e747118fdbf0e467b1e4f7d03de1}
+
+
+Definition at line 563 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_af2b86dbe25d3d26fa48180edc5e2a9fc}{
+\index{TiXmlDocument@{TiXmlDocument}!IterateChildren@{IterateChildren}}
+\index{IterateChildren@{IterateChildren}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IterateChildren}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode} $\ast$ TiXmlNode::IterateChildren (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{value, }
+\item[{const {\bf TiXmlNode} $\ast$}]{previous}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_af2b86dbe25d3d26fa48180edc5e2a9fc}
+
+
+This flavor of IterateChildren searches for children with a particular 'value'. 
+
+
+
+Definition at line 395 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a67ba8275e533e6f76340236c42ea0aea}{
+\index{TiXmlDocument@{TiXmlDocument}!IterateChildren@{IterateChildren}}
+\index{IterateChildren@{IterateChildren}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IterateChildren}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::IterateChildren (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value, }
+\item[{const {\bf TiXmlNode} $\ast$}]{previous}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a67ba8275e533e6f76340236c42ea0aea}
+
+
+Definition at line 569 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aaef7ac3978c4bb1cc8a24ffae7bced75}{
+\index{TiXmlDocument@{TiXmlDocument}!IterateChildren@{IterateChildren}}
+\index{IterateChildren@{IterateChildren}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{IterateChildren}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode} $\ast$ TiXmlNode::IterateChildren (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlNode} $\ast$}]{previous}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aaef7ac3978c4bb1cc8a24ffae7bced75}
+
+
+An alternate way to walk the children of a node. 
+
+One way to iterate over nodes is: \begin{DoxyVerb}
+			for( child = parent->FirstChild(); child; child = child->NextSibling() )
+		\end{DoxyVerb}
+
+
+IterateChildren does the same thing with the syntax: \begin{DoxyVerb}
+			child = 0;
+			while( child = parent->IterateChildren( child ) )
+		\end{DoxyVerb}
+
+
+IterateChildren takes the previous child as input and finds the next one. If the previous child is null, it returns the first. IterateChildren will return null when done. 
+
+Definition at line 381 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_abad5bf1059c48127b958711ef89e8e5d}{
+\index{TiXmlDocument@{TiXmlDocument}!LastChild@{LastChild}}
+\index{LastChild@{LastChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LastChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::LastChild (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_abad5bf1059c48127b958711ef89e8e5d}
+
+
+The last child of this node matching 'value'. Will be null if there are no children. 
+
+
+
+Definition at line 535 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a6d671107e00cca1d28cb2d7f3a87a21e}{
+\index{TiXmlDocument@{TiXmlDocument}!LastChild@{LastChild}}
+\index{LastChild@{LastChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LastChild}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode}$\ast$ TiXmlNode::LastChild (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a6d671107e00cca1d28cb2d7f3a87a21e}
+
+
+Definition at line 531 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a6432d2b2495f6caf9cb4278df706a031}{
+\index{TiXmlDocument@{TiXmlDocument}!LastChild@{LastChild}}
+\index{LastChild@{LastChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LastChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::LastChild (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a6432d2b2495f6caf9cb4278df706a031}
+
+
+The last child of this node. Will be null if there are no children. 
+
+
+
+Definition at line 532 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_acdd3fdc436aa7433023310a041e5e63f}{
+\index{TiXmlDocument@{TiXmlDocument}!LastChild@{LastChild}}
+\index{LastChild@{LastChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LastChild}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode} $\ast$ TiXmlNode::LastChild (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_acdd3fdc436aa7433023310a041e5e63f}
+
+
+Definition at line 369 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a1a881212554b759865f6cac79a851d38}{
+\index{TiXmlDocument@{TiXmlDocument}!LinkEndChild@{LinkEndChild}}
+\index{LinkEndChild@{LinkEndChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LinkEndChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlNode::LinkEndChild (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlNode} $\ast$}]{addThis}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a1a881212554b759865f6cac79a851d38}
+
+
+Add a new node related to this. 
+
+Adds a child past the LastChild.
+
+NOTE: the node to be added is passed by pointer, and will be henceforth owned (and deleted) by tinyXml. This method is efficient and avoids an extra copy, but should be used with care as it uses a different memory model than the other insert functions.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classTiXmlNode_af287a913ce46d8dbf7ef24fec69bbaf0}{InsertEndChild} 
+\end{DoxySeeAlso}
+
+
+Definition at line 186 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a4c852a889c02cf251117fd1d9fe1845f}{
+\index{TiXmlDocument@{TiXmlDocument}!LoadFile@{LoadFile}}
+\index{LoadFile@{LoadFile}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LoadFile}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::LoadFile (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlEncoding}}]{encoding = {\ttfamily {\bf TIXML\_\-DEFAULT\_\-ENCODING}}}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_a4c852a889c02cf251117fd1d9fe1845f}
+
+
+Load a file using the current document value. 
+
+Returns true if successful. Will delete any existing document data before loading. 
+
+Definition at line 909 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a879cdf5e981b8b2d2ef82f2546dd28fb}{
+\index{TiXmlDocument@{TiXmlDocument}!LoadFile@{LoadFile}}
+\index{LoadFile@{LoadFile}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LoadFile}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::LoadFile (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename, }
+\item[{{\bf TiXmlEncoding}}]{encoding = {\ttfamily {\bf TIXML\_\-DEFAULT\_\-ENCODING}}}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_a879cdf5e981b8b2d2ef82f2546dd28fb}
+
+
+Load a file using the given filename. Returns true if successful. 
+
+
+
+Definition at line 920 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a41f6fe7200864d1dca663d230caf8db6}{
+\index{TiXmlDocument@{TiXmlDocument}!LoadFile@{LoadFile}}
+\index{LoadFile@{LoadFile}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{LoadFile}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::LoadFile (
+\begin{DoxyParamCaption}
+\item[{FILE $\ast$}]{file, }
+\item[{{\bf TiXmlEncoding}}]{encoding = {\ttfamily {\bf TIXML\_\-DEFAULT\_\-ENCODING}}}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_a41f6fe7200864d1dca663d230caf8db6}
+
+
+Load a file using the given FILE$\ast$. 
+
+Returns true if successful. Note that this method doesn't stream -\/ the entire object pointed at by the FILE$\ast$ will be interpreted as an XML file. TinyXML doesn't stream in XML from the current file location. Streaming may be added in the future. 
+
+Definition at line 941 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_af854baeba384f5fe9859f5aee03b548e}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSibling@{NextSibling}}
+\index{NextSibling@{NextSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSibling}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode}$\ast$ TiXmlNode::NextSibling (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_af854baeba384f5fe9859f5aee03b548e}
+
+
+Navigate to a sibling node. 
+
+
+
+Definition at line 631 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a4d05f7b1d7b470ac6887edd072d4892a}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSibling@{NextSibling}}
+\index{NextSibling@{NextSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSibling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::NextSibling (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a4d05f7b1d7b470ac6887edd072d4892a}
+
+
+Definition at line 632 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_acaf9dc17531ac041f602f9ad579573ea}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSibling@{NextSibling}}
+\index{NextSibling@{NextSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSibling}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode} $\ast$ TiXmlNode::NextSibling (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_acaf9dc17531ac041f602f9ad579573ea}
+
+
+Navigate to a sibling node with the given 'value'. 
+
+
+
+Definition at line 409 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a4080bc5cc8a5c139e7cf308669e850fc}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSibling@{NextSibling}}
+\index{NextSibling@{NextSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSibling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::NextSibling (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-next}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a4080bc5cc8a5c139e7cf308669e850fc}
+
+
+Definition at line 636 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a7667217e269e0da01d1f82aee94d1a3d}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSiblingElement@{NextSiblingElement}}
+\index{NextSiblingElement@{NextSiblingElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSiblingElement}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlElement} $\ast$ TiXmlNode::NextSiblingElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a7667217e269e0da01d1f82aee94d1a3d}
+
+
+Convenience function to get through elements. 
+
+Calls NextSibling and ToElement. Will skip all non-\/Element nodes. Returns 0 if there is not another element. 
+
+Definition at line 478 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a1b211cb5034655a04358e0e2f6fc5010}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSiblingElement@{NextSiblingElement}}
+\index{NextSiblingElement@{NextSiblingElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSiblingElement}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlElement}$\ast$ TiXmlNode::NextSiblingElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a1b211cb5034655a04358e0e2f6fc5010}
+
+
+Definition at line 645 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a3d7897999f99cf4870dd59df6331d7ff}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSiblingElement@{NextSiblingElement}}
+\index{NextSiblingElement@{NextSiblingElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSiblingElement}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlElement} $\ast$ TiXmlNode::NextSiblingElement (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a3d7897999f99cf4870dd59df6331d7ff}
+
+
+Convenience function to get through elements. 
+
+Calls NextSibling and ToElement. Will skip all non-\/Element nodes. Returns 0 if there is not another element. 
+
+Definition at line 493 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a6e1ac6b800e18049bc75e9f8e63a8e5f}{
+\index{TiXmlDocument@{TiXmlDocument}!NextSiblingElement@{NextSiblingElement}}
+\index{NextSiblingElement@{NextSiblingElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NextSiblingElement}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlElement}$\ast$ TiXmlNode::NextSiblingElement (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-next}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a6e1ac6b800e18049bc75e9f8e63a8e5f}
+
+
+Definition at line 654 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aeed21ad30630ef6e7faf096127edc9f3}{
+\index{TiXmlDocument@{TiXmlDocument}!NoChildren@{NoChildren}}
+\index{NoChildren@{NoChildren}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{NoChildren}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlNode::NoChildren (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aeed21ad30630ef6e7faf096127edc9f3}
+
+
+Returns true if this node has no children. 
+
+
+
+Definition at line 695 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_aafbfacc3414008f619b1345775ef12a4}{
+\index{TiXmlDocument@{TiXmlDocument}!operator=@{operator=}}
+\index{operator=@{operator=}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlDocument} \&}]{copy}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_aafbfacc3414008f619b1345775ef12a4}
+
+
+Definition at line 902 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a78878709e53066f06eb4fcbcdd3a5260}{
+\index{TiXmlDocument@{TiXmlDocument}!Parent@{Parent}}
+\index{Parent@{Parent}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Parent}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode}$\ast$ TiXmlNode::Parent (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a78878709e53066f06eb4fcbcdd3a5260}
+
+
+Definition at line 520 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_ab643043132ffd794f8602685d34a982e}{
+\index{TiXmlDocument@{TiXmlDocument}!Parent@{Parent}}
+\index{Parent@{Parent}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Parent}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::Parent (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ab643043132ffd794f8602685d34a982e}
+
+
+One step up the DOM. 
+
+
+
+Definition at line 519 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a789ad2f06f93d52bdb5570b2f3670289}{
+\index{TiXmlDocument@{TiXmlDocument}!Parse@{Parse}}
+\index{Parse@{Parse}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Parse}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlDocument::Parse (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{p, }
+\item[{{\bf TiXmlParsingData} $\ast$}]{data = {\ttfamily 0}, }
+\item[{{\bf TiXmlEncoding}}]{encoding = {\ttfamily {\bf TIXML\_\-DEFAULT\_\-ENCODING}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a789ad2f06f93d52bdb5570b2f3670289}
+
+
+Parse the given null terminated block of xml data. 
+
+Passing in an encoding to this method (either TIXML\_\-ENCODING\_\-LEGACY or TIXML\_\-ENCODING\_\-UTF8 will force TinyXml to use that encoding, regardless of what TinyXml might otherwise try to detect. 
+
+Implements \hyperlink{classTiXmlBase_a00e4edb0219d00a1379c856e5a1d2025}{TiXmlBase}.
+
+
+
+Definition at line 704 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlNode_ac2cd892768726270e511b2ab32de4d10}{
+\index{TiXmlDocument@{TiXmlDocument}!PreviousSibling@{PreviousSibling}}
+\index{PreviousSibling@{PreviousSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{PreviousSibling}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode}$\ast$ TiXmlNode::PreviousSibling (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ac2cd892768726270e511b2ab32de4d10}
+
+
+Navigate to a sibling node. 
+
+
+
+Definition at line 614 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_af8c0642ad6ecc03f62953e68896ed1cc}{
+\index{TiXmlDocument@{TiXmlDocument}!PreviousSibling@{PreviousSibling}}
+\index{PreviousSibling@{PreviousSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{PreviousSibling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::PreviousSibling (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_af8c0642ad6ecc03f62953e68896ed1cc}
+
+
+Definition at line 615 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_abbb3b8c1f38fa7b9e52d584a4aeca795}{
+\index{TiXmlDocument@{TiXmlDocument}!PreviousSibling@{PreviousSibling}}
+\index{PreviousSibling@{PreviousSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{PreviousSibling}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlNode} $\ast$ TiXmlNode::PreviousSibling (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_abbb3b8c1f38fa7b9e52d584a4aeca795}
+
+
+Navigate to a sibling node. 
+
+
+
+Definition at line 421 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a6c977049207177ef21b51972315c2053}{
+\index{TiXmlDocument@{TiXmlDocument}!PreviousSibling@{PreviousSibling}}
+\index{PreviousSibling@{PreviousSibling}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{PreviousSibling}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ TiXmlNode::PreviousSibling (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-prev}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a6c977049207177ef21b51972315c2053}
+
+
+Definition at line 619 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_af08389ec70ee9b2de7f800e206a18510}{
+\index{TiXmlDocument@{TiXmlDocument}!Print@{Print}}
+\index{Print@{Print}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Print}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::Print (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_af08389ec70ee9b2de7f800e206a18510}
+
+
+Write the document to standard out using formatted printing (\char`\"{}pretty print\char`\"{}). 
+
+
+
+Definition at line 1512 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a7b1aea204fee266b70b9c105c8bf2ada}{
+\index{TiXmlDocument@{TiXmlDocument}!Print@{Print}}
+\index{Print@{Print}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Print}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::Print (
+\begin{DoxyParamCaption}
+\item[{FILE $\ast$}]{cfile, }
+\item[{int}]{depth = {\ttfamily 0}}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a7b1aea204fee266b70b9c105c8bf2ada}
+
+
+Print this Document to a FILE stream. 
+
+
+
+Implements \hyperlink{classTiXmlBase_a0de56b3f2ef14c65091a3b916437b512}{TiXmlBase}.
+
+
+
+Definition at line 1100 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlBase_a1c21a6ab5f7b503acd91f35f183734b3}{
+\index{TiXmlDocument@{TiXmlDocument}!ReadName@{ReadName}}
+\index{ReadName@{ReadName}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ReadName}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlBase::ReadName (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{p, }
+\item[{TIXML\_\-STRING $\ast$}]{name, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a1c21a6ab5f7b503acd91f35f183734b3}
+
+
+Definition at line 401 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlBase_aa646c74921aa33156968b802bbf5566e}{
+\index{TiXmlDocument@{TiXmlDocument}!ReadText@{ReadText}}
+\index{ReadText@{ReadText}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ReadText}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlBase::ReadText (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{in, }
+\item[{TIXML\_\-STRING $\ast$}]{text, }
+\item[{bool}]{ignoreWhiteSpace, }
+\item[{const char $\ast$}]{endTag, }
+\item[{bool}]{ignoreCase, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_aa646c74921aa33156968b802bbf5566e}
+
+
+Definition at line 574 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlNode_ae19d8510efc90596552f4feeac9a8fbf}{
+\index{TiXmlDocument@{TiXmlDocument}!RemoveChild@{RemoveChild}}
+\index{RemoveChild@{RemoveChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{RemoveChild}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlNode::RemoveChild (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlNode} $\ast$}]{removeThis}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_ae19d8510efc90596552f4feeac9a8fbf}
+
+
+Delete a child of this node. 
+
+
+
+Definition at line 331 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlNode_a543208c2c801c84a213529541e904b9f}{
+\index{TiXmlDocument@{TiXmlDocument}!ReplaceChild@{ReplaceChild}}
+\index{ReplaceChild@{ReplaceChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ReplaceChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode} $\ast$ TiXmlNode::ReplaceChild (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlNode} $\ast$}]{replaceThis, }
+\item[{const {\bf TiXmlNode} \&}]{withThis}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a543208c2c801c84a213529541e904b9f}
+
+
+Replace a child of this node. 
+
+Returns a pointer to the new object or NULL if an error occured. 
+
+Definition at line 292 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_a0b43e762a23f938b06651bc90b8a1013}{
+\index{TiXmlDocument@{TiXmlDocument}!RootElement@{RootElement}}
+\index{RootElement@{RootElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{RootElement}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlElement}$\ast$ TiXmlDocument::RootElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a0b43e762a23f938b06651bc90b8a1013}
+
+
+Definition at line 1446 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_ad09d17927f908f40efb406af2fb873be}{
+\index{TiXmlDocument@{TiXmlDocument}!RootElement@{RootElement}}
+\index{RootElement@{RootElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{RootElement}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlElement}$\ast$ TiXmlDocument::RootElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_ad09d17927f908f40efb406af2fb873be}
+
+
+Get the root element -\/-\/ the only top level element -\/-\/ of the document. 
+
+In well formed XML, there should only be one. TinyXml is tolerant of multiple elements at the document level. 
+
+Definition at line 1445 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}{
+\index{TiXmlDocument@{TiXmlDocument}!Row@{Row}}
+\index{Row@{Row}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Row}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlBase::Row (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}
+
+
+Return the position, in the original source file, of this node or attribute. 
+
+The row and column are 1-\/based. (That is the first row and first column is 1,1). If the returns values are 0 or less, then the parser does not have a row and column value.
+
+Generally, the row and column value will be set when the TiXmlDocument::Load(), \hyperlink{classTiXmlDocument_a4c852a889c02cf251117fd1d9fe1845f}{TiXmlDocument::LoadFile()}, or any \hyperlink{classTiXmlBase_a00e4edb0219d00a1379c856e5a1d2025}{TiXmlNode::Parse()} is called. It will NOT be set when the DOM was created from operator$>$$>$.
+
+The values reflect the initial load. Once the DOM is modified programmatically (by adding or changing nodes and attributes) the new values will NOT update to reflect changes in the document.
+
+There is a minor performance cost to computing the row and column. Computation can be disabled if \hyperlink{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{TiXmlDocument::SetTabSize()} is called with 0 as the value.
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{TiXmlDocument::SetTabSize()} 
+\end{DoxySeeAlso}
+
+
+Definition at line 244 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a21c0aeb0d0a720169ad4ac89523ebe93}{
+\index{TiXmlDocument@{TiXmlDocument}!SaveFile@{SaveFile}}
+\index{SaveFile@{SaveFile}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SaveFile}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::SaveFile (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d09/classTiXmlDocument_a21c0aeb0d0a720169ad4ac89523ebe93}
+
+
+Save a file using the current document value. Returns true if successful. 
+
+
+
+Definition at line 915 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_ae869f5ebf7fc54c4a1d737fb4689fd44}{
+\index{TiXmlDocument@{TiXmlDocument}!SaveFile@{SaveFile}}
+\index{SaveFile@{SaveFile}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SaveFile}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::SaveFile (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d09/classTiXmlDocument_ae869f5ebf7fc54c4a1d737fb4689fd44}
+
+
+Save a file using the given filename. Returns true if successful. 
+
+
+
+Definition at line 1039 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlDocument_acf1672b4538c6d1d441f9f108aea2bf4}{
+\index{TiXmlDocument@{TiXmlDocument}!SaveFile@{SaveFile}}
+\index{SaveFile@{SaveFile}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SaveFile}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlDocument::SaveFile (
+\begin{DoxyParamCaption}
+\item[{FILE $\ast$}]{fp}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d09/classTiXmlDocument_acf1672b4538c6d1d441f9f108aea2bf4}
+
+
+Save a file using the given FILE$\ast$. Returns true if successful. 
+
+
+
+Definition at line 1053 of file tinyxml.cpp.
+
+\hypertarget{classTiXmlBase_a0f799ec645bfb8d8a969e83478f379c1}{
+\index{TiXmlDocument@{TiXmlDocument}!SetCondenseWhiteSpace@{SetCondenseWhiteSpace}}
+\index{SetCondenseWhiteSpace@{SetCondenseWhiteSpace}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SetCondenseWhiteSpace}]{\setlength{\rightskip}{0pt plus 5cm}static void TiXmlBase::SetCondenseWhiteSpace (
+\begin{DoxyParamCaption}
+\item[{bool}]{condense}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a0f799ec645bfb8d8a969e83478f379c1}
+
+
+The world does not agree on whether white space should be kept or not. 
+
+In order to make everyone happy, these global, static functions are provided to set whether or not TinyXml will condense all white space into a single space or not. The default is to condense. Note changing this value is not thread safe. 
+
+Definition at line 221 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a735c23e318597b920c94eae77fa206de}{
+\index{TiXmlDocument@{TiXmlDocument}!SetError@{SetError}}
+\index{SetError@{SetError}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SetError}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::SetError (
+\begin{DoxyParamCaption}
+\item[{int}]{err, }
+\item[{const char $\ast$}]{errorLocation, }
+\item[{{\bf TiXmlParsingData} $\ast$}]{prevData, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)}}
+\label{df/d09/classTiXmlDocument_a735c23e318597b920c94eae77fa206de}
+
+
+Definition at line 798 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{
+\index{TiXmlDocument@{TiXmlDocument}!SetTabSize@{SetTabSize}}
+\index{SetTabSize@{SetTabSize}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SetTabSize}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlDocument::SetTabSize (
+\begin{DoxyParamCaption}
+\item[{int}]{\_\-tabsize}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}
+
+
+\hyperlink{classTiXmlDocument_a51dac56316f89b35bdb7d0d433ba988e}{SetTabSize()} allows the error reporting functions (\hyperlink{classTiXmlDocument_af30efc75e804aa2e92fb8be3a8cb676e}{ErrorRow()} and \hyperlink{classTiXmlDocument_aa90bc630ee5203c6109ca5fad3323649}{ErrorCol()}) to report the correct values for row and column. 
+
+It does not change the output or input in any way.
+
+By calling this method, with a tab size greater than 0, the row and column of each node and attribute is stored when the file is loaded. Very useful for tracking the DOM back in to the source file.
+
+The tab size is required for calculating the location of nodes. If not set, the default of 4 is used. The tabsize is set per document. Setting the tabsize to 0 disables row/column tracking.
+
+Note that row and column tracking is not supported when using operator$>$$>$.
+
+The tab size needs to be enabled before the parse or load. Correct usage: \begin{DoxyVerb}
+		TiXmlDocument doc;
+		doc.SetTabSize( 8 );
+		doc.Load( "myfile.xml" );
+		\end{DoxyVerb}
+
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{classTiXmlBase_a024bceb070188df92c2a8d8852dd0853}{Row}, \hyperlink{classTiXmlBase_ab54bfb9b70fe6dd276e7b279cab7f003}{Column} 
+\end{DoxySeeAlso}
+
+
+Definition at line 1497 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ac6b3e0f790930d4970ec30764e937b5d}{
+\index{TiXmlDocument@{TiXmlDocument}!SetUserData@{SetUserData}}
+\index{SetUserData@{SetUserData}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SetUserData}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlBase::SetUserData (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{user}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ac6b3e0f790930d4970ec30764e937b5d}
+
+
+Set a pointer to arbitrary user data. 
+
+
+
+Definition at line 247 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a2a38329ca5d3f28f98ce932b8299ae90}{
+\index{TiXmlDocument@{TiXmlDocument}!SetValue@{SetValue}}
+\index{SetValue@{SetValue}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SetValue}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlNode::SetValue (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{\_\-value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a2a38329ca5d3f28f98ce932b8299ae90}
+
+
+Changes the value of the node. 
+
+Defined as: \begin{DoxyVerb}
+		Document:	filename of the xml file
+		Element:	name of the element
+		Comment:	the comment text
+		Unknown:	the tag contents
+		Text:		the text string
+		\end{DoxyVerb}
+ 
+
+Definition at line 508 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ac0c3d66d8a9e6996a1fa016275e16875}{
+\index{TiXmlDocument@{TiXmlDocument}!SkipWhiteSpace@{SkipWhiteSpace}}
+\index{SkipWhiteSpace@{SkipWhiteSpace}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{SkipWhiteSpace}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ TiXmlBase::SkipWhiteSpace (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{p, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ac0c3d66d8a9e6996a1fa016275e16875}
+
+
+Definition at line 314 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlBase_a51631e6986179558b9e5850723ed165a}{
+\index{TiXmlDocument@{TiXmlDocument}!StringEqual@{StringEqual}}
+\index{StringEqual@{StringEqual}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{StringEqual}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlBase::StringEqual (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{p, }
+\item[{const char $\ast$}]{endTag, }
+\item[{bool}]{ignoreCase, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a51631e6986179558b9e5850723ed165a}
+
+
+Definition at line 534 of file tinyxmlparser.cpp.
+
+\hypertarget{classTiXmlDocument_a612360241b85bad0826b2a9ae9cda561}{
+\index{TiXmlDocument@{TiXmlDocument}!TabSize@{TabSize}}
+\index{TabSize@{TabSize}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{TabSize}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlDocument::TabSize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a612360241b85bad0826b2a9ae9cda561}
+
+
+Definition at line 1499 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a383e06a0787f7063953934867990f849}{
+\index{TiXmlDocument@{TiXmlDocument}!ToComment@{ToComment}}
+\index{ToComment@{ToComment}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToComment}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlComment}$\ast$ TiXmlNode::ToComment (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a383e06a0787f7063953934867990f849}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlComment_acc7c7e07e13c23f17797d642981511df}{TiXmlComment}.
+
+
+
+Definition at line 706 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aa0a5086f9eaee910bbfdc7f975e26574}{
+\index{TiXmlDocument@{TiXmlDocument}!ToComment@{ToComment}}
+\index{ToComment@{ToComment}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToComment}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlComment}$\ast$ TiXmlNode::ToComment (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aa0a5086f9eaee910bbfdc7f975e26574}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlComment_a00fb4215c20a2399ea05ac9b9e7e68a0}{TiXmlComment}.
+
+
+
+Definition at line 699 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a4027136ca820ff4a636b607231b6a6df}{
+\index{TiXmlDocument@{TiXmlDocument}!ToDeclaration@{ToDeclaration}}
+\index{ToDeclaration@{ToDeclaration}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToDeclaration}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlDeclaration}$\ast$ TiXmlNode::ToDeclaration (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a4027136ca820ff4a636b607231b6a6df}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlDeclaration_a6bd3d1daddcaeb9543c24bfd090969ce}{TiXmlDeclaration}.
+
+
+
+Definition at line 709 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a9f43e6984fc7d4afd6eb32714c6b7b72}{
+\index{TiXmlDocument@{TiXmlDocument}!ToDeclaration@{ToDeclaration}}
+\index{ToDeclaration@{ToDeclaration}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToDeclaration}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlDeclaration}$\ast$ TiXmlNode::ToDeclaration (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a9f43e6984fc7d4afd6eb32714c6b7b72}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlDeclaration_a1e085d3fefd1dbf5ccdbff729931a967}{TiXmlDeclaration}.
+
+
+
+Definition at line 702 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a1dc977bde3e4fe85a8eb9d88a35ef5a4}{
+\index{TiXmlDocument@{TiXmlDocument}!ToDocument@{ToDocument}}
+\index{ToDocument@{ToDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToDocument}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlDocument}$\ast$ TiXmlDocument::ToDocument (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a1dc977bde3e4fe85a8eb9d88a35ef5a4}
+
+
+Cast to a more defined type. Will return null not of the requested type. 
+
+
+
+Reimplemented from \hyperlink{classTiXmlNode_a8a4cda4b15c29f64cff419309aebed08}{TiXmlNode}.
+
+
+
+Definition at line 1525 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a1025d942a1f328fd742d545e37efdd42}{
+\index{TiXmlDocument@{TiXmlDocument}!ToDocument@{ToDocument}}
+\index{ToDocument@{ToDocument}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToDocument}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlDocument}$\ast$ TiXmlDocument::ToDocument (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a1025d942a1f328fd742d545e37efdd42}
+
+
+Cast to a more defined type. Will return null not of the requested type. 
+
+
+
+Reimplemented from \hyperlink{classTiXmlNode_a6a4c8ac28ee7a745d059db6691e03bae}{TiXmlNode}.
+
+
+
+Definition at line 1526 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a72abed96dc9667ab9e0a2a275301bb1c}{
+\index{TiXmlDocument@{TiXmlDocument}!ToElement@{ToElement}}
+\index{ToElement@{ToElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToElement}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlElement}$\ast$ TiXmlNode::ToElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a72abed96dc9667ab9e0a2a275301bb1c}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlElement_ac5b8d0e25fa23fd9acbb6d146082901c}{TiXmlElement}.
+
+
+
+Definition at line 698 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aa65d000223187d22a4dcebd7479e9ebc}{
+\index{TiXmlDocument@{TiXmlDocument}!ToElement@{ToElement}}
+\index{ToElement@{ToElement}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToElement}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlElement}$\ast$ TiXmlNode::ToElement (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aa65d000223187d22a4dcebd7479e9ebc}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlElement_a9def86337ea7a755eb41cac980f60c7a}{TiXmlElement}.
+
+
+
+Definition at line 705 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_a799f17405a86a5c2029618e85f11a097}{
+\index{TiXmlDocument@{TiXmlDocument}!ToLower@{ToLower}}
+\index{ToLower@{ToLower}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToLower}]{\setlength{\rightskip}{0pt plus 5cm}static int TiXmlBase::ToLower (
+\begin{DoxyParamCaption}
+\item[{int}]{v, }
+\item[{{\bf TiXmlEncoding}}]{encoding}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a799f17405a86a5c2029618e85f11a097}
+
+
+Definition at line 382 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a95a46a52c525992d6b4ee08beb14cd69}{
+\index{TiXmlDocument@{TiXmlDocument}!ToText@{ToText}}
+\index{ToText@{ToText}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToText}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlText}$\ast$ TiXmlNode::ToText (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a95a46a52c525992d6b4ee08beb14cd69}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlText_a895bf34ffad17f7439ab2a52b9651648}{TiXmlText}.
+
+
+
+Definition at line 701 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a3ddfbcac78fbea041fad57e5c6d60a03}{
+\index{TiXmlDocument@{TiXmlDocument}!ToText@{ToText}}
+\index{ToText@{ToText}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToText}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlText}$\ast$ TiXmlNode::ToText (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a3ddfbcac78fbea041fad57e5c6d60a03}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlText_ae7c3a8fd3e4dbf6c0c4363a943d72f5b}{TiXmlText}.
+
+
+
+Definition at line 708 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a06de5af852668c7e4af0d09c205f0b0d}{
+\index{TiXmlDocument@{TiXmlDocument}!ToUnknown@{ToUnknown}}
+\index{ToUnknown@{ToUnknown}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToUnknown}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf TiXmlUnknown}$\ast$ TiXmlNode::ToUnknown (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a06de5af852668c7e4af0d09c205f0b0d}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlUnknown_a67c9fd22940e8c47f706a72cdd2e332c}{TiXmlUnknown}.
+
+
+
+Definition at line 707 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_afd7205cf31d7a376929f8a36930627a2}{
+\index{TiXmlDocument@{TiXmlDocument}!ToUnknown@{ToUnknown}}
+\index{ToUnknown@{ToUnknown}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ToUnknown}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf TiXmlUnknown}$\ast$ TiXmlNode::ToUnknown (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_afd7205cf31d7a376929f8a36930627a2}
+
+
+Cast to a more defined type. Will return null if not of the requested type. 
+
+
+
+Reimplemented in \hyperlink{classTiXmlUnknown_ab0313e5fe77987d746ac1a97a254419d}{TiXmlUnknown}.
+
+
+
+Definition at line 700 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a57b99d5c97d67a42b9752f5210a1ba5e}{
+\index{TiXmlDocument@{TiXmlDocument}!Type@{Type}}
+\index{Type@{Type}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Type}]{\setlength{\rightskip}{0pt plus 5cm}int TiXmlNode::Type (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a57b99d5c97d67a42b9752f5210a1ba5e}
+
+
+Query the type (as an enumerated value, above) of this node. 
+
+The possible types are: DOCUMENT, ELEMENT, COMMENT, UNKNOWN, TEXT, and DECLARATION. 
+
+Definition at line 684 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a77943eb90d12c2892b1337a9f5918b41}{
+\index{TiXmlDocument@{TiXmlDocument}!Value@{Value}}
+\index{Value@{Value}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{Value}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ TiXmlNode::Value (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a77943eb90d12c2892b1337a9f5918b41}
+
+
+The meaning of 'value' changes for the specific type of \hyperlink{classTiXmlNode}{TiXmlNode}. 
+
+\begin{DoxyVerb}
+		Document:	filename of the xml file
+		Element:	name of the element
+		Comment:	the comment text
+		Unknown:	the tag contents
+		Text:		the text string
+		\end{DoxyVerb}
+
+
+The subclasses will wrap this function. 
+
+Definition at line 487 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a83ece13d2ea66dac66e0b21332229239}{
+\index{TiXmlDocument@{TiXmlDocument}!ValueTStr@{ValueTStr}}
+\index{ValueTStr@{ValueTStr}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{ValueTStr}]{\setlength{\rightskip}{0pt plus 5cm}const TIXML\_\-STRING\& TiXmlNode::ValueTStr (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a83ece13d2ea66dac66e0b21332229239}
+
+
+Definition at line 497 of file tinyxml.h.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classTiXmlDocument_a1ff6a063602f31acae6f37fc049d8bbd}{
+\index{TiXmlDocument@{TiXmlDocument}!error@{error}}
+\index{error@{error}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{error}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf TiXmlDocument::error}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a1ff6a063602f31acae6f37fc049d8bbd}
+
+
+Definition at line 1542 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a2da9a95ba3f9c895a8d7f4de7122a642}{
+\index{TiXmlDocument@{TiXmlDocument}!errorDesc@{errorDesc}}
+\index{errorDesc@{errorDesc}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{errorDesc}]{\setlength{\rightskip}{0pt plus 5cm}TIXML\_\-STRING {\bf TiXmlDocument::errorDesc}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a2da9a95ba3f9c895a8d7f4de7122a642}
+
+
+Definition at line 1544 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_acdef97a4bb80729ac6863dd54cee7eeb}{
+\index{TiXmlDocument@{TiXmlDocument}!errorId@{errorId}}
+\index{errorId@{errorId}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{errorId}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf TiXmlDocument::errorId}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_acdef97a4bb80729ac6863dd54cee7eeb}
+
+
+Definition at line 1543 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_aa4030f989f1549f6b897147fc2851d1a}{
+\index{TiXmlDocument@{TiXmlDocument}!errorLocation@{errorLocation}}
+\index{errorLocation@{errorLocation}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{errorLocation}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlCursor} {\bf TiXmlDocument::errorLocation}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_aa4030f989f1549f6b897147fc2851d1a}
+
+
+Definition at line 1546 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_a7ac8feec4100e446b3d78e1ac0659700}{
+\index{TiXmlDocument@{TiXmlDocument}!errorString@{errorString}}
+\index{errorString@{errorString}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{errorString}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ {\bf TiXmlBase::errorString}\hspace{0.3cm}{\ttfamily  \mbox{[}static, protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a7ac8feec4100e446b3d78e1ac0659700}
+{\bfseries Initial value:}
+\begin{DoxyCode}
+
+{
+        "No error",
+        "Error",
+        "Failed to open file",
+        "Error parsing Element.",
+        "Failed to read Element name",
+        "Error reading Element value.",
+        "Error reading Attributes.",
+        "Error: empty tag.",
+        "Error reading end tag.",
+        "Error parsing Unknown.",
+        "Error parsing Comment.",
+        "Error parsing Declaration.",
+        "Error document empty.",
+        "Error null (0) or unexpected EOF found in input stream.",
+        "Error parsing CDATA.",
+        "Error when TiXmlDocument added to document, because TiXmlDocument can on
+      ly be at the root.",
+}
+\end{DoxyCode}
+
+
+Definition at line 371 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_af749fb7f22010b80e8f904c32653d50e}{
+\index{TiXmlDocument@{TiXmlDocument}!firstChild@{firstChild}}
+\index{firstChild@{firstChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{firstChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ {\bf TiXmlNode::firstChild}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_af749fb7f22010b80e8f904c32653d50e}
+
+
+Definition at line 758 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a5b30756d21b304580d22a841ec9d61f8}{
+\index{TiXmlDocument@{TiXmlDocument}!lastChild@{lastChild}}
+\index{lastChild@{lastChild}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{lastChild}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ {\bf TiXmlNode::lastChild}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a5b30756d21b304580d22a841ec9d61f8}
+
+
+Definition at line 759 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_a0d992580f3bc264909f898e942677a3c}{
+\index{TiXmlDocument@{TiXmlDocument}!location@{location}}
+\index{location@{location}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{location}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlCursor} {\bf TiXmlBase::location}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_a0d992580f3bc264909f898e942677a3c}
+
+
+Definition at line 373 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a2f329cc993d2d34df76e17dcbb776b45}{
+\index{TiXmlDocument@{TiXmlDocument}!next@{next}}
+\index{next@{next}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{next}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ {\bf TiXmlNode::next}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a2f329cc993d2d34df76e17dcbb776b45}
+
+
+Definition at line 764 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a662c4de61244e4fa5bd4e2d8c63143a5}{
+\index{TiXmlDocument@{TiXmlDocument}!parent@{parent}}
+\index{parent@{parent}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{parent}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ {\bf TiXmlNode::parent}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a662c4de61244e4fa5bd4e2d8c63143a5}
+
+
+Definition at line 755 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a9c5370ea2cbfd9f0e0f7b30a57fd68f5}{
+\index{TiXmlDocument@{TiXmlDocument}!prev@{prev}}
+\index{prev@{prev}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{prev}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlNode}$\ast$ {\bf TiXmlNode::prev}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a9c5370ea2cbfd9f0e0f7b30a57fd68f5}
+
+
+Definition at line 763 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_af2fa6a010b903d893d52cc6fee5575a1}{
+\index{TiXmlDocument@{TiXmlDocument}!tabsize@{tabsize}}
+\index{tabsize@{tabsize}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{tabsize}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf TiXmlDocument::tabsize}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_af2fa6a010b903d893d52cc6fee5575a1}
+
+
+Definition at line 1545 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_a2619c6379181c16ba95ae6922e2ca839}{
+\index{TiXmlDocument@{TiXmlDocument}!type@{type}}
+\index{type@{type}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{type}]{\setlength{\rightskip}{0pt plus 5cm}{\bf NodeType} {\bf TiXmlNode::type}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_a2619c6379181c16ba95ae6922e2ca839}
+
+
+Definition at line 756 of file tinyxml.h.
+
+\hypertarget{classTiXmlDocument_a4d5400dec9bfb55c640428de33297886}{
+\index{TiXmlDocument@{TiXmlDocument}!useMicrosoftBOM@{useMicrosoftBOM}}
+\index{useMicrosoftBOM@{useMicrosoftBOM}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{useMicrosoftBOM}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf TiXmlDocument::useMicrosoftBOM}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d09/classTiXmlDocument_a4d5400dec9bfb55c640428de33297886}
+
+
+Definition at line 1547 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ab242c01590191f644569fa89a080d97c}{
+\index{TiXmlDocument@{TiXmlDocument}!userData@{userData}}
+\index{userData@{userData}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{userData}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ {\bf TiXmlBase::userData}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ab242c01590191f644569fa89a080d97c}
+
+
+Field containing a generic user pointer. 
+
+
+
+Definition at line 376 of file tinyxml.h.
+
+\hypertarget{classTiXmlBase_ac8c86058137bdb4b413c3eca58f2d467}{
+\index{TiXmlDocument@{TiXmlDocument}!utf8ByteTable@{utf8ByteTable}}
+\index{utf8ByteTable@{utf8ByteTable}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{utf8ByteTable}]{\setlength{\rightskip}{0pt plus 5cm}const int {\bf TiXmlBase::utf8ByteTable}\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{d8/d47/classTiXmlBase_ac8c86058137bdb4b413c3eca58f2d467}
+{\bfseries Initial value:}
+\begin{DoxyCode}
+ 
+{
+        
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      1,      1,      1,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1,      
+                1,      1,      2,      2,      2,      2,      2,      2,      2
+      ,       2,      2,      2,      2,      2,      2,      2,      
+                2,      2,      2,      2,      2,      2,      2,      2,      2
+      ,       2,      2,      2,      2,      2,      2,      2,      
+                3,      3,      3,      3,      3,      3,      3,      3,      3
+      ,       3,      3,      3,      3,      3,      3,      3,      
+                4,      4,      4,      4,      4,      1,      1,      1,      1
+      ,       1,      1,      1,      1,      1,      1,      1       
+}
+\end{DoxyCode}
+
+
+Definition at line 253 of file tinyxml.h.
+
+\hypertarget{classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}{
+\index{TiXmlDocument@{TiXmlDocument}!value@{value}}
+\index{value@{value}!TiXmlDocument@{TiXmlDocument}}
+\subsubsection[{value}]{\setlength{\rightskip}{0pt plus 5cm}TIXML\_\-STRING {\bf TiXmlNode::value}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dd5/classTiXmlNode_aead528b3cedc33c16a6c539872c7cc8b}
+
+
+Definition at line 761 of file tinyxml.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/kats/\hyperlink{tinyxml_8h}{tinyxml.h}\item 
+madara/kats/\hyperlink{tinyxml_8cpp}{tinyxml.cpp}\item 
+madara/kats/\hyperlink{tinyxmlparser_8cpp}{tinyxmlparser.cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,324 @@
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread}{
+\section{Madara::Transport::Splice\_\-Read\_\-Thread Class Reference}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread}\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+}
+
+
+{\ttfamily \#include $<$Splice\_\-Transport\_\-Read\_\-Thread.h$>$}
+
+
+
+Collaboration diagram for Madara::Transport::Splice\_\-Read\_\-Thread:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{dc/d9f/classMadara_1_1Transport_1_1Splice__Read__Thread__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a17729538ea8da10ba3716781c90c0bdf}{Splice\_\-Read\_\-Thread} (const std::string \&id, \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \&context, \hyperlink{classKnowledge_1_1UpdateDataReader}{Knowledge::UpdateDataReader\_\-ptr} \&update\_\-reader, \hyperlink{classKnowledge_1_1MutexDataReader}{Knowledge::MutexDataReader\_\-ptr} \&mutex\_\-reader, bool enable\_\-mutexing)
+\item 
+\hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a85350aae8f80457b444a2abd1cfc15d3}{$\sim$Splice\_\-Read\_\-Thread} ()
+\item 
+int \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a8ba76a5d234a10111a708e923fdd42b3}{enter\_\-barrier} (void)
+\begin{DoxyCompactList}\small\item\em service exit point for thread \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_aa9aec995a38ee960b3630f14e7b0e1aa}{close} (void)
+\item 
+int \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a152795c3853303d001e7e45c8ab5ac55}{svc} (void)
+\item 
+void \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a2696c23b93bac4b2bca110ac12a70845}{wait\_\-for\_\-ready} (void)
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_aed89155ab54fc86e90a71a138350b1f8}{handle\_\-assignment} (\hyperlink{structKnowledge_1_1Update}{Knowledge::Update} \&data)
+\item 
+void \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a2ff87127681cab58e6313efd0d2965a3}{handle\_\-multiassignment} (\hyperlink{structKnowledge_1_1Update}{Knowledge::Update} \&data)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+::std::vector$<$ ::std::string $>$ \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_af941b4eb602832b645701c42d42f5e50}{assignment\_\-symbols\_\-}
+\item 
+const std::string \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a2c04d64648061c72cb08113bf2d1c137}{id\_\-}
+\item 
+::\hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \& \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a899ad85e073aacfdb1d9000b39ff5960}{context\_\-}
+\item 
+::\hyperlink{classKnowledge_1_1UpdateDataReader}{Knowledge::UpdateDataReader\_\-ptr} \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a46dffcab5a39bda92f4783705bb893bd}{update\_\-reader\_\-}
+\item 
+::\hyperlink{classKnowledge_1_1MutexDataReader}{Knowledge::MutexDataReader\_\-ptr} \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a6ce0b58da3928412036a1b3e070a55b8}{mutex\_\-reader\_\-}
+\item 
+ACE\_\-Barrier \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a1ac9be82d884c2366923bd5f95d6b3c8}{barrier\_\-}
+\begin{DoxyCompactList}\small\item\em typdef for a threadsafe counter \item\end{DoxyCompactList}\item 
+ACE\_\-Atomic\_\-Op$<$ ACE\_\-Mutex, bool $>$ \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a5cafe35dd52b080cce126ee746c79033}{terminated\_\-}
+\item 
+DDS::WaitSet \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a768b5b0cfa08c3e499a9d5075052457d}{waitset\_\-}
+\item 
+DDS::StatusCondition\_\-ptr \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a8dabbe08768a63ad0b8625d4ebbabe06}{condition\_\-}
+\item 
+ACE\_\-Thread\_\-Mutex \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a9c431adb377e9c87e7461e3f74dd57bb}{mutex\_\-}
+\item 
+\hyperlink{namespaceMadara_1_1Transport_a5dd6d9a7fb47cdbf2d1448242da4e13d}{Madara::Transport::Condition} \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_af7a39070fa9019143d7971022c08be4a}{is\_\-not\_\-ready\_\-}
+\item 
+bool \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_a696974cc3cc3ff803f65a3e0b00038dc}{is\_\-ready\_\-}
+\item 
+bool \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread_ab8595b5547734b537d0cefa26a660777}{enable\_\-mutexing\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 25 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a17729538ea8da10ba3716781c90c0bdf}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!Splice\_\-Read\_\-Thread@{Splice\_\-Read\_\-Thread}}
+\index{Splice\_\-Read\_\-Thread@{Splice\_\-Read\_\-Thread}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{Splice\_\-Read\_\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Transport::Splice\_\-Read\_\-Thread::Splice\_\-Read\_\-Thread (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{id, }
+\item[{{\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \&}]{context, }
+\item[{{\bf Knowledge::UpdateDataReader\_\-ptr} \&}]{update\_\-reader, }
+\item[{{\bf Knowledge::MutexDataReader\_\-ptr} \&}]{mutex\_\-reader, }
+\item[{bool}]{enable\_\-mutexing}
+\end{DoxyParamCaption}
+)}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a17729538ea8da10ba3716781c90c0bdf}
+
+
+Definition at line 9 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a85350aae8f80457b444a2abd1cfc15d3}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!$\sim$Splice\_\-Read\_\-Thread@{$\sim$Splice\_\-Read\_\-Thread}}
+\index{$\sim$Splice\_\-Read\_\-Thread@{$\sim$Splice\_\-Read\_\-Thread}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{$\sim$Splice\_\-Read\_\-Thread}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Transport::Splice\_\-Read\_\-Thread::$\sim$Splice\_\-Read\_\-Thread (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a85350aae8f80457b444a2abd1cfc15d3}
+
+
+Definition at line 42 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_aa9aec995a38ee960b3630f14e7b0e1aa}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!close@{close}}
+\index{close@{close}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{close}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::Splice\_\-Read\_\-Thread::close (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_aa9aec995a38ee960b3630f14e7b0e1aa}
+
+
+Definition at line 48 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a8ba76a5d234a10111a708e923fdd42b3}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!enter\_\-barrier@{enter\_\-barrier}}
+\index{enter\_\-barrier@{enter\_\-barrier}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{enter\_\-barrier}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::Splice\_\-Read\_\-Thread::enter\_\-barrier (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a8ba76a5d234a10111a708e923fdd42b3}
+
+
+service exit point for thread 
+
+
+
+Definition at line 63 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_aed89155ab54fc86e90a71a138350b1f8}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!handle\_\-assignment@{handle\_\-assignment}}
+\index{handle\_\-assignment@{handle\_\-assignment}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{handle\_\-assignment}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Transport::Splice\_\-Read\_\-Thread::handle\_\-assignment (
+\begin{DoxyParamCaption}
+\item[{{\bf Knowledge::Update} \&}]{data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_aed89155ab54fc86e90a71a138350b1f8}
+
+
+Definition at line 73 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a2ff87127681cab58e6313efd0d2965a3}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!handle\_\-multiassignment@{handle\_\-multiassignment}}
+\index{handle\_\-multiassignment@{handle\_\-multiassignment}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{handle\_\-multiassignment}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Transport::Splice\_\-Read\_\-Thread::handle\_\-multiassignment (
+\begin{DoxyParamCaption}
+\item[{{\bf Knowledge::Update} \&}]{data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a2ff87127681cab58e6313efd0d2965a3}
+
+
+Definition at line 144 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a152795c3853303d001e7e45c8ab5ac55}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!svc@{svc}}
+\index{svc@{svc}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{svc}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Transport::Splice\_\-Read\_\-Thread::svc (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a152795c3853303d001e7e45c8ab5ac55}
+
+
+Definition at line 223 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a2696c23b93bac4b2bca110ac12a70845}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!wait\_\-for\_\-ready@{wait\_\-for\_\-ready}}
+\index{wait\_\-for\_\-ready@{wait\_\-for\_\-ready}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{wait\_\-for\_\-ready}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Transport::Splice\_\-Read\_\-Thread::wait\_\-for\_\-ready (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a2696c23b93bac4b2bca110ac12a70845}
+
+
+Definition at line 57 of file Splice\_\-Transport\_\-Read\_\-Thread.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_af941b4eb602832b645701c42d42f5e50}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!assignment\_\-symbols\_\-@{assignment\_\-symbols\_\-}}
+\index{assignment\_\-symbols\_\-@{assignment\_\-symbols\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{assignment\_\-symbols\_\-}]{\setlength{\rightskip}{0pt plus 5cm}::std::vector$<$ ::std::string$>$ {\bf Madara::Transport::Splice\_\-Read\_\-Thread::assignment\_\-symbols\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_af941b4eb602832b645701c42d42f5e50}
+
+
+Definition at line 44 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a1ac9be82d884c2366923bd5f95d6b3c8}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!barrier\_\-@{barrier\_\-}}
+\index{barrier\_\-@{barrier\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{barrier\_\-}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Barrier {\bf Madara::Transport::Splice\_\-Read\_\-Thread::barrier\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a1ac9be82d884c2366923bd5f95d6b3c8}
+
+
+typdef for a threadsafe counter 
+
+
+
+Definition at line 51 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a8dabbe08768a63ad0b8625d4ebbabe06}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!condition\_\-@{condition\_\-}}
+\index{condition\_\-@{condition\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{condition\_\-}]{\setlength{\rightskip}{0pt plus 5cm}DDS::StatusCondition\_\-ptr {\bf Madara::Transport::Splice\_\-Read\_\-Thread::condition\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a8dabbe08768a63ad0b8625d4ebbabe06}
+
+
+Definition at line 56 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a899ad85e073aacfdb1d9000b39ff5960}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!context\_\-@{context\_\-}}
+\index{context\_\-@{context\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{context\_\-}]{\setlength{\rightskip}{0pt plus 5cm}::{\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}\& {\bf Madara::Transport::Splice\_\-Read\_\-Thread::context\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a899ad85e073aacfdb1d9000b39ff5960}
+
+
+Definition at line 47 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_ab8595b5547734b537d0cefa26a660777}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!enable\_\-mutexing\_\-@{enable\_\-mutexing\_\-}}
+\index{enable\_\-mutexing\_\-@{enable\_\-mutexing\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{enable\_\-mutexing\_\-}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Madara::Transport::Splice\_\-Read\_\-Thread::enable\_\-mutexing\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_ab8595b5547734b537d0cefa26a660777}
+
+
+Definition at line 60 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a2c04d64648061c72cb08113bf2d1c137}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!id\_\-@{id\_\-}}
+\index{id\_\-@{id\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{id\_\-}]{\setlength{\rightskip}{0pt plus 5cm}const std::string {\bf Madara::Transport::Splice\_\-Read\_\-Thread::id\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a2c04d64648061c72cb08113bf2d1c137}
+
+
+Definition at line 46 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_af7a39070fa9019143d7971022c08be4a}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!is\_\-not\_\-ready\_\-@{is\_\-not\_\-ready\_\-}}
+\index{is\_\-not\_\-ready\_\-@{is\_\-not\_\-ready\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{is\_\-not\_\-ready\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Transport::Condition} {\bf Madara::Transport::Splice\_\-Read\_\-Thread::is\_\-not\_\-ready\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_af7a39070fa9019143d7971022c08be4a}
+
+
+Definition at line 58 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a696974cc3cc3ff803f65a3e0b00038dc}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!is\_\-ready\_\-@{is\_\-ready\_\-}}
+\index{is\_\-ready\_\-@{is\_\-ready\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{is\_\-ready\_\-}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Madara::Transport::Splice\_\-Read\_\-Thread::is\_\-ready\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a696974cc3cc3ff803f65a3e0b00038dc}
+
+
+Definition at line 59 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a9c431adb377e9c87e7461e3f74dd57bb}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!mutex\_\-@{mutex\_\-}}
+\index{mutex\_\-@{mutex\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{mutex\_\-}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Thread\_\-Mutex {\bf Madara::Transport::Splice\_\-Read\_\-Thread::mutex\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a9c431adb377e9c87e7461e3f74dd57bb}
+
+
+Definition at line 57 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a6ce0b58da3928412036a1b3e070a55b8}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!mutex\_\-reader\_\-@{mutex\_\-reader\_\-}}
+\index{mutex\_\-reader\_\-@{mutex\_\-reader\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{mutex\_\-reader\_\-}]{\setlength{\rightskip}{0pt plus 5cm}::{\bf Knowledge::MutexDataReader\_\-ptr} {\bf Madara::Transport::Splice\_\-Read\_\-Thread::mutex\_\-reader\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a6ce0b58da3928412036a1b3e070a55b8}
+
+
+Definition at line 49 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a5cafe35dd52b080cce126ee746c79033}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!terminated\_\-@{terminated\_\-}}
+\index{terminated\_\-@{terminated\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{terminated\_\-}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Atomic\_\-Op$<$ACE\_\-Mutex,bool$>$ {\bf Madara::Transport::Splice\_\-Read\_\-Thread::terminated\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a5cafe35dd52b080cce126ee746c79033}
+
+
+Definition at line 52 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a46dffcab5a39bda92f4783705bb893bd}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!update\_\-reader\_\-@{update\_\-reader\_\-}}
+\index{update\_\-reader\_\-@{update\_\-reader\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{update\_\-reader\_\-}]{\setlength{\rightskip}{0pt plus 5cm}::{\bf Knowledge::UpdateDataReader\_\-ptr} {\bf Madara::Transport::Splice\_\-Read\_\-Thread::update\_\-reader\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a46dffcab5a39bda92f4783705bb893bd}
+
+
+Definition at line 48 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+\hypertarget{classMadara_1_1Transport_1_1Splice__Read__Thread_a768b5b0cfa08c3e499a9d5075052457d}{
+\index{Madara::Transport::Splice\_\-Read\_\-Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}!waitset\_\-@{waitset\_\-}}
+\index{waitset\_\-@{waitset\_\-}!Madara::Transport::Splice_Read_Thread@{Madara::Transport::Splice\_\-Read\_\-Thread}}
+\subsubsection[{waitset\_\-}]{\setlength{\rightskip}{0pt plus 5cm}DDS::WaitSet {\bf Madara::Transport::Splice\_\-Read\_\-Thread::waitset\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/db7/classMadara_1_1Transport_1_1Splice__Read__Thread_a768b5b0cfa08c3e499a9d5075052457d}
+
+
+Definition at line 55 of file Splice\_\-Transport\_\-Read\_\-Thread.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/transport/\hyperlink{Splice__Transport__Read__Thread_8h}{Splice\_\-Transport\_\-Read\_\-Thread.h}\item 
+madara/transport/\hyperlink{Splice__Transport__Read__Thread_8cpp}{Splice\_\-Transport\_\-Read\_\-Thread.cpp}\end{DoxyCompactItemize}

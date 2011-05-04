@@ -1,0 +1,405 @@
+\hypertarget{Batch_8cpp}{
+\section{madara/kats/Batch.cpp File Reference}
+\label{db/dc3/Batch_8cpp}\index{madara/kats/Batch.cpp@{madara/kats/Batch.cpp}}
+}
+{\ttfamily \#include $<$string$>$}\par
+{\ttfamily \#include $<$vector$>$}\par
+{\ttfamily \#include $<$iostream$>$}\par
+{\ttfamily \#include $<$sstream$>$}\par
+{\ttfamily \#include $<$assert.h$>$}\par
+{\ttfamily \#include $<$iomanip$>$}\par
+{\ttfamily \#include \char`\"{}ace/Log\_\-Msg.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Get\_\-Opt.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/High\_\-Res\_\-Timer.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/OS\_\-NS\_\-Thread.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Sched\_\-Params.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}ace/Process.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/kats/Test\_\-Framework.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/kats/tinyxml.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/utility/Utility.h\char`\"{}}\par
+Include dependency graph for Batch.cpp:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d9/dff/Batch_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classKATS__Process}{KATS\_\-Process}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Batch_8cpp_a39125ed59aeeb00f19cc8b2a012e133f}{MADARA\_\-NTRACE}~0
+\item 
+\#define \hyperlink{Batch_8cpp_a1ba4bc2c76618489375f7c26bdcabd00}{ACE\_\-NTRACE}~0
+\item 
+\#define \hyperlink{Batch_8cpp_a05d9aa98a9d73a78453489f071bdd856}{ACE\_\-NDEBUG}~0
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+ACE\_\-Time\_\-Value \hyperlink{Batch_8cpp_a65e3a000b578a3ff82195d060e065ef6}{kill\_\-time} (0)
+\item 
+ACE\_\-Time\_\-Value \hyperlink{Batch_8cpp_a84c32a0051fac70bfc920af20e5cf718}{delay\_\-time} (0)
+\item 
+std::string \hyperlink{Batch_8cpp_ab5a4f79a39ebb49a45aff7dc8ad1fac1}{extract\_\-path} (const std::string \&name)
+\item 
+int \hyperlink{Batch_8cpp_a98bee60ff9073cffdbad017b7ccffeed}{parse\_\-args} (int argc, ACE\_\-TCHAR $\ast$argv\mbox{[}$\,$\mbox{]})
+\item 
+int \hyperlink{Batch_8cpp_aa97388e555bbc18e422d02a0bac345b9}{ACE\_\-TMAIN} (int argc, ACE\_\-TCHAR $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1KATS_1_1Settings}{Madara::KATS::Settings} \hyperlink{Batch_8cpp_adc540ae770c0ae35e062434a9fae2620}{settings}
+\item 
+bool \hyperlink{Batch_8cpp_ab974ed706e3afa44696c8f4e77a60e2e}{realtime} = false
+\item 
+bool \hyperlink{Batch_8cpp_a55a84c94b0b3072334906801b7e9d7de}{debug\_\-printing} = false
+\item 
+bool \hyperlink{Batch_8cpp_a630e9bc413f4d180c280fee927a55d3e}{run\_\-in\_\-parallel} = false
+\item 
+bool \hyperlink{Batch_8cpp_a87e338a8e266a28dc6f0d1a59b68afe1}{process\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_ab4b8aea3196c595d51acbca0c0877a27}{kill\_\-time\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_ab97e597df3082da6d93751222ddc9e4e}{id\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_aecfb19646d13e82066af9212225203f0}{processes\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a2f7739eedafae441711ca9aa9e598e34}{host\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a48545629c65f74c7589516655cd76e09}{domain\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_aa514ea9922c9d4c76def44dbf901b250}{realtime\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_ac1f90c5eb1f99a529a818ccec52d1b97}{debug\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a86cf112a460722d33fb3ab6fb5a292e0}{pre\_\-condition\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a61fbdf2cc5741f3e7bbede9c233e8eed}{post\_\-condition\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_abae74294e8cdf7fc561be6dd971d6581}{parallel\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a7fbc4fd5b0e1f36e44573045d01c357d}{delay\_\-time\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a341bf925d286acccefbe4aebcb847406}{test\_\-name\_\-set} = false
+\item 
+bool \hyperlink{Batch_8cpp_a2a1f04882d2a461bd26e418535e0747a}{loglevel\_\-set} = false
+\item 
+std::string \hyperlink{Batch_8cpp_a4d9f5825bc03011a856a1aa3470ea6f4}{test\_\-name}
+\item 
+std::string \hyperlink{Batch_8cpp_a8dbeacb5625fe0926dda02ea9b2a0c14}{pre\_\-condition}
+\item 
+std::string \hyperlink{Batch_8cpp_a58e2278c84957abc753d55d193f28ee5}{post\_\-condition}
+\item 
+std::string \hyperlink{Batch_8cpp_ae0c18a856b165e51cccb373794d0529d}{tests\_\-file}
+\item 
+std::string \hyperlink{Batch_8cpp_a4d455efceee21e97d8e21ee40e9b4a20}{path}
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{Batch_8cpp_a05d9aa98a9d73a78453489f071bdd856}{
+\index{Batch.cpp@{Batch.cpp}!ACE\_\-NDEBUG@{ACE\_\-NDEBUG}}
+\index{ACE\_\-NDEBUG@{ACE\_\-NDEBUG}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{ACE\_\-NDEBUG}]{\setlength{\rightskip}{0pt plus 5cm}\#define ACE\_\-NDEBUG~0}}
+\label{db/dc3/Batch_8cpp_a05d9aa98a9d73a78453489f071bdd856}
+
+
+Definition at line 6 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a1ba4bc2c76618489375f7c26bdcabd00}{
+\index{Batch.cpp@{Batch.cpp}!ACE\_\-NTRACE@{ACE\_\-NTRACE}}
+\index{ACE\_\-NTRACE@{ACE\_\-NTRACE}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{ACE\_\-NTRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define ACE\_\-NTRACE~0}}
+\label{db/dc3/Batch_8cpp_a1ba4bc2c76618489375f7c26bdcabd00}
+
+
+Definition at line 3 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a39125ed59aeeb00f19cc8b2a012e133f}{
+\index{Batch.cpp@{Batch.cpp}!MADARA\_\-NTRACE@{MADARA\_\-NTRACE}}
+\index{MADARA\_\-NTRACE@{MADARA\_\-NTRACE}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{MADARA\_\-NTRACE}]{\setlength{\rightskip}{0pt plus 5cm}\#define MADARA\_\-NTRACE~0}}
+\label{db/dc3/Batch_8cpp_a39125ed59aeeb00f19cc8b2a012e133f}
+
+
+Definition at line 2 of file Batch.cpp.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{Batch_8cpp_aa97388e555bbc18e422d02a0bac345b9}{
+\index{Batch.cpp@{Batch.cpp}!ACE\_\-TMAIN@{ACE\_\-TMAIN}}
+\index{ACE\_\-TMAIN@{ACE\_\-TMAIN}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{ACE\_\-TMAIN}]{\setlength{\rightskip}{0pt plus 5cm}int ACE\_\-TMAIN (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{ACE\_\-TCHAR $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}
+\label{db/dc3/Batch_8cpp_aa97388e555bbc18e422d02a0bac345b9}
+
+
+Definition at line 290 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a84c32a0051fac70bfc920af20e5cf718}{
+\index{Batch.cpp@{Batch.cpp}!delay\_\-time@{delay\_\-time}}
+\index{delay\_\-time@{delay\_\-time}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{delay\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Time\_\-Value delay\_\-time (
+\begin{DoxyParamCaption}
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}}
+\label{db/dc3/Batch_8cpp_a84c32a0051fac70bfc920af20e5cf718}
+\hypertarget{Batch_8cpp_ab5a4f79a39ebb49a45aff7dc8ad1fac1}{
+\index{Batch.cpp@{Batch.cpp}!extract\_\-path@{extract\_\-path}}
+\index{extract\_\-path@{extract\_\-path}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{extract\_\-path}]{\setlength{\rightskip}{0pt plus 5cm}std::string extract\_\-path (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{name}
+\end{DoxyParamCaption}
+)}}
+\label{db/dc3/Batch_8cpp_ab5a4f79a39ebb49a45aff7dc8ad1fac1}
+
+
+Definition at line 266 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a65e3a000b578a3ff82195d060e065ef6}{
+\index{Batch.cpp@{Batch.cpp}!kill\_\-time@{kill\_\-time}}
+\index{kill\_\-time@{kill\_\-time}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{kill\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Time\_\-Value kill\_\-time (
+\begin{DoxyParamCaption}
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}}
+\label{db/dc3/Batch_8cpp_a65e3a000b578a3ff82195d060e065ef6}
+\hypertarget{Batch_8cpp_a98bee60ff9073cffdbad017b7ccffeed}{
+\index{Batch.cpp@{Batch.cpp}!parse\_\-args@{parse\_\-args}}
+\index{parse\_\-args@{parse\_\-args}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{parse\_\-args}]{\setlength{\rightskip}{0pt plus 5cm}int parse\_\-args (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{ACE\_\-TCHAR $\ast$}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}
+\label{db/dc3/Batch_8cpp_a98bee60ff9073cffdbad017b7ccffeed}
+
+
+Definition at line 979 of file Batch.cpp.
+
+
+
+\subsection{Variable Documentation}
+\hypertarget{Batch_8cpp_a55a84c94b0b3072334906801b7e9d7de}{
+\index{Batch.cpp@{Batch.cpp}!debug\_\-printing@{debug\_\-printing}}
+\index{debug\_\-printing@{debug\_\-printing}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{debug\_\-printing}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf debug\_\-printing} = false}}
+\label{db/dc3/Batch_8cpp_a55a84c94b0b3072334906801b7e9d7de}
+
+
+Definition at line 30 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_ac1f90c5eb1f99a529a818ccec52d1b97}{
+\index{Batch.cpp@{Batch.cpp}!debug\_\-set@{debug\_\-set}}
+\index{debug\_\-set@{debug\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{debug\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf debug\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_ac1f90c5eb1f99a529a818ccec52d1b97}
+
+
+Definition at line 42 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a7fbc4fd5b0e1f36e44573045d01c357d}{
+\index{Batch.cpp@{Batch.cpp}!delay\_\-time\_\-set@{delay\_\-time\_\-set}}
+\index{delay\_\-time\_\-set@{delay\_\-time\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{delay\_\-time\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf delay\_\-time\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a7fbc4fd5b0e1f36e44573045d01c357d}
+
+
+Definition at line 46 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a48545629c65f74c7589516655cd76e09}{
+\index{Batch.cpp@{Batch.cpp}!domain\_\-set@{domain\_\-set}}
+\index{domain\_\-set@{domain\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{domain\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf domain\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a48545629c65f74c7589516655cd76e09}
+
+
+Definition at line 40 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a2f7739eedafae441711ca9aa9e598e34}{
+\index{Batch.cpp@{Batch.cpp}!host\_\-set@{host\_\-set}}
+\index{host\_\-set@{host\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{host\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf host\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a2f7739eedafae441711ca9aa9e598e34}
+
+
+Definition at line 39 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_ab97e597df3082da6d93751222ddc9e4e}{
+\index{Batch.cpp@{Batch.cpp}!id\_\-set@{id\_\-set}}
+\index{id\_\-set@{id\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{id\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf id\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_ab97e597df3082da6d93751222ddc9e4e}
+
+
+Definition at line 37 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_ab4b8aea3196c595d51acbca0c0877a27}{
+\index{Batch.cpp@{Batch.cpp}!kill\_\-time\_\-set@{kill\_\-time\_\-set}}
+\index{kill\_\-time\_\-set@{kill\_\-time\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{kill\_\-time\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf kill\_\-time\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_ab4b8aea3196c595d51acbca0c0877a27}
+
+
+Definition at line 36 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a2a1f04882d2a461bd26e418535e0747a}{
+\index{Batch.cpp@{Batch.cpp}!loglevel\_\-set@{loglevel\_\-set}}
+\index{loglevel\_\-set@{loglevel\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{loglevel\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf loglevel\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a2a1f04882d2a461bd26e418535e0747a}
+
+
+Definition at line 48 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_abae74294e8cdf7fc561be6dd971d6581}{
+\index{Batch.cpp@{Batch.cpp}!parallel\_\-set@{parallel\_\-set}}
+\index{parallel\_\-set@{parallel\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{parallel\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf parallel\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_abae74294e8cdf7fc561be6dd971d6581}
+
+
+Definition at line 45 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a4d455efceee21e97d8e21ee40e9b4a20}{
+\index{Batch.cpp@{Batch.cpp}!path@{path}}
+\index{path@{path}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{path}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf path}}}
+\label{db/dc3/Batch_8cpp_a4d455efceee21e97d8e21ee40e9b4a20}
+
+
+Definition at line 57 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a58e2278c84957abc753d55d193f28ee5}{
+\index{Batch.cpp@{Batch.cpp}!post\_\-condition@{post\_\-condition}}
+\index{post\_\-condition@{post\_\-condition}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{post\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf post\_\-condition}}}
+\label{db/dc3/Batch_8cpp_a58e2278c84957abc753d55d193f28ee5}
+
+
+Definition at line 52 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a61fbdf2cc5741f3e7bbede9c233e8eed}{
+\index{Batch.cpp@{Batch.cpp}!post\_\-condition\_\-set@{post\_\-condition\_\-set}}
+\index{post\_\-condition\_\-set@{post\_\-condition\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{post\_\-condition\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf post\_\-condition\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a61fbdf2cc5741f3e7bbede9c233e8eed}
+
+
+Definition at line 44 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a8dbeacb5625fe0926dda02ea9b2a0c14}{
+\index{Batch.cpp@{Batch.cpp}!pre\_\-condition@{pre\_\-condition}}
+\index{pre\_\-condition@{pre\_\-condition}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{pre\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf pre\_\-condition}}}
+\label{db/dc3/Batch_8cpp_a8dbeacb5625fe0926dda02ea9b2a0c14}
+
+
+Definition at line 51 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a86cf112a460722d33fb3ab6fb5a292e0}{
+\index{Batch.cpp@{Batch.cpp}!pre\_\-condition\_\-set@{pre\_\-condition\_\-set}}
+\index{pre\_\-condition\_\-set@{pre\_\-condition\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{pre\_\-condition\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf pre\_\-condition\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a86cf112a460722d33fb3ab6fb5a292e0}
+
+
+Definition at line 43 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a87e338a8e266a28dc6f0d1a59b68afe1}{
+\index{Batch.cpp@{Batch.cpp}!process\_\-set@{process\_\-set}}
+\index{process\_\-set@{process\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{process\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf process\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a87e338a8e266a28dc6f0d1a59b68afe1}
+
+
+Definition at line 35 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_aecfb19646d13e82066af9212225203f0}{
+\index{Batch.cpp@{Batch.cpp}!processes\_\-set@{processes\_\-set}}
+\index{processes\_\-set@{processes\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{processes\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf processes\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_aecfb19646d13e82066af9212225203f0}
+
+
+Definition at line 38 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_ab974ed706e3afa44696c8f4e77a60e2e}{
+\index{Batch.cpp@{Batch.cpp}!realtime@{realtime}}
+\index{realtime@{realtime}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{realtime}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf realtime} = false}}
+\label{db/dc3/Batch_8cpp_ab974ed706e3afa44696c8f4e77a60e2e}
+
+
+Definition at line 29 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_aa514ea9922c9d4c76def44dbf901b250}{
+\index{Batch.cpp@{Batch.cpp}!realtime\_\-set@{realtime\_\-set}}
+\index{realtime\_\-set@{realtime\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{realtime\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf realtime\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_aa514ea9922c9d4c76def44dbf901b250}
+
+
+Definition at line 41 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a630e9bc413f4d180c280fee927a55d3e}{
+\index{Batch.cpp@{Batch.cpp}!run\_\-in\_\-parallel@{run\_\-in\_\-parallel}}
+\index{run\_\-in\_\-parallel@{run\_\-in\_\-parallel}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{run\_\-in\_\-parallel}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf run\_\-in\_\-parallel} = false}}
+\label{db/dc3/Batch_8cpp_a630e9bc413f4d180c280fee927a55d3e}
+
+
+Definition at line 31 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_adc540ae770c0ae35e062434a9fae2620}{
+\index{Batch.cpp@{Batch.cpp}!settings@{settings}}
+\index{settings@{settings}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::KATS::Settings} {\bf settings}}}
+\label{db/dc3/Batch_8cpp_adc540ae770c0ae35e062434a9fae2620}
+
+
+Definition at line 26 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a4d9f5825bc03011a856a1aa3470ea6f4}{
+\index{Batch.cpp@{Batch.cpp}!test\_\-name@{test\_\-name}}
+\index{test\_\-name@{test\_\-name}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{test\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf test\_\-name}}}
+\label{db/dc3/Batch_8cpp_a4d9f5825bc03011a856a1aa3470ea6f4}
+
+
+Definition at line 50 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_a341bf925d286acccefbe4aebcb847406}{
+\index{Batch.cpp@{Batch.cpp}!test\_\-name\_\-set@{test\_\-name\_\-set}}
+\index{test\_\-name\_\-set@{test\_\-name\_\-set}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{test\_\-name\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool {\bf test\_\-name\_\-set} = false}}
+\label{db/dc3/Batch_8cpp_a341bf925d286acccefbe4aebcb847406}
+
+
+Definition at line 47 of file Batch.cpp.
+
+\hypertarget{Batch_8cpp_ae0c18a856b165e51cccb373794d0529d}{
+\index{Batch.cpp@{Batch.cpp}!tests\_\-file@{tests\_\-file}}
+\index{tests\_\-file@{tests\_\-file}!Batch.cpp@{Batch.cpp}}
+\subsubsection[{tests\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf tests\_\-file}}}
+\label{db/dc3/Batch_8cpp_ae0c18a856b165e51cccb373794d0529d}
+
+
+Definition at line 53 of file Batch.cpp.
+

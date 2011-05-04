@@ -114,6 +114,7 @@ namespace Madara
        *                           event barrier
        * @param barrier_this_event barrier across all processes as part
        *                           of the pre_condition
+       * @param close_transport    closes transport after the event
        * @returns          0 if all conditions passed, -1 if fail_condition
        *                   was met
        **/

@@ -1,0 +1,196 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal}{
+\section{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal Class Reference}
+\label{db/d82/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal}\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+}
+
+
+Check and left and right arguments for greater than or equal to.  
+
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=304pt]{d0/d84/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=318pt]{d5/dfe/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a179cefcf956a1f53be58ffeff2dd5ad4}{Greater\_\-Than\_\-Equal} (void)
+\begin{DoxyCompactList}\small\item\em constructor \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a66439f721200c8bfbaf774077f6c59fd}{$\sim$Greater\_\-Than\_\-Equal} (void)
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a7a220157018243113057bd293ef72f61}{add\_\-precedence} (int accumulated\_\-precedence)
+\begin{DoxyCompactList}\small\item\em returns the precedence level \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_ad59f6d84a2cca9cdb9da0ca75987f3a4}{build} (void)
+\begin{DoxyCompactList}\small\item\em builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{precedence} (void)
+\begin{DoxyCompactList}\small\item\em abstract method for returning precedence level (higher value means higher precedence \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{left\_\-}
+\begin{DoxyCompactList}\small\item\em left and right pointers \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{right\_\-}
+\item 
+int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{precedence\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Check and left and right arguments for greater than or equal to. 
+
+Definition at line 379 of file Interpreter.cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a179cefcf956a1f53be58ffeff2dd5ad4}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!Greater\_\-Than\_\-Equal@{Greater\_\-Than\_\-Equal}}
+\index{Greater\_\-Than\_\-Equal@{Greater\_\-Than\_\-Equal}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{Greater\_\-Than\_\-Equal}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal::Greater\_\-Than\_\-Equal (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{db/d82/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a179cefcf956a1f53be58ffeff2dd5ad4}
+
+
+constructor 
+
+
+
+Definition at line 1042 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a66439f721200c8bfbaf774077f6c59fd}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!$\sim$Greater\_\-Than\_\-Equal@{$\sim$Greater\_\-Than\_\-Equal}}
+\index{$\sim$Greater\_\-Than\_\-Equal@{$\sim$Greater\_\-Than\_\-Equal}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{$\sim$Greater\_\-Than\_\-Equal}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal::$\sim$Greater\_\-Than\_\-Equal (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{db/d82/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a66439f721200c8bfbaf774077f6c59fd}
+
+
+destructor 
+
+
+
+Definition at line 1048 of file Interpreter.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a7a220157018243113057bd293ef72f61}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!add\_\-precedence@{add\_\-precedence}}
+\index{add\_\-precedence@{add\_\-precedence}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{add\_\-precedence}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal::add\_\-precedence (
+\begin{DoxyParamCaption}
+\item[{int}]{accumulated\_\-precedence}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{db/d82/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_a7a220157018243113057bd293ef72f61}
+
+
+returns the precedence level 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ae16afabe3c5f9ba32d06386eb02e7e0c}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 1054 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_ad59f6d84a2cca9cdb9da0ca75987f3a4}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!build@{build}}
+\index{build@{build}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{build}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal::build (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{db/d82/classMadara_1_1Expression__Tree_1_1Greater__Than__Equal_ad59f6d84a2cca9cdb9da0ca75987f3a4}
+
+
+builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a01fdf1d8b06b3d6e49027d35b761cce4}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 1061 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!precedence@{precedence}}
+\index{precedence@{precedence}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{precedence}]{\setlength{\rightskip}{0pt plus 5cm}virtual int Madara::Expression\_\-Tree::Symbol::precedence (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}
+
+
+abstract method for returning precedence level (higher value means higher precedence 
+
+
+
+Definition at line 71 of file Interpreter.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!left\_\-@{left\_\-}}
+\index{left\_\-@{left\_\-}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{left\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::left\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}
+
+
+left and right pointers 
+
+
+
+Definition at line 84 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!precedence\_\-@{precedence\_\-}}
+\index{precedence\_\-@{precedence\_\-}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{precedence\_\-}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Madara::Expression\_\-Tree::Symbol::precedence\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}
+
+
+Definition at line 86 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{
+\index{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}!right\_\-@{right\_\-}}
+\index{right\_\-@{right\_\-}!Madara::Expression_Tree::Greater_Than_Equal@{Madara::Expression\_\-Tree::Greater\_\-Than\_\-Equal}}
+\subsubsection[{right\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::right\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}
+
+
+Definition at line 85 of file Interpreter.cpp.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Interpreter_8cpp}{Interpreter.cpp}\end{DoxyCompactItemize}

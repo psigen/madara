@@ -1,0 +1,101 @@
+\hypertarget{namespaceMadara_1_1Transport}{
+\section{Madara::Transport Namespace Reference}
+\label{dd/deb/namespaceMadara_1_1Transport}\index{Madara::Transport@{Madara::Transport}}
+}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMadara_1_1Transport_1_1Splice__DDS__Transport}{Splice\_\-DDS\_\-Transport}
+\begin{DoxyCompactList}\small\item\em This class provides an interface into the Open Splice dissemination transport. \item\end{DoxyCompactList}\item 
+class \hyperlink{classMadara_1_1Transport_1_1Splice__Read__Thread}{Splice\_\-Read\_\-Thread}
+\item 
+class \hyperlink{classMadara_1_1Transport_1_1TCP__Transport}{TCP\_\-Transport}
+\item 
+class \hyperlink{classMadara_1_1Transport_1_1TCP__Transport__Read__Thread}{TCP\_\-Transport\_\-Read\_\-Thread}
+\item 
+class \hyperlink{classMadara_1_1Transport_1_1Settings}{Settings}
+\begin{DoxyCompactList}\small\item\em Holds \hyperlink{namespaceMadara_1_1Transport}{Transport} \hyperlink{classMadara_1_1Transport_1_1Settings}{Settings}. \item\end{DoxyCompactList}\item 
+class \hyperlink{classMadara_1_1Transport_1_1Base}{Base}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef ACE\_\-Condition$<$ ACE\_\-Thread\_\-Mutex $>$ \hyperlink{namespaceMadara_1_1Transport_a5dd6d9a7fb47cdbf2d1448242da4e13d}{Condition}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5}{Types} \{ \hyperlink{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5a70c51f2527432fc6d626c39d9019097d}{NO\_\-TRANSPORT} =  0, 
+\hyperlink{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5aebef9e50b4444c512a871c759fe18757}{SPLICE} =  1, 
+\hyperlink{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5a423f39bf6e79c7ebf7279c2268f19273}{TCP} =  2
+ \}
+\item 
+enum \hyperlink{namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3}{Reliabilities} \{ \hyperlink{namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3a3278c1d2833224516cbf27185c32df53}{BEST\_\-EFFORT} =  0, 
+\hyperlink{namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3a7e04dbb87629114207ef526ea07fec82}{RELIABLE} =  1
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{namespaceMadara_1_1Transport_a5dd6d9a7fb47cdbf2d1448242da4e13d}{
+\index{Madara::Transport@{Madara::Transport}!Condition@{Condition}}
+\index{Condition@{Condition}!Madara::Transport@{Madara::Transport}}
+\subsubsection[{Condition}]{\setlength{\rightskip}{0pt plus 5cm}typedef ACE\_\-Condition$<$ACE\_\-Thread\_\-Mutex$>$ {\bf Madara::Transport::Condition}}}
+\label{dd/deb/namespaceMadara_1_1Transport_a5dd6d9a7fb47cdbf2d1448242da4e13d}
+
+
+Definition at line 88 of file Transport.h.
+
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3}{
+\index{Madara::Transport@{Madara::Transport}!Reliabilities@{Reliabilities}}
+\index{Reliabilities@{Reliabilities}!Madara::Transport@{Madara::Transport}}
+\subsubsection[{Reliabilities}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Madara::Transport::Reliabilities}}}
+\label{dd/deb/namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{BEST\_\-EFFORT@{BEST\_\-EFFORT}!Madara::Transport@{Madara::Transport}}\index{Madara::Transport@{Madara::Transport}!BEST\_\-EFFORT@{BEST\_\-EFFORT}}\item[{\em 
+\hypertarget{namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3a3278c1d2833224516cbf27185c32df53}{
+BEST\_\-EFFORT}
+\label{dd/deb/namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3a3278c1d2833224516cbf27185c32df53}
+}]\index{RELIABLE@{RELIABLE}!Madara::Transport@{Madara::Transport}}\index{Madara::Transport@{Madara::Transport}!RELIABLE@{RELIABLE}}\item[{\em 
+\hypertarget{namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3a7e04dbb87629114207ef526ea07fec82}{
+RELIABLE}
+\label{dd/deb/namespaceMadara_1_1Transport_a8eede09c44edca44b766fa0ace76aba3a7e04dbb87629114207ef526ea07fec82}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 20 of file Transport.h.
+
+\hypertarget{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5}{
+\index{Madara::Transport@{Madara::Transport}!Types@{Types}}
+\index{Types@{Types}!Madara::Transport@{Madara::Transport}}
+\subsubsection[{Types}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Madara::Transport::Types}}}
+\label{dd/deb/namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{NO\_\-TRANSPORT@{NO\_\-TRANSPORT}!Madara::Transport@{Madara::Transport}}\index{Madara::Transport@{Madara::Transport}!NO\_\-TRANSPORT@{NO\_\-TRANSPORT}}\item[{\em 
+\hypertarget{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5a70c51f2527432fc6d626c39d9019097d}{
+NO\_\-TRANSPORT}
+\label{dd/deb/namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5a70c51f2527432fc6d626c39d9019097d}
+}]\index{SPLICE@{SPLICE}!Madara::Transport@{Madara::Transport}}\index{Madara::Transport@{Madara::Transport}!SPLICE@{SPLICE}}\item[{\em 
+\hypertarget{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5aebef9e50b4444c512a871c759fe18757}{
+SPLICE}
+\label{dd/deb/namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5aebef9e50b4444c512a871c759fe18757}
+}]\index{TCP@{TCP}!Madara::Transport@{Madara::Transport}}\index{Madara::Transport@{Madara::Transport}!TCP@{TCP}}\item[{\em 
+\hypertarget{namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5a423f39bf6e79c7ebf7279c2268f19273}{
+TCP}
+\label{dd/deb/namespaceMadara_1_1Transport_a280656de18d1bbe4a165cd9fdd654ba5a423f39bf6e79c7ebf7279c2268f19273}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 14 of file Transport.h.
+

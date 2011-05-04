@@ -1,0 +1,230 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable}{
+\section{Madara::Expression\_\-Tree::Variable Class Reference}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable}\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+}
+
+
+Leaf node of parse tree.  
+
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Variable:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{d6/dc5/classMadara_1_1Expression__Tree_1_1Variable__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Variable:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{de/d23/classMadara_1_1Expression__Tree_1_1Variable__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Variable_a344f3f04b66474bca1ca5fb2f4686bd0}{Variable} (const ::std::string \&key, \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \&context)
+\begin{DoxyCompactList}\small\item\em constructors \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Variable_a0698b620b5b0fae2255bce64664e584f}{$\sim$Variable} (void)
+\begin{DoxyCompactList}\small\item\em destructor \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Variable_ac33bf9452571b6aa2a27799f801c3abf}{add\_\-precedence} (int accumulated\_\-precedence)
+\begin{DoxyCompactList}\small\item\em returns the precedence level \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Variable_a031ac3899ab8efb759543a3ed6edacdb}{build} (void)
+\begin{DoxyCompactList}\small\item\em builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node \item\end{DoxyCompactList}\item 
+virtual int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{precedence} (void)
+\begin{DoxyCompactList}\small\item\em abstract method for returning precedence level (higher value means higher precedence \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{left\_\-}
+\begin{DoxyCompactList}\small\item\em left and right pointers \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Symbol}{Symbol} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{right\_\-}
+\item 
+int \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{precedence\_\-}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const ::std::string \hyperlink{classMadara_1_1Expression__Tree_1_1Variable_aa1a24281fc8deb28411580346595325c}{key\_\-}
+\begin{DoxyCompactList}\small\item\em Key for retrieving value of this variable. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \& \hyperlink{classMadara_1_1Expression__Tree_1_1Variable_aad758024e3cfcc2482280157bf4b7a2e}{context\_\-}
+\begin{DoxyCompactList}\small\item\em Context for variables. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Leaf node of parse tree. 
+
+Definition at line 150 of file Interpreter.cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable_a344f3f04b66474bca1ca5fb2f4686bd0}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!Variable@{Variable}}
+\index{Variable@{Variable}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{Variable}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Variable::Variable (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{{\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context} \&}]{context}
+\end{DoxyParamCaption}
+)}}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable_a344f3f04b66474bca1ca5fb2f4686bd0}
+
+
+constructors 
+
+
+
+Definition at line 792 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable_a0698b620b5b0fae2255bce64664e584f}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!$\sim$Variable@{$\sim$Variable}}
+\index{$\sim$Variable@{$\sim$Variable}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{$\sim$Variable}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Variable::$\sim$Variable (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable_a0698b620b5b0fae2255bce64664e584f}
+
+
+destructor 
+
+
+
+Definition at line 799 of file Interpreter.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable_ac33bf9452571b6aa2a27799f801c3abf}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!add\_\-precedence@{add\_\-precedence}}
+\index{add\_\-precedence@{add\_\-precedence}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{add\_\-precedence}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Expression\_\-Tree::Variable::add\_\-precedence (
+\begin{DoxyParamCaption}
+\item[{int}]{accumulated\_\-precedence}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable_ac33bf9452571b6aa2a27799f801c3abf}
+
+
+returns the precedence level 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_ae16afabe3c5f9ba32d06386eb02e7e0c}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 805 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable_a031ac3899ab8efb759543a3ed6edacdb}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!build@{build}}
+\index{build@{build}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{build}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Variable::build (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable_a031ac3899ab8efb759543a3ed6edacdb}
+
+
+builds an equivalent \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} node 
+
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Symbol_a01fdf1d8b06b3d6e49027d35b761cce4}{Madara::Expression\_\-Tree::Symbol}.
+
+
+
+Definition at line 812 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!precedence@{precedence}}
+\index{precedence@{precedence}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{precedence}]{\setlength{\rightskip}{0pt plus 5cm}virtual int Madara::Expression\_\-Tree::Symbol::precedence (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual, inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_ac060dedb8d16864591b259df375109b3}
+
+
+abstract method for returning precedence level (higher value means higher precedence 
+
+
+
+Definition at line 71 of file Interpreter.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable_aad758024e3cfcc2482280157bf4b7a2e}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!context\_\-@{context\_\-}}
+\index{context\_\-@{context\_\-}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{context\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}\& {\bf Madara::Expression\_\-Tree::Variable::context\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable_aad758024e3cfcc2482280157bf4b7a2e}
+
+
+Context for variables. 
+
+
+
+Definition at line 171 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Variable_aa1a24281fc8deb28411580346595325c}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!key\_\-@{key\_\-}}
+\index{key\_\-@{key\_\-}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{key\_\-}]{\setlength{\rightskip}{0pt plus 5cm}const ::std::string {\bf Madara::Expression\_\-Tree::Variable::key\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d8/d80/classMadara_1_1Expression__Tree_1_1Variable_aa1a24281fc8deb28411580346595325c}
+
+
+Key for retrieving value of this variable. 
+
+
+
+Definition at line 168 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!left\_\-@{left\_\-}}
+\index{left\_\-@{left\_\-}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{left\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::left\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a7808eb3daad675e2e01409f173a41cee}
+
+
+left and right pointers 
+
+
+
+Definition at line 84 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!precedence\_\-@{precedence\_\-}}
+\index{precedence\_\-@{precedence\_\-}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{precedence\_\-}]{\setlength{\rightskip}{0pt plus 5cm}int {\bf Madara::Expression\_\-Tree::Symbol::precedence\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a2de31139261eea47dccd48d377780803}
+
+
+Definition at line 86 of file Interpreter.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}{
+\index{Madara::Expression\_\-Tree::Variable@{Madara::Expression\_\-Tree::Variable}!right\_\-@{right\_\-}}
+\index{right\_\-@{right\_\-}!Madara::Expression_Tree::Variable@{Madara::Expression\_\-Tree::Variable}}
+\subsubsection[{right\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Symbol}$\ast$ {\bf Madara::Expression\_\-Tree::Symbol::right\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d5/d85/classMadara_1_1Expression__Tree_1_1Symbol_a13467d1c78fbf06c3d64a6a4770eee7a}
+
+
+Definition at line 85 of file Interpreter.cpp.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Interpreter_8cpp}{Interpreter.cpp}\end{DoxyCompactItemize}

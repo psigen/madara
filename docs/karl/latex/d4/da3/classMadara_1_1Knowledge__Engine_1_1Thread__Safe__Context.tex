@@ -1,0 +1,745 @@
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}{
+\section{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context Class Reference}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context}\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+}
+
+
+This class stores variables and their values for use by any entity needing state information in a thread safe way.  
+
+
+
+
+{\ttfamily \#include $<$Thread\_\-Safe\_\-Context.h$>$}
+
+
+
+Collaboration diagram for Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d9/d92/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef ACE\_\-Condition$<$ ACE\_\-Recursive\_\-Thread\_\-Mutex $>$ \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_adad1b4f13e2506ea29d19c6ae0703f8e}{Condition}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae9ffa2c965b7d6b9a5abbf27481ea633}{Thread\_\-Safe\_\-Context} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a398941437526d7ad94a875327dc3f9d9}{$\sim$Thread\_\-Safe\_\-Context} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ac340373d2f4c22aa443e9f5e3ee8d3d5}{get} (const ::std::string \&key) const 
+\begin{DoxyCompactList}\small\item\em Atomically return the value of a variable. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a3e1c5decbb3292ded800fd0d9d797737}{set} (const ::std::string \&key, long long value, bool modified=true)
+\begin{DoxyCompactList}\small\item\em Atomically set the value of a variable. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aa82eaaeaaa80462a098158925baa7b47}{set\_\-if\_\-unequal} (const ::std::string \&key, long long value, unsigned long quality, unsigned long long clock, bool modified=true)
+\begin{DoxyCompactList}\small\item\em Atomically set if the variable value will be different. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7fc69cd862105ff4dc150e9f85a22d58}{get\_\-quality} (const ::std::string \&key)
+\begin{DoxyCompactList}\small\item\em Get quality of last update to a variable. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ad9b368999a28306558ee4ffa589b4f55}{get\_\-write\_\-quality} (const ::std::string \&key)
+\begin{DoxyCompactList}\small\item\em Get quality of local process updates to a variable. \item\end{DoxyCompactList}\item 
+unsigned long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a595b9624264a67db13824642f4ea520b}{set\_\-quality} (const ::std::string \&key, unsigned long quality, bool force\_\-update)
+\begin{DoxyCompactList}\small\item\em Set quality of last update to a variable. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a648dc63feb8f7f764b340fbfa0efd521}{set\_\-write\_\-quality} (const ::std::string \&key, unsigned long quality)
+\begin{DoxyCompactList}\small\item\em Set quality of this process writing to a variable. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab849d015e0e1d272d38bcf8dbace0798}{get\_\-modified} (\hyperlink{namespaceMadara_a5555eaae3fdb02fcc2691b8ff0178e1c}{Madara::String\_\-Vector} \&modified) const 
+\begin{DoxyCompactList}\small\item\em Return list of variables that have been modified. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae145dd7dd6ef1b18a230fe44dd0864e9}{reset\_\-modified} (void)
+\begin{DoxyCompactList}\small\item\em Reset all variables to unmodified. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab5601f950f83aa7e2da49c8fea345889}{apply\_\-modified} (void)
+\begin{DoxyCompactList}\small\item\em Changes all global variables to modified at current time. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a5eef60377d621f3997fe0337acae29d2}{reset\_\-modified} (const ::std::string \&key)
+\begin{DoxyCompactList}\small\item\em Reset a variable to unmodified. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acedbd87418912605880c87f2b99d0c9c}{inc} (const ::std::string \&key)
+\begin{DoxyCompactList}\small\item\em Atomically increment the value of the variable. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae6373c01752d65907a1d43fbfdbc4870}{wait\_\-for\_\-change} (bool extra\_\-release=false)
+\begin{DoxyCompactList}\small\item\em Make the current thread of execution wait for a change on the context. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ad9b23351339a10a79e75b3e590337d9c}{dec} (const ::std::string \&key)
+\begin{DoxyCompactList}\small\item\em Atomically decrement the value of the variable. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a81bc0d2cca2772d1cc2b59b5438466b2}{exists} (const ::std::string \&key) const 
+\begin{DoxyCompactList}\small\item\em Atomically check to see if a key exists. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a8568b009fb314eafc72008ae04d61216}{print} (unsigned int level) const 
+\begin{DoxyCompactList}\small\item\em Print all variables and their values. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a31ad60e0ba7ce73913faa8859a3c00a4}{print} (const std::string \&statement, unsigned int level) const 
+\begin{DoxyCompactList}\small\item\em Print a statement, similar to printf (variable expansions allowed) e.g. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aefdf0e91933a447ededc6a1e28828a0a}{clear} (void)
+\begin{DoxyCompactList}\small\item\em Clear all variables and their values. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acaf3bd7f1949fe90c691500e96b637d1}{lock} (void) const 
+\begin{DoxyCompactList}\small\item\em Lock the mutex on this context. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aea7de1117389c07d3db0d6fc51da3e22}{unlock} (void) const 
+\begin{DoxyCompactList}\small\item\em Unlock the mutex on this context. \item\end{DoxyCompactList}\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7a9faa4faee4c334c58ab359b8e1d870}{inc\_\-clock} (void)
+\begin{DoxyCompactList}\small\item\em atomically increment the lamport clock and return the new clock time (intended for sending knowledge updates) \item\end{DoxyCompactList}\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7308e69ba47dabe9f1ba95d4091f91d3}{inc\_\-clock} (const std::string \&key)
+\begin{DoxyCompactList}\small\item\em atomically increment the lamport clock of a particular variable and return the new clock time (for sending knowledge updates) \item\end{DoxyCompactList}\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a9fedc92a1b9d47303612aabbb7515b84}{set\_\-clock} (unsigned long long clock)
+\begin{DoxyCompactList}\small\item\em set the lamport clock (updates with lamport clocks lower than our current clock get discarded) \item\end{DoxyCompactList}\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a4e161b678cad2b529bb30a66c35ba549}{set\_\-clock} (const std::string \&key, unsigned long long clock)
+\begin{DoxyCompactList}\small\item\em set the lamport clock for a particular variable (updates with lamport clocks lower than our current clock get discarded) \item\end{DoxyCompactList}\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_af4caa12ac1e96723cea1a627e75355e8}{get\_\-clock} (void)
+\begin{DoxyCompactList}\small\item\em get the lamport clock (updates with lamport clocks lower than our current clock get discarded) \item\end{DoxyCompactList}\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a3166fceae673dccddb7366c73a3fabea}{get\_\-clock} (const std::string \&key)
+\begin{DoxyCompactList}\small\item\em get the lamport clock for a particular variable (updates with lamport clocks lower than our current clock get discarded) \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a16e8d93461a3ed73a2893be3d95b1ed3}{signal} (void) const 
+\begin{DoxyCompactList}\small\item\em Signal the condition that it can wake up someone else on changed data. \item\end{DoxyCompactList}\item 
+std::string \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acacddbfcb23fbb92e8683eedcb6f1d08}{expand\_\-statement} (const std::string \&statement) const 
+\begin{DoxyCompactList}\small\item\em Expand a string with variable expansions. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef ACE\_\-Guard$<$ ACE\_\-Recursive\_\-Thread\_\-Mutex $>$ \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a57064d7990248bc355b119159fa627d1}{Context\_\-Guard}
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{namespaceMadara_a072a1733d5e97cad8e1564c37135a506}{Madara::Knowledge\_\-Map} \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab440ae2c260b9592a3bc899c3f9a2607}{map\_\-}
+\begin{DoxyCompactList}\small\item\em Hash table containing variable names and values. \item\end{DoxyCompactList}\item 
+ACE\_\-Recursive\_\-Thread\_\-Mutex \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a239fefcb443bba3eddef39342ca6a110}{mutex\_\-}
+\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_adad1b4f13e2506ea29d19c6ae0703f8e}{Condition} \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae5f55e8a134860c3e71fb4bbef3d5418}{changed\_\-}
+\item 
+std::vector$<$ std::string $>$ \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ac98bb47361f4d859e8306de5d92ca0eb}{expansion\_\-splitters\_\-}
+\item 
+unsigned long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae16c3d6186939bca49989c8c31262861}{clock\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class stores variables and their values for use by any entity needing state information in a thread safe way. 
+
+Definition at line 33 of file Thread\_\-Safe\_\-Context.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_adad1b4f13e2506ea29d19c6ae0703f8e}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!Condition@{Condition}}
+\index{Condition@{Condition}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{Condition}]{\setlength{\rightskip}{0pt plus 5cm}typedef ACE\_\-Condition$<$ACE\_\-Recursive\_\-Thread\_\-Mutex$>$ {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::Condition}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_adad1b4f13e2506ea29d19c6ae0703f8e}
+
+
+Definition at line 36 of file Thread\_\-Safe\_\-Context.h.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a57064d7990248bc355b119159fa627d1}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!Context\_\-Guard@{Context\_\-Guard}}
+\index{Context\_\-Guard@{Context\_\-Guard}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{Context\_\-Guard}]{\setlength{\rightskip}{0pt plus 5cm}typedef ACE\_\-Guard$<$ACE\_\-Recursive\_\-Thread\_\-Mutex$>$ {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::Context\_\-Guard}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a57064d7990248bc355b119159fa627d1}
+
+
+Definition at line 147 of file Thread\_\-Safe\_\-Context.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae9ffa2c965b7d6b9a5abbf27481ea633}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!Thread\_\-Safe\_\-Context@{Thread\_\-Safe\_\-Context}}
+\index{Thread\_\-Safe\_\-Context@{Thread\_\-Safe\_\-Context}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{Thread\_\-Safe\_\-Context}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::Thread\_\-Safe\_\-Context (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae9ffa2c965b7d6b9a5abbf27481ea633}
+
+
+Constructor. 
+
+
+
+Definition at line 11 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a398941437526d7ad94a875327dc3f9d9}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!$\sim$Thread\_\-Safe\_\-Context@{$\sim$Thread\_\-Safe\_\-Context}}
+\index{$\sim$Thread\_\-Safe\_\-Context@{$\sim$Thread\_\-Safe\_\-Context}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{$\sim$Thread\_\-Safe\_\-Context}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::$\sim$Thread\_\-Safe\_\-Context (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a398941437526d7ad94a875327dc3f9d9}
+
+
+Destructor. 
+
+
+
+Definition at line 19 of file Thread\_\-Safe\_\-Context.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab5601f950f83aa7e2da49c8fea345889}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!apply\_\-modified@{apply\_\-modified}}
+\index{apply\_\-modified@{apply\_\-modified}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{apply\_\-modified}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::apply\_\-modified (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab5601f950f83aa7e2da49c8fea345889}
+
+
+Changes all global variables to modified at current time. 
+
+
+
+Definition at line 318 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aefdf0e91933a447ededc6a1e28828a0a}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!clear@{clear}}
+\index{clear@{clear}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::clear (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aefdf0e91933a447ededc6a1e28828a0a}
+
+
+Clear all variables and their values. 
+
+
+
+Definition at line 256 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ad9b23351339a10a79e75b3e590337d9c}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!dec@{dec}}
+\index{dec@{dec}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{dec}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::dec (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ad9b23351339a10a79e75b3e590337d9c}
+
+
+Atomically decrement the value of the variable. 
+
+
+
+Definition at line 85 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a81bc0d2cca2772d1cc2b59b5438466b2}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!exists@{exists}}
+\index{exists@{exists}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{exists}]{\setlength{\rightskip}{0pt plus 5cm}bool Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::exists (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a81bc0d2cca2772d1cc2b59b5438466b2}
+
+
+Atomically check to see if a key exists. 
+
+
+
+Definition at line 62 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acacddbfcb23fbb92e8683eedcb6f1d08}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!expand\_\-statement@{expand\_\-statement}}
+\index{expand\_\-statement@{expand\_\-statement}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{expand\_\-statement}]{\setlength{\rightskip}{0pt plus 5cm}std::string Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::expand\_\-statement (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{key}
+\end{DoxyParamCaption}
+) const}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acacddbfcb23fbb92e8683eedcb6f1d08}
+
+
+Expand a string with variable expansions. 
+
+This is a generic form of the function found in Variable\_\-Node, which is optimized to never change keys. 
+
+Definition at line 259 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ac340373d2f4c22aa443e9f5e3ee8d3d5}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!get@{get}}
+\index{get@{get}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::get (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+) const}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ac340373d2f4c22aa443e9f5e3ee8d3d5}
+
+
+Atomically return the value of a variable. 
+
+
+
+Definition at line 25 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_af4caa12ac1e96723cea1a627e75355e8}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!get\_\-clock@{get\_\-clock}}
+\index{get\_\-clock@{get\_\-clock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{get\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::get\_\-clock (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_af4caa12ac1e96723cea1a627e75355e8}
+
+
+get the lamport clock (updates with lamport clocks lower than our current clock get discarded) 
+
+
+
+Definition at line 201 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a3166fceae673dccddb7366c73a3fabea}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!get\_\-clock@{get\_\-clock}}
+\index{get\_\-clock@{get\_\-clock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{get\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::get\_\-clock (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{key}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a3166fceae673dccddb7366c73a3fabea}
+
+
+get the lamport clock for a particular variable (updates with lamport clocks lower than our current clock get discarded) 
+
+get the lamport clock for a particular variable 
+
+Definition at line 209 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab849d015e0e1d272d38bcf8dbace0798}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!get\_\-modified@{get\_\-modified}}
+\index{get\_\-modified@{get\_\-modified}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{get\_\-modified}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::get\_\-modified (
+\begin{DoxyParamCaption}
+\item[{{\bf Madara::String\_\-Vector} \&}]{modified}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab849d015e0e1d272d38bcf8dbace0798}
+
+
+Return list of variables that have been modified. 
+
+
+
+Definition at line 287 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7fc69cd862105ff4dc150e9f85a22d58}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!get\_\-quality@{get\_\-quality}}
+\index{get\_\-quality@{get\_\-quality}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{get\_\-quality}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::get\_\-quality (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7fc69cd862105ff4dc150e9f85a22d58}
+
+
+Get quality of last update to a variable. 
+
+get quality of last update to a variable.
+
+\begin{DoxyReturn}{Returns}
+quality of the variable 
+\end{DoxyReturn}
+
+
+Definition at line 93 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ad9b368999a28306558ee4ffa589b4f55}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!get\_\-write\_\-quality@{get\_\-write\_\-quality}}
+\index{get\_\-write\_\-quality@{get\_\-write\_\-quality}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{get\_\-write\_\-quality}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::get\_\-write\_\-quality (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ad9b368999a28306558ee4ffa589b4f55}
+
+
+Get quality of local process updates to a variable. 
+
+get quality of last update to a variable.
+
+\begin{DoxyReturn}{Returns}
+quality of the variable 
+\end{DoxyReturn}
+
+
+Definition at line 114 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acedbd87418912605880c87f2b99d0c9c}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!inc@{inc}}
+\index{inc@{inc}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{inc}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::inc (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acedbd87418912605880c87f2b99d0c9c}
+
+
+Atomically increment the value of the variable. 
+
+
+
+Definition at line 22 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7a9faa4faee4c334c58ab359b8e1d870}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!inc\_\-clock@{inc\_\-clock}}
+\index{inc\_\-clock@{inc\_\-clock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{inc\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::inc\_\-clock (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7a9faa4faee4c334c58ab359b8e1d870}
+
+
+atomically increment the lamport clock and return the new clock time (intended for sending knowledge updates) 
+
+increment the process lamport clock 
+
+Definition at line 192 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7308e69ba47dabe9f1ba95d4091f91d3}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!inc\_\-clock@{inc\_\-clock}}
+\index{inc\_\-clock@{inc\_\-clock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{inc\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::inc\_\-clock (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{key}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a7308e69ba47dabe9f1ba95d4091f91d3}
+
+
+atomically increment the lamport clock of a particular variable and return the new clock time (for sending knowledge updates) 
+
+set the lamport clock for a particular variable (updates with lamport clocks lower than our current clock get discarded) 
+
+Definition at line 172 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acaf3bd7f1949fe90c691500e96b637d1}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!lock@{lock}}
+\index{lock@{lock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{lock}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::lock (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_acaf3bd7f1949fe90c691500e96b637d1}
+
+
+Lock the mutex on this context. 
+
+Warning: this will cause all operations to block until the unlock call is made. 
+
+Definition at line 230 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a8568b009fb314eafc72008ae04d61216}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!print@{print}}
+\index{print@{print}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::print (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{level}
+\end{DoxyParamCaption}
+) const}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a8568b009fb314eafc72008ae04d61216}
+
+
+Print all variables and their values. 
+
+
+
+Definition at line 244 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a31ad60e0ba7ce73913faa8859a3c00a4}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!print@{print}}
+\index{print@{print}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::print (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{statement, }
+\item[{unsigned int}]{level}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a31ad60e0ba7ce73913faa8859a3c00a4}
+
+
+Print a statement, similar to printf (variable expansions allowed) e.g. 
+
+Print a statement, similar to printf (variable expressions allowed) e.g.
+
+input = \char`\"{}MyVar\{.id\} = \{MyVar\{.id\}\}$\backslash$n\char`\"{}; 
+
+Definition at line 245 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae145dd7dd6ef1b18a230fe44dd0864e9}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!reset\_\-modified@{reset\_\-modified}}
+\index{reset\_\-modified@{reset\_\-modified}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{reset\_\-modified}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::reset\_\-modified (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae145dd7dd6ef1b18a230fe44dd0864e9}
+
+
+Reset all variables to unmodified. 
+
+
+
+Definition at line 304 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a5eef60377d621f3997fe0337acae29d2}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!reset\_\-modified@{reset\_\-modified}}
+\index{reset\_\-modified@{reset\_\-modified}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{reset\_\-modified}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::reset\_\-modified (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a5eef60377d621f3997fe0337acae29d2}
+
+
+Reset a variable to unmodified. 
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a3e1c5decbb3292ded800fd0d9d797737}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!set@{set}}
+\index{set@{set}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::set (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{long long}]{value, }
+\item[{bool}]{modified = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a3e1c5decbb3292ded800fd0d9d797737}
+
+
+Atomically set the value of a variable. 
+
+\begin{DoxyReturn}{Returns}
+0 if the value was set. -\/1 if null key 
+\end{DoxyReturn}
+
+
+Definition at line 47 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a4e161b678cad2b529bb30a66c35ba549}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!set\_\-clock@{set\_\-clock}}
+\index{set\_\-clock@{set\_\-clock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{set\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::set\_\-clock (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{key, }
+\item[{unsigned long long}]{clock}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a4e161b678cad2b529bb30a66c35ba549}
+
+
+set the lamport clock for a particular variable (updates with lamport clocks lower than our current clock get discarded) 
+
+set the lamport clock (updates with lamport clocks lower than our current clock get discarded) 
+
+Definition at line 142 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a9fedc92a1b9d47303612aabbb7515b84}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!set\_\-clock@{set\_\-clock}}
+\index{set\_\-clock@{set\_\-clock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{set\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::set\_\-clock (
+\begin{DoxyParamCaption}
+\item[{unsigned long long}]{clock}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a9fedc92a1b9d47303612aabbb7515b84}
+
+
+set the lamport clock (updates with lamport clocks lower than our current clock get discarded) 
+
+
+
+Definition at line 126 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aa82eaaeaaa80462a098158925baa7b47}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!set\_\-if\_\-unequal@{set\_\-if\_\-unequal}}
+\index{set\_\-if\_\-unequal@{set\_\-if\_\-unequal}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{set\_\-if\_\-unequal}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::set\_\-if\_\-unequal (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{long long}]{value, }
+\item[{unsigned long}]{quality, }
+\item[{unsigned long long}]{clock, }
+\item[{bool}]{modified = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aa82eaaeaaa80462a098158925baa7b47}
+
+
+Atomically set if the variable value will be different. 
+
+Set if the variable value will be different.
+
+\begin{DoxyReturn}{Returns}
+1 if the value was changed. 0 if not changed. -\/1 if null key
+\end{DoxyReturn}
+Always updates clock to highest value \begin{DoxyReturn}{Returns}
+1 if the value was changed. 0 if not changed. -\/1 if null key, -\/2 if quality not high enough 
+\end{DoxyReturn}
+
+
+Definition at line 173 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a595b9624264a67db13824642f4ea520b}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!set\_\-quality@{set\_\-quality}}
+\index{set\_\-quality@{set\_\-quality}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{set\_\-quality}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::set\_\-quality (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{unsigned long}]{quality, }
+\item[{bool}]{force\_\-update}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a595b9624264a67db13824642f4ea520b}
+
+
+Set quality of last update to a variable. 
+
+\begin{DoxyReturn}{Returns}
+quality of the variable after this call 
+\end{DoxyReturn}
+
+
+Definition at line 135 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a648dc63feb8f7f764b340fbfa0efd521}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!set\_\-write\_\-quality@{set\_\-write\_\-quality}}
+\index{set\_\-write\_\-quality@{set\_\-write\_\-quality}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{set\_\-write\_\-quality}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::set\_\-write\_\-quality (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{unsigned long}]{quality}
+\end{DoxyParamCaption}
+)}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a648dc63feb8f7f764b340fbfa0efd521}
+
+
+Set quality of this process writing to a variable. 
+
+
+
+Definition at line 157 of file Thread\_\-Safe\_\-Context.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a16e8d93461a3ed73a2893be3d95b1ed3}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!signal@{signal}}
+\index{signal@{signal}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{signal}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::signal (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a16e8d93461a3ed73a2893be3d95b1ed3}
+
+
+Signal the condition that it can wake up someone else on changed data. 
+
+
+
+Definition at line 356 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aea7de1117389c07d3db0d6fc51da3e22}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!unlock@{unlock}}
+\index{unlock@{unlock}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{unlock}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::unlock (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_aea7de1117389c07d3db0d6fc51da3e22}
+
+
+Unlock the mutex on this context. 
+
+
+
+Definition at line 237 of file Thread\_\-Safe\_\-Context.inl.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae6373c01752d65907a1d43fbfdbc4870}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!wait\_\-for\_\-change@{wait\_\-for\_\-change}}
+\index{wait\_\-for\_\-change@{wait\_\-for\_\-change}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{wait\_\-for\_\-change}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::wait\_\-for\_\-change (
+\begin{DoxyParamCaption}
+\item[{bool}]{extra\_\-release = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae6373c01752d65907a1d43fbfdbc4870}
+
+
+Make the current thread of execution wait for a change on the context. 
+
+
+
+Definition at line 269 of file Thread\_\-Safe\_\-Context.inl.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae5f55e8a134860c3e71fb4bbef3d5418}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!changed\_\-@{changed\_\-}}
+\index{changed\_\-@{changed\_\-}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{changed\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Condition} {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::changed\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}mutable, private\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae5f55e8a134860c3e71fb4bbef3d5418}
+
+
+Definition at line 152 of file Thread\_\-Safe\_\-Context.h.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae16c3d6186939bca49989c8c31262861}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!clock\_\-@{clock\_\-}}
+\index{clock\_\-@{clock\_\-}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{clock\_\-}]{\setlength{\rightskip}{0pt plus 5cm}unsigned long long {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::clock\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ae16c3d6186939bca49989c8c31262861}
+
+
+Definition at line 154 of file Thread\_\-Safe\_\-Context.h.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ac98bb47361f4d859e8306de5d92ca0eb}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!expansion\_\-splitters\_\-@{expansion\_\-splitters\_\-}}
+\index{expansion\_\-splitters\_\-@{expansion\_\-splitters\_\-}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{expansion\_\-splitters\_\-}]{\setlength{\rightskip}{0pt plus 5cm}std::vector$<$ std::string$>$ {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::expansion\_\-splitters\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ac98bb47361f4d859e8306de5d92ca0eb}
+
+
+Definition at line 153 of file Thread\_\-Safe\_\-Context.h.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab440ae2c260b9592a3bc899c3f9a2607}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!map\_\-@{map\_\-}}
+\index{map\_\-@{map\_\-}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{map\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Knowledge\_\-Map} {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::map\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_ab440ae2c260b9592a3bc899c3f9a2607}
+
+
+Hash table containing variable names and values. 
+
+
+
+Definition at line 150 of file Thread\_\-Safe\_\-Context.h.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a239fefcb443bba3eddef39342ca6a110}{
+\index{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}!mutex\_\-@{mutex\_\-}}
+\index{mutex\_\-@{mutex\_\-}!Madara::Knowledge_Engine::Thread_Safe_Context@{Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context}}
+\subsubsection[{mutex\_\-}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Recursive\_\-Thread\_\-Mutex {\bf Madara::Knowledge\_\-Engine::Thread\_\-Safe\_\-Context::mutex\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}mutable, private\mbox{]}}}}
+\label{d4/da3/classMadara_1_1Knowledge__Engine_1_1Thread__Safe__Context_a239fefcb443bba3eddef39342ca6a110}
+
+
+Definition at line 151 of file Thread\_\-Safe\_\-Context.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/knowledge\_\-engine/\hyperlink{Thread__Safe__Context_8h}{Thread\_\-Safe\_\-Context.h}\item 
+madara/knowledge\_\-engine/\hyperlink{Thread__Safe__Context_8cpp}{Thread\_\-Safe\_\-Context.cpp}\item 
+madara/knowledge\_\-engine/\hyperlink{Thread__Safe__Context_8inl}{Thread\_\-Safe\_\-Context.inl}\end{DoxyCompactItemize}

@@ -1,0 +1,292 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node}{
+\section{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node Class Reference}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node}\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+}
+
+
+Defines a left and right node (via inheritance from \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node}{Composite\_\-Unary\_\-Node}).  
+
+
+
+
+{\ttfamily \#include $<$Composite\_\-Binary\_\-Node.h$>$}
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d5/da3/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{df/d61/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_ace5075689a4b1e549373beaa19a2eb0e}{Composite\_\-Binary\_\-Node} (\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$left, \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$right)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acb34deda8eff37c460d310d413e9b3a0}{$\sim$Composite\_\-Binary\_\-Node} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}{left} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the left expression. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}{right} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the right expression. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_ac38c35834da00a454c8f876278ad1b99}{item} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns the value of the node. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a8833adfc3e79980a90e82a68586f4300}{prune} (bool \&can\_\-change)=0
+\begin{DoxyCompactList}\small\item\em Prunes the expression tree of unnecessary nodes. \item\end{DoxyCompactList}\item 
+virtual long long \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a16c08750339b84c363e9fd0ea9858969}{evaluate} (void)=0
+\begin{DoxyCompactList}\small\item\em Evaluates the expression tree. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_ac3bb92d96b29f14ee23289c73a2307d1}{accept} (\hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} \&visitor) const 
+\begin{DoxyCompactList}\small\item\em Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acac60a70beb2484737e6e7161edb2d1b}{left\_\-}
+\begin{DoxyCompactList}\small\item\em left expression \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_a077b7bd1b52df6f5c6adfde735556a68}{right\_\-}
+\begin{DoxyCompactList}\small\item\em Right expression. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Defines a left and right node (via inheritance from \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node}{Composite\_\-Unary\_\-Node}). 
+
+Definition at line 18 of file Composite\_\-Binary\_\-Node.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_ace5075689a4b1e549373beaa19a2eb0e}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!Composite\_\-Binary\_\-Node@{Composite\_\-Binary\_\-Node}}
+\index{Composite\_\-Binary\_\-Node@{Composite\_\-Binary\_\-Node}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{Composite\_\-Binary\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node::Composite\_\-Binary\_\-Node (
+\begin{DoxyParamCaption}
+\item[{{\bf Component\_\-Node} $\ast$}]{left, }
+\item[{{\bf Component\_\-Node} $\ast$}]{right}
+\end{DoxyParamCaption}
+)}}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_ace5075689a4b1e549373beaa19a2eb0e}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & left expression \\
+\hline
+{\em right} & right expression \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 8 of file Composite\_\-Binary\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acb34deda8eff37c460d310d413e9b3a0}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!$\sim$Composite\_\-Binary\_\-Node@{$\sim$Composite\_\-Binary\_\-Node}}
+\index{$\sim$Composite\_\-Binary\_\-Node@{$\sim$Composite\_\-Binary\_\-Node}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{$\sim$Composite\_\-Binary\_\-Node}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node::$\sim$Composite\_\-Binary\_\-Node (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acb34deda8eff37c460d310d413e9b3a0}
+
+
+Destructor. 
+
+
+
+Definition at line 16 of file Composite\_\-Binary\_\-Node.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Component__Node_ac3bb92d96b29f14ee23289c73a2307d1}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!accept@{accept}}
+\index{accept@{accept}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{accept}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Component\_\-Node::accept (
+\begin{DoxyParamCaption}
+\item[{{\bf Visitor} \&}]{visitor}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{de/da8/classMadara_1_1Expression__Tree_1_1Component__Node_ac3bb92d96b29f14ee23289c73a2307d1}
+
+
+Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & visitor instance to use \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node_af0f45a8cfcb75f6c1d05bb0e955def10}{Madara::Expression\_\-Tree::Composite\_\-Add\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node_a7bfbeebb5c90625a79ec0cb19e17c118}{Madara::Expression\_\-Tree::Composite\_\-And\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node_a834155d24ce5366cfcfc943ced4e5df2}{Madara::Expression\_\-Tree::Composite\_\-Assignment\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node_a2d20ccb951c3da415e8a9b4f352766d2}{Madara::Expression\_\-Tree::Composite\_\-Both\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node_a4ef185628577b4e0faae08e3c2061117}{Madara::Expression\_\-Tree::Composite\_\-Divide\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node_ab16daffb4e02f8020db7820ec4af6c90}{Madara::Expression\_\-Tree::Composite\_\-Equality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node_a48cbea410ff056c7fbfc714e4247ce3c}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node_a58e3e46c3b4268c2de62073245f7a6eb}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node_ae06d733f3d3c3a5d37a1507ae0200ba9}{Madara::Expression\_\-Tree::Composite\_\-Implies\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node_a667aea651666d9a0887745b8c5c88cff}{Madara::Expression\_\-Tree::Composite\_\-Inequality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node_ac2f05f3c1b8fc7e9cb49e35caf1364d0}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node_afac850cf366738cdfd9079235c8dcfe0}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node_a884f6c53634eca04be8c37a6b725f6e1}{Madara::Expression\_\-Tree::Composite\_\-Modulus\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node_afa9e40ed0ce1a86b99e77aa5dd66cb58}{Madara::Expression\_\-Tree::Composite\_\-Multiply\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node_a35f42733f97befd885ceca35282f228c}{Madara::Expression\_\-Tree::Composite\_\-Negate\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node_a4123f66ae7ef032f6e8518f766473de1}{Madara::Expression\_\-Tree::Composite\_\-Not\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node_a947941a0f7a13ddc13f03040c3734964}{Madara::Expression\_\-Tree::Composite\_\-Or\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node_a1a66cbc5d00d8e07a5f75b769b12a37b}{Madara::Expression\_\-Tree::Composite\_\-Predecrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node_ae677ce316231e55c363c817de8a6cfe2}{Madara::Expression\_\-Tree::Composite\_\-Preincrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a64c16017671a9f102f1b994f74f287a3}{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_aa56517272d5f33ffe766cd88bc0e502d}{Madara::Expression\_\-Tree::Leaf\_\-Node}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node_a86e843b4233c5fa145568d8dee2b6ad4}{Madara::Expression\_\-Tree::Variable\_\-Node}.
+
+
+
+Definition at line 38 of file Component\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Component__Node_a16c08750339b84c363e9fd0ea9858969}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{evaluate}]{\setlength{\rightskip}{0pt plus 5cm}virtual long long Madara::Expression\_\-Tree::Component\_\-Node::evaluate (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{de/da8/classMadara_1_1Expression__Tree_1_1Component__Node_a16c08750339b84c363e9fd0ea9858969}
+
+
+Evaluates the expression tree. 
+
+\begin{DoxyReturn}{Returns}
+value of current contained expression tree 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node_ac1e44d1f7c126c83d989c4ab5bc4cef1}{Madara::Expression\_\-Tree::Composite\_\-Add\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node_a4d7510e8174d0f3d666d707808237859}{Madara::Expression\_\-Tree::Composite\_\-And\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node_af6620ea1813001d26d3c3e21bc1287b1}{Madara::Expression\_\-Tree::Composite\_\-Assignment\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node_a0a51ded8431f786d923d9b7dc59c3326}{Madara::Expression\_\-Tree::Composite\_\-Both\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node_afbb60cd9bc4730f41f0bb0e89282a758}{Madara::Expression\_\-Tree::Composite\_\-Divide\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node_a264f6762bfb2ac78a171df6798018185}{Madara::Expression\_\-Tree::Composite\_\-Equality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node_ab68ee252d895279d38875c66e13206dd}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node_a8133ecbdc83e2da78399fca68bfe256c}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node_a1d06d90048c87c24328436ab66160667}{Madara::Expression\_\-Tree::Composite\_\-Implies\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node_ad3c4a154f6a7e75fbe6be04af875d07e}{Madara::Expression\_\-Tree::Composite\_\-Inequality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node_aaab05400e30f24c86075d809c33021cb}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node_a659a1eff1ee173334ae5fc4cb90c2c44}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node_a565198ed27d20054d38ada6083d4c473}{Madara::Expression\_\-Tree::Composite\_\-Modulus\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node_a69d7d0d06143d829208b6bf530bafbc9}{Madara::Expression\_\-Tree::Composite\_\-Multiply\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node_a6f7fc2d58f7d2258766a8384557bac72}{Madara::Expression\_\-Tree::Composite\_\-Negate\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node_a25e21eaef918e8638a7141ef8b2f4a94}{Madara::Expression\_\-Tree::Composite\_\-Not\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node_a53f207a7bbba2e4d2baa342c8334fad2}{Madara::Expression\_\-Tree::Composite\_\-Or\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node_a98eaae3652e6a950960f51326bbe0040}{Madara::Expression\_\-Tree::Composite\_\-Predecrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node_ab2385695523608cc0bed77072e6806ae}{Madara::Expression\_\-Tree::Composite\_\-Preincrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a5c6ec3403b7f4593d90204ee4c8cb588}{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a4bd377264487997762d3c4e8a88a32a4}{Madara::Expression\_\-Tree::Leaf\_\-Node}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node_a48e7fc9e0780338ba406bfca170276a6}{Madara::Expression\_\-Tree::Variable\_\-Node}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Component__Node_ac38c35834da00a454c8f876278ad1b99}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!item@{item}}
+\index{item@{item}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{item}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Component\_\-Node::item (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{de/da8/classMadara_1_1Expression__Tree_1_1Component__Node_ac38c35834da00a454c8f876278ad1b99}
+
+
+Returns the value of the node. 
+
+\begin{DoxyReturn}{Returns}
+value of the node 
+\end{DoxyReturn}
+
+
+Reimplemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node_a04d546052a4d35dae43c90441ffb5848}{Madara::Expression\_\-Tree::Composite\_\-Add\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node_a69165571334e1ed1446c3a2e795930de}{Madara::Expression\_\-Tree::Composite\_\-And\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node_a6b1db38d12994981379b862caa64b533}{Madara::Expression\_\-Tree::Composite\_\-Assignment\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node_a29b648222c9a6cf9d1ac504ddd5c35e7}{Madara::Expression\_\-Tree::Composite\_\-Both\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node_a2cf5cf3ec9d7fdcdb558c4ead02b34df}{Madara::Expression\_\-Tree::Composite\_\-Divide\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node_a2f2eac9a039b4a187e5c7e680d5e86a0}{Madara::Expression\_\-Tree::Composite\_\-Equality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node_a99f6441eda73ee71a1531f22d72f0bf8}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node_a181eee226ff472daa3d3acd4b09c2df5}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node_a64e1fd7f018d1471d182b04b299762fe}{Madara::Expression\_\-Tree::Composite\_\-Implies\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node_a43913cd3629b7e0ffb818322c193aa29}{Madara::Expression\_\-Tree::Composite\_\-Inequality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node_aff89f3a5409704d549e09c9fcf6d7961}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node_a0e232fa0538a625cf2650fa600c74ad4}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node_aba5aeecd0b3622d928a3e59dd2ad8339}{Madara::Expression\_\-Tree::Composite\_\-Modulus\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node_a51755bc032a96130f1ab893ad1c84eca}{Madara::Expression\_\-Tree::Composite\_\-Multiply\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node_a2d8c2d077cf8775ea7c31f897f522b02}{Madara::Expression\_\-Tree::Composite\_\-Negate\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node_aca37f44ff004d68a559b7b0dac9ec51e}{Madara::Expression\_\-Tree::Composite\_\-Not\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node_a43e7b6917bb7b627598a84d69c1d1272}{Madara::Expression\_\-Tree::Composite\_\-Or\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node_a951a934559c2ee7f2aa6a3ff00b0c14d}{Madara::Expression\_\-Tree::Composite\_\-Predecrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node_ad86c898eba60ac46b1aa7aafa0e635ad}{Madara::Expression\_\-Tree::Composite\_\-Preincrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a25ed90010dfa8df2d65684bf83ca7a89}{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_a1daacf407d2be4039be668fe9fcd82e5}{Madara::Expression\_\-Tree::Leaf\_\-Node}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node_ab0c1097b8e08af347fbd7361de28fe2b}{Madara::Expression\_\-Tree::Variable\_\-Node}.
+
+
+
+Definition at line 17 of file Component\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!left@{left}}
+\index{left@{left}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{left}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node::left (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_a6ca5cccbc46ccc6026c18f9665298380}
+
+
+Returns the left expression. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the left expression 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_abe0c7474f1af4cb06d06ab13479a89db}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 24 of file Composite\_\-Binary\_\-Node.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Component__Node_a8833adfc3e79980a90e82a68586f4300}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!prune@{prune}}
+\index{prune@{prune}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{prune}]{\setlength{\rightskip}{0pt plus 5cm}virtual long long Madara::Expression\_\-Tree::Component\_\-Node::prune (
+\begin{DoxyParamCaption}
+\item[{bool \&}]{can\_\-change}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual, inherited\mbox{]}}}}
+\label{de/da8/classMadara_1_1Expression__Tree_1_1Component__Node_a8833adfc3e79980a90e82a68586f4300}
+
+
+Prunes the expression tree of unnecessary nodes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em can\_\-change} & set to true if variable nodes are contained \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of current contained expression tree 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node_a40ec621d31e38a5fdefa7445e5378227}{Madara::Expression\_\-Tree::Composite\_\-Add\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node_aebd287766ca5e720db29446b60c1b9b6}{Madara::Expression\_\-Tree::Composite\_\-And\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node_a58aad88460f030c8a58b365c211a2504}{Madara::Expression\_\-Tree::Composite\_\-Assignment\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node_a9ffef2b8c0f5fc025ffc9ddd04f65844}{Madara::Expression\_\-Tree::Composite\_\-Both\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node_a8cfb96a567df6afb30935d27c92cdcca}{Madara::Expression\_\-Tree::Composite\_\-Divide\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node_a91847a47177176e3c90a66a0af26e702}{Madara::Expression\_\-Tree::Composite\_\-Equality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node_a9833f0ed0c051ea406b1a67e987f2b2e}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node_a0c392aaaa2c3d420284ed932eebabf0d}{Madara::Expression\_\-Tree::Composite\_\-Greater\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node_a1619d68eb2db2be8aeed73811c775909}{Madara::Expression\_\-Tree::Composite\_\-Implies\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node_a69b643ade2a33e1c67bb0061898c5eab}{Madara::Expression\_\-Tree::Composite\_\-Inequality\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node_a429febd1284c14f39a49ebf5406bba1e}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Equal\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node_a351204dc5331c772933a725e367a1fe5}{Madara::Expression\_\-Tree::Composite\_\-Less\_\-Than\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node_a1762f6a31a60425c6f99070af3e5d815}{Madara::Expression\_\-Tree::Composite\_\-Modulus\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node_ab01ac436816d007000456fc3962241b8}{Madara::Expression\_\-Tree::Composite\_\-Multiply\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node_ad1cf0eb41e1b962483cd07a6cffa49cf}{Madara::Expression\_\-Tree::Composite\_\-Negate\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node_ad6cca9a480df314dd71006bfa2dfd96e}{Madara::Expression\_\-Tree::Composite\_\-Not\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node_abd05fbf9e57faa6282c7fa0ed5efd219}{Madara::Expression\_\-Tree::Composite\_\-Or\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node_a68dc02a74f35832dadbd66c7a15110c0}{Madara::Expression\_\-Tree::Composite\_\-Predecrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node_aa9aa178cdcb1e0291547f3842eabb4f3}{Madara::Expression\_\-Tree::Composite\_\-Preincrement\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node_a50a0cc14511b5c33285003b4a4da74f8}{Madara::Expression\_\-Tree::Composite\_\-Subtract\_\-Node}, \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node_ab1fb385a485b5ee6d52b66d8c3cfb835}{Madara::Expression\_\-Tree::Leaf\_\-Node}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node_ae3cb5a153c295adf41642b1bf51062e1}{Madara::Expression\_\-Tree::Variable\_\-Node}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!right@{right}}
+\index{right@{right}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{right}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Composite\_\-Unary\_\-Node::right (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual, inherited\mbox{]}}}}
+\label{d3/dc7/classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_ade55cde5707e0fa73ab1c019159b9aec}
+
+
+Returns the right expression. 
+
+\begin{DoxyReturn}{Returns}
+a pointer to the right expression 
+\end{DoxyReturn}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node_a672f2b18b4e63efda38e9063a47bc30f}{Madara::Expression\_\-Tree::Component\_\-Node}.
+
+
+
+Definition at line 24 of file Composite\_\-Unary\_\-Node.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acac60a70beb2484737e6e7161edb2d1b}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!left\_\-@{left\_\-}}
+\index{left\_\-@{left\_\-}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{left\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Component\_\-Node}$\ast$ {\bf Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node::left\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{df/d55/classMadara_1_1Expression__Tree_1_1Composite__Binary__Node_acac60a70beb2484737e6e7161edb2d1b}
+
+
+left expression 
+
+
+
+Definition at line 42 of file Composite\_\-Binary\_\-Node.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_a077b7bd1b52df6f5c6adfde735556a68}{
+\index{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}!right\_\-@{right\_\-}}
+\index{right\_\-@{right\_\-}!Madara::Expression_Tree::Composite_Binary_Node@{Madara::Expression\_\-Tree::Composite\_\-Binary\_\-Node}}
+\subsubsection[{right\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Component\_\-Node}$\ast$ {\bf Madara::Expression\_\-Tree::Composite\_\-Unary\_\-Node::right\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d3/dc7/classMadara_1_1Expression__Tree_1_1Composite__Unary__Node_a077b7bd1b52df6f5c6adfde735556a68}
+
+
+Right expression. 
+
+
+
+Definition at line 38 of file Composite\_\-Unary\_\-Node.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Composite__Binary__Node_8h}{Composite\_\-Binary\_\-Node.h}\item 
+madara/expression\_\-tree/\hyperlink{Composite__Binary__Node_8cpp}{Composite\_\-Binary\_\-Node.cpp}\end{DoxyCompactItemize}

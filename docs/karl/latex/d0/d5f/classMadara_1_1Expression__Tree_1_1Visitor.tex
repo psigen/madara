@@ -1,0 +1,482 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor}{
+\section{Madara::Expression\_\-Tree::Visitor Class Reference}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor}\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+}
+
+
+Abstract base class for all visitors to all classes that derive from {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node}\/}.  
+
+
+
+
+{\ttfamily \#include $<$Visitor.h$>$}
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Visitor:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{db/d13/classMadara_1_1Expression__Tree_1_1Visitor__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ab97d52a179d6874cdab71ab18d00dff6}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node}{Leaf\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node}{Leaf\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a5dea5d0d83eb683ab0341a4d45fd271a}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node}{Variable\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node}{Variable\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_afbf6baaf3a8d55a822350ac3292fa605}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node}{Composite\_\-Negate\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node}{Composite\_\-Negate\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_afd6a5648a7d2fef8bd3b5012bc458c04}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node}{Composite\_\-Predecrement\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node}{Composite\_\-Predecrement\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a88faa7afdbf0a288e9625dada5fd49f5}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node}{Composite\_\-Preincrement\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a Composite\_\-Increment\_\-Node. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_aa5653bd83f66953364437226dcfa328f}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node}{Composite\_\-Not\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node}{Composite\_\-Not\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ab82426f2ad2034d9f0f7dd71b0147528}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node}{Composite\_\-Add\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node}{Composite\_\-Add\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_aba9f7eb8d0b31c03f914d7e35e4df396}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node}{Composite\_\-Assignment\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node}{Composite\_\-Assignment\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a4611293cddbf31811abdd2811e9bf746}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node}{Composite\_\-And\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node}{Composite\_\-And\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a1d77ed3780e25fd736ac5adf3053ff3c}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node}{Composite\_\-Or\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node}{Composite\_\-Or\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a1224cd9f797b16400cf75c76221408fb}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node}{Composite\_\-Equality\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node}{Composite\_\-Equality\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ac81a4bdef4403e10e8a6d3f156048528}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node}{Composite\_\-Inequality\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node}{Composite\_\-Inequality\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a69644a36999b74dbcc12832decdce966}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node}{Composite\_\-Greater\_\-Than\_\-Equal\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a7d9dc0afe2f6c86bf003173f06b82b71}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node}{Composite\_\-Greater\_\-Than\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a61caff0eabd03b465eb29d2001bbadef}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a88cd67af717a399e6e4837ec25add04e}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a0a0e59098b9b084be172b8ee62dd9fd5}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}{Composite\_\-Subtract\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}{Composite\_\-Subtract\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ad9ce73a2a45d3e6946215da2d08a5420}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node}{Composite\_\-Divide\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node}{Composite\_\-Divide\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a250c5147e5631706120652f183d2acaf}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node}{Composite\_\-Multiply\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node}{Composite\_\-Multiply\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a7715d370880e4bf5c3e25051bfd4133d}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node}{Composite\_\-Modulus\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node}{Composite\_\-Modulus\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a2389827a51a465fd3c3025084111173e}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node}{Composite\_\-Both\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node}{Composite\_\-Both\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a1dc5f69864ddaba89a5517a3f87a6907}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node}{Composite\_\-Implies\_\-Node} \&node)=0
+\begin{DoxyCompactList}\small\item\em Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node}{Composite\_\-Implies\_\-Node}. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a55d0ee22ede05c41c18482f03b2ee42e}{$\sim$Visitor} (void)=0
+\begin{DoxyCompactList}\small\item\em No-\/op destructor to hold things together. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract base class for all visitors to all classes that derive from {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node}\/}. This class plays the role of the \char`\"{}visitor\char`\"{} in the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} pattern. 
+
+Definition at line 40 of file Visitor.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a55d0ee22ede05c41c18482f03b2ee42e}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!$\sim$Visitor@{$\sim$Visitor}}
+\index{$\sim$Visitor@{$\sim$Visitor}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{$\sim$Visitor}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Visitor::$\sim$Visitor (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a55d0ee22ede05c41c18482f03b2ee42e}
+
+
+No-\/op destructor to hold things together. 
+
+
+
+Definition at line 7 of file Visitor.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_ab97d52a179d6874cdab71ab18d00dff6}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Leaf\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_ab97d52a179d6874cdab71ab18d00dff6}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node}{Leaf\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af3664b440fe01d28eaff2f18653aaa99}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a95d7257c03bca39b8958720650c20a68}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a1dc5f69864ddaba89a5517a3f87a6907}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Implies\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a1dc5f69864ddaba89a5517a3f87a6907}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node}{Composite\_\-Implies\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abbcab30bdf0f2e1c760de6bc382c1723}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a7db8e65a5054748d2af146dca1ab8ea4}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a2389827a51a465fd3c3025084111173e}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Both\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a2389827a51a465fd3c3025084111173e}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node}{Composite\_\-Both\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a35e6b96e1ff68fa0ee1f3d0df07f9d0d}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a6da7946e126cb75788cfb4cf0fea96f2}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a7715d370880e4bf5c3e25051bfd4133d}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Modulus\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a7715d370880e4bf5c3e25051bfd4133d}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node}{Composite\_\-Modulus\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8453ba6d855c41a6305ecbc3436fa4f7}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_abdf8d85687e7c6a143759a04bd052048}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a250c5147e5631706120652f183d2acaf}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Multiply\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a250c5147e5631706120652f183d2acaf}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node}{Composite\_\-Multiply\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_aa4b7f2b528afd2ce68d9ea9d147cfbe4}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a54d4952833230fc26b009d35b60730a9}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_ad9ce73a2a45d3e6946215da2d08a5420}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Divide\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_ad9ce73a2a45d3e6946215da2d08a5420}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node}{Composite\_\-Divide\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ac259237b3b88024675e3f3cc3b3edc05}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_ac39c07dbc0276afdea3031779d55c5fd}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a0a0e59098b9b084be172b8ee62dd9fd5}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Subtract\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a0a0e59098b9b084be172b8ee62dd9fd5}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}{Composite\_\-Subtract\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a495cb77e0a45bf903e8a7429e09f5413}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a7b940fde6c08b239298977c79f0e6b04}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a88cd67af717a399e6e4837ec25add04e}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Less\_\-Than\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a88cd67af717a399e6e4837ec25add04e}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ab18210ee3c81c30c079db5dea7f53980}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a160734722c1d50d3ba17c925174f3e7f}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a61caff0eabd03b465eb29d2001bbadef}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Less\_\-Than\_\-Equal\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a61caff0eabd03b465eb29d2001bbadef}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2b8c077eb7edeb4b967aeb28b81a3483}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a932f6bab556f819c6d8c398f70b4a5c2}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a7d9dc0afe2f6c86bf003173f06b82b71}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Greater\_\-Than\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a7d9dc0afe2f6c86bf003173f06b82b71}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ad6d5516b88d0c701c8a836a538aee93a}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a8430656938fed043fcb45622911b2a57}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a69644a36999b74dbcc12832decdce966}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Greater\_\-Than\_\-Equal\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a69644a36999b74dbcc12832decdce966}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2ad42bf7fc9bcaf73c608b01c96f08a0}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a68ac856171854ce9acd1542b1fe26954}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_ac81a4bdef4403e10e8a6d3f156048528}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Inequality\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_ac81a4bdef4403e10e8a6d3f156048528}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node}{Composite\_\-Inequality\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8b428f77ff5392b1df72ace443789020}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a39190cbf3624c28ec61fb446fd86ecc5}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a1224cd9f797b16400cf75c76221408fb}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Equality\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a1224cd9f797b16400cf75c76221408fb}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node}{Composite\_\-Equality\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a7383a967290101e03ba286ed59fc036e}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a5f057afe2768e363c7591c529bef6024}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a1d77ed3780e25fd736ac5adf3053ff3c}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Or\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a1d77ed3780e25fd736ac5adf3053ff3c}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node}{Composite\_\-Or\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af2fc2f3460afb55d7f543be3ebd49d45}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a947c243aabff17a497483aca0e78f424}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a4611293cddbf31811abdd2811e9bf746}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-And\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a4611293cddbf31811abdd2811e9bf746}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node}{Composite\_\-And\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2d685f97e2b81a556b665abb4da3dd21}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a60a6a932f44dd353e8715971ad5f35a4}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_aba9f7eb8d0b31c03f914d7e35e4df396}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Assignment\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_aba9f7eb8d0b31c03f914d7e35e4df396}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node}{Composite\_\-Assignment\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a96b9cc06685677d61f60ef24dd301904}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a76ec0ee448aae9e5c5c36937c35bb038}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_ab82426f2ad2034d9f0f7dd71b0147528}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Add\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_ab82426f2ad2034d9f0f7dd71b0147528}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node}{Composite\_\-Add\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_adc7d691a271e65c2cf1f2b40e2453f58}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_ac8bec51aa16da7b7e87dee002bc700f5}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_aa5653bd83f66953364437226dcfa328f}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Not\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_aa5653bd83f66953364437226dcfa328f}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node}{Composite\_\-Not\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2f6321d6bb771a915b3bd2bc05643f26}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a2958c4aef76f608c1b559f8ca4edebe6}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a88faa7afdbf0a288e9625dada5fd49f5}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Preincrement\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a88faa7afdbf0a288e9625dada5fd49f5}
+
+
+Visit a Composite\_\-Increment\_\-Node. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a684fd1145e81d16a5cafe716c98d61d3}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a56086ca594583631851a58da832b4200}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_afd6a5648a7d2fef8bd3b5012bc458c04}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Predecrement\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_afd6a5648a7d2fef8bd3b5012bc458c04}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node}{Composite\_\-Predecrement\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a4aa350f8b8abaaae00e164c54fac3c57}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a248e48a1dff926b6e587ac247c0b269e}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_afbf6baaf3a8d55a822350ac3292fa605}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Negate\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_afbf6baaf3a8d55a822350ac3292fa605}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node}{Composite\_\-Negate\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a0a2a5d3acba1febec3ccc2b6f5789322}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a8bcad035d2a05437cc55c2a317935136}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Visitor_a5dea5d0d83eb683ab0341a4d45fd271a}{
+\index{Madara::Expression\_\-Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Visitor@{Madara::Expression\_\-Tree::Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Madara::Expression\_\-Tree::Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Variable\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d0/d5f/classMadara_1_1Expression__Tree_1_1Visitor_a5dea5d0d83eb683ab0341a4d45fd271a}
+
+
+Visit a \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node}{Variable\_\-Node}. 
+
+
+
+Implemented in \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_afa8a63ef42dc63aaff316a96c01f0878}{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}, and \hyperlink{classMadara_1_1Expression__Tree_1_1Print__Visitor_a19b0a3b523c8e46d23338604cc272f2c}{Madara::Expression\_\-Tree::Print\_\-Visitor}.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Visitor_8h}{Visitor.h}\item 
+madara/expression\_\-tree/\hyperlink{Visitor_8cpp}{Visitor.cpp}\end{DoxyCompactItemize}

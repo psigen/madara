@@ -1,0 +1,55 @@
+\hypertarget{Evaluation__Visitor_8cpp}{
+\section{madara/expression\_\-tree/Evaluation\_\-Visitor.cpp File Reference}
+\label{d3/d78/Evaluation__Visitor_8cpp}\index{madara/expression\_\-tree/Evaluation\_\-Visitor.cpp@{madara/expression\_\-tree/Evaluation\_\-Visitor.cpp}}
+}
+{\ttfamily \#include $<$iostream$>$}\par
+{\ttfamily \#include $<$typeinfo$>$}\par
+{\ttfamily \#include $<$algorithm$>$}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Leaf\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Variable\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Negate\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Predecrement\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Preincrement\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Not\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Add\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Assignment\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-And\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Or\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Equality\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Inequality\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Greater\_\-Than\_\-Equal\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Greater\_\-Than\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Less\_\-Than\_\-Equal\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Less\_\-Than\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Subtract\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Divide\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Multiply\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Modulus\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Both\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Composite\_\-Implies\_\-Node.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}madara/expression\_\-tree/Evaluation\_\-Visitor.h\char`\"{}}\par
+Include dependency graph for Evaluation\_\-Visitor.cpp:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d7/d30/Evaluation__Visitor_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Evaluation__Visitor_8cpp_a28764259856847f02de6558f75754ea4}{\_\-EVALUATION\_\-VISITOR\_\-CPP\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{Evaluation__Visitor_8cpp_a28764259856847f02de6558f75754ea4}{
+\index{Evaluation\_\-Visitor.cpp@{Evaluation\_\-Visitor.cpp}!\_\-EVALUATION\_\-VISITOR\_\-CPP\_\-@{\_\-EVALUATION\_\-VISITOR\_\-CPP\_\-}}
+\index{\_\-EVALUATION\_\-VISITOR\_\-CPP\_\-@{\_\-EVALUATION\_\-VISITOR\_\-CPP\_\-}!Evaluation_Visitor.cpp@{Evaluation\_\-Visitor.cpp}}
+\subsubsection[{\_\-EVALUATION\_\-VISITOR\_\-CPP\_\-}]{\setlength{\rightskip}{0pt plus 5cm}\#define \_\-EVALUATION\_\-VISITOR\_\-CPP\_\-}}
+\label{d3/d78/Evaluation__Visitor_8cpp_a28764259856847f02de6558f75754ea4}
+
+
+Definition at line 3 of file Evaluation\_\-Visitor.cpp.
+

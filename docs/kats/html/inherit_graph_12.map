@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d9/d74/classTiXmlVisitor.html" title="Implements the interface to the &quot;Visitor pattern&quot; (see the Accept() method.) If you call the Accept() method, it requires being passed a TiXmlVisitor class to handle callbacks." alt="" coords="5,5,99,35"/>
+<area shape="rect" id="node3" href="$d4/d3c/classTiXmlPrinter.html" title="Print to memory functionality." alt="" coords="148,5,241,35"/>
+</map>

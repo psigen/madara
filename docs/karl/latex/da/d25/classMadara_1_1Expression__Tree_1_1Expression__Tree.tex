@@ -1,0 +1,515 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree}{
+\section{Madara::Expression\_\-Tree::Expression\_\-Tree Class Reference}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree}\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+}
+
+
+Encapsulates a MADARA KaRL expression into an evaluatable tree.  
+
+
+
+
+{\ttfamily \#include $<$Expression\_\-Tree.h$>$}
+
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Expression\_\-Tree:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=310pt]{d9/def/classMadara_1_1Expression__Tree_1_1Expression__Tree__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef long long \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_ada1c181c09aa5564bf87fdc70e7bff4a}{value\_\-type}
+\item 
+typedef \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator}{Expression\_\-Tree\_\-Iterator} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a3292b7dd7babd755adb156fdc5122c06}{iterator}
+\item 
+typedef \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Const__Iterator}{Expression\_\-Tree\_\-Const\_\-Iterator} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a8824934a03e87b54512cd7f09d301e43}{const\_\-iterator}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a6aae339a61966a4797923f7cf50104c4}{Expression\_\-Tree} (void)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a11c9a5dfbf7f44dd2c372443836a19f4}{Expression\_\-Tree} (\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$root, bool increase\_\-count=false)
+\begin{DoxyCompactList}\small\item\em Constructor for copying a root node. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a92570ddc5914b7faf55ce0b983dfb55e}{Expression\_\-Tree} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree)
+\begin{DoxyCompactList}\small\item\em Constructor for copying an expression tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_ae6801155228779f834c1af639ea56c66}{$\sim$Expression\_\-Tree} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_af1e3b1868881a8c02ccc38700b957742}{get\_\-root} (void)
+\begin{DoxyCompactList}\small\item\em Returns the root node of the expression tree. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a85a61dd28e6ade83bab02261363368ad}{operator=} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree)
+\begin{DoxyCompactList}\small\item\em Non-\/deep copies an expression tree into this instance. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a9c4b052d51dbf4eddf53c7a8c30ac146}{is\_\-null} (void) const 
+\begin{DoxyCompactList}\small\item\em Checks if root pointer is null. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a55e7939e536d8c1d741c3fb429da1245}{item} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns value of tree. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a1cfb1d17c39590fb927d5ac9fc1b6a44}{prune} (void)
+\begin{DoxyCompactList}\small\item\em Prunes the expression tree of unnecessary nodes. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a23246efa474c996687c43fac8de871e8}{evaluate} (void)
+\begin{DoxyCompactList}\small\item\em Evaluates the expression tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_afa2ed8833e24ed45219056f3d07ffe54}{left} (void)
+\begin{DoxyCompactList}\small\item\em Returns the left expression of this tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a817bb84c1447d8cfc70ca84a64fad8fe}{right} (void)
+\begin{DoxyCompactList}\small\item\em Returns the right expression of this tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator}{iterator} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a87d62db793809ce406d64b531159cd21}{begin} (const ::std::string \&traversal\_\-order)
+\begin{DoxyCompactList}\small\item\em Returns an iterator to the beginning of the expression tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator}{iterator} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_aa25a3fb7d24006c1d8d3a0ab3912c585}{end} (const ::std::string \&traversal\_\-order)
+\begin{DoxyCompactList}\small\item\em Returns an iterator to the end of the expression tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Const__Iterator}{const\_\-iterator} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_acb0c6e46752b71f2a3c9640a993a0b2f}{begin} (const ::std::string \&traversal\_\-order) const 
+\begin{DoxyCompactList}\small\item\em Returns a const iterator to the beginning of the expression tree. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Const__Iterator}{const\_\-iterator} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a56d184e7bccff7107df76799123e0df1}{end} (const ::std::string \&traversal\_\-order) const 
+\begin{DoxyCompactList}\small\item\em Returns a const iterator to the end of the expression tree. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a3c24c73f0c6ebf814184d49684ac7ed2}{accept} (\hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} \&visitor) const 
+\begin{DoxyCompactList}\small\item\em Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Utility_1_1Refcounter}{Madara::Utility::Refcounter}$<$ \hyperlink{classMadara_1_1Expression__Tree_1_1Component__Node}{Component\_\-Node} $>$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree_a9f38e8a0b9bfcbea1b4e3accf651da66}{root\_\-}
+\begin{DoxyCompactList}\small\item\em root of the expression tree \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Encapsulates a MADARA KaRL expression into an evaluatable tree. 
+
+Definition at line 24 of file Expression\_\-Tree.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a8824934a03e87b54512cd7f09d301e43}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!const\_\-iterator@{const\_\-iterator}}
+\index{const\_\-iterator@{const\_\-iterator}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{const\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Expression\_\-Tree\_\-Const\_\-Iterator} {\bf Madara::Expression\_\-Tree::Expression\_\-Tree::const\_\-iterator}}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a8824934a03e87b54512cd7f09d301e43}
+
+
+Definition at line 31 of file Expression\_\-Tree.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a3292b7dd7babd755adb156fdc5122c06}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!iterator@{iterator}}
+\index{iterator@{iterator}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{iterator}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Expression\_\-Tree\_\-Iterator} {\bf Madara::Expression\_\-Tree::Expression\_\-Tree::iterator}}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a3292b7dd7babd755adb156fdc5122c06}
+
+
+Definition at line 30 of file Expression\_\-Tree.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_ada1c181c09aa5564bf87fdc70e7bff4a}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!value\_\-type@{value\_\-type}}
+\index{value\_\-type@{value\_\-type}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{value\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef long long {\bf Madara::Expression\_\-Tree::Expression\_\-Tree::value\_\-type}}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_ada1c181c09aa5564bf87fdc70e7bff4a}
+
+
+Definition at line 29 of file Expression\_\-Tree.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a6aae339a61966a4797923f7cf50104c4}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!Expression\_\-Tree@{Expression\_\-Tree}}
+\index{Expression\_\-Tree@{Expression\_\-Tree}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{Expression\_\-Tree}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Expression\_\-Tree::Expression\_\-Tree (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a6aae339a61966a4797923f7cf50104c4}
+
+
+Constructor. 
+
+
+
+Definition at line 151 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a11c9a5dfbf7f44dd2c372443836a19f4}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!Expression\_\-Tree@{Expression\_\-Tree}}
+\index{Expression\_\-Tree@{Expression\_\-Tree}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{Expression\_\-Tree}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Expression\_\-Tree::Expression\_\-Tree (
+\begin{DoxyParamCaption}
+\item[{{\bf Component\_\-Node} $\ast$}]{root, }
+\item[{bool}]{increase\_\-count = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a11c9a5dfbf7f44dd2c372443836a19f4}
+
+
+Constructor for copying a root node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em root} & root of the tree to copy \\
+\hline
+{\em increase\_\-count} & whether or not to increase the ref count \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 158 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a92570ddc5914b7faf55ce0b983dfb55e}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!Expression\_\-Tree@{Expression\_\-Tree}}
+\index{Expression\_\-Tree@{Expression\_\-Tree}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{Expression\_\-Tree}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Expression\_\-Tree::Expression\_\-Tree (
+\begin{DoxyParamCaption}
+\item[{const {\bf Expression\_\-Tree} \&}]{tree}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a92570ddc5914b7faf55ce0b983dfb55e}
+
+
+Constructor for copying an expression tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tree} & expression tree to copy \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 166 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_ae6801155228779f834c1af639ea56c66}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!$\sim$Expression\_\-Tree@{$\sim$Expression\_\-Tree}}
+\index{$\sim$Expression\_\-Tree@{$\sim$Expression\_\-Tree}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{$\sim$Expression\_\-Tree}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Expression\_\-Tree::$\sim$Expression\_\-Tree (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_ae6801155228779f834c1af639ea56c66}
+
+
+Destructor. 
+
+
+
+Definition at line 186 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a3c24c73f0c6ebf814184d49684ac7ed2}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!accept@{accept}}
+\index{accept@{accept}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{accept}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Expression\_\-Tree::accept (
+\begin{DoxyParamCaption}
+\item[{{\bf Visitor} \&}]{visitor}
+\end{DoxyParamCaption}
+) const}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a3c24c73f0c6ebf814184d49684ac7ed2}
+
+
+Accepts a visitor subclassed from the \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor}{Visitor} class. 
+
+Accept a visitor to perform some action on the \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em visitor} & visitor instance to use \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 310 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_acb0c6e46752b71f2a3c9640a993a0b2f}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!begin@{begin}}
+\index{begin@{begin}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Const\_\-Iterator} Madara::Expression\_\-Tree::Expression\_\-Tree::begin (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{traversal\_\-order}
+\end{DoxyParamCaption}
+) const}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_acb0c6e46752b71f2a3c9640a993a0b2f}
+
+
+Returns a const iterator to the beginning of the expression tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em traversal\_\-order} & in-\/order, post-\/order, pre-\/order, level-\/order \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+iterator for the specified order 
+\end{DoxyReturn}
+
+
+Definition at line 288 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a87d62db793809ce406d64b531159cd21}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!begin@{begin}}
+\index{begin@{begin}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{begin}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree::iterator} Madara::Expression\_\-Tree::Expression\_\-Tree::begin (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{traversal\_\-order}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a87d62db793809ce406d64b531159cd21}
+
+
+Returns an iterator to the beginning of the expression tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em traversal\_\-order} & in-\/order, post-\/order, pre-\/order, level-\/order \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+iterator for the specified order 
+\end{DoxyReturn}
+
+
+Definition at line 266 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_aa25a3fb7d24006c1d8d3a0ab3912c585}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!end@{end}}
+\index{end@{end}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree::iterator} Madara::Expression\_\-Tree::Expression\_\-Tree::end (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{traversal\_\-order}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_aa25a3fb7d24006c1d8d3a0ab3912c585}
+
+
+Returns an iterator to the end of the expression tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em traversal\_\-order} & in-\/order, post-\/order, pre-\/order, level-\/order \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+iterator for the specified order 
+\end{DoxyReturn}
+
+
+Definition at line 277 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a56d184e7bccff7107df76799123e0df1}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!end@{end}}
+\index{end@{end}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{end}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Const\_\-Iterator} Madara::Expression\_\-Tree::Expression\_\-Tree::end (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{traversal\_\-order}
+\end{DoxyParamCaption}
+) const}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a56d184e7bccff7107df76799123e0df1}
+
+
+Returns a const iterator to the end of the expression tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em traversal\_\-order} & in-\/order, post-\/order, pre-\/order, level-\/order \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+iterator for the specified order 
+\end{DoxyReturn}
+
+
+Definition at line 299 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a23246efa474c996687c43fac8de871e8}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{evaluate}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Expression\_\-Tree::evaluate (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a23246efa474c996687c43fac8de871e8}
+
+
+Evaluates the expression tree. 
+
+Evaluates the node and its children.
+
+\begin{DoxyReturn}{Returns}
+value of expression tree
+\end{DoxyReturn}
+This does not prune any of the expression tree, and is much faster than the prune function 
+
+Definition at line 226 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_af1e3b1868881a8c02ccc38700b957742}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!get\_\-root@{get\_\-root}}
+\index{get\_\-root@{get\_\-root}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{get\_\-root}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Component\_\-Node} $\ast$ Madara::Expression\_\-Tree::Expression\_\-Tree::get\_\-root (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_af1e3b1868881a8c02ccc38700b957742}
+
+
+Returns the root node of the expression tree. 
+
+\begin{DoxyReturn}{Returns}
+root node of the expression tree 
+\end{DoxyReturn}
+
+
+Definition at line 234 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a9c4b052d51dbf4eddf53c7a8c30ac146}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!is\_\-null@{is\_\-null}}
+\index{is\_\-null@{is\_\-null}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{is\_\-null}]{\setlength{\rightskip}{0pt plus 5cm}bool Madara::Expression\_\-Tree::Expression\_\-Tree::is\_\-null (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a9c4b052d51dbf4eddf53c7a8c30ac146}
+
+
+Checks if root pointer is null. 
+
+\begin{DoxyReturn}{Returns}
+true if root of tree is null 
+\end{DoxyReturn}
+
+
+Definition at line 194 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a55e7939e536d8c1d741c3fb429da1245}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!item@{item}}
+\index{item@{item}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{item}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Expression\_\-Tree::item (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a55e7939e536d8c1d741c3fb429da1245}
+
+
+Returns value of tree. 
+
+\begin{DoxyReturn}{Returns}
+value of the expression tree 
+\end{DoxyReturn}
+
+
+Definition at line 242 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_afa2ed8833e24ed45219056f3d07ffe54}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!left@{left}}
+\index{left@{left}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{left}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree} Madara::Expression\_\-Tree::Expression\_\-Tree::left (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_afa2ed8833e24ed45219056f3d07ffe54}
+
+
+Returns the left expression of this tree. 
+
+\begin{DoxyReturn}{Returns}
+left expression 
+\end{DoxyReturn}
+
+
+Definition at line 250 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a85a61dd28e6ade83bab02261363368ad}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!operator=@{operator=}}
+\index{operator=@{operator=}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Expression\_\-Tree::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Expression\_\-Tree} \&}]{tree}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a85a61dd28e6ade83bab02261363368ad}
+
+
+Non-\/deep copies an expression tree into this instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tree} & tree to copy from \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 175 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a1cfb1d17c39590fb927d5ac9fc1b6a44}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!prune@{prune}}
+\index{prune@{prune}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{prune}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Expression\_\-Tree::prune (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a1cfb1d17c39590fb927d5ac9fc1b6a44}
+
+
+Prunes the expression tree of unnecessary nodes. 
+
+Prune the tree of unnecessary nodes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em can\_\-change} & set to true if variable nodes are contained \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of expression tree
+\end{DoxyReturn}
+Returns evaluation of the node and sets can\_\-change appropriately. if this node can be changed, that means it shouldn't be pruned. 
+
+Definition at line 204 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a817bb84c1447d8cfc70ca84a64fad8fe}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!right@{right}}
+\index{right@{right}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{right}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree} Madara::Expression\_\-Tree::Expression\_\-Tree::right (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a817bb84c1447d8cfc70ca84a64fad8fe}
+
+
+Returns the right expression of this tree. 
+
+\begin{DoxyReturn}{Returns}
+right expression 
+\end{DoxyReturn}
+
+
+Definition at line 258 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree_a9f38e8a0b9bfcbea1b4e3accf651da66}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}!root\_\-@{root\_\-}}
+\index{root\_\-@{root\_\-}!Madara::Expression_Tree::Expression_Tree@{Madara::Expression\_\-Tree::Expression\_\-Tree}}
+\subsubsection[{root\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Utility::Refcounter}$<${\bf Component\_\-Node}$>$ {\bf Madara::Expression\_\-Tree::Expression\_\-Tree::root\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{da/d25/classMadara_1_1Expression__Tree_1_1Expression__Tree_a9f38e8a0b9bfcbea1b4e3accf651da66}
+
+
+root of the expression tree 
+
+
+
+Definition at line 146 of file Expression\_\-Tree.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Expression__Tree_8h}{Expression\_\-Tree.h}\item 
+madara/expression\_\-tree/\hyperlink{Expression__Tree_8cpp}{Expression\_\-Tree.cpp}\end{DoxyCompactItemize}

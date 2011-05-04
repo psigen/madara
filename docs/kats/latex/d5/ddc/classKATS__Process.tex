@@ -1,0 +1,550 @@
+\hypertarget{classKATS__Process}{
+\section{KATS\_\-Process Class Reference}
+\label{d5/ddc/classKATS__Process}\index{KATS\_\-Process@{KATS\_\-Process}}
+}
+
+
+Collaboration diagram for KATS\_\-Process:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{db/d59/classKATS__Process__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classKATS__Process_ae60140d056f6912da09a0178ecaa7d44}{KATS\_\-Process} ()
+\item 
+\hyperlink{classKATS__Process_a4fbee788f8e511200f0f307472a20f80}{KATS\_\-Process} (const \hyperlink{classKATS__Process}{KATS\_\-Process} \&rhs)
+\item 
+\hyperlink{classKATS__Process_a7657418f0f58b871e532745d92aa7c4d}{$\sim$KATS\_\-Process} ()
+\item 
+\hyperlink{classKATS__Process}{KATS\_\-Process} \& \hyperlink{classKATS__Process_ac662a14156c8a6eb1fabf032e9ce43ee}{operator=} (const \hyperlink{classKATS__Process}{KATS\_\-Process} \&rhs)
+\item 
+void \hyperlink{classKATS__Process_a5001291bcb531009b9089848734cc47f}{enable\_\-realtime} (void)
+\item 
+void \hyperlink{classKATS__Process_a9b9e4f9c68e1573326d26769e35f1236}{enable\_\-debug} (void)
+\item 
+void \hyperlink{classKATS__Process_ab551c7a477ee13d1de4849bd37a71924}{set\_\-precondition} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a93de177ea804a8fcd3683ef08b9a04d4}{set\_\-executable} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_adbbf134f5c023829063ab3bad77ebc42}{set\_\-postcondition} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a8eeed6e1890f3d09577fee47dddb06ad}{set\_\-commandline} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a87a4ebc72cf062729c8bd2d420812432}{set\_\-killtime} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a9e53408f83f89eeb71365210dfd08ec6}{set\_\-killsignal} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a6fb83c9cbe59d9845690fee96775b1c4}{set\_\-delaytime} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a066c72c7bf270adf29c3a0a0509cd687}{set\_\-id} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_aae625dfbd79c1e00e30b3c19197130a1}{set\_\-host} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_acde95270b2b715f3282169cbc55fb12c}{set\_\-stdin} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a8e154dfd08a9dd52affb52d8e5d109e0}{set\_\-stdout} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_af599529fc19e3e91a63fae71f8ef915a}{set\_\-stderr} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a93fedff66c4526da4aa640a173502f63}{set\_\-loglevel} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_a06349fc6340e92c19a250fb45cecc3ea}{set\_\-processes} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_ac382020f63760542683dfa2e9e63cbc4}{set\_\-workingdir} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_af825eb3107e356937e1978969a03e6c4}{set\_\-environment} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_aac5a4e2dbc371aec258b586b44919093}{set\_\-domain} (const std::string \&value)
+\item 
+void \hyperlink{classKATS__Process_aac52c6505338127510192278ad3e9f6b}{set\_\-testname} (const std::string \&value)
+\item 
+std::string \hyperlink{classKATS__Process_a06ecac6953b3323e070deb26eb42d4f3}{query\_\-setup} (void)
+\item 
+void \hyperlink{classKATS__Process_a4dbd986253bfc36a1000d93bdfdc39ed}{launch} (void)
+\item 
+int \hyperlink{classKATS__Process_ab850f6f94d349e5a46f43bb67f24ab6b}{running} (void)
+\item 
+ACE\_\-exitcode \hyperlink{classKATS__Process_a7ce23225fdabcc14193d26832da726a7}{exit\_\-code} (void)
+\item 
+int \hyperlink{classKATS__Process_ad0553f8bb8d0aa1e386e8a115f948d0c}{terminate} (void)
+\item 
+pid\_\-t \hyperlink{classKATS__Process_a4d91cec6b270e036069e2528d51c0dc5}{wait} (void)
+\item 
+pid\_\-t \hyperlink{classKATS__Process_a9da90c9eb28ddd2ea0e71a7e32eae4ec}{wait} (const ACE\_\-Time\_\-Value \&value)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+ACE\_\-Process \hyperlink{classKATS__Process_a6ba77ef0f8e4c11cc023c58e3644d5a9}{process}
+\item 
+ACE\_\-Process\_\-Options \hyperlink{classKATS__Process_a8b87574deae87e421b23fe0ccb1519ad}{process\_\-options}
+\item 
+std::string \hyperlink{classKATS__Process_ad3d481ebf6551b3c126b991b4e2dd915}{executable}
+\item 
+std::stringstream \hyperlink{classKATS__Process_a01b7df843e2b94a483278a0b1e45811c}{command\_\-line}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 60 of file Batch.cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classKATS__Process_ae60140d056f6912da09a0178ecaa7d44}{
+\index{KATS\_\-Process@{KATS\_\-Process}!KATS\_\-Process@{KATS\_\-Process}}
+\index{KATS\_\-Process@{KATS\_\-Process}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{KATS\_\-Process}]{\setlength{\rightskip}{0pt plus 5cm}KATS\_\-Process::KATS\_\-Process (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ae60140d056f6912da09a0178ecaa7d44}
+
+
+Definition at line 63 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a4fbee788f8e511200f0f307472a20f80}{
+\index{KATS\_\-Process@{KATS\_\-Process}!KATS\_\-Process@{KATS\_\-Process}}
+\index{KATS\_\-Process@{KATS\_\-Process}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{KATS\_\-Process}]{\setlength{\rightskip}{0pt plus 5cm}KATS\_\-Process::KATS\_\-Process (
+\begin{DoxyParamCaption}
+\item[{const {\bf KATS\_\-Process} \&}]{rhs}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a4fbee788f8e511200f0f307472a20f80}
+
+
+Definition at line 71 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a7657418f0f58b871e532745d92aa7c4d}{
+\index{KATS\_\-Process@{KATS\_\-Process}!$\sim$KATS\_\-Process@{$\sim$KATS\_\-Process}}
+\index{$\sim$KATS\_\-Process@{$\sim$KATS\_\-Process}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{$\sim$KATS\_\-Process}]{\setlength{\rightskip}{0pt plus 5cm}KATS\_\-Process::$\sim$KATS\_\-Process (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a7657418f0f58b871e532745d92aa7c4d}
+
+
+Definition at line 78 of file Batch.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classKATS__Process_a9b9e4f9c68e1573326d26769e35f1236}{
+\index{KATS\_\-Process@{KATS\_\-Process}!enable\_\-debug@{enable\_\-debug}}
+\index{enable\_\-debug@{enable\_\-debug}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{enable\_\-debug}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::enable\_\-debug (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a9b9e4f9c68e1573326d26769e35f1236}
+
+
+Definition at line 96 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a5001291bcb531009b9089848734cc47f}{
+\index{KATS\_\-Process@{KATS\_\-Process}!enable\_\-realtime@{enable\_\-realtime}}
+\index{enable\_\-realtime@{enable\_\-realtime}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{enable\_\-realtime}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::enable\_\-realtime (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a5001291bcb531009b9089848734cc47f}
+
+
+Definition at line 91 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a7ce23225fdabcc14193d26832da726a7}{
+\index{KATS\_\-Process@{KATS\_\-Process}!exit\_\-code@{exit\_\-code}}
+\index{exit\_\-code@{exit\_\-code}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{exit\_\-code}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-exitcode KATS\_\-Process::exit\_\-code (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a7ce23225fdabcc14193d26832da726a7}
+
+
+Definition at line 237 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a4dbd986253bfc36a1000d93bdfdc39ed}{
+\index{KATS\_\-Process@{KATS\_\-Process}!launch@{launch}}
+\index{launch@{launch}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{launch}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::launch (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a4dbd986253bfc36a1000d93bdfdc39ed}
+
+
+Definition at line 223 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_ac662a14156c8a6eb1fabf032e9ce43ee}{
+\index{KATS\_\-Process@{KATS\_\-Process}!operator=@{operator=}}
+\index{operator=@{operator=}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf KATS\_\-Process}\& KATS\_\-Process::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf KATS\_\-Process} \&}]{rhs}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ac662a14156c8a6eb1fabf032e9ce43ee}
+
+
+Definition at line 82 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a06ecac6953b3323e070deb26eb42d4f3}{
+\index{KATS\_\-Process@{KATS\_\-Process}!query\_\-setup@{query\_\-setup}}
+\index{query\_\-setup@{query\_\-setup}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{query\_\-setup}]{\setlength{\rightskip}{0pt plus 5cm}std::string KATS\_\-Process::query\_\-setup (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a06ecac6953b3323e070deb26eb42d4f3}
+
+
+Definition at line 213 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_ab850f6f94d349e5a46f43bb67f24ab6b}{
+\index{KATS\_\-Process@{KATS\_\-Process}!running@{running}}
+\index{running@{running}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{running}]{\setlength{\rightskip}{0pt plus 5cm}int KATS\_\-Process::running (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ab850f6f94d349e5a46f43bb67f24ab6b}
+
+
+Definition at line 232 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a8eeed6e1890f3d09577fee47dddb06ad}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-commandline@{set\_\-commandline}}
+\index{set\_\-commandline@{set\_\-commandline}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-commandline}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-commandline (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a8eeed6e1890f3d09577fee47dddb06ad}
+
+
+Definition at line 121 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a6fb83c9cbe59d9845690fee96775b1c4}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-delaytime@{set\_\-delaytime}}
+\index{set\_\-delaytime@{set\_\-delaytime}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-delaytime}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-delaytime (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a6fb83c9cbe59d9845690fee96775b1c4}
+
+
+Definition at line 140 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_aac5a4e2dbc371aec258b586b44919093}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-domain@{set\_\-domain}}
+\index{set\_\-domain@{set\_\-domain}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-domain}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-domain (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_aac5a4e2dbc371aec258b586b44919093}
+
+
+Definition at line 200 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_af825eb3107e356937e1978969a03e6c4}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-environment@{set\_\-environment}}
+\index{set\_\-environment@{set\_\-environment}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-environment}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-environment (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_af825eb3107e356937e1978969a03e6c4}
+
+
+Definition at line 194 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a93de177ea804a8fcd3683ef08b9a04d4}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-executable@{set\_\-executable}}
+\index{set\_\-executable@{set\_\-executable}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-executable}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-executable (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a93de177ea804a8fcd3683ef08b9a04d4}
+
+
+Definition at line 108 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_aae625dfbd79c1e00e30b3c19197130a1}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-host@{set\_\-host}}
+\index{set\_\-host@{set\_\-host}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-host}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-host (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_aae625dfbd79c1e00e30b3c19197130a1}
+
+
+Definition at line 152 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a066c72c7bf270adf29c3a0a0509cd687}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-id@{set\_\-id}}
+\index{set\_\-id@{set\_\-id}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-id}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-id (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a066c72c7bf270adf29c3a0a0509cd687}
+
+
+Definition at line 146 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a9e53408f83f89eeb71365210dfd08ec6}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-killsignal@{set\_\-killsignal}}
+\index{set\_\-killsignal@{set\_\-killsignal}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-killsignal}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-killsignal (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a9e53408f83f89eeb71365210dfd08ec6}
+
+
+Definition at line 134 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a87a4ebc72cf062729c8bd2d420812432}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-killtime@{set\_\-killtime}}
+\index{set\_\-killtime@{set\_\-killtime}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-killtime}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-killtime (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a87a4ebc72cf062729c8bd2d420812432}
+
+
+Definition at line 128 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a93fedff66c4526da4aa640a173502f63}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-loglevel@{set\_\-loglevel}}
+\index{set\_\-loglevel@{set\_\-loglevel}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-loglevel}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-loglevel (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a93fedff66c4526da4aa640a173502f63}
+
+
+Definition at line 176 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_adbbf134f5c023829063ab3bad77ebc42}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-postcondition@{set\_\-postcondition}}
+\index{set\_\-postcondition@{set\_\-postcondition}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-postcondition}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-postcondition (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_adbbf134f5c023829063ab3bad77ebc42}
+
+
+Definition at line 114 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_ab551c7a477ee13d1de4849bd37a71924}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-precondition@{set\_\-precondition}}
+\index{set\_\-precondition@{set\_\-precondition}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-precondition}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-precondition (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ab551c7a477ee13d1de4849bd37a71924}
+
+
+Definition at line 101 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a06349fc6340e92c19a250fb45cecc3ea}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-processes@{set\_\-processes}}
+\index{set\_\-processes@{set\_\-processes}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-processes}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-processes (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a06349fc6340e92c19a250fb45cecc3ea}
+
+
+Definition at line 182 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_af599529fc19e3e91a63fae71f8ef915a}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-stderr@{set\_\-stderr}}
+\index{set\_\-stderr@{set\_\-stderr}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-stderr}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-stderr (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_af599529fc19e3e91a63fae71f8ef915a}
+
+
+Definition at line 170 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_acde95270b2b715f3282169cbc55fb12c}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-stdin@{set\_\-stdin}}
+\index{set\_\-stdin@{set\_\-stdin}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-stdin}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-stdin (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_acde95270b2b715f3282169cbc55fb12c}
+
+
+Definition at line 158 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a8e154dfd08a9dd52affb52d8e5d109e0}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-stdout@{set\_\-stdout}}
+\index{set\_\-stdout@{set\_\-stdout}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-stdout}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-stdout (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a8e154dfd08a9dd52affb52d8e5d109e0}
+
+
+Definition at line 164 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_aac52c6505338127510192278ad3e9f6b}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-testname@{set\_\-testname}}
+\index{set\_\-testname@{set\_\-testname}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-testname}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-testname (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_aac52c6505338127510192278ad3e9f6b}
+
+
+Definition at line 206 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_ac382020f63760542683dfa2e9e63cbc4}{
+\index{KATS\_\-Process@{KATS\_\-Process}!set\_\-workingdir@{set\_\-workingdir}}
+\index{set\_\-workingdir@{set\_\-workingdir}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{set\_\-workingdir}]{\setlength{\rightskip}{0pt plus 5cm}void KATS\_\-Process::set\_\-workingdir (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ac382020f63760542683dfa2e9e63cbc4}
+
+
+Definition at line 188 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_ad0553f8bb8d0aa1e386e8a115f948d0c}{
+\index{KATS\_\-Process@{KATS\_\-Process}!terminate@{terminate}}
+\index{terminate@{terminate}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{terminate}]{\setlength{\rightskip}{0pt plus 5cm}int KATS\_\-Process::terminate (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ad0553f8bb8d0aa1e386e8a115f948d0c}
+
+
+Definition at line 242 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a4d91cec6b270e036069e2528d51c0dc5}{
+\index{KATS\_\-Process@{KATS\_\-Process}!wait@{wait}}
+\index{wait@{wait}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{wait}]{\setlength{\rightskip}{0pt plus 5cm}pid\_\-t KATS\_\-Process::wait (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a4d91cec6b270e036069e2528d51c0dc5}
+
+
+Definition at line 247 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a9da90c9eb28ddd2ea0e71a7e32eae4ec}{
+\index{KATS\_\-Process@{KATS\_\-Process}!wait@{wait}}
+\index{wait@{wait}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{wait}]{\setlength{\rightskip}{0pt plus 5cm}pid\_\-t KATS\_\-Process::wait (
+\begin{DoxyParamCaption}
+\item[{const ACE\_\-Time\_\-Value \&}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a9da90c9eb28ddd2ea0e71a7e32eae4ec}
+
+
+Definition at line 252 of file Batch.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classKATS__Process_a01b7df843e2b94a483278a0b1e45811c}{
+\index{KATS\_\-Process@{KATS\_\-Process}!command\_\-line@{command\_\-line}}
+\index{command\_\-line@{command\_\-line}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{command\_\-line}]{\setlength{\rightskip}{0pt plus 5cm}std::stringstream {\bf KATS\_\-Process::command\_\-line}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a01b7df843e2b94a483278a0b1e45811c}
+
+
+Definition at line 262 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_ad3d481ebf6551b3c126b991b4e2dd915}{
+\index{KATS\_\-Process@{KATS\_\-Process}!executable@{executable}}
+\index{executable@{executable}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{executable}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf KATS\_\-Process::executable}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_ad3d481ebf6551b3c126b991b4e2dd915}
+
+
+Definition at line 261 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a6ba77ef0f8e4c11cc023c58e3644d5a9}{
+\index{KATS\_\-Process@{KATS\_\-Process}!process@{process}}
+\index{process@{process}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{process}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Process {\bf KATS\_\-Process::process}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a6ba77ef0f8e4c11cc023c58e3644d5a9}
+
+
+Definition at line 259 of file Batch.cpp.
+
+\hypertarget{classKATS__Process_a8b87574deae87e421b23fe0ccb1519ad}{
+\index{KATS\_\-Process@{KATS\_\-Process}!process\_\-options@{process\_\-options}}
+\index{process\_\-options@{process\_\-options}!KATS_Process@{KATS\_\-Process}}
+\subsubsection[{process\_\-options}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Process\_\-Options {\bf KATS\_\-Process::process\_\-options}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{d5/ddc/classKATS__Process_a8b87574deae87e421b23fe0ccb1519ad}
+
+
+Definition at line 260 of file Batch.cpp.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/kats/\hyperlink{Batch_8cpp}{Batch.cpp}\end{DoxyCompactItemize}

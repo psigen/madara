@@ -1,0 +1,397 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl}{
+\section{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl Class Reference}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl}\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+}
+
+
+Iterates through an {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree}\/} in post-\/order.  
+
+
+
+
+{\ttfamily \#include $<$Iterator\_\-Impl.h$>$}
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=348pt]{d8/d3c/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{d7/dbb/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef ::std::forward\_\-iterator\_\-tag \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a7705e7513403a9230549f22307fc48a1}{iterator\_\-category}
+\begin{DoxyCompactList}\small\item\em = Necessary traits \item\end{DoxyCompactList}\item 
+typedef long \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a1cbf1023180bd2e240f068a7ae890c3b}{value\_\-type}
+\item 
+typedef int $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a25a4fb605bf76c81f92b78de5fe9b5b3}{pointer}
+\item 
+typedef int \& \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_abcfe99c7ecb45d8400b7a6a91b47827b}{reference}
+\item 
+typedef int \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a126fb29e61a2f9753ca68acb648372e6}{difference\_\-type}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a518a87569ec26d1ede774459b0f0868f}{Post\_\-Order\_\-Iterator\_\-Impl} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, bool end\_\-iter=false)
+\begin{DoxyCompactList}\small\item\em Construct an \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl}{Post\_\-Order\_\-Iterator\_\-Impl}. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a4602cffffbbf2bdad0f765e2f15dd2f0}{$\sim$Post\_\-Order\_\-Iterator\_\-Impl} (void)
+\begin{DoxyCompactList}\small\item\em Dtor. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a52bf5e8fc82ab5fff162d7f94f411d59}{operator$\ast$} (void)
+\begin{DoxyCompactList}\small\item\em Dereference operator returns a reference to the item contained at the current position. \item\end{DoxyCompactList}\item 
+virtual const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a353bc35186465b3df77ae126ac28a5b5}{operator$\ast$} (void) const 
+\begin{DoxyCompactList}\small\item\em Returns a const reference to the item contained at the current position. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a8fb182a812c3184d0a68a8d5d23060ee}{operator++} (void)
+\begin{DoxyCompactList}\small\item\em Increment operator (used for both pre-\/ and post-\/increment). \item\end{DoxyCompactList}\item 
+virtual bool \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_af1a79aa4f92fd93c9c549e3628bb3b45}{operator==} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} \&rhs) const 
+\begin{DoxyCompactList}\small\item\em \hyperlink{classMadara_1_1Expression__Tree_1_1Equality}{Equality} operator. \item\end{DoxyCompactList}\item 
+virtual bool \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_aa7120d9733f35d93b507856e3ac9279c}{operator!=} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} \&lhs) const 
+\begin{DoxyCompactList}\small\item\em Nonequality operator. \item\end{DoxyCompactList}\item 
+virtual \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a7017630a4ed8e1212c836730f0e3420b}{clone} (void)
+\begin{DoxyCompactList}\small\item\em Method for cloning an impl. Necessary for post increments. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \& \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a4b369e3fcfc62405321ece1d46719f93}{tree\_\-}
+\begin{DoxyCompactList}\small\item\em The tree we are iterating over. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Utility_1_1LStack}{Madara::Utility::LStack}$<$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} $>$ \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a6919a91bb3a0e156991ff459a0366b34}{stack\_\-}
+\begin{DoxyCompactList}\small\item\em Our current position in the iteration. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_adfe8d209b4dd64ac100d4c9c9adf08c1}{Expression\_\-Tree\_\-Iterator}
+\item 
+class \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_aebe1f916414d809cae08793459b42a35}{Refcounter$<$ Expression\_\-Tree\_\-Iterator\_\-Impl $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Iterates through an {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree}\/} in post-\/order. Plays the role of the \char`\"{}implementor\char`\"{} class in the Bridge pattern that defines the post-\/order iteration algorithm. 
+
+Definition at line 202 of file Iterator\_\-Impl.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a126fb29e61a2f9753ca68acb648372e6}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!difference\_\-type@{difference\_\-type}}
+\index{difference\_\-type@{difference\_\-type}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{difference\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef int {\bf Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::difference\_\-type}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a126fb29e61a2f9753ca68acb648372e6}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_ae0238cb942a1398b7cd91dffe4c5ba3c}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 244 of file Iterator\_\-Impl.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a7705e7513403a9230549f22307fc48a1}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!iterator\_\-category@{iterator\_\-category}}
+\index{iterator\_\-category@{iterator\_\-category}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{iterator\_\-category}]{\setlength{\rightskip}{0pt plus 5cm}typedef ::std::forward\_\-iterator\_\-tag {\bf Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::iterator\_\-category}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a7705e7513403a9230549f22307fc48a1}
+
+
+= Necessary traits 
+
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a59d9cb2efd705e21684d901de09399c7}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 240 of file Iterator\_\-Impl.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a25a4fb605bf76c81f92b78de5fe9b5b3}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!pointer@{pointer}}
+\index{pointer@{pointer}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{pointer}]{\setlength{\rightskip}{0pt plus 5cm}typedef int$\ast$ {\bf Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::pointer}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a25a4fb605bf76c81f92b78de5fe9b5b3}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a33e128179eed32fd363d0f426ed313a1}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 242 of file Iterator\_\-Impl.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_abcfe99c7ecb45d8400b7a6a91b47827b}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!reference@{reference}}
+\index{reference@{reference}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{reference}]{\setlength{\rightskip}{0pt plus 5cm}typedef int\& {\bf Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::reference}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_abcfe99c7ecb45d8400b7a6a91b47827b}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_adbfbf382a07c981d136ea739c913aeab}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 243 of file Iterator\_\-Impl.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a1cbf1023180bd2e240f068a7ae890c3b}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!value\_\-type@{value\_\-type}}
+\index{value\_\-type@{value\_\-type}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{value\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef long {\bf Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::value\_\-type}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a1cbf1023180bd2e240f068a7ae890c3b}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a7905c3a8d6cb961d826aff8bbd10e520}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 241 of file Iterator\_\-Impl.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a518a87569ec26d1ede774459b0f0868f}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!Post\_\-Order\_\-Iterator\_\-Impl@{Post\_\-Order\_\-Iterator\_\-Impl}}
+\index{Post\_\-Order\_\-Iterator\_\-Impl@{Post\_\-Order\_\-Iterator\_\-Impl}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{Post\_\-Order\_\-Iterator\_\-Impl}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::Post\_\-Order\_\-Iterator\_\-Impl (
+\begin{DoxyParamCaption}
+\item[{const {\bf Expression\_\-Tree} \&}]{tree, }
+\item[{bool}]{end\_\-iter = {\ttfamily false}}
+\end{DoxyParamCaption}
+)}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a518a87569ec26d1ede774459b0f0868f}
+
+
+Construct an \hyperlink{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl}{Post\_\-Order\_\-Iterator\_\-Impl}. 
+
+Construct an Post\_\-Order\_\-Expression\_\-Tree\_\-Iterator.
+
+If end\_\-iter is set to true, the iterator points to the end of the tree. Otherwise, the iterator starts with a free tree.
+
+If end\_\-iter is set to true, the iterator points to the end of the tree 
+
+Definition at line 297 of file Iterator\_\-Impl.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a4602cffffbbf2bdad0f765e2f15dd2f0}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!$\sim$Post\_\-Order\_\-Iterator\_\-Impl@{$\sim$Post\_\-Order\_\-Iterator\_\-Impl}}
+\index{$\sim$Post\_\-Order\_\-Iterator\_\-Impl@{$\sim$Post\_\-Order\_\-Iterator\_\-Impl}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{$\sim$Post\_\-Order\_\-Iterator\_\-Impl}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::$\sim$Post\_\-Order\_\-Iterator\_\-Impl (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a4602cffffbbf2bdad0f765e2f15dd2f0}
+
+
+Dtor. 
+
+destructor -\/ nothing to do 
+
+Definition at line 334 of file Iterator\_\-Impl.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a7017630a4ed8e1212c836730f0e3420b}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!clone@{clone}}
+\index{clone@{clone}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{clone}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::clone (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a7017630a4ed8e1212c836730f0e3420b}
+
+
+Method for cloning an impl. Necessary for post increments. 
+
+Method for cloning an impl.
+
+Necessary for post increments (bridge) \begin{DoxySeeAlso}{See also}
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator}{Expression\_\-Tree\_\-Iterator} 
+\end{DoxySeeAlso}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_add85852d0a6805269caa3290000c318d}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 463 of file Iterator\_\-Impl.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_aa7120d9733f35d93b507856e3ac9279c}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!operator!=@{operator!=}}
+\index{operator!=@{operator!=}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{operator!=}]{\setlength{\rightskip}{0pt plus 5cm}bool Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::operator!= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Expression\_\-Tree\_\-Iterator\_\-Impl} \&}]{lhs}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_aa7120d9733f35d93b507856e3ac9279c}
+
+
+Nonequality operator. 
+
+checks two iterators for inequality 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a82c7271bdc27fb7c98fcb2a656e22fb6}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 453 of file Iterator\_\-Impl.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a353bc35186465b3df77ae126ac28a5b5}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{operator$\ast$}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Madara::Expression\_\-Tree::Expression\_\-Tree} Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::operator$\ast$ (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a353bc35186465b3df77ae126ac28a5b5}
+
+
+Returns a const reference to the item contained at the current position. 
+
+Returns the Node that the iterator is pointing to (const version)
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a0adf08a25890d38df2b6a8615ba47b9d}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 350 of file Iterator\_\-Impl.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a52bf5e8fc82ab5fff162d7f94f411d59}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{operator$\ast$}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree} Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::operator$\ast$ (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a52bf5e8fc82ab5fff162d7f94f411d59}
+
+
+Dereference operator returns a reference to the item contained at the current position. 
+
+Returns the Node that the iterator is pointing to (non-\/const version)
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_aaec2964459ca6f0226f3e0dabda54288}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 342 of file Iterator\_\-Impl.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a8fb182a812c3184d0a68a8d5d23060ee}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!operator++@{operator++}}
+\index{operator++@{operator++}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{operator++}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::operator++ (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a8fb182a812c3184d0a68a8d5d23060ee}
+
+
+Increment operator (used for both pre-\/ and post-\/increment). 
+
+moves the iterator to the next node (pre-\/increment) 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_ae73d9d30eb08bb414115302cf6748205}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 358 of file Iterator\_\-Impl.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_af1a79aa4f92fd93c9c549e3628bb3b45}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!operator==@{operator==}}
+\index{operator==@{operator==}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{operator==}]{\setlength{\rightskip}{0pt plus 5cm}bool Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::operator== (
+\begin{DoxyParamCaption}
+\item[{const {\bf Expression\_\-Tree\_\-Iterator\_\-Impl} \&}]{rhs}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_af1a79aa4f92fd93c9c549e3628bb3b45}
+
+
+\hyperlink{classMadara_1_1Expression__Tree_1_1Equality}{Equality} operator. 
+
+checks two iterators for equality 
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a05aaa44a9c047b7863789792d8d7830a}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 404 of file Iterator\_\-Impl.cpp.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_adfe8d209b4dd64ac100d4c9c9adf08c1}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!Expression\_\-Tree\_\-Iterator@{Expression\_\-Tree\_\-Iterator}}
+\index{Expression\_\-Tree\_\-Iterator@{Expression\_\-Tree\_\-Iterator}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{Expression\_\-Tree\_\-Iterator}]{\setlength{\rightskip}{0pt plus 5cm}friend class {\bf Expression\_\-Tree\_\-Iterator}\hspace{0.3cm}{\ttfamily  \mbox{[}friend\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_adfe8d209b4dd64ac100d4c9c9adf08c1}
+
+
+Reimplemented from \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_adfe8d209b4dd64ac100d4c9c9adf08c1}{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl}.
+
+
+
+Definition at line 204 of file Iterator\_\-Impl.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_aebe1f916414d809cae08793459b42a35}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!Refcounter$<$ Expression\_\-Tree\_\-Iterator\_\-Impl $>$@{Refcounter$<$ Expression\_\-Tree\_\-Iterator\_\-Impl $>$}}
+\index{Refcounter$<$ Expression\_\-Tree\_\-Iterator\_\-Impl $>$@{Refcounter$<$ Expression\_\-Tree\_\-Iterator\_\-Impl $>$}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{Refcounter$<$ Expression\_\-Tree\_\-Iterator\_\-Impl $>$}]{\setlength{\rightskip}{0pt plus 5cm}friend class Refcounter$<$ {\bf Expression\_\-Tree\_\-Iterator\_\-Impl} $>$\hspace{0.3cm}{\ttfamily  \mbox{[}friend\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_aebe1f916414d809cae08793459b42a35}
+
+
+Definition at line 205 of file Iterator\_\-Impl.h.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a6919a91bb3a0e156991ff459a0366b34}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!stack\_\-@{stack\_\-}}
+\index{stack\_\-@{stack\_\-}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{stack\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Utility::LStack}$<${\bf Expression\_\-Tree}$>$ {\bf Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl::stack\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d3e/classMadara_1_1Expression__Tree_1_1Post__Order__Iterator__Impl_a6919a91bb3a0e156991ff459a0366b34}
+
+
+Our current position in the iteration. 
+
+
+
+Definition at line 248 of file Iterator\_\-Impl.h.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a4b369e3fcfc62405321ece1d46719f93}{
+\index{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}!tree\_\-@{tree\_\-}}
+\index{tree\_\-@{tree\_\-}!Madara::Expression_Tree::Post_Order_Iterator_Impl@{Madara::Expression\_\-Tree::Post\_\-Order\_\-Iterator\_\-Impl}}
+\subsubsection[{tree\_\-}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf Expression\_\-Tree}\& {\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl::tree\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected, inherited\mbox{]}}}}
+\label{d0/dd7/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl_a4b369e3fcfc62405321ece1d46719f93}
+
+
+The tree we are iterating over. 
+
+
+
+Definition at line 81 of file Iterator\_\-Impl.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Iterator__Impl_8h}{Iterator\_\-Impl.h}\item 
+madara/expression\_\-tree/\hyperlink{Iterator__Impl_8cpp}{Iterator\_\-Impl.cpp}\end{DoxyCompactItemize}

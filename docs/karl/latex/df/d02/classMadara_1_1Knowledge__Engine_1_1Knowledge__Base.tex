@@ -1,0 +1,834 @@
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base}{
+\section{Madara::Knowledge\_\-Engine::Knowledge\_\-Base Class Reference}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base}\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+}
+
+
+This class provides a distributed knowledge base to users.  
+
+
+
+
+{\ttfamily \#include $<$Knowledge\_\-Base.h$>$}
+
+
+
+Collaboration diagram for Madara::Knowledge\_\-Engine::Knowledge\_\-Base:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=332pt]{d8/d49/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8a6c25e2115c114e112a691f19e1445a29}{NO\_\-TRANSPORT} =  0, 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8a954c7c0a6aa7ffd684ab0768d610f5dc}{OPEN\_\-SPLICE\_\-TRANSPORT} =  1, 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8aafacafa9caa135a04478eb7496c6ae5b}{TCP\_\-TRANSPORT} =  2
+ \}
+\begin{DoxyCompactList}\small\item\em \hyperlink{namespaceMadara_1_1Transport}{Transport} type enumeration. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a4b9e119c21c60b2f370dded04b1145b2}{Knowledge\_\-Base} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a2d209942f62dc3eb238024ea457d5d0b}{Knowledge\_\-Base} (const std::string \&host, int transport)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a499e89d75cce7d69f3e9aff72a3c87b9}{Knowledge\_\-Base} (const std::string \&host, int transport, const std::string \&domain)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a6d496d93753553470eb7346fee212ce3}{Knowledge\_\-Base} (const std::string \&host, const \hyperlink{classMadara_1_1Transport_1_1Settings}{Madara::Transport::Settings} \&config)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a5a34c40e07b04ec21421e3faed58ed0d}{Knowledge\_\-Base} (const \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base}{Knowledge\_\-Base} \&original)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab1e6aa7f2eba9f320c59f49a07d1c488}{$\sim$Knowledge\_\-Base} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a2e04a387be8c8b1e9eab87dbca25973c}{operator=} (const \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base}{Knowledge\_\-Base} \&original)
+\begin{DoxyCompactList}\small\item\em Assigns another instance's knowledge and settings to this instance. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_afef2bc133696e30644b611b1a813e69f}{activate\_\-transport} (void)
+\begin{DoxyCompactList}\small\item\em Starts the transport mechanism for dissemination if it is closed. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a7198b302a8dbc910a7baa3121c964bfc}{close\_\-transport} (void)
+\begin{DoxyCompactList}\small\item\em Closes the transport mechanism so no dissemination is possible. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_af7e85b45b76a4401ef0665802843b87d}{get} (const ::std::string \&key) const 
+\begin{DoxyCompactList}\small\item\em Retrieves a knowledge value. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a9986ccffb9186938e1cd63ce3aaffd52}{read\_\-file} (const std::string \&knowledge\_\-key, const std::string \&file\_\-name)
+\begin{DoxyCompactList}\small\item\em Read a file into the knowledge base. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_aa940b7a5686f30d03abac08687bf1d6a}{write\_\-file} (const std::string \&knowledge\_\-key, const std::string \&file\_\-name)
+\begin{DoxyCompactList}\small\item\em Write a file from the knowledge base to a specified location. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a448f8b65bb14a1770e594614ade17366}{read\_\-policy} (const std::string \&policy\_\-key, const std::string \&policy\_\-file)
+\begin{DoxyCompactList}\small\item\em Read a policy into the knowledge base. \item\end{DoxyCompactList}\item 
+std::string \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a99d8b395aefdb1c0ed218a715ee368c4}{expand\_\-statement} (const ::std::string \&statement) const 
+\begin{DoxyCompactList}\small\item\em Expands a statement using variable expansion. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a81fa8bdc003afe0ecedd06ca8370fbda}{set} (const ::std::string \&key, long long value=Madara::Knowledge\_\-Record::MODIFIED)
+\begin{DoxyCompactList}\small\item\em Sets a knowledge value to a specified value. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ae6e630a68b67196c333784e6545004ea}{set} (const ::std::string \&key, long long value, bool send\_\-modifieds)
+\begin{DoxyCompactList}\small\item\em Sets a knowledge value to a specified value. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_aab81dc606fe8ec5904bf292eaefae951}{set\_\-quality} (const ::std::string \&key, unsigned long quality)
+\begin{DoxyCompactList}\small\item\em Sets the quality of writing to a certain variable from this entity. \item\end{DoxyCompactList}\item 
+bool \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab53b823cf528ed14903a45e2d671914c}{exists} (const ::std::string \&key) const 
+\begin{DoxyCompactList}\small\item\em Checks if a knowledge location exists in the context. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a9b25b30c34a63a8b33fb285c9ce54a77}{evaluate} (const ::std::string \&expression)
+\begin{DoxyCompactList}\small\item\em Evaluates an expression. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ac3623a17b6adcb34a821df7a8b97407e}{evaluate} (const ::std::string \&expression, bool send\_\-modifieds)
+\begin{DoxyCompactList}\small\item\em Evaluates an expression. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a754181d491b72b052d9f92a6052e8f17}{wait} (const ::std::string \&expression)
+\begin{DoxyCompactList}\small\item\em Waits for an expression to be non-\/zero. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab227d9ce466aa954032d065700ae498f}{wait} (const ::std::string \&expression, bool send\_\-modifieds)
+\begin{DoxyCompactList}\small\item\em Waits for an expression to be non-\/zero. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a7bd62f59f791c41d4ff82b467187de29}{apply\_\-modified} (void)
+\begin{DoxyCompactList}\small\item\em Applies current time and modified to all global variables and tries to send them. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a6f53172febf5dd225e5a51349dcf78aa}{print\_\-knowledge} (unsigned int level=0) const 
+\begin{DoxyCompactList}\small\item\em Prints knowledge variables and values at a logging level. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ade6fa720afe6649f2c8809014ff7ee84}{print} (const std::string \&statement, unsigned int level=0) const 
+\begin{DoxyCompactList}\small\item\em Expands and prints a user provided statement at a logging level. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ac10a0980da9449e950f0505d213e7a7a}{clear} (void)
+\begin{DoxyCompactList}\small\item\em Clears the knowledge base. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a8c0717d5eeddd03190a54a42b4e288e5}{clear\_\-map} (void)
+\begin{DoxyCompactList}\small\item\em Clears the knowledge base. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ad4a669ec01f83c7f5b59bf067d8953d3}{acquire} (void)
+\begin{DoxyCompactList}\small\item\em Acquires the recursive lock on the knowledge base. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a1b85a0ab0625f95e52c63c75862ee319}{release} (void)
+\begin{DoxyCompactList}\small\item\em Releases a recursive lock on the knowledge base. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Utility_1_1Refcounter}{Madara::Utility::Refcounter}$<$ \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base__Impl}{Knowledge\_\-Base\_\-Impl} $>$ \hyperlink{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_acf0e941dec72247fa5465ce79d051c6b}{impl\_\-}
+\begin{DoxyCompactList}\small\item\em Pointer to actual implementation, i.e., the \char`\"{}bridge\char`\"{}, which is reference counted to automate memory management. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class provides a distributed knowledge base to users. 
+
+Definition at line 31 of file Knowledge\_\-Base.h.
+
+
+
+\subsection{Member Enumeration Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8}{
+\subsubsection[{"@4}]{\setlength{\rightskip}{0pt plus 5cm}anonymous enum}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8}
+
+
+\hyperlink{namespaceMadara_1_1Transport}{Transport} type enumeration. 
+
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{NO\_\-TRANSPORT@{NO\_\-TRANSPORT}!Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!NO\_\-TRANSPORT@{NO\_\-TRANSPORT}}\item[{\em 
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8a6c25e2115c114e112a691f19e1445a29}{
+NO\_\-TRANSPORT}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8a6c25e2115c114e112a691f19e1445a29}
+}]\index{OPEN\_\-SPLICE\_\-TRANSPORT@{OPEN\_\-SPLICE\_\-TRANSPORT}!Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!OPEN\_\-SPLICE\_\-TRANSPORT@{OPEN\_\-SPLICE\_\-TRANSPORT}}\item[{\em 
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8a954c7c0a6aa7ffd684ab0768d610f5dc}{
+OPEN\_\-SPLICE\_\-TRANSPORT}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8a954c7c0a6aa7ffd684ab0768d610f5dc}
+}]\index{TCP\_\-TRANSPORT@{TCP\_\-TRANSPORT}!Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!TCP\_\-TRANSPORT@{TCP\_\-TRANSPORT}}\item[{\em 
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8aafacafa9caa135a04478eb7496c6ae5b}{
+TCP\_\-TRANSPORT}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a509265a70e9c117d273fcb33fc7815a8aafacafa9caa135a04478eb7496c6ae5b}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 35 of file Knowledge\_\-Base.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a4b9e119c21c60b2f370dded04b1145b2}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!Knowledge\_\-Base@{Knowledge\_\-Base}}
+\index{Knowledge\_\-Base@{Knowledge\_\-Base}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{Knowledge\_\-Base}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Knowledge\_\-Base::Knowledge\_\-Base (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a4b9e119c21c60b2f370dded04b1145b2}
+
+
+Constructor. 
+
+
+
+Definition at line 14 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a2d209942f62dc3eb238024ea457d5d0b}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!Knowledge\_\-Base@{Knowledge\_\-Base}}
+\index{Knowledge\_\-Base@{Knowledge\_\-Base}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{Knowledge\_\-Base}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Knowledge\_\-Base::Knowledge\_\-Base (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{host, }
+\item[{int}]{transport}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a2d209942f62dc3eb238024ea457d5d0b}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em host} & hostname/ip of this machine \\
+\hline
+{\em transport} & transport to use for knowledge dissemination \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 19 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a499e89d75cce7d69f3e9aff72a3c87b9}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!Knowledge\_\-Base@{Knowledge\_\-Base}}
+\index{Knowledge\_\-Base@{Knowledge\_\-Base}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{Knowledge\_\-Base}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Knowledge\_\-Base::Knowledge\_\-Base (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{host, }
+\item[{int}]{transport, }
+\item[{const std::string \&}]{domain}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a499e89d75cce7d69f3e9aff72a3c87b9}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em host} & hostname/ip of this machine \\
+\hline
+{\em transport} & transport to use for knowledge dissemination \\
+\hline
+{\em domain} & knowledge domain we want to join \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 25 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a6d496d93753553470eb7346fee212ce3}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!Knowledge\_\-Base@{Knowledge\_\-Base}}
+\index{Knowledge\_\-Base@{Knowledge\_\-Base}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{Knowledge\_\-Base}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Knowledge\_\-Base::Knowledge\_\-Base (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{host, }
+\item[{const {\bf Madara::Transport::Settings} \&}]{config}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a6d496d93753553470eb7346fee212ce3}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em host} & hostname/ip of this machine \\
+\hline
+{\em config} & transport settings to use for dissemination \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 32 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a5a34c40e07b04ec21421e3faed58ed0d}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!Knowledge\_\-Base@{Knowledge\_\-Base}}
+\index{Knowledge\_\-Base@{Knowledge\_\-Base}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{Knowledge\_\-Base}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Knowledge\_\-Base::Knowledge\_\-Base (
+\begin{DoxyParamCaption}
+\item[{const {\bf Knowledge\_\-Base} \&}]{original}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a5a34c40e07b04ec21421e3faed58ed0d}
+
+
+Copy constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em original} & knowledge base to copy \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 38 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab1e6aa7f2eba9f320c59f49a07d1c488}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!$\sim$Knowledge\_\-Base@{$\sim$Knowledge\_\-Base}}
+\index{$\sim$Knowledge\_\-Base@{$\sim$Knowledge\_\-Base}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{$\sim$Knowledge\_\-Base}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Knowledge\_\-Engine::Knowledge\_\-Base::$\sim$Knowledge\_\-Base (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab1e6aa7f2eba9f320c59f49a07d1c488}
+
+
+Destructor. 
+
+
+
+Definition at line 44 of file Knowledge\_\-Base.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ad4a669ec01f83c7f5b59bf067d8953d3}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!acquire@{acquire}}
+\index{acquire@{acquire}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{acquire}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::acquire (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ad4a669ec01f83c7f5b59bf067d8953d3}
+
+
+Acquires the recursive lock on the knowledge base. 
+
+This will block any other thread from updating or using the knowledge base until you call @ release. 
+
+Definition at line 179 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_afef2bc133696e30644b611b1a813e69f}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!activate\_\-transport@{activate\_\-transport}}
+\index{activate\_\-transport@{activate\_\-transport}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{activate\_\-transport}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::activate\_\-transport (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_afef2bc133696e30644b611b1a813e69f}
+
+
+Starts the transport mechanism for dissemination if it is closed. 
+
+
+
+Definition at line 61 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a7bd62f59f791c41d4ff82b467187de29}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!apply\_\-modified@{apply\_\-modified}}
+\index{apply\_\-modified@{apply\_\-modified}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{apply\_\-modified}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Knowledge\_\-Base::apply\_\-modified (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a7bd62f59f791c41d4ff82b467187de29}
+
+
+Applies current time and modified to all global variables and tries to send them. 
+
+
+
+Definition at line 69 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ac10a0980da9449e950f0505d213e7a7a}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!clear@{clear}}
+\index{clear@{clear}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::clear (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ac10a0980da9449e950f0505d213e7a7a}
+
+
+Clears the knowledge base. 
+
+
+
+Definition at line 167 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a8c0717d5eeddd03190a54a42b4e288e5}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!clear\_\-map@{clear\_\-map}}
+\index{clear\_\-map@{clear\_\-map}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{clear\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::clear\_\-map (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a8c0717d5eeddd03190a54a42b4e288e5}
+
+
+Clears the knowledge base. 
+
+
+
+Definition at line 173 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a7198b302a8dbc910a7baa3121c964bfc}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!close\_\-transport@{close\_\-transport}}
+\index{close\_\-transport@{close\_\-transport}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{close\_\-transport}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::close\_\-transport (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a7198b302a8dbc910a7baa3121c964bfc}
+
+
+Closes the transport mechanism so no dissemination is possible. 
+
+
+
+Definition at line 75 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a9b25b30c34a63a8b33fb285c9ce54a77}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{evaluate}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Knowledge\_\-Base::evaluate (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{expression}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a9b25b30c34a63a8b33fb285c9ce54a77}
+
+
+Evaluates an expression. 
+
+Always disseminates modifications.
+
+
+\begin{DoxyParams}{Parameters}
+{\em expression} & KaRL expression to evaluate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of expression 
+\end{DoxyReturn}
+
+
+Definition at line 192 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ac3623a17b6adcb34a821df7a8b97407e}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!evaluate@{evaluate}}
+\index{evaluate@{evaluate}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{evaluate}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Knowledge\_\-Base::evaluate (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{expression, }
+\item[{bool}]{send\_\-modifieds}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ac3623a17b6adcb34a821df7a8b97407e}
+
+
+Evaluates an expression. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expression} & KaRL expression to evaluate \\
+\hline
+{\em send\_\-modifieds} & whether or not to dissemination modifications \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of expression 
+\end{DoxyReturn}
+
+
+Definition at line 200 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab53b823cf528ed14903a45e2d671914c}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!exists@{exists}}
+\index{exists@{exists}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{exists}]{\setlength{\rightskip}{0pt plus 5cm}bool Madara::Knowledge\_\-Engine::Knowledge\_\-Base::exists (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab53b823cf528ed14903a45e2d671914c}
+
+
+Checks if a knowledge location exists in the context. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & knowledge variable location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if location has been set 
+\end{DoxyReturn}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a99d8b395aefdb1c0ed218a715ee368c4}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!expand\_\-statement@{expand\_\-statement}}
+\index{expand\_\-statement@{expand\_\-statement}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{expand\_\-statement}]{\setlength{\rightskip}{0pt plus 5cm}std::string Madara::Knowledge\_\-Engine::Knowledge\_\-Base::expand\_\-statement (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{statement}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a99d8b395aefdb1c0ed218a715ee368c4}
+
+
+Expands a statement using variable expansion. 
+
+For example, if the statement were MyKnowledge.\{.id\}, and .id==1, then the statement would be expanded to MyKnowledge.1
+
+
+\begin{DoxyParams}{Parameters}
+{\em statement} & statement to expand \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+expanded statement 
+\end{DoxyReturn}
+
+
+Definition at line 110 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_af7e85b45b76a4401ef0665802843b87d}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!get@{get}}
+\index{get@{get}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Knowledge\_\-Base::get (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_af7e85b45b76a4401ef0665802843b87d}
+
+
+Retrieves a knowledge value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & knowledge location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value at knowledge location 
+\end{DoxyReturn}
+
+
+Definition at line 81 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a2e04a387be8c8b1e9eab87dbca25973c}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!operator=@{operator=}}
+\index{operator=@{operator=}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf Knowledge\_\-Base} \&}]{original}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a2e04a387be8c8b1e9eab87dbca25973c}
+
+
+Assigns another instance's knowledge and settings to this instance. 
+
+Assignment operator.
+
+
+\begin{DoxyParams}{Parameters}
+{\em original} & knowledge base to copy \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 51 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ade6fa720afe6649f2c8809014ff7ee84}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!print@{print}}
+\index{print@{print}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::print (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{statement, }
+\item[{unsigned int}]{level = {\ttfamily 0}}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ade6fa720afe6649f2c8809014ff7ee84}
+
+
+Expands and prints a user provided statement at a logging level. 
+
+For example, if the statement were MyKnowledge.\{.id\}, and .id==1, then the statement would be expanded to MyKnowledge.1
+
+
+\begin{DoxyParams}{Parameters}
+{\em statement} & statement to expand with variable values \\
+\hline
+{\em level} & level to log the knowledge at \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 160 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a6f53172febf5dd225e5a51349dcf78aa}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!print\_\-knowledge@{print\_\-knowledge}}
+\index{print\_\-knowledge@{print\_\-knowledge}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{print\_\-knowledge}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::print\_\-knowledge (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{level = {\ttfamily 0}}
+\end{DoxyParamCaption}
+) const}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a6f53172febf5dd225e5a51349dcf78aa}
+
+
+Prints knowledge variables and values at a logging level. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & level to log the knowledge at \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 153 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a9986ccffb9186938e1cd63ce3aaffd52}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!read\_\-file@{read\_\-file}}
+\index{read\_\-file@{read\_\-file}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{read\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Knowledge\_\-Base::read\_\-file (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{knowledge\_\-key, }
+\item[{const std::string \&}]{file\_\-name}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a9986ccffb9186938e1cd63ce3aaffd52}
+
+
+Read a file into the knowledge base. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\_\-name} & file to read \\
+\hline
+{\em knowledge\_\-key} & key to store the file into \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 88 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a448f8b65bb14a1770e594614ade17366}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!read\_\-policy@{read\_\-policy}}
+\index{read\_\-policy@{read\_\-policy}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{read\_\-policy}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Knowledge\_\-Base::read\_\-policy (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{policy\_\-key, }
+\item[{const std::string \&}]{policy\_\-file}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a448f8b65bb14a1770e594614ade17366}
+
+
+Read a policy into the knowledge base. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em policy\_\-key} & key to read the policy into \\
+\hline
+{\em policy\_\-file} & file to read the policy from \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 95 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a1b85a0ab0625f95e52c63c75862ee319}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!release@{release}}
+\index{release@{release}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{release}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::release (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a1b85a0ab0625f95e52c63c75862ee319}
+
+
+Releases a recursive lock on the knowledge base. 
+
+This will allow other thread to access the knowledge base if you had previously called @ acquire. 
+
+Definition at line 185 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a81fa8bdc003afe0ecedd06ca8370fbda}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!set@{set}}
+\index{set@{set}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Knowledge\_\-Base::set (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{long long}]{value = {\ttfamily Madara::Knowledge\_\-Record::MODIFIED}}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a81fa8bdc003afe0ecedd06ca8370fbda}
+
+
+Sets a knowledge value to a specified value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & knowledge variable location \\
+\hline
+{\em value} & value to set at location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 if key is null, and -\/2 if quality isn't high enough 
+\end{DoxyReturn}
+
+
+Definition at line 117 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ae6e630a68b67196c333784e6545004ea}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!set@{set}}
+\index{set@{set}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Knowledge\_\-Base::set (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{long long}]{value, }
+\item[{bool}]{send\_\-modifieds}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ae6e630a68b67196c333784e6545004ea}
+
+
+Sets a knowledge value to a specified value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & knowledge variable location \\
+\hline
+{\em value} & value to set at location \\
+\hline
+{\em send\_\-modifieds} & whether or not to dissemination modifications \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if successful, -\/1 if key is null, and -\/2 if quality isn't high enough 
+\end{DoxyReturn}
+
+
+Definition at line 124 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_aab81dc606fe8ec5904bf292eaefae951}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!set\_\-quality@{set\_\-quality}}
+\index{set\_\-quality@{set\_\-quality}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{set\_\-quality}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Knowledge\_\-Engine::Knowledge\_\-Base::set\_\-quality (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{key, }
+\item[{unsigned long}]{quality}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_aab81dc606fe8ec5904bf292eaefae951}
+
+
+Sets the quality of writing to a certain variable from this entity. 
+
+Set quality of writing to a variable.
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & knowledge variable location \\
+\hline
+{\em quality} & quality of writing to this location \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 133 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a754181d491b72b052d9f92a6052e8f17}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!wait@{wait}}
+\index{wait@{wait}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{wait}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Knowledge\_\-Base::wait (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{expression}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_a754181d491b72b052d9f92a6052e8f17}
+
+
+Waits for an expression to be non-\/zero. 
+
+Always disseminates modifications.
+
+
+\begin{DoxyParams}{Parameters}
+{\em expression} & KaRL expression to wait on \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of expression 
+\end{DoxyReturn}
+
+
+Definition at line 140 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab227d9ce466aa954032d065700ae498f}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!wait@{wait}}
+\index{wait@{wait}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{wait}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Knowledge\_\-Engine::Knowledge\_\-Base::wait (
+\begin{DoxyParamCaption}
+\item[{const ::std::string \&}]{expression, }
+\item[{bool}]{send\_\-modifieds}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_ab227d9ce466aa954032d065700ae498f}
+
+
+Waits for an expression to be non-\/zero. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expression} & KaRL expression to wait on \\
+\hline
+{\em send\_\-modifieds} & whether or not to dissemination modifications \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+value of expression 
+\end{DoxyReturn}
+
+
+Definition at line 146 of file Knowledge\_\-Base.cpp.
+
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_aa940b7a5686f30d03abac08687bf1d6a}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!write\_\-file@{write\_\-file}}
+\index{write\_\-file@{write\_\-file}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{write\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Knowledge\_\-Engine::Knowledge\_\-Base::write\_\-file (
+\begin{DoxyParamCaption}
+\item[{const std::string \&}]{knowledge\_\-key, }
+\item[{const std::string \&}]{file\_\-name}
+\end{DoxyParamCaption}
+)}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_aa940b7a5686f30d03abac08687bf1d6a}
+
+
+Write a file from the knowledge base to a specified location. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\_\-name} & file to write to \\
+\hline
+{\em knowledge\_\-key} & key to read the file from \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 102 of file Knowledge\_\-Base.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_acf0e941dec72247fa5465ce79d051c6b}{
+\index{Madara::Knowledge\_\-Engine::Knowledge\_\-Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}!impl\_\-@{impl\_\-}}
+\index{impl\_\-@{impl\_\-}!Madara::Knowledge_Engine::Knowledge_Base@{Madara::Knowledge\_\-Engine::Knowledge\_\-Base}}
+\subsubsection[{impl\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Utility::Refcounter}$<${\bf Knowledge\_\-Base\_\-Impl}$>$ {\bf Madara::Knowledge\_\-Engine::Knowledge\_\-Base::impl\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{df/d02/classMadara_1_1Knowledge__Engine_1_1Knowledge__Base_acf0e941dec72247fa5465ce79d051c6b}
+
+
+Pointer to actual implementation, i.e., the \char`\"{}bridge\char`\"{}, which is reference counted to automate memory management. 
+
+
+
+Definition at line 264 of file Knowledge\_\-Base.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/knowledge\_\-engine/\hyperlink{Knowledge__Base_8h}{Knowledge\_\-Base.h}\item 
+madara/knowledge\_\-engine/\hyperlink{Knowledge__Base_8cpp}{Knowledge\_\-Base.cpp}\end{DoxyCompactItemize}

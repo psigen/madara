@@ -1,0 +1,213 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory}{
+\section{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory Class Reference}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory}\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+}
+
+
+Implementation of a factory pattern that dynamically allocates the appropriate {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl}\/} object.  
+
+
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=362pt]{df/d36/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_ae7a0e262d355c6c715359759ae020cce}{Expression\_\-Tree\_\-Iterator\_\-Factory} (void)
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a4fabd7762791d76f45b796a6a5cdac1e}{make\_\-tree\_\-iterator} (\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, const ::std::string \&traversal\_\-order, bool end\_\-iter)
+\begin{DoxyCompactList}\small\item\em Dynamically allocate a new {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl}\/} object based on the designated {\itshape traversal\_\-order\/} and {\itshape end\_\-iter\/}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$(Expression\_\-Tree\_\-Iterator\_\-Factory::$\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a40f71753b0013655c8f227129f618ae9}{TRAVERSAL\_\-PTMF} )(\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, bool end\_\-iter)
+\item 
+typedef ::std::map$<$ ::std::string, \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a40f71753b0013655c8f227129f618ae9}{TRAVERSAL\_\-PTMF} $>$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa032e0fc34454740fe22d550406e6f2b}{TRAVERSAL\_\-MAP}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a492806bade6071b13cfbff75e6a22f80}{make\_\-in\_\-order\_\-tree\_\-iterator} (\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, bool end\_\-iter)
+\begin{DoxyCompactList}\small\item\em Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Level\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa5a4c3c838077e00ca5da565802bf4c1}{make\_\-pre\_\-order\_\-tree\_\-iterator} (\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, bool end\_\-iter)
+\begin{DoxyCompactList}\small\item\em Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Pre\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_ad36db5c7397fd27e3292839b1d591325}{make\_\-post\_\-order\_\-tree\_\-iterator} (\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, bool end\_\-iter)
+\begin{DoxyCompactList}\small\item\em Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Post\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a60efc8c810a76c3374505feed34326e0}{make\_\-level\_\-order\_\-tree\_\-iterator} (\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree}{Expression\_\-Tree} \&tree, bool end\_\-iter)
+\begin{DoxyCompactList}\small\item\em Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Level\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa032e0fc34454740fe22d550406e6f2b}{TRAVERSAL\_\-MAP} \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aaf39c92f409756d9e9e46d0e8f0c9a65}{traversal\_\-map\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation of a factory pattern that dynamically allocates the appropriate {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl}\/} object. This is a variant of the Abstract Factory pattern that has a set of related factory methods but which doesn't use inheritance.
+
+\begin{DoxySeeAlso}{See also}
+Expression\_\-Tree\_\-Level\_\-Order\_\-Iterator\_\-Impl, Expression\_\-Tree\_\-In\_\-Order\_\-Iterator\_\-Impl, Expression\_\-Tree\_\-Pre\_\-Order\_\-Iterator\_\-Impl, and Expression\_\-Tree\_\-Post\_\-Order\_\-Iterator\_\-Impl. 
+\end{DoxySeeAlso}
+
+
+Definition at line 49 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa032e0fc34454740fe22d550406e6f2b}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!TRAVERSAL\_\-MAP@{TRAVERSAL\_\-MAP}}
+\index{TRAVERSAL\_\-MAP@{TRAVERSAL\_\-MAP}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{TRAVERSAL\_\-MAP}]{\setlength{\rightskip}{0pt plus 5cm}typedef ::std::map$<$ ::std::string, {\bf TRAVERSAL\_\-PTMF}$>$ {\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::TRAVERSAL\_\-MAP}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa032e0fc34454740fe22d550406e6f2b}
+
+
+Definition at line 84 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a40f71753b0013655c8f227129f618ae9}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!TRAVERSAL\_\-PTMF@{TRAVERSAL\_\-PTMF}}
+\index{TRAVERSAL\_\-PTMF@{TRAVERSAL\_\-PTMF}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{TRAVERSAL\_\-PTMF}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf Expression\_\-Tree\_\-Iterator\_\-Impl}$\ast$(Expression\_\-Tree\_\-Iterator\_\-Factory::$\ast$ {\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::TRAVERSAL\_\-PTMF})({\bf Expression\_\-Tree} \&tree, bool end\_\-iter)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a40f71753b0013655c8f227129f618ae9}
+
+
+Definition at line 83 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_ae7a0e262d355c6c715359759ae020cce}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!Expression\_\-Tree\_\-Iterator\_\-Factory@{Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\index{Expression\_\-Tree\_\-Iterator\_\-Factory@{Expression\_\-Tree\_\-Iterator\_\-Factory}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{Expression\_\-Tree\_\-Iterator\_\-Factory}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::Expression\_\-Tree\_\-Iterator\_\-Factory (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_ae7a0e262d355c6c715359759ae020cce}
+
+
+Constructor. 
+
+
+
+Definition at line 89 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a492806bade6071b13cfbff75e6a22f80}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!make\_\-in\_\-order\_\-tree\_\-iterator@{make\_\-in\_\-order\_\-tree\_\-iterator}}
+\index{make\_\-in\_\-order\_\-tree\_\-iterator@{make\_\-in\_\-order\_\-tree\_\-iterator}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{make\_\-in\_\-order\_\-tree\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::make\_\-in\_\-order\_\-tree\_\-iterator (
+\begin{DoxyParamCaption}
+\item[{{\bf Expression\_\-Tree} \&}]{tree, }
+\item[{bool}]{end\_\-iter}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a492806bade6071b13cfbff75e6a22f80}
+
+
+Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Level\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. 
+
+
+
+Definition at line 109 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a60efc8c810a76c3374505feed34326e0}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!make\_\-level\_\-order\_\-tree\_\-iterator@{make\_\-level\_\-order\_\-tree\_\-iterator}}
+\index{make\_\-level\_\-order\_\-tree\_\-iterator@{make\_\-level\_\-order\_\-tree\_\-iterator}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{make\_\-level\_\-order\_\-tree\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::make\_\-level\_\-order\_\-tree\_\-iterator (
+\begin{DoxyParamCaption}
+\item[{{\bf Expression\_\-Tree} \&}]{tree, }
+\item[{bool}]{end\_\-iter}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a60efc8c810a76c3374505feed34326e0}
+
+
+Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Level\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. 
+
+
+
+Definition at line 102 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_ad36db5c7397fd27e3292839b1d591325}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!make\_\-post\_\-order\_\-tree\_\-iterator@{make\_\-post\_\-order\_\-tree\_\-iterator}}
+\index{make\_\-post\_\-order\_\-tree\_\-iterator@{make\_\-post\_\-order\_\-tree\_\-iterator}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{make\_\-post\_\-order\_\-tree\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::make\_\-post\_\-order\_\-tree\_\-iterator (
+\begin{DoxyParamCaption}
+\item[{{\bf Expression\_\-Tree} \&}]{tree, }
+\item[{bool}]{end\_\-iter}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_ad36db5c7397fd27e3292839b1d591325}
+
+
+Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Post\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. 
+
+
+
+Definition at line 123 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa5a4c3c838077e00ca5da565802bf4c1}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!make\_\-pre\_\-order\_\-tree\_\-iterator@{make\_\-pre\_\-order\_\-tree\_\-iterator}}
+\index{make\_\-pre\_\-order\_\-tree\_\-iterator@{make\_\-pre\_\-order\_\-tree\_\-iterator}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{make\_\-pre\_\-order\_\-tree\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::make\_\-pre\_\-order\_\-tree\_\-iterator (
+\begin{DoxyParamCaption}
+\item[{{\bf Expression\_\-Tree} \&}]{tree, }
+\item[{bool}]{end\_\-iter}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aa5a4c3c838077e00ca5da565802bf4c1}
+
+
+Dynamically allocate a new {\itshape Expression\_\-Tree\_\-Pre\_\-Order\_\-Iterator\_\-Impl\/} object based on the designated {\itshape end\_\-iter\/}. 
+
+
+
+Definition at line 116 of file Expression\_\-Tree.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a4fabd7762791d76f45b796a6a5cdac1e}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!make\_\-tree\_\-iterator@{make\_\-tree\_\-iterator}}
+\index{make\_\-tree\_\-iterator@{make\_\-tree\_\-iterator}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{make\_\-tree\_\-iterator}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Impl} $\ast$ Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::make\_\-tree\_\-iterator (
+\begin{DoxyParamCaption}
+\item[{{\bf Expression\_\-Tree} \&}]{tree, }
+\item[{const ::std::string \&}]{traversal\_\-order, }
+\item[{bool}]{end\_\-iter}
+\end{DoxyParamCaption}
+)}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_a4fabd7762791d76f45b796a6a5cdac1e}
+
+
+Dynamically allocate a new {\itshape \hyperlink{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Impl}{Expression\_\-Tree\_\-Iterator\_\-Impl}\/} object based on the designated {\itshape traversal\_\-order\/} and {\itshape end\_\-iter\/}. 
+
+
+
+Definition at line 130 of file Expression\_\-Tree.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aaf39c92f409756d9e9e46d0e8f0c9a65}{
+\index{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}!traversal\_\-map\_\-@{traversal\_\-map\_\-}}
+\index{traversal\_\-map\_\-@{traversal\_\-map\_\-}!Madara::Expression_Tree::Expression_Tree_Iterator_Factory@{Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory}}
+\subsubsection[{traversal\_\-map\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TRAVERSAL\_\-MAP} {\bf Madara::Expression\_\-Tree::Expression\_\-Tree\_\-Iterator\_\-Factory::traversal\_\-map\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d4/d93/classMadara_1_1Expression__Tree_1_1Expression__Tree__Iterator__Factory_aaf39c92f409756d9e9e46d0e8f0c9a65}
+
+
+Definition at line 86 of file Expression\_\-Tree.cpp.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Expression__Tree_8cpp}{Expression\_\-Tree.cpp}\end{DoxyCompactItemize}

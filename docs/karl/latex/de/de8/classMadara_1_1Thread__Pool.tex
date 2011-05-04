@@ -1,0 +1,243 @@
+\hypertarget{classMadara_1_1Thread__Pool}{
+\section{Madara::Thread\_\-Pool Class Reference}
+\label{de/de8/classMadara_1_1Thread__Pool}\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}}
+}
+
+
+{\ttfamily \#include $<$Thread\_\-Pool.h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classMadara_1_1Thread__Pool_1_1Counter__Guard}{Counter\_\-Guard}
+\begin{DoxyCompactList}\small\item\em This class is used in the svc methods to ensure that the active thread count is kept up to date, even if we do an thread exit. \item\end{DoxyCompactList}\item 
+class \hyperlink{classMadara_1_1Thread__Pool_1_1Message__Block__Guard}{Message\_\-Block\_\-Guard}
+\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{classMadara_1_1Thread__Pool_a3d16063779a0b939db6c3671e7cf7f44}{size\_\-t} \{ \hyperlink{classMadara_1_1Thread__Pool_a3d16063779a0b939db6c3671e7cf7f44ac57ae35d186b494621a65adb253310e5}{DEFAULT\_\-POOL\_\-SIZE} =  4
+ \}
+\item 
+typedef ACE\_\-Atomic\_\-Op$<$ ACE\_\-Mutex, int $>$ \hyperlink{classMadara_1_1Thread__Pool_a301b0deb023c42a89927746f3453218f}{Counter}
+\begin{DoxyCompactList}\small\item\em typdef for a threadsafe counter \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Thread__Pool_a4e4efa340eb3b538ea7133d0f9a9f8f7}{Thread\_\-Pool} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \item\end{DoxyCompactList}\item 
+\hyperlink{classMadara_1_1Thread__Pool_ad1448764c7945dda5ef7e18170efbc92}{$\sim$Thread\_\-Pool} ()
+\item 
+int \hyperlink{classMadara_1_1Thread__Pool_a26bfa147cbce5b51fc5084d1f7e8dc28}{open} (int pool\_\-size=DEFAULT\_\-POOL\_\-SIZE)
+\begin{DoxyCompactList}\small\item\em Open the thread pool with the indicated number of threads. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Thread__Pool_a16dc4f1bf77b224b396e6d739195eb22}{close} (void)
+\begin{DoxyCompactList}\small\item\em Close the thread pool. \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Thread__Pool_a73492d06d61080eb597485cabd04cb80}{enqueue} (ACE\_\-Message\_\-Block $\ast$message)
+\begin{DoxyCompactList}\small\item\em Enqueue a unit of work. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classMadara_1_1Thread__Pool_adce10a858e798fe062afdc758f5979df}{svc} (void)
+\begin{DoxyCompactList}\small\item\em service entry point for all threads \item\end{DoxyCompactList}\item 
+int \hyperlink{classMadara_1_1Thread__Pool_ab9561aafc19da0cab5bfb05c37836160}{enter\_\-barrier} (void)
+\begin{DoxyCompactList}\small\item\em service exit point for thread \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Thread__Pool_a301b0deb023c42a89927746f3453218f}{Counter} \hyperlink{classMadara_1_1Thread__Pool_a91bae0866bed581096f3bcf9aa538e85}{threads\_\-}
+\item 
+ACE\_\-Barrier $\ast$ \hyperlink{classMadara_1_1Thread__Pool_a48d8574671ba53c9b04b6968b8d59e0a}{barrier\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 19 of file Thread\_\-Pool.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classMadara_1_1Thread__Pool_a301b0deb023c42a89927746f3453218f}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!Counter@{Counter}}
+\index{Counter@{Counter}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{Counter}]{\setlength{\rightskip}{0pt plus 5cm}typedef ACE\_\-Atomic\_\-Op$<$ACE\_\-Mutex,int$>$ {\bf Madara::Thread\_\-Pool::Counter}}}
+\label{de/de8/classMadara_1_1Thread__Pool_a301b0deb023c42a89927746f3453218f}
+
+
+typdef for a threadsafe counter 
+
+
+
+Definition at line 42 of file Thread\_\-Pool.h.
+
+
+
+\subsection{Member Enumeration Documentation}
+\hypertarget{classMadara_1_1Thread__Pool_a3d16063779a0b939db6c3671e7cf7f44}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!size\_\-t@{size\_\-t}}
+\index{size\_\-t@{size\_\-t}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{size\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Madara::Thread\_\-Pool::size\_\-t}}}
+\label{de/de8/classMadara_1_1Thread__Pool_a3d16063779a0b939db6c3671e7cf7f44}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{DEFAULT\_\-POOL\_\-SIZE@{DEFAULT\_\-POOL\_\-SIZE}!Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}}\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!DEFAULT\_\-POOL\_\-SIZE@{DEFAULT\_\-POOL\_\-SIZE}}\item[{\em 
+\hypertarget{classMadara_1_1Thread__Pool_a3d16063779a0b939db6c3671e7cf7f44ac57ae35d186b494621a65adb253310e5}{
+DEFAULT\_\-POOL\_\-SIZE}
+\label{de/de8/classMadara_1_1Thread__Pool_a3d16063779a0b939db6c3671e7cf7f44ac57ae35d186b494621a65adb253310e5}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 23 of file Thread\_\-Pool.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classMadara_1_1Thread__Pool_a4e4efa340eb3b538ea7133d0f9a9f8f7}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!Thread\_\-Pool@{Thread\_\-Pool}}
+\index{Thread\_\-Pool@{Thread\_\-Pool}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{Thread\_\-Pool}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Thread\_\-Pool::Thread\_\-Pool (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{de/de8/classMadara_1_1Thread__Pool_a4e4efa340eb3b538ea7133d0f9a9f8f7}
+
+
+Constructor. 
+
+
+
+Definition at line 10 of file Thread\_\-Pool.cpp.
+
+\hypertarget{classMadara_1_1Thread__Pool_ad1448764c7945dda5ef7e18170efbc92}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!$\sim$Thread\_\-Pool@{$\sim$Thread\_\-Pool}}
+\index{$\sim$Thread\_\-Pool@{$\sim$Thread\_\-Pool}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{$\sim$Thread\_\-Pool}]{\setlength{\rightskip}{0pt plus 5cm}Madara::Thread\_\-Pool::$\sim$Thread\_\-Pool (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{de/de8/classMadara_1_1Thread__Pool_ad1448764c7945dda5ef7e18170efbc92}
+
+
+Definition at line 16 of file Thread\_\-Pool.cpp.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Thread__Pool_a16dc4f1bf77b224b396e6d739195eb22}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!close@{close}}
+\index{close@{close}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{close}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Thread\_\-Pool::close (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{de/de8/classMadara_1_1Thread__Pool_a16dc4f1bf77b224b396e6d739195eb22}
+
+
+Close the thread pool. 
+
+
+
+Definition at line 29 of file Thread\_\-Pool.cpp.
+
+\hypertarget{classMadara_1_1Thread__Pool_a73492d06d61080eb597485cabd04cb80}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!enqueue@{enqueue}}
+\index{enqueue@{enqueue}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{enqueue}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Thread\_\-Pool::enqueue (
+\begin{DoxyParamCaption}
+\item[{ACE\_\-Message\_\-Block $\ast$}]{message}
+\end{DoxyParamCaption}
+)}}
+\label{de/de8/classMadara_1_1Thread__Pool_a73492d06d61080eb597485cabd04cb80}
+
+
+Enqueue a unit of work. 
+
+Enqueue a message block for the svc function of threads in the pool. 
+
+Definition at line 63 of file Thread\_\-Pool.cpp.
+
+\hypertarget{classMadara_1_1Thread__Pool_ab9561aafc19da0cab5bfb05c37836160}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!enter\_\-barrier@{enter\_\-barrier}}
+\index{enter\_\-barrier@{enter\_\-barrier}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{enter\_\-barrier}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Thread\_\-Pool::enter\_\-barrier (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{de/de8/classMadara_1_1Thread__Pool_ab9561aafc19da0cab5bfb05c37836160}
+
+
+service exit point for thread 
+
+
+
+Definition at line 52 of file Thread\_\-Pool.cpp.
+
+\hypertarget{classMadara_1_1Thread__Pool_a26bfa147cbce5b51fc5084d1f7e8dc28}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!open@{open}}
+\index{open@{open}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{open}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Thread\_\-Pool::open (
+\begin{DoxyParamCaption}
+\item[{int}]{pool\_\-size = {\ttfamily DEFAULT\_\-POOL\_\-SIZE}}
+\end{DoxyParamCaption}
+)}}
+\label{de/de8/classMadara_1_1Thread__Pool_a26bfa147cbce5b51fc5084d1f7e8dc28}
+
+
+Open the thread pool with the indicated number of threads. 
+
+
+
+Definition at line 22 of file Thread\_\-Pool.cpp.
+
+\hypertarget{classMadara_1_1Thread__Pool_adce10a858e798fe062afdc758f5979df}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!svc@{svc}}
+\index{svc@{svc}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{svc}]{\setlength{\rightskip}{0pt plus 5cm}int Madara::Thread\_\-Pool::svc (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{de/de8/classMadara_1_1Thread__Pool_adce10a858e798fe062afdc758f5979df}
+
+
+service entry point for all threads 
+
+main function of each thread 
+
+Definition at line 75 of file Thread\_\-Pool.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Thread__Pool_a48d8574671ba53c9b04b6968b8d59e0a}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!barrier\_\-@{barrier\_\-}}
+\index{barrier\_\-@{barrier\_\-}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{barrier\_\-}]{\setlength{\rightskip}{0pt plus 5cm}ACE\_\-Barrier$\ast$ {\bf Madara::Thread\_\-Pool::barrier\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/de8/classMadara_1_1Thread__Pool_a48d8574671ba53c9b04b6968b8d59e0a}
+
+
+Definition at line 106 of file Thread\_\-Pool.h.
+
+\hypertarget{classMadara_1_1Thread__Pool_a91bae0866bed581096f3bcf9aa538e85}{
+\index{Madara::Thread\_\-Pool@{Madara::Thread\_\-Pool}!threads\_\-@{threads\_\-}}
+\index{threads\_\-@{threads\_\-}!Madara::Thread_Pool@{Madara::Thread\_\-Pool}}
+\subsubsection[{threads\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Counter} {\bf Madara::Thread\_\-Pool::threads\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{de/de8/classMadara_1_1Thread__Pool_a91bae0866bed581096f3bcf9aa538e85}
+
+
+Definition at line 105 of file Thread\_\-Pool.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/\hyperlink{Thread__Pool_8h}{Thread\_\-Pool.h}\item 
+madara/\hyperlink{Thread__Pool_8cpp}{Thread\_\-Pool.cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,383 @@
+\hypertarget{classTiXmlOutStream}{
+\section{TiXmlOutStream Class Reference}
+\label{dc/d34/classTiXmlOutStream}\index{TiXmlOutStream@{TiXmlOutStream}}
+}
+
+
+{\ttfamily \#include $<$tinystr.h$>$}
+
+
+
+Inheritance diagram for TiXmlOutStream:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=168pt]{db/d95/classTiXmlOutStream__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for TiXmlOutStream:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=172pt]{d2/d24/classTiXmlOutStream__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef size\_\-t \hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classTiXmlOutStream}{TiXmlOutStream} \& \hyperlink{classTiXmlOutStream_a3640dcb1c0903be3bc6966cdc9a79db6}{operator$<$$<$} (const \hyperlink{classTiXmlString}{TiXmlString} \&in)
+\item 
+\hyperlink{classTiXmlOutStream}{TiXmlOutStream} \& \hyperlink{classTiXmlOutStream_af2117e5a8cbfcb69544804ad2859bfb6}{operator$<$$<$} (const char $\ast$in)
+\item 
+\hyperlink{classTiXmlString}{TiXmlString} \& \hyperlink{classTiXmlString_ab56336ac2aa2a08d24a71eb9a2b502a5}{operator+=} (const char $\ast$suffix)
+\item 
+\hyperlink{classTiXmlString}{TiXmlString} \& \hyperlink{classTiXmlString_a6aa09d5240470b76d54ec709e04f8c13}{operator+=} (char single)
+\item 
+\hyperlink{classTiXmlString}{TiXmlString} \& \hyperlink{classTiXmlString_afdcae5ea2b4d9e194dc21226b817f417}{operator+=} (const \hyperlink{classTiXmlString}{TiXmlString} \&suffix)
+\item 
+const char $\ast$ \hyperlink{classTiXmlString_a5581ca641d915551d3cda90f8e7bf49b}{c\_\-str} () const 
+\item 
+const char $\ast$ \hyperlink{classTiXmlString_a00abc60f135c7ca1951c7334cc2c7993}{data} () const 
+\item 
+\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} \hyperlink{classTiXmlString_a3202f27d139a3fac79205f1f3c707727}{length} () const 
+\item 
+\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} \hyperlink{classTiXmlString_a96103e5c0f67e987fa48527e1f47a1f6}{size} () const 
+\item 
+bool \hyperlink{classTiXmlString_a9a61e1d11cdb71bea4a4ed79caa793f4}{empty} () const 
+\item 
+\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} \hyperlink{classTiXmlString_a76e4d6aba7845f4cf9c02332a5fbf916}{capacity} () const 
+\item 
+const char \& \hyperlink{classTiXmlString_a6763093267bbdecbf03f8840bc349877}{at} (\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} index) const 
+\item 
+char \& \hyperlink{classTiXmlString_ae8cdc1d46c538536b786f7ae03c0c1d9}{operator\mbox{[}$\,$\mbox{]}} (\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} index) const 
+\item 
+\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} \hyperlink{classTiXmlString_a5c2b368b5eafe075fd9565cbcbd4c2f9}{find} (char lookup) const 
+\item 
+\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} \hyperlink{classTiXmlString_a5f2a6fd565751410b392f249a9786db4}{find} (char tofind, \hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} offset) const 
+\item 
+void \hyperlink{classTiXmlString_ab20e06e4c666abf3bdbfb3a1191d4888}{clear} ()
+\item 
+void \hyperlink{classTiXmlString_a88ecf9f0f00cb5c67b6b637958d7049c}{reserve} (\hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} cap)
+\item 
+\hyperlink{classTiXmlString}{TiXmlString} \& \hyperlink{classTiXmlString_ac72f3d9149b7812c1e6c59402014d0d5}{assign} (const char $\ast$str, \hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} len)
+\item 
+\hyperlink{classTiXmlString}{TiXmlString} \& \hyperlink{classTiXmlString_ad44b21700d2ec24a511367b222b643fb}{append} (const char $\ast$str, \hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} len)
+\item 
+void \hyperlink{classTiXmlString_aa392cbc180752a79f007f4f9280c7762}{swap} (\hyperlink{classTiXmlString}{TiXmlString} \&other)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const \hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{size\_\-type} \hyperlink{classTiXmlString_a8f4422d227088dc7bec96f479b275d0a}{npos} = static\_\-cast$<$ \hyperlink{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{TiXmlString::size\_\-type} $>$(-\/1)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 298 of file tinystr.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}{
+\index{TiXmlOutStream@{TiXmlOutStream}!size\_\-type@{size\_\-type}}
+\index{size\_\-type@{size\_\-type}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{size\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef size\_\-t {\bf TiXmlString::size\_\-type}\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_abeb2c1893a04c17904f7c06546d0b971}
+
+
+Definition at line 71 of file tinystr.h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classTiXmlString_ad44b21700d2ec24a511367b222b643fb}{
+\index{TiXmlOutStream@{TiXmlOutStream}!append@{append}}
+\index{append@{append}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{append}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlString} \& TiXmlString::append (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{str, }
+\item[{{\bf size\_\-type}}]{len}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_ad44b21700d2ec24a511367b222b643fb}
+
+
+Definition at line 73 of file tinystr.cpp.
+
+\hypertarget{classTiXmlString_ac72f3d9149b7812c1e6c59402014d0d5}{
+\index{TiXmlOutStream@{TiXmlOutStream}!assign@{assign}}
+\index{assign@{assign}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{assign}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlString} \& TiXmlString::assign (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{str, }
+\item[{{\bf size\_\-type}}]{len}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_ac72f3d9149b7812c1e6c59402014d0d5}
+
+
+Definition at line 54 of file tinystr.cpp.
+
+\hypertarget{classTiXmlString_a6763093267bbdecbf03f8840bc349877}{
+\index{TiXmlOutStream@{TiXmlOutStream}!at@{at}}
+\index{at@{at}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{at}]{\setlength{\rightskip}{0pt plus 5cm}const char\& TiXmlString::at (
+\begin{DoxyParamCaption}
+\item[{{\bf size\_\-type}}]{index}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a6763093267bbdecbf03f8840bc349877}
+
+
+Definition at line 161 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a5581ca641d915551d3cda90f8e7bf49b}{
+\index{TiXmlOutStream@{TiXmlOutStream}!c\_\-str@{c\_\-str}}
+\index{c\_\-str@{c\_\-str}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{c\_\-str}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ TiXmlString::c\_\-str (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a5581ca641d915551d3cda90f8e7bf49b}
+
+
+Definition at line 142 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a76e4d6aba7845f4cf9c02332a5fbf916}{
+\index{TiXmlOutStream@{TiXmlOutStream}!capacity@{capacity}}
+\index{capacity@{capacity}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{capacity}]{\setlength{\rightskip}{0pt plus 5cm}{\bf size\_\-type} TiXmlString::capacity (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a76e4d6aba7845f4cf9c02332a5fbf916}
+
+
+Definition at line 157 of file tinystr.h.
+
+\hypertarget{classTiXmlString_ab20e06e4c666abf3bdbfb3a1191d4888}{
+\index{TiXmlOutStream@{TiXmlOutStream}!clear@{clear}}
+\index{clear@{clear}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{clear}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlString::clear (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_ab20e06e4c666abf3bdbfb3a1191d4888}
+
+
+Definition at line 192 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a00abc60f135c7ca1951c7334cc2c7993}{
+\index{TiXmlOutStream@{TiXmlOutStream}!data@{data}}
+\index{data@{data}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ TiXmlString::data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a00abc60f135c7ca1951c7334cc2c7993}
+
+
+Definition at line 145 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a9a61e1d11cdb71bea4a4ed79caa793f4}{
+\index{TiXmlOutStream@{TiXmlOutStream}!empty@{empty}}
+\index{empty@{empty}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{empty}]{\setlength{\rightskip}{0pt plus 5cm}bool TiXmlString::empty (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a9a61e1d11cdb71bea4a4ed79caa793f4}
+
+
+Definition at line 154 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a5f2a6fd565751410b392f249a9786db4}{
+\index{TiXmlOutStream@{TiXmlOutStream}!find@{find}}
+\index{find@{find}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{find}]{\setlength{\rightskip}{0pt plus 5cm}{\bf size\_\-type} TiXmlString::find (
+\begin{DoxyParamCaption}
+\item[{char}]{tofind, }
+\item[{{\bf size\_\-type}}]{offset}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a5f2a6fd565751410b392f249a9786db4}
+
+
+Definition at line 181 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a5c2b368b5eafe075fd9565cbcbd4c2f9}{
+\index{TiXmlOutStream@{TiXmlOutStream}!find@{find}}
+\index{find@{find}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{find}]{\setlength{\rightskip}{0pt plus 5cm}{\bf size\_\-type} TiXmlString::find (
+\begin{DoxyParamCaption}
+\item[{char}]{lookup}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a5c2b368b5eafe075fd9565cbcbd4c2f9}
+
+
+Definition at line 175 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a3202f27d139a3fac79205f1f3c707727}{
+\index{TiXmlOutStream@{TiXmlOutStream}!length@{length}}
+\index{length@{length}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{length}]{\setlength{\rightskip}{0pt plus 5cm}{\bf size\_\-type} TiXmlString::length (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a3202f27d139a3fac79205f1f3c707727}
+
+
+Definition at line 148 of file tinystr.h.
+
+\hypertarget{classTiXmlString_afdcae5ea2b4d9e194dc21226b817f417}{
+\index{TiXmlOutStream@{TiXmlOutStream}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{operator+=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlString}\& TiXmlString::operator+= (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlString} \&}]{suffix}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_afdcae5ea2b4d9e194dc21226b817f417}
+
+
+Definition at line 135 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a6aa09d5240470b76d54ec709e04f8c13}{
+\index{TiXmlOutStream@{TiXmlOutStream}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{operator+=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlString}\& TiXmlString::operator+= (
+\begin{DoxyParamCaption}
+\item[{char}]{single}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a6aa09d5240470b76d54ec709e04f8c13}
+
+
+Definition at line 129 of file tinystr.h.
+
+\hypertarget{classTiXmlString_ab56336ac2aa2a08d24a71eb9a2b502a5}{
+\index{TiXmlOutStream@{TiXmlOutStream}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{operator+=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlString}\& TiXmlString::operator+= (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{suffix}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_ab56336ac2aa2a08d24a71eb9a2b502a5}
+
+
+Definition at line 123 of file tinystr.h.
+
+\hypertarget{classTiXmlOutStream_af2117e5a8cbfcb69544804ad2859bfb6}{
+\index{TiXmlOutStream@{TiXmlOutStream}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlOutStream}\& TiXmlOutStream::operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{in}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{dc/d34/classTiXmlOutStream_af2117e5a8cbfcb69544804ad2859bfb6}
+
+
+Definition at line 310 of file tinystr.h.
+
+\hypertarget{classTiXmlOutStream_a3640dcb1c0903be3bc6966cdc9a79db6}{
+\index{TiXmlOutStream@{TiXmlOutStream}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{operator$<$$<$}]{\setlength{\rightskip}{0pt plus 5cm}{\bf TiXmlOutStream}\& TiXmlOutStream::operator$<$$<$ (
+\begin{DoxyParamCaption}
+\item[{const {\bf TiXmlString} \&}]{in}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{dc/d34/classTiXmlOutStream_a3640dcb1c0903be3bc6966cdc9a79db6}
+
+
+Definition at line 303 of file tinystr.h.
+
+\hypertarget{classTiXmlString_ae8cdc1d46c538536b786f7ae03c0c1d9}{
+\index{TiXmlOutStream@{TiXmlOutStream}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{operator[]}]{\setlength{\rightskip}{0pt plus 5cm}char\& TiXmlString::operator\mbox{[}$\,$\mbox{]} (
+\begin{DoxyParamCaption}
+\item[{{\bf size\_\-type}}]{index}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_ae8cdc1d46c538536b786f7ae03c0c1d9}
+
+
+Definition at line 168 of file tinystr.h.
+
+\hypertarget{classTiXmlString_a88ecf9f0f00cb5c67b6b637958d7049c}{
+\index{TiXmlOutStream@{TiXmlOutStream}!reserve@{reserve}}
+\index{reserve@{reserve}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{reserve}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlString::reserve (
+\begin{DoxyParamCaption}
+\item[{{\bf size\_\-type}}]{cap}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a88ecf9f0f00cb5c67b6b637958d7049c}
+
+
+Definition at line 42 of file tinystr.cpp.
+
+\hypertarget{classTiXmlString_a96103e5c0f67e987fa48527e1f47a1f6}{
+\index{TiXmlOutStream@{TiXmlOutStream}!size@{size}}
+\index{size@{size}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf size\_\-type} TiXmlString::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a96103e5c0f67e987fa48527e1f47a1f6}
+
+
+Definition at line 151 of file tinystr.h.
+
+\hypertarget{classTiXmlString_aa392cbc180752a79f007f4f9280c7762}{
+\index{TiXmlOutStream@{TiXmlOutStream}!swap@{swap}}
+\index{swap@{swap}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{swap}]{\setlength{\rightskip}{0pt plus 5cm}void TiXmlString::swap (
+\begin{DoxyParamCaption}
+\item[{{\bf TiXmlString} \&}]{other}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_aa392cbc180752a79f007f4f9280c7762}
+
+
+Definition at line 211 of file tinystr.h.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classTiXmlString_a8f4422d227088dc7bec96f479b275d0a}{
+\index{TiXmlOutStream@{TiXmlOutStream}!npos@{npos}}
+\index{npos@{npos}!TiXmlOutStream@{TiXmlOutStream}}
+\subsubsection[{npos}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf TiXmlString::size\_\-type} {\bf TiXmlString::npos} = static\_\-cast$<$ {\bf TiXmlString::size\_\-type} $>$(-\/1)\hspace{0.3cm}{\ttfamily  \mbox{[}static, inherited\mbox{]}}}}
+\label{d1/d15/classTiXmlString_a8f4422d227088dc7bec96f479b275d0a}
+
+
+Definition at line 74 of file tinystr.h.
+
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+madara/kats/\hyperlink{tinystr_8h}{tinystr.h}\end{DoxyCompactItemize}

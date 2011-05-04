@@ -1,0 +1,461 @@
+\hypertarget{classKnowledge_1_1UpdateDataReader}{
+\section{Knowledge::UpdateDataReader Class Reference}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader}\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+}
+
+
+{\ttfamily \#include $<$Splice\_\-Knowledge\_\-UpdateDcps.h$>$}
+
+
+
+Inheritance diagram for Knowledge::UpdateDataReader:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{d2/d7f/classKnowledge_1_1UpdateDataReader__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} \hyperlink{classKnowledge_1_1UpdateDataReader_a5aa1e0d7df2df2db07892433815c0864}{\_\-ptr\_\-type}
+\item 
+typedef \hyperlink{namespaceKnowledge_acbf12106aaac4bdb65b120d8c2f38757}{UpdateDataReader\_\-var} \hyperlink{classKnowledge_1_1UpdateDataReader_a4300e2956b49cd500ba1024e4d7c54a7}{\_\-var\_\-type}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+DDS::Boolean \hyperlink{classKnowledge_1_1UpdateDataReader_a2c0cf8dbc56adc069771319aaf4e68c5}{\_\-local\_\-is\_\-a} (const char $\ast$id)
+\item 
+\hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} \hyperlink{classKnowledge_1_1UpdateDataReader_a2ba17dd4a2363ae8f26f9366a7eeb8f3}{\_\-this} ()
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a85a1a349e1e65f5e356d5a0ad3133fe6}{read} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a4779729ac92314687c87b7a959c84af1}{take} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a0613fe0c358530af6b6eafb353775dbf}{read\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a2cc66d38d8b528fcb76a8e8f5e4b9bfb}{take\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a3a01192e6a4e66d03cd71dc3d5bcb5cf}{read\_\-next\_\-sample} (\hyperlink{structKnowledge_1_1Update}{Update} \&received\_\-data, DDS::SampleInfo \&sample\_\-info)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_ae03783b27b1c1cf0718e5f8b2921c1de}{take\_\-next\_\-sample} (\hyperlink{structKnowledge_1_1Update}{Update} \&received\_\-data, DDS::SampleInfo \&sample\_\-info)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a502069464da539d0e5997d4ba2641c23}{read\_\-instance} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_ad7eba351fa1bd50038a3249f130636cd}{take\_\-instance} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a4cd59dd5dc9dc0aed118bac446ffaf8f}{read\_\-next\_\-instance} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_aea925f946609743a2eea698d5de6720f}{take\_\-next\_\-instance} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::SampleStateMask sample\_\-states, DDS::ViewStateMask view\_\-states, DDS::InstanceStateMask instance\_\-states)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_adee304d2b374df5401b5c60fef44301b}{read\_\-next\_\-instance\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a96fb568a9968f486076820455880e410}{take\_\-next\_\-instance\_\-w\_\-condition} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq, DDS::Long max\_\-samples, DDS::InstanceHandle\_\-t a\_\-handle, DDS::ReadCondition\_\-ptr a\_\-condition)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a8d6fa29703342018a59ccf1d70dee7c2}{return\_\-loan} (\hyperlink{namespaceKnowledge_ab62e46316b954f0d249e0e45de7059dc}{UpdateSeq} \&received\_\-data, DDS::SampleInfoSeq \&info\_\-seq)=0
+\item 
+virtual DDS::ReturnCode\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_adaf4a81ae777f656dadd82dd5dceca36}{get\_\-key\_\-value} (\hyperlink{structKnowledge_1_1Update}{Update} \&key\_\-holder, DDS::InstanceHandle\_\-t handle)=0
+\item 
+virtual DDS::InstanceHandle\_\-t \hyperlink{classKnowledge_1_1UpdateDataReader_a2d59c6eed5ace0ad6b4bd8fa17fb0991}{lookup\_\-instance} (const \hyperlink{structKnowledge_1_1Update}{Update} \&instance)=0
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} \hyperlink{classKnowledge_1_1UpdateDataReader_a993f2375983266927ca22f109ebd57a8}{\_\-duplicate} (\hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} obj)
+\item 
+static \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} \hyperlink{classKnowledge_1_1UpdateDataReader_aae79abdf6d1190981cd0213eedcbcaa1}{\_\-narrow} (DDS::Object\_\-ptr obj)
+\item 
+static \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} \hyperlink{classKnowledge_1_1UpdateDataReader_a03462f93a84ec6639253405bd305594e}{\_\-unchecked\_\-narrow} (DDS::Object\_\-ptr obj)
+\item 
+static \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader\_\-ptr} \hyperlink{classKnowledge_1_1UpdateDataReader_a0954b4e17262e54b280c1cdfb9ead129}{\_\-nil} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \hyperlink{classKnowledge_1_1UpdateDataReader_ae66465e3f4a52332b3d16cc911c7b290}{\_\-local\_\-id} = \char`\"{}IDL:Knowledge/UpdateDataReader:1.0\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classKnowledge_1_1UpdateDataReader_a8ff168e14ceffac28b9731c58dfc4ef4}{UpdateDataReader} ()
+\item 
+\hyperlink{classKnowledge_1_1UpdateDataReader_af7a92f5093519c82d87abef4b359c04c}{$\sim$UpdateDataReader} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classKnowledge_1_1UpdateDataReader_a3ee9adb19925962b373536cc1a3dbf1b}{UpdateDataReader} (const \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader} \&)
+\item 
+\hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader} \& \hyperlink{classKnowledge_1_1UpdateDataReader_a3eef02ab11696c8063385273271d8de7}{operator=} (const \hyperlink{classKnowledge_1_1UpdateDataReader}{UpdateDataReader} \&)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 121 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a5aa1e0d7df2df2db07892433815c0864}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-ptr\_\-type@{\_\-ptr\_\-type}}
+\index{\_\-ptr\_\-type@{\_\-ptr\_\-type}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-ptr\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf UpdateDataReader\_\-ptr} {\bf Knowledge::UpdateDataReader::\_\-ptr\_\-type}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a5aa1e0d7df2df2db07892433815c0864}
+
+
+Definition at line 126 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a4300e2956b49cd500ba1024e4d7c54a7}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-var\_\-type@{\_\-var\_\-type}}
+\index{\_\-var\_\-type@{\_\-var\_\-type}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-var\_\-type}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf UpdateDataReader\_\-var} {\bf Knowledge::UpdateDataReader::\_\-var\_\-type}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a4300e2956b49cd500ba1024e4d7c54a7}
+
+
+Definition at line 127 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a8ff168e14ceffac28b9731c58dfc4ef4}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!UpdateDataReader@{UpdateDataReader}}
+\index{UpdateDataReader@{UpdateDataReader}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{UpdateDataReader}]{\setlength{\rightskip}{0pt plus 5cm}Knowledge::UpdateDataReader::UpdateDataReader (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, protected\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a8ff168e14ceffac28b9731c58dfc4ef4}
+
+
+Definition at line 155 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_af7a92f5093519c82d87abef4b359c04c}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!$\sim$UpdateDataReader@{$\sim$UpdateDataReader}}
+\index{$\sim$UpdateDataReader@{$\sim$UpdateDataReader}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{$\sim$UpdateDataReader}]{\setlength{\rightskip}{0pt plus 5cm}Knowledge::UpdateDataReader::$\sim$UpdateDataReader (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, protected\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_af7a92f5093519c82d87abef4b359c04c}
+
+
+Definition at line 156 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a3ee9adb19925962b373536cc1a3dbf1b}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!UpdateDataReader@{UpdateDataReader}}
+\index{UpdateDataReader@{UpdateDataReader}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{UpdateDataReader}]{\setlength{\rightskip}{0pt plus 5cm}Knowledge::UpdateDataReader::UpdateDataReader (
+\begin{DoxyParamCaption}
+\item[{const {\bf UpdateDataReader} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a3ee9adb19925962b373536cc1a3dbf1b}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a993f2375983266927ca22f109ebd57a8}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-duplicate@{\_\-duplicate}}
+\index{\_\-duplicate@{\_\-duplicate}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-duplicate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Knowledge::UpdateDataReader\_\-ptr} Knowledge::UpdateDataReader::\_\-duplicate (
+\begin{DoxyParamCaption}
+\item[{{\bf Knowledge::UpdateDataReader\_\-ptr}}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a993f2375983266927ca22f109ebd57a8}
+
+
+Definition at line 108 of file Splice\_\-Knowledge\_\-UpdateDcps.cpp.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a2c0cf8dbc56adc069771319aaf4e68c5}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-local\_\-is\_\-a@{\_\-local\_\-is\_\-a}}
+\index{\_\-local\_\-is\_\-a@{\_\-local\_\-is\_\-a}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-local\_\-is\_\-a}]{\setlength{\rightskip}{0pt plus 5cm}DDS::Boolean Knowledge::UpdateDataReader::\_\-local\_\-is\_\-a (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{id}
+\end{DoxyParamCaption}
+)}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a2c0cf8dbc56adc069771319aaf4e68c5}
+
+
+Definition at line 114 of file Splice\_\-Knowledge\_\-UpdateDcps.cpp.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_aae79abdf6d1190981cd0213eedcbcaa1}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-narrow@{\_\-narrow}}
+\index{\_\-narrow@{\_\-narrow}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-narrow}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Knowledge::UpdateDataReader\_\-ptr} Knowledge::UpdateDataReader::\_\-narrow (
+\begin{DoxyParamCaption}
+\item[{DDS::Object\_\-ptr}]{obj}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_aae79abdf6d1190981cd0213eedcbcaa1}
+
+
+Definition at line 131 of file Splice\_\-Knowledge\_\-UpdateDcps.cpp.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a0954b4e17262e54b280c1cdfb9ead129}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-nil@{\_\-nil}}
+\index{\_\-nil@{\_\-nil}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-nil}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf UpdateDataReader\_\-ptr} Knowledge::UpdateDataReader::\_\-nil (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a0954b4e17262e54b280c1cdfb9ead129}
+
+
+Definition at line 134 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a2ba17dd4a2363ae8f26f9366a7eeb8f3}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-this@{\_\-this}}
+\index{\_\-this@{\_\-this}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-this}]{\setlength{\rightskip}{0pt plus 5cm}{\bf UpdateDataReader\_\-ptr} Knowledge::UpdateDataReader::\_\-this (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a2ba17dd4a2363ae8f26f9366a7eeb8f3}
+
+
+Definition at line 136 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a03462f93a84ec6639253405bd305594e}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-unchecked\_\-narrow@{\_\-unchecked\_\-narrow}}
+\index{\_\-unchecked\_\-narrow@{\_\-unchecked\_\-narrow}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-unchecked\_\-narrow}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Knowledge::UpdateDataReader\_\-ptr} Knowledge::UpdateDataReader::\_\-unchecked\_\-narrow (
+\begin{DoxyParamCaption}
+\item[{DDS::Object\_\-ptr}]{obj}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a03462f93a84ec6639253405bd305594e}
+
+
+Definition at line 142 of file Splice\_\-Knowledge\_\-UpdateDcps.cpp.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_adaf4a81ae777f656dadd82dd5dceca36}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!get\_\-key\_\-value@{get\_\-key\_\-value}}
+\index{get\_\-key\_\-value@{get\_\-key\_\-value}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{get\_\-key\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::get\_\-key\_\-value (
+\begin{DoxyParamCaption}
+\item[{{\bf Update} \&}]{key\_\-holder, }
+\item[{DDS::InstanceHandle\_\-t}]{handle}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_adaf4a81ae777f656dadd82dd5dceca36}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a2d59c6eed5ace0ad6b4bd8fa17fb0991}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!lookup\_\-instance@{lookup\_\-instance}}
+\index{lookup\_\-instance@{lookup\_\-instance}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{lookup\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::InstanceHandle\_\-t Knowledge::UpdateDataReader::lookup\_\-instance (
+\begin{DoxyParamCaption}
+\item[{const {\bf Update} \&}]{instance}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a2d59c6eed5ace0ad6b4bd8fa17fb0991}
+
+
+Implemented in \hyperlink{classKnowledge_1_1UpdateDataReader__impl_a38221e70ed56dcb773f334820fe1b0c0}{Knowledge::UpdateDataReader\_\-impl}.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a3eef02ab11696c8063385273271d8de7}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!operator=@{operator=}}
+\index{operator=@{operator=}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{operator=}]{\setlength{\rightskip}{0pt plus 5cm}{\bf UpdateDataReader}\& Knowledge::UpdateDataReader::operator= (
+\begin{DoxyParamCaption}
+\item[{const {\bf UpdateDataReader} \&}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a3eef02ab11696c8063385273271d8de7}
+
+
+Reimplemented in \hyperlink{classKnowledge_1_1UpdateDataReader__impl_a30fad7f37d39b9486b23cc3744e4f314}{Knowledge::UpdateDataReader\_\-impl}.
+
+\hypertarget{classKnowledge_1_1UpdateDataReader_a85a1a349e1e65f5e356d5a0ad3133fe6}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!read@{read}}
+\index{read@{read}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{read}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::read (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a85a1a349e1e65f5e356d5a0ad3133fe6}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a502069464da539d0e5997d4ba2641c23}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!read\_\-instance@{read\_\-instance}}
+\index{read\_\-instance@{read\_\-instance}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{read\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::read\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a502069464da539d0e5997d4ba2641c23}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a4cd59dd5dc9dc0aed118bac446ffaf8f}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!read\_\-next\_\-instance@{read\_\-next\_\-instance}}
+\index{read\_\-next\_\-instance@{read\_\-next\_\-instance}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{read\_\-next\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::read\_\-next\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a4cd59dd5dc9dc0aed118bac446ffaf8f}
+\hypertarget{classKnowledge_1_1UpdateDataReader_adee304d2b374df5401b5c60fef44301b}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!read\_\-next\_\-instance\_\-w\_\-condition@{read\_\-next\_\-instance\_\-w\_\-condition}}
+\index{read\_\-next\_\-instance\_\-w\_\-condition@{read\_\-next\_\-instance\_\-w\_\-condition}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{read\_\-next\_\-instance\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::read\_\-next\_\-instance\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_adee304d2b374df5401b5c60fef44301b}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a3a01192e6a4e66d03cd71dc3d5bcb5cf}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!read\_\-next\_\-sample@{read\_\-next\_\-sample}}
+\index{read\_\-next\_\-sample@{read\_\-next\_\-sample}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{read\_\-next\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::read\_\-next\_\-sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Update} \&}]{received\_\-data, }
+\item[{DDS::SampleInfo \&}]{sample\_\-info}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a3a01192e6a4e66d03cd71dc3d5bcb5cf}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a0613fe0c358530af6b6eafb353775dbf}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!read\_\-w\_\-condition@{read\_\-w\_\-condition}}
+\index{read\_\-w\_\-condition@{read\_\-w\_\-condition}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{read\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::read\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a0613fe0c358530af6b6eafb353775dbf}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a8d6fa29703342018a59ccf1d70dee7c2}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!return\_\-loan@{return\_\-loan}}
+\index{return\_\-loan@{return\_\-loan}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{return\_\-loan}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::return\_\-loan (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a8d6fa29703342018a59ccf1d70dee7c2}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a4779729ac92314687c87b7a959c84af1}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!take@{take}}
+\index{take@{take}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{take}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::take (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a4779729ac92314687c87b7a959c84af1}
+\hypertarget{classKnowledge_1_1UpdateDataReader_ad7eba351fa1bd50038a3249f130636cd}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!take\_\-instance@{take\_\-instance}}
+\index{take\_\-instance@{take\_\-instance}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{take\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::take\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_ad7eba351fa1bd50038a3249f130636cd}
+\hypertarget{classKnowledge_1_1UpdateDataReader_aea925f946609743a2eea698d5de6720f}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!take\_\-next\_\-instance@{take\_\-next\_\-instance}}
+\index{take\_\-next\_\-instance@{take\_\-next\_\-instance}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{take\_\-next\_\-instance}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::take\_\-next\_\-instance (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::SampleStateMask}]{sample\_\-states, }
+\item[{DDS::ViewStateMask}]{view\_\-states, }
+\item[{DDS::InstanceStateMask}]{instance\_\-states}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_aea925f946609743a2eea698d5de6720f}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a96fb568a9968f486076820455880e410}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!take\_\-next\_\-instance\_\-w\_\-condition@{take\_\-next\_\-instance\_\-w\_\-condition}}
+\index{take\_\-next\_\-instance\_\-w\_\-condition@{take\_\-next\_\-instance\_\-w\_\-condition}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{take\_\-next\_\-instance\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::take\_\-next\_\-instance\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::InstanceHandle\_\-t}]{a\_\-handle, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a96fb568a9968f486076820455880e410}
+\hypertarget{classKnowledge_1_1UpdateDataReader_ae03783b27b1c1cf0718e5f8b2921c1de}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!take\_\-next\_\-sample@{take\_\-next\_\-sample}}
+\index{take\_\-next\_\-sample@{take\_\-next\_\-sample}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{take\_\-next\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::take\_\-next\_\-sample (
+\begin{DoxyParamCaption}
+\item[{{\bf Update} \&}]{received\_\-data, }
+\item[{DDS::SampleInfo \&}]{sample\_\-info}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_ae03783b27b1c1cf0718e5f8b2921c1de}
+\hypertarget{classKnowledge_1_1UpdateDataReader_a2cc66d38d8b528fcb76a8e8f5e4b9bfb}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!take\_\-w\_\-condition@{take\_\-w\_\-condition}}
+\index{take\_\-w\_\-condition@{take\_\-w\_\-condition}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{take\_\-w\_\-condition}]{\setlength{\rightskip}{0pt plus 5cm}virtual DDS::ReturnCode\_\-t Knowledge::UpdateDataReader::take\_\-w\_\-condition (
+\begin{DoxyParamCaption}
+\item[{{\bf UpdateSeq} \&}]{received\_\-data, }
+\item[{DDS::SampleInfoSeq \&}]{info\_\-seq, }
+\item[{DDS::Long}]{max\_\-samples, }
+\item[{DDS::ReadCondition\_\-ptr}]{a\_\-condition}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}pure virtual\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_a2cc66d38d8b528fcb76a8e8f5e4b9bfb}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classKnowledge_1_1UpdateDataReader_ae66465e3f4a52332b3d16cc911c7b290}{
+\index{Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}!\_\-local\_\-id@{\_\-local\_\-id}}
+\index{\_\-local\_\-id@{\_\-local\_\-id}!Knowledge::UpdateDataReader@{Knowledge::UpdateDataReader}}
+\subsubsection[{\_\-local\_\-id}]{\setlength{\rightskip}{0pt plus 5cm}const char $\ast$ {\bf Knowledge::UpdateDataReader::\_\-local\_\-id} = \char`\"{}IDL:Knowledge/UpdateDataReader:1.0\char`\"{}\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{d7/d6e/classKnowledge_1_1UpdateDataReader_ae66465e3f4a52332b3d16cc911c7b290}
+
+
+Definition at line 135 of file Splice\_\-Knowledge\_\-UpdateDcps.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/\hyperlink{Splice__Knowledge__UpdateDcps_8h}{Splice\_\-Knowledge\_\-UpdateDcps.h}\item 
+madara/\hyperlink{Splice__Knowledge__UpdateDcps_8cpp}{Splice\_\-Knowledge\_\-UpdateDcps.cpp}\end{DoxyCompactItemize}

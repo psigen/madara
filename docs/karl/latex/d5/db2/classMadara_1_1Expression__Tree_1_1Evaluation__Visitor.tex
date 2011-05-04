@@ -1,0 +1,776 @@
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor}{
+\section{Madara::Expression\_\-Tree::Evaluation\_\-Visitor Class Reference}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor}\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+}
+
+
+This plays the role of a visitor for evaluating nodes in an expression tree that is being iterated in post-\/order fashion (and does not work correctly with any other iterator).  
+
+
+
+
+{\ttfamily \#include $<$Evaluation\_\-Visitor.h$>$}
+
+
+
+Inheritance diagram for Madara::Expression\_\-Tree::Evaluation\_\-Visitor:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=292pt]{db/dda/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Madara::Expression\_\-Tree::Evaluation\_\-Visitor:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=400pt]{dd/d5c/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af3664b440fe01d28eaff2f18653aaa99}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node}{Leaf\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a constant. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_afa8a63ef42dc63aaff316a96c01f0878}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node}{Variable\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a variable. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a0a2a5d3acba1febec3ccc2b6f5789322}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node}{Composite\_\-Negate\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates an integer negation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a4aa350f8b8abaaae00e164c54fac3c57}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node}{Composite\_\-Predecrement\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a predecrement. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a684fd1145e81d16a5cafe716c98d61d3}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node}{Composite\_\-Preincrement\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a preincrement. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2f6321d6bb771a915b3bd2bc05643f26}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node}{Composite\_\-Not\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a logical not. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_adc7d691a271e65c2cf1f2b40e2453f58}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node}{Composite\_\-Add\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates an addition. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a96b9cc06685677d61f60ef24dd301904}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node}{Composite\_\-Assignment\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates an assignment to a variable. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2d685f97e2b81a556b665abb4da3dd21}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node}{Composite\_\-And\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a logical and. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af2fc2f3460afb55d7f543be3ebd49d45}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node}{Composite\_\-Or\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a logical or. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a7383a967290101e03ba286ed59fc036e}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node}{Composite\_\-Equality\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates an equality operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8b428f77ff5392b1df72ace443789020}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node}{Composite\_\-Inequality\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates an inequality operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2ad42bf7fc9bcaf73c608b01c96f08a0}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node}{Composite\_\-Greater\_\-Than\_\-Equal\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a greater-\/than-\/or-\/equal-\/to operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ad6d5516b88d0c701c8a836a538aee93a}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node}{Composite\_\-Greater\_\-Than\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a less-\/than operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2b8c077eb7edeb4b967aeb28b81a3483}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a less-\/than-\/or-\/equal-\/to operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ab18210ee3c81c30c079db5dea7f53980}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a less-\/than operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a495cb77e0a45bf903e8a7429e09f5413}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}{Composite\_\-Subtract\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a subtraction. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ac259237b3b88024675e3f3cc3b3edc05}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node}{Composite\_\-Divide\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a division. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_aa4b7f2b528afd2ce68d9ea9d147cfbe4}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node}{Composite\_\-Multiply\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a multiplication. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8453ba6d855c41a6305ecbc3436fa4f7}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node}{Composite\_\-Modulus\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a remainder operation. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a35e6b96e1ff68fa0ee1f3d0df07f9d0d}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node}{Composite\_\-Both\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates a left and right expression. \item\end{DoxyCompactList}\item 
+virtual void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abbcab30bdf0f2e1c760de6bc382c1723}{visit} (const \hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Implies__Node}{Composite\_\-Implies\_\-Node} \&node)
+\begin{DoxyCompactList}\small\item\em Evaluates an inference rule. \item\end{DoxyCompactList}\item 
+long long \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abca833110f678ead9a8b57817b701078}{total} (void)
+\begin{DoxyCompactList}\small\item\em Returns the result of the evaluation. \item\end{DoxyCompactList}\item 
+void \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a9ba7891b19645979106dca75afcf1d6c}{reset} (void)
+\begin{DoxyCompactList}\small\item\em Resets the evaluation. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMadara_1_1Utility_1_1LStack}{Madara::Utility::LStack}$<$ long long $>$ \hyperlink{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a1d83cf18c9cc232176789d95e322b9f1}{stack\_\-}
+\begin{DoxyCompactList}\small\item\em Stack used for temporarily storing evaluations. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This plays the role of a visitor for evaluating nodes in an expression tree that is being iterated in post-\/order fashion (and does not work correctly with any other iterator). 
+
+Definition at line 19 of file Evaluation\_\-Visitor.h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a9ba7891b19645979106dca75afcf1d6c}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!reset@{reset}}
+\index{reset@{reset}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{reset}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::reset (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a9ba7891b19645979106dca75afcf1d6c}
+
+
+Resets the evaluation. 
+
+reset the evaluation 
+
+Definition at line 488 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abca833110f678ead9a8b57817b701078}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!total@{total}}
+\index{total@{total}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{total}]{\setlength{\rightskip}{0pt plus 5cm}long long Madara::Expression\_\-Tree::Evaluation\_\-Visitor::total (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abca833110f678ead9a8b57817b701078}
+
+
+Returns the result of the evaluation. 
+
+print a total for the evaluation
+
+\begin{DoxyReturn}{Returns}
+result of the evaluation 
+\end{DoxyReturn}
+
+
+Definition at line 478 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a7383a967290101e03ba286ed59fc036e}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Equality\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a7383a967290101e03ba286ed59fc036e}
+
+
+Evaluates an equality operation. 
+
+evaluation of an equality comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Equality__Node}{Composite\_\-Equality\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a1224cd9f797b16400cf75c76221408fb}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 261 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abbcab30bdf0f2e1c760de6bc382c1723}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Implies\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_abbcab30bdf0f2e1c760de6bc382c1723}
+
+
+Evaluates an inference rule. 
+
+evaluations of a division (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node}{Composite\_\-Modulus\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a1dc5f69864ddaba89a5517a3f87a6907}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 462 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a35e6b96e1ff68fa0ee1f3d0df07f9d0d}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Both\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a35e6b96e1ff68fa0ee1f3d0df07f9d0d}
+
+
+Evaluates a left and right expression. 
+
+evaluation of both left and right (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Both__Node}{Composite\_\-Both\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a2389827a51a465fd3c3025084111173e}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 238 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8453ba6d855c41a6305ecbc3436fa4f7}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Modulus\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8453ba6d855c41a6305ecbc3436fa4f7}
+
+
+Evaluates a remainder operation. 
+
+evaluations of a division (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Modulus__Node}{Composite\_\-Modulus\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a7715d370880e4bf5c3e25051bfd4133d}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 442 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_aa4b7f2b528afd2ce68d9ea9d147cfbe4}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Multiply\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_aa4b7f2b528afd2ce68d9ea9d147cfbe4}
+
+
+Evaluates a multiplication. 
+
+evaluations of a division (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Multiply__Node}{Composite\_\-Multiply\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a250c5147e5631706120652f183d2acaf}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 426 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ac259237b3b88024675e3f3cc3b3edc05}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Divide\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ac259237b3b88024675e3f3cc3b3edc05}
+
+
+Evaluates a division. 
+
+evaluations of a division (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Divide__Node}{Composite\_\-Divide\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ad9ce73a2a45d3e6946215da2d08a5420}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 406 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a495cb77e0a45bf903e8a7429e09f5413}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Subtract\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a495cb77e0a45bf903e8a7429e09f5413}
+
+
+Evaluates a subtraction. 
+
+evaluation of an addition (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Subtract__Node}{Composite\_\-Subtract\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a0a0e59098b9b084be172b8ee62dd9fd5}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 387 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ab18210ee3c81c30c079db5dea7f53980}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Less\_\-Than\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ab18210ee3c81c30c079db5dea7f53980}
+
+
+Evaluates a less-\/than operation. 
+
+evaluation of a less than comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Node}{Composite\_\-Less\_\-Than\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a88cd67af717a399e6e4837ec25add04e}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 366 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2b8c077eb7edeb4b967aeb28b81a3483}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Less\_\-Than\_\-Equal\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2b8c077eb7edeb4b967aeb28b81a3483}
+
+
+Evaluates a less-\/than-\/or-\/equal-\/to operation. 
+
+evaluation of a less than equal to comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Less__Than__Equal__Node}{Composite\_\-Less\_\-Than\_\-Equal\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a61caff0eabd03b465eb29d2001bbadef}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 345 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ad6d5516b88d0c701c8a836a538aee93a}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Greater\_\-Than\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_ad6d5516b88d0c701c8a836a538aee93a}
+
+
+Evaluates a less-\/than operation. 
+
+evaluation of a greater than comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Node}{Composite\_\-Greater\_\-Than\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a7d9dc0afe2f6c86bf003173f06b82b71}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 324 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2ad42bf7fc9bcaf73c608b01c96f08a0}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Greater\_\-Than\_\-Equal\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2ad42bf7fc9bcaf73c608b01c96f08a0}
+
+
+Evaluates a greater-\/than-\/or-\/equal-\/to operation. 
+
+evaluation of a greater than equal to comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Greater__Than__Equal__Node}{Composite\_\-Greater\_\-Than\_\-Equal\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a69644a36999b74dbcc12832decdce966}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 303 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2f6321d6bb771a915b3bd2bc05643f26}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Not\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2f6321d6bb771a915b3bd2bc05643f26}
+
+
+Evaluates a logical not. 
+
+evaluation of a negation (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Not__Node}{Composite\_\-Not\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_aa5653bd83f66953364437226dcfa328f}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 134 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a684fd1145e81d16a5cafe716c98d61d3}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Preincrement\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a684fd1145e81d16a5cafe716c98d61d3}
+
+
+Evaluates a preincrement. 
+
+evaluation of a increment (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Preincrement__Node}{Composite\_\-Preincrement\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a88faa7afdbf0a288e9625dada5fd49f5}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 101 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af2fc2f3460afb55d7f543be3ebd49d45}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Or\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af2fc2f3460afb55d7f543be3ebd49d45}
+
+
+Evaluates a logical or. 
+
+evaluation of a logical or comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Or__Node}{Composite\_\-Or\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a1d77ed3780e25fd736ac5adf3053ff3c}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 217 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2d685f97e2b81a556b665abb4da3dd21}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-And\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a2d685f97e2b81a556b665abb4da3dd21}
+
+
+Evaluates a logical and. 
+
+evaluation of a logical and comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__And__Node}{Composite\_\-And\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a4611293cddbf31811abdd2811e9bf746}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 196 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a96b9cc06685677d61f60ef24dd301904}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Assignment\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a96b9cc06685677d61f60ef24dd301904}
+
+
+Evaluates an assignment to a variable. 
+
+evaluation of an assignment (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Assignment__Node}{Composite\_\-Assignment\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_aba9f7eb8d0b31c03f914d7e35e4df396}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 166 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_adc7d691a271e65c2cf1f2b40e2453f58}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Add\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_adc7d691a271e65c2cf1f2b40e2453f58}
+
+
+Evaluates an addition. 
+
+evaluation of an addition (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Add__Node}{Composite\_\-Add\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ab82426f2ad2034d9f0f7dd71b0147528}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 150 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a0a2a5d3acba1febec3ccc2b6f5789322}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Negate\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a0a2a5d3acba1febec3ccc2b6f5789322}
+
+
+Evaluates an integer negation. 
+
+evaluation of a negation (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Negate__Node}{Composite\_\-Negate\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_afbf6baaf3a8d55a822350ac3292fa605}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 52 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_afa8a63ef42dc63aaff316a96c01f0878}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Variable\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_afa8a63ef42dc63aaff316a96c01f0878}
+
+
+Evaluates a variable. 
+
+Evaluate a \hyperlink{classMadara_1_1Expression__Tree_1_1Variable__Node}{Variable\_\-Node} (holds a dynamic value)
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_a5dea5d0d83eb683ab0341a4d45fd271a}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 44 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a4aa350f8b8abaaae00e164c54fac3c57}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Predecrement\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a4aa350f8b8abaaae00e164c54fac3c57}
+
+
+Evaluates a predecrement. 
+
+evaluation of a decrement (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Predecrement__Node}{Composite\_\-Predecrement\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_afd6a5648a7d2fef8bd3b5012bc458c04}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 68 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8b428f77ff5392b1df72ace443789020}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Composite\_\-Inequality\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a8b428f77ff5392b1df72ace443789020}
+
+
+Evaluates an inequality operation. 
+
+evaluation of an inequality comparison (\hyperlink{classMadara_1_1Expression__Tree_1_1Composite__Inequality__Node}{Composite\_\-Inequality\_\-Node})
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ac81a4bdef4403e10e8a6d3f156048528}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 282 of file Evaluation\_\-Visitor.cpp.
+
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af3664b440fe01d28eaff2f18653aaa99}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!visit@{visit}}
+\index{visit@{visit}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{visit}]{\setlength{\rightskip}{0pt plus 5cm}void Madara::Expression\_\-Tree::Evaluation\_\-Visitor::visit (
+\begin{DoxyParamCaption}
+\item[{const {\bf Leaf\_\-Node} \&}]{node}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_af3664b440fe01d28eaff2f18653aaa99}
+
+
+Evaluates a constant. 
+
+Evaluate a \hyperlink{classMadara_1_1Expression__Tree_1_1Leaf__Node}{Leaf\_\-Node} (holds a static value)
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to evaluate \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classMadara_1_1Expression__Tree_1_1Visitor_ab97d52a179d6874cdab71ab18d00dff6}{Madara::Expression\_\-Tree::Visitor}.
+
+
+
+Definition at line 36 of file Evaluation\_\-Visitor.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a1d83cf18c9cc232176789d95e322b9f1}{
+\index{Madara::Expression\_\-Tree::Evaluation\_\-Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}!stack\_\-@{stack\_\-}}
+\index{stack\_\-@{stack\_\-}!Madara::Expression_Tree::Evaluation_Visitor@{Madara::Expression\_\-Tree::Evaluation\_\-Visitor}}
+\subsubsection[{stack\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Madara::Utility::LStack}$<$long long$>$ {\bf Madara::Expression\_\-Tree::Evaluation\_\-Visitor::stack\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}private\mbox{]}}}}
+\label{d5/db2/classMadara_1_1Expression__Tree_1_1Evaluation__Visitor_a1d83cf18c9cc232176789d95e322b9f1}
+
+
+Stack used for temporarily storing evaluations. 
+
+
+
+Definition at line 168 of file Evaluation\_\-Visitor.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+madara/expression\_\-tree/\hyperlink{Evaluation__Visitor_8h}{Evaluation\_\-Visitor.h}\item 
+madara/expression\_\-tree/\hyperlink{Evaluation__Visitor_8cpp}{Evaluation\_\-Visitor.cpp}\end{DoxyCompactItemize}
