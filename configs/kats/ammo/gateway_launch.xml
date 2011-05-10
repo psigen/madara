@@ -1,7 +1,7 @@
 <group>
   <setup>
     <!--<debug />-->
-    <barriername>global_test_name</barriername>
+    <barrier name="global_test_name"/>
     <domain>ammo_tests</domain>
     <host>localhost</host>
     <id>0</id>
@@ -11,7 +11,7 @@
   </setup>
   <process>
     <debug />
-    <barriername>gateway</barriername>
+    <barrier name="gateway"/>
     <domain>ammo_group</domain>
     <executable>$(GATEWAY_ROOT)/build/bin/GatewayCore</executable>
     <id>0</id>
@@ -29,7 +29,7 @@
   </process>
   <process>
     <debug />
-    <barriername>gateway</barriername>
+    <barrier name="gateway"/>
     <domain>ammo_group</domain>
     <id>1</id>
     <processes>5</processes>
@@ -47,7 +47,7 @@
   </process>
   <process>
     <debug />
-    <barriername>gateway</barriername>
+    <barrier name="gateway"/>
     <domain>ammo_group</domain>
     <id>2</id>
     <processes>5</processes>
@@ -65,7 +65,7 @@
   </process>
   <process>
     <debug />
-    <barriername>gateway</barriername>
+    <barrier name="gateway"/>
     <domain>ammo_group</domain>
     <id>3</id>
     <processes>5</processes>
@@ -83,7 +83,7 @@
   </process>
   <process>
     <debug />
-    <barriername>gateway</barriername>
+    <barrier name="gateway"/>
     <domain>ammo_group</domain>
     <id>4</id>
     <processes>5</processes>

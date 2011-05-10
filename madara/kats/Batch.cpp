@@ -327,6 +327,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   TiXmlElement * el_tests = 0; 
   TiXmlElement * el_globals = 0; 
   TiXmlElement * element = 0;
+  TiXmlAttribute * attribute = 0;
 
   el_tests  = doc.FirstChildElement ("group");;
 
@@ -498,17 +499,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
     if (!test_name_set)
     {
-      element = el_globals->FirstChildElement ("barriername");
+      element = el_globals->FirstChildElement ("barrier");
       if (element)
       {
-        if (element->GetText ())
-        {
-          test_name = Madara::Utility::expand_envs (element->GetText ());
-
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read test name = %s from process group\n",
-            test_name.c_str ()));
-        }
+        test_name = Madara::Utility::expand_envs (element->Attribute ("name"));
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read barrier name = %s from process group file\n",
+          test_name.c_str ()));
       } // if name element existed
     } // if the user didn't specify a test name from the command line
 
@@ -605,7 +602,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   }
 
   ACE_DEBUG ((LM_DEBUG, 
-    "KATS_BATCH:  Finished KATS setup. Proceeding to tests...\n"));
+    "KATS_BATCH:  Finished KATS setup. Proceeding to processes...\n"));
 
   // *************** END KATS PRELIMINARY WORK ******************
 
@@ -616,7 +613,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         element; element = element->NextSiblingElement ("process"), ++cur);
 
   ACE_DEBUG ((LM_DEBUG, 
-    "KATS_BATCH:  %d tests found in %s...\n", cur, tests_file.c_str ()));
+    "KATS_BATCH:  %d processes found in %s...\n", cur, tests_file.c_str ()));
 
   //processes.reserve (cur);
   processes.resize (cur);
@@ -629,28 +626,34 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         element; element = element->NextSiblingElement ("process"), ++cur)
   {
     ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Grabbing a test...\n"));
+        "KATS_BATCH:    Grabbing a process...\n"));
     KATS_Process process;
 
-    TiXmlElement * el_temp1 = element->FirstChildElement ("barriername");
     TiXmlElement * el_temp2 = element->FirstChildElement ("executable");
     
-    // if the file didn't have a name or executable for an individual test
+    // if the file didn't have an executable for an individual test
     // then let them know about the problem
-    if (!el_temp1 || !el_temp2 ||
-        !el_temp1->GetText () || !el_temp2->GetText ())
+    if (!el_temp2 || !el_temp2->GetText ())
     {
       ACE_DEBUG ((LM_INFO, 
-        "KATS_BATCH:    Each test must have a <name> and <executable>\n"));
+        "KATS_BATCH:    Each test must have an <executable>\n"));
       return -3;
     }
 
-    // go ahead and set the executable and test name
-
-    processes[cur].set_testname (Madara::Utility::expand_envs (
-      el_temp1->GetText ()));
+    // set the executable
     processes[cur].set_executable (Madara::Utility::expand_envs (
       el_temp2->GetText ()));
+
+    // do we have a barrier name?
+    TiXmlElement * el_temp1 = element->FirstChildElement ("barrier");
+    if (el_temp1)
+    {
+      processes[cur].set_testname (Madara::Utility::expand_envs (
+        el_temp1->Attribute ("name")));
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Read barrier name = %s from process group file\n",
+        el_temp1->Attribute ("name")));
+    }
 
     // check the loglevel setting
     if (!loglevel_set)

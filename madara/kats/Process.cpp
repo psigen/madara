@@ -74,13 +74,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     return -1;
   }
 
-  if (!test_set)
-  {
-    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nKATS_PROCESS:"\
-      " no test name was specified. Try -h or --help\n"));
-    return -1;
-  }
+  // we're going to try not requiring the barrier name for a while
+  //if (!test_set)
+  //{
+  //  MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+  //    "\nKATS_PROCESS:"\
+  //    " no test name was specified. Try -h or --help\n"));
+  //  return -1;
+  //}
 
 
   // setup the process options
@@ -102,7 +103,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if(debug_printing)
     testing.dump ();
 
-  testing.barrier (test_name);
+  // handle the case where there is no barrier name. Barrier now
+  // handles case where processes <= 1
+  if (test_name != "")
+    testing.barrier (test_name);
 
   // Before we check for delay, we first check for a precondition
 
