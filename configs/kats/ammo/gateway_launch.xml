@@ -1,7 +1,7 @@
-<tests>
+<group>
   <setup>
     <!--<debug />-->
-    <name>full_gateway</name>
+    <barriername>global_test_name</barriername>
     <domain>ammo_tests</domain>
     <host>localhost</host>
     <id>0</id>
@@ -9,10 +9,10 @@
     <realtime />
     <parallel />
   </setup>
-  <test>
+  <process>
     <debug />
-    <name>gateway</name>
-    <domain>ammo_tests</domain>
+    <barriername>gateway</barriername>
+    <domain>ammo_group</domain>
     <executable>$(GATEWAY_ROOT)/build/bin/GatewayCore</executable>
     <id>0</id>
     <processes>5</processes>
@@ -22,15 +22,15 @@
       <signal>2</signal>
     </kill>
     <precondition></precondition>
-    <postcondition>gatewaycore.launched=1</postcondition>
+    <postcondition>gatewaycore.finished=1</postcondition>
     <stdout>./gatewaycore.out</stdout>
     <stderr>./gatewaycore.err</stderr>
     <realtime />
-  </test>
-  <test>
+  </process>
+  <process>
     <debug />
-    <name>gateway</name>
-    <domain>ammo_tests</domain>
+    <barriername>gateway</barriername>
+    <domain>ammo_group</domain>
     <id>1</id>
     <processes>5</processes>
     <executable>$(GATEWAY_ROOT)/build/bin/AndroidGatewayPlugin</executable>
@@ -40,15 +40,15 @@
       <time>12</time>
       <signal>2</signal>
     </kill>
-    <precondition>gatewaycore.launched</precondition>
-    <postcondition>androidgateway.launched=1</postcondition>
+    <precondition></precondition>
+    <postcondition>androidgateway.finished=1</postcondition>
     <stdout>./androidgateway.out</stdout>
     <stderr>./androidgateway.err</stderr>
-  </test>
-  <test>
+  </process>
+  <process>
     <debug />
-    <name>gateway</name>
-    <domain>ammo_tests</domain>
+    <barriername>gateway</barriername>
+    <domain>ammo_group</domain>
     <id>2</id>
     <processes>5</processes>
     <executable>$(GATEWAY_ROOT)/build/bin/TigrGatewayPlugin</executable>
@@ -58,15 +58,15 @@
       <time>12</time>
       <signal>2</signal>
     </kill>
-    <precondition>gatewaycore.launched</precondition>
-    <postcondition>tigrgateway.launched=1</postcondition>
+    <precondition></precondition>
+    <postcondition>tigrgateway.finished=1</postcondition>
     <stdout>./tigrgateway.out</stdout>
     <stderr>./tigrgateway.err</stderr>
-  </test>
-  <test>
+  </process>
+  <process>
     <debug />
-    <name>gateway</name>
-    <domain>ammo_tests</domain>
+    <barriername>gateway</barriername>
+    <domain>ammo_group</domain>
     <id>3</id>
     <processes>5</processes>
     <executable>$(GATEWAY_ROOT)/build/bin/LocationStoreGatewayPlugin</executable>
@@ -76,15 +76,15 @@
       <time>12</time>
       <signal>2</signal>
     </kill>
-    <precondition>gatewaycore.launched</precondition>
-    <postcondition>locationstore.launched=1</postcondition>
+    <precondition></precondition>
+    <postcondition>locationstore.finished=1</postcondition>
     <stdout>./locationstore.out</stdout>
     <stderr>./locationstore.err</stderr>
-  </test>
-  <test>
+  </process>
+  <process>
     <debug />
-    <name>gateway</name>
-    <domain>ammo_tests</domain>
+    <barriername>gateway</barriername>
+    <domain>ammo_group</domain>
     <id>4</id>
     <processes>5</processes>
     <executable>$(GATEWAY_ROOT)/build/bin/LdapGatewayPlugin</executable>
@@ -94,9 +94,9 @@
       <time>12</time>
       <signal>2</signal>
     </kill>
-    <precondition>gatewaycore.launched</precondition>
-    <postcondition>ldapgateway.launched=1</postcondition>
+    <precondition></precondition>
+    <postcondition>ldapgateway.finished=1</postcondition>
     <stdout>./ldapgateway.out</stdout>
     <stderr>./ldapgateway.err</stderr>
-  </test>
-</tests>
+  </process>
+</group>

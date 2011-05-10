@@ -309,7 +309,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nKATS_BATCH:"\
-      " no tests file was specified. Try -h or --help\n"));
+      " no process group file was specified. Try -h or --help\n"));
     return -1;
 
   }
@@ -328,17 +328,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   TiXmlElement * el_globals = 0; 
   TiXmlElement * element = 0;
 
-  el_tests  = doc.FirstChildElement ("tests");;
+  el_tests  = doc.FirstChildElement ("group");;
 
   if (!el_tests)
   {
     ACE_DEBUG ((LM_INFO, 
-      "KATS_BATCH:  Tests was not the root element\n"));
+      "KATS_BATCH:  group was not the root element\n"));
     return -2;
   }
 
   ACE_DEBUG ((LM_DEBUG, 
-    "KATS_BATCH:  Reading tests setup...\n"));
+    "KATS_BATCH:  Reading process group setup...\n"));
 
   el_globals = el_tests->FirstChildElement ("setup");
 
@@ -360,7 +360,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           buffer >> settings.id;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read id = %d from tests file\n", settings.id));
+            "KATS_BATCH:    Read id = %d from process group file\n", settings.id));
         }
       } // if the id element existed
     } // if the user didn't specify id from the command line
@@ -377,7 +377,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           domain_set = true;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read domain = %s from tests file\n",
+            "KATS_BATCH:    Read domain = %s from process group file\n",
             settings.domains.c_str ()));
         }
       } // if the domain element existed
@@ -394,7 +394,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           host_set = true;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read host = %s from tests file\n",
+            "KATS_BATCH:    Read host = %s from group file\n",
             settings.host.c_str ()));
         }
       } // if the host element existed
@@ -412,7 +412,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           buffer >> settings.processes;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read processes = %d from tests file\n",
+            "KATS_BATCH:    Read processes = %d from group file\n",
             settings.processes));
         }
       } // if the processes element existed
@@ -432,7 +432,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           loglevel_set = true;
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read loglevel = %u from tests file\n",
+            "KATS_BATCH:    Read loglevel = %u from process group\n",
             MADARA_debug_level));
         }
       } // if the processes element existed
@@ -457,7 +457,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
             kill_time_set = true;
 
             ACE_DEBUG ((LM_DEBUG,
-              "KATS_BATCH:    Read kill time = %d s from tests file\n",
+              "KATS_BATCH:    Read kill time = %d s from process group\n",
               time_in_seconds));
           }
         } // if element kill/time exists
@@ -474,7 +474,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           pre_condition = Madara::Utility::expand_envs (element->GetText ());
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read precondition = %s from tests file\n",
+            "KATS_BATCH:    Read precondition = %s from process group\n",
             pre_condition.c_str ()));
         }
       } // if precondition element existed
@@ -490,7 +490,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           post_condition = Madara::Utility::expand_envs (element->GetText ());
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read postcondition = %s from tests file\n",
+            "KATS_BATCH:    Read postcondition = %s from process group\n",
             post_condition.c_str ()));
         }
       } // if postcondition element existed
@@ -498,7 +498,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
     if (!test_name_set)
     {
-      element = el_globals->FirstChildElement ("name");
+      element = el_globals->FirstChildElement ("barriername");
       if (element)
       {
         if (element->GetText ())
@@ -506,7 +506,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           test_name = Madara::Utility::expand_envs (element->GetText ());
 
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read test name = %s from tests file\n",
+            "KATS_BATCH:    Read test name = %s from process group\n",
             test_name.c_str ()));
         }
       } // if name element existed
@@ -520,7 +520,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         realtime = true;
         realtime_set = true;
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Enabled realtime scheduling from tests file\n"));
+          "KATS_BATCH:    Enabled realtime scheduling from process group file\n"));
       } // if realtime element existed
     } // if the user didn't specify real time scheduling from the command line
 
@@ -532,7 +532,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         run_in_parallel = true;
         parallel_set = true;
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Enabled parallel execution from tests file\n"));
+          "KATS_BATCH:    Enabled parallel execution from process group file\n"));
       } // if debug element existed
     } // if the user didn't specify debug mode from the command line
 
@@ -544,7 +544,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         debug_printing = true;
         debug_set = true;
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Enabled debug mode printing from tests file\n"));
+          "KATS_BATCH:    Enabled debug mode printing from process group file\n"));
       } // if debug element existed
     } // if the user didn't specify debug mode from the command line
   }
@@ -612,8 +612,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   size_t cur = 0;
 
-  for (cur = 0, element = el_tests->FirstChildElement ("test");
-        element; element = element->NextSiblingElement ("test"), ++cur);
+  for (cur = 0, element = el_tests->FirstChildElement ("process");
+        element; element = element->NextSiblingElement ("process"), ++cur);
 
   ACE_DEBUG ((LM_DEBUG, 
     "KATS_BATCH:  %d tests found in %s...\n", cur, tests_file.c_str ()));
@@ -625,14 +625,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   timer.start ();
 
-  for (cur = 0, element = el_tests->FirstChildElement ("test");
-        element; element = element->NextSiblingElement ("test"), ++cur)
+  for (cur = 0, element = el_tests->FirstChildElement ("process");
+        element; element = element->NextSiblingElement ("process"), ++cur)
   {
     ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Grabbing a test...\n"));
     KATS_Process process;
 
-    TiXmlElement * el_temp1 = element->FirstChildElement ("name");
+    TiXmlElement * el_temp1 = element->FirstChildElement ("barriername");
     TiXmlElement * el_temp2 = element->FirstChildElement ("executable");
     
     // if the file didn't have a name or executable for an individual test
@@ -659,7 +659,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       if (el_temp1 && el_temp1->GetText ())
       {
         ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read loglevel = %s from tests file\n",
+          "KATS_BATCH:    Read loglevel = %s from process group file\n",
              el_temp1->GetText ()));
         processes[cur].set_loglevel (Madara::Utility::expand_envs (
            el_temp1->GetText ()));
@@ -677,7 +677,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read host = %s from tests file\n",
+        "KATS_BATCH:    Read host = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_processes (Madara::Utility::expand_envs (
          el_temp1->GetText ()));
@@ -688,7 +688,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read id = %s from tests file\n",
+        "KATS_BATCH:    Read id = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_id (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -699,7 +699,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read env = %s from tests file\n",
+        "KATS_BATCH:    Read env = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_environment (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -710,7 +710,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read delay = %s from tests file\n",
+        "KATS_BATCH:    Read delay = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_delaytime (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -721,7 +721,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read stdout redirect = %s from tests file\n",
+        "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_stdout (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -732,7 +732,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read stderr redirect = %s from tests file\n",
+        "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_stderr (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -743,7 +743,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read stdin redirect = %s from tests file\n",
+        "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_stdin (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -754,7 +754,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read precondition = %s from tests file\n",
+        "KATS_BATCH:    Read precondition = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_precondition (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -765,7 +765,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read postcondition = %s from tests file\n",
+        "KATS_BATCH:    Read postcondition = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_postcondition (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -776,7 +776,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read commandline = %s from tests file\n",
+        "KATS_BATCH:    Read commandline = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_commandline (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -800,7 +800,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         if (el_temp2->GetText ())
         {
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read kill time = %s from tests file\n",
+            "KATS_BATCH:    Read kill time = %s from process group file\n",
             el_temp2->GetText ()));
           processes[cur].set_killtime (Madara::Utility::expand_envs (
             el_temp2->GetText ()));
@@ -815,7 +815,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         if (el_temp2->GetText ())
         {
           ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read kill signal = %s from tests file\n",
+            "KATS_BATCH:    Read kill signal = %s from process group file\n",
             el_temp2->GetText ()));
           processes[cur].set_killsignal (Madara::Utility::expand_envs (
             el_temp2->GetText ()));
@@ -828,7 +828,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read workingdir = %s from tests file\n",
+        "KATS_BATCH:    Read workingdir = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_workingdir (Madara::Utility::expand_envs (
         el_temp1->GetText ()));
@@ -989,6 +989,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("barriername"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("file"), 'f', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("debug"), 'g', ACE_Get_Opt::NO_ARG);
@@ -1233,6 +1234,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\
       -a (--testname)    name of the test (for barriers) \n\
+         (--barriername) \n\
       -b (--precondition) precondition to wait for after barrier \n\
       -d (--domain)      knowledge domain to isolate knowledge into \n\
       -f (--file)        xml file containing testing information \n\

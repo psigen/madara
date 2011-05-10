@@ -200,6 +200,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("barriername"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("precondition"), 'b',
       ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("commandline"), 'c',
@@ -488,6 +489,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\
       -a (--testname)    name of the test (for barriers) \n\
+         (--barriername) \n\
       -b (--precondition) precondition to wait for after barrier \n\
       -c (--commandline) command line arguments \n\
       -d (--domain)      knowledge domain to isolate knowledge into \n\
