@@ -203,9 +203,9 @@ void KATS_BON::GroupImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
-std::string KATS_BON::GroupImpl::getDelay() 
+long KATS_BON::GroupImpl::getDelay() 
 {
-	return FCOImpl::getAttribute("Delay")->getStringValue();
+	return FCOImpl::getAttribute("Delay")->getIntegerValue();
 }
 
 
@@ -311,9 +311,9 @@ void KATS_BON::GroupImpl::setDebug( bool val)
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::GroupImpl::setDelay( const std::string& val)
+void KATS_BON::GroupImpl::setDelay( const long val)
 {
-	FCOImpl::getAttribute("Delay")->setStringValue( val);
+	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
 }
 
 
@@ -450,6 +450,23 @@ std::set<KATS_BON::HostRef> KATS_BON::GroupImpl::getHostRef()
 
 
 //********************************************************************************
+// getter for role "Kill" among "KATS_BON::Kill"s
+//********************************************************************************
+std::set<KATS_BON::Kill> KATS_BON::GroupImpl::getKill()
+{
+	std::set<KATS_BON::Kill> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("Kill");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::Kill elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
 // getter for role "Process" among "KATS_BON::Process"s
 //********************************************************************************
 std::set<KATS_BON::Process> KATS_BON::GroupImpl::getProcess()
@@ -495,9 +512,9 @@ std::string KATS_BON::ProcessImpl::getCommandLine()
 //********************************************************************************
 // 
 //********************************************************************************
-std::string KATS_BON::ProcessImpl::getDelay() 
+long KATS_BON::ProcessImpl::getDelay() 
 {
-	return FCOImpl::getAttribute("Delay")->getStringValue();
+	return FCOImpl::getAttribute("Delay")->getIntegerValue();
 }
 
 
@@ -516,6 +533,15 @@ std::string KATS_BON::ProcessImpl::getExecutable()
 long KATS_BON::ProcessImpl::getId() 
 {
 	return FCOImpl::getAttribute("Id")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ProcessImpl::getOrder() 
+{
+	return FCOImpl::getAttribute("Order")->getIntegerValue();
 }
 
 
@@ -621,9 +647,9 @@ void KATS_BON::ProcessImpl::setDebug( bool val)
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::ProcessImpl::setDelay( const std::string& val)
+void KATS_BON::ProcessImpl::setDelay( const long val)
 {
-	FCOImpl::getAttribute("Delay")->setStringValue( val);
+	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
 }
 
 
@@ -642,6 +668,15 @@ void KATS_BON::ProcessImpl::setExecutable( const std::string& val)
 void KATS_BON::ProcessImpl::setId( const long val)
 {
 	FCOImpl::getAttribute("Id")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setOrder( const long val)
+{
+	FCOImpl::getAttribute("Order")->setIntegerValue( val);
 }
 
 

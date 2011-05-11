@@ -21,12 +21,41 @@
 
 #include "stdafx.h"
 #include <sstream>
+#include <vector>
+#include <algorithm>
 #include <Console.h>
 #include "BON2Component.h"
 #include "../Utility/tinyxml.h"
 
+
+// I have to paste this into KATSBonX.h/cpp whenever I change
+// the paradigm
+//namespace KATS_BON
+//{
+//  class Process
+//  {
+//  public:
+//    bool operator< (const Process & right)
+//    {
+//      if (this->getOrder () < right->getOrder ())
+//        return true;
+//
+//      return this->getId () < right->getId ();
+//    }
+//  };
+//}
+
+
 namespace BON
 {
+
+
+  bool Comparison (KATS_BON::Process & lhs,
+    KATS_BON::Process & rhs)
+  {
+    return (lhs->getOrder () < rhs->getOrder ());
+  }
+
 
 //###############################################################################################################################################
 //
@@ -112,15 +141,28 @@ void Component::process_process (KATS_BON::Process & current,
     KATS_BON::HostRef href = *hbegin;
     KATS_BON::Host host = href->getHost ();
 
-    TiXmlElement element ("host");
-    TiXmlText text (host->getName ());
-    
-    if (host->getOverride () != "")
-    {
-      text.SetValue (host->getOverride ());
-    }
-    element.InsertEndChild (text);
+    Util::GenRefCounted * ref_ptr = host.getCounted (false);
 
+    TiXmlElement element ("host");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (host->getName ());
+      if (host->getOverride () != "")
+      {
+        text.SetValue (host->getOverride ());
+      }
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (href->getName ());
+      element.InsertEndChild (text);
+    }
     xml_setup.InsertEndChild (element);
   }
 
@@ -132,17 +174,28 @@ void Component::process_process (KATS_BON::Process & current,
     KATS_BON::DomainRef dref = *dbegin;
     KATS_BON::Domain domain = dref->getDomain ();
 
+    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
+
     TiXmlElement element ("domain");
 
-    TiXmlText text (domain->getName ());
-    
-    if (domain->getOverride () != "")
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
     {
-      text.SetValue (domain->getOverride ());
+      // we have a real reference
+      TiXmlText text (domain->getName ());
+      if (domain->getOverride () != "")
+      {
+        text.SetValue (domain->getOverride ());
+      }
+      element.InsertEndChild (text);
     }
-
-    element.InsertEndChild (text);
-
+    else
+    {
+      TiXmlText text (dref->getName ());
+      element.InsertEndChild (text);
+    }
     xml_setup.InsertEndChild (element);
   }
 
@@ -154,15 +207,28 @@ void Component::process_process (KATS_BON::Process & current,
     KATS_BON::BarrierRef bref = *bbegin;
     KATS_BON::Barrier barrier = bref->getBarrier ();
 
+    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
+
     TiXmlElement element ("barrier");
-    TiXmlText text (barrier->getObjectMeta ().name ());
-    if (barrier->getOverride () != "")
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
     {
-      text.SetValue (barrier->getOverride ());
+      // we have a real reference
+      TiXmlText text (barrier->getName ());
+      if (barrier->getOverride () != "")
+      {
+        text.SetValue (barrier->getOverride ());
+      }
+      element.InsertEndChild (text);
     }
-
-    element.InsertEndChild (text);
-
+    else
+    {
+      TiXmlText text (bref->getName ());
+      element.InsertEndChild (text);
+    }
     xml_setup.InsertEndChild (element);
   }
  
@@ -191,7 +257,20 @@ void Component::process_process (KATS_BON::Process & current,
 
     xml_setup.InsertEndChild (element);
   }
- 
+
+  // did the user set a delay?
+  if (current->getDelay () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getDelay ();
+
+    TiXmlElement element ("delay");
+    TiXmlText text (buffer.str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+  
   // did the user set a precondition?
   if (current->getPrecondition () != "")
   {
@@ -237,6 +316,36 @@ void Component::process_process (KATS_BON::Process & current,
     xml_setup.InsertEndChild (element);
   }
 
+  // get the kill settings
+  std::set<KATS_BON::Kill> kills = current->getKill ();
+  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
+  if (kbegin != kills.end ())
+  {
+    KATS_BON::Kill kill = *kbegin;
+    if (kill->getTime () > 0)
+    {
+      TiXmlElement element ("kill");
+      TiXmlElement time ("time");
+      TiXmlElement signal ("signal");
+
+      std::stringstream time_buff;
+      std::stringstream signal_buff;
+
+      time_buff << kill->getTime ();
+      signal_buff << kill->getSignal ();
+
+      TiXmlText time_text (time_buff.str ());
+      TiXmlText signal_text (signal_buff.str ());
+
+      time.InsertEndChild (time_text);
+      signal.InsertEndChild (signal_text);
+
+      element.InsertEndChild (time);
+      element.InsertEndChild (signal);
+      xml_setup.InsertEndChild (element);
+    }
+  }
+
   // did the user set a stdin redirect?
   if (current->getStdin () != "")
   {
@@ -265,9 +374,6 @@ void Component::process_process (KATS_BON::Process & current,
 
     xml_setup.InsertEndChild (element);
   }
-
-
-
 
   parent.InsertEndChild (xml_setup);
 }
@@ -310,15 +416,28 @@ void Component::process_process_group (KATS_BON::Group & current)
     KATS_BON::HostRef href = *hbegin;
     KATS_BON::Host host = href->getHost ();
 
-    TiXmlElement element ("host");
-    TiXmlText text (host->getName ());
-    
-    if (host->getOverride () != "")
-    {
-      text.SetValue (host->getOverride ());
-    }
-    element.InsertEndChild (text);
+    Util::GenRefCounted * ref_ptr = host.getCounted (false);
 
+    TiXmlElement element ("host");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (host->getName ());
+      if (host->getOverride () != "")
+      {
+        text.SetValue (host->getOverride ());
+      }
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (href->getName ());
+      element.InsertEndChild (text);
+    }
     xml_setup.InsertEndChild (element);
   }
 
@@ -330,17 +449,28 @@ void Component::process_process_group (KATS_BON::Group & current)
     KATS_BON::DomainRef dref = *dbegin;
     KATS_BON::Domain domain = dref->getDomain ();
 
+    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
+
     TiXmlElement element ("domain");
 
-    TiXmlText text (domain->getName ());
-    
-    if (domain->getOverride () != "")
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
     {
-      text.SetValue (domain->getOverride ());
+      // we have a real reference
+      TiXmlText text (domain->getName ());
+      if (domain->getOverride () != "")
+      {
+        text.SetValue (domain->getOverride ());
+      }
+      element.InsertEndChild (text);
     }
-
-    element.InsertEndChild (text);
-
+    else
+    {
+      TiXmlText text (dref->getName ());
+      element.InsertEndChild (text);
+    }
     xml_setup.InsertEndChild (element);
   }
 
@@ -352,15 +482,28 @@ void Component::process_process_group (KATS_BON::Group & current)
     KATS_BON::BarrierRef bref = *bbegin;
     KATS_BON::Barrier barrier = bref->getBarrier ();
 
+    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
+
     TiXmlElement element ("barrier");
-    TiXmlText text (barrier->getObjectMeta ().name ());
-    if (barrier->getOverride () != "")
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
     {
-      text.SetValue (barrier->getOverride ());
+      // we have a real reference
+      TiXmlText text (barrier->getName ());
+      if (barrier->getOverride () != "")
+      {
+        text.SetValue (barrier->getOverride ());
+      }
+      element.InsertEndChild (text);
     }
-
-    element.InsertEndChild (text);
-
+    else
+    {
+      TiXmlText text (bref->getName ());
+      element.InsertEndChild (text);
+    }
     xml_setup.InsertEndChild (element);
   }
  
@@ -390,6 +533,19 @@ void Component::process_process_group (KATS_BON::Group & current)
     xml_setup.InsertEndChild (element);
   }
  
+  // did the user set a delay?
+  if (current->getDelay () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getDelay ();
+
+    TiXmlElement element ("delay");
+    TiXmlText text (buffer.str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+ 
   // did the user set a precondition?
   if (current->getPrecondition () != "")
   {
@@ -408,6 +564,35 @@ void Component::process_process_group (KATS_BON::Group & current)
     xml_setup.InsertEndChild (element);
   }
 
+  // get the kill settings
+  std::set<KATS_BON::Kill> kills = current->getKill ();
+  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
+  if (kbegin != kills.end ())
+  {
+    KATS_BON::Kill kill = *kbegin;
+    if (kill->getTime () > 0)
+    {
+      TiXmlElement element ("kill");
+      TiXmlElement time ("time");
+      TiXmlElement signal ("signal");
+
+      std::stringstream time_buff;
+      std::stringstream signal_buff;
+
+      time_buff << kill->getTime ();
+      signal_buff << kill->getSignal ();
+
+      TiXmlText time_text (time_buff.str ());
+      TiXmlText signal_text (signal_buff.str ());
+
+      time.InsertEndChild (time_text);
+      signal.InsertEndChild (signal_text);
+
+      element.InsertEndChild (time);
+      element.InsertEndChild (signal);
+      xml_setup.InsertEndChild (element);
+    }
+  }
 
   // did the user set a stdin redirect?
   if (current->getStdin () != "")
@@ -443,11 +628,21 @@ void Component::process_process_group (KATS_BON::Group & current)
   // iterate through all of the processes
 
   std::set <KATS_BON::Process> processes = current->getProcess ();
+
+  std::vector <KATS_BON::Process> ordered_processes;
+
   for (std::set <KATS_BON::Process>::iterator process_i = processes.begin ();
                         process_i != processes.end (); ++process_i)
   {
-    process_process (*process_i, xml_group);
+    //process_process (*process_i, xml_group);
+    ordered_processes.push_back (*process_i);
   }
+
+  std::sort (ordered_processes.begin (), ordered_processes.end (),
+    Comparison);
+
+  for (size_t i = 0; i < ordered_processes.size (); ++i)
+    process_process (ordered_processes[i], xml_group);
 
   // check our host information
   //std::set<KATS_BON::HostRef>::iterator i = group->getHostRef ().begin ();

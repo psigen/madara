@@ -134,7 +134,7 @@ public:
 
 	//
 	// attribute getters and setters
-	virtual std::string getDelay() ;
+	virtual long        getDelay() ;
 	virtual long        getId() ;
 	virtual std::string getPostcondition() ;
 	virtual std::string getPrecondition() ;
@@ -146,7 +146,7 @@ public:
 	virtual bool        isParallel() ;
 	virtual bool        isRealtime() ;
 	virtual void        setDebug( bool val);
-	virtual void        setDelay( const std::string& val);
+	virtual void        setDelay( const long val);
 	virtual void        setId( const long val);
 	virtual void        setParallel( bool val);
 	virtual void        setPostcondition( const std::string& val);
@@ -161,6 +161,7 @@ public:
 	virtual std::set<KATS_BON::BarrierRef>  getBarrierRef();
 	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
 	virtual std::set<KATS_BON::HostRef>     getHostRef();
+	virtual std::set<KATS_BON::Kill>        getKill();
 	virtual std::set<KATS_BON::Process>     getProcess();
 
 	///BUP
@@ -186,9 +187,10 @@ public:
 	//
 	// attribute getters and setters
 	virtual std::string getCommandLine() ;
-	virtual std::string getDelay() ;
+	virtual long        getDelay() ;
 	virtual std::string getExecutable() ;
 	virtual long        getId() ;
+	virtual long        getOrder() ;
 	virtual std::string getPostcondition() ;
 	virtual std::string getPrecondition() ;
 	virtual long        getProcesses() ;
@@ -200,9 +202,10 @@ public:
 	virtual bool        isRealtime() ;
 	virtual void        setCommandLine( const std::string& val);
 	virtual void        setDebug( bool val);
-	virtual void        setDelay( const std::string& val);
+	virtual void        setDelay( const long val);
 	virtual void        setExecutable( const std::string& val);
 	virtual void        setId( const long val);
+	virtual void        setOrder( const long val);
 	virtual void        setPostcondition( const std::string& val);
 	virtual void        setPrecondition( const std::string& val);
 	virtual void        setProcesses( const long val);
