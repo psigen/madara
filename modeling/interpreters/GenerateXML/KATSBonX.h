@@ -318,9 +318,9 @@ public:
 
 	//
 	// attribute getters and setters
-	virtual long        getSignal() ;
+	virtual std::string getSignal() ;
 	virtual long        getTime() ;
-	virtual void        setSignal( const long val);
+	virtual void        setSignal( const std::string& val);
 	virtual void        setTime( const long val);
 
 	///BUP

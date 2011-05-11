@@ -502,7 +502,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       element = el_globals->FirstChildElement ("barrier");
       if (element)
       {
-        test_name = Madara::Utility::expand_envs (element->Attribute ("name"));
+        if (element->Attribute ("name"))
+          test_name = Madara::Utility::expand_envs (element->Attribute ("name"));
+        else if (element->GetText ())
+          test_name = Madara::Utility::expand_envs (element->GetText ());
+
         ACE_DEBUG ((LM_DEBUG, 
           "KATS_BATCH:    Read barrier name = %s from process group file\n",
           test_name.c_str ()));
@@ -648,11 +652,22 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     TiXmlElement * el_temp1 = element->FirstChildElement ("barrier");
     if (el_temp1)
     {
-      processes[cur].set_testname (Madara::Utility::expand_envs (
-        el_temp1->Attribute ("name")));
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read barrier name = %s from process group file\n",
-        el_temp1->Attribute ("name")));
+      if (el_temp1->Attribute ("name"))
+      {
+        processes[cur].set_testname (Madara::Utility::expand_envs (
+          el_temp1->Attribute ("name")));
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read barrier name = %s from process group file\n",
+          el_temp1->Attribute ("name")));
+      }
+      else if (el_temp1->GetText ())
+      {
+        processes[cur].set_testname (Madara::Utility::expand_envs (
+          el_temp1->GetText ()));
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read barrier name = %s from process group file\n",
+          el_temp1->GetText ()));
+      }
     }
 
     // check the loglevel setting

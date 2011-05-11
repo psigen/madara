@@ -917,9 +917,9 @@ void KATS_BON::KillImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::KillImpl::getSignal() 
+std::string KATS_BON::KillImpl::getSignal() 
 {
-	return FCOImpl::getAttribute("Signal")->getIntegerValue();
+	return FCOImpl::getAttribute("Signal")->getStringValue();
 }
 
 
@@ -935,9 +935,9 @@ long KATS_BON::KillImpl::getTime()
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::KillImpl::setSignal( const long val)
+void KATS_BON::KillImpl::setSignal( const std::string& val)
 {
-	FCOImpl::getAttribute("Signal")->setIntegerValue( val);
+	FCOImpl::getAttribute("Signal")->setStringValue( val);
 }
 
 

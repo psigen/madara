@@ -217,18 +217,14 @@ void Component::process_process (KATS_BON::Process & current,
     if (ref_ptr)
     {
       // we have a real reference
-      TiXmlText text (barrier->getName ());
       if (barrier->getOverride () != "")
-      {
-        text.SetValue (barrier->getOverride ());
-      }
-      element.InsertEndChild (text);
+        element.SetAttribute ("name", barrier->getOverride ());
+      else
+        element.SetAttribute ("name", barrier->getName ());
     }
     else
-    {
-      TiXmlText text (bref->getName ());
-      element.InsertEndChild (text);
-    }
+      element.SetAttribute ("name", bref->getName ());
+
     xml_setup.InsertEndChild (element);
   }
  
@@ -326,22 +322,28 @@ void Component::process_process (KATS_BON::Process & current,
     {
       TiXmlElement element ("kill");
       TiXmlElement time ("time");
-      TiXmlElement signal ("signal");
 
       std::stringstream time_buff;
-      std::stringstream signal_buff;
-
       time_buff << kill->getTime ();
-      signal_buff << kill->getSignal ();
-
       TiXmlText time_text (time_buff.str ());
-      TiXmlText signal_text (signal_buff.str ());
-
       time.InsertEndChild (time_text);
-      signal.InsertEndChild (signal_text);
 
       element.InsertEndChild (time);
-      element.InsertEndChild (signal);
+
+      // has a signal been defined?
+      if (kill->getSignal () != "")
+      {
+        TiXmlElement signal ("signal");
+
+        // insert the signal into the xml element
+        std::stringstream signal_buff;
+        signal_buff << kill->getSignal ();
+        TiXmlText signal_text (signal_buff.str ());
+        signal.InsertEndChild (signal_text);
+
+        element.InsertEndChild (signal);
+      }
+
       xml_setup.InsertEndChild (element);
     }
   }
@@ -492,18 +494,14 @@ void Component::process_process_group (KATS_BON::Group & current)
     if (ref_ptr)
     {
       // we have a real reference
-      TiXmlText text (barrier->getName ());
       if (barrier->getOverride () != "")
-      {
-        text.SetValue (barrier->getOverride ());
-      }
-      element.InsertEndChild (text);
+        element.SetAttribute ("name", barrier->getOverride ());
+      else
+        element.SetAttribute ("name", barrier->getName ());
     }
     else
-    {
-      TiXmlText text (bref->getName ());
-      element.InsertEndChild (text);
-    }
+      element.SetAttribute ("name", bref->getName ());
+
     xml_setup.InsertEndChild (element);
   }
  
@@ -574,22 +572,28 @@ void Component::process_process_group (KATS_BON::Group & current)
     {
       TiXmlElement element ("kill");
       TiXmlElement time ("time");
-      TiXmlElement signal ("signal");
 
       std::stringstream time_buff;
-      std::stringstream signal_buff;
-
       time_buff << kill->getTime ();
-      signal_buff << kill->getSignal ();
-
       TiXmlText time_text (time_buff.str ());
-      TiXmlText signal_text (signal_buff.str ());
-
       time.InsertEndChild (time_text);
-      signal.InsertEndChild (signal_text);
 
       element.InsertEndChild (time);
-      element.InsertEndChild (signal);
+
+      // has a signal been defined?
+      if (kill->getSignal () != "")
+      {
+        TiXmlElement signal ("signal");
+
+        // insert the signal into the xml element
+        std::stringstream signal_buff;
+        signal_buff << kill->getSignal ();
+        TiXmlText signal_text (signal_buff.str ());
+        signal.InsertEndChild (signal_text);
+
+        element.InsertEndChild (signal);
+      }
+
       xml_setup.InsertEndChild (element);
     }
   }
