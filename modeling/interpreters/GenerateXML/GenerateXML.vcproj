@@ -97,6 +97,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="2"
 			UseOfATL="2"
@@ -125,7 +127,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="$(ProjectDir);$(GME_ROOT)/SDK/BON/Common;$(GME_ROOT)/Interfaces;$(GME_ROOT)/Gme/Interfaces"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;BUILDER_OBJECT_NETWORK_V2;TIXML_USE_STL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				BrowseInformation="1"

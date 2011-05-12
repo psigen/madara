@@ -151,16 +151,16 @@ void Component::process_process (KATS_BON::Process & current,
     if (ref_ptr)
     {
       // we have a real reference
-      TiXmlText text (host->getName ());
+      TiXmlText text (host->getName ().c_str ());
       if (host->getOverride () != "")
       {
-        text.SetValue (host->getOverride ());
+        text.SetValue (host->getOverride ().c_str ());
       }
       element.InsertEndChild (text);
     }
     else
     {
-      TiXmlText text (href->getName ());
+      TiXmlText text (href->getName ().c_str ());
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -184,16 +184,16 @@ void Component::process_process (KATS_BON::Process & current,
     if (ref_ptr)
     {
       // we have a real reference
-      TiXmlText text (domain->getName ());
+      TiXmlText text (domain->getName ().c_str ());
       if (domain->getOverride () != "")
       {
-        text.SetValue (domain->getOverride ());
+        text.SetValue (domain->getOverride ().c_str ());
       }
       element.InsertEndChild (text);
     }
     else
     {
-      TiXmlText text (dref->getName ());
+      TiXmlText text (dref->getName ().c_str ());
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -218,12 +218,12 @@ void Component::process_process (KATS_BON::Process & current,
     {
       // we have a real reference
       if (barrier->getOverride () != "")
-        element.SetAttribute ("name", barrier->getOverride ());
+        element.SetAttribute ("name", barrier->getOverride ().c_str ());
       else
-        element.SetAttribute ("name", barrier->getName ());
+        element.SetAttribute ("name", barrier->getName ().c_str ());
     }
     else
-      element.SetAttribute ("name", bref->getName ());
+      element.SetAttribute ("name", bref->getName ().c_str ());
 
     xml_setup.InsertEndChild (element);
   }
@@ -235,7 +235,7 @@ void Component::process_process (KATS_BON::Process & current,
     buffer << current->getId ();
 
     TiXmlElement element ("id");
-    TiXmlText text (buffer.str ());
+    TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -248,7 +248,7 @@ void Component::process_process (KATS_BON::Process & current,
     buffer << current->getProcesses ();
 
     TiXmlElement element ("processes");
-    TiXmlText text (buffer.str ());
+    TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -261,7 +261,7 @@ void Component::process_process (KATS_BON::Process & current,
     buffer << current->getDelay ();
 
     TiXmlElement element ("delay");
-    TiXmlText text (buffer.str ());
+    TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -271,7 +271,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getPrecondition () != "")
   {
     TiXmlElement element ("precondition");
-    TiXmlText text (current->getPrecondition ());
+    TiXmlText text (current->getPrecondition ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -280,7 +280,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getPostcondition () != "")
   {
     TiXmlElement element ("postcondition");
-    TiXmlText text (current->getPostcondition ());
+    TiXmlText text (current->getPostcondition ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -289,7 +289,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getExecutable () != "")
   {
     TiXmlElement element ("executable");
-    TiXmlText text (current->getExecutable ());
+    TiXmlText text (current->getExecutable ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -298,7 +298,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getWorkingDir () != "")
   {
     TiXmlElement element ("workingdir");
-    TiXmlText text (current->getWorkingDir ());
+    TiXmlText text (current->getWorkingDir ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -307,7 +307,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getCommandLine () != "")
   {
     TiXmlElement element ("commandline");
-    TiXmlText text (current->getCommandLine ());
+    TiXmlText text (current->getCommandLine ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -325,7 +325,7 @@ void Component::process_process (KATS_BON::Process & current,
 
       std::stringstream time_buff;
       time_buff << kill->getTime ();
-      TiXmlText time_text (time_buff.str ());
+      TiXmlText time_text (time_buff.str ().c_str ());
       time.InsertEndChild (time_text);
 
       element.InsertEndChild (time);
@@ -338,7 +338,7 @@ void Component::process_process (KATS_BON::Process & current,
         // insert the signal into the xml element
         std::stringstream signal_buff;
         signal_buff << kill->getSignal ();
-        TiXmlText signal_text (signal_buff.str ());
+        TiXmlText signal_text (signal_buff.str ().c_str ());
         signal.InsertEndChild (signal_text);
 
         element.InsertEndChild (signal);
@@ -352,7 +352,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getStdin () != "")
   {
     TiXmlElement element ("stdin");
-    TiXmlText text (current->getStdin ());
+    TiXmlText text (current->getStdin ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -361,7 +361,7 @@ void Component::process_process (KATS_BON::Process & current,
   if (current->getStderr () != "")
   {
     TiXmlElement element ("stderr");
-    TiXmlText text (current->getStderr ());
+    TiXmlText text (current->getStderr ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -371,7 +371,7 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("stdout");
 
-    TiXmlText text (current->getStdout ());
+    TiXmlText text (current->getStdout ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -428,16 +428,16 @@ void Component::process_process_group (KATS_BON::Group & current)
     if (ref_ptr)
     {
       // we have a real reference
-      TiXmlText text (host->getName ());
+      TiXmlText text (host->getName ().c_str ());
       if (host->getOverride () != "")
       {
-        text.SetValue (host->getOverride ());
+        text.SetValue (host->getOverride ().c_str ());
       }
       element.InsertEndChild (text);
     }
     else
     {
-      TiXmlText text (href->getName ());
+      TiXmlText text (href->getName ().c_str ());
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -461,16 +461,16 @@ void Component::process_process_group (KATS_BON::Group & current)
     if (ref_ptr)
     {
       // we have a real reference
-      TiXmlText text (domain->getName ());
+      TiXmlText text (domain->getName ().c_str ());
       if (domain->getOverride () != "")
       {
-        text.SetValue (domain->getOverride ());
+        text.SetValue (domain->getOverride ().c_str ());
       }
       element.InsertEndChild (text);
     }
     else
     {
-      TiXmlText text (dref->getName ());
+      TiXmlText text (dref->getName ().c_str ());
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -495,12 +495,12 @@ void Component::process_process_group (KATS_BON::Group & current)
     {
       // we have a real reference
       if (barrier->getOverride () != "")
-        element.SetAttribute ("name", barrier->getOverride ());
+        element.SetAttribute ("name", barrier->getOverride ().c_str ());
       else
-        element.SetAttribute ("name", barrier->getName ());
+        element.SetAttribute ("name", barrier->getName ().c_str ());
     }
     else
-      element.SetAttribute ("name", bref->getName ());
+      element.SetAttribute ("name", bref->getName ().c_str ());
 
     xml_setup.InsertEndChild (element);
   }
@@ -512,7 +512,7 @@ void Component::process_process_group (KATS_BON::Group & current)
     buffer << current->getId ();
 
     TiXmlElement element ("id");
-    TiXmlText text (buffer.str ());
+    TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -525,7 +525,7 @@ void Component::process_process_group (KATS_BON::Group & current)
     buffer << current->getProcesses ();
 
     TiXmlElement element ("processes");
-    TiXmlText text (buffer.str ());
+    TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -538,7 +538,7 @@ void Component::process_process_group (KATS_BON::Group & current)
     buffer << current->getDelay ();
 
     TiXmlElement element ("delay");
-    TiXmlText text (buffer.str ());
+    TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -548,7 +548,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   if (current->getPrecondition () != "")
   {
     TiXmlElement element ("precondition");
-    TiXmlText text (current->getPrecondition ());
+    TiXmlText text (current->getPrecondition ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -557,7 +557,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   if (current->getPostcondition () != "")
   {
     TiXmlElement element ("postcondition");
-    TiXmlText text (current->getPostcondition ());
+    TiXmlText text (current->getPostcondition ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -575,7 +575,7 @@ void Component::process_process_group (KATS_BON::Group & current)
 
       std::stringstream time_buff;
       time_buff << kill->getTime ();
-      TiXmlText time_text (time_buff.str ());
+      TiXmlText time_text (time_buff.str ().c_str ());
       time.InsertEndChild (time_text);
 
       element.InsertEndChild (time);
@@ -588,7 +588,7 @@ void Component::process_process_group (KATS_BON::Group & current)
         // insert the signal into the xml element
         std::stringstream signal_buff;
         signal_buff << kill->getSignal ();
-        TiXmlText signal_text (signal_buff.str ());
+        TiXmlText signal_text (signal_buff.str ().c_str ());
         signal.InsertEndChild (signal_text);
 
         element.InsertEndChild (signal);
@@ -602,7 +602,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   if (current->getStdin () != "")
   {
     TiXmlElement element ("stdin");
-    TiXmlText text (current->getStdin ());
+    TiXmlText text (current->getStdin ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -611,7 +611,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   if (current->getStderr () != "")
   {
     TiXmlElement element ("stderr");
-    TiXmlText text (current->getStderr ());
+    TiXmlText text (current->getStderr ().c_str ());
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -621,7 +621,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   {
     TiXmlElement element ("stdout");
 
-    TiXmlText text (current->getStdout ());
+    TiXmlText text (current->getStdout ().c_str ());
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -671,13 +671,13 @@ void Component::process_process_group (KATS_BON::Group & current)
     buffer << current->getName ();
     buffer << ".xml";
 
-    TiXmlDocument xml_doc (buffer.str ());
+    TiXmlDocument xml_doc (buffer.str ().c_str ());
     xml_doc.InsertEndChild (xml_group);
 
     Console::Out::WriteLine(CString ("......Writing to file ") + 
       buffer.str ().c_str ());
 
-    xml_doc.SaveFile (buffer.str ());
+    xml_doc.SaveFile (buffer.str ().c_str ());
   }
 }
 
