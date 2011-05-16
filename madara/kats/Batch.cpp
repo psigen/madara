@@ -580,6 +580,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   testing.barrier (test_name);
 
+  testing.event (
+    "updatevars","",".kats.id=.madara.id;.kats.processes=madara.processes");
+
   // Before we check for delay, we first check for a precondition
 
   if (pre_condition != "")
@@ -985,7 +988,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".post.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), post_condition, "");
+    testing.event (buffer.str (), "", post_condition, "");
   }
 
   if(debug_printing)

@@ -34,6 +34,20 @@ Madara::KATS::Test_Framework::~Test_Framework ()
 {
 }
 
+/// Retrieves a knowledge value
+long long
+Madara::KATS::Test_Framework::get (const ::std::string & key) const
+{
+  return knowledge_.get (key);
+}
+
+/// Sets a knowledge value to a specified value
+int
+Madara::KATS::Test_Framework::set (const ::std::string & key, long long value)
+{
+  return knowledge_.set (key, value);
+}
+
 /// Barriers on all processes until everyone is at the event
 long long
 Madara::KATS::Test_Framework::barrier (const std::string & event_name)

@@ -135,6 +135,26 @@ namespace Madara
        **/
       void log (const std::string & statement, unsigned int level = 0);
 
+      
+      /**
+       * Retrieves a knowledge value
+       * @param key                knowledge location
+       * @return                   value at knowledge location
+       **/
+      long long get (const ::std::string & key) const;
+
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key          knowledge variable location
+       * @param value        value to set at location
+       * @return             0 if successful, -1 if key is null, and
+       *                     -2 if quality isn't high enough
+       **/
+      int set (const ::std::string & key, long long value =
+        Madara::Knowledge_Record::MODIFIED);
+
+
       /**
        * Dumps all knowledge to std::err
        * @param level      level of severity

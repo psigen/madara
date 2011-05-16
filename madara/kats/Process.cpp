@@ -175,6 +175,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   return_value = process.return_value ();
 
+  testing.set (".kats.return", (long long) return_value);
+
   if (post_condition != "")
   {
     std::stringstream buffer;
@@ -182,8 +184,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".post.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), post_condition, "");
+    testing.event (buffer.str (), "", post_condition, "");
   }
+
+  testing.event (
+    "updatevars","",".kats.id=.madara.id;.kats.processes=madara.processes");
 
   if(debug_printing)
     testing.dump ();

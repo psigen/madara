@@ -87,6 +87,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::KATS::Test_Framework testing (settings);
 
+  testing.event (
+    "updatevars","",".kats.id=.madara.id;.kats.processes=madara.processes");
+
   if(debug_printing)
     testing.dump ();
 
@@ -116,6 +119,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     DLINFO "KATS_SLEEP: %: seconds of sleep completed\n",
     delay_time.sec () ));
 
+  testing.set (".kats.return", (long long) exit_code);
+
   if (post_condition != "")
   {
     std::stringstream buffer;
@@ -123,7 +128,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".post.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), post_condition, "");
+    testing.event (buffer.str (), "", post_condition, "");
   }
 
   if(debug_printing)
