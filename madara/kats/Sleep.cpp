@@ -32,6 +32,7 @@ bool test_set = false;
 bool kill_time_set = false;
 bool delay_time_set = false;
 bool debug_printing = false;
+int exit_code = 0;
 ACE_Time_Value kill_time (0);
 ACE_Time_Value delay_time (0);
 
@@ -59,9 +60,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // parse any arguments
   int retcode = parse_args (argc, argv);
 
-  // for returning back to the user after process spawn
-  int return_value = 0;
-
   if (retcode < 0)
     return retcode;
 
@@ -70,14 +68,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nKATS_SLEEP:"\
       " no sleep time was specified. Try -h or --help\n"));
-    return -1;
-  }
-
-  if (!test_set)
-  {
-    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nKATS_SLEEP:"\
-      " no test name was specified. Try -h or --help\n"));
     return -1;
   }
 
@@ -100,7 +90,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if(debug_printing)
     testing.dump ();
 
-  testing.barrier (test_name);
+  if (test_name != "")
+    testing.barrier (test_name);
 
   // Before we check for delay, we first check for a precondition
 
@@ -138,7 +129,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if(debug_printing)
     testing.dump ();
 
-  return return_value;
+  return exit_code;
 }
 
 int parse_args (int argc, ACE_TCHAR * argv[])
@@ -161,6 +152,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("delay"), 'l', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'n', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("exitcode"), 'x', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("exitvalue"), 'x', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("returnvalue"), 'x', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("realtime"), 'r', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("postcondition"), 's',
       ACE_Get_Opt::ARG_REQUIRED);
@@ -300,6 +294,20 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         MADARA_debug_level));
 
       break;
+    case 'x':
+      // processes
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> exit_code;
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_SLEEP: exit code set to %d\n",
+        exit_code));
+
+
+      break;
     case ':':
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_SLEEP: ERROR: -%c requires an argument"),
@@ -322,6 +330,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -t (--timeout)     time in seconds to wait before killing \n\
          -k --signal     kill signal to send after timeout \n\
       -v (--loglevel)    maximum log level to print from MADARA messages\n\
+      -x (--exit_code)   exit code to return \n\
+          --exit_value \n\
+          --return_value \n\
 "
       ));
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 

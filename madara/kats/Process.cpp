@@ -171,9 +171,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "KATS_PROCESS: Process returned %u\n",
-    process.exit_code () ));
+    process.return_value () ));
 
-  return_value = process.exit_code ();
+  return_value = process.return_value ();
 
   if (post_condition != "")
   {

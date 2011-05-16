@@ -234,9 +234,9 @@ public:
     return process.running ();
   }
 
-  ACE_exitcode exit_code (void)
+  ACE_exitcode return_value (void)
   {
-    return process.exit_code ();
+    return process.return_value ();
   }
 
   int terminate (void)
