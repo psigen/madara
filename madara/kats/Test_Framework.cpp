@@ -66,7 +66,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Test_Framework::barrier: .madara.processes <= 1."
-      " Returning success."));
+      " Returning success.\n"));
     return 1;
   }
 

@@ -10,8 +10,10 @@ IMPLEMENT_BONEXTENSION( KATS_BON::Barriers, "Barriers" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Domains, "Domains" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Hosts, "Hosts" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Processes, "Processes" );
-IMPLEMENT_BONEXTENSION( KATS_BON::Group, "Group" );
+IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::Ordered );
 IMPLEMENT_BONEXTENSION( KATS_BON::Process, "Process" );
+IMPLEMENT_BONEXTENSION( KATS_BON::GroupRef, "GroupRef" );
+IMPLEMENT_BONEXTENSION( KATS_BON::Group, "Group" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Barrier, "Barrier" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Domain, "Domain" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Host, "Host" );
@@ -180,6 +182,391 @@ std::set<KATS_BON::Group> KATS_BON::ProcessesImpl::getGroup()
 		res.insert(elem);
 	}
 	return res;
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::OrderedImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::Ordered
+	pVisitor->visitOrdered( KATS_BON::Ordered( this));
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::OrderedImpl::getOrder() 
+{
+	return FCOImpl::getAttribute("Order")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::OrderedImpl::isEnabled() 
+{
+	return FCOImpl::getAttribute("Enabled")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::OrderedImpl::setEnabled( bool val)
+{
+	FCOImpl::getAttribute("Enabled")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::OrderedImpl::setOrder( const long val)
+{
+	FCOImpl::getAttribute("Order")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::Process
+	pVisitor->visitProcess( KATS_BON::Process( this));
+
+	// then its children
+	std::set<BON::FCO> children = ModelImpl::getChildFCOs();
+	for( std::set<BON::FCO>::const_iterator it = children.begin(); it != children.end(); ++it)
+	{
+		(*it)->accept( pVisitor);
+	}
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getCommandLine() 
+{
+	return FCOImpl::getAttribute("CommandLine")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ProcessImpl::getDelay() 
+{
+	return FCOImpl::getAttribute("Delay")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getExecutable() 
+{
+	return FCOImpl::getAttribute("Executable")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ProcessImpl::getId() 
+{
+	return FCOImpl::getAttribute("Id")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getPostcondition() 
+{
+	return FCOImpl::getAttribute("Postcondition")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getPrecondition() 
+{
+	return FCOImpl::getAttribute("Precondition")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ProcessImpl::getProcesses() 
+{
+	return FCOImpl::getAttribute("Processes")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getStderr() 
+{
+	return FCOImpl::getAttribute("Stderr")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getStdin() 
+{
+	return FCOImpl::getAttribute("Stdin")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getStdout() 
+{
+	return FCOImpl::getAttribute("Stdout")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ProcessImpl::getWorkingDir() 
+{
+	return FCOImpl::getAttribute("WorkingDir")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::ProcessImpl::isDebug() 
+{
+	return FCOImpl::getAttribute("Debug")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::ProcessImpl::isRealtime() 
+{
+	return FCOImpl::getAttribute("Realtime")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setCommandLine( const std::string& val)
+{
+	FCOImpl::getAttribute("CommandLine")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setDebug( bool val)
+{
+	FCOImpl::getAttribute("Debug")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setDelay( const long val)
+{
+	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setExecutable( const std::string& val)
+{
+	FCOImpl::getAttribute("Executable")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setId( const long val)
+{
+	FCOImpl::getAttribute("Id")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setPostcondition( const std::string& val)
+{
+	FCOImpl::getAttribute("Postcondition")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setPrecondition( const std::string& val)
+{
+	FCOImpl::getAttribute("Precondition")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setProcesses( const long val)
+{
+	FCOImpl::getAttribute("Processes")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setRealtime( bool val)
+{
+	FCOImpl::getAttribute("Realtime")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setStderr( const std::string& val)
+{
+	FCOImpl::getAttribute("Stderr")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setStdin( const std::string& val)
+{
+	FCOImpl::getAttribute("Stdin")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setStdout( const std::string& val)
+{
+	FCOImpl::getAttribute("Stdout")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessImpl::setWorkingDir( const std::string& val)
+{
+	FCOImpl::getAttribute("WorkingDir")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// getter for role "BarrierRef" among "KATS_BON::BarrierRef"s
+//********************************************************************************
+std::set<KATS_BON::BarrierRef> KATS_BON::ProcessImpl::getBarrierRef()
+{
+	std::set<KATS_BON::BarrierRef> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("BarrierRef");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::BarrierRef elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// getter for role "DomainRef" among "KATS_BON::DomainRef"s
+//********************************************************************************
+std::set<KATS_BON::DomainRef> KATS_BON::ProcessImpl::getDomainRef()
+{
+	std::set<KATS_BON::DomainRef> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("DomainRef");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::DomainRef elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// getter for role "HostRef" among "KATS_BON::HostRef"s
+//********************************************************************************
+std::set<KATS_BON::HostRef> KATS_BON::ProcessImpl::getHostRef()
+{
+	std::set<KATS_BON::HostRef> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("HostRef");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::HostRef elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// getter for role "Kill" among "KATS_BON::Kill"s
+//********************************************************************************
+std::set<KATS_BON::Kill> KATS_BON::ProcessImpl::getKill()
+{
+	std::set<KATS_BON::Kill> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("Kill");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::Kill elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::GroupRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::GroupRef
+	pVisitor->visitGroupRef( KATS_BON::GroupRef( this));
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+KATS_BON::Group KATS_BON::GroupRefImpl::getGroup()
+{
+	BON::FCO r = BON::ReferenceImpl::getReferred();
+	return KATS_BON::Group(r);
 }
 
 
@@ -433,6 +820,40 @@ std::set<KATS_BON::DomainRef> KATS_BON::GroupImpl::getDomainRef()
 
 
 //********************************************************************************
+// getter for role "Group" among "KATS_BON::Group"s
+//********************************************************************************
+std::set<KATS_BON::Group> KATS_BON::GroupImpl::getGroup()
+{
+	std::set<KATS_BON::Group> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("Group");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::Group elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// getter for role "GroupRef" among "Ordered"s and its descendants
+//********************************************************************************
+std::set<KATS_BON::GroupRef> KATS_BON::GroupImpl::getGroupRef()
+{
+	std::set<KATS_BON::GroupRef> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("GroupRef");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::GroupRef elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
 // getter for role "HostRef" among "KATS_BON::HostRef"s
 //********************************************************************************
 std::set<KATS_BON::HostRef> KATS_BON::GroupImpl::getHostRef()
@@ -467,7 +888,28 @@ std::set<KATS_BON::Kill> KATS_BON::GroupImpl::getKill()
 
 
 //********************************************************************************
-// getter for role "Process" among "KATS_BON::Process"s
+// aggregated getter for role "KATS_BON::" among "KATS_BON::Ordered"s and its descendants
+//********************************************************************************
+std::set<KATS_BON::Ordered> KATS_BON::GroupImpl::getOrdered()
+{
+	std::set<KATS_BON::Ordered> res;
+	const int len = 2;
+	std::set<BON::FCO> roles_vec[ len];
+	roles_vec[0] = ModelImpl::getChildFCOsAs("Process");
+	roles_vec[1] = ModelImpl::getChildFCOsAs("GroupRef");
+	for( int k = 0; k < len; ++k)
+		for( std::set<BON::FCO>::iterator i = roles_vec[k].begin(); i != roles_vec[k].end(); ++i)
+		{
+			KATS_BON::Ordered elem(*i);
+			ASSERT(elem);
+			res.insert(elem);
+		}
+	return res;
+}
+
+
+//********************************************************************************
+// getter for role "Process" among "Ordered"s and its descendants
 //********************************************************************************
 std::set<KATS_BON::Process> KATS_BON::GroupImpl::getProcess()
 {
@@ -476,343 +918,6 @@ std::set<KATS_BON::Process> KATS_BON::GroupImpl::getProcess()
 	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
 	{
 		KATS_BON::Process elem(*i);
-		ASSERT(elem);
-		res.insert(elem);
-	}
-	return res;
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::accept( KATS_BON::KATSVisitor *pVisitor)
-{
-	// visit the KATS_BON::Process
-	pVisitor->visitProcess( KATS_BON::Process( this));
-
-	// then its children
-	std::set<BON::FCO> children = ModelImpl::getChildFCOs();
-	for( std::set<BON::FCO>::const_iterator it = children.begin(); it != children.end(); ++it)
-	{
-		(*it)->accept( pVisitor);
-	}
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getCommandLine() 
-{
-	return FCOImpl::getAttribute("CommandLine")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessImpl::getDelay() 
-{
-	return FCOImpl::getAttribute("Delay")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getExecutable() 
-{
-	return FCOImpl::getAttribute("Executable")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessImpl::getId() 
-{
-	return FCOImpl::getAttribute("Id")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessImpl::getOrder() 
-{
-	return FCOImpl::getAttribute("Order")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getPostcondition() 
-{
-	return FCOImpl::getAttribute("Postcondition")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getPrecondition() 
-{
-	return FCOImpl::getAttribute("Precondition")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessImpl::getProcesses() 
-{
-	return FCOImpl::getAttribute("Processes")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getStderr() 
-{
-	return FCOImpl::getAttribute("Stderr")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getStdin() 
-{
-	return FCOImpl::getAttribute("Stdin")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getStdout() 
-{
-	return FCOImpl::getAttribute("Stdout")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessImpl::getWorkingDir() 
-{
-	return FCOImpl::getAttribute("WorkingDir")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-bool KATS_BON::ProcessImpl::isDebug() 
-{
-	return FCOImpl::getAttribute("Debug")->getBooleanValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-bool KATS_BON::ProcessImpl::isRealtime() 
-{
-	return FCOImpl::getAttribute("Realtime")->getBooleanValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setCommandLine( const std::string& val)
-{
-	FCOImpl::getAttribute("CommandLine")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setDebug( bool val)
-{
-	FCOImpl::getAttribute("Debug")->setBooleanValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setDelay( const long val)
-{
-	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setExecutable( const std::string& val)
-{
-	FCOImpl::getAttribute("Executable")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setId( const long val)
-{
-	FCOImpl::getAttribute("Id")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setOrder( const long val)
-{
-	FCOImpl::getAttribute("Order")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setPostcondition( const std::string& val)
-{
-	FCOImpl::getAttribute("Postcondition")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setPrecondition( const std::string& val)
-{
-	FCOImpl::getAttribute("Precondition")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setProcesses( const long val)
-{
-	FCOImpl::getAttribute("Processes")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setRealtime( bool val)
-{
-	FCOImpl::getAttribute("Realtime")->setBooleanValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setStderr( const std::string& val)
-{
-	FCOImpl::getAttribute("Stderr")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setStdin( const std::string& val)
-{
-	FCOImpl::getAttribute("Stdin")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setStdout( const std::string& val)
-{
-	FCOImpl::getAttribute("Stdout")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessImpl::setWorkingDir( const std::string& val)
-{
-	FCOImpl::getAttribute("WorkingDir")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// getter for role "BarrierRef" among "KATS_BON::BarrierRef"s
-//********************************************************************************
-std::set<KATS_BON::BarrierRef> KATS_BON::ProcessImpl::getBarrierRef()
-{
-	std::set<KATS_BON::BarrierRef> res;
-	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("BarrierRef");
-	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
-	{
-		KATS_BON::BarrierRef elem(*i);
-		ASSERT(elem);
-		res.insert(elem);
-	}
-	return res;
-}
-
-
-//********************************************************************************
-// getter for role "DomainRef" among "KATS_BON::DomainRef"s
-//********************************************************************************
-std::set<KATS_BON::DomainRef> KATS_BON::ProcessImpl::getDomainRef()
-{
-	std::set<KATS_BON::DomainRef> res;
-	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("DomainRef");
-	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
-	{
-		KATS_BON::DomainRef elem(*i);
-		ASSERT(elem);
-		res.insert(elem);
-	}
-	return res;
-}
-
-
-//********************************************************************************
-// getter for role "HostRef" among "KATS_BON::HostRef"s
-//********************************************************************************
-std::set<KATS_BON::HostRef> KATS_BON::ProcessImpl::getHostRef()
-{
-	std::set<KATS_BON::HostRef> res;
-	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("HostRef");
-	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
-	{
-		KATS_BON::HostRef elem(*i);
-		ASSERT(elem);
-		res.insert(elem);
-	}
-	return res;
-}
-
-
-//********************************************************************************
-// getter for role "Kill" among "KATS_BON::Kill"s
-//********************************************************************************
-std::set<KATS_BON::Kill> KATS_BON::ProcessImpl::getKill()
-{
-	std::set<KATS_BON::Kill> res;
-	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("Kill");
-	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
-	{
-		KATS_BON::Kill elem(*i);
 		ASSERT(elem);
 		res.insert(elem);
 	}

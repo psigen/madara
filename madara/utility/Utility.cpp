@@ -6,6 +6,7 @@
 #include <fstream>
 #include "ace/INET_Addr.h"
 #include "madara/utility/Log_Macros.h"
+#include "ace/Default_Constants.h"
 
 /// Convert string to uppercase
 ::std::string &
@@ -324,7 +325,9 @@ Madara::Utility::expand_envs (const std::string & source)
     // environment variable must be larger than $()
     if (source[i] == '$' && i + 3 < source.size ())
     {
-      buffer << get_var (source, i+2, i);
+      char * value = get_var (source, i+2, i);
+      if (value)
+        buffer << value;
     }
     else
       buffer << source[i];
@@ -348,3 +351,25 @@ Madara::Utility::get_var (const std::string & source,
   return getenv (source.substr (cur,source.size () - cur).c_str ());
 }
 
+std::string
+Madara::Utility::clean_dir_name (const std::string & source)
+{
+  // define the characters we'll want to replace
+#ifdef ACE_WIN32
+  #define REPLACE_THIS    '/'
+  #define REPLACE_WITH    '\\'
+#else
+  #define REPLACE_THIS    '\\'
+  #define REPLACE_WITH    '/'
+#endif
+
+  std::string target (source);
+
+  for (std::string::iterator i = target.begin (); i != target.end(); ++i)
+  {
+    if (*i == REPLACE_THIS)
+      *i = REPLACE_WITH;
+  }
+
+  return target;
+}

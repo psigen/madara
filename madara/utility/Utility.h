@@ -65,7 +65,7 @@ namespace Madara
     /// grab an environment variable value (@see expand_envs)
     char * get_var (const std::string & source, size_t cur, size_t & end);
 
-
+    MADARA_Export std::string clean_dir_name (const std::string & target);
   }
 }
 #endif

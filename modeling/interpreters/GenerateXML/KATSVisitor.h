@@ -25,7 +25,9 @@ class KATSVisitor
 		virtual bool visitProcess( const KATS_BON::Process& object );
 		virtual bool visitBarrierRef( const KATS_BON::BarrierRef& object );
 		virtual bool visitDomainRef( const KATS_BON::DomainRef& object );
+		virtual bool visitGroupRef( const KATS_BON::GroupRef& object );
 		virtual bool visitHostRef( const KATS_BON::HostRef& object );
+		virtual bool visitOrdered( const KATS_BON::Ordered& object );
 		virtual bool visitBarriers( const KATS_BON::Barriers& object );
 		virtual bool visitDomains( const KATS_BON::Domains& object );
 		virtual bool visitHosts( const KATS_BON::Hosts& object );

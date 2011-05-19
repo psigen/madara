@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <iomanip>
 
+#include "ace/ACE.h"
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
 #include "ace/High_Res_Timer.h"
@@ -32,6 +33,9 @@ bool run_in_parallel = false;
 
 // flags for whether or not command line arguments
 // were supplied
+bool stdin_set = false;
+bool stderr_set = false;
+bool stdout_set = false;
 bool process_set = false;
 bool kill_time_set = false;
 bool id_set = false;
@@ -55,6 +59,7 @@ ACE_Time_Value kill_time (0);
 ACE_Time_Value delay_time (0);
 
 std::string path;
+std::string working_dir;
 
 
 class KATS_Process
@@ -62,10 +67,7 @@ class KATS_Process
 public:
   KATS_Process ()
   {
-    std::stringstream buffer;
-    buffer << path;
-    buffer << "kats_process";
-    executable = buffer.str ();
+    kats_type ("process");
   }
 
   KATS_Process (const KATS_Process & rhs)
@@ -203,6 +205,12 @@ public:
     command_line << value;
   }
 
+  void set_file (const std::string & value)
+  {
+    command_line << " -f ";
+    command_line << value;
+  }
+
   void set_testname (const std::string & value)
   {
     command_line << " -a ";
@@ -254,6 +262,22 @@ public:
     return process.wait (value);
   }
 
+  void kats_type (const std::string & type)
+  {
+    std::stringstream buffer;
+    buffer << Madara::Utility::clean_dir_name (
+      Madara::Utility::expand_envs ("$(MADARA_ROOT)/bin/"));
+
+    if (type == "process")
+      buffer << "kats_process";
+    else if (type == "group")
+      buffer << "kats_batch";
+    else if (type == "maml")
+      buffer << "kats_maml";
+
+    executable = buffer.str ();
+  }
+
 protected:
 
   ACE_Process process;
@@ -263,25 +287,34 @@ protected:
 };
 
 std::string
-extract_path (const std::string & name)
+extract_file (const std::string & name)
 {
-  std::string::size_type start = 0;
+  std::string::size_type start = name.size () - 1;
   for (std::string::size_type i = 0; i < name.size (); ++i)
   {
     // check for directory delimiters and update start
-    if (name[i] == '/' || name[i] == '\\')
+    if (name[start] != '/' && name[start] != '\\')
     {
-      // if they have supplied a directory with an
-      // ending slash, then use the previous start
-      if (i != name.size () - 1)
-        start = i + 1;
+      break;
     }
+    --start;
   }
 
   // return the substring from 0 with start number of elements
-  return name.substr (0, start);
+  return name.substr (start, name.size () - start);
 }
 
+std::string
+extract_path (const std::string & name)
+{
+  std::string result;
+
+  const char * c_result = ACE::dirname (name.c_str ());
+  if (c_result)
+    result = c_result;
+
+  return result;
+}
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
@@ -313,6 +346,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     return -1;
 
   }
+
+  working_dir = extract_path (tests_file);
 
   // read the file
   TiXmlDocument doc (tests_file);
@@ -349,6 +384,59 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     // only load globals from the file if they were not
     // supplied via command line (command line has highest priority)
 
+    if (!stdout_set)
+    {
+      // check for stdout redirect
+      element = el_globals->FirstChildElement ("stdout");
+      if (element && element->GetText ())
+      {
+        // expand the string for environment variables, then clean the path up
+        std::string value (Madara::Utility::clean_dir_name (
+          Madara::Utility::expand_envs (element->GetText ())));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
+             value.c_str ()));
+
+        freopen (value.c_str (),"w", stdout);
+      }
+    }
+
+    if (!stderr_set)
+    {
+      // check for stderr redirect
+      element = el_globals->FirstChildElement ("stderr");
+      if (element && element->GetText ())
+      {
+        // expand the string for environment variables, then clean the path up
+        std::string value (Madara::Utility::clean_dir_name (
+          Madara::Utility::expand_envs (element->GetText ())));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
+             value.c_str ()));
+
+        freopen (value.c_str (),"w", stderr);
+      }
+    }
+
+    if (!stdin_set)
+    {
+      // check for stdin redirect
+      element = el_globals->FirstChildElement ("stdin");
+      if (element && element->GetText ())
+      {
+        // expand the string for environment variables, then clean the path up
+        std::string value (Madara::Utility::clean_dir_name (
+          Madara::Utility::expand_envs (element->GetText ())));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
+          value.c_str ()));
+
+        freopen (value.c_str (),"r", stdin);
+      }
+    }
     if (!id_set)
     {
       element = el_globals->FirstChildElement ("id");
@@ -616,40 +704,125 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   size_t cur = 0;
 
-  for (cur = 0, element = el_tests->FirstChildElement ("process");
-        element; element = element->NextSiblingElement ("process"), ++cur);
+
+  // count the processes we should be spawning
+  for (element = el_tests->FirstChildElement ();
+        element; element = element->NextSiblingElement ())
+  {
+    std::string type = element->Value ();
+    if (type == "process" || type == "group")
+      ++cur;
+  }
 
   ACE_DEBUG ((LM_DEBUG, 
     "KATS_BATCH:  %d processes found in %s...\n", cur, tests_file.c_str ()));
 
   //processes.reserve (cur);
-  processes.resize (cur);
+  processes.resize (cur + 1);
 
   ACE_High_Res_Timer timer;
 
   timer.start ();
 
-  for (cur = 0, element = el_tests->FirstChildElement ("process");
-        element; element = element->NextSiblingElement ("process"), ++cur)
+  for (cur = 0, element = el_tests->FirstChildElement ();
+        element; element = element->NextSiblingElement ())
   {
-    ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Grabbing a process...\n"));
-    KATS_Process process;
-
-    TiXmlElement * el_temp2 = element->FirstChildElement ("executable");
-    
-    // if the file didn't have an executable for an individual test
-    // then let them know about the problem
-    if (!el_temp2 || !el_temp2->GetText ())
+    std::string type = element->Value ();
+    if (type != "process" && type != "group")
     {
-      ACE_DEBUG ((LM_INFO, 
-        "KATS_BATCH:    Each test must have an <executable>\n"));
-      return -3;
+      continue;
     }
 
-    // set the executable
-    processes[cur].set_executable (Madara::Utility::expand_envs (
-      el_temp2->GetText ()));
+    TiXmlElement * el_temp2 = 0;
+
+    if (type == "process")
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Processing a process...\n"));
+
+      el_temp2 = element->FirstChildElement ("executable");
+      
+      // if the file didn't have an executable for an individual test
+      // then let them know about the problem
+      if (!el_temp2 || !el_temp2->GetText ())
+      {
+        ACE_DEBUG ((LM_INFO, 
+          "KATS_BATCH:    Each test must have an <executable>\n"));
+        return -3;
+      }
+
+      // expand the string for environment variables, then clean the path up
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (el_temp2->GetText ())));
+
+      // set the executable
+      processes[cur].set_executable (value);
+
+    }
+    else if (type == "group")
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Processing a process group...\n"));
+
+      if (element->Attribute ("file"))
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:      File is set to %s...\n",
+          element->Attribute ("file")));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:      XML dir is set to %s...\n",
+          working_dir.c_str ()));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:      dirname of file is %s...\n",
+          ACE::dirname (element->Attribute ("file"))));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:      basename of file is %s...\n",
+          ACE::basename (element->Attribute ("file"))));
+
+        std::stringstream buffer;
+
+        if ("." == extract_path (
+          Madara::Utility::expand_envs (element->Attribute ("file"))))
+        {
+          // build up a file string
+          buffer << working_dir;
+          buffer << "/";
+          buffer << element->Attribute ("file");
+        }
+        else
+        {
+          buffer << element->Attribute ("file");
+        }
+
+        // expand the string for environment variables, then clean the path up
+        std::string final_file (Madara::Utility::clean_dir_name (
+                      Madara::Utility::expand_envs (buffer.str ())));
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:      expanded file is set to %s...\n",
+          final_file.c_str ()));
+
+        if (final_file != "")
+        {
+          processes[cur].kats_type ("group");
+          processes[cur].set_file (final_file);
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:      Read group file = %s from process group file\n",
+            final_file.c_str ()));
+        }
+        else
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:      Process group did not have valid group file\n"
+            ));
+        }
+
+      } // if name element existed
+    }
+    //KATS_Process process;
 
     // do we have a barrier name?
     TiXmlElement * el_temp1 = element->FirstChildElement ("barrier");
@@ -698,7 +871,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read host = %s from process group file\n",
+        "KATS_BATCH:    Read processes = %s from process group file\n",
            el_temp1->GetText ()));
       processes[cur].set_processes (Madara::Utility::expand_envs (
          el_temp1->GetText ()));
@@ -741,33 +914,46 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     el_temp1 = element->FirstChildElement ("stdout");
     if (el_temp1 && el_temp1->GetText ())
     {
+      // expand the string for environment variables, then clean the path up
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (el_temp1->GetText ())));
+
       ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
-           el_temp1->GetText ()));
+           value.c_str ()));
+
       processes[cur].set_stdout (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+        value.c_str ()));
     }
 
     // check for stderr redirect
     el_temp1 = element->FirstChildElement ("stderr");
     if (el_temp1 && el_temp1->GetText ())
     {
+      // expand the string for environment variables, then clean the path up
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (el_temp1->GetText ())));
+
       ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
-           el_temp1->GetText ()));
+           value.c_str ()));
       processes[cur].set_stderr (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+        value.c_str ()));
     }
 
     // check for stderr redirect
     el_temp1 = element->FirstChildElement ("stdin");
     if (el_temp1 && el_temp1->GetText ())
     {
+      // expand the string for environment variables, then clean the path up
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (el_temp1->GetText ())));
+
       ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
-           el_temp1->GetText ()));
+        value.c_str ()));
       processes[cur].set_stdin (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+        value.c_str ()));
     }
 
     // check the precondition
@@ -796,11 +982,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     el_temp1 = element->FirstChildElement ("commandline");
     if (el_temp1 && el_temp1->GetText ())
     {
+      // expand the string for environment variables, then clean the path up
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (el_temp1->GetText ())));
+
       ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Read commandline = %s from process group file\n",
-           el_temp1->GetText ()));
+          value.c_str ()));
       processes[cur].set_commandline (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+        value.c_str ()));
     }
 
     // kill may be a nested element, e.g. the following:
@@ -848,11 +1038,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     el_temp1 = element->FirstChildElement ("workingdir");
     if (el_temp1 && el_temp1->GetText ())
     {
+      // expand the string for environment variables, then clean the path up
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (el_temp1->GetText ())));
+
       ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Read workingdir = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_workingdir (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+        value.c_str ()));
+
+      processes[cur].set_workingdir (value);
     }
 
     // check the settings that are overridable from command line
@@ -860,14 +1054,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (realtime || element->FirstChildElement ("realtime"))
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Enabling real time scheduling\n"));
+        "KATS_BATCH:    Enabling real time scheduling in process\n"));
       processes[cur].enable_realtime (); 
     }
 
     if (debug_printing ||  element->FirstChildElement ("debug"))
     {
       ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Enabling real time scheduling\n"));
+        "KATS_BATCH:    Enabling debug printing in process\n"));
       processes[cur].enable_debug ();
     }
 
@@ -960,6 +1154,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         processes[cur].terminate ();
       }
     }
+    ++cur;
   }
 
   if (run_in_parallel)
@@ -1036,30 +1231,39 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case '0':
       // redirecting stdout
 
-      freopen (cmd_opts.opt_arg (), "r", stdin);
+      freopen (Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str (),
+               "r", stdin);
+
+      stdin_set = true;
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         DLINFO "KATS_PROCESS: stdin redirected from %s\n",
-        cmd_opts.opt_arg ()));
+        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ())));
 
       break;
     case '1':
       // redirecting stdout
 
-      freopen (cmd_opts.opt_arg (), "w", stdout);
+      freopen (Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str (),
+               "w", stdout);
+
+      stdout_set = true;
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         DLINFO "KATS_PROCESS: stdout redirected to %s\n",
-        cmd_opts.opt_arg ()));
+        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ())));
 
       break;
     case '2':
       // redirecting stderr
-      freopen (cmd_opts.opt_arg (), "w", stderr);
+      freopen (Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str (),
+               "w", stderr);
+
+      stderr_set = true;
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         DLINFO "KATS_PROCESS: stderr redirected to %s\n",
-        cmd_opts.opt_arg ()));
+        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ())));
 
       break;
     case 'a':
@@ -1097,7 +1301,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'f':
       // the knowledge domain
 
-      tests_file = cmd_opts.opt_arg ();
+      tests_file = Madara::Utility::clean_dir_name (cmd_opts.opt_arg ());
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         "KATS_BATCH:  reading tests from %s.\n",

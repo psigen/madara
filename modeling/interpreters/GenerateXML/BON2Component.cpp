@@ -49,9 +49,13 @@
 namespace BON
 {
 
-
-  bool Comparison (KATS_BON::Process & lhs,
-    KATS_BON::Process & rhs)
+  /**
+   * Comparison for derived classes of Ordered
+   * @param   lhs   left hand side argument
+   * @param   rhs   right hand side argument
+   **/
+  bool Comparison (KATS_BON::Ordered & lhs,
+    KATS_BON::Ordered & rhs)
   {
     return (lhs->getOrder () < rhs->getOrder ());
   }
@@ -113,6 +117,26 @@ void Component::invoke( Project& project, const std::set<FCO>& setModels, long l
 		if ( m_bIsInteractive )
 			AfxMessageBox("This BON2 Component does not support the obsolete invoke mechanism!");
 	#endif
+}
+
+void Component::process_group_ref (KATS_BON::GroupRef & current,
+                                 TiXmlElement & parent)
+{
+  KATS_BON::Group group = current->getGroup ();
+
+  // if the user has actually redirect pasted a group into this ref,
+  // then create a new xml element
+  if (group.getCounted (false))
+  {
+    TiXmlElement element ("group");
+    std::stringstream buffer;
+    buffer << group->getName ();
+    buffer << ".xml";
+
+    element.SetAttribute ("file", buffer.str ());
+
+    parent.InsertEndChild (element);
+  }
 }
 
 void Component::process_process (KATS_BON::Process & current,
@@ -631,23 +655,32 @@ void Component::process_process_group (KATS_BON::Group & current)
 
   // iterate through all of the processes
 
-  std::set <KATS_BON::Process> processes = current->getProcess ();
+  std::set <KATS_BON::Ordered> ordereds = current->getOrdered ();
 
-  std::vector <KATS_BON::Process> ordered_processes;
+  std::vector <KATS_BON::Ordered> sorted_candidates;
 
-  for (std::set <KATS_BON::Process>::iterator process_i = processes.begin ();
-                        process_i != processes.end (); ++process_i)
+  for (std::set <KATS_BON::Ordered>::iterator ordered_i = ordereds.begin ();
+                        ordered_i != ordereds.end (); ++ordered_i)
   {
     //process_process (*process_i, xml_group);
-    ordered_processes.push_back (*process_i);
+    if ((*ordered_i)->isEnabled ())
+      sorted_candidates.push_back (*ordered_i);
   }
 
-  std::sort (ordered_processes.begin (), ordered_processes.end (),
+  std::sort (sorted_candidates.begin (), sorted_candidates.end (),
     Comparison);
 
-  for (size_t i = 0; i < ordered_processes.size (); ++i)
-    process_process (ordered_processes[i], xml_group);
+  for (size_t i = 0; i < sorted_candidates.size (); ++i)
+  {
+    // is this a Process?
+    KATS_BON::Process process = sorted_candidates[i];
+    KATS_BON::GroupRef group_ref = sorted_candidates[i];
 
+    if (process.getCounted (false))
+      process_process (process, xml_group);
+    else if (group_ref.getCounted (false))
+      process_group_ref (group_ref, xml_group);
+  }
   // check our host information
   //std::set<KATS_BON::HostRef>::iterator i = group->getHostRef ().begin ();
   //if (i != group->getHostRef ().end ())

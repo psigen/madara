@@ -62,6 +62,8 @@ class Component
     
     void process_process (KATS_BON::Process & process,
                           TiXmlElement & parent);
+    void process_group_ref (KATS_BON::GroupRef & group_ref,
+                          TiXmlElement & parent);
     void process_process_group (KATS_BON::Group & group);
     void process_processes_folder (KATS_BON::Processes & process_folder);
 		void invoke( Project& project, const std::set<FCO>& setModels, long lParam );

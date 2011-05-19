@@ -81,7 +81,25 @@ bool KATSVisitor::visitDomainRef( const KATS_BON::DomainRef& object )
 }
 
 
+bool KATSVisitor::visitGroupRef( const KATS_BON::GroupRef& object )
+{
+	if ( !object)
+		return false;
+
+	return true;
+}
+
+
 bool KATSVisitor::visitHostRef( const KATS_BON::HostRef& object )
+{
+	if ( !object)
+		return false;
+
+	return true;
+}
+
+
+bool KATSVisitor::visitOrdered( const KATS_BON::Ordered& object )
 {
 	if ( !object)
 		return false;
