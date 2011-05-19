@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!DOCTYPE paradigm SYSTEM "edf.dtd">
+
+<paradigm name="KATS" version="0.3.0" guid="{843FAB4F-DE02-46F6-89C6-39A2A6BEF8F4}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+
+	<comment></comment>
+
+	<author>James Edmondson</author>
+
+	<folder name = "RootFolder" metaref = "1000"  subfolders = "Barriers Domains Hosts Processes" rootobjects = "Barrier Domain Host" >
+		<attrdef name="CommandLine" metaref = "1001" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Add command line arguments?"></regnode>
+		</attrdef>
+		<attrdef name="Debug" metaref = "1002" valuetype = "boolean" defvalue = "false">
+			<regnode name="help" value = "Print Madara debug messages?"></regnode>
+		</attrdef>
+		<attrdef name="Delay" metaref = "1003" valuetype = "integer" defvalue = "0">
+			<regnode name="help" value = "Seconds to delay after barrier and precondition?"></regnode>
+		</attrdef>
+		<attrdef name="Enabled" metaref = "1099" valuetype = "boolean" defvalue = "true">
+			<regnode name="help" value = "Generate in XML?"></regnode>
+		</attrdef>
+		<attrdef name="Executable" metaref = "1004" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Which program to execute?"></regnode>
+		</attrdef>
+		<attrdef name="Id" metaref = "1005" valuetype = "integer" defvalue = "">
+			<regnode name="help" value = "Id of this test? This should be within 0..Processes-1"></regnode>
+		</attrdef>
+		<attrdef name="Order" metaref = "1093" valuetype = "integer" defvalue = "0">
+			<regnode name="help" value = "Where does this process rank in the process sequence?"></regnode>
+		</attrdef>
+		<attrdef name="Override" metaref = "1089" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Overrides the component name and allows for spaces, punctuation, etc."></regnode>
+		</attrdef>
+		<attrdef name="Parallel" metaref = "1006" valuetype = "boolean" defvalue = "false">
+			<regnode name="help" value = "Run tests in parallel?"></regnode>
+		</attrdef>
+		<attrdef name="Postcondition" metaref = "1007" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "KaRL expression to evaluate after test finishes?"></regnode>
+		</attrdef>
+		<attrdef name="Precondition" metaref = "1008" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "KaRL expression to wait to become non-zero before test runs?"></regnode>
+		</attrdef>
+		<attrdef name="Processes" metaref = "1009" valuetype = "integer" defvalue = "1">
+			<regnode name="help" value = "Number of processes participating in the barrier"></regnode>
+		</attrdef>
+		<attrdef name="Realtime" metaref = "1010" valuetype = "boolean" defvalue = "false">
+			<regnode name="help" value = "Enable realtime scheduling for this and all spawned processes?"></regnode>
+		</attrdef>
+		<attrdef name="Signal" metaref = "1011" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "What signal should be used to kill the test?"></regnode>
+		</attrdef>
+		<attrdef name="Stderr" metaref = "1012" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Redirect stderr to a file?"></regnode>
+		</attrdef>
+		<attrdef name="Stdin" metaref = "1013" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Redirect stdin from a file?"></regnode>
+		</attrdef>
+		<attrdef name="Stdout" metaref = "1014" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Redirect stdout to a file?"></regnode>
+		</attrdef>
+		<attrdef name="Time" metaref = "1015" valuetype = "integer" defvalue = "">
+			<regnode name="help" value = "How many seconds before killing the test?"></regnode>
+		</attrdef>
+		<attrdef name="WorkingDir" metaref = "1090" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "What should the working directory be?"></regnode>
+		</attrdef>
+		<atom name = "Barrier" metaref = "1076"  attributes = "Override">
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="barrier.gif"></regnode>
+		</atom>
+		<atom name = "Domain" metaref = "1016"  attributes = "Override">
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="domain.jpg"></regnode>
+		</atom>
+		<atom name = "Host" metaref = "1082"  attributes = "Override">
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="host.jpg"></regnode>
+		</atom>
+		<atom name = "Kill" metaref = "1038"  attributes = "Time Signal">
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kill.gif"></regnode>
+		</atom>
+		<reference name = "BarrierRef" metaref = "1077">
+			<dispname>Barrier Name</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+			<regnode name = "isTypeShown" value ="true"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Barrier"></pointeritem>
+			</pointerspec>
+		</reference>
+		<reference name = "DomainRef" metaref = "1018">
+			<dispname>Domain</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+			<regnode name = "isTypeShown" value ="true"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Domain"></pointeritem>
+			</pointerspec>
+		</reference>
+		<reference name = "GroupRef" metaref = "1096" attributes = "Order Enabled">
+				<regnode name = "namePosition" value ="4"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Group"></pointeritem>
+			</pointerspec>
+		</reference>
+		<reference name = "HostRef" metaref = "1083">
+			<dispname>Host Name</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+			<regnode name = "isTypeShown" value ="true"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Host"></pointeritem>
+			</pointerspec>
+		</reference>
+		<model name = "Group" metaref = "1058" attributes = "Debug Parallel Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Stderr" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="buttongroup.jpg"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "BarrierRef" metaref = "1078" kind = "BarrierRef"></role>
+			<role name = "DomainRef" metaref = "1059" kind = "DomainRef"></role>
+			<role name = "Group" metaref = "1094" kind = "Group"></role>
+			<role name = "GroupRef" metaref = "1097" kind = "GroupRef"></role>
+			<role name = "HostRef" metaref = "1084" kind = "HostRef"></role>
+			<role name = "Kill" metaref = "1091" kind = "Kill"></role>
+			<role name = "Process" metaref = "1060" kind = "Process"></role>
+			<aspect name = "Configuration" metaref = "1062" attributes = "Debug Parallel Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Stderr" >
+				<part metaref = "1079" role = "BarrierRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1063" role = "DomainRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1098" role = "GroupRef" primary = "yes" kindaspect = "Configuration" linked = "no"></part>
+				<part metaref = "1087" role = "HostRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1092" role = "Kill" primary = "yes" linked = "no"></part>
+				<part metaref = "1064" role = "Process" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Process" metaref = "1066" attributes = "Debug Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Order Enabled Executable Stderr CommandLine WorkingDir" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="blue_play.jpg"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "BarrierRef" metaref = "1080" kind = "BarrierRef"></role>
+			<role name = "DomainRef" metaref = "1067" kind = "DomainRef"></role>
+			<role name = "HostRef" metaref = "1085" kind = "HostRef"></role>
+			<role name = "Kill" metaref = "1068" kind = "Kill"></role>
+			<aspect name = "Configuration" metaref = "1070" attributes = "Debug Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Order Enabled Executable Stderr CommandLine WorkingDir" >
+				<part metaref = "1081" role = "BarrierRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1071" role = "DomainRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1088" role = "HostRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1072" role = "Kill" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<folder name = "Barriers" metaref = "1043"  rootobjects = "Barrier" >
+		</folder>
+		<folder name = "Domains" metaref = "1044"  rootobjects = "Domain" >
+		</folder>
+		<folder name = "Hosts" metaref = "1086"  rootobjects = "Host" >
+		</folder>
+		<folder name = "Processes" metaref = "1074"  rootobjects = "Group" >
+		</folder>
+	</folder>
+</paradigm>
