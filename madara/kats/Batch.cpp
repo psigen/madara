@@ -1253,7 +1253,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         DLINFO "KATS_PROCESS: stdin redirected from %s\n",
-        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ())));
+        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
 
       break;
     case '1':
@@ -1266,7 +1266,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         DLINFO "KATS_PROCESS: stdout redirected to %s\n",
-        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ())));
+        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
 
       break;
     case '2':
@@ -1278,7 +1278,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
         DLINFO "KATS_PROCESS: stderr redirected to %s\n",
-        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ())));
+        Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
 
       break;
     case 'a':
