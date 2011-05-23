@@ -14,10 +14,13 @@ namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, BarriersImpl, Bar
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, DomainsImpl, Domains ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, HostsImpl, Hosts ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, ProcessesImpl, Processes ); }
+namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::Model, ProcessBaseImpl, ProcessBase ); }
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, OrderedImpl, Ordered ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( BON::Model, Ordered, ProcessImpl, Process ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION( ProcessBase, GroupImpl, Group ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ObserverImpl, Observer ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ProcessImpl, Process ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, SleepImpl, Sleep ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION2( BON::Reference, Ordered, GroupRefImpl, GroupRef ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Model, GroupImpl, Group ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, BarrierImpl, Barrier ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, DomainImpl, Domain ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, HostImpl, Host ); }
@@ -124,6 +127,57 @@ public:
 namespace KATS_BON
 {
 //*******************************************************************
+//   C  L  A  S  S   ProcessBaseImpl
+//*******************************************************************
+class ProcessBaseImpl :
+	  virtual public BON::ModelImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
+	//
+	// attribute getters and setters
+	virtual long        getDelay() ;
+	virtual long        getId() ;
+	virtual std::string getPostcondition() ;
+	virtual std::string getPrecondition() ;
+	virtual long        getProcesses() ;
+	virtual std::string getStderr() ;
+	virtual std::string getStdin() ;
+	virtual std::string getStdout() ;
+	virtual std::string getWorkingDir() ;
+	virtual bool        isDebug() ;
+	virtual bool        isRealtime() ;
+	virtual void        setDebug( bool val);
+	virtual void        setDelay( const long val);
+	virtual void        setId( const long val);
+	virtual void        setPostcondition( const std::string& val);
+	virtual void        setPrecondition( const std::string& val);
+	virtual void        setProcesses( const long val);
+	virtual void        setRealtime( bool val);
+	virtual void        setStderr( const std::string& val);
+	virtual void        setStdin( const std::string& val);
+	virtual void        setStdout( const std::string& val);
+	virtual void        setWorkingDir( const std::string& val);
+	//
+	// kind and role getters
+	virtual std::set<KATS_BON::BarrierRef>  getBarrierRef();
+	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
+	virtual std::set<KATS_BON::HostRef>     getHostRef();
+	virtual std::set<KATS_BON::Kill>        getKill();
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
 //   C  L  A  S  S   OrderedImpl
 //*******************************************************************
 class OrderedImpl :
@@ -151,10 +205,65 @@ public:
 namespace KATS_BON
 {
 //*******************************************************************
+//   C  L  A  S  S   GroupImpl
+//*******************************************************************
+class GroupImpl :
+	  public ProcessBaseImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
+	//
+	// attribute getters and setters
+	virtual bool        isParallel() ;
+	virtual void        setParallel( bool val);
+	//
+	// kind and role getters
+	virtual std::set<KATS_BON::Group>       getGroup();
+	virtual std::set<KATS_BON::GroupRef>    getGroupRef();
+	virtual std::set<KATS_BON::Observer>    getObserver();
+	virtual std::set<KATS_BON::Ordered>     getOrdered();
+	virtual std::set<KATS_BON::Process>     getProcess();
+	virtual std::set<KATS_BON::Sleep>       getSleep();
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
+//   C  L  A  S  S   ObserverImpl
+//*******************************************************************
+class ObserverImpl :
+	  public ProcessBaseImpl
+	, public OrderedImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
 //   C  L  A  S  S   ProcessImpl
 //*******************************************************************
 class ProcessImpl :
-	  virtual public BON::ModelImpl
+	  public ProcessBaseImpl
 	, public OrderedImpl
 {
 public:
@@ -165,37 +274,31 @@ public:
 	//
 	// attribute getters and setters
 	virtual std::string getCommandLine() ;
-	virtual long        getDelay() ;
 	virtual std::string getExecutable() ;
-	virtual long        getId() ;
-	virtual std::string getPostcondition() ;
-	virtual std::string getPrecondition() ;
-	virtual long        getProcesses() ;
-	virtual std::string getStderr() ;
-	virtual std::string getStdin() ;
-	virtual std::string getStdout() ;
-	virtual std::string getWorkingDir() ;
-	virtual bool        isDebug() ;
-	virtual bool        isRealtime() ;
 	virtual void        setCommandLine( const std::string& val);
-	virtual void        setDebug( bool val);
-	virtual void        setDelay( const long val);
 	virtual void        setExecutable( const std::string& val);
-	virtual void        setId( const long val);
-	virtual void        setPostcondition( const std::string& val);
-	virtual void        setPrecondition( const std::string& val);
-	virtual void        setProcesses( const long val);
-	virtual void        setRealtime( bool val);
-	virtual void        setStderr( const std::string& val);
-	virtual void        setStdin( const std::string& val);
-	virtual void        setStdout( const std::string& val);
-	virtual void        setWorkingDir( const std::string& val);
-	//
-	// kind and role getters
-	virtual std::set<KATS_BON::BarrierRef>  getBarrierRef();
-	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
-	virtual std::set<KATS_BON::HostRef>     getHostRef();
-	virtual std::set<KATS_BON::Kill>        getKill();
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
+//   C  L  A  S  S   SleepImpl
+//*******************************************************************
+class SleepImpl :
+	  public ProcessBaseImpl
+	, public OrderedImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
 
 	///BUP
 	// add your own members here
@@ -221,61 +324,6 @@ public:
 	//
 	// ref getters
 	virtual KATS_BON::Group                 getGroup();
-
-	///BUP
-	// add your own members here
-	///EUP
-}; // class
-}  // namespace
-
-
-namespace KATS_BON
-{
-//*******************************************************************
-//   C  L  A  S  S   GroupImpl
-//*******************************************************************
-class GroupImpl :
-	  virtual public BON::ModelImpl
-{
-public:
-	virtual void        initialize() { };
-	virtual void        finalize() { };
-	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
-
-	//
-	// attribute getters and setters
-	virtual long        getDelay() ;
-	virtual long        getId() ;
-	virtual std::string getPostcondition() ;
-	virtual std::string getPrecondition() ;
-	virtual long        getProcesses() ;
-	virtual std::string getStderr() ;
-	virtual std::string getStdin() ;
-	virtual std::string getStdout() ;
-	virtual bool        isDebug() ;
-	virtual bool        isParallel() ;
-	virtual bool        isRealtime() ;
-	virtual void        setDebug( bool val);
-	virtual void        setDelay( const long val);
-	virtual void        setId( const long val);
-	virtual void        setParallel( bool val);
-	virtual void        setPostcondition( const std::string& val);
-	virtual void        setPrecondition( const std::string& val);
-	virtual void        setProcesses( const long val);
-	virtual void        setRealtime( bool val);
-	virtual void        setStderr( const std::string& val);
-	virtual void        setStdin( const std::string& val);
-	virtual void        setStdout( const std::string& val);
-	//
-	// kind and role getters
-	virtual std::set<KATS_BON::BarrierRef>  getBarrierRef();
-	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
-	virtual std::set<KATS_BON::Group>       getGroup();
-	virtual std::set<KATS_BON::GroupRef>    getGroupRef();
-	virtual std::set<KATS_BON::HostRef>     getHostRef();
-	virtual std::set<KATS_BON::Kill>        getKill();
-	virtual std::set<KATS_BON::Ordered>     getOrdered();
-	virtual std::set<KATS_BON::Process>     getProcess();
 
 	///BUP
 	// add your own members here

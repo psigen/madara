@@ -1,0 +1,1355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "mga.dtd">
+
+<project guid="{EB300869-216C-4E24-BE96-F3FE01A7A448}" cdate="Sun May 22 14:26:18 2011" mdate="Sun May 22 14:26:18 2011" version="" metaguid="{843FAB4F-DE02-46F6-89C6-39A2A6BEF8F4}" metaversion="0.3.0" metaname="KATS">
+	<name>RootFolder</name>
+	<comment></comment>
+	<author></author>
+	<folder id="id-006a-00000001" relid="0x1" childrelidcntr="0x2" kind="RootFolder" guid="{4041e6e7-ae26-4e6b-9a0e-d8dfc7fb14f6}">
+		<name>RootFolder</name>
+		<folder id="id-006a-00000002" relid="0x1" childrelidcntr="0x2" kind="Barriers" guid="{34506e42-fcc6-4b16-80ef-997197161e00}">
+			<name>barriers</name>
+			<atom id="id-0066-00000001" kind="Barrier" guid="{d5b8e428-1020-4198-98ac-5ee6a0f6d078}" relid="0x1">
+				<name>timeouts_five</name>
+				<attribute kind="Override" status="meta">
+					<value></value>
+				</attribute>
+			</atom>
+			<atom id="id-0066-00000002" kind="Barrier" guid="{58827a37-3f97-4241-be36-1796b2d3eae1}" relid="0x2">
+				<name>timeouts_ten</name>
+				<attribute kind="Override" status="meta">
+					<value></value>
+				</attribute>
+			</atom>
+		</folder>
+		<folder id="id-006a-00000003" relid="0x2" childrelidcntr="0x5" kind="Processes" guid="{b89545eb-179a-4d27-80bd-9c5aece08a6d}">
+			<name>tests</name>
+			<model id="id-0065-00000001" kind="Group" guid="{4c482edd-6e6e-4656-baf1-460a9aa61189}" relid="0x1" childrelidcntr="0x7">
+				<name>FiveTimeouts_Parallel</name>
+				<attribute kind="Debug" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Delay" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Id" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Parallel">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Postcondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Precondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Processes" status="meta">
+					<value>1</value>
+				</attribute>
+				<attribute kind="Realtime" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Stderr">
+					<value>$(RESULTS)/FiveTimeouts_Parallel.out</value>
+				</attribute>
+				<attribute kind="Stdin" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Stdout">
+					<value>$(RESULTS)/FiveTimeouts_Parallel.err</value>
+				</attribute>
+				<model id="id-0065-00000005" kind="Process" role="Process" guid="{c6a5c160-2db5-42e5-bd13-76a830170c04}" relid="0x1" childrelidcntr="0x1">
+					<name>timeout1</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>51,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>1</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_timeout1.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_timeout1.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000001" kind="BarrierRef" role="BarrierRef" guid="{34e99631-ecb9-4462-b99f-86f3475a12ec}" relid="0x1" referred="id-0066-00000001">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000007" kind="Process" role="Process" guid="{78cbf0d4-322c-4694-b8be-f321046e2b86}" relid="0x2" childrelidcntr="0x1">
+					<name>timeout5</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>590,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>4</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>5</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_timeout5.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_timeout5.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000002" kind="BarrierRef" role="BarrierRef" guid="{d9f7ced0-e204-44e4-8a7c-98b694b69024}" relid="0x1" referred="id-0066-00000001">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000008" kind="Process" role="Process" guid="{b421ede1-3d92-49f2-92d7-ec58b7e9b1ba}" relid="0x3" childrelidcntr="0x1">
+					<name>timeout2</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>177,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>1</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>2</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_timeout2.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_timeout2.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000003" kind="BarrierRef" role="BarrierRef" guid="{74d4ae5c-f4a9-4143-a001-e74caabf7704}" relid="0x1" referred="id-0066-00000001">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000009" kind="Process" role="Process" guid="{5f77e5d2-6516-44c2-9d86-6b13be6cf132}" relid="0x4" childrelidcntr="0x1">
+					<name>timeout3</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>310,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>2</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>3</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_timeout3.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_timeout3.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000004" kind="BarrierRef" role="BarrierRef" guid="{081809d7-e71b-4c60-8949-ead01f735f24}" relid="0x1" referred="id-0066-00000001">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-0000000a" kind="Process" role="Process" guid="{3c8ecea7-792c-4dcd-b09f-4c2c60c779be}" relid="0x5" childrelidcntr="0x1">
+					<name>timeout4</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>450,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>3</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>4</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_timeout4.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_timeout4.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000005" kind="BarrierRef" role="BarrierRef" guid="{ed0e5877-20ac-486b-a9f2-e177d31835d1}" relid="0x1" referred="id-0066-00000001">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000015" kind="Process" role="Process" guid="{c4c44609-e8b4-4bba-87de-1582df01dc6d}" relid="0x6" childrelidcntr="0x1">
+					<name>Observer</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>51,208</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>-g -l 5</value>
+					</attribute>
+					<attribute kind="Debug">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>$(MADARA_ROOT)/bin/kats_observer</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>5</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_observer.err</value>
+					</attribute>
+					<attribute kind="Stdin">
+						<value>$(MADARA_ROOT)/modeling/tests/input/observer_thirty.stdin</value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_observer.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+				</model>
+				<atom id="id-0066-00000003" kind="Kill" role="Kill" guid="{81644e8d-51c3-4247-86e2-64f5588820d7}" relid="0x7">
+					<name>Kill</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>209,223</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Signal" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Time">
+						<value>90</value>
+					</attribute>
+				</atom>
+			</model>
+			<model id="id-0065-00000002" kind="Group" guid="{4efb3482-c6cc-4a14-affd-3cca3944c8a9}" relid="0x2" childrelidcntr="0xa">
+				<name>TenTimeouts_Parallel</name>
+				<attribute kind="Debug" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Delay" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Id" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Parallel">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Postcondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Precondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Processes" status="meta">
+					<value>1</value>
+				</attribute>
+				<attribute kind="Realtime" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Stderr">
+					<value>$(RESULTS)/TenTimeouts_Parallel.err</value>
+				</attribute>
+				<attribute kind="Stdin" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Stdout">
+					<value>$(RESULTS)/TenTimeouts_Parallel.out</value>
+				</attribute>
+				<model id="id-0065-0000000b" kind="Process" role="Process" guid="{856ed1f4-5c00-46aa-9046-2c9c8d500544}" relid="0x1" childrelidcntr="0x1">
+					<name>timeout4</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>436,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>3</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>4</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout4.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout4.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000007" kind="BarrierRef" role="BarrierRef" guid="{26b788e5-6678-4b5e-911b-9e5e6e5d1520}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-0000000c" kind="Process" role="Process" guid="{005ad568-c754-4762-aeeb-6b61b292ca7b}" relid="0x2" childrelidcntr="0x1">
+					<name>timeout3</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>310,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>2</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>3</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout3.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout3.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000008" kind="BarrierRef" role="BarrierRef" guid="{abfb6c1d-b9c8-47de-9592-8845b673cd8d}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-0000000d" kind="Process" role="Process" guid="{e780a76d-58e6-4367-a76c-75c46b12caba}" relid="0x3" childrelidcntr="0x1">
+					<name>timeout2</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>177,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>1</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>2</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout2.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout2.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000009" kind="BarrierRef" role="BarrierRef" guid="{0fea403b-de9c-4d4c-9bc8-ddf865e9863b}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-0000000e" kind="Process" role="Process" guid="{a1f7e9a6-3fae-4241-bbdc-71895568ffea}" relid="0x4" childrelidcntr="0x1">
+					<name>timeout5</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>576,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>4</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>5</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout5.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout5.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000000a" kind="BarrierRef" role="BarrierRef" guid="{58b4e026-5aa6-4c57-8410-6b2f538ad7f8}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-0000000f" kind="Process" role="Process" guid="{c22b0933-b979-43ff-a980-1c0855d02a84}" relid="0x5" childrelidcntr="0x1">
+					<name>timeout1</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>51,47</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>1</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout1.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout1.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000000b" kind="BarrierRef" role="BarrierRef" guid="{54e8ed2b-1b31-4d6a-842c-9ac960178837}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000010" kind="Process" role="Process" guid="{2f3aa881-af51-43af-8035-c03070709855}" relid="0x6" childrelidcntr="0x1">
+					<name>timeout7</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>177,159</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>7</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout7.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout7.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000000c" kind="BarrierRef" role="BarrierRef" guid="{b9aaec7d-0c72-4e98-b0eb-b0b38bc62b67}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000011" kind="Process" role="Process" guid="{d7abb61f-9f4f-472b-bd58-b52e08679470}" relid="0x7" childrelidcntr="0x1">
+					<name>timeout8</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>310,159</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>7</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>8</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout8.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout8.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000000d" kind="BarrierRef" role="BarrierRef" guid="{d2bb0635-5daa-4f96-9f88-f17514c9b7e8}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000012" kind="Process" role="Process" guid="{bc4c555a-aade-4ae5-bdee-5d3988815ac7}" relid="0x8" childrelidcntr="0x1">
+					<name>timeout9</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>436,159</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>8</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>9</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout9.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout9.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000000e" kind="BarrierRef" role="BarrierRef" guid="{d016ff0d-a95b-4561-a1f6-32fcc8daf7d2}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000013" kind="Process" role="Process" guid="{d28aea6f-0ebd-40a9-9d49-8a837101bf00}" relid="0x9" childrelidcntr="0x1">
+					<name>timeout10</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>576,159</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>9</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout10.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout10.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-0000000f" kind="BarrierRef" role="BarrierRef" guid="{d77647be-e20d-48b2-a7a3-8af753bfb805}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+				<model id="id-0065-00000014" kind="Process" role="Process" guid="{cb4d26ea-42ff-414c-98c6-830d16d11470}" relid="0xa" childrelidcntr="0x1">
+					<name>timeout6</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>51,159</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="CommandLine">
+						<value>/t 5</value>
+					</attribute>
+					<attribute kind="Debug" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Delay" status="meta">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Executable">
+						<value>timeout</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>5</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>10</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/ten_timeout6.err</value>
+					</attribute>
+					<attribute kind="Stdin" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/ten_timeout6.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+					<reference id="id-0067-00000010" kind="BarrierRef" role="BarrierRef" guid="{0cc6b3cf-2313-415a-a45c-8e31ed009850}" relid="0x1" referred="id-0066-00000002">
+						<name>BarrierRef</name>
+						<regnode name="PartRegs" status="undefined">
+							<value></value>
+							<regnode name="Configuration" status="undefined">
+								<value></value>
+								<regnode name="Position" isopaque="yes">
+									<value>103,26</value>
+								</regnode>
+							</regnode>
+						</regnode>
+					</reference>
+				</model>
+			</model>
+			<model id="id-0065-00000003" kind="Group" guid="{57758359-f7f2-4f30-a72f-9471fa867cc7}" relid="0x3" childrelidcntr="0x0">
+				<name>TwentyTimeouts</name>
+				<attribute kind="Debug" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Delay" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Id" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Parallel">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Postcondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Precondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Processes" status="meta">
+					<value>1</value>
+				</attribute>
+				<attribute kind="Realtime" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Stderr">
+					<value>$(RESULTS)/TwentyTimeouts_Parallel.err</value>
+				</attribute>
+				<attribute kind="Stdin" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Stdout">
+					<value>$(RESULTS)/TwentyTimeouts_Parallel.out</value>
+				</attribute>
+			</model>
+			<model id="id-0065-00000004" kind="Group" guid="{7bd8046c-5300-47c4-b849-fcb8c13a546a}" relid="0x4" childrelidcntr="0x0">
+				<name>FiftyTimeouts_Parallel</name>
+				<attribute kind="Debug" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Delay" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Id" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Parallel">
+					<value>true</value>
+				</attribute>
+				<attribute kind="Postcondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Precondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Processes" status="meta">
+					<value>1</value>
+				</attribute>
+				<attribute kind="Realtime" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Stderr">
+					<value>$(RESULTS)/FiftyTimeouts_Parallel.err</value>
+				</attribute>
+				<attribute kind="Stdin" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Stdout">
+					<value>$(RESULTS)/FiftyTimeouts_Parallel.out</value>
+				</attribute>
+			</model>
+			<model id="id-0065-00000006" kind="Group" guid="{2e3e318b-6c9a-47c0-9263-5829eff7a040}" relid="0x5" childrelidcntr="0x3">
+				<name>AllTests_Parallel</name>
+				<attribute kind="Debug" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Delay" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Id" status="meta">
+					<value>0</value>
+				</attribute>
+				<attribute kind="Parallel" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Postcondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Precondition" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Processes" status="meta">
+					<value>1</value>
+				</attribute>
+				<attribute kind="Realtime" status="meta">
+					<value>false</value>
+				</attribute>
+				<attribute kind="Stderr">
+					<value>$(RESULTS)/AllTests_Parallel.err</value>
+				</attribute>
+				<attribute kind="Stdin" status="meta">
+					<value></value>
+				</attribute>
+				<attribute kind="Stdout">
+					<value>$(RESULTS)/AllTests_Parallel.out</value>
+				</attribute>
+				<reference id="id-0067-00000006" kind="GroupRef" role="GroupRef" guid="{a6bdc3ab-e211-481a-abdb-bec8010f353b}" relid="0x1" referred="id-0065-00000001">
+					<name>FiveTimeouts</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>89,103</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Order" status="meta">
+						<value>0</value>
+					</attribute>
+				</reference>
+				<reference id="id-0067-00000011" kind="GroupRef" role="GroupRef" guid="{34f0dc1e-2c81-4afc-a206-4f343ec5f6a5}" relid="0x2" referred="id-0065-00000002">
+					<name>TenTimeouts</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>259,97</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>1</value>
+					</attribute>
+				</reference>
+			</model>
+		</folder>
+	</folder>
+</project>

@@ -91,3 +91,21 @@ project (Kats_Sleep) : using_kats, using_madara, using_ace {
   }
 }
 
+
+project (Kats_Observer) : using_kats, using_madara, using_ace {
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = kats_observer
+  
+  Build_Files {
+    Kats.mpc
+  }
+
+  Header_Files {
+    utility/Log_Macros.h
+  }
+
+  Source_Files {
+    kats/Observer.cpp
+  }
+}

@@ -62,6 +62,10 @@ class Component
     
     void process_process (KATS_BON::Process & process,
                           TiXmlElement & parent);
+    void process_sleep (KATS_BON::Sleep & sleep,
+                          TiXmlElement & parent);
+    void process_observer (KATS_BON::Observer & observer,
+                          TiXmlElement & parent);
     void process_group_ref (KATS_BON::GroupRef & group_ref,
                           TiXmlElement & parent);
     void process_process_group (KATS_BON::Group & group);

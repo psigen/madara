@@ -54,7 +54,34 @@ bool KATSVisitor::visitGroup( const KATS_BON::Group& object )
 }
 
 
+bool KATSVisitor::visitObserver( const KATS_BON::Observer& object )
+{
+	if ( !object)
+		return false;
+
+	return true;
+}
+
+
 bool KATSVisitor::visitProcess( const KATS_BON::Process& object )
+{
+	if ( !object)
+		return false;
+
+	return true;
+}
+
+
+bool KATSVisitor::visitProcessBase( const KATS_BON::ProcessBase& object )
+{
+	if ( !object)
+		return false;
+
+	return true;
+}
+
+
+bool KATSVisitor::visitSleep( const KATS_BON::Sleep& object )
 {
 	if ( !object)
 		return false;

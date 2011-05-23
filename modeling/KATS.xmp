@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="KATS" version="0.3.0" guid="{843FAB4F-DE02-46F6-89C6-39A2A6BEF8F4}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+<paradigm name="KATS" version="0.3.7" guid="{5EF78334-3A18-4B8E-8FB3-01D30BB23594}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
 
 	<comment></comment>
 
@@ -97,7 +97,7 @@
 				<pointeritem desc = "Domain"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "GroupRef" metaref = "1096" attributes = "Order Enabled">
+		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order">
 				<regnode name = "namePosition" value ="4"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Group"></pointeritem>
@@ -111,7 +111,7 @@
 				<pointeritem desc = "Host"></pointeritem>
 			</pointerspec>
 		</reference>
-		<model name = "Group" metaref = "1058" attributes = "Debug Parallel Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Stderr" >
+		<model name = "Group" metaref = "1058" attributes = "Parallel Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="buttongroup.jpg"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
@@ -121,17 +121,36 @@
 			<role name = "GroupRef" metaref = "1097" kind = "GroupRef"></role>
 			<role name = "HostRef" metaref = "1084" kind = "HostRef"></role>
 			<role name = "Kill" metaref = "1091" kind = "Kill"></role>
+			<role name = "Observer" metaref = "1120" kind = "Observer"></role>
 			<role name = "Process" metaref = "1060" kind = "Process"></role>
-			<aspect name = "Configuration" metaref = "1062" attributes = "Debug Parallel Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Stderr" >
+			<role name = "Sleep" metaref = "1121" kind = "Sleep"></role>
+			<aspect name = "Configuration" metaref = "1062" attributes = "Parallel Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
 				<part metaref = "1079" role = "BarrierRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1063" role = "DomainRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1098" role = "GroupRef" primary = "yes" kindaspect = "Configuration" linked = "no"></part>
 				<part metaref = "1087" role = "HostRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1092" role = "Kill" primary = "yes" linked = "no"></part>
+				<part metaref = "1122" role = "Observer" primary = "yes" linked = "no"></part>
 				<part metaref = "1064" role = "Process" primary = "yes" linked = "no"></part>
+				<part metaref = "1123" role = "Sleep" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
-		<model name = "Process" metaref = "1066" attributes = "Debug Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Order Enabled Executable Stderr CommandLine WorkingDir" >
+		<model name = "Observer" metaref = "1100" attributes = "Enabled Order Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="binoculars.jpg"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "BarrierRef" metaref = "1101" kind = "BarrierRef"></role>
+			<role name = "DomainRef" metaref = "1102" kind = "DomainRef"></role>
+			<role name = "HostRef" metaref = "1103" kind = "HostRef"></role>
+			<role name = "Kill" metaref = "1104" kind = "Kill"></role>
+			<aspect name = "Configuration" metaref = "1105" attributes = "Enabled Order Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
+				<part metaref = "1106" role = "BarrierRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1107" role = "DomainRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1108" role = "HostRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1109" role = "Kill" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Process" metaref = "1066" attributes = "Enabled Order CommandLine Executable Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="blue_play.jpg"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
@@ -139,11 +158,26 @@
 			<role name = "DomainRef" metaref = "1067" kind = "DomainRef"></role>
 			<role name = "HostRef" metaref = "1085" kind = "HostRef"></role>
 			<role name = "Kill" metaref = "1068" kind = "Kill"></role>
-			<aspect name = "Configuration" metaref = "1070" attributes = "Debug Precondition Realtime Postcondition Delay Id Stdin Processes Stdout Order Enabled Executable Stderr CommandLine WorkingDir" >
+			<aspect name = "Configuration" metaref = "1070" attributes = "Enabled Order CommandLine Executable Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
 				<part metaref = "1081" role = "BarrierRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1071" role = "DomainRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1088" role = "HostRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1072" role = "Kill" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Sleep" metaref = "1110" attributes = "Enabled Order Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="sleep.jpg"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "BarrierRef" metaref = "1111" kind = "BarrierRef"></role>
+			<role name = "DomainRef" metaref = "1112" kind = "DomainRef"></role>
+			<role name = "HostRef" metaref = "1113" kind = "HostRef"></role>
+			<role name = "Kill" metaref = "1114" kind = "Kill"></role>
+			<aspect name = "Configuration" metaref = "1115" attributes = "Enabled Order Realtime Debug Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir" >
+				<part metaref = "1116" role = "BarrierRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1117" role = "DomainRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1118" role = "HostRef" primary = "yes" linked = "no"></part>
+				<part metaref = "1119" role = "Kill" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
 		<folder name = "Barriers" metaref = "1043"  rootobjects = "Barrier" >

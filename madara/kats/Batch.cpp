@@ -274,6 +274,10 @@ public:
       buffer << "kats_batch";
     else if (type == "maml")
       buffer << "kats_maml";
+    else if (type == "sleep")
+      buffer << "kats_sleep";
+    else if (type == "observer")
+      buffer << "kats_observer";
 
     executable = buffer.str ();
   }
@@ -710,7 +714,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         element; element = element->NextSiblingElement ())
   {
     std::string type = element->Value ();
-    if (type == "process" || type == "group")
+    if (type == "process" || type == "group" ||
+        type == "sleep" || type == "observer")
       ++cur;
   }
 
@@ -728,7 +733,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         element; element = element->NextSiblingElement ())
   {
     std::string type = element->Value ();
-    if (type != "process" && type != "group")
+    if (type != "process" && type != "group" &&
+        type != "sleep" && type != "observer")
     {
       continue;
     }
@@ -822,6 +828,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
       } // if name element existed
     }
+    else
+    {
+      // currently this is a catch all for:
+      // sleep for kats_sleep
+      // observer for kats_observer
+
+      processes[cur].kats_type (type);
+    }
+
     //KATS_Process process;
 
     // do we have a barrier name?

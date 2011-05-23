@@ -404,6 +404,500 @@ void Component::process_process (KATS_BON::Process & current,
   parent.InsertEndChild (xml_setup);
 }
 
+void Component::process_sleep (KATS_BON::Sleep & current,
+                                 TiXmlElement & parent)
+{
+  TiXmlElement xml_setup ("sleep");
+  // did the user set debug mode?
+  if (current->isDebug ())
+  {
+    TiXmlElement element ("debug");
+    xml_setup.InsertEndChild (element);
+  }
+  
+  // did the user set realtime scheduling?
+  if (current->isRealtime ())
+  {
+    TiXmlElement element ("realtime");
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the host name
+  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
+  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
+  if (hbegin != hosts.end ())
+  {
+    KATS_BON::HostRef href = *hbegin;
+    KATS_BON::Host host = href->getHost ();
+
+    Util::GenRefCounted * ref_ptr = host.getCounted (false);
+
+    TiXmlElement element ("host");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (host->getName ().c_str ());
+      if (host->getOverride () != "")
+      {
+        text.SetValue (host->getOverride ().c_str ());
+      }
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (href->getName ().c_str ());
+      element.InsertEndChild (text);
+    }
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the domain name
+  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
+  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
+  if (dbegin != domains.end ())
+  {
+    KATS_BON::DomainRef dref = *dbegin;
+    KATS_BON::Domain domain = dref->getDomain ();
+
+    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
+
+    TiXmlElement element ("domain");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (domain->getName ().c_str ());
+      if (domain->getOverride () != "")
+      {
+        text.SetValue (domain->getOverride ().c_str ());
+      }
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (dref->getName ().c_str ());
+      element.InsertEndChild (text);
+    }
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the barrier name
+  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
+  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  if (bbegin != barriers.end ())
+  {
+    KATS_BON::BarrierRef bref = *bbegin;
+    KATS_BON::Barrier barrier = bref->getBarrier ();
+
+    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
+
+    TiXmlElement element ("barrier");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      if (barrier->getOverride () != "")
+        element.SetAttribute ("name", barrier->getOverride ().c_str ());
+      else
+        element.SetAttribute ("name", barrier->getName ().c_str ());
+    }
+    else
+      element.SetAttribute ("name", bref->getName ().c_str ());
+
+    xml_setup.InsertEndChild (element);
+  }
+ 
+  // did the user set an id in the process ring?
+  if (current->getId () >= 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getId ();
+
+    TiXmlElement element ("id");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set the number of processes in the barrier?
+  if (current->getProcesses () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getProcesses ();
+
+    TiXmlElement element ("processes");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a delay?
+  if (current->getDelay () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getDelay ();
+
+    TiXmlElement element ("delay");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+  
+  // did the user set a precondition?
+  if (current->getPrecondition () != "")
+  {
+    TiXmlElement element ("precondition");
+    TiXmlText text (current->getPrecondition ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a postcondition?
+  if (current->getPostcondition () != "")
+  {
+    TiXmlElement element ("postcondition");
+    TiXmlText text (current->getPostcondition ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // what is the working directory?
+  if (current->getWorkingDir () != "")
+  {
+    TiXmlElement element ("workingdir");
+    TiXmlText text (current->getWorkingDir ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the kill settings
+  std::set<KATS_BON::Kill> kills = current->getKill ();
+  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
+  if (kbegin != kills.end ())
+  {
+    KATS_BON::Kill kill = *kbegin;
+    if (kill->getTime () > 0)
+    {
+      TiXmlElement element ("kill");
+      TiXmlElement time ("time");
+
+      std::stringstream time_buff;
+      time_buff << kill->getTime ();
+      TiXmlText time_text (time_buff.str ().c_str ());
+      time.InsertEndChild (time_text);
+
+      element.InsertEndChild (time);
+
+      // has a signal been defined?
+      if (kill->getSignal () != "")
+      {
+        TiXmlElement signal ("signal");
+
+        // insert the signal into the xml element
+        std::stringstream signal_buff;
+        signal_buff << kill->getSignal ();
+        TiXmlText signal_text (signal_buff.str ().c_str ());
+        signal.InsertEndChild (signal_text);
+
+        element.InsertEndChild (signal);
+      }
+
+      xml_setup.InsertEndChild (element);
+    }
+  }
+
+  // did the user set a stdin redirect?
+  if (current->getStdin () != "")
+  {
+    TiXmlElement element ("stdin");
+    TiXmlText text (current->getStdin ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stderr redirect?
+  if (current->getStderr () != "")
+  {
+    TiXmlElement element ("stderr");
+    TiXmlText text (current->getStderr ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stdout redirect?
+  if (current->getStdout () != "")
+  {
+    TiXmlElement element ("stdout");
+
+    TiXmlText text (current->getStdout ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  parent.InsertEndChild (xml_setup);
+}
+
+void Component::process_observer (KATS_BON::Observer & current,
+                                 TiXmlElement & parent)
+{
+  TiXmlElement xml_setup ("observer");
+  // did the user set debug mode?
+  if (current->isDebug ())
+  {
+    TiXmlElement element ("debug");
+    xml_setup.InsertEndChild (element);
+  }
+  
+  // did the user set realtime scheduling?
+  if (current->isRealtime ())
+  {
+    TiXmlElement element ("realtime");
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the host name
+  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
+  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
+  if (hbegin != hosts.end ())
+  {
+    KATS_BON::HostRef href = *hbegin;
+    KATS_BON::Host host = href->getHost ();
+
+    Util::GenRefCounted * ref_ptr = host.getCounted (false);
+
+    TiXmlElement element ("host");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (host->getName ().c_str ());
+      if (host->getOverride () != "")
+      {
+        text.SetValue (host->getOverride ().c_str ());
+      }
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (href->getName ().c_str ());
+      element.InsertEndChild (text);
+    }
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the domain name
+  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
+  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
+  if (dbegin != domains.end ())
+  {
+    KATS_BON::DomainRef dref = *dbegin;
+    KATS_BON::Domain domain = dref->getDomain ();
+
+    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
+
+    TiXmlElement element ("domain");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (domain->getName ().c_str ());
+      if (domain->getOverride () != "")
+      {
+        text.SetValue (domain->getOverride ().c_str ());
+      }
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (dref->getName ().c_str ());
+      element.InsertEndChild (text);
+    }
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the barrier name
+  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
+  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  if (bbegin != barriers.end ())
+  {
+    KATS_BON::BarrierRef bref = *bbegin;
+    KATS_BON::Barrier barrier = bref->getBarrier ();
+
+    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
+
+    TiXmlElement element ("barrier");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      if (barrier->getOverride () != "")
+        element.SetAttribute ("name", barrier->getOverride ().c_str ());
+      else
+        element.SetAttribute ("name", barrier->getName ().c_str ());
+    }
+    else
+      element.SetAttribute ("name", bref->getName ().c_str ());
+
+    xml_setup.InsertEndChild (element);
+  }
+ 
+  // did the user set an id in the process ring?
+  if (current->getId () >= 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getId ();
+
+    TiXmlElement element ("id");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set the number of processes in the barrier?
+  if (current->getProcesses () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getProcesses ();
+
+    TiXmlElement element ("processes");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a delay?
+  if (current->getDelay () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getDelay ();
+
+    TiXmlElement element ("delay");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+  
+  // did the user set a precondition?
+  if (current->getPrecondition () != "")
+  {
+    TiXmlElement element ("precondition");
+    TiXmlText text (current->getPrecondition ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a postcondition?
+  if (current->getPostcondition () != "")
+  {
+    TiXmlElement element ("postcondition");
+    TiXmlText text (current->getPostcondition ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // what is the working directory?
+  if (current->getWorkingDir () != "")
+  {
+    TiXmlElement element ("workingdir");
+    TiXmlText text (current->getWorkingDir ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the kill settings
+  std::set<KATS_BON::Kill> kills = current->getKill ();
+  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
+  if (kbegin != kills.end ())
+  {
+    KATS_BON::Kill kill = *kbegin;
+    if (kill->getTime () > 0)
+    {
+      TiXmlElement element ("kill");
+      TiXmlElement time ("time");
+
+      std::stringstream time_buff;
+      time_buff << kill->getTime ();
+      TiXmlText time_text (time_buff.str ().c_str ());
+      time.InsertEndChild (time_text);
+
+      element.InsertEndChild (time);
+
+      // has a signal been defined?
+      if (kill->getSignal () != "")
+      {
+        TiXmlElement signal ("signal");
+
+        // insert the signal into the xml element
+        std::stringstream signal_buff;
+        signal_buff << kill->getSignal ();
+        TiXmlText signal_text (signal_buff.str ().c_str ());
+        signal.InsertEndChild (signal_text);
+
+        element.InsertEndChild (signal);
+      }
+
+      xml_setup.InsertEndChild (element);
+    }
+  }
+
+  // did the user set a stdin redirect?
+  if (current->getStdin () != "")
+  {
+    TiXmlElement element ("stdin");
+    TiXmlText text (current->getStdin ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stderr redirect?
+  if (current->getStderr () != "")
+  {
+    TiXmlElement element ("stderr");
+    TiXmlText text (current->getStderr ().c_str ());
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stdout redirect?
+  if (current->getStdout () != "")
+  {
+    TiXmlElement element ("stdout");
+
+    TiXmlText text (current->getStdout ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  parent.InsertEndChild (xml_setup);
+}
+
 void Component::process_process_group (KATS_BON::Group & current)
 {
 	using namespace GMEConsole;
@@ -672,28 +1166,25 @@ void Component::process_process_group (KATS_BON::Group & current)
 
   for (size_t i = 0; i < sorted_candidates.size (); ++i)
   {
-    // is this a Process?
+    // this is probably not the most efficient way to handle this
+    // but it is also not likely to take that long and is easy to follow
+
+    // try to cast to each ordered type
     KATS_BON::Process process = sorted_candidates[i];
     KATS_BON::GroupRef group_ref = sorted_candidates[i];
+    KATS_BON::Sleep sleep = sorted_candidates[i];
+    KATS_BON::Observer observer = sorted_candidates[i];
 
+    // check to see if the cast resulted in a valid reference counted object
     if (process.getCounted (false))
       process_process (process, xml_group);
     else if (group_ref.getCounted (false))
       process_group_ref (group_ref, xml_group);
+    else if (sleep.getCounted (false))
+      process_sleep (sleep, xml_group);
+    else if (observer.getCounted (false))
+      process_observer (observer, xml_group);
   }
-  // check our host information
-  //std::set<KATS_BON::HostRef>::iterator i = group->getHostRef ().begin ();
-  //if (i != group->getHostRef ().end ())
-  //{
-  //  KATS_BON::HostRef href = *i;
-  //  KATS_BON::Host host = href->getHost ();
-
-  //  TiXmlElement element ("host");
-  //  TiXmlText text (host->getName ());
-  //  element.InsertEndChild (text);
-
-  //  xml_group.InsertEndChild (element);
-  //}
 
   // write the file out
   {
