@@ -90,6 +90,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::KATS::Test_Framework testing (settings);
 
+  testing.event (
+    "updatevars","",".kats.id=.madara.id;.kats.processes=.madara.processes");
+
   if(debug_printing)
     testing.dump ();
 

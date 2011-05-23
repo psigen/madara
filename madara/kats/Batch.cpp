@@ -670,10 +670,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_DEBUG ((LM_DEBUG, 
     "KATS_BATCH:    Starting barrier (if necessary)...\n"));
 
-  testing.barrier (test_name);
+  if (test_name != "")
+    testing.barrier (test_name);
 
   testing.event (
-    "updatevars","",".kats.id=.madara.id;.kats.processes=madara.processes");
+    "updatevars","",".kats.id=.madara.id;.kats.processes=.madara.processes");
 
   // Before we check for delay, we first check for a precondition
 
@@ -998,8 +999,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     if (el_temp1 && el_temp1->GetText ())
     {
       // expand the string for environment variables, then clean the path up
-      std::string value (Madara::Utility::clean_dir_name (
-        Madara::Utility::expand_envs (el_temp1->GetText ())));
+      std::string value (Madara::Utility::expand_envs (el_temp1->GetText ()));
 
       ACE_DEBUG ((LM_DEBUG, 
         "KATS_BATCH:    Read commandline = %s from process group file\n",
