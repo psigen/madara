@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{EB300869-216C-4E24-BE96-F3FE01A7A448}" cdate="Sun May 22 14:26:18 2011" mdate="Sun May 22 14:26:18 2011" version="" metaguid="{843FAB4F-DE02-46F6-89C6-39A2A6BEF8F4}" metaversion="0.3.0" metaname="KATS">
+<project guid="{63D18E87-18E4-4F06-A501-D136074FEA15}" cdate="Sun May 22 14:26:18 2011" mdate="Sun May 22 14:26:18 2011" version="" metaguid="{74B90EB7-B230-4C4E-BEF8-C46F15A15E72}" metaversion="0.3.7" metaname="KATS">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -24,7 +24,7 @@
 		</folder>
 		<folder id="id-006a-00000003" relid="0x2" childrelidcntr="0x5" kind="Processes" guid="{b89545eb-179a-4d27-80bd-9c5aece08a6d}">
 			<name>tests</name>
-			<model id="id-0065-00000001" kind="Group" guid="{4c482edd-6e6e-4656-baf1-460a9aa61189}" relid="0x1" childrelidcntr="0x7">
+			<model id="id-0065-00000001" kind="Group" guid="{4c482edd-6e6e-4656-baf1-460a9aa61189}" relid="0x1" childrelidcntr="0x9">
 				<name>FiveTimeouts_Parallel</name>
 				<attribute kind="Debug" status="meta">
 					<value>false</value>
@@ -38,8 +38,8 @@
 				<attribute kind="Parallel">
 					<value>true</value>
 				</attribute>
-				<attribute kind="Postcondition" status="meta">
-					<value></value>
+				<attribute kind="Postcondition">
+					<value>fivetimeouts.done = 1</value>
 				</attribute>
 				<attribute kind="Precondition" status="meta">
 					<value></value>
@@ -58,6 +58,9 @@
 				</attribute>
 				<attribute kind="Stdout">
 					<value>$(RESULTS)/FiveTimeouts_Parallel.err</value>
+				</attribute>
+				<attribute kind="WorkingDir" status="meta">
+					<value></value>
 				</attribute>
 				<model id="id-0065-00000005" kind="Process" role="Process" guid="{c6a5c160-2db5-42e5-bd13-76a830170c04}" relid="0x1" childrelidcntr="0x1">
 					<name>timeout1</name>
@@ -98,7 +101,7 @@
 						<value></value>
 					</attribute>
 					<attribute kind="Processes">
-						<value>6</value>
+						<value>5</value>
 					</attribute>
 					<attribute kind="Realtime" status="meta">
 						<value>false</value>
@@ -167,7 +170,7 @@
 						<value></value>
 					</attribute>
 					<attribute kind="Processes">
-						<value>6</value>
+						<value>5</value>
 					</attribute>
 					<attribute kind="Realtime" status="meta">
 						<value>false</value>
@@ -236,7 +239,7 @@
 						<value></value>
 					</attribute>
 					<attribute kind="Processes">
-						<value>6</value>
+						<value>5</value>
 					</attribute>
 					<attribute kind="Realtime" status="meta">
 						<value>false</value>
@@ -305,7 +308,7 @@
 						<value></value>
 					</attribute>
 					<attribute kind="Processes">
-						<value>6</value>
+						<value>5</value>
 					</attribute>
 					<attribute kind="Realtime" status="meta">
 						<value>false</value>
@@ -374,7 +377,7 @@
 						<value></value>
 					</attribute>
 					<attribute kind="Processes">
-						<value>6</value>
+						<value>5</value>
 					</attribute>
 					<attribute kind="Realtime" status="meta">
 						<value>false</value>
@@ -404,63 +407,6 @@
 						</regnode>
 					</reference>
 				</model>
-				<model id="id-0065-00000015" kind="Process" role="Process" guid="{c4c44609-e8b4-4bba-87de-1582df01dc6d}" relid="0x6" childrelidcntr="0x1">
-					<name>Observer</name>
-					<regnode name="PartRegs" status="undefined">
-						<value></value>
-						<regnode name="Configuration" status="undefined">
-							<value></value>
-							<regnode name="Position" isopaque="yes">
-								<value>51,208</value>
-							</regnode>
-						</regnode>
-					</regnode>
-					<attribute kind="CommandLine">
-						<value>-g -l 5</value>
-					</attribute>
-					<attribute kind="Debug">
-						<value>false</value>
-					</attribute>
-					<attribute kind="Delay" status="meta">
-						<value>0</value>
-					</attribute>
-					<attribute kind="Enabled" status="meta">
-						<value>true</value>
-					</attribute>
-					<attribute kind="Executable">
-						<value>$(MADARA_ROOT)/bin/kats_observer</value>
-					</attribute>
-					<attribute kind="Id">
-						<value>5</value>
-					</attribute>
-					<attribute kind="Order">
-						<value>6</value>
-					</attribute>
-					<attribute kind="Postcondition" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Precondition" status="meta">
-						<value></value>
-					</attribute>
-					<attribute kind="Processes">
-						<value>6</value>
-					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
-					</attribute>
-					<attribute kind="Stderr">
-						<value>$(RESULTS)/five_observer.err</value>
-					</attribute>
-					<attribute kind="Stdin">
-						<value>$(MADARA_ROOT)/modeling/tests/input/observer_thirty.stdin</value>
-					</attribute>
-					<attribute kind="Stdout">
-						<value>$(RESULTS)/five_observer.out</value>
-					</attribute>
-					<attribute kind="WorkingDir" status="meta">
-						<value></value>
-					</attribute>
-				</model>
 				<atom id="id-0066-00000003" kind="Kill" role="Kill" guid="{81644e8d-51c3-4247-86e2-64f5588820d7}" relid="0x7">
 					<name>Kill</name>
 					<regnode name="PartRegs" status="undefined">
@@ -480,7 +426,7 @@
 					</attribute>
 				</atom>
 			</model>
-			<model id="id-0065-00000002" kind="Group" guid="{4efb3482-c6cc-4a14-affd-3cca3944c8a9}" relid="0x2" childrelidcntr="0xa">
+			<model id="id-0065-00000002" kind="Group" guid="{4efb3482-c6cc-4a14-affd-3cca3944c8a9}" relid="0x2" childrelidcntr="0xd">
 				<name>TenTimeouts_Parallel</name>
 				<attribute kind="Debug" status="meta">
 					<value>false</value>
@@ -497,8 +443,8 @@
 				<attribute kind="Postcondition" status="meta">
 					<value></value>
 				</attribute>
-				<attribute kind="Precondition" status="meta">
-					<value></value>
+				<attribute kind="Precondition">
+					<value>fivetimeouts.done</value>
 				</attribute>
 				<attribute kind="Processes" status="meta">
 					<value>1</value>
@@ -514,6 +460,9 @@
 				</attribute>
 				<attribute kind="Stdout">
 					<value>$(RESULTS)/TenTimeouts_Parallel.out</value>
+				</attribute>
+				<attribute kind="WorkingDir" status="meta">
+					<value></value>
 				</attribute>
 				<model id="id-0065-0000000b" kind="Process" role="Process" guid="{856ed1f4-5c00-46aa-9046-2c9c8d500544}" relid="0x1" childrelidcntr="0x1">
 					<name>timeout4</name>
@@ -556,8 +505,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout4.err</value>
@@ -625,8 +574,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout3.err</value>
@@ -694,8 +643,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout2.err</value>
@@ -763,8 +712,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout5.err</value>
@@ -832,8 +781,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout1.err</value>
@@ -901,8 +850,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout7.err</value>
@@ -970,8 +919,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout8.err</value>
@@ -1039,8 +988,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout9.err</value>
@@ -1108,8 +1057,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout10.err</value>
@@ -1177,8 +1126,8 @@
 					<attribute kind="Processes">
 						<value>10</value>
 					</attribute>
-					<attribute kind="Realtime" status="meta">
-						<value>false</value>
+					<attribute kind="Realtime">
+						<value>true</value>
 					</attribute>
 					<attribute kind="Stderr">
 						<value>$(RESULTS)/ten_timeout6.err</value>
@@ -1205,6 +1154,24 @@
 						</regnode>
 					</reference>
 				</model>
+				<atom id="id-0066-00000004" kind="Kill" role="Kill" guid="{02e647fd-b1b7-48a8-8254-db9c71a23948}" relid="0xb">
+					<name>Kill</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>202,293</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Signal" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Time">
+						<value>90</value>
+					</attribute>
+				</atom>
 			</model>
 			<model id="id-0065-00000003" kind="Group" guid="{57758359-f7f2-4f30-a72f-9471fa867cc7}" relid="0x3" childrelidcntr="0x0">
 				<name>TwentyTimeouts</name>
@@ -1240,6 +1207,9 @@
 				</attribute>
 				<attribute kind="Stdout">
 					<value>$(RESULTS)/TwentyTimeouts_Parallel.out</value>
+				</attribute>
+				<attribute kind="WorkingDir" status="meta">
+					<value></value>
 				</attribute>
 			</model>
 			<model id="id-0065-00000004" kind="Group" guid="{7bd8046c-5300-47c4-b849-fcb8c13a546a}" relid="0x4" childrelidcntr="0x0">
@@ -1277,8 +1247,11 @@
 				<attribute kind="Stdout">
 					<value>$(RESULTS)/FiftyTimeouts_Parallel.out</value>
 				</attribute>
+				<attribute kind="WorkingDir" status="meta">
+					<value></value>
+				</attribute>
 			</model>
-			<model id="id-0065-00000006" kind="Group" guid="{2e3e318b-6c9a-47c0-9263-5829eff7a040}" relid="0x5" childrelidcntr="0x3">
+			<model id="id-0065-00000006" kind="Group" guid="{2e3e318b-6c9a-47c0-9263-5829eff7a040}" relid="0x5" childrelidcntr="0x4">
 				<name>AllTests_Parallel</name>
 				<attribute kind="Debug" status="meta">
 					<value>false</value>
@@ -1289,8 +1262,8 @@
 				<attribute kind="Id" status="meta">
 					<value>0</value>
 				</attribute>
-				<attribute kind="Parallel" status="meta">
-					<value>false</value>
+				<attribute kind="Parallel">
+					<value>true</value>
 				</attribute>
 				<attribute kind="Postcondition" status="meta">
 					<value></value>
@@ -1313,6 +1286,60 @@
 				<attribute kind="Stdout">
 					<value>$(RESULTS)/AllTests_Parallel.out</value>
 				</attribute>
+				<attribute kind="WorkingDir" status="meta">
+					<value></value>
+				</attribute>
+				<model id="id-0065-00000016" kind="Observer" role="Observer" guid="{ea3c0c92-c4cf-474a-ac66-6f289081fdc6}" relid="0x4" childrelidcntr="0x1">
+					<name>Observer</name>
+					<regnode name="PartRegs" status="undefined">
+						<value></value>
+						<regnode name="Configuration" status="undefined">
+							<value></value>
+							<regnode name="Position" isopaque="yes">
+								<value>436,108</value>
+							</regnode>
+						</regnode>
+					</regnode>
+					<attribute kind="Debug">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Delay">
+						<value>5</value>
+					</attribute>
+					<attribute kind="Enabled" status="meta">
+						<value>true</value>
+					</attribute>
+					<attribute kind="Id">
+						<value>0</value>
+					</attribute>
+					<attribute kind="Order">
+						<value>6</value>
+					</attribute>
+					<attribute kind="Postcondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Precondition" status="meta">
+						<value></value>
+					</attribute>
+					<attribute kind="Processes">
+						<value>1</value>
+					</attribute>
+					<attribute kind="Realtime" status="meta">
+						<value>false</value>
+					</attribute>
+					<attribute kind="Stderr">
+						<value>$(RESULTS)/five_observer.err</value>
+					</attribute>
+					<attribute kind="Stdin">
+						<value>$(MADARA_ROOT)/modeling/tests/input/observer_thirty.stdin</value>
+					</attribute>
+					<attribute kind="Stdout">
+						<value>$(RESULTS)/five_observer.out</value>
+					</attribute>
+					<attribute kind="WorkingDir" status="meta">
+						<value></value>
+					</attribute>
+				</model>
 				<reference id="id-0067-00000006" kind="GroupRef" role="GroupRef" guid="{a6bdc3ab-e211-481a-abdb-bec8010f353b}" relid="0x1" referred="id-0065-00000001">
 					<name>FiveTimeouts</name>
 					<regnode name="PartRegs" status="undefined">
