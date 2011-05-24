@@ -248,6 +248,19 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_hrtime_t process_elapsed;
   process_timer.elapsed_time (process_elapsed);
 
+  {
+    std::stringstream buffer;
+    buffer << "KATS_PROCESS: ";
+    buffer << process_name;
+    buffer << " runtime was ";
+    buffer << process_elapsed;
+    buffer << " ns";
+
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+      DLINFO "%s\n",
+      buffer.str ().c_str () ));
+  }
+
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
     DLINFO "KATS_PROCESS: %s runtime was %Q ns\n",
     process_name.c_str (), process_elapsed ));

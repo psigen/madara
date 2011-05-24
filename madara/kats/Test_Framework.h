@@ -26,6 +26,7 @@ namespace Madara
       #define DEFAULT_ID                0
       #define DEFAULT_PROCESSES         1
       #define DEFAULT_HOST              "localhost"
+      #define DEFAULT_KATS_RELIABILITY  Madara::Transport::RELIABLE
 
     /**
      * @class Settings
@@ -37,6 +38,7 @@ namespace Madara
         // set the underlying members
         this->domains = DEFAULT_KATS_DOMAIN;
         this->type = DEFAULT_KATS_TRANSPORT;
+        this->reliability = DEFAULT_KATS_RELIABILITY;
 
         // set our local members
         id = DEFAULT_ID;

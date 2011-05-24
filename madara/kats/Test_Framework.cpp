@@ -57,6 +57,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   knowledge_.activate_transport ();
 
   std::stringstream buffer;
+  std::stringstream postcondition;
   std::stringstream log_message;
 
   long long id = knowledge_.get (".madara.id");
@@ -69,6 +70,11 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
       " Returning success.\n"));
     return 1;
   }
+
+  std::stringstream makesure;
+  makesure << "MADARA.BARRIER.";
+  makesure << event_name;
+  makesure << "=1";
 
   // set our attribute to 1
   buffer << "((MADARA.BARRIER.";
@@ -101,7 +107,15 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "%s", knowledge_.expand_statement (log_message.str ()).c_str ()));
 
-  return knowledge_.wait (buffer.str ());
+  long long result = knowledge_.wait (buffer.str ());
+
+  // there are times when one of the barriered processes will return
+  // before others have realized they are out of the barrier, so we
+  // also set a value to say "the entire barrier is done, if you guys
+  // want to go ahead and get out of here."
+  knowledge_.evaluate (makesure.str ());
+
+  return result;
 }
 
 /// Attempts to send out all global knowledge
