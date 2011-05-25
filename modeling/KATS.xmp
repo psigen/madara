@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="KATS" version="0.3.7" guid="{74B90EB7-B230-4C4E-BEF8-C46F15A15E72}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+<paradigm name="KATS" version="0.3.8" guid="{E15BED17-AE31-4000-AAC1-CDEA7B7F9C29}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
 
 	<comment></comment>
 
@@ -32,7 +32,7 @@
 		<attrdef name="Override" metaref = "1089" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Overrides the component name and allows for spaces, punctuation, etc."></regnode>
 		</attrdef>
-		<attrdef name="Parallel" metaref = "1006" valuetype = "boolean" defvalue = "false">
+		<attrdef name="Parallel" metaref = "1006" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Run tests in parallel?"></regnode>
 		</attrdef>
 		<attrdef name="Postcondition" metaref = "1007" valuetype = "string" defvalue = "">
@@ -44,7 +44,7 @@
 		<attrdef name="Processes" metaref = "1009" valuetype = "integer" defvalue = "1">
 			<regnode name="help" value = "Number of processes participating in the barrier"></regnode>
 		</attrdef>
-		<attrdef name="Realtime" metaref = "1010" valuetype = "boolean" defvalue = "false">
+		<attrdef name="Realtime" metaref = "1010" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Enable realtime scheduling for this and all spawned processes?"></regnode>
 		</attrdef>
 		<attrdef name="Signal" metaref = "1011" valuetype = "string" defvalue = "">
