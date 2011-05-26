@@ -1,0 +1,28 @@
+<group>
+    <setup>
+        <parallel />
+        <realtime />
+        <id>0</id>
+        <processes>1</processes>
+        <stderr>$(RESULTS)/TwoSleeps.err</stderr>
+        <stdout>$(RESULTS)/TwoSleeps.out</stdout>
+    </setup>
+    <sleep>
+        <realtime />
+        <barrier name="sleep" />
+        <id>0</id>
+        <processes>4</processes>
+        <delay>5</delay>
+        <stderr>$(RESULTS)/sleep1.err</stderr>
+        <stdout>$(RESULTS)/sleep1.out</stdout>
+    </sleep>
+    <sleep>
+        <realtime />
+        <barrier name="sleep" />
+        <id>1</id>
+        <processes>4</processes>
+        <delay>5</delay>
+        <stderr>$(RESULTS)/sleep2.err</stderr>
+        <stdout>$(RESULTS)/sleep2.out</stdout>
+    </sleep>
+</group>

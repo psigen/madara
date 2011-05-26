@@ -1,0 +1,27 @@
+<group>
+    <setup>
+        <parallel />
+        <realtime />
+        <id>0</id>
+        <processes>1</processes>
+    </setup>
+    <group file="TwoSleeps.xml" />
+    <sleep>
+        <realtime />
+        <barrier name="sleep" />
+        <id>2</id>
+        <processes>4</processes>
+        <delay>5</delay>
+        <stderr>$(RESULTS)/sleep3.err</stderr>
+        <stdout>$(RESULTS)/sleep3.out</stdout>
+    </sleep>
+    <sleep>
+        <realtime />
+        <barrier name="sleep" />
+        <id>3</id>
+        <processes>4</processes>
+        <delay>5</delay>
+        <stderr>$(RESULTS)/sleep4.err</stderr>
+        <stdout>$(RESULTS)/sleep4.out</stdout>
+    </sleep>
+</group>
