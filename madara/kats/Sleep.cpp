@@ -140,12 +140,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("n:i:o:e:w:l:t:x:a:c:d:b:s:v:k:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:n:i:o:e:w:l:t:x:a:c:d:b:s:v:k:grh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
+  cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("precondition"), 'b',
       ACE_Get_Opt::ARG_REQUIRED);
@@ -167,10 +170,12 @@ int parse_args (int argc, ACE_TCHAR * argv[])
  
   // temp for current switched option
   int option;
+  char short_arg;
 
   // iterate through the options until done
   while ((option = cmd_opts ()) != EOF)
   {
+    short_arg = (char) option; 
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
@@ -316,9 +321,15 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case ':':
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_SLEEP: ERROR: -%c requires an argument"),
-           cmd_opts.opt_opt ()), -2); 
-    case 'h':
+           short_arg), -2); 
+      break;
     default:
+
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+        DLINFO "KATS_SLEEP: the command line argument -%c is not supported\n\n",
+        short_arg));
+
+    case 'h':
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:    \n\
       -a (--testname)    name of the test (for barriers) \n\
       -b (--precondition) precondition to wait for after barrier \n\
