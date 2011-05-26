@@ -179,6 +179,35 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
+    case '0':
+      // redirecting stdin
+
+      freopen (cmd_opts.opt_arg (), "r", stdin);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: stdin redirected from %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
+    case '1':
+      // redirecting stdout
+
+      freopen (cmd_opts.opt_arg (), "w", stdout);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: stdout redirected to %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
+    case '2':
+      // redirecting stderr
+      freopen (cmd_opts.opt_arg (), "w", stderr);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: stderr redirected to %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
     case 'a':
       // test name
       test_name = cmd_opts.opt_arg ();
