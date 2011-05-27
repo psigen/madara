@@ -455,15 +455,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         delay_time.sec ()));
 
       break;
-    case 'o':
-      // host name
-      settings.host = cmd_opts.opt_arg ();
-
-      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-        DLINFO "KATS_PROCESS: host set to %s\n",
-        settings.host.c_str ()));
-
-      break;
     case 'm':
       // print timing information?
       timing = true;
@@ -485,6 +476,15 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         DLINFO "KATS_PROCESS: processes involved in test set to %u\n",
         settings.processes));
 
+
+      break;
+    case 'o':
+      // host name
+      settings.host = cmd_opts.opt_arg ();
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: host set to %s\n",
+        settings.host.c_str ()));
 
       break;
     case 'r':

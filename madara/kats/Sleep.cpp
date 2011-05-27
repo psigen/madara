@@ -132,6 +132,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // stop the clock for all conditions (including OS temporal one)
   allconditions_timer.stop ();
 
+  if(debug_printing)
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+      DLINFO "KATS_SLEEP: starting %: seconds of sleep\n",
+      delay_time.sec () ));
+
   // clock the process time
   process_timer.start ();
 
@@ -143,10 +148,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   process_timer.stop ();
 
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "KATS_SLEEP: %: seconds of sleep completed\n",
-    delay_time.sec () ));
+  if(debug_printing)
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+      DLINFO "KATS_SLEEP: %: seconds of sleep completed\n",
+      delay_time.sec () ));
 
   testing.set (".kats.return", (long long) exit_code);
 
@@ -182,16 +187,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       starttofinish_timer.elapsed_time (starttofinish_elapsed);
 
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
-        DLINFO "KATS_PROCESS: Barrier took %Q ns\n",
+        DLINFO "KATS_SLEEP: Barrier took %Q ns\n",
         barrier_elapsed ));
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
-        DLINFO "KATS_PROCESS: All KATS conditions took %Q ns\n",
+        DLINFO "KATS_SLEEP: All KATS conditions took %Q ns\n",
         allkatsconditions_elapsed ));
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
-        DLINFO "KATS_PROCESS: All conditions took %Q ns\n",
+        DLINFO "KATS_SLEEP: All conditions took %Q ns\n",
         allconditions_elapsed ));
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
-        DLINFO "KATS_PROCESS: From kats_process start to finish took %Q ns\n",
+        DLINFO "KATS_SLEEP: From kats_process start to finish took %Q ns\n",
         starttofinish_elapsed ));
     }
   }
@@ -202,7 +207,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     process_timer.elapsed_time (process_elapsed);
 
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
-      DLINFO "KATS_PROCESS: %s runtime was %Q ns\n",
+      DLINFO "KATS_SLEEP: %s runtime was %Q ns\n",
       process_name.c_str (), process_elapsed ));
   }
 
