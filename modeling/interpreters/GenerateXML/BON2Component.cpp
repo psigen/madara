@@ -27,7 +27,6 @@
 #include "BON2Component.h"
 #include "../Utility/tinyxml.h"
 
-
 // I have to paste this into KATSBonX.h/cpp whenever I change
 // the paradigm
 //namespace KATS_BON
@@ -48,6 +47,8 @@
 
 namespace BON
 {
+
+  const char * interpreter_version = "0.1.0";
 
   /**
    * Comparison for derived classes of Ordered
@@ -1306,6 +1307,12 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
 	project->setAutoCommit( false);
 #endif
 	using namespace GMEConsole;
+  std::stringstream buffer;
+  buffer << "KATS GenerateXML Interpreter version ";
+  buffer << interpreter_version;
+  buffer << "...";
+
+  Console::Out::WriteLine(buffer.str ().c_str ());
 	Console::Out::WriteLine("Processing KATS model...");
 	// ======================
 	// TODO: Insert application specific code here
