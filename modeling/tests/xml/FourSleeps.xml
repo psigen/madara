@@ -2,12 +2,12 @@
     <setup>
         <parallel />
         <realtime />
-        <id>0</id>
-        <processes>1</processes>
+        <timing />
     </setup>
     <group file="TwoSleeps.xml" />
     <sleep>
         <realtime />
+        <timing />
         <barrier name="sleep" />
         <id>2</id>
         <processes>4</processes>
@@ -17,6 +17,7 @@
     </sleep>
     <sleep>
         <realtime />
+        <timing />
         <barrier name="sleep" />
         <id>3</id>
         <processes>4</processes>

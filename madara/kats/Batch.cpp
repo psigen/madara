@@ -50,6 +50,7 @@ bool parallel_set = false;
 bool delay_time_set = false;
 bool test_name_set = false;
 bool loglevel_set = false;
+bool timing = false;
 
 std::string test_name;
 std::string pre_condition;
@@ -98,6 +99,11 @@ public:
   void enable_debug (void)
   {
     command_line << " -g";
+  }
+
+  void enable_timing (void)
+  {
+    command_line << " -m";
   }
 
   void set_precondition (const std::string & value)
@@ -326,6 +332,16 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
+  // timers relating to launching process  
+  ACE_High_Res_Timer barrier_timer;
+  ACE_High_Res_Timer allkatsconditions_timer;
+  ACE_High_Res_Timer allconditions_timer;
+  ACE_High_Res_Timer starttofinish_timer;
+  ACE_High_Res_Timer process_timer;
+
+  // for complete timing
+  starttofinish_timer.start ();
+
   path = extract_path (argv[0]);
 
   // by default, see LM_INFO and LM_ERROR logging messages
@@ -617,6 +633,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       } // if realtime element existed
     } // if the user didn't specify real time scheduling from the command line
 
+    if (!timing)
+    {
+      element = el_globals->FirstChildElement ("timing");
+      if (element)
+      {
+        timing = true;
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Enabled printing of timing information " \
+          "from process group file\n"));
+      } // if realtime element existed
+    } // if the user didn't specify real time scheduling from the command line
+
     if (!parallel_set)
     {
       element = el_globals->FirstChildElement ("parallel");
@@ -670,11 +698,19 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_DEBUG ((LM_DEBUG, 
     "KATS_BATCH:    Starting barrier (if necessary)...\n"));
 
+  testing.event (
+    "updatevars","",".kats.id=.madara.id;.kats.processes=.madara.processes");
+
   if (test_name != "")
     testing.barrier (test_name);
 
-  testing.event (
-    "updatevars","",".kats.id=.madara.id;.kats.processes=.madara.processes");
+  // start timers for conditions related to KATS for record keeping
+  allconditions_timer.start ();
+  allkatsconditions_timer.start ();
+  barrier_timer.start ();
+
+  // stop the barrier timer
+  barrier_timer.stop ();
 
   // Before we check for delay, we first check for a precondition
 
@@ -691,6 +727,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     testing.event (buffer.str (), pre_condition, "");
   }
 
+  allkatsconditions_timer.stop ();
+
   // sleep for a set amount of time after the barrier (if specified)
   if (delay_time_set)
   {
@@ -700,6 +738,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
     ACE_OS::sleep (delay_time);
   }
+
+  // stop the clock for all conditions (including OS temporal one)
+  allconditions_timer.stop ();
 
   ACE_DEBUG ((LM_DEBUG, 
     "KATS_BATCH:  Finished KATS setup. Proceeding to processes...\n"));
@@ -729,6 +770,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_High_Res_Timer timer;
 
   timer.start ();
+
+  // clock the process time
+  process_timer.start ();
 
   for (cur = 0, element = el_tests->FirstChildElement ();
         element; element = element->NextSiblingElement ())
@@ -1073,6 +1117,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       processes[cur].enable_realtime (); 
     }
 
+    if (timing || element->FirstChildElement ("timing"))
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Enabling printing of timing info in process\n"));
+      processes[cur].enable_timing ();
+    }
+
     if (debug_printing ||  element->FirstChildElement ("debug"))
     {
       ACE_DEBUG ((LM_DEBUG, 
@@ -1191,6 +1242,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     }
   }
 
+  process_timer.stop ();
+
   if (post_condition != "")
   {
     std::stringstream buffer;
@@ -1201,8 +1254,51 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     testing.event (buffer.str (), "", post_condition, "");
   }
 
+  starttofinish_timer.stop ();
+
   if(debug_printing)
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+      DLINFO "KATS_BATCH: Printing final knowledge values\n"));
+
     testing.dump ();
+
+    if (timing)
+    {
+      ACE_hrtime_t barrier_elapsed;
+      ACE_hrtime_t allkatsconditions_elapsed;
+      ACE_hrtime_t allconditions_elapsed;
+      ACE_hrtime_t starttofinish_elapsed;
+
+      barrier_timer.elapsed_time (barrier_elapsed);
+      allkatsconditions_timer.elapsed_time (allkatsconditions_elapsed);
+      allconditions_timer.elapsed_time (allconditions_elapsed);
+      starttofinish_timer.elapsed_time (starttofinish_elapsed);
+
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+        DLINFO "KATS_BATCH: Barrier took %Q ns\n",
+        barrier_elapsed ));
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+        DLINFO "KATS_BATCH: All KATS conditions took %Q ns\n",
+        allkatsconditions_elapsed ));
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+        DLINFO "KATS_BATCH: All conditions took %Q ns\n",
+        allconditions_elapsed ));
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+        DLINFO "KATS_BATCH: From kats_process start to finish took %Q ns\n",
+        starttofinish_elapsed ));
+    }
+  }
+
+  if (timing)
+  {
+    ACE_hrtime_t process_elapsed;
+    process_timer.elapsed_time (process_elapsed);
+
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
+      DLINFO "KATS_BATCH: group runtime was %Q ns\n",
+      process_elapsed ));
+  }
 
   return 0;
 }
@@ -1210,7 +1306,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:f:n:i:l:o:d:a:t:v:grh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:f:n:i:l:o:d:a:t:v:mgrh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -1226,6 +1322,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("debug"), 'g', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("timing"), 'm', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'n', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("parallel"), 'p', ACE_Get_Opt::NO_ARG);
@@ -1366,6 +1463,15 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         delay_time.sec ()));
 
       break;
+    case 'm':
+      // print timing information?
+      timing = true;
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: printing timing information\n",
+        settings.processes));
+
+      break;
     case 'n':
       // processes
       {
@@ -1481,7 +1587,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -g (--debug)       prints KATS debug messages \n\
       -h (--help)        print this menu        \n\
       -i (--id)          this process id        \n\
-      -l (--delay)       time delay (secs) after barrier to wait before spawn\n\
+      -l (--delay)       time delay (secs) after barrier and KaRL\n\
+                         precondition to wait before process group spawn\n\
+      -m (--timing)      print timing information \n\
+                         (add -g for kats conditional timing) \n\
       -n (--processes)   number of testing processes \n\
       -o (--host)        host identifier        \n\
       -r (--realtime)    run the process with real time scheduling \n\

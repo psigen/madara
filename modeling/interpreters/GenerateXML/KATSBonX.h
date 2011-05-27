@@ -17,9 +17,9 @@ namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, ProcessesImpl, Pr
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::Model, ProcessBaseImpl, ProcessBase ); }
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, OrderedImpl, Ordered ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( ProcessBase, GroupImpl, Group ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ObserverImpl, Observer ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ProcessImpl, Process ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, SleepImpl, Sleep ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ObserverImpl, Observer ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ProcessImpl, Process ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, SleepImpl, Sleep ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION2( BON::Reference, Ordered, GroupRefImpl, GroupRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, BarrierImpl, Barrier ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, DomainImpl, Domain ); }
@@ -141,6 +141,7 @@ public:
 	// attribute getters and setters
 	virtual long        getDelay() ;
 	virtual long        getId() ;
+	virtual long        getLogLevel() ;
 	virtual std::string getPostcondition() ;
 	virtual std::string getPrecondition() ;
 	virtual long        getProcesses() ;
@@ -150,9 +151,11 @@ public:
 	virtual std::string getWorkingDir() ;
 	virtual bool        isDebug() ;
 	virtual bool        isRealtime() ;
+	virtual bool        isTiming() ;
 	virtual void        setDebug( bool val);
 	virtual void        setDelay( const long val);
 	virtual void        setId( const long val);
+	virtual void        setLogLevel( const long val);
 	virtual void        setPostcondition( const std::string& val);
 	virtual void        setPrecondition( const std::string& val);
 	virtual void        setProcesses( const long val);
@@ -160,6 +163,7 @@ public:
 	virtual void        setStderr( const std::string& val);
 	virtual void        setStdin( const std::string& val);
 	virtual void        setStdout( const std::string& val);
+	virtual void        setTiming( bool val);
 	virtual void        setWorkingDir( const std::string& val);
 	//
 	// kind and role getters
@@ -241,8 +245,8 @@ namespace KATS_BON
 //   C  L  A  S  S   ObserverImpl
 //*******************************************************************
 class ObserverImpl :
-	  public ProcessBaseImpl
-	, public OrderedImpl
+	  public OrderedImpl
+	, public ProcessBaseImpl
 {
 public:
 	virtual void        initialize() { };
@@ -263,8 +267,8 @@ namespace KATS_BON
 //   C  L  A  S  S   ProcessImpl
 //*******************************************************************
 class ProcessImpl :
-	  public ProcessBaseImpl
-	, public OrderedImpl
+	  public OrderedImpl
+	, public ProcessBaseImpl
 {
 public:
 	virtual void        initialize() { };
@@ -291,8 +295,8 @@ namespace KATS_BON
 //   C  L  A  S  S   SleepImpl
 //*******************************************************************
 class SleepImpl :
-	  public ProcessBaseImpl
-	, public OrderedImpl
+	  public OrderedImpl
+	, public ProcessBaseImpl
 {
 public:
 	virtual void        initialize() { };

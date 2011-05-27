@@ -226,6 +226,15 @@ long KATS_BON::ProcessBaseImpl::getId()
 //********************************************************************************
 // 
 //********************************************************************************
+long KATS_BON::ProcessBaseImpl::getLogLevel() 
+{
+	return FCOImpl::getAttribute("LogLevel")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 std::string KATS_BON::ProcessBaseImpl::getPostcondition() 
 {
 	return FCOImpl::getAttribute("Postcondition")->getStringValue();
@@ -307,6 +316,15 @@ bool KATS_BON::ProcessBaseImpl::isRealtime()
 //********************************************************************************
 // 
 //********************************************************************************
+bool KATS_BON::ProcessBaseImpl::isTiming() 
+{
+	return FCOImpl::getAttribute("Timing")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 void KATS_BON::ProcessBaseImpl::setDebug( bool val)
 {
 	FCOImpl::getAttribute("Debug")->setBooleanValue( val);
@@ -328,6 +346,15 @@ void KATS_BON::ProcessBaseImpl::setDelay( const long val)
 void KATS_BON::ProcessBaseImpl::setId( const long val)
 {
 	FCOImpl::getAttribute("Id")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessBaseImpl::setLogLevel( const long val)
+{
+	FCOImpl::getAttribute("LogLevel")->setIntegerValue( val);
 }
 
 
@@ -391,6 +418,15 @@ void KATS_BON::ProcessBaseImpl::setStdin( const std::string& val)
 void KATS_BON::ProcessBaseImpl::setStdout( const std::string& val)
 {
 	FCOImpl::getAttribute("Stdout")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ProcessBaseImpl::setTiming( bool val)
+{
+	FCOImpl::getAttribute("Timing")->setBooleanValue( val);
 }
 
 

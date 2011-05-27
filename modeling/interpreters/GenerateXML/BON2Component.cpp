@@ -157,6 +157,13 @@ void Component::process_process (KATS_BON::Process & current,
     xml_setup.InsertEndChild (element);
   }
 
+  // does the user want timing information printed?
+  if (current->isTiming ())
+  {
+    TiXmlElement element ("timing");
+    xml_setup.InsertEndChild (element);
+  }
+
   // get the host name
   std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
   std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
@@ -253,7 +260,7 @@ void Component::process_process (KATS_BON::Process & current,
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0)
+  if (current->getId () >= 0 && current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -266,12 +273,25 @@ void Component::process_process (KATS_BON::Process & current,
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () >= 1)
+  if (current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
 
     TiXmlElement element ("processes");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set an log level?
+  if (current->getLogLevel () > 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getLogLevel ();
+
+    TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
@@ -422,6 +442,13 @@ void Component::process_sleep (KATS_BON::Sleep & current,
     xml_setup.InsertEndChild (element);
   }
 
+  // does the user want timing information printed?
+  if (current->isTiming ())
+  {
+    TiXmlElement element ("timing");
+    xml_setup.InsertEndChild (element);
+  }
+
   // get the host name
   std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
   std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
@@ -518,7 +545,7 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0)
+  if (current->getId () >= 0 && current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -531,12 +558,25 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () >= 1)
+  if (current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
 
     TiXmlElement element ("processes");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set an log level?
+  if (current->getLogLevel () > 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getLogLevel ();
+
+    TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
@@ -669,6 +709,13 @@ void Component::process_observer (KATS_BON::Observer & current,
     xml_setup.InsertEndChild (element);
   }
 
+  // does the user want timing information printed?
+  if (current->isTiming ())
+  {
+    TiXmlElement element ("timing");
+    xml_setup.InsertEndChild (element);
+  }
+
   // get the host name
   std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
   std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
@@ -765,7 +812,7 @@ void Component::process_observer (KATS_BON::Observer & current,
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0)
+  if (current->getId () >= 0 && current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -778,12 +825,25 @@ void Component::process_observer (KATS_BON::Observer & current,
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () >= 1)
+  if (current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
 
     TiXmlElement element ("processes");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set an log level?
+  if (current->getLogLevel () > 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getLogLevel ();
+
+    TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
     element.InsertEndChild (text);
 
@@ -928,6 +988,13 @@ void Component::process_process_group (KATS_BON::Group & current)
     xml_setup.InsertEndChild (element);
   }
 
+  // does the user want timing information printed?
+  if (current->isTiming ())
+  {
+    TiXmlElement element ("timing");
+    xml_setup.InsertEndChild (element);
+  }
+
   // get the host name
   std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
   std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
@@ -1024,7 +1091,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0)
+  if (current->getId () >= 0 && current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -1037,7 +1104,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () >= 1)
+  if (current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
@@ -1049,6 +1116,19 @@ void Component::process_process_group (KATS_BON::Group & current)
     xml_setup.InsertEndChild (element);
   }
  
+  // did the user set an log level?
+  if (current->getLogLevel () > 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getLogLevel ();
+
+    TiXmlElement element ("loglevel");
+    TiXmlText text (buffer.str ().c_str ());
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
   // did the user set a delay?
   if (current->getDelay () >= 1)
   {
