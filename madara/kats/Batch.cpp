@@ -1140,7 +1140,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         ACE_DEBUG ((LM_DEBUG, 
           "KATS_BATCH:    Read host = %s from test entry\n",
           el_temp1->GetText ()));
-        processes[cur].set_id (Madara::Utility::expand_envs (
+        processes[cur].set_host (Madara::Utility::expand_envs (
           el_temp1->GetText ()));
       }
     }
