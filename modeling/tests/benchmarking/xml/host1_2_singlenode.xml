@@ -11,12 +11,12 @@
         <timing />
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
-        <barrier name="ten_process" />
+        <barrier name="two_process" />
         <id>0</id>
-        <processes>10</processes>
+        <processes>2</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_tentotal_sleep1.err</stderr>
-        <stdout>$(RESULTS)/host1_tentotal_sleep1.out</stdout>
+        <stderr>$(RESULTS)/host1_twototal_1host_sleep1.err</stderr>
+        <stdout>$(RESULTS)/host1_twototal_1host_sleep1.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -24,11 +24,11 @@
         <timing />
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
-        <barrier name="ten_process" />
-        <id>5</id>
-        <processes>10</processes>
+        <barrier name="two_process" />
+        <id>1</id>
+        <processes>2</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_tentotal_sleep1.err</stderr>
-        <stdout>$(RESULTS)/host1_tentotal_sleep1.out</stdout>
+        <stderr>$(RESULTS)/host1_twototal_1host_sleep2.err</stderr>
+        <stdout>$(RESULTS)/host1_twototal_1host_sleep2.out</stdout>
     </sleep>
 </group>
