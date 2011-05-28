@@ -12,11 +12,11 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="ten_process" />
-        <id>4</id>
+        <id>9</id>
         <processes>10</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host5_tentotal_sleep1.err</stderr>
-        <stdout>$(RESULTS)/host5_tentotal_sleep1.out</stdout>
+        <stderr>$(RESULTS)/host4_tentotal_sleep1.err</stderr>
+        <stdout>$(RESULTS)/host4_tentotal_sleep1.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -25,10 +25,10 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="ten_process" />
-        <id>9</id>
+        <id>4</id>
         <processes>10</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host4_tentotal_sleep1.err</stderr>
-        <stdout>$(RESULTS)/host4_tentotal_sleep1.out</stdout>
+        <stderr>$(RESULTS)/host5_tentotal_sleep1.err</stderr>
+        <stdout>$(RESULTS)/host5_tentotal_sleep1.out</stdout>
     </sleep>
 </group>

@@ -12,7 +12,7 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="ten_process" />
-        <id>2</id>
+        <id>7</id>
         <processes>10</processes>
         <delay>5</delay>
         <stderr>$(RESULTS)/host3_tentotal_sleep1.err</stderr>
@@ -25,7 +25,7 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="ten_process" />
-        <id>7</id>
+        <id>2</id>
         <processes>10</processes>
         <delay>5</delay>
         <stderr>$(RESULTS)/host3_tentotal_sleep1.err</stderr>
