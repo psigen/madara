@@ -12,11 +12,11 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="six_process" />
-        <id>2</id>
+        <id>3</id>
         <processes>6</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_6total_1host_sleep3.err</stderr>
-        <stdout>$(RESULTS)/host1_6total_1host_sleep3.out</stdout>
+        <stderr>$(RESULTS)/host1_6total_1host_sleep4.err</stderr>
+        <stdout>$(RESULTS)/host1_6total_1host_sleep4.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -38,11 +38,11 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="six_process" />
-        <id>3</id>
+        <id>2</id>
         <processes>6</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_6total_1host_sleep4.err</stderr>
-        <stdout>$(RESULTS)/host1_6total_1host_sleep4.out</stdout>
+        <stderr>$(RESULTS)/host1_6total_1host_sleep3.err</stderr>
+        <stdout>$(RESULTS)/host1_6total_1host_sleep3.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -51,11 +51,11 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="six_process" />
-        <id>1</id>
+        <id>5</id>
         <processes>6</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_6total_1host_sleep2.err</stderr>
-        <stdout>$(RESULTS)/host1_6total_1host_sleep2.out</stdout>
+        <stderr>$(RESULTS)/host1_6total_1host_sleep6.err</stderr>
+        <stdout>$(RESULTS)/host1_6total_1host_sleep6.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -77,10 +77,10 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="six_process" />
-        <id>5</id>
+        <id>1</id>
         <processes>6</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_6total_1host_sleep6.err</stderr>
-        <stdout>$(RESULTS)/host1_6total_1host_sleep6.out</stdout>
+        <stderr>$(RESULTS)/host1_6total_1host_sleep2.err</stderr>
+        <stdout>$(RESULTS)/host1_6total_1host_sleep2.out</stdout>
     </sleep>
 </group>

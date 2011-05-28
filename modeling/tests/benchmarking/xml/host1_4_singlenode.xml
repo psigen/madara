@@ -25,11 +25,11 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="four_process" />
-        <id>0</id>
+        <id>3</id>
         <processes>4</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_4total_1host_sleep1.err</stderr>
-        <stdout>$(RESULTS)/host1_4total_1host_sleep1.out</stdout>
+        <stderr>$(RESULTS)/host1_4total_1host_sleep4.err</stderr>
+        <stdout>$(RESULTS)/host1_4total_1host_sleep4.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -51,10 +51,10 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="four_process" />
-        <id>3</id>
+        <id>0</id>
         <processes>4</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_4total_1host_sleep4.err</stderr>
-        <stdout>$(RESULTS)/host1_4total_1host_sleep4.out</stdout>
+        <stderr>$(RESULTS)/host1_4total_1host_sleep1.err</stderr>
+        <stdout>$(RESULTS)/host1_4total_1host_sleep1.out</stdout>
     </sleep>
 </group>

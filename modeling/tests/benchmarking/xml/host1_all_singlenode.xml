@@ -6,7 +6,7 @@
         <stderr>$(RESULTS)/host1_all_singlenode.err</stderr>
         <stdout>$(RESULTS)/host1_all_singlenode.out</stdout>
     </setup>
-    <group file="host1_3_singlenode.xml" />
+    <group file="host1_2_singlenode.xml" />
     <group file="host1_3_singlenode.xml" />
     <group file="host1_4_singlenode.xml" />
     <group file="host1_5_singlenode.xml" />

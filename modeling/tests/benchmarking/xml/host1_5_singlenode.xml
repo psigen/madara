@@ -12,37 +12,24 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="five_process" />
-        <id>2</id>
-        <processes>5</processes>
-        <delay>5</delay>
-        <stderr>$(RESULTS)/host1_5total_1host_sleep3.err</stderr>
-        <stdout>$(RESULTS)/host1_5total_1host_sleep3.out</stdout>
-    </sleep>
-    <sleep>
-        <debug />
-        <realtime />
-        <timing />
-        <host>$(HOST)</host>
-        <domain>barrier_benchmarks</domain>
-        <barrier name="five_process" />
-        <id>0</id>
-        <processes>5</processes>
-        <delay>5</delay>
-        <stderr>$(RESULTS)/host1_5total_1host_sleep1.err</stderr>
-        <stdout>$(RESULTS)/host1_5total_1host_sleep1.out</stdout>
-    </sleep>
-    <sleep>
-        <debug />
-        <realtime />
-        <timing />
-        <host>$(HOST)</host>
-        <domain>barrier_benchmarks</domain>
-        <barrier name="five_process" />
         <id>3</id>
         <processes>5</processes>
         <delay>5</delay>
         <stderr>$(RESULTS)/host1_5total_1host_sleep4.err</stderr>
         <stdout>$(RESULTS)/host1_5total_1host_sleep4.out</stdout>
+    </sleep>
+    <sleep>
+        <debug />
+        <realtime />
+        <timing />
+        <host>$(HOST)</host>
+        <domain>barrier_benchmarks</domain>
+        <barrier name="five_process" />
+        <id>4</id>
+        <processes>5</processes>
+        <delay>5</delay>
+        <stderr>$(RESULTS)/host1_5total_1host_sleep5.err</stderr>
+        <stdout>$(RESULTS)/host1_5total_1host_sleep5.out</stdout>
     </sleep>
     <sleep>
         <debug />
@@ -64,10 +51,23 @@
         <host>$(HOST)</host>
         <domain>barrier_benchmarks</domain>
         <barrier name="five_process" />
-        <id>4</id>
+        <id>0</id>
         <processes>5</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/host1_5total_1host_sleep5.err</stderr>
-        <stdout>$(RESULTS)/host1_5total_1host_sleep5.out</stdout>
+        <stderr>$(RESULTS)/host1_5total_1host_sleep1.err</stderr>
+        <stdout>$(RESULTS)/host1_5total_1host_sleep1.out</stdout>
+    </sleep>
+    <sleep>
+        <debug />
+        <realtime />
+        <timing />
+        <host>$(HOST)</host>
+        <domain>barrier_benchmarks</domain>
+        <barrier name="five_process" />
+        <id>2</id>
+        <processes>5</processes>
+        <delay>5</delay>
+        <stderr>$(RESULTS)/host1_5total_1host_sleep3.err</stderr>
+        <stdout>$(RESULTS)/host1_5total_1host_sleep3.out</stdout>
     </sleep>
 </group>
