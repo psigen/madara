@@ -26,6 +26,7 @@
 #include <Console.h>
 #include "BON2Component.h"
 #include "../Utility/tinyxml.h"
+#include "../Utility/Utility.h"
 
 // I have to paste this into KATSBonX.h/cpp whenever I change
 // the paradigm
@@ -256,6 +257,9 @@ void Component::process_process (KATS_BON::Process & current,
     }
     else
       element.SetAttribute ("name", bref->getName ().c_str ());
+
+    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
+                          element.Attribute ("name")));
 
     xml_setup.InsertEndChild (element);
   }
@@ -542,6 +546,9 @@ void Component::process_sleep (KATS_BON::Sleep & current,
     else
       element.SetAttribute ("name", bref->getName ().c_str ());
 
+    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
+                          element.Attribute ("name")));
+
     xml_setup.InsertEndChild (element);
   }
  
@@ -808,6 +815,9 @@ void Component::process_observer (KATS_BON::Observer & current,
     }
     else
       element.SetAttribute ("name", bref->getName ().c_str ());
+
+    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
+                          element.Attribute ("name")));
 
     xml_setup.InsertEndChild (element);
   }
@@ -1087,6 +1097,9 @@ void Component::process_process_group (KATS_BON::Group & current)
     }
     else
       element.SetAttribute ("name", bref->getName ().c_str ());
+
+    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
+                          element.Attribute ("name")));
 
     xml_setup.InsertEndChild (element);
   }

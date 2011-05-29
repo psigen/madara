@@ -14,13 +14,14 @@ namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, BarriersImpl, Bar
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, DomainsImpl, Domains ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, HostsImpl, Hosts ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, ProcessesImpl, Processes ); }
-namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::Model, ProcessBaseImpl, ProcessBase ); }
+namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, ConfigureBaseImpl, ConfigureBase ); }
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, OrderedImpl, Ordered ); }
+namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION2( BON::Model, ConfigureBase, ProcessBaseImpl, ProcessBase ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION3( BON::Reference, ConfigureBase, Ordered, GroupRefImpl, GroupRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( ProcessBase, GroupImpl, Group ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ObserverImpl, Observer ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ProcessImpl, Process ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, SleepImpl, Sleep ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( BON::Reference, Ordered, GroupRefImpl, GroupRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, BarrierImpl, Barrier ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, DomainImpl, Domain ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, HostImpl, Host ); }
@@ -127,10 +128,10 @@ public:
 namespace KATS_BON
 {
 //*******************************************************************
-//   C  L  A  S  S   ProcessBaseImpl
+//   C  L  A  S  S   ConfigureBaseImpl
 //*******************************************************************
-class ProcessBaseImpl :
-	  virtual public BON::ModelImpl
+class ConfigureBaseImpl :
+	  virtual public BON::FCOImpl
 {
 public:
 	virtual void        initialize() { };
@@ -165,12 +166,6 @@ public:
 	virtual void        setStdout( const std::string& val);
 	virtual void        setTiming( bool val);
 	virtual void        setWorkingDir( const std::string& val);
-	//
-	// kind and role getters
-	virtual std::set<KATS_BON::BarrierRef>  getBarrierRef();
-	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
-	virtual std::set<KATS_BON::HostRef>     getHostRef();
-	virtual std::set<KATS_BON::Kill>        getKill();
 
 	///BUP
 	// add your own members here
@@ -198,6 +193,60 @@ public:
 	virtual bool        isEnabled() ;
 	virtual void        setEnabled( bool val);
 	virtual void        setOrder( const long val);
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
+//   C  L  A  S  S   ProcessBaseImpl
+//*******************************************************************
+class ProcessBaseImpl :
+	  virtual public BON::ModelImpl
+	, public ConfigureBaseImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
+	//
+	// kind and role getters
+	virtual std::set<KATS_BON::BarrierRef>  getBarrierRef();
+	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
+	virtual std::set<KATS_BON::HostRef>     getHostRef();
+	virtual std::set<KATS_BON::Kill>        getKill();
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
+//   C  L  A  S  S   GroupRefImpl
+//*******************************************************************
+class GroupRefImpl :
+	  virtual public BON::ReferenceImpl
+	, public ConfigureBaseImpl
+	, public OrderedImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
+	//
+	// ref getters
+	virtual KATS_BON::Group                 getGroup();
 
 	///BUP
 	// add your own members here
@@ -303,31 +352,6 @@ public:
 	virtual void        finalize() { };
 	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
 
-
-	///BUP
-	// add your own members here
-	///EUP
-}; // class
-}  // namespace
-
-
-namespace KATS_BON
-{
-//*******************************************************************
-//   C  L  A  S  S   GroupRefImpl
-//*******************************************************************
-class GroupRefImpl :
-	  virtual public BON::ReferenceImpl
-	, public OrderedImpl
-{
-public:
-	virtual void        initialize() { };
-	virtual void        finalize() { };
-	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
-
-	//
-	// ref getters
-	virtual KATS_BON::Group                 getGroup();
 
 	///BUP
 	// add your own members here

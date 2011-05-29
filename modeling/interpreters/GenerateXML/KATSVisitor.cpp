@@ -126,6 +126,15 @@ bool KATSVisitor::visitHostRef( const KATS_BON::HostRef& object )
 }
 
 
+bool KATSVisitor::visitConfigureBase( const KATS_BON::ConfigureBase& object )
+{
+	if ( !object)
+		return false;
+
+	return true;
+}
+
+
 bool KATSVisitor::visitOrdered( const KATS_BON::Ordered& object )
 {
 	if ( !object)

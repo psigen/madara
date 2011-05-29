@@ -10,13 +10,14 @@ IMPLEMENT_BONEXTENSION( KATS_BON::Barriers, "Barriers" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Domains, "Domains" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Hosts, "Hosts" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Processes, "Processes" );
-IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::ProcessBase );
+IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::ConfigureBase );
 IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::Ordered );
+IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::ProcessBase );
+IMPLEMENT_BONEXTENSION( KATS_BON::GroupRef, "GroupRef" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Group, "Group" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Observer, "Observer" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Process, "Process" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Sleep, "Sleep" );
-IMPLEMENT_BONEXTENSION( KATS_BON::GroupRef, "GroupRef" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Barrier, "Barrier" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Domain, "Domain" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Host, "Host" );
@@ -191,6 +192,296 @@ std::set<KATS_BON::Group> KATS_BON::ProcessesImpl::getGroup()
 //********************************************************************************
 // 
 //********************************************************************************
+void KATS_BON::ConfigureBaseImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::ConfigureBase
+	pVisitor->visitConfigureBase( KATS_BON::ConfigureBase( this));
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ConfigureBaseImpl::getDelay() 
+{
+	return FCOImpl::getAttribute("Delay")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ConfigureBaseImpl::getId() 
+{
+	return FCOImpl::getAttribute("Id")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ConfigureBaseImpl::getLogLevel() 
+{
+	return FCOImpl::getAttribute("LogLevel")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getPostcondition() 
+{
+	return FCOImpl::getAttribute("Postcondition")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getPrecondition() 
+{
+	return FCOImpl::getAttribute("Precondition")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::ConfigureBaseImpl::getProcesses() 
+{
+	return FCOImpl::getAttribute("Processes")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getStderr() 
+{
+	return FCOImpl::getAttribute("Stderr")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getStdin() 
+{
+	return FCOImpl::getAttribute("Stdin")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getStdout() 
+{
+	return FCOImpl::getAttribute("Stdout")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getWorkingDir() 
+{
+	return FCOImpl::getAttribute("WorkingDir")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::ConfigureBaseImpl::isDebug() 
+{
+	return FCOImpl::getAttribute("Debug")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::ConfigureBaseImpl::isRealtime() 
+{
+	return FCOImpl::getAttribute("Realtime")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::ConfigureBaseImpl::isTiming() 
+{
+	return FCOImpl::getAttribute("Timing")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setDebug( bool val)
+{
+	FCOImpl::getAttribute("Debug")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setDelay( const long val)
+{
+	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setId( const long val)
+{
+	FCOImpl::getAttribute("Id")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setLogLevel( const long val)
+{
+	FCOImpl::getAttribute("LogLevel")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setPostcondition( const std::string& val)
+{
+	FCOImpl::getAttribute("Postcondition")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setPrecondition( const std::string& val)
+{
+	FCOImpl::getAttribute("Precondition")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setProcesses( const long val)
+{
+	FCOImpl::getAttribute("Processes")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setRealtime( bool val)
+{
+	FCOImpl::getAttribute("Realtime")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setStderr( const std::string& val)
+{
+	FCOImpl::getAttribute("Stderr")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setStdin( const std::string& val)
+{
+	FCOImpl::getAttribute("Stdin")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setStdout( const std::string& val)
+{
+	FCOImpl::getAttribute("Stdout")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setTiming( bool val)
+{
+	FCOImpl::getAttribute("Timing")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setWorkingDir( const std::string& val)
+{
+	FCOImpl::getAttribute("WorkingDir")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::OrderedImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::Ordered
+	pVisitor->visitOrdered( KATS_BON::Ordered( this));
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+long KATS_BON::OrderedImpl::getOrder() 
+{
+	return FCOImpl::getAttribute("Order")->getIntegerValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+bool KATS_BON::OrderedImpl::isEnabled() 
+{
+	return FCOImpl::getAttribute("Enabled")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::OrderedImpl::setEnabled( bool val)
+{
+	FCOImpl::getAttribute("Enabled")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::OrderedImpl::setOrder( const long val)
+{
+	FCOImpl::getAttribute("Order")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 void KATS_BON::ProcessBaseImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 {
 	// visit the KATS_BON::ProcessBase
@@ -202,240 +493,6 @@ void KATS_BON::ProcessBaseImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 	{
 		(*it)->accept( pVisitor);
 	}
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessBaseImpl::getDelay() 
-{
-	return FCOImpl::getAttribute("Delay")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessBaseImpl::getId() 
-{
-	return FCOImpl::getAttribute("Id")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessBaseImpl::getLogLevel() 
-{
-	return FCOImpl::getAttribute("LogLevel")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessBaseImpl::getPostcondition() 
-{
-	return FCOImpl::getAttribute("Postcondition")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessBaseImpl::getPrecondition() 
-{
-	return FCOImpl::getAttribute("Precondition")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-long KATS_BON::ProcessBaseImpl::getProcesses() 
-{
-	return FCOImpl::getAttribute("Processes")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessBaseImpl::getStderr() 
-{
-	return FCOImpl::getAttribute("Stderr")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessBaseImpl::getStdin() 
-{
-	return FCOImpl::getAttribute("Stdin")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessBaseImpl::getStdout() 
-{
-	return FCOImpl::getAttribute("Stdout")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-std::string KATS_BON::ProcessBaseImpl::getWorkingDir() 
-{
-	return FCOImpl::getAttribute("WorkingDir")->getStringValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-bool KATS_BON::ProcessBaseImpl::isDebug() 
-{
-	return FCOImpl::getAttribute("Debug")->getBooleanValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-bool KATS_BON::ProcessBaseImpl::isRealtime() 
-{
-	return FCOImpl::getAttribute("Realtime")->getBooleanValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-bool KATS_BON::ProcessBaseImpl::isTiming() 
-{
-	return FCOImpl::getAttribute("Timing")->getBooleanValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setDebug( bool val)
-{
-	FCOImpl::getAttribute("Debug")->setBooleanValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setDelay( const long val)
-{
-	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setId( const long val)
-{
-	FCOImpl::getAttribute("Id")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setLogLevel( const long val)
-{
-	FCOImpl::getAttribute("LogLevel")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setPostcondition( const std::string& val)
-{
-	FCOImpl::getAttribute("Postcondition")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setPrecondition( const std::string& val)
-{
-	FCOImpl::getAttribute("Precondition")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setProcesses( const long val)
-{
-	FCOImpl::getAttribute("Processes")->setIntegerValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setRealtime( bool val)
-{
-	FCOImpl::getAttribute("Realtime")->setBooleanValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setStderr( const std::string& val)
-{
-	FCOImpl::getAttribute("Stderr")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setStdin( const std::string& val)
-{
-	FCOImpl::getAttribute("Stdin")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setStdout( const std::string& val)
-{
-	FCOImpl::getAttribute("Stdout")->setStringValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setTiming( bool val)
-{
-	FCOImpl::getAttribute("Timing")->setBooleanValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::ProcessBaseImpl::setWorkingDir( const std::string& val)
-{
-	FCOImpl::getAttribute("WorkingDir")->setStringValue( val);
 }
 
 
@@ -510,46 +567,20 @@ std::set<KATS_BON::Kill> KATS_BON::ProcessBaseImpl::getKill()
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::OrderedImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+void KATS_BON::GroupRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 {
-	// visit the KATS_BON::Ordered
-	pVisitor->visitOrdered( KATS_BON::Ordered( this));
+	// visit the KATS_BON::GroupRef
+	pVisitor->visitGroupRef( KATS_BON::GroupRef( this));
 }
 
 
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::OrderedImpl::getOrder() 
+KATS_BON::Group KATS_BON::GroupRefImpl::getGroup()
 {
-	return FCOImpl::getAttribute("Order")->getIntegerValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-bool KATS_BON::OrderedImpl::isEnabled() 
-{
-	return FCOImpl::getAttribute("Enabled")->getBooleanValue();
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::OrderedImpl::setEnabled( bool val)
-{
-	FCOImpl::getAttribute("Enabled")->setBooleanValue( val);
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::OrderedImpl::setOrder( const long val)
-{
-	FCOImpl::getAttribute("Order")->setIntegerValue( val);
+	BON::FCO r = BON::ReferenceImpl::getReferred();
+	return KATS_BON::Group(r);
 }
 
 
@@ -780,26 +811,6 @@ void KATS_BON::SleepImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 	{
 		(*it)->accept( pVisitor);
 	}
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-void KATS_BON::GroupRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
-{
-	// visit the KATS_BON::GroupRef
-	pVisitor->visitGroupRef( KATS_BON::GroupRef( this));
-}
-
-
-//********************************************************************************
-// 
-//********************************************************************************
-KATS_BON::Group KATS_BON::GroupRefImpl::getGroup()
-{
-	BON::FCO r = BON::ReferenceImpl::getReferred();
-	return KATS_BON::Group(r);
 }
 
 

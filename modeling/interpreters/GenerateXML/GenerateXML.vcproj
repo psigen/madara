@@ -292,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Utility\Utility.cpp"
+				>
+			</File>
+			<File
 				RelativePath="$(GME_ROOT)\SDK\BON\Common\Utils.cpp"
 				>
 			</File>
@@ -386,6 +390,10 @@
 			</File>
 			<File
 				RelativePath="..\Utility\tinyxml.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Utility\Utility.h"
 				>
 			</File>
 			<File
