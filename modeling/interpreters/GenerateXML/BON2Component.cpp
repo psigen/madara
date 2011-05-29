@@ -189,11 +189,19 @@ void Component::process_process (KATS_BON::Process & current,
       {
         text.SetValue (host->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (href->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -222,11 +230,19 @@ void Component::process_process (KATS_BON::Process & current,
       {
         text.SetValue (domain->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (dref->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -272,6 +288,10 @@ void Component::process_process (KATS_BON::Process & current,
 
     TiXmlElement element ("id");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -285,6 +305,10 @@ void Component::process_process (KATS_BON::Process & current,
 
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -298,6 +322,10 @@ void Component::process_process (KATS_BON::Process & current,
 
     TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -311,6 +339,10 @@ void Component::process_process (KATS_BON::Process & current,
 
     TiXmlElement element ("delay");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -321,6 +353,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("precondition");
     TiXmlText text (current->getPrecondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -330,6 +366,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("postcondition");
     TiXmlText text (current->getPostcondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -339,6 +379,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("executable");
     TiXmlText text (current->getExecutable ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -348,6 +392,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("workingdir");
     TiXmlText text (current->getWorkingDir ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -357,6 +405,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("commandline");
     TiXmlText text (current->getCommandLine ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -375,6 +427,10 @@ void Component::process_process (KATS_BON::Process & current,
       std::stringstream time_buff;
       time_buff << kill->getTime ();
       TiXmlText time_text (time_buff.str ().c_str ());
+
+      time_text.SetValue (KATS::Utility::expand_model_vars (current,
+        time_text.ValueStr ()));
+
       time.InsertEndChild (time_text);
 
       element.InsertEndChild (time);
@@ -388,6 +444,10 @@ void Component::process_process (KATS_BON::Process & current,
         std::stringstream signal_buff;
         signal_buff << kill->getSignal ();
         TiXmlText signal_text (signal_buff.str ().c_str ());
+
+        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
+          signal_text.ValueStr ()));
+
         signal.InsertEndChild (signal_text);
 
         element.InsertEndChild (signal);
@@ -402,6 +462,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("stdin");
     TiXmlText text (current->getStdin ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -411,6 +475,10 @@ void Component::process_process (KATS_BON::Process & current,
   {
     TiXmlElement element ("stderr");
     TiXmlText text (current->getStderr ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -421,6 +489,10 @@ void Component::process_process (KATS_BON::Process & current,
     TiXmlElement element ("stdout");
 
     TiXmlText text (current->getStdout ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -477,11 +549,19 @@ void Component::process_sleep (KATS_BON::Sleep & current,
       {
         text.SetValue (host->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (href->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -510,11 +590,19 @@ void Component::process_sleep (KATS_BON::Sleep & current,
       {
         text.SetValue (domain->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (dref->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -560,6 +648,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
 
     TiXmlElement element ("id");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -573,6 +665,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
 
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -586,6 +682,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
 
     TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -599,6 +699,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
 
     TiXmlElement element ("delay");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -609,6 +713,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   {
     TiXmlElement element ("precondition");
     TiXmlText text (current->getPrecondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -618,6 +726,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   {
     TiXmlElement element ("postcondition");
     TiXmlText text (current->getPostcondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -627,6 +739,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   {
     TiXmlElement element ("workingdir");
     TiXmlText text (current->getWorkingDir ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -645,6 +761,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
       std::stringstream time_buff;
       time_buff << kill->getTime ();
       TiXmlText time_text (time_buff.str ().c_str ());
+
+      time_text.SetValue (KATS::Utility::expand_model_vars (current,
+        time_text.ValueStr ()));
+
       time.InsertEndChild (time_text);
 
       element.InsertEndChild (time);
@@ -658,6 +778,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
         std::stringstream signal_buff;
         signal_buff << kill->getSignal ();
         TiXmlText signal_text (signal_buff.str ().c_str ());
+
+        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
+          signal_text.ValueStr ()));
+
         signal.InsertEndChild (signal_text);
 
         element.InsertEndChild (signal);
@@ -672,6 +796,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   {
     TiXmlElement element ("stdin");
     TiXmlText text (current->getStdin ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -681,6 +809,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   {
     TiXmlElement element ("stderr");
     TiXmlText text (current->getStderr ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -691,6 +823,10 @@ void Component::process_sleep (KATS_BON::Sleep & current,
     TiXmlElement element ("stdout");
 
     TiXmlText text (current->getStdout ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -747,11 +883,19 @@ void Component::process_observer (KATS_BON::Observer & current,
       {
         text.SetValue (host->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (href->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -780,11 +924,19 @@ void Component::process_observer (KATS_BON::Observer & current,
       {
         text.SetValue (domain->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (dref->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -830,6 +982,10 @@ void Component::process_observer (KATS_BON::Observer & current,
 
     TiXmlElement element ("id");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -843,6 +999,9 @@ void Component::process_observer (KATS_BON::Observer & current,
 
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -856,6 +1015,9 @@ void Component::process_observer (KATS_BON::Observer & current,
 
     TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -869,6 +1031,9 @@ void Component::process_observer (KATS_BON::Observer & current,
 
     TiXmlElement element ("delay");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -879,6 +1044,9 @@ void Component::process_observer (KATS_BON::Observer & current,
   {
     TiXmlElement element ("precondition");
     TiXmlText text (current->getPrecondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -888,6 +1056,9 @@ void Component::process_observer (KATS_BON::Observer & current,
   {
     TiXmlElement element ("postcondition");
     TiXmlText text (current->getPostcondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -897,6 +1068,9 @@ void Component::process_observer (KATS_BON::Observer & current,
   {
     TiXmlElement element ("workingdir");
     TiXmlText text (current->getWorkingDir ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -915,6 +1089,10 @@ void Component::process_observer (KATS_BON::Observer & current,
       std::stringstream time_buff;
       time_buff << kill->getTime ();
       TiXmlText time_text (time_buff.str ().c_str ());
+
+      time_text.SetValue (KATS::Utility::expand_model_vars (current,
+        time_text.ValueStr ()));
+    
       time.InsertEndChild (time_text);
 
       element.InsertEndChild (time);
@@ -928,6 +1106,10 @@ void Component::process_observer (KATS_BON::Observer & current,
         std::stringstream signal_buff;
         signal_buff << kill->getSignal ();
         TiXmlText signal_text (signal_buff.str ().c_str ());
+
+        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
+          signal_text.ValueStr ()));
+    
         signal.InsertEndChild (signal_text);
 
         element.InsertEndChild (signal);
@@ -942,6 +1124,9 @@ void Component::process_observer (KATS_BON::Observer & current,
   {
     TiXmlElement element ("stdin");
     TiXmlText text (current->getStdin ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -951,6 +1136,9 @@ void Component::process_observer (KATS_BON::Observer & current,
   {
     TiXmlElement element ("stderr");
     TiXmlText text (current->getStderr ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -961,6 +1149,9 @@ void Component::process_observer (KATS_BON::Observer & current,
     TiXmlElement element ("stdout");
 
     TiXmlText text (current->getStdout ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -1029,11 +1220,17 @@ void Component::process_process_group (KATS_BON::Group & current)
       {
         text.SetValue (host->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (href->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
       element.InsertEndChild (text);
     }
     xml_setup.InsertEndChild (element);
@@ -1062,13 +1259,21 @@ void Component::process_process_group (KATS_BON::Group & current)
       {
         text.SetValue (domain->getOverride ().c_str ());
       }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    
       element.InsertEndChild (text);
     }
     else
     {
       TiXmlText text (dref->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+    
       element.InsertEndChild (text);
     }
+
     xml_setup.InsertEndChild (element);
   }
 
@@ -1112,6 +1317,10 @@ void Component::process_process_group (KATS_BON::Group & current)
 
     TiXmlElement element ("id");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -1125,6 +1334,10 @@ void Component::process_process_group (KATS_BON::Group & current)
 
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -1138,6 +1351,10 @@ void Component::process_process_group (KATS_BON::Group & current)
 
     TiXmlElement element ("loglevel");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -1151,6 +1368,10 @@ void Component::process_process_group (KATS_BON::Group & current)
 
     TiXmlElement element ("delay");
     TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
@@ -1161,6 +1382,10 @@ void Component::process_process_group (KATS_BON::Group & current)
   {
     TiXmlElement element ("precondition");
     TiXmlText text (current->getPrecondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -1170,6 +1395,10 @@ void Component::process_process_group (KATS_BON::Group & current)
   {
     TiXmlElement element ("postcondition");
     TiXmlText text (current->getPostcondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -1188,6 +1417,10 @@ void Component::process_process_group (KATS_BON::Group & current)
       std::stringstream time_buff;
       time_buff << kill->getTime ();
       TiXmlText time_text (time_buff.str ().c_str ());
+
+      time_text.SetValue (KATS::Utility::expand_model_vars (current,
+        time_text.ValueStr ()));
+    
       time.InsertEndChild (time_text);
 
       element.InsertEndChild (time);
@@ -1201,6 +1434,10 @@ void Component::process_process_group (KATS_BON::Group & current)
         std::stringstream signal_buff;
         signal_buff << kill->getSignal ();
         TiXmlText signal_text (signal_buff.str ().c_str ());
+
+        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
+          signal_text.ValueStr ()));
+    
         signal.InsertEndChild (signal_text);
 
         element.InsertEndChild (signal);
@@ -1215,6 +1452,10 @@ void Component::process_process_group (KATS_BON::Group & current)
   {
     TiXmlElement element ("stdin");
     TiXmlText text (current->getStdin ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -1224,6 +1465,10 @@ void Component::process_process_group (KATS_BON::Group & current)
   {
     TiXmlElement element ("stderr");
     TiXmlText text (current->getStderr ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
@@ -1234,6 +1479,10 @@ void Component::process_process_group (KATS_BON::Group & current)
     TiXmlElement element ("stdout");
 
     TiXmlText text (current->getStdout ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+    
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
