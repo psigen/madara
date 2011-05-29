@@ -19,9 +19,9 @@ namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, OrderedImpl
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION2( BON::Model, ConfigureBase, ProcessBaseImpl, ProcessBase ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION3( BON::Reference, ConfigureBase, Ordered, GroupRefImpl, GroupRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( ProcessBase, GroupImpl, Group ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ObserverImpl, Observer ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ProcessImpl, Process ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, SleepImpl, Sleep ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ObserverImpl, Observer ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ProcessImpl, Process ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, SleepImpl, Sleep ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, BarrierImpl, Barrier ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, DomainImpl, Domain ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, HostImpl, Host ); }
@@ -294,8 +294,8 @@ namespace KATS_BON
 //   C  L  A  S  S   ObserverImpl
 //*******************************************************************
 class ObserverImpl :
-	  public OrderedImpl
-	, public ProcessBaseImpl
+	  public ProcessBaseImpl
+	, public OrderedImpl
 {
 public:
 	virtual void        initialize() { };
@@ -316,8 +316,8 @@ namespace KATS_BON
 //   C  L  A  S  S   ProcessImpl
 //*******************************************************************
 class ProcessImpl :
-	  public OrderedImpl
-	, public ProcessBaseImpl
+	  public ProcessBaseImpl
+	, public OrderedImpl
 {
 public:
 	virtual void        initialize() { };
@@ -344,8 +344,8 @@ namespace KATS_BON
 //   C  L  A  S  S   SleepImpl
 //*******************************************************************
 class SleepImpl :
-	  public OrderedImpl
-	, public ProcessBaseImpl
+	  public ProcessBaseImpl
+	, public OrderedImpl
 {
 public:
 	virtual void        initialize() { };
@@ -475,6 +475,10 @@ public:
 	virtual void        finalize() { };
 	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
 
+	//
+	// attribute getters and setters
+	virtual bool        isOverrideProcesses() ;
+	virtual void        setOverrideProcesses( bool val);
 	//
 	// ref getters
 	virtual KATS_BON::Barrier               getBarrier();

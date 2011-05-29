@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="KATS" version="0.4.0" guid="{BF8BC07E-6353-44AF-BC5A-C5B071FCCE75}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+<paradigm name="KATS" version="0.4.1" guid="{D4CF431E-0234-4119-9707-65185F7860B5}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
 
 	<comment></comment>
 
@@ -34,6 +34,8 @@
 		</attrdef>
 		<attrdef name="Override" metaref = "1089" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Overrides the component name and allows for spaces, punctuation, etc."></regnode>
+		</attrdef>
+		<attrdef name="OverrideProcesses" metaref = "1160" valuetype = "boolean" defvalue = "true">
 		</attrdef>
 		<attrdef name="Parallel" metaref = "1006" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Run tests in parallel?"></regnode>
@@ -87,7 +89,7 @@
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="kill.gif"></regnode>
 		</atom>
-		<reference name = "BarrierRef" metaref = "1077">
+		<reference name = "BarrierRef" metaref = "1077" attributes = "OverrideProcesses">
 			<dispname>Barrier Name</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 			<regnode name = "isTypeShown" value ="true"></regnode>

@@ -251,11 +251,11 @@ void Component::process_process (KATS_BON::Process & current,
   // get the barrier name
   std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
   std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  KATS_BON::BarrierRef bref = *bbegin;
+  KATS_BON::Barrier barrier = bref->getBarrier ();
+
   if (bbegin != barriers.end ())
   {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
     Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
 
     TiXmlElement element ("barrier");
@@ -281,7 +281,7 @@ void Component::process_process (KATS_BON::Process & current,
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0 && current->getProcesses () > 1)
+  if (current->getId () > 0)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -298,7 +298,7 @@ void Component::process_process (KATS_BON::Process & current,
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () > 1)
+  if (bref->isOverrideProcesses () || current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
@@ -306,8 +306,17 @@ void Component::process_process (KATS_BON::Process & current,
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
 
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
+    if (bref->isOverrideProcesses ())
+    {
+      std::stringstream buffer;
+      buffer << barrier->getReferredBy ().size ();
+      text.SetValue (buffer.str ());
+    }
+    else
+    {
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+    }
 
     element.InsertEndChild (text);
 
@@ -611,11 +620,11 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   // get the barrier name
   std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
   std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  KATS_BON::BarrierRef bref = *bbegin;
+  KATS_BON::Barrier barrier = bref->getBarrier ();
+
   if (bbegin != barriers.end ())
   {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
     Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
 
     TiXmlElement element ("barrier");
@@ -641,7 +650,7 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0 && current->getProcesses () > 1)
+  if (current->getId () > 0)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -658,7 +667,7 @@ void Component::process_sleep (KATS_BON::Sleep & current,
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () > 1)
+  if (bref->isOverrideProcesses () || current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
@@ -666,8 +675,17 @@ void Component::process_sleep (KATS_BON::Sleep & current,
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
 
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
+    if (bref->isOverrideProcesses ())
+    {
+      std::stringstream buffer;
+      buffer << barrier->getReferredBy ().size ();
+      text.SetValue (buffer.str ());
+    }
+    else
+    {
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+    }
 
     element.InsertEndChild (text);
 
@@ -945,11 +963,11 @@ void Component::process_observer (KATS_BON::Observer & current,
   // get the barrier name
   std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
   std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  KATS_BON::BarrierRef bref = *bbegin;
+  KATS_BON::Barrier barrier = bref->getBarrier ();
+
   if (bbegin != barriers.end ())
   {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
     Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
 
     TiXmlElement element ("barrier");
@@ -975,7 +993,7 @@ void Component::process_observer (KATS_BON::Observer & current,
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0 && current->getProcesses () > 1)
+  if (current->getId () > 0)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -992,7 +1010,7 @@ void Component::process_observer (KATS_BON::Observer & current,
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () > 1)
+  if (bref->isOverrideProcesses () || current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
@@ -1000,7 +1018,17 @@ void Component::process_observer (KATS_BON::Observer & current,
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
 
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
+    if (bref->isOverrideProcesses ())
+    {
+      std::stringstream buffer;
+      buffer << barrier->getReferredBy ().size ();
+      text.SetValue (buffer.str ());
+    }
+    else
+    {
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+    }
 
     element.InsertEndChild (text);
 
@@ -1280,11 +1308,11 @@ void Component::process_process_group (KATS_BON::Group & current)
   // get the barrier name
   std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
   std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  KATS_BON::BarrierRef bref = *bbegin;
+  KATS_BON::Barrier barrier = bref->getBarrier ();
+
   if (bbegin != barriers.end ())
   {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
     Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
 
     TiXmlElement element ("barrier");
@@ -1310,7 +1338,7 @@ void Component::process_process_group (KATS_BON::Group & current)
   }
  
   // did the user set an id in the process ring?
-  if (current->getId () >= 0 && current->getProcesses () > 1)
+  if (current->getId () > 0)
   {
     std::stringstream buffer;
     buffer << current->getId ();
@@ -1320,14 +1348,14 @@ void Component::process_process_group (KATS_BON::Group & current)
 
     text.SetValue (KATS::Utility::expand_model_vars (current,
       text.ValueStr ()));
-    
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
   }
 
   // did the user set the number of processes in the barrier?
-  if (current->getProcesses () > 1)
+  if (bref->isOverrideProcesses () || current->getProcesses () > 1)
   {
     std::stringstream buffer;
     buffer << current->getProcesses ();
@@ -1335,14 +1363,23 @@ void Component::process_process_group (KATS_BON::Group & current)
     TiXmlElement element ("processes");
     TiXmlText text (buffer.str ().c_str ());
 
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
+    if (bref->isOverrideProcesses ())
+    {
+      std::stringstream buffer;
+      buffer << barrier->getReferredBy ().size ();
+      text.SetValue (buffer.str ());
+    }
+    else
+    {
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+    }
+
     element.InsertEndChild (text);
 
     xml_setup.InsertEndChild (element);
   }
- 
+
   // did the user set an log level?
   if (current->getLogLevel () > 0)
   {

@@ -957,6 +957,24 @@ void KATS_BON::BarrierRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
+bool KATS_BON::BarrierRefImpl::isOverrideProcesses() 
+{
+	return FCOImpl::getAttribute("OverrideProcesses")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::BarrierRefImpl::setOverrideProcesses( bool val)
+{
+	FCOImpl::getAttribute("OverrideProcesses")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 KATS_BON::Barrier KATS_BON::BarrierRefImpl::getBarrier()
 {
 	BON::FCO r = BON::ReferenceImpl::getReferred();
