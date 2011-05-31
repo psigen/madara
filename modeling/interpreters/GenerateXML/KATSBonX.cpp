@@ -577,6 +577,24 @@ void KATS_BON::GroupRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
+bool KATS_BON::GroupRefImpl::isOverrideSettings() 
+{
+	return FCOImpl::getAttribute("OverrideSettings")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::GroupRefImpl::setOverrideSettings( bool val)
+{
+	FCOImpl::getAttribute("OverrideSettings")->setBooleanValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 KATS_BON::Group KATS_BON::GroupRefImpl::getGroup()
 {
 	BON::FCO r = BON::ReferenceImpl::getReferred();

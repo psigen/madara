@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="KATS" version="0.4.1" guid="{D4CF431E-0234-4119-9707-65185F7860B5}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+<paradigm name="KATS" version="0.4.2" guid="{D622B28F-D051-4944-978F-7FE7D5211363}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
 
 	<comment></comment>
 
@@ -36,6 +36,9 @@
 			<regnode name="help" value = "Overrides the component name and allows for spaces, punctuation, etc."></regnode>
 		</attrdef>
 		<attrdef name="OverrideProcesses" metaref = "1160" valuetype = "boolean" defvalue = "true">
+		</attrdef>
+		<attrdef name="OverrideSettings" metaref = "1161" valuetype = "boolean" defvalue = "false">
+			<regnode name="help" value = "Override the group settings with those listed here?"></regnode>
 		</attrdef>
 		<attrdef name="Parallel" metaref = "1006" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Run tests in parallel?"></regnode>
@@ -105,7 +108,7 @@
 				<pointeritem desc = "Domain"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir">
+		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order OverrideSettings Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir">
 				<regnode name = "namePosition" value ="4"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Group"></pointeritem>
