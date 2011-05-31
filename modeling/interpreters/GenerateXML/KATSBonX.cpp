@@ -229,6 +229,24 @@ long KATS_BON::ConfigureBaseImpl::getLogLevel()
 //********************************************************************************
 // 
 //********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getPostDelay() 
+{
+	return FCOImpl::getAttribute("PostDelay")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getPostLaunch() 
+{
+	return FCOImpl::getAttribute("PostLaunch")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 std::string KATS_BON::ConfigureBaseImpl::getPostcondition() 
 {
 	return FCOImpl::getAttribute("Postcondition")->getStringValue();
@@ -349,6 +367,24 @@ void KATS_BON::ConfigureBaseImpl::setId( const long val)
 void KATS_BON::ConfigureBaseImpl::setLogLevel( const long val)
 {
 	FCOImpl::getAttribute("LogLevel")->setIntegerValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setPostDelay( const std::string& val)
+{
+	FCOImpl::getAttribute("PostDelay")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setPostLaunch( const std::string& val)
+{
+	FCOImpl::getAttribute("PostLaunch")->setStringValue( val);
 }
 
 

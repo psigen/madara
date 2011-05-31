@@ -60,6 +60,8 @@ class Component
 		void initialize( Project& project );
 		void finalize( Project& project );
     
+    void process_process_base (KATS_BON::ProcessBase & current,
+                                      TiXmlElement & xml_setup);
     void process_process (KATS_BON::Process & process,
                           TiXmlElement & parent);
     void process_sleep (KATS_BON::Sleep & sleep,

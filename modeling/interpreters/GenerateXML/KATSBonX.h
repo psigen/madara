@@ -143,6 +143,8 @@ public:
 	virtual long        getDelay() ;
 	virtual long        getId() ;
 	virtual long        getLogLevel() ;
+	virtual std::string getPostDelay() ;
+	virtual std::string getPostLaunch() ;
 	virtual std::string getPostcondition() ;
 	virtual std::string getPrecondition() ;
 	virtual long        getProcesses() ;
@@ -157,6 +159,8 @@ public:
 	virtual void        setDelay( const long val);
 	virtual void        setId( const long val);
 	virtual void        setLogLevel( const long val);
+	virtual void        setPostDelay( const std::string& val);
+	virtual void        setPostLaunch( const std::string& val);
 	virtual void        setPostcondition( const std::string& val);
 	virtual void        setPrecondition( const std::string& val);
 	virtual void        setProcesses( const long val);

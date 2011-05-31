@@ -49,7 +49,7 @@
 namespace BON
 {
 
-  const char * interpreter_version = "0.1.0";
+  const char * interpreter_version = "0.4.3";
 
   /**
    * Comparison for derived classes of Ordered
@@ -121,6 +121,374 @@ void Component::invoke( Project& project, const std::set<FCO>& setModels, long l
 	#endif
 }
 
+void Component::process_process_base (KATS_BON::ProcessBase & current,
+                                      TiXmlElement & xml_setup)
+{
+  // did the user set debug mode?
+  if (current->isDebug ())
+  {
+    TiXmlElement element ("debug");
+    xml_setup.InsertEndChild (element);
+  }
+  
+  // did the user set realtime scheduling?
+  if (current->isRealtime ())
+  {
+    TiXmlElement element ("realtime");
+    xml_setup.InsertEndChild (element);
+  }
+
+  // does the user want timing information printed?
+  if (current->isTiming ())
+  {
+    TiXmlElement element ("timing");
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the host name
+  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
+  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
+  if (hbegin != hosts.end ())
+  {
+    KATS_BON::HostRef href = *hbegin;
+    KATS_BON::Host host = href->getHost ();
+
+    Util::GenRefCounted * ref_ptr = host.getCounted (false);
+
+    TiXmlElement element ("host");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (host->getName ().c_str ());
+      if (host->getOverride () != "")
+      {
+        text.SetValue (host->getOverride ().c_str ());
+      }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (href->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
+      element.InsertEndChild (text);
+    }
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the domain name
+  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
+  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
+  if (dbegin != domains.end ())
+  {
+    KATS_BON::DomainRef dref = *dbegin;
+    KATS_BON::Domain domain = dref->getDomain ();
+
+    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
+
+    TiXmlElement element ("domain");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      TiXmlText text (domain->getName ().c_str ());
+      if (domain->getOverride () != "")
+      {
+        text.SetValue (domain->getOverride ().c_str ());
+      }
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
+      element.InsertEndChild (text);
+    }
+    else
+    {
+      TiXmlText text (dref->getName ().c_str ());
+
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+
+      element.InsertEndChild (text);
+    }
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the barrier name
+  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
+  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
+  size_t barrier_count = 0;
+  bool barrier_override = false;
+  if (bbegin != barriers.end ())
+  {
+    KATS_BON::BarrierRef bref = *bbegin;
+    KATS_BON::Barrier barrier = bref->getBarrier ();
+
+    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
+
+    TiXmlElement element ("barrier");
+
+    // check to see if the user initialized the reference to an
+    // actual instance. If not, we use the reference's name as
+    // a convenience
+    if (ref_ptr)
+    {
+      // we have a real reference
+      if (barrier->getOverride () != "")
+        element.SetAttribute ("name", barrier->getOverride ().c_str ());
+      else
+        element.SetAttribute ("name", barrier->getName ().c_str ());
+    }
+    else
+      element.SetAttribute ("name", bref->getName ().c_str ());
+
+    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
+                          element.Attribute ("name")));
+
+    xml_setup.InsertEndChild (element);
+  }
+ 
+  // did the user set an id in the process ring?
+  if (current->getId () > 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getId ();
+
+    TiXmlElement element ("id");
+    TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set the number of processes in the barrier?
+  if (barrier_override || current->getProcesses () > 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getProcesses ();
+
+    TiXmlElement element ("processes");
+    TiXmlText text (buffer.str ().c_str ());
+
+    if (barrier_override)
+    {
+      std::stringstream buffer;
+      buffer << barrier_count;
+      text.SetValue (buffer.str ());
+    }
+    else
+    {
+      text.SetValue (KATS::Utility::expand_model_vars (current,
+        text.ValueStr ()));
+    }
+
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set an log level?
+  if (current->getLogLevel () > 0)
+  {
+    std::stringstream buffer;
+    buffer << current->getLogLevel ();
+
+    TiXmlElement element ("loglevel");
+    TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a delay?
+  if (current->getDelay () >= 1)
+  {
+    std::stringstream buffer;
+    buffer << current->getDelay ();
+
+    TiXmlElement element ("delay");
+    TiXmlText text (buffer.str ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+  
+  // did the user set a precondition?
+  if (current->getPrecondition () != "")
+  {
+    TiXmlElement element ("precondition");
+    TiXmlText text (current->getPrecondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a postdelay?
+  if (current->getPostDelay () != "")
+  {
+    TiXmlElement element ("postdelay");
+    TiXmlText text (current->getPostDelay ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a postlaunch?
+  if (current->getPostLaunch () != "")
+  {
+    TiXmlElement element ("postlaunch");
+    TiXmlText text (current->getPostLaunch ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a postcondition?
+  if (current->getPostcondition () != "")
+  {
+    TiXmlElement element ("postcondition");
+    TiXmlText text (current->getPostcondition ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // what is the working directory?
+  if (current->getWorkingDir () != "")
+  {
+    TiXmlElement element ("workingdir");
+    TiXmlText text (current->getWorkingDir ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // get the kill settings
+  std::set<KATS_BON::Kill> kills = current->getKill ();
+  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
+  if (kbegin != kills.end ())
+  {
+    KATS_BON::Kill kill = *kbegin;
+    if (kill->getTime () > 0)
+    {
+      TiXmlElement element ("kill");
+      TiXmlElement time ("time");
+
+      std::stringstream time_buff;
+      time_buff << kill->getTime ();
+      TiXmlText time_text (time_buff.str ().c_str ());
+
+      time_text.SetValue (KATS::Utility::expand_model_vars (current,
+        time_text.ValueStr ()));
+
+      time.InsertEndChild (time_text);
+
+      element.InsertEndChild (time);
+
+      // has a signal been defined?
+      if (kill->getSignal () != "")
+      {
+        TiXmlElement signal ("signal");
+
+        // insert the signal into the xml element
+        std::stringstream signal_buff;
+        signal_buff << kill->getSignal ();
+        TiXmlText signal_text (signal_buff.str ().c_str ());
+
+        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
+          signal_text.ValueStr ()));
+
+        signal.InsertEndChild (signal_text);
+
+        element.InsertEndChild (signal);
+      }
+
+      xml_setup.InsertEndChild (element);
+    }
+  }
+
+  // did the user set a stdin redirect?
+  if (current->getStdin () != "")
+  {
+    TiXmlElement element ("stdin");
+    TiXmlText text (current->getStdin ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stderr redirect?
+  if (current->getStderr () != "")
+  {
+    TiXmlElement element ("stderr");
+    TiXmlText text (current->getStderr ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stdout redirect?
+  if (current->getStdout () != "")
+  {
+    TiXmlElement element ("stdout");
+
+    TiXmlText text (current->getStdout ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
+
+    xml_setup.InsertEndChild (element);
+  }
+}
+
 void Component::process_group_ref (KATS_BON::GroupRef & current,
                                  TiXmlElement & parent)
 {
@@ -145,264 +513,15 @@ void Component::process_process (KATS_BON::Process & current,
                                  TiXmlElement & parent)
 {
   TiXmlElement xml_setup ("process");
-  // did the user set debug mode?
-  if (current->isDebug ())
-  {
-    TiXmlElement element ("debug");
-    xml_setup.InsertEndChild (element);
-  }
-  
-  // did the user set realtime scheduling?
-  if (current->isRealtime ())
-  {
-    TiXmlElement element ("realtime");
-    xml_setup.InsertEndChild (element);
-  }
 
-  // does the user want timing information printed?
-  if (current->isTiming ())
-  {
-    TiXmlElement element ("timing");
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the host name
-  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
-  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
-  if (hbegin != hosts.end ())
-  {
-    KATS_BON::HostRef href = *hbegin;
-    KATS_BON::Host host = href->getHost ();
-
-    Util::GenRefCounted * ref_ptr = host.getCounted (false);
-
-    TiXmlElement element ("host");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (host->getName ().c_str ());
-      if (host->getOverride () != "")
-      {
-        text.SetValue (host->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (href->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the domain name
-  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
-  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
-  if (dbegin != domains.end ())
-  {
-    KATS_BON::DomainRef dref = *dbegin;
-    KATS_BON::Domain domain = dref->getDomain ();
-
-    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
-
-    TiXmlElement element ("domain");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (domain->getName ().c_str ());
-      if (domain->getOverride () != "")
-      {
-        text.SetValue (domain->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (dref->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the barrier name
-  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
-  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
-  size_t barrier_count = 0;
-  bool barrier_override = false;
-  if (bbegin != barriers.end ())
-  {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
-    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
-
-    TiXmlElement element ("barrier");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      if (barrier->getOverride () != "")
-        element.SetAttribute ("name", barrier->getOverride ().c_str ());
-      else
-        element.SetAttribute ("name", barrier->getName ().c_str ());
-    }
-    else
-      element.SetAttribute ("name", bref->getName ().c_str ());
-
-    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
-                          element.Attribute ("name")));
-
-    xml_setup.InsertEndChild (element);
-  }
- 
-  // did the user set an id in the process ring?
-  if (current->getId () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getId ();
-
-    TiXmlElement element ("id");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set the number of processes in the barrier?
-  if (barrier_override || current->getProcesses () > 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getProcesses ();
-
-    TiXmlElement element ("processes");
-    TiXmlText text (buffer.str ().c_str ());
-
-    if (barrier_override)
-    {
-      std::stringstream buffer;
-      buffer << barrier_count;
-      text.SetValue (buffer.str ());
-    }
-    else
-    {
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-    }
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set an log level?
-  if (current->getLogLevel () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getLogLevel ();
-
-    TiXmlElement element ("loglevel");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a delay?
-  if (current->getDelay () >= 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getDelay ();
-
-    TiXmlElement element ("delay");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-  
-  // did the user set a precondition?
-  if (current->getPrecondition () != "")
-  {
-    TiXmlElement element ("precondition");
-    TiXmlText text (current->getPrecondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a postcondition?
-  if (current->getPostcondition () != "")
-  {
-    TiXmlElement element ("postcondition");
-    TiXmlText text (current->getPostcondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
+  // fill in the process base xml settings
+  process_process_base (current, xml_setup);
 
   // what is the executable?
   if (current->getExecutable () != "")
   {
     TiXmlElement element ("executable");
     TiXmlText text (current->getExecutable ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // what is the working directory?
-  if (current->getWorkingDir () != "")
-  {
-    TiXmlElement element ("workingdir");
-    TiXmlText text (current->getWorkingDir ().c_str ());
 
     text.SetValue (KATS::Utility::expand_model_vars (current,
       text.ValueStr ()));
@@ -424,91 +543,6 @@ void Component::process_process (KATS_BON::Process & current,
     xml_setup.InsertEndChild (element);
   }
 
-  // get the kill settings
-  std::set<KATS_BON::Kill> kills = current->getKill ();
-  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
-  if (kbegin != kills.end ())
-  {
-    KATS_BON::Kill kill = *kbegin;
-    if (kill->getTime () > 0)
-    {
-      TiXmlElement element ("kill");
-      TiXmlElement time ("time");
-
-      std::stringstream time_buff;
-      time_buff << kill->getTime ();
-      TiXmlText time_text (time_buff.str ().c_str ());
-
-      time_text.SetValue (KATS::Utility::expand_model_vars (current,
-        time_text.ValueStr ()));
-
-      time.InsertEndChild (time_text);
-
-      element.InsertEndChild (time);
-
-      // has a signal been defined?
-      if (kill->getSignal () != "")
-      {
-        TiXmlElement signal ("signal");
-
-        // insert the signal into the xml element
-        std::stringstream signal_buff;
-        signal_buff << kill->getSignal ();
-        TiXmlText signal_text (signal_buff.str ().c_str ());
-
-        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
-          signal_text.ValueStr ()));
-
-        signal.InsertEndChild (signal_text);
-
-        element.InsertEndChild (signal);
-      }
-
-      xml_setup.InsertEndChild (element);
-    }
-  }
-
-  // did the user set a stdin redirect?
-  if (current->getStdin () != "")
-  {
-    TiXmlElement element ("stdin");
-    TiXmlText text (current->getStdin ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stderr redirect?
-  if (current->getStderr () != "")
-  {
-    TiXmlElement element ("stderr");
-    TiXmlText text (current->getStderr ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stdout redirect?
-  if (current->getStdout () != "")
-  {
-    TiXmlElement element ("stdout");
-
-    TiXmlText text (current->getStdout ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
   parent.InsertEndChild (xml_setup);
 }
 
@@ -516,343 +550,9 @@ void Component::process_sleep (KATS_BON::Sleep & current,
                                  TiXmlElement & parent)
 {
   TiXmlElement xml_setup ("sleep");
-  // did the user set debug mode?
-  if (current->isDebug ())
-  {
-    TiXmlElement element ("debug");
-    xml_setup.InsertEndChild (element);
-  }
-  
-  // did the user set realtime scheduling?
-  if (current->isRealtime ())
-  {
-    TiXmlElement element ("realtime");
-    xml_setup.InsertEndChild (element);
-  }
 
-  // does the user want timing information printed?
-  if (current->isTiming ())
-  {
-    TiXmlElement element ("timing");
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the host name
-  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
-  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
-  if (hbegin != hosts.end ())
-  {
-    KATS_BON::HostRef href = *hbegin;
-    KATS_BON::Host host = href->getHost ();
-
-    Util::GenRefCounted * ref_ptr = host.getCounted (false);
-
-    TiXmlElement element ("host");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (host->getName ().c_str ());
-      if (host->getOverride () != "")
-      {
-        text.SetValue (host->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (href->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the domain name
-  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
-  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
-  if (dbegin != domains.end ())
-  {
-    KATS_BON::DomainRef dref = *dbegin;
-    KATS_BON::Domain domain = dref->getDomain ();
-
-    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
-
-    TiXmlElement element ("domain");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (domain->getName ().c_str ());
-      if (domain->getOverride () != "")
-      {
-        text.SetValue (domain->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (dref->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the barrier name
-  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
-  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
-  size_t barrier_count = 0;
-  bool barrier_override = false;
-  if (bbegin != barriers.end ())
-  {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
-    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
-
-    TiXmlElement element ("barrier");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      if (barrier->getOverride () != "")
-        element.SetAttribute ("name", barrier->getOverride ().c_str ());
-      else
-        element.SetAttribute ("name", barrier->getName ().c_str ());
-    }
-    else
-      element.SetAttribute ("name", bref->getName ().c_str ());
-
-    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
-                          element.Attribute ("name")));
-
-    xml_setup.InsertEndChild (element);
-  }
- 
-  // did the user set an id in the process ring?
-  if (current->getId () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getId ();
-
-    TiXmlElement element ("id");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set the number of processes in the barrier?
-  if (barrier_override || current->getProcesses () > 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getProcesses ();
-
-    TiXmlElement element ("processes");
-    TiXmlText text (buffer.str ().c_str ());
-
-    if (barrier_override)
-    {
-      std::stringstream buffer;
-      buffer << barrier_count;
-      text.SetValue (buffer.str ());
-    }
-    else
-    {
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-    }
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set an log level?
-  if (current->getLogLevel () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getLogLevel ();
-
-    TiXmlElement element ("loglevel");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a delay?
-  if (current->getDelay () >= 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getDelay ();
-
-    TiXmlElement element ("delay");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-  
-  // did the user set a precondition?
-  if (current->getPrecondition () != "")
-  {
-    TiXmlElement element ("precondition");
-    TiXmlText text (current->getPrecondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a postcondition?
-  if (current->getPostcondition () != "")
-  {
-    TiXmlElement element ("postcondition");
-    TiXmlText text (current->getPostcondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // what is the working directory?
-  if (current->getWorkingDir () != "")
-  {
-    TiXmlElement element ("workingdir");
-    TiXmlText text (current->getWorkingDir ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the kill settings
-  std::set<KATS_BON::Kill> kills = current->getKill ();
-  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
-  if (kbegin != kills.end ())
-  {
-    KATS_BON::Kill kill = *kbegin;
-    if (kill->getTime () > 0)
-    {
-      TiXmlElement element ("kill");
-      TiXmlElement time ("time");
-
-      std::stringstream time_buff;
-      time_buff << kill->getTime ();
-      TiXmlText time_text (time_buff.str ().c_str ());
-
-      time_text.SetValue (KATS::Utility::expand_model_vars (current,
-        time_text.ValueStr ()));
-
-      time.InsertEndChild (time_text);
-
-      element.InsertEndChild (time);
-
-      // has a signal been defined?
-      if (kill->getSignal () != "")
-      {
-        TiXmlElement signal ("signal");
-
-        // insert the signal into the xml element
-        std::stringstream signal_buff;
-        signal_buff << kill->getSignal ();
-        TiXmlText signal_text (signal_buff.str ().c_str ());
-
-        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
-          signal_text.ValueStr ()));
-
-        signal.InsertEndChild (signal_text);
-
-        element.InsertEndChild (signal);
-      }
-
-      xml_setup.InsertEndChild (element);
-    }
-  }
-
-  // did the user set a stdin redirect?
-  if (current->getStdin () != "")
-  {
-    TiXmlElement element ("stdin");
-    TiXmlText text (current->getStdin ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stderr redirect?
-  if (current->getStderr () != "")
-  {
-    TiXmlElement element ("stderr");
-    TiXmlText text (current->getStderr ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stdout redirect?
-  if (current->getStdout () != "")
-  {
-    TiXmlElement element ("stdout");
-
-    TiXmlText text (current->getStdout ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
+  // fill in the process base xml settings
+  process_process_base (current, xml_setup);
 
   parent.InsertEndChild (xml_setup);
 }
@@ -861,335 +561,9 @@ void Component::process_observer (KATS_BON::Observer & current,
                                  TiXmlElement & parent)
 {
   TiXmlElement xml_setup ("observer");
-  // did the user set debug mode?
-  if (current->isDebug ())
-  {
-    TiXmlElement element ("debug");
-    xml_setup.InsertEndChild (element);
-  }
-  
-  // did the user set realtime scheduling?
-  if (current->isRealtime ())
-  {
-    TiXmlElement element ("realtime");
-    xml_setup.InsertEndChild (element);
-  }
 
-  // does the user want timing information printed?
-  if (current->isTiming ())
-  {
-    TiXmlElement element ("timing");
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the host name
-  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
-  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
-  if (hbegin != hosts.end ())
-  {
-    KATS_BON::HostRef href = *hbegin;
-    KATS_BON::Host host = href->getHost ();
-
-    Util::GenRefCounted * ref_ptr = host.getCounted (false);
-
-    TiXmlElement element ("host");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (host->getName ().c_str ());
-      if (host->getOverride () != "")
-      {
-        text.SetValue (host->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (href->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the domain name
-  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
-  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
-  if (dbegin != domains.end ())
-  {
-    KATS_BON::DomainRef dref = *dbegin;
-    KATS_BON::Domain domain = dref->getDomain ();
-
-    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
-
-    TiXmlElement element ("domain");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (domain->getName ().c_str ());
-      if (domain->getOverride () != "")
-      {
-        text.SetValue (domain->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (dref->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the barrier name
-  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
-  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
-  size_t barrier_count = 0;
-  bool barrier_override = false;
-  if (bbegin != barriers.end ())
-  {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
-    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
-
-    TiXmlElement element ("barrier");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      if (barrier->getOverride () != "")
-        element.SetAttribute ("name", barrier->getOverride ().c_str ());
-      else
-        element.SetAttribute ("name", barrier->getName ().c_str ());
-    }
-    else
-      element.SetAttribute ("name", bref->getName ().c_str ());
-
-    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
-                          element.Attribute ("name")));
-
-    xml_setup.InsertEndChild (element);
-  }
- 
-  // did the user set an id in the process ring?
-  if (current->getId () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getId ();
-
-    TiXmlElement element ("id");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set the number of processes in the barrier?
-  if (barrier_override || current->getProcesses () > 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getProcesses ();
-
-    TiXmlElement element ("processes");
-    TiXmlText text (buffer.str ().c_str ());
-
-    if (barrier_override)
-    {
-      std::stringstream buffer;
-      buffer << barrier_count;
-      text.SetValue (buffer.str ());
-    }
-    else
-    {
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-    }
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set an log level?
-  if (current->getLogLevel () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getLogLevel ();
-
-    TiXmlElement element ("loglevel");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a delay?
-  if (current->getDelay () >= 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getDelay ();
-
-    TiXmlElement element ("delay");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-  
-  // did the user set a precondition?
-  if (current->getPrecondition () != "")
-  {
-    TiXmlElement element ("precondition");
-    TiXmlText text (current->getPrecondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a postcondition?
-  if (current->getPostcondition () != "")
-  {
-    TiXmlElement element ("postcondition");
-    TiXmlText text (current->getPostcondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // what is the working directory?
-  if (current->getWorkingDir () != "")
-  {
-    TiXmlElement element ("workingdir");
-    TiXmlText text (current->getWorkingDir ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the kill settings
-  std::set<KATS_BON::Kill> kills = current->getKill ();
-  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
-  if (kbegin != kills.end ())
-  {
-    KATS_BON::Kill kill = *kbegin;
-    if (kill->getTime () > 0)
-    {
-      TiXmlElement element ("kill");
-      TiXmlElement time ("time");
-
-      std::stringstream time_buff;
-      time_buff << kill->getTime ();
-      TiXmlText time_text (time_buff.str ().c_str ());
-
-      time_text.SetValue (KATS::Utility::expand_model_vars (current,
-        time_text.ValueStr ()));
-    
-      time.InsertEndChild (time_text);
-
-      element.InsertEndChild (time);
-
-      // has a signal been defined?
-      if (kill->getSignal () != "")
-      {
-        TiXmlElement signal ("signal");
-
-        // insert the signal into the xml element
-        std::stringstream signal_buff;
-        signal_buff << kill->getSignal ();
-        TiXmlText signal_text (signal_buff.str ().c_str ());
-
-        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
-          signal_text.ValueStr ()));
-    
-        signal.InsertEndChild (signal_text);
-
-        element.InsertEndChild (signal);
-      }
-
-      xml_setup.InsertEndChild (element);
-    }
-  }
-
-  // did the user set a stdin redirect?
-  if (current->getStdin () != "")
-  {
-    TiXmlElement element ("stdin");
-    TiXmlText text (current->getStdin ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stderr redirect?
-  if (current->getStderr () != "")
-  {
-    TiXmlElement element ("stderr");
-    TiXmlText text (current->getStderr ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stdout redirect?
-  if (current->getStdout () != "")
-  {
-    TiXmlElement element ("stdout");
-
-    TiXmlText text (current->getStdout ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
+  // fill in the process base xml settings
+  process_process_base (current, xml_setup);
 
   parent.InsertEndChild (xml_setup);
 }
@@ -1203,13 +577,6 @@ void Component::process_process_group (KATS_BON::Group & current)
   TiXmlElement xml_group ("group");
   TiXmlElement xml_setup ("setup");
 
-  // did the user set debug mode?
-  if (current->isDebug ())
-  {
-    TiXmlElement element ("debug");
-    xml_setup.InsertEndChild (element);
-  }
-  
   // did the user set parallel process launch?
   if (current->isParallel ())
   {
@@ -1217,321 +584,8 @@ void Component::process_process_group (KATS_BON::Group & current)
     xml_setup.InsertEndChild (element);
   }
 
-  // did the user set realtime scheduling?
-  if (current->isRealtime ())
-  {
-    TiXmlElement element ("realtime");
-    xml_setup.InsertEndChild (element);
-  }
-
-  // does the user want timing information printed?
-  if (current->isTiming ())
-  {
-    TiXmlElement element ("timing");
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the host name
-  std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
-  std::set<KATS_BON::HostRef>::iterator hbegin = hosts.begin();
-  if (hbegin != hosts.end ())
-  {
-    KATS_BON::HostRef href = *hbegin;
-    KATS_BON::Host host = href->getHost ();
-
-    Util::GenRefCounted * ref_ptr = host.getCounted (false);
-
-    TiXmlElement element ("host");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (host->getName ().c_str ());
-      if (host->getOverride () != "")
-      {
-        text.SetValue (host->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (href->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-      element.InsertEndChild (text);
-    }
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the domain name
-  std::set<KATS_BON::DomainRef> domains = current->getDomainRef ();
-  std::set<KATS_BON::DomainRef>::iterator dbegin = domains.begin();
-  if (dbegin != domains.end ())
-  {
-    KATS_BON::DomainRef dref = *dbegin;
-    KATS_BON::Domain domain = dref->getDomain ();
-
-    Util::GenRefCounted * ref_ptr = domain.getCounted (false);
-
-    TiXmlElement element ("domain");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      TiXmlText text (domain->getName ().c_str ());
-      if (domain->getOverride () != "")
-      {
-        text.SetValue (domain->getOverride ().c_str ());
-      }
-
-      text.SetValue (KATS::Utility::expand_model_vars (current, text.ValueStr ()));
-    
-      element.InsertEndChild (text);
-    }
-    else
-    {
-      TiXmlText text (dref->getName ().c_str ());
-
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-    
-      element.InsertEndChild (text);
-    }
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the barrier name
-  std::set<KATS_BON::BarrierRef> barriers = current->getBarrierRef ();
-  std::set<KATS_BON::BarrierRef>::iterator bbegin = barriers.begin();
-  size_t barrier_count = 0;
-  bool barrier_override = false;
-  if (bbegin != barriers.end ())
-  {
-    KATS_BON::BarrierRef bref = *bbegin;
-    KATS_BON::Barrier barrier = bref->getBarrier ();
-
-    Util::GenRefCounted * ref_ptr = barrier.getCounted (false);
-
-    TiXmlElement element ("barrier");
-
-    // check to see if the user initialized the reference to an
-    // actual instance. If not, we use the reference's name as
-    // a convenience
-    if (ref_ptr)
-    {
-      // we have a real reference
-      if (barrier->getOverride () != "")
-        element.SetAttribute ("name", barrier->getOverride ().c_str ());
-      else
-        element.SetAttribute ("name", barrier->getName ().c_str ());
-    }
-    else
-      element.SetAttribute ("name", bref->getName ().c_str ());
-
-    element.SetAttribute ("name", KATS::Utility::expand_model_vars (current, 
-                          element.Attribute ("name")));
-
-    xml_setup.InsertEndChild (element);
-  }
- 
-  // did the user set an id in the process ring?
-  if (current->getId () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getId ();
-
-    TiXmlElement element ("id");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set the number of processes in the barrier?
-  if (barrier_override || current->getProcesses () > 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getProcesses ();
-
-    TiXmlElement element ("processes");
-    TiXmlText text (buffer.str ().c_str ());
-
-    if (barrier_override)
-    {
-      std::stringstream buffer;
-      buffer << barrier_count;
-      text.SetValue (buffer.str ());
-    }
-    else
-    {
-      text.SetValue (KATS::Utility::expand_model_vars (current,
-        text.ValueStr ()));
-    }
-
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set an log level?
-  if (current->getLogLevel () > 0)
-  {
-    std::stringstream buffer;
-    buffer << current->getLogLevel ();
-
-    TiXmlElement element ("loglevel");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a delay?
-  if (current->getDelay () >= 1)
-  {
-    std::stringstream buffer;
-    buffer << current->getDelay ();
-
-    TiXmlElement element ("delay");
-    TiXmlText text (buffer.str ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
- 
-  // did the user set a precondition?
-  if (current->getPrecondition () != "")
-  {
-    TiXmlElement element ("precondition");
-    TiXmlText text (current->getPrecondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a postcondition?
-  if (current->getPostcondition () != "")
-  {
-    TiXmlElement element ("postcondition");
-    TiXmlText text (current->getPostcondition ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // get the kill settings
-  std::set<KATS_BON::Kill> kills = current->getKill ();
-  std::set<KATS_BON::Kill>::iterator kbegin = kills.begin();
-  if (kbegin != kills.end ())
-  {
-    KATS_BON::Kill kill = *kbegin;
-    if (kill->getTime () > 0)
-    {
-      TiXmlElement element ("kill");
-      TiXmlElement time ("time");
-
-      std::stringstream time_buff;
-      time_buff << kill->getTime ();
-      TiXmlText time_text (time_buff.str ().c_str ());
-
-      time_text.SetValue (KATS::Utility::expand_model_vars (current,
-        time_text.ValueStr ()));
-    
-      time.InsertEndChild (time_text);
-
-      element.InsertEndChild (time);
-
-      // has a signal been defined?
-      if (kill->getSignal () != "")
-      {
-        TiXmlElement signal ("signal");
-
-        // insert the signal into the xml element
-        std::stringstream signal_buff;
-        signal_buff << kill->getSignal ();
-        TiXmlText signal_text (signal_buff.str ().c_str ());
-
-        signal_text.SetValue (KATS::Utility::expand_model_vars (current,
-          signal_text.ValueStr ()));
-    
-        signal.InsertEndChild (signal_text);
-
-        element.InsertEndChild (signal);
-      }
-
-      xml_setup.InsertEndChild (element);
-    }
-  }
-
-  // did the user set a stdin redirect?
-  if (current->getStdin () != "")
-  {
-    TiXmlElement element ("stdin");
-    TiXmlText text (current->getStdin ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stderr redirect?
-  if (current->getStderr () != "")
-  {
-    TiXmlElement element ("stderr");
-    TiXmlText text (current->getStderr ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-    xml_setup.InsertEndChild (element);
-  }
-
-  // did the user set a stdout redirect?
-  if (current->getStdout () != "")
-  {
-    TiXmlElement element ("stdout");
-
-    TiXmlText text (current->getStdout ().c_str ());
-
-    text.SetValue (KATS::Utility::expand_model_vars (current,
-      text.ValueStr ()));
-    
-    element.InsertEndChild (text);
-
-    xml_setup.InsertEndChild (element);
-  }
+  // fill in the process base xml settings
+  process_process_base (current, xml_setup);
 
   xml_group.InsertEndChild (xml_setup);
 

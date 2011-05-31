@@ -46,6 +46,8 @@ bool realtime_set = false;
 bool debug_set = false;
 bool pre_condition_set = false;
 bool post_condition_set = false;
+bool post_delay_set = false;
+bool post_launch_set = false;
 bool parallel_set = false;
 bool delay_time_set = false;
 bool test_name_set = false;
@@ -55,6 +57,8 @@ bool timing = false;
 std::string test_name;
 std::string pre_condition;
 std::string post_condition;
+std::string post_delay;
+std::string post_launch;
 std::string tests_file;
 ACE_Time_Value kill_time (0);
 ACE_Time_Value delay_time (0);
@@ -122,6 +126,20 @@ public:
   void set_postcondition (const std::string & value)
   {
     command_line << " -s \"";
+    command_line << value;
+    command_line << "\"";
+  }
+
+  void set_postdelay (const std::string & value)
+  {
+    command_line << " -y \"";
+    command_line << value;
+    command_line << "\"";
+  }
+
+  void set_postlaunch (const std::string & value)
+  {
+    command_line << " -z \"";
     command_line << value;
     command_line << "\"";
   }
@@ -605,6 +623,22 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       } // if postcondition element existed
     } // if the user didn't specify a postcondition from the command line
 
+    if (!post_delay_set)
+    {
+      element = el_globals->FirstChildElement ("postdelay");
+      if (element)
+      {
+        if (element->GetText ())
+        {
+          post_delay = Madara::Utility::expand_envs (element->GetText ());
+
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read postdelay = %s from process group\n",
+            post_delay.c_str ()));
+        }
+      } // if postcondition element existed
+    } // if the user didn't specify a postcondition from the command line
+
     if (!test_name_set)
     {
       element = el_globals->FirstChildElement ("barrier");
@@ -724,7 +758,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".pre.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), pre_condition, "");
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.precondition=";
+    cond_buffer << pre_condition;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
 
   allkatsconditions_timer.stop ();
@@ -737,6 +775,21 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       delay_time.sec ()));
 
     ACE_OS::sleep (delay_time);
+  }
+
+  // set the post_delay
+  if (post_delay != "")
+  {
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".post_delay.";
+    buffer << "{.madara.id}";
+
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.postdelay=";
+    cond_buffer << post_delay;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
 
   // stop the clock for all conditions (including OS temporal one)
@@ -1038,6 +1091,28 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         el_temp1->GetText ()));
     }
 
+    // check the postdelay
+    el_temp1 = element->FirstChildElement ("postdelay");
+    if (el_temp1 && el_temp1->GetText ())
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Read postdelay = %s from process group file\n",
+           el_temp1->GetText ()));
+      processes[cur].set_postdelay (Madara::Utility::expand_envs (
+        el_temp1->GetText ()));
+    }
+
+    // check the postdelay
+    el_temp1 = element->FirstChildElement ("postlaunch");
+    if (el_temp1 && el_temp1->GetText ())
+    {
+      ACE_DEBUG ((LM_DEBUG, 
+        "KATS_BATCH:    Read postlaunch = %s from process group file\n",
+           el_temp1->GetText ()));
+      processes[cur].set_postlaunch (Madara::Utility::expand_envs (
+        el_temp1->GetText ()));
+    }
+
     // check the commandline
     el_temp1 = element->FirstChildElement ("commandline");
     if (el_temp1 && el_temp1->GetText ())
@@ -1223,6 +1298,25 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     ++cur;
   }
 
+  // post launch occurs after all processes have been launched.
+  // if parallel was set, then this will be between start and finish
+  // if sequential mode was set, then this will be after the last process
+  // was finally launched and maybe returned, depending on settings.
+  if (post_launch != "")
+  {
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".post_launch.";
+    buffer << "{.madara.id}";
+
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.postlaunch=";
+    cond_buffer << post_launch;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
+  }
+
+
   if (run_in_parallel)
   {
     ACE_DEBUG ((LM_DEBUG, 
@@ -1251,7 +1345,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".post.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), "", post_condition, "");
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.postcondition=";
+    cond_buffer << post_condition;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
 
   starttofinish_timer.stop ();
@@ -1306,7 +1404,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:f:n:i:l:o:d:a:t:v:mgrh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:f:n:i:l:o:d:a:s:t:v:y:z:mgrh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -1326,6 +1424,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("processes"), 'n', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("parallel"), 'p', ACE_Get_Opt::NO_ARG);
+  cmd_opts.long_option (ACE_TEXT ("postcondition"), 's',
+      ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("realtime"), 'r', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("delay"), 'l', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("killtime"), 't', ACE_Get_Opt::ARG_REQUIRED);
@@ -1557,6 +1657,28 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         MADARA_debug_level));
 
       break;
+    case 'y':
+      // a postdelay
+
+      post_delay = cmd_opts.opt_arg ();
+      post_delay_set = true;
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: postdelay set to %s\n",
+        post_delay.c_str ()));
+
+      break;
+    case 'z':
+      // a postdelay
+
+      post_launch = cmd_opts.opt_arg ();
+      post_launch_set = true;
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: postlaunch set to %s\n",
+        post_launch.c_str ()));
+
+      break;
     case ':':
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_BATCH:  ERROR: -%c requires an argument"),
@@ -1594,9 +1716,12 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -n (--processes)   number of testing processes \n\
       -o (--host)        host identifier        \n\
       -r (--realtime)    run the process with real time scheduling \n\
-      -s (--postcondition) postcondition to set after process exits \n\
+      -s (--postcondition) postcondition to evaluate after process exits \n\
       -t (--timeout)     time in seconds to wait before killing \n\
       -v (--loglevel)    maximum log level to print from MADARA messages\n\
+      -y (--postdelay)   condition to evaluate after temporal delay and \n\
+                         before user application launch\n\
+      -z (--postlaunch)  condition to evaluate after user application launch\n\
 "
       ));
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 

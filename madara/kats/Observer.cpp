@@ -46,6 +46,8 @@ int kill_signal = 15;
 
 std::string pre_condition;
 std::string post_condition;
+std::string post_delay;
+std::string post_launch;
 
 volatile bool terminated = 0;
 
@@ -129,7 +131,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".pre.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), pre_condition, "");
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.precondition=";
+    cond_buffer << pre_condition;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
 
   allkatsconditions_timer.stop ();
@@ -138,6 +144,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (delay_time_set)
   {
     ACE_OS::sleep (delay_time);
+  }
+
+  if (post_delay != "")
+  {
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".post_delay.";
+    buffer << "{.madara.id}";
+
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.postdelay=";
+    cond_buffer << post_delay;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
 
   // stop the clock for all conditions (including OS temporal one)
@@ -157,6 +177,21 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "KATS_OBS: Beginning observation. Kill time set to %Q seconds\n",
       max_elapsed));
+
+  // post launch
+  if (post_launch != "")
+  {
+    std::stringstream buffer;
+    buffer << test_name;
+    buffer << ".post_launch.";
+    buffer << "{.madara.id}";
+
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.postlaunch=";
+    cond_buffer << post_launch;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
+  }
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
@@ -198,7 +233,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     buffer << ".post.";
     buffer << "{.madara.id}";
 
-    testing.event (buffer.str (), "", post_condition, "");
+    std::stringstream cond_buffer;
+    cond_buffer << ".kats.postcondition=";
+    cond_buffer << post_condition;
+
+    testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
 
   starttofinish_timer.stop ();
@@ -255,7 +294,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:grmh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:y:z:grmh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -289,6 +328,8 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("executable"), 'x',
       ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("loglevel"), 'v', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("postdelay"), 'y', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("postlaunch"), 'z', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -526,6 +567,25 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         cmd_opts.opt_arg ()));
 
       break;
+    case 'y':
+      // a postdelay
+
+      post_delay = cmd_opts.opt_arg ();
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_OBS: postdelay set to %s\n",
+        post_delay.c_str ()));
+
+      break;
+    case 'z':
+      // a postdelay
+
+      post_launch = cmd_opts.opt_arg ();
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_OBS: postlaunch set to %s\n",
+        post_launch.c_str ()));
+
     case ':':
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         ACE_TEXT ("KATS_OBSERVER: ERROR: -%c requires an argument"),
@@ -567,6 +627,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
          -k --signal     kill signal to send after timeout \n\
       -v (--loglevel)    maximum log level to print from MADARA messages\n\
       -w (--working)     working directory (default=.) \n\
+      -y (--postdelay)   condition to evaluate after temporal delay and \n\
+                         before postlaunch\n\
+      -z (--postlaunch)  condition to evaluate after postdelay\n\
 "
       ));
       MADARA_ERROR_RETURN (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
