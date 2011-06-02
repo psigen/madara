@@ -140,14 +140,14 @@ public:
 
 	//
 	// attribute getters and setters
-	virtual long        getDelay() ;
-	virtual long        getId() ;
-	virtual long        getLogLevel() ;
+	virtual std::string getDelay() ;
+	virtual std::string getId() ;
+	virtual std::string getLogLevel() ;
 	virtual std::string getPostDelay() ;
 	virtual std::string getPostLaunch() ;
 	virtual std::string getPostcondition() ;
 	virtual std::string getPrecondition() ;
-	virtual long        getProcesses() ;
+	virtual std::string getProcesses() ;
 	virtual std::string getStderr() ;
 	virtual std::string getStdin() ;
 	virtual std::string getStdout() ;
@@ -156,14 +156,14 @@ public:
 	virtual bool        isRealtime() ;
 	virtual bool        isTiming() ;
 	virtual void        setDebug( bool val);
-	virtual void        setDelay( const long val);
-	virtual void        setId( const long val);
-	virtual void        setLogLevel( const long val);
+	virtual void        setDelay( const std::string& val);
+	virtual void        setId( const std::string& val);
+	virtual void        setLogLevel( const std::string& val);
 	virtual void        setPostDelay( const std::string& val);
 	virtual void        setPostLaunch( const std::string& val);
 	virtual void        setPostcondition( const std::string& val);
 	virtual void        setPrecondition( const std::string& val);
-	virtual void        setProcesses( const long val);
+	virtual void        setProcesses( const std::string& val);
 	virtual void        setRealtime( bool val);
 	virtual void        setStderr( const std::string& val);
 	virtual void        setStdin( const std::string& val);
@@ -250,7 +250,13 @@ public:
 
 	//
 	// attribute getters and setters
+	virtual std::string getOverrideBarrier() ;
+	virtual std::string getOverrideDomain() ;
+	virtual std::string getOverrideHost() ;
 	virtual bool        isOverrideSettings() ;
+	virtual void        setOverrideBarrier( const std::string& val);
+	virtual void        setOverrideDomain( const std::string& val);
+	virtual void        setOverrideHost( const std::string& val);
 	virtual void        setOverrideSettings( bool val);
 	//
 	// ref getters
@@ -459,9 +465,9 @@ public:
 	//
 	// attribute getters and setters
 	virtual std::string getSignal() ;
-	virtual long        getTime() ;
+	virtual std::string getTime() ;
 	virtual void        setSignal( const std::string& val);
-	virtual void        setTime( const long val);
+	virtual void        setTime( const std::string& val);
 
 	///BUP
 	// add your own members here

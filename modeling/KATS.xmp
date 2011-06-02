@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="KATS" version="0.4.3" guid="{4C5012DB-4F64-46F1-880C-E836EEAA6841}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+<paradigm name="KATS" version="0.4.7" guid="{878909CF-31EA-4C50-84FD-0CFDF0CFD3D3}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
 
 	<comment></comment>
 
@@ -14,7 +14,7 @@
 		<attrdef name="Debug" metaref = "1002" valuetype = "boolean" defvalue = "false">
 			<regnode name="help" value = "Print Madara debug messages?"></regnode>
 		</attrdef>
-		<attrdef name="Delay" metaref = "1003" valuetype = "integer" defvalue = "0">
+		<attrdef name="Delay" metaref = "1003" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Seconds to delay after barrier and precondition?"></regnode>
 		</attrdef>
 		<attrdef name="Enabled" metaref = "1099" valuetype = "boolean" defvalue = "true">
@@ -23,10 +23,10 @@
 		<attrdef name="Executable" metaref = "1004" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Which program to execute?"></regnode>
 		</attrdef>
-		<attrdef name="Id" metaref = "1005" valuetype = "integer" defvalue = "">
+		<attrdef name="Id" metaref = "1005" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Id of this test? This should be within 0..Processes-1"></regnode>
 		</attrdef>
-		<attrdef name="LogLevel" metaref = "1125" valuetype = "integer" defvalue = "0">
+		<attrdef name="LogLevel" metaref = "1125" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "What should log level be (0-10, where 10 is print everything)"></regnode>
 		</attrdef>
 		<attrdef name="Order" metaref = "1093" valuetype = "integer" defvalue = "0">
@@ -34,6 +34,13 @@
 		</attrdef>
 		<attrdef name="Override" metaref = "1089" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Overrides the component name and allows for spaces, punctuation, etc."></regnode>
+		</attrdef>
+		<attrdef name="OverrideBarrier" metaref = "1164" valuetype = "string" defvalue = "">
+		</attrdef>
+		<attrdef name="OverrideDomain" metaref = "1165" valuetype = "string" defvalue = "">
+		</attrdef>
+		<attrdef name="OverrideHost" metaref = "1166" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "Override the host settings on the referenced group?"></regnode>
 		</attrdef>
 		<attrdef name="OverrideProcesses" metaref = "1160" valuetype = "boolean" defvalue = "true">
 		</attrdef>
@@ -55,7 +62,7 @@
 		<attrdef name="Precondition" metaref = "1008" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "KaRL expression to wait to become non-zero before test runs?"></regnode>
 		</attrdef>
-		<attrdef name="Processes" metaref = "1009" valuetype = "integer" defvalue = "1">
+		<attrdef name="Processes" metaref = "1009" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Number of processes participating in the barrier"></regnode>
 		</attrdef>
 		<attrdef name="Realtime" metaref = "1010" valuetype = "boolean" defvalue = "true">
@@ -73,7 +80,7 @@
 		<attrdef name="Stdout" metaref = "1014" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Redirect stdout to a file?"></regnode>
 		</attrdef>
-		<attrdef name="Time" metaref = "1015" valuetype = "integer" defvalue = "">
+		<attrdef name="Time" metaref = "1015" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "How many seconds before killing the test?"></regnode>
 		</attrdef>
 		<attrdef name="Timing" metaref = "1124" valuetype = "boolean" defvalue = "true">
@@ -114,7 +121,7 @@
 				<pointeritem desc = "Domain"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order OverrideSettings Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch">
+		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order OverrideSettings OverrideHost OverrideDomain OverrideBarrier Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch">
 				<regnode name = "namePosition" value ="4"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Group"></pointeritem>

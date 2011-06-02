@@ -202,27 +202,27 @@ void KATS_BON::ConfigureBaseImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::ConfigureBaseImpl::getDelay() 
+std::string KATS_BON::ConfigureBaseImpl::getDelay() 
 {
-	return FCOImpl::getAttribute("Delay")->getIntegerValue();
+	return FCOImpl::getAttribute("Delay")->getStringValue();
 }
 
 
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::ConfigureBaseImpl::getId() 
+std::string KATS_BON::ConfigureBaseImpl::getId() 
 {
-	return FCOImpl::getAttribute("Id")->getIntegerValue();
+	return FCOImpl::getAttribute("Id")->getStringValue();
 }
 
 
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::ConfigureBaseImpl::getLogLevel() 
+std::string KATS_BON::ConfigureBaseImpl::getLogLevel() 
 {
-	return FCOImpl::getAttribute("LogLevel")->getIntegerValue();
+	return FCOImpl::getAttribute("LogLevel")->getStringValue();
 }
 
 
@@ -265,9 +265,9 @@ std::string KATS_BON::ConfigureBaseImpl::getPrecondition()
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::ConfigureBaseImpl::getProcesses() 
+std::string KATS_BON::ConfigureBaseImpl::getProcesses() 
 {
-	return FCOImpl::getAttribute("Processes")->getIntegerValue();
+	return FCOImpl::getAttribute("Processes")->getStringValue();
 }
 
 
@@ -346,27 +346,27 @@ void KATS_BON::ConfigureBaseImpl::setDebug( bool val)
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::ConfigureBaseImpl::setDelay( const long val)
+void KATS_BON::ConfigureBaseImpl::setDelay( const std::string& val)
 {
-	FCOImpl::getAttribute("Delay")->setIntegerValue( val);
+	FCOImpl::getAttribute("Delay")->setStringValue( val);
 }
 
 
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::ConfigureBaseImpl::setId( const long val)
+void KATS_BON::ConfigureBaseImpl::setId( const std::string& val)
 {
-	FCOImpl::getAttribute("Id")->setIntegerValue( val);
+	FCOImpl::getAttribute("Id")->setStringValue( val);
 }
 
 
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::ConfigureBaseImpl::setLogLevel( const long val)
+void KATS_BON::ConfigureBaseImpl::setLogLevel( const std::string& val)
 {
-	FCOImpl::getAttribute("LogLevel")->setIntegerValue( val);
+	FCOImpl::getAttribute("LogLevel")->setStringValue( val);
 }
 
 
@@ -409,9 +409,9 @@ void KATS_BON::ConfigureBaseImpl::setPrecondition( const std::string& val)
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::ConfigureBaseImpl::setProcesses( const long val)
+void KATS_BON::ConfigureBaseImpl::setProcesses( const std::string& val)
 {
-	FCOImpl::getAttribute("Processes")->setIntegerValue( val);
+	FCOImpl::getAttribute("Processes")->setStringValue( val);
 }
 
 
@@ -613,9 +613,63 @@ void KATS_BON::GroupRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
+std::string KATS_BON::GroupRefImpl::getOverrideBarrier() 
+{
+	return FCOImpl::getAttribute("OverrideBarrier")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::GroupRefImpl::getOverrideDomain() 
+{
+	return FCOImpl::getAttribute("OverrideDomain")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::GroupRefImpl::getOverrideHost() 
+{
+	return FCOImpl::getAttribute("OverrideHost")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 bool KATS_BON::GroupRefImpl::isOverrideSettings() 
 {
 	return FCOImpl::getAttribute("OverrideSettings")->getBooleanValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::GroupRefImpl::setOverrideBarrier( const std::string& val)
+{
+	FCOImpl::getAttribute("OverrideBarrier")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::GroupRefImpl::setOverrideDomain( const std::string& val)
+{
+	FCOImpl::getAttribute("OverrideDomain")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::GroupRefImpl::setOverrideHost( const std::string& val)
+{
+	FCOImpl::getAttribute("OverrideHost")->setStringValue( val);
 }
 
 
@@ -974,9 +1028,9 @@ std::string KATS_BON::KillImpl::getSignal()
 //********************************************************************************
 // 
 //********************************************************************************
-long KATS_BON::KillImpl::getTime() 
+std::string KATS_BON::KillImpl::getTime() 
 {
-	return FCOImpl::getAttribute("Time")->getIntegerValue();
+	return FCOImpl::getAttribute("Time")->getStringValue();
 }
 
 
@@ -992,9 +1046,9 @@ void KATS_BON::KillImpl::setSignal( const std::string& val)
 //********************************************************************************
 // 
 //********************************************************************************
-void KATS_BON::KillImpl::setTime( const long val)
+void KATS_BON::KillImpl::setTime( const std::string& val)
 {
-	FCOImpl::getAttribute("Time")->setIntegerValue( val);
+	FCOImpl::getAttribute("Time")->setStringValue( val);
 }
 
 
