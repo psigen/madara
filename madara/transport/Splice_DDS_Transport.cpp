@@ -39,15 +39,10 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   domain_participant_ (0), publisher_ (0), subscriber_ (0), 
   datawriter_ (0), datareader_ (0), 
   update_writer_ (0), update_reader_ (0),
-  //  update_data_list_ (new Knowledge::UpdateSeq), 
-    mutex_writer_ (0), mutex_reader_ (0),
-  //  mutex_data_list_ (new Knowledge::MutexSeq), 
   update_topic_ (0), 
-  mutex_topic_ (0), 
-  thread_ (0),
+  thread_ (0)
   //reliability_ (reliability), 
   //valid_setup_ (false),
-  enable_mutexing_ (false)
   //data_topic_name_ (topic_names_[0]),
   //control_topic_name_ (topic_names_[1])
 {
@@ -73,13 +68,11 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   if (subscriber_)
   {
     subscriber_->delete_datareader (update_reader_);
-    subscriber_->delete_datareader (mutex_reader_);
   }
 
   if (publisher_)
   {
     publisher_->delete_datawriter (update_writer_);
-    publisher_->delete_datawriter (mutex_writer_);
   }
 
 
@@ -88,7 +81,6 @@ Madara::Transport::Splice_DDS_Transport::close (void)
     domain_participant_->delete_subscriber (subscriber_);
     domain_participant_->delete_publisher (publisher_);
     domain_participant_->delete_topic (update_topic_);
-    domain_participant_->delete_topic (mutex_topic_);
   }
 
   if (domain_factory_)
@@ -98,9 +90,6 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   update_reader_ = 0;
   update_writer_ = 0;
   update_topic_ = 0;
-  mutex_reader_ = 0;
-  mutex_writer_ = 0;
-  mutex_topic_ = 0;
   subscriber_ = 0;
   publisher_ = 0;
   domain_participant_ = 0;
@@ -185,13 +174,6 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   check_handle(update_topic_, 
     "DDS::DomainParticipant::create_topic (Knowledge_Update)");
 
-  // Create Mutex topic
-  //mutex_topic_ = domain_participant_->create_topic (
-  //  control_topic_name_.c_str (), "Knowledge::Mutex", 
-  //  topic_qos_, NULL, DDS::STATUS_MASK_NONE);
-  //check_handle(mutex_topic_, 
-  //  "DDS::DomainParticipant::create_topic (Knowledge_Mutex)");
-
   // Get default qos for publisher
   status = domain_participant_->get_default_publisher_qos (pub_qos_);
   check_status(status, "DDS::DomainParticipant::get_default_publisher_qos");
@@ -236,12 +218,6 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
       "\nSplice_DDS_Transport::setup:" \
       " pub or sub could not be created. Try 'ospl stop; ospl start'...\n"));
     exit (-2);
-
-    //if (!subscriber_)
-    //  return Madara::Transport::Splice_DDS_Transport::ERROR_SUB_BAD_CREATE;
-
-    //if (!publisher_)
-    //  return Madara::Transport::Splice_DDS_Transport::ERROR_PUB_BAD_CREATE;
   }
 
   // Create datawriter
@@ -265,14 +241,6 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   check_handle(datawriter_, "DDS::Publisher::create_datawriter (Update)");
   update_writer_ = dynamic_cast<Knowledge::UpdateDataWriter_ptr> (datawriter_);
   check_handle(update_writer_, "Knowledge::UpdateDataWriter_ptr::narrow");
-
-  // Create Mutex writer
-  //datawriter_ = publisher_->create_datawriter (mutex_topic_, 
-  //  datawriter_qos_, NULL, DDS::STATUS_MASK_NONE);
-  //check_handle(datawriter_, "DDS::Publisher::create_datawriter (Mutex)");
-  //mutex_writer_ = dynamic_cast<Knowledge::MutexDataWriter_ptr> (datawriter_);
-  //check_handle(mutex_writer_, "Knowledge::MutexDataWriter_ptr::narrow");
-
 
 
   // Create datareader
@@ -308,7 +276,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
 
   thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
-    update_reader_, mutex_reader_, enable_mutexing_);
+    update_reader_);
   
   this->validate_transport ();
 

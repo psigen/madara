@@ -1,34 +1,27 @@
-#ifndef SPLICE_DDS_TRANSPORT_H
-#define SPLICE_DDS_TRANSPORT_H
+#ifndef _NDDS_TRANSPORT_H_
+#define _NDDS_TRANSPORT_H_
 
 #include <string>
 
-#include "madara/transport/Splice_Transport_Read_Thread.h"
+#include "madara/transport/NDDS_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
-#include "ccpp_dds_dcps.h"
-#include "madara/ccpp_Splice_Knowledge_Update.h"
+#include <ndds/ndds_cpp.h>
+#include "madara/Ndds_Knowledge_Update.h"
+#include "madara/Ndds_Knowledge_UpdateSupport.h"
 
 namespace Madara
 {
   namespace Transport
   {
     /**
-     * @class Splice_DDS_Transport
-     * @brief This class provides an interface into the Open Splice
+     * @class NDDS_Transport
+     * @brief This class provides an interface into the NDDS
      *        dissemination transport
      */
-    class Splice_DDS_Transport : public Base
+    class NDDS_Transport : public Base
     {
     public:
-
-      enum {
-        ERROR_OSPL_NOT_STARTED = -1,
-        ERROR_SUB_BAD_CREATE = -2,
-        ERROR_PUB_BAD_CREATE = -3
-      };
-
-      static const int PROFILES = 2;
 
       /**
        * Constructor
@@ -37,14 +30,14 @@ namespace Madara
        * @param   config   transport configuration settings
        * @param   launch_transport  whether or not to launch this transport
        **/
-      Splice_DDS_Transport (const std::string & id, 
+      NDDS_Transport (const std::string & id, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         const Settings & config, bool launch_transport);
 
       /**
        * Destructor
        **/
-      ~Splice_DDS_Transport ();
+      ~NDDS_Transport ();
 
       /**
        * Sends a single knowledge assignment
@@ -97,45 +90,8 @@ namespace Madara
       const static char *                             topic_names_[];
       const static char *                             partition_;
 
-      //DDS::pong_handler                        *active_handler;
+      NDDS_Read_Thread *               thread_;
 
-      DDS::DomainParticipantQos          part_qos_;
-      DDS::TopicQos                      topic_qos_;
-      DDS::PublisherQos                  pub_qos_;
-      DDS::DataWriterQos                 datawriter_qos_;
-      DDS::SubscriberQos                 sub_qos_;
-      DDS::DataReaderQos                 datareader_qos_;
-
-      DDS::DomainId_t                    domain_;
-      DDS::DomainParticipantFactory_ptr  domain_factory_;
-      DDS::DomainParticipant_ptr         domain_participant_;
-      DDS::Publisher_ptr                 publisher_;
-      DDS::Subscriber_ptr                subscriber_;
-      DDS::DataWriter_ptr                datawriter_;
-      DDS::DataReader_ptr                datareader_;
-
-      Knowledge::UpdateDataWriter_ptr    update_writer_;
-      Knowledge::UpdateDataReader_ptr    update_reader_;
-      Knowledge::UpdateTypeSupport       update_type_support_;
-
-      DDS::Topic_ptr                     update_topic_;
-
-      Splice_Read_Thread *               thread_;
-
-      /**
-       * Splice handle checker
-       **/
-      void check_handle (void * handle, const char *info);
-
-      /**
-       * Splice status checker
-       **/
-      void check_status (DDS::ReturnCode_t status, const char * info);
-      
-      /**
-       * Returns error name of the specific status
-       **/
-      const char * get_error_name (DDS::ReturnCode_t status);
     };
   }
 }

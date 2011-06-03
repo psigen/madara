@@ -1,0 +1,16 @@
+
+module NDDS
+{
+  module Knowledge
+  {
+      struct Update
+      {
+        string                            key;
+        long long                         value;
+        unsigned long                     quality;
+        string                            originator; //@key
+        unsigned long                     type;
+        unsigned long long                clock;
+      };  
+  };
+};

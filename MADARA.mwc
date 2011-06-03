@@ -5,7 +5,7 @@ workspace {
   madara/Madara.mpc
   madara/Kats.mpc
   madara/Splice_DDS_Transport.mpc
-  madara/Splice_Mutexes.mpc
+  madara/NDDS_Transport.mpc
   madara/Tests.mpc
   madara/Traffic_Lights_Ambulance.mpc
 }

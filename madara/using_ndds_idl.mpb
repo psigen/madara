@@ -1,0 +1,21 @@
+project {
+  Define_Custom(NDDSNoTaoTypeSupport) {
+    command               = <%quote%>$(NDDSHOME)/scripts/rtiddsgen<%quote%>
+
+    commandflags          = -replace -language C++
+
+    dependent             = <%quote%>$(NDDSHOME)/scripts/rtiddsgen<%bat%><%quote%>
+
+    source_pre_extension  = , Support, Plugin
+    source_outputext      = .cxx
+    header_pre_extension  = , Support, Plugin
+    header_outputext      = .h
+    keyword ndds_notao_ts_flags = commandflags
+  }
+
+  verbatim(gnuace, macros) {
+    override no_hidden_visibility = 1
+    override no_strict_aliasing = 1
+  }
+
+}

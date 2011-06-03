@@ -1,5 +1,5 @@
 
-project (Madara) : using_ace, using_splice, splice_transport {
+project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_transport {
 
   sharedname = Madara
   dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL
@@ -13,11 +13,15 @@ project (Madara) : using_ace, using_splice, splice_transport {
     $(MADARA_ROOT)/default.features
     Madara.mpc
     Splice_DDS_Transport.mpc
+    NDDS_Transport.mpc
     splice_transport.mpb
+    ndds_transport.mpb
     using_ace.mpb
     using_madara.mpb
     using_splice.mpb
     using_splice_idl.mpb
+    using_ndds.mpb
+    using_ndds_idl.mpb
   }
 
   Inline_Files {

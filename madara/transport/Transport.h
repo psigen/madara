@@ -14,7 +14,8 @@ namespace Madara
     enum Types {
       NO_TRANSPORT = 0,
       SPLICE       = 1,
-      TCP          = 2
+      TCP          = 2,
+      NDDS         = 3
     } ;
 
     enum Reliabilities {

@@ -12,6 +12,10 @@
   #include "madara/transport/Splice_DDS_Transport.h"
 #endif // _USE_OPEN_SPLICE_
 
+#ifdef _USE_NDDS_
+  #include "madara/transport/NDDS_Transport.h"
+#endif // _USE_NDDS_
+
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
@@ -99,6 +103,18 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 
       transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
                          settings_, true);
+    #else
+      transport_ = 0;
+    #endif
+    }
+    else if (settings_.type == Madara::Transport::NDDS)
+    {
+    #ifdef _USE_NDDS_
+
+      transport_ = new Madara::Transport::NDDS_Transport (id_, map_,
+                         settings_, true);
+    #else
+      transport_ = 0;
     #endif
     }
     else if (settings_.type == Madara::Transport::TCP)

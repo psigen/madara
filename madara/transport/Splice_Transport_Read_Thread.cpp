@@ -9,13 +9,10 @@
 Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-  Knowledge::UpdateDataReader_ptr & update_reader, 
-  Knowledge::MutexDataReader_ptr & mutex_reader, bool enable_mutexing)
+  Knowledge::UpdateDataReader_ptr & update_reader)
   : id_ (id), context_ (context), update_reader_ (update_reader), 
-    mutex_reader_ (mutex_reader), 
     barrier_ (2), terminated_ (false), 
-    mutex_ (), is_not_ready_ (mutex_), is_ready_ (false),
-    enable_mutexing_ (enable_mutexing)
+    mutex_ (), is_not_ready_ (mutex_), is_ready_ (false)
 {
   assignment_symbols_.push_back ("=");
   assignment_symbols_.push_back (";");
@@ -25,13 +22,6 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
   condition_->set_enabled_statuses (DDS::DATA_AVAILABLE_STATUS);
   waitset_.attach_condition (condition_);
 
-  if (enable_mutexing)
-  {
-    // Add mutex datareader statuscondition to waitset
-    condition_ = mutex_reader_->get_statuscondition ();
-    condition_->set_enabled_statuses (DDS::DATA_AVAILABLE_STATUS);
-    waitset_.attach_condition (condition_);
-  }
   this->activate (THR_NEW_LWP | THR_DETACHED, 1);
   
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
