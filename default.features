@@ -23,3 +23,7 @@ tests                   = 1
 /// Enable this feature if you would like to build the 
 /// KaRL Automated Testing System
 kats                    = 1
+
+/// @feature ndds
+/// Enable this feature if you would like to generate NDDS Transports
+ndds                    = 0
