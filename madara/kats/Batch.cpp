@@ -483,7 +483,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         if (element->GetText ())
         {
           std::stringstream buffer;
-          buffer << element->GetText ();
+          buffer << Madara::Utility::expand_envs (element->GetText ());
           buffer >> settings.id;
 
           ACE_DEBUG ((LM_DEBUG, 
@@ -535,7 +535,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         if (element->GetText ())
         {
           std::stringstream buffer;
-          buffer << element->GetText ();
+          buffer << Madara::Utility::expand_envs (element->GetText ());
           buffer >> settings.processes;
 
           ACE_DEBUG ((LM_DEBUG, 
@@ -553,7 +553,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         if (element->GetText ())
         {
           std::stringstream buffer;
-          buffer << element->GetText ();
+          buffer << Madara::Utility::expand_envs (element->GetText ());
           buffer >> MADARA_debug_level;
 
           loglevel_set = true;
@@ -577,7 +577,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
           {
             time_t time_in_seconds;
             std::stringstream buffer;
-            buffer << element->GetText ();
+            buffer << Madara::Utility::expand_envs (element->GetText ());
             buffer >> time_in_seconds;
 
             kill_time.sec (time_in_seconds);
