@@ -193,7 +193,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
     std::stringstream cond_buffer;
     cond_buffer << ".kats.postlaunch=";
-    cond_buffer << post_delay;
+    cond_buffer << post_launch;
 
     testing.event (buffer.str (), "", cond_buffer.str (), "");
   }
@@ -612,7 +612,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
 
       break;
     case 'z':
-      // a postdelay
+      // a postlaunch
 
       post_launch = cmd_opts.opt_arg ();
 
