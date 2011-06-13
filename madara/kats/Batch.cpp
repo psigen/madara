@@ -53,6 +53,7 @@ bool delay_time_set = false;
 bool test_name_set = false;
 bool loglevel_set = false;
 bool timing = false;
+bool transport_set = false;
 
 std::string test_name;
 std::string pre_condition;
@@ -133,6 +134,13 @@ public:
   void set_postdelay (const std::string & value)
   {
     command_line << " -y \"";
+    command_line << value;
+    command_line << "\"";
+  }
+
+  void set_transport (const std::string & value)
+  {
+    command_line << " -p \"";
     command_line << value;
     command_line << "\"";
   }
@@ -1404,7 +1412,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:f:n:i:l:o:d:a:s:t:v:y:z:mgrh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:9:f:n:i:l:o:d:a:s:t:v:y:z:mgrh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -1413,6 +1421,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("transport"), '9', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("barriername"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
@@ -1449,7 +1458,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       stdin_set = true;
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
-        DLINFO "KATS_PROCESS: stdin redirected from %s\n",
+        DLINFO "KATS_BATCH: stdin redirected from %s\n",
         Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
 
       break;
@@ -1462,7 +1471,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       stdout_set = true;
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
-        DLINFO "KATS_PROCESS: stdout redirected to %s\n",
+        DLINFO "KATS_BATCH: stdout redirected to %s\n",
         Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
 
       break;
@@ -1474,8 +1483,22 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       stderr_set = true;
 
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
-        DLINFO "KATS_PROCESS: stderr redirected to %s\n",
+        DLINFO "KATS_BATCH: stderr redirected to %s\n",
         Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
+
+      break;
+    case '9':
+      // transport protocol
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> settings.type;
+      }
+      transport_set = true;
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: transport protocol set to %u\n",
+        settings.type));
 
       break;
     case 'a':
@@ -1714,6 +1737,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -m (--timing)      print timing information \n\
                          (add -g for kats conditional timing) \n\
       -n (--processes)   number of testing processes \n\
+      -p (--transport)   use the specified transport protocol: \n\
+                         0   ==  No transport \n\
+                         1   ==  Open Splice DDS \n\
+                         2   ==  NDDS         \n\
       -o (--host)        host identifier        \n\
       -r (--realtime)    run the process with real time scheduling \n\
       -s (--postcondition) postcondition to evaluate after process exits \n\

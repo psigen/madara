@@ -90,8 +90,12 @@ namespace Madara
       const static char *                             topic_names_[];
       const static char *                             partition_;
 
-      NDDS_Read_Thread *               thread_;
+      NDDS_Read_Thread *               thread_;    DDS_ReturnCode_t         rc;
 
+      // NDDS variables
+      DDSDomainParticipant *   participant_;
+      DDSTopic *               topic_;
+      NDDS_Knowledge_UpdateDataWriter * update_writer_;
     };
   }
 }

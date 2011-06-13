@@ -313,7 +313,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:y:z:gmrh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:9:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:y:z:gmrh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -322,6 +322,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("transport"), '9', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("barriername"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("precondition"), 'b',
@@ -386,6 +387,19 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "KATS_PROCESS: stderr redirected to %s\n",
         cmd_opts.opt_arg ()));
+
+      break;
+    case '9':
+      // transport protocol
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> settings.type;
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_PROCESS: transport protocol set to %u\n",
+        settings.type));
 
       break;
     case 'a':
@@ -643,6 +657,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -0 (--stdin)       redirect stdin from a file \n\
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\
+      -9 (--transport)   use the specified transport protocol: \n\
+                         0   ==  No transport \n\
+                         1   ==  Open Splice DDS \n\
+                         2   ==  NDDS         \n\
       -a (--testname)    name of the test (for barriers) \n\
          (--barriername) \n\
       -b (--precondition) precondition to wait for after barrier \n\

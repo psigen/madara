@@ -27,8 +27,8 @@ namespace Madara
     public:
       NDDS_Read_Thread (
         const std::string & id,
-        Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-        DDSDataReader & update_reader);
+        Madara::Knowledge_Engine::Thread_Safe_Context & context,
+            NDDS_Knowledge_UpdateDataReader * reader);
       ~NDDS_Read_Thread ();
 
       /// service exit point for thread
@@ -52,6 +52,9 @@ namespace Madara
       Madara::Transport::Condition       is_not_ready_;
       bool                               is_ready_;
       bool                               enable_mutexing_;
+
+      // NDDS variables
+      NDDS_Knowledge_UpdateDataReader * data_reader_;
     };
   }
 }
