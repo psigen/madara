@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "madara/transport/TCP_Transport_Read_Thread.h"
+#include "madara/transport/tcp/TCP_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 

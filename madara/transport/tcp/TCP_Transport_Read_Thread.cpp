@@ -1,4 +1,4 @@
-#include "madara/transport/TCP_Transport_Read_Thread.h"
+#include "madara/transport/tcp/TCP_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
 
 #include <iostream>

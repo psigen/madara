@@ -1,5 +1,5 @@
-#include "madara/transport/NDDS_Transport.h"
-#include "madara/transport/NDDS_Transport_Read_Thread.h"
+#include "madara/transport/ndds/NDDS_Transport.h"
+#include "madara/transport/ndds/NDDS_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"

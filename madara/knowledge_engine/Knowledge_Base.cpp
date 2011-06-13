@@ -3,12 +3,6 @@
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 
 #include <sstream>
-
-
-#ifdef _USE_OPEN_SPLICE_
-  #include "madara/transport/Splice_DDS_Transport.h"
-#endif // _USE_OPEN_SPLICE_
-
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()

@@ -7,7 +7,7 @@
 #include "madara/transport/Transport.h"
 
 #include "ccpp_dds_dcps.h"
-#include "madara/ccpp_Splice_Knowledge_Update.h"
+#include "madara/transport/splice/ccpp_Splice_Knowledge_Update.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"

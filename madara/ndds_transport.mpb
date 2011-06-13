@@ -1,16 +1,21 @@
 feature (ndds) {
 
-  after += NDDS_Transport
-  libs += NDDS_Transport
   dynamicflags += _USE_NDDS_
 
   Source_Files {
-      transport/NDDS_Transport.cpp
-      transport/NDDS_Transport_Read_Thread.cpp
+    transport/ndds/NDDS_Transport.cpp
+    transport/ndds/NDDS_Transport_Read_Thread.cpp
+    transport/ndds/Ndds_Knowledge_Update.cxx
+    transport/ndds/Ndds_Knowledge_UpdatePlugin.cxx
+    transport/ndds/Ndds_Knowledge_UpdateSupport.cxx
   }
 
   Header_Files {
-      transport/NDDS_Transport.h
-      transport/NDDS_Transport_Read_Thread.h
+    transport/ndds/NDDS_Transport.h
+    transport/ndds/NDDS_Transport_Read_Thread.h
+    transport/ndds/Ndds_Knowledge_Update.h 
+    transport/ndds/Ndds_Knowledge_UpdatePlugin.h
+    transport/ndds/Ndds_Knowledge_UpdateSupport.h
+    transport/ndds/NDDS_Transport_Export.h
   }
 }

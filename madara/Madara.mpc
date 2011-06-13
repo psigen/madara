@@ -39,8 +39,8 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     utility/Utility.cpp
     utility/Refcounter.cpp
     utility/Log_Macros.cpp
-    transport/TCP_Transport.cpp
-    transport/TCP_Transport_Read_Thread.cpp
+    transport/tcp/TCP_Transport.cpp
+    transport/tcp/TCP_Transport_Read_Thread.cpp
     Thread_Pool.cpp
   }
 
@@ -49,8 +49,8 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     knowledge_engine
     utility
     transport/Transport.h
-    transport/TCP_Transport.h
-    transport/TCP_Transport_Read_Thread.h
+    transport/tcp/TCP_Transport.h
+    transport/tcp/TCP_Transport_Read_Thread.h
     Globals.h
     Thread_Pool.h
     MADARA_export.h

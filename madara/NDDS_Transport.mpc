@@ -1,39 +1,4 @@
 
-project (NDDS_Transport) : using_ndds, build_files {
-
-  requires += ndds
-
-  libout = $(MADARA_ROOT)/lib
-  dynamicflags += NDDS_TRANSPORT_BUILD_DLL 
-  // NDDS_USER_DLL_EXPORT
-  includes += $(ACE_ROOT)
-  
-  after += NDDS_Transport_IDL
-  
-  specific(prop:microsoft) {
-    macros += _CRT_SECURE_NO_WARNINGS
-  }
-  
-  Build_Files {
-    $(MADARA_ROOT)/default.features
-    RTI_DDS_Transport.mpc
-    using_ndds.mpb
-  }
-
-  Source_Files {
-    Ndds_Knowledge_Update.cxx
-    Ndds_Knowledge_UpdatePlugin.cxx
-    Ndds_Knowledge_UpdateSupport.cxx
-  }
-
-  Header_Files {
-    Ndds_Knowledge_Update.h 
-    Ndds_Knowledge_UpdatePlugin.h
-    Ndds_Knowledge_UpdateSupport.h
-    NDDS_Transport_Export.h
-  }
-}
-
 project (NDDS_Transport_IDL) : using_ndds_idl, build_files {
 
   requires += ndds
@@ -45,13 +10,10 @@ project (NDDS_Transport_IDL) : using_ndds_idl, build_files {
     RTI_DDS_Transport.mpc
     using_ndds.mpb
   }
-
-  specific(prop:microsoft) {
-    macros += -D NDDS_Transport_Export,NDDS_Transport_export.h
-  }
+  
+  ndds_notao_ts_flags += -d transport/ndds
   
   NDDSNoTaoTypeSupport_Files {
-    Ndds_Knowledge_Update.idl
+    transport/ndds/Ndds_Knowledge_Update.idl
   }
-
 }

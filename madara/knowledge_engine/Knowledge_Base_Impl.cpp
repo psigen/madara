@@ -2,18 +2,18 @@
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/expression_tree/Expression_Tree.h"
-#include "madara/transport/TCP_Transport.h"
+#include "madara/transport/tcp/TCP_Transport.h"
 #include "madara/utility/Log_Macros.h"
 
 #include <sstream>
 
 
 #ifdef _USE_OPEN_SPLICE_
-  #include "madara/transport/Splice_DDS_Transport.h"
+  #include "madara/transport/splice/Splice_DDS_Transport.h"
 #endif // _USE_OPEN_SPLICE_
 
 #ifdef _USE_NDDS_
-  #include "madara/transport/NDDS_Transport.h"
+  #include "madara/transport/ndds/NDDS_Transport.h"
 #endif // _USE_NDDS_
 
 #include <iostream>
@@ -100,30 +100,58 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
     if (settings_.type == Madara::Transport::SPLICE)
     {
     #ifdef _USE_OPEN_SPLICE_
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " creating Open Splice DDS transport.\n",
+        settings_.type));
 
       transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
                          settings_, true);
     #else
-      transport_ = 0;
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " project was not generated with opensplice=1. Transport is invalid.\n",
+        settings_.type));
+
+      exit (-2);
     #endif
     }
     else if (settings_.type == Madara::Transport::NDDS)
     {
     #ifdef _USE_NDDS_
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " creating NDDS transport.\n",
+        settings_.type));
 
       transport_ = new Madara::Transport::NDDS_Transport (id_, map_,
                          settings_, true);
     #else
-      transport_ = 0;
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " project was not generated with ndds=1. Transport is invalid.\n",
+        settings_.type));
+
+      exit (-2);
     #endif
     }
     else if (settings_.type == Madara::Transport::TCP)
     {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " creating TCP transport.\n",
+        settings_.type));
+
       transport_ = new Madara::Transport::TCP_Transport (id_, map_,
         Madara::Transport::TCP_Transport::RELIABLE);
     }
     else
     {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " no transport was specified. Setting transport to null.\n",
+        settings_.type));
+
       transport_ = 0;
     }
   }

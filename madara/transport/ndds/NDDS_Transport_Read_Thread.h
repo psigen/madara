@@ -7,8 +7,8 @@
 #include "madara/transport/Transport.h"
 
 #include <ndds/ndds_cpp.h>
-#include "madara/Ndds_Knowledge_Update.h"
-#include "madara/Ndds_Knowledge_UpdateSupport.h"
+#include "madara/transport/ndds/Ndds_Knowledge_Update.h"
+#include "madara/transport/ndds/Ndds_Knowledge_UpdateSupport.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"

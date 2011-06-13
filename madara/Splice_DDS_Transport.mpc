@@ -21,18 +21,18 @@ project (Splice_DDS_Transport) : using_splice, using_splice_idl, build_files {
   }
 
   Source_Files {
-    Splice_Knowledge_Update.cpp
-    Splice_Knowledge_UpdateDcps.cpp
-    Splice_Knowledge_UpdateDcps_impl.cpp
-    Splice_Knowledge_UpdateSplDcps.cpp
+    transport/splice/Splice_Knowledge_Update.cpp
+    transport/splice/Splice_Knowledge_UpdateDcps.cpp
+    transport/splice/Splice_Knowledge_UpdateDcps_impl.cpp
+    transport/splice/Splice_Knowledge_UpdateSplDcps.cpp
   }
 
   Header_Files {
-    ccpp_Splice_Knowledge_Update.h 
-    Splice_Knowledge_Update.h
-    Splice_Knowledge_UpdateDcps_impl.h
-    Splice_Knowledge_UpdateSplDcps.h
-    Splice_Knowledge_UpdateDcps.h
+    transport/splice/ccpp_Splice_Knowledge_Update.h 
+    transport/splice/Splice_Knowledge_Update.h
+    transport/splice/Splice_Knowledge_UpdateDcps_impl.h
+    transport/splice/Splice_Knowledge_UpdateSplDcps.h
+    transport/splice/Splice_Knowledge_UpdateDcps.h
     OSPL_Transport_Export.h
   }
 }
@@ -47,6 +47,8 @@ project (Splice_DDS_Transport_IDL) : using_splice, using_splice_idl, build_files
     splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
   }
   
+  splice_ts_flags += -d transport/splice
+  
   Build_Files {
     $(MADARA_ROOT)/default.features
     Splice_DDS_Transport.mpc
@@ -55,7 +57,7 @@ project (Splice_DDS_Transport_IDL) : using_splice, using_splice_idl, build_files
   }
 
   SpliceTypeSupport_Files {
-    Splice_Knowledge_Update.idl
+    transport/splice/Splice_Knowledge_Update.idl
   }
 
 }

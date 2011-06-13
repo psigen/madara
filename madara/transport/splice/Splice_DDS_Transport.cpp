@@ -1,5 +1,5 @@
-#include "madara/transport/Splice_DDS_Transport.h"
-#include "madara/transport/Splice_Transport_Read_Thread.h"
+#include "madara/transport/splice/Splice_DDS_Transport.h"
+#include "madara/transport/splice/Splice_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
