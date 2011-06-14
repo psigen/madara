@@ -3,12 +3,12 @@
 
 #include <string>
 
-#include "madara/transport/ndds/NDDS_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include <ndds/ndds_cpp.h>
 #include "madara/transport/ndds/Ndds_Knowledge_Update.h"
 #include "madara/transport/ndds/Ndds_Knowledge_UpdateSupport.h"
+#include "madara/transport/ndds/NDDS_Listener.h"
 
 namespace Madara
 {
@@ -90,12 +90,11 @@ namespace Madara
       const static char *                             topic_names_[];
       const static char *                             partition_;
 
-      NDDS_Read_Thread *               thread_;    DDS_ReturnCode_t         rc;
-
       // NDDS variables
       DDSDomainParticipant *   participant_;
       DDSTopic *               topic_;
       NDDS_Knowledge_UpdateDataWriter * update_writer_;
+      NDDS_Listener listener_;
     };
   }
 }

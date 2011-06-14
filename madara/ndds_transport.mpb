@@ -4,7 +4,7 @@ feature (ndds) {
 
   Source_Files {
     transport/ndds/NDDS_Transport.cpp
-    transport/ndds/NDDS_Transport_Read_Thread.cpp
+    transport/ndds/NDDS_Listener.cpp
     transport/ndds/Ndds_Knowledge_Update.cxx
     transport/ndds/Ndds_Knowledge_UpdatePlugin.cxx
     transport/ndds/Ndds_Knowledge_UpdateSupport.cxx
@@ -12,7 +12,7 @@ feature (ndds) {
 
   Header_Files {
     transport/ndds/NDDS_Transport.h
-    transport/ndds/NDDS_Transport_Read_Thread.h
+    transport/ndds/NDDS_Listener.h
     transport/ndds/Ndds_Knowledge_Update.h 
     transport/ndds/Ndds_Knowledge_UpdatePlugin.h
     transport/ndds/Ndds_Knowledge_UpdateSupport.h

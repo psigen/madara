@@ -239,6 +239,15 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   return result;
 }
 
+/// Indicate that a status change has occurred. This could be a message
+/// from the transport to let the knowledge engine know that new agents
+/// are available to send knowledge to.
+void 
+Madara::Knowledge_Engine::Thread_Safe_Context::set_changed (void)
+{
+  changed_.signal ();
+}
+
 // print all variables and their values
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::print (

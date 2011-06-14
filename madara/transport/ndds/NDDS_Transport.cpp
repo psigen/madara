@@ -1,5 +1,5 @@
 #include "madara/transport/ndds/NDDS_Transport.h"
-#include "madara/transport/ndds/NDDS_Transport_Read_Thread.h"
+//#include "madara/transport/ndds/NDDS_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
@@ -20,7 +20,8 @@ Madara::Transport::NDDS_Transport::NDDS_Transport (
   const Settings & config, bool launch_transport)
   : Madara::Transport::Base (config), 
   id_ (id), context_ (context),
-  participant_ (0), topic_ (0), update_writer_ (0)
+  participant_ (0), topic_ (0), update_writer_ (0),
+  listener_ (id, context)
 {
   if (launch_transport)
     setup ();
@@ -36,14 +37,6 @@ Madara::Transport::NDDS_Transport::close (void)
 {
   DDS_ReturnCode_t rc;
   this->invalidate_transport ();
-
-  if (thread_)
-  {
-    thread_->close ();
-    //delete thread_;
-  }
-
-  thread_ = 0;
 
   if (participant_)
   {
@@ -127,7 +120,7 @@ Madara::Transport::NDDS_Transport::setup (void)
                         DDS_TOPIC_QOS_DEFAULT,
                         NULL,           /* listener */
                         DDS_STATUS_MASK_NONE);
-  if (topic_ == NULL)
+  if (topic_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -143,7 +136,7 @@ Madara::Transport::NDDS_Transport::setup (void)
                       DDS_PUBLISHER_QOS_DEFAULT,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
-  if (publisher == NULL)
+  if (publisher == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -157,7 +150,7 @@ Madara::Transport::NDDS_Transport::setup (void)
                       DDS_DATAWRITER_QOS_DEFAULT,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
-  if (data_writer == NULL)
+  if (data_writer == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -167,7 +160,7 @@ Madara::Transport::NDDS_Transport::setup (void)
 
   // create the specialized data writer for our data type
   update_writer_ = NDDS_Knowledge_UpdateDataWriter::narrow(data_writer);
-  if (update_writer_ == NULL)
+  if (update_writer_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -195,7 +188,7 @@ Madara::Transport::NDDS_Transport::setup (void)
   reader = subscriber->create_datareader(
                       topic_,
                       DDS_DATAREADER_QOS_DEFAULT,
-                      0,
+                      &listener_,
                       DDS_STATUS_MASK_ALL);
   if (reader == 0) {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
@@ -204,20 +197,6 @@ Madara::Transport::NDDS_Transport::setup (void)
     return -2;
   }
 
-  // narrow the specialized reader for our read thread
-  NDDS_Knowledge_UpdateDataReader * update_reader = 
-    NDDS_Knowledge_UpdateDataReader::narrow(reader);
-  if (update_reader == 0) {
-    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nNDDS_Read_Thread::svc:" \
-      " Unable to create specialized reader. Leaving thread...\n"));
-    return -2;
-  }
-
-  // launch the read thread
-  thread_ = new Madara::Transport::NDDS_Read_Thread (id_, context_, 
-    update_reader);
-  
   this->validate_transport ();
 
   return 0;
@@ -249,15 +228,15 @@ Madara::Transport::NDDS_Transport::send_data (const std::string & key,
 
   NDDS_Knowledge_Update data;
 
-  data.key = new char [key.size () + 1];
+  NDDS_Knowledge_Update_initialize (&data);
+
   strcpy (data.key, key.c_str ());
-  
+
   data.value = value;
   data.clock = cur_clock;
   data.quality = context_.get_write_quality (key);
 
-  data.originator = new char [id_.size () + 1];
-  strcpy (data.key, id_.c_str ());
+  strcpy (data.originator, id_.c_str ());
 
   data.type = Madara::Knowledge_Engine::ASSIGNMENT;
 
@@ -269,8 +248,7 @@ Madara::Transport::NDDS_Transport::send_data (const std::string & key,
   DDS_InstanceHandle_t handle = update_writer_->register_instance (data);
   rc = update_writer_->write (data, handle); 
 
-  delete data.key;
-  delete data.originator;
+  NDDS_Knowledge_Update_finalize (&data);
 
   return rc;
 }
@@ -302,15 +280,15 @@ Madara::Transport::NDDS_Transport::send_multiassignment (
 
   NDDS_Knowledge_Update data;
 
-  data.key = new char [expression.size () + 1];
+  NDDS_Knowledge_Update_initialize (&data);
+
   strcpy (data.key, expression.c_str ());
   
   data.value = 0;
   data.clock = cur_clock;
   data.quality = quality;
 
-  data.originator = new char [id_.size () + 1];
-  strcpy (data.key, id_.c_str ());
+  strcpy (data.originator, id_.c_str ());
 
   data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
 
@@ -322,8 +300,7 @@ Madara::Transport::NDDS_Transport::send_multiassignment (
   DDS_InstanceHandle_t handle = update_writer_->register_instance (data);
   rc = update_writer_->write (data, handle); 
 
-  delete data.key;
-  delete data.originator;
+  NDDS_Knowledge_Update_finalize (&data);
 
   return rc;
 }

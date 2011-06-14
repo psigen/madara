@@ -66,6 +66,11 @@ namespace Madara
       unsigned long set_quality (const ::std::string & key, 
         unsigned long quality, bool force_update);
       
+      /// Indicate that a status change has occurred. This could be a message
+      /// from the transport to let the knowledge engine know that new agents
+      /// are available to send knowledge to.
+      void set_changed (void);
+
       /// Set quality of this process writing to a variable
       void set_write_quality (const ::std::string & key, unsigned long quality);
 
