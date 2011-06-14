@@ -83,12 +83,17 @@ int
 Madara::Transport::NDDS_Transport::setup (void)
 {
   DDS_ReturnCode_t rc;
+  DDS_DomainId_t domain = 0;
   this->is_valid_ = false;
+
+  std::stringstream domainreader;
+  domainreader << this->settings_.domains;
+  domainreader >> domain;
 
   // create the domain participant
   participant_ = DDSDomainParticipantFactory::get_instance()->
                         create_participant(
-                        0,
+                        domain,
                         DDS_PARTICIPANT_QOS_DEFAULT,
                         NULL,   /* Listener */
                         DDS_STATUS_MASK_NONE);
