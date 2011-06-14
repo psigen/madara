@@ -20,7 +20,7 @@ Madara::Transport::NDDS_Transport::NDDS_Transport (
   const Settings & config, bool launch_transport)
   : Madara::Transport::Base (config), 
   id_ (id), context_ (context),
-  participant_ (0), topic_ (0), update_writer_ (0),
+  domain_participant_ (0), update_topic_ (0), update_writer_ (0),
   listener_ (id, context)
 {
   if (launch_transport)
@@ -38,31 +38,50 @@ Madara::Transport::NDDS_Transport::close (void)
   DDS_ReturnCode_t rc;
   this->invalidate_transport ();
 
-  if (participant_)
+  if (subscriber_)
+  {
+    subscriber_->delete_datareader (data_reader_);
+  }
+
+  if (publisher_)
+  {
+    publisher_->delete_datawriter (data_writer_);
+  }
+
+  if (domain_participant_)
+  {
+    domain_participant_->delete_subscriber (subscriber_);
+    domain_participant_->delete_publisher (publisher_);
+    domain_participant_->delete_topic (update_topic_);
+  }
+
+  if (domain_participant_)
   {
       /* Perform a clean shutdown of the participant and all the contained
        * entities
        */
-      rc = participant_->delete_contained_entities();
+      rc = domain_participant_->delete_contained_entities();
       if (rc != DDS_RETCODE_OK)
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
           DLINFO
-          "NDDS_Transport::close: unable to delete participant entities"));
+          "NDDS_Transport::close: unable to delete participant entities\n"));
       }
 
       rc = DDSDomainParticipantFactory::get_instance()->delete_participant(
-                      participant_);
+                      domain_participant_);
       if (rc != DDS_RETCODE_OK)
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
-          DLINFO "NDDS_Transport::close: unable to delete participant"));
+          DLINFO "NDDS_Transport::close: unable to delete participant\n"));
       }
   }
 
-  participant_ = 0;
-  topic_ = 0;
+  domain_participant_ = 0;
+  subscriber_ = 0;
+  publisher_ = 0;
   update_writer_ = 0;
+  update_topic_ = 0;
 
   this->shutting_down_ = false;
 }
@@ -91,13 +110,13 @@ Madara::Transport::NDDS_Transport::setup (void)
   domainreader >> domain;
 
   // create the domain participant
-  participant_ = DDSDomainParticipantFactory::get_instance()->
+  domain_participant_ = DDSDomainParticipantFactory::get_instance()->
                         create_participant(
                         domain,
                         DDS_PARTICIPANT_QOS_DEFAULT,
                         NULL,   /* Listener */
                         DDS_STATUS_MASK_NONE);
-  if (participant_ == NULL)
+  if (domain_participant_ == NULL)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -106,7 +125,7 @@ Madara::Transport::NDDS_Transport::setup (void)
   }
 
   DDS_TopicQos topic_qos;
-  participant_->get_default_topic_qos(topic_qos);
+  domain_participant_->get_default_topic_qos(topic_qos);
 
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
@@ -119,11 +138,11 @@ Madara::Transport::NDDS_Transport::setup (void)
       DDS_BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
   //topic_qos_.resource_limits.max_samples_per_instance= 10;
-  participant_->set_default_topic_qos(topic_qos);
+  domain_participant_->set_default_topic_qos(topic_qos);
 
   // register the Knowledge Update Type
-  rc = NDDS_Knowledge_UpdateTypeSupport::register_type(
-           participant_,
+  rc = NDDS_Knowledge_UpdateTypeSupport::register_type (
+           domain_participant_,
            NDDS_Knowledge_UpdateTypeSupport::get_type_name());
 
   if (rc != DDS_RETCODE_OK)
@@ -135,13 +154,13 @@ Madara::Transport::NDDS_Transport::setup (void)
   }
 
   // create the knowledge topic
-  topic_ = participant_->create_topic (
+  update_topic_ = domain_participant_->create_topic (
                         topic_names_[0],
                         NDDS_Knowledge_UpdateTypeSupport::get_type_name(),
                         topic_qos,
                         NULL,           /* listener */
                         DDS_STATUS_MASK_NONE);
-  if (topic_ == 0)
+  if (update_topic_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -149,11 +168,9 @@ Madara::Transport::NDDS_Transport::setup (void)
     exit (-2);
   }
 
-  DDSPublisher * publisher = 0;
-  DDSDataWriter * data_writer = 0;
   DDS_PublisherQos pub_qos;
 
-  participant_->get_default_publisher_qos (pub_qos);
+  domain_participant_->get_default_publisher_qos (pub_qos);
 
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
@@ -162,30 +179,30 @@ Madara::Transport::NDDS_Transport::setup (void)
     pub_qos.presentation.ordered_access = false;
   }
 
-  // create the publisher
-  publisher = participant_->create_publisher(
+  // create the publisher_
+  publisher_ = domain_participant_->create_publisher (
                       pub_qos,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
-  if (publisher == 0)
+  if (publisher_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
-      " Unable to create publisher. Exiting...\n"));
+      " Unable to create publisher_. Exiting...\n"));
     exit (-2);
   }
 
   DDS_DataWriterQos datawriter_qos;
-  publisher->get_default_datawriter_qos (datawriter_qos);
-  publisher->copy_from_topic_qos(datawriter_qos, topic_qos);
+  publisher_->get_default_datawriter_qos (datawriter_qos);
+  publisher_->copy_from_topic_qos (datawriter_qos, topic_qos);
 
   // create a topic data writer
-  data_writer = publisher->create_datawriter(
-                      topic_,
+  data_writer_ = publisher_->create_datawriter (
+                      update_topic_,
                       datawriter_qos,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
-  if (data_writer == 0)
+  if (data_writer_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Transport::setup:" \
@@ -194,7 +211,7 @@ Madara::Transport::NDDS_Transport::setup (void)
   }
 
   // create the specialized data writer for our data type
-  update_writer_ = NDDS_Knowledge_UpdateDataWriter::narrow(data_writer);
+  update_writer_ = NDDS_Knowledge_UpdateDataWriter::narrow(data_writer_);
   if (update_writer_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
@@ -203,8 +220,6 @@ Madara::Transport::NDDS_Transport::setup (void)
     exit (-2);
   }
 
-  DDSSubscriber * subscriber = NULL;
-  DDSDataReader * reader = NULL;
   DDS_SubscriberQos sub_qos;
 
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
@@ -214,22 +229,22 @@ Madara::Transport::NDDS_Transport::setup (void)
     sub_qos.presentation.ordered_access = false;
   }
 
-  // create a subscriber
-  subscriber = participant_->create_subscriber(
+  // create a subscriber_
+  subscriber_ = domain_participant_->create_subscriber (
                       sub_qos,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
-  if (subscriber == 0)
+  if (subscriber_ == 0)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Read_Thread::svc:" \
-      " Unable to create subscriber. Exiting...\n"));
+      " Unable to create subscriber_. Exiting...\n"));
     exit (-2);
   }
 
   DDS_DataReaderQos datareader_qos;
-  subscriber->get_default_datareader_qos (datareader_qos);
-  subscriber->copy_from_topic_qos (datareader_qos, topic_qos);
+  subscriber_->get_default_datareader_qos (datareader_qos);
+  subscriber_->copy_from_topic_qos (datareader_qos, topic_qos);
 
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
@@ -241,12 +256,12 @@ Madara::Transport::NDDS_Transport::setup (void)
   }
 
   // create a reader for the topic
-  reader = subscriber->create_datareader(
-                      topic_,
+  data_reader_ = subscriber_->create_datareader (
+                      update_topic_,
                       datareader_qos,
                       &listener_,
                       DDS_STATUS_MASK_ALL);
-  if (reader == 0) {
+  if (data_reader_ == 0) {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nNDDS_Read_Thread::svc:" \
       " Unable to create reader. Leaving thread...\n"));

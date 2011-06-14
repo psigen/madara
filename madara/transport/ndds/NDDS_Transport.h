@@ -91,8 +91,12 @@ namespace Madara
       const static char *                             partition_;
 
       // NDDS variables
-      DDSDomainParticipant *   participant_;
-      DDSTopic *               topic_;
+      DDSDomainParticipant *   domain_participant_;
+      DDSPublisher *   publisher_;
+      DDSSubscriber *   subscriber_;
+      DDSTopic *        update_topic_;
+      DDSDataReader *   data_reader_;
+      DDSDataWriter *   data_writer_;
       NDDS_Knowledge_UpdateDataWriter * update_writer_;
       NDDS_Listener listener_;
     };
