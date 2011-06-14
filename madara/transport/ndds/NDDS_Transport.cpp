@@ -100,6 +100,22 @@ Madara::Transport::NDDS_Transport::setup (void)
     exit (-2);
   }
 
+  DDS_TopicQos topic_qos;
+  participant_->get_default_topic_qos(topic_qos);
+
+  if (Madara::Transport::RELIABLE == this->settings_.reliability)
+  {
+    topic_qos.reliability.kind = DDS_RELIABLE_RELIABILITY_QOS;
+    topic_qos.history.depth = this->settings_.queue_length;
+    topic_qos.resource_limits.max_samples_per_instance = 
+      this->settings_.queue_length;
+    topic_qos.resource_limits.max_samples = this->settings_.queue_length;
+    topic_qos.destination_order.kind = 
+      DDS_BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+  }
+  //topic_qos_.resource_limits.max_samples_per_instance= 10;
+  participant_->set_default_topic_qos(topic_qos);
+
   // register the Knowledge Update Type
   rc = NDDS_Knowledge_UpdateTypeSupport::register_type(
            participant_,
@@ -114,10 +130,10 @@ Madara::Transport::NDDS_Transport::setup (void)
   }
 
   // create the knowledge topic
-  topic_ = participant_->create_topic(
+  topic_ = participant_->create_topic (
                         topic_names_[0],
                         NDDS_Knowledge_UpdateTypeSupport::get_type_name(),
-                        DDS_TOPIC_QOS_DEFAULT,
+                        topic_qos,
                         NULL,           /* listener */
                         DDS_STATUS_MASK_NONE);
   if (topic_ == 0)
@@ -130,10 +146,20 @@ Madara::Transport::NDDS_Transport::setup (void)
 
   DDSPublisher * publisher = 0;
   DDSDataWriter * data_writer = 0;
+  DDS_PublisherQos pub_qos;
+
+  participant_->get_default_publisher_qos (pub_qos);
+
+  if (Madara::Transport::RELIABLE == this->settings_.reliability)
+  {
+    pub_qos.presentation.access_scope = DDS_TOPIC_PRESENTATION_QOS;
+    pub_qos.presentation.coherent_access = true;
+    pub_qos.presentation.ordered_access = false;
+  }
 
   // create the publisher
   publisher = participant_->create_publisher(
-                      DDS_PUBLISHER_QOS_DEFAULT,
+                      pub_qos,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
   if (publisher == 0)
@@ -144,10 +170,14 @@ Madara::Transport::NDDS_Transport::setup (void)
     exit (-2);
   }
 
+  DDS_DataWriterQos datawriter_qos;
+  publisher->get_default_datawriter_qos (datawriter_qos);
+  publisher->copy_from_topic_qos(datawriter_qos, topic_qos);
+
   // create a topic data writer
   data_writer = publisher->create_datawriter(
                       topic_,
-                      DDS_DATAWRITER_QOS_DEFAULT,
+                      datawriter_qos,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
   if (data_writer == 0)
@@ -170,10 +200,18 @@ Madara::Transport::NDDS_Transport::setup (void)
 
   DDSSubscriber * subscriber = NULL;
   DDSDataReader * reader = NULL;
-  
+  DDS_SubscriberQos sub_qos;
+
+  if (Madara::Transport::RELIABLE == this->settings_.reliability)
+  {
+    sub_qos.presentation.access_scope = DDS_TOPIC_PRESENTATION_QOS;
+    sub_qos.presentation.coherent_access = true;
+    sub_qos.presentation.ordered_access = false;
+  }
+
   // create a subscriber
   subscriber = participant_->create_subscriber(
-                      DDS_SUBSCRIBER_QOS_DEFAULT,
+                      sub_qos,
                       NULL,           /* listener */
                       DDS_STATUS_MASK_NONE);
   if (subscriber == 0)
@@ -184,10 +222,23 @@ Madara::Transport::NDDS_Transport::setup (void)
     exit (-2);
   }
 
+  DDS_DataReaderQos datareader_qos;
+  subscriber->get_default_datareader_qos (datareader_qos);
+  subscriber->copy_from_topic_qos (datareader_qos, topic_qos);
+
+  if (Madara::Transport::RELIABLE == this->settings_.reliability)
+  {
+    datareader_qos.reliability.kind = DDS_RELIABLE_RELIABILITY_QOS;
+    datareader_qos.history.depth = this->settings_.queue_length;
+    datareader_qos.resource_limits.max_samples = this->settings_.queue_length;
+    datareader_qos.destination_order.kind = 
+      DDS_BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+  }
+
   // create a reader for the topic
   reader = subscriber->create_datareader(
                       topic_,
-                      DDS_DATAREADER_QOS_DEFAULT,
+                      datareader_qos,
                       &listener_,
                       DDS_STATUS_MASK_ALL);
   if (reader == 0) {
