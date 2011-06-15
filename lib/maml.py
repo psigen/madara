@@ -15,7 +15,7 @@ import string
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice
 
 ## MAML version number (major.minor.revision)
-version = "0.1.0"
+version = "0.1.2"
 
 ## uninstall a particular type of package
 # @param  device   the monkey runner device object
@@ -88,6 +88,31 @@ def right (device, num=1, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def press (device, sleep_time=0):
   device.press ('KEYCODE_DPAD_CENTER', 'DOWN_AND_UP')
+
+  if sleep_time > 0:
+    sleep (sleep_time)
+
+## Click at a position on the screen
+# @param  device   the phone or emulator we are instrumenting
+# @param  x        the x coordinate to click on
+# @param  y        the y coordinate to click on
+# @param  num      the number of times to click the position
+# @param  sleep_time   Time to sleep after performing all actions
+def click (device, x=0, y=0, num=1, sleep_time=0):
+  for i in range (num):
+    device.touch (x, y, 'DOWN_AND_UP')
+
+  if sleep_time > 0:
+    sleep (sleep_time)
+
+## Long click (aka long press) at a position on the screen
+# @param  device   the phone or emulator we are instrumenting
+# @param  x        the x coordinate to click on
+# @param  y        the y coordinate to click on
+# @param  seconds  number of seconds to hold the press (float e.g 2.0)
+# @param  sleep_time   Time to sleep after performing all actions
+def long_click (device, x=0, y=0, seconds=2.0, sleep_time=0):
+  device.drag ((x,y), (x,y), seconds)
 
   if sleep_time > 0:
     sleep (sleep_time)
