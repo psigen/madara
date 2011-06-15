@@ -15,7 +15,7 @@ import string
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice
 
 ## MAML version number (major.minor.revision)
-version = "0.1.2"
+version = "0.1.3"
 
 ## uninstall a particular type of package
 # @param  device   the monkey runner device object
@@ -113,6 +113,20 @@ def click (device, x=0, y=0, num=1, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def long_click (device, x=0, y=0, seconds=2.0, sleep_time=0):
   device.drag ((x,y), (x,y), seconds)
+
+  if sleep_time > 0:
+    sleep (sleep_time)
+
+## Wrapper for Monkeyrunner drag function. Best to use this in
+# case I get the shell commands working faster in the adb-only version.
+# @param  device   the phone or emulator we are instrumenting
+# @param  start  the (x,y) coordinate to start the drag at
+# @param  end    the (x,y) coordinate to end the drag at
+# @param  seconds  number of seconds to execute the drag
+# @param  steps    number of steps to take to execute the drag over the seconds
+# @param  sleep_time   Time to sleep after performing all actions
+def long_click (device, start=(0,0), end=(0,0), seconds=2.0, sleep_time=0):
+  device.drag (start, end, seconds, steps)
 
   if sleep_time > 0:
     sleep (sleep_time)
