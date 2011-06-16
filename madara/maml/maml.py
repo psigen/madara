@@ -117,6 +117,7 @@ def long_click (device, x=0, y=0, seconds=2.0, sleep_time=0):
   if sleep_time > 0:
     sleep (sleep_time)
 
+
 ## Wrapper for Monkeyrunner drag function. Best to use this in
 # case I get the shell commands working faster in the adb-only version.
 # @param  device   the phone or emulator we are instrumenting
@@ -125,11 +126,12 @@ def long_click (device, x=0, y=0, seconds=2.0, sleep_time=0):
 # @param  seconds  number of seconds to execute the drag
 # @param  steps    number of steps to take to execute the drag over the seconds
 # @param  sleep_time   Time to sleep after performing all actions
-def long_click (device, start=(0,0), end=(0,0), seconds=2.0, sleep_time=0):
+def drag (device, start=(0,0), end=(0,0), seconds=2.0, sleep_time=0):
   device.drag (start, end, seconds, steps)
 
   if sleep_time > 0:
     sleep (sleep_time)
+
 
 ## Presses the menu button down
 # @param  device   the phone or emulator we are instrumenting
@@ -221,19 +223,19 @@ def type (device, text, clear_input=False, sleep_time=0):
     sleep (sleep_time)
 
 ## Runs an adb command. Note that this does not necessary run a shell
-# command as well. This is the equivalent of saying "adb 
+# command as well. This is the equivalent of saying "adb -s serial cmd args"
 # @param  cmd      the command to run in adb
 # @param  args     the command args. this should be a list not a string
 # @param  serial   the phone or emulator serial we are running a command to
 # @param  sleep_time   Time to sleep after running the command, if any
 # @param  print_stderr Whether or not to print the stderr of the command
 # @param  print_stdout Whether or not to print the stdout of the command
+# @returns  a tuple containing stdout and stderr (stdout, stderr) printouts
 def adb (cmd, args, serial, sleep_time=0, print_stderr=False,
                  print_stdout=False):
    
   popen_args = ['adb']
  
-#  return subprocess.check_output ("adb", "-s", serial, cmd, args)
   if serial:
     popen_args.append ('-s');
     popen_args.append (serial);
@@ -251,6 +253,56 @@ def adb (cmd, args, serial, sleep_time=0, print_stderr=False,
   if print_stdout:
     print "  MAML: STDOUT for " + ' '.join (popen_args)
     print my_out
+
+  if sleep_time > 0:
+    sleep (sleep_time)
+
+  return (my_out, my_err)
+
+
+
+## Runs an adb logcat command
+# @param  serial   the phone or emulator serial we are running a command to
+# @param  flush    if true, flushes the current logcat   
+# @param  file     saves the logcat contents to the specified file
+# @param  filters  also called tags in logcat. These help filter the logcat contents
+#                  so you can find specific information. For instance, 'MyApp:I' would
+#                  show all (I)nformation level logs for the app 'MyApp'. If you want
+#                  multiple filters, simply add more filters into the list (note this
+#                  is not a string)
+# @param  format   format the output according to logcat formats ('brief', 'process', etc.
+#                  are valid options). See the Android adb logcat help for more options.
+#                  'brief' is default for adb logcat.
+# @param  sleep_time   Time to sleep after running the command, if any
+# @returns  a tuple containing stdout and stderr (stdout, stderr) printouts
+def logcat (serial, flush=False, file=None, filters=[], format=None, sleep_time=0):
+
+  args = []
+
+  if flush:
+    args.append ('-c')
+  else:
+    args.append ('-d')
+
+  if len (filters) > 0:
+    args.append (filters)
+
+  if format:
+    args.append ('-v')
+    args.append (format)
+
+  (my_out, my_err) = adb ('logcat', args, serial, sleep_time)
+
+  if file:
+    outfile = open (file, 'w')
+    outfile.write (my_out)
+    outfile.close ()
+
+  if sleep_time > 0:
+    sleep (sleep_time)
+
+  return (my_out, my_err)
+  
 
 ## Types a random string into the current focus
 # @param  device       the phone or emulator serial we are running a command to
