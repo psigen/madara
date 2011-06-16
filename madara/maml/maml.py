@@ -284,12 +284,12 @@ def logcat (serial, flush=False, file=None, filters=[], format=None, sleep_time=
   else:
     args.append ('-d')
 
-  if len (filters) > 0:
-    args.append (filters)
-
   if format:
     args.append ('-v')
     args.append (format)
+
+  if len (filters) > 0:
+    args.extend (filters)
 
   (my_out, my_err) = adb ('logcat', args, serial, sleep_time)
 
