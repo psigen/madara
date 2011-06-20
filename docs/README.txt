@@ -18,7 +18,7 @@ MADARA HELP DOCUMENTATION INFORMATION
        Click on the downloads link and download the binaries/setup file for
        your operating system. It is unlikely that you will want to download
        the source. On many Linux systems, you can use the system package
-       manager of your choice to download Doxygen. Almost modern version
+       manager of your choice to download Doxygen. Most modern versions
        should work.
 
 2. GENERATING DEVELOPER DOCUMENTATION
