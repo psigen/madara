@@ -70,7 +70,7 @@ MADARA HELP DOCUMENTATION INFORMATION
        you are running commands from. We plan on supporting running the maml
        library directly from a command line with GME modeling support, but for
        now, you will need to import the library into another Python script that
-       you will be writing the application specific testing logic from.
+       you will be writing the application specific testing logic into.
 
        Importing MAML can be done via the following (at the top of your
        Python file):
