@@ -440,11 +440,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         std::string value (Madara::Utility::clean_dir_name (
           Madara::Utility::expand_envs (element->GetText ())));
 
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
-             value.c_str ()));
+        if (value != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
+               value.c_str ()));
 
-        freopen (value.c_str (),"w", stdout);
+          freopen (value.c_str (),"w", stdout);
+        }
       }
     }
 
@@ -458,11 +461,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         std::string value (Madara::Utility::clean_dir_name (
           Madara::Utility::expand_envs (element->GetText ())));
 
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
-             value.c_str ()));
+        if (value != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
+               value.c_str ()));
 
-        freopen (value.c_str (),"w", stderr);
+          freopen (value.c_str (),"w", stderr);
+        }
       }
     }
 
@@ -476,11 +482,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         std::string value (Madara::Utility::clean_dir_name (
           Madara::Utility::expand_envs (element->GetText ())));
 
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
-          value.c_str ()));
+        if (value != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
+            value.c_str ()));
 
-        freopen (value.c_str (),"r", stdin);
+          freopen (value.c_str (),"r", stdin);
+        }
       }
     }
     if (!id_set)
@@ -490,12 +499,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          std::stringstream buffer;
-          buffer << Madara::Utility::expand_envs (element->GetText ());
-          buffer >> settings.id;
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            std::stringstream buffer;
+            buffer << Madara::Utility::expand_envs (temp);
+            buffer >> settings.id;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read id = %d from process group file\n", settings.id));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read id = %d from process group file\n",
+              settings.id));
+          }
         }
       } // if the id element existed
     } // if the user didn't specify id from the command line
@@ -507,13 +522,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          settings.domains = Madara::Utility::expand_envs (
-                              element->GetText ());
-          domain_set = true;
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            settings.domains = temp;
+            domain_set = true;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read domain = %s from process group file\n",
-            settings.domains.c_str ()));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read domain = %s from process group file\n",
+              settings.domains.c_str ()));
+          }
         }
       } // if the domain element existed
     } // if the user didn't specify domain from the command line
@@ -525,12 +544,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          settings.host = Madara::Utility::expand_envs (element->GetText ());
-          host_set = true;
+          std::string temp = Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            settings.host = temp;
+            host_set = true;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read host = %s from group file\n",
-            settings.host.c_str ()));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read host = %s from group file\n",
+              settings.host.c_str ()));
+          }
         }
       } // if the host element existed
     } // if the user didn't specify host from the command line
@@ -542,13 +565,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          std::stringstream buffer;
-          buffer << Madara::Utility::expand_envs (element->GetText ());
-          buffer >> settings.processes;
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            std::stringstream buffer;
+            buffer << Madara::Utility::expand_envs (temp);
+            buffer >> settings.processes;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read processes = %d from group file\n",
-            settings.processes));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read processes = %d from group file\n",
+              settings.processes));
+          }
         }
       } // if the processes element existed
     } // if the user didn't specify processes from the command line
@@ -560,15 +588,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          std::stringstream buffer;
-          buffer << Madara::Utility::expand_envs (element->GetText ());
-          buffer >> MADARA_debug_level;
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            std::stringstream buffer;
+            buffer << Madara::Utility::expand_envs (temp);
+            buffer >> MADARA_debug_level;
 
-          loglevel_set = true;
+            loglevel_set = true;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read loglevel = %u from process group\n",
-            MADARA_debug_level));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read loglevel = %u from process group\n",
+              MADARA_debug_level));
+          }
         }
       } // if the processes element existed
     } // if the user didn't specify processes from the command line
@@ -583,17 +616,22 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         {
           if (element->GetText ())
           {
-            time_t time_in_seconds;
-            std::stringstream buffer;
-            buffer << Madara::Utility::expand_envs (element->GetText ());
-            buffer >> time_in_seconds;
+            std::string temp = 
+              Madara::Utility::expand_envs (element->GetText ());
+            if (temp != "")
+            {
+              time_t time_in_seconds;
+              std::stringstream buffer;
+              buffer << Madara::Utility::expand_envs (temp);
+              buffer >> time_in_seconds;
 
-            kill_time.sec (time_in_seconds);
-            kill_time_set = true;
+              kill_time.sec (time_in_seconds);
+              kill_time_set = true;
 
-            ACE_DEBUG ((LM_DEBUG,
-              "KATS_BATCH:    Read kill time = %d s from process group\n",
-              time_in_seconds));
+              ACE_DEBUG ((LM_DEBUG,
+                "KATS_BATCH:    Read kill time = %d s from process group\n",
+                time_in_seconds));
+            }
           }
         } // if element kill/time exists
       } // if element kill exists
@@ -606,11 +644,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          pre_condition = Madara::Utility::expand_envs (element->GetText ());
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            pre_condition = temp;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read precondition = %s from process group\n",
-            pre_condition.c_str ()));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read precondition = %s from process group\n",
+              pre_condition.c_str ()));
+          }
         }
       } // if precondition element existed
     } // if the user didn't specify a precondition from the command line
@@ -622,11 +665,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          post_condition = Madara::Utility::expand_envs (element->GetText ());
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            post_condition = temp;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read postcondition = %s from process group\n",
-            post_condition.c_str ()));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read postcondition = %s from process group\n",
+              post_condition.c_str ()));
+          }
         }
       } // if postcondition element existed
     } // if the user didn't specify a postcondition from the command line
@@ -638,11 +686,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         if (element->GetText ())
         {
-          post_delay = Madara::Utility::expand_envs (element->GetText ());
+          std::string temp = 
+            Madara::Utility::expand_envs (element->GetText ());
+          if (temp != "")
+          {
+            post_delay = temp;
 
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read postdelay = %s from process group\n",
-            post_delay.c_str ()));
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read postdelay = %s from process group\n",
+              post_delay.c_str ()));
+          }
         }
       } // if postcondition element existed
     } // if the user didn't specify a postcondition from the command line
@@ -652,14 +705,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       element = el_globals->FirstChildElement ("barrier");
       if (element)
       {
+        std::string temp;
         if (element->Attribute ("name"))
-          test_name = Madara::Utility::expand_envs (element->Attribute ("name"));
+          temp = Madara::Utility::expand_envs (element->Attribute ("name"));
         else if (element->GetText ())
-          test_name = Madara::Utility::expand_envs (element->GetText ());
+          temp = Madara::Utility::expand_envs (element->GetText ());
 
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read barrier name = %s from process group file\n",
-          test_name.c_str ()));
+        if (temp != "")
+        {
+          test_name = temp;
+
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read barrier name = %s from process group file\n",
+            test_name.c_str ()));
+        }
       } // if name element existed
     } // if the user didn't specify a test name from the command line
 
@@ -867,9 +926,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       std::string value (Madara::Utility::clean_dir_name (
         Madara::Utility::expand_envs (el_temp2->GetText ())));
 
+      if (value == "")
+      {
+        ACE_DEBUG ((LM_INFO, 
+          "KATS_BATCH:    Each test must have an <executable>\n"));
+        return -3;
+      }
       // set the executable
       processes[cur].set_executable (value);
-
     }
     else if (type == "group")
     {
@@ -951,19 +1015,27 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     {
       if (el_temp1->Attribute ("name"))
       {
-        processes[cur].set_testname (Madara::Utility::expand_envs (
-          el_temp1->Attribute ("name")));
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read barrier name = %s from process group file\n",
-          el_temp1->Attribute ("name")));
+        std::string temp = 
+          Madara::Utility::expand_envs (el_temp1->Attribute ("name"));
+        if (temp != "")
+        {
+          processes[cur].set_testname (temp);
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read barrier name = %s from process group file\n",
+            temp.c_str ()));
+        }
       }
       else if (el_temp1->GetText ())
       {
-        processes[cur].set_testname (Madara::Utility::expand_envs (
-          el_temp1->GetText ()));
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read barrier name = %s from process group file\n",
-          el_temp1->GetText ()));
+        std::string temp = 
+          Madara::Utility::expand_envs (el_temp1->GetText ());
+        if (temp != "")
+        {
+          processes[cur].set_testname (temp);
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read barrier name = %s from process group file\n",
+            temp.c_str ()));
+        }
       }
     }
 
@@ -973,11 +1045,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       el_temp1 = element->FirstChildElement ("loglevel");
       if (el_temp1 && el_temp1->GetText ())
       {
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read loglevel = %s from process group file\n",
-             el_temp1->GetText ()));
-        processes[cur].set_loglevel (Madara::Utility::expand_envs (
-           el_temp1->GetText ()));
+        std::string temp = 
+          Madara::Utility::expand_envs (el_temp1->GetText ());
+        if (temp != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read loglevel = %s from process group file\n",
+            temp.c_str ()));
+          processes[cur].set_loglevel (temp);
+        }
       }
     }
     else
@@ -991,44 +1067,60 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     el_temp1 = element->FirstChildElement ("processes");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read processes = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_processes (Madara::Utility::expand_envs (
-         el_temp1->GetText ()));
+        std::string temp = 
+          Madara::Utility::expand_envs (el_temp1->GetText ());
+        if (temp != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read processes = %s from process group file\n",
+            temp.c_str ()));
+          processes[cur].set_processes (temp);
+        }
     }
 
     // check the id setting
     el_temp1 = element->FirstChildElement ("id");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read id = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_id (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read id = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_id (temp);
+      }
     }
 
     // check the executable environment
     el_temp1 = element->FirstChildElement ("environment");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read env = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_environment (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read env = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_environment (temp);
+      }
     }
 
     // check the delay
     el_temp1 = element->FirstChildElement ("delay");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read delay = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_delaytime (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read delay = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_delaytime (temp);
+      }
     }
 
     // check for stdout redirect
@@ -1039,12 +1131,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       std::string value (Madara::Utility::clean_dir_name (
         Madara::Utility::expand_envs (el_temp1->GetText ())));
 
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
-           value.c_str ()));
+      if (value != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read stdout redirect = %s from process group file\n",
+             value.c_str ()));
 
-      processes[cur].set_stdout (Madara::Utility::expand_envs (
-        value.c_str ()));
+        processes[cur].set_stdout (value);
+      }
     }
 
     // check for stderr redirect
@@ -1055,11 +1149,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       std::string value (Madara::Utility::clean_dir_name (
         Madara::Utility::expand_envs (el_temp1->GetText ())));
 
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
-           value.c_str ()));
-      processes[cur].set_stderr (Madara::Utility::expand_envs (
-        value.c_str ()));
+      if (value != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read stderr redirect = %s from process group file\n",
+             value.c_str ()));
+        processes[cur].set_stderr (value);
+      }
     }
 
     // check for stderr redirect
@@ -1070,55 +1166,73 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       std::string value (Madara::Utility::clean_dir_name (
         Madara::Utility::expand_envs (el_temp1->GetText ())));
 
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
-        value.c_str ()));
-      processes[cur].set_stdin (Madara::Utility::expand_envs (
-        value.c_str ()));
+      if (value != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read stdin redirect = %s from process group file\n",
+          value.c_str ()));
+        processes[cur].set_stdin (value);
+      }
     }
 
     // check the precondition
     el_temp1 = element->FirstChildElement ("precondition");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read precondition = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_precondition (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read precondition = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_precondition (temp);
+      }
     }
 
     // check the postcondition
     el_temp1 = element->FirstChildElement ("postcondition");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read postcondition = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_postcondition (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read postcondition = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_postcondition (temp);
+      }
     }
 
     // check the postdelay
     el_temp1 = element->FirstChildElement ("postdelay");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read postdelay = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_postdelay (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read postdelay = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_postdelay (temp);
+      }
     }
 
     // check the postdelay
     el_temp1 = element->FirstChildElement ("postlaunch");
     if (el_temp1 && el_temp1->GetText ())
     {
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read postlaunch = %s from process group file\n",
-           el_temp1->GetText ()));
-      processes[cur].set_postlaunch (Madara::Utility::expand_envs (
-        el_temp1->GetText ()));
+      std::string temp = 
+        Madara::Utility::expand_envs (el_temp1->GetText ());
+      if (temp != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read postlaunch = %s from process group file\n",
+          temp.c_str ()));
+        processes[cur].set_postlaunch (temp);
+      }
     }
 
     // check the commandline
@@ -1128,11 +1242,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       // expand the string for environment variables, then clean the path up
       std::string value (Madara::Utility::expand_envs (el_temp1->GetText ()));
 
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read commandline = %s from process group file\n",
-          value.c_str ()));
-      processes[cur].set_commandline (Madara::Utility::expand_envs (
-        value.c_str ()));
+      if (value != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read commandline = %s from process group file\n",
+            value.c_str ()));
+        processes[cur].set_commandline (value);
+      }
     }
 
     // kill may be a nested element, e.g. the following:
@@ -1152,11 +1268,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         // we have a kill/time
         if (el_temp2->GetText ())
         {
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read kill time = %s from process group file\n",
-            el_temp2->GetText ()));
-          processes[cur].set_killtime (Madara::Utility::expand_envs (
-            el_temp2->GetText ()));
+          std::string temp = 
+            Madara::Utility::expand_envs (el_temp2->GetText ());
+          if (temp != "")
+          {
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read kill time = %s from process group file\n",
+              temp.c_str ()));
+            processes[cur].set_killtime (temp);
+          }
         }
       }
 
@@ -1167,11 +1287,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         // we have a kill/signal
         if (el_temp2->GetText ())
         {
-          ACE_DEBUG ((LM_DEBUG, 
-            "KATS_BATCH:    Read kill signal = %s from process group file\n",
-            el_temp2->GetText ()));
-          processes[cur].set_killsignal (Madara::Utility::expand_envs (
-            el_temp2->GetText ()));
+          std::string temp = 
+            Madara::Utility::expand_envs (el_temp2->GetText ());
+          if (temp != "")
+          {
+            ACE_DEBUG ((LM_DEBUG, 
+              "KATS_BATCH:    Read kill signal = %s from process group file\n",
+              temp.c_str ()));
+            processes[cur].set_killsignal (temp);
+          }
         }
       }
     }
@@ -1184,11 +1308,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       std::string value (Madara::Utility::clean_dir_name (
         Madara::Utility::expand_envs (el_temp1->GetText ())));
 
-      ACE_DEBUG ((LM_DEBUG, 
-        "KATS_BATCH:    Read workingdir = %s from process group file\n",
-        value.c_str ()));
+      if (value != "")
+      {
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read workingdir = %s from process group file\n",
+          value.c_str ()));
 
-      processes[cur].set_workingdir (value);
+        processes[cur].set_workingdir (value);
+      }
     }
 
     // check the settings that are overridable from command line
@@ -1220,11 +1347,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       el_temp1 = element->FirstChildElement ("host");
       if (el_temp1 && el_temp1->GetText ())
       {
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read host = %s from test entry\n",
-          el_temp1->GetText ()));
-        processes[cur].set_host (Madara::Utility::expand_envs (
-          el_temp1->GetText ()));
+        std::string temp = 
+          Madara::Utility::expand_envs (el_temp1->GetText ());
+        if (temp != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read host = %s from test entry\n",
+            temp.c_str ()));
+          processes[cur].set_host (temp);
+        }
       }
     }
     // user can override host on the command line
@@ -1242,11 +1373,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       el_temp1 = element->FirstChildElement ("domain");
       if (el_temp1 && el_temp1->GetText ())
       {
-        ACE_DEBUG ((LM_DEBUG, 
-          "KATS_BATCH:    Read domain = %s from test entry\n",
-          el_temp1->GetText ()));
-        processes[cur].set_domain (Madara::Utility::expand_envs (
-          el_temp1->GetText ()));
+        std::string temp = 
+          Madara::Utility::expand_envs (el_temp1->GetText ());
+        if (temp != "")
+        {
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read domain = %s from test entry\n",
+            temp.c_str ()));
+          processes[cur].set_domain (temp);
+        }
       }
     }
     // user can override domain on the command line
