@@ -1407,11 +1407,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     }
 
     // check for stdout redirect
-    element = el_globals->FirstChildElement ("transport");
-    if (element && element->Attribute ("file"))
+    el_temp1 = el_globals->FirstChildElement ("transport");
+    if (el_temp1 && el_temp1->Attribute ("file"))
     {
       std::string value (Madara::Utility::clean_dir_name (
-        Madara::Utility::expand_envs (element->Attribute ("file"))));
+        Madara::Utility::expand_envs (el_temp1->Attribute ("file"))));
 
       if (value != "")
       {
@@ -1555,7 +1555,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   }
 
   // clear the XML document so we're not wasting memory anymore
-  doc.Clear ();
+  //doc.Clear ();
 
   // post launch occurs after all processes have been launched.
   // if parallel was set, then this will be between start and finish
