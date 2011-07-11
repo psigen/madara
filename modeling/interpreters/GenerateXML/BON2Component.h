@@ -60,6 +60,8 @@ class Component
 		void initialize( Project& project );
 		void finalize( Project& project );
 
+    void process_transport (KATS_BON::Transport & transport);
+    void process_transports_folder (KATS_BON::Transports & folder);
     void process_process_base (KATS_BON::ProcessBase & current,
                                       TiXmlElement & xml_setup);
     void process_process (KATS_BON::Process & process,

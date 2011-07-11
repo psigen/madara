@@ -10,6 +10,7 @@ IMPLEMENT_BONEXTENSION( KATS_BON::Barriers, "Barriers" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Domains, "Domains" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Hosts, "Hosts" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Processes, "Processes" );
+IMPLEMENT_BONEXTENSION( KATS_BON::Transports, "Transports" );
 IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::ConfigureBase );
 IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::Ordered );
 IMPLEMENT_ABSTRACT_BONEXTENSION( KATS_BON::ProcessBase );
@@ -18,6 +19,7 @@ IMPLEMENT_BONEXTENSION( KATS_BON::Group, "Group" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Observer, "Observer" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Process, "Process" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Sleep, "Sleep" );
+IMPLEMENT_BONEXTENSION( KATS_BON::Transport, "Transport" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Barrier, "Barrier" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Domain, "Domain" );
 IMPLEMENT_BONEXTENSION( KATS_BON::Host, "Host" );
@@ -25,6 +27,7 @@ IMPLEMENT_BONEXTENSION( KATS_BON::Kill, "Kill" );
 IMPLEMENT_BONEXTENSION( KATS_BON::BarrierRef, "BarrierRef" );
 IMPLEMENT_BONEXTENSION( KATS_BON::DomainRef, "DomainRef" );
 IMPLEMENT_BONEXTENSION( KATS_BON::HostRef, "HostRef" );
+IMPLEMENT_BONEXTENSION( KATS_BON::TransportRef, "TransportRef" );
 
 
 } // namespace BON
@@ -192,6 +195,46 @@ std::set<KATS_BON::Group> KATS_BON::ProcessesImpl::getGroup()
 //********************************************************************************
 // 
 //********************************************************************************
+void KATS_BON::TransportsImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::Transports
+	pVisitor->visitTransports( KATS_BON::Transports( this));
+
+	// then its children
+	std::set<BON::Folder> subfolders = BON::FolderImpl::getChildFolders();
+	for( std::set<BON::Folder>::const_iterator it = subfolders.begin(); it != subfolders.end(); ++it)
+	{
+		(*it)->accept( pVisitor);
+	}
+
+	std::set<BON::FCO> children = BON::FolderImpl::getRootFCOs();
+	for( std::set<BON::FCO>::const_iterator it = children.begin(); it != children.end(); ++it)
+	{
+		(*it)->accept( pVisitor);
+	}
+}
+
+
+//********************************************************************************
+// getter for kind "Transport"
+//********************************************************************************
+std::set<KATS_BON::Transport> KATS_BON::TransportsImpl::getTransport()
+{
+	std::set<KATS_BON::Transport> res;
+	std::set<BON::Object> kinds = FolderImpl::getChildObjects("Transport");
+	for( std::set<BON::Object>::iterator i = kinds.begin(); i != kinds.end(); ++i)
+	{
+		KATS_BON::Transport elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 void KATS_BON::ConfigureBaseImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 {
 	// visit the KATS_BON::ConfigureBase
@@ -205,6 +248,15 @@ void KATS_BON::ConfigureBaseImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 std::string KATS_BON::ConfigureBaseImpl::getDelay() 
 {
 	return FCOImpl::getAttribute("Delay")->getStringValue();
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+std::string KATS_BON::ConfigureBaseImpl::getDuplicates() 
+{
+	return FCOImpl::getAttribute("Duplicates")->getStringValue();
 }
 
 
@@ -349,6 +401,15 @@ void KATS_BON::ConfigureBaseImpl::setDebug( bool val)
 void KATS_BON::ConfigureBaseImpl::setDelay( const std::string& val)
 {
 	FCOImpl::getAttribute("Delay")->setStringValue( val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::ConfigureBaseImpl::setDuplicates( const std::string& val)
+{
+	FCOImpl::getAttribute("Duplicates")->setStringValue( val);
 }
 
 
@@ -593,6 +654,23 @@ std::set<KATS_BON::Kill> KATS_BON::ProcessBaseImpl::getKill()
 	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
 	{
 		KATS_BON::Kill elem(*i);
+		ASSERT(elem);
+		res.insert(elem);
+	}
+	return res;
+}
+
+
+//********************************************************************************
+// getter for role "TransportRef" among "KATS_BON::TransportRef"s
+//********************************************************************************
+std::set<KATS_BON::TransportRef> KATS_BON::ProcessBaseImpl::getTransportRef()
+{
+	std::set<KATS_BON::TransportRef> res;
+	std::set<BON::FCO> roles = ModelImpl::getChildFCOsAs("TransportRef");
+	for( std::set<BON::FCO>::iterator i = roles.begin(); i != roles.end(); ++i)
+	{
+		KATS_BON::TransportRef elem(*i);
 		ASSERT(elem);
 		res.insert(elem);
 	}
@@ -925,6 +1003,81 @@ void KATS_BON::SleepImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 //********************************************************************************
 // 
 //********************************************************************************
+void KATS_BON::TransportImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::Transport
+	pVisitor->visitTransport( KATS_BON::Transport( this));
+
+	// then its children
+	std::set<BON::FCO> children = ModelImpl::getChildFCOs();
+	for( std::set<BON::FCO>::const_iterator it = children.begin(); it != children.end(); ++it)
+	{
+		(*it)->accept( pVisitor);
+	}
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+KATS_BON::TransportImpl::Persistence_Type KATS_BON::TransportImpl::getPersistence()
+{
+	std::string val = FCOImpl::getAttribute("Persistence")->getStringValue();
+
+	if ( val == "Volatile") return Volatile_Persistence_Type;
+	else if ( val == "Persistent") return Persistent_Persistence_Type;
+	else throw("None of the possible items");
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+KATS_BON::TransportImpl::Type_Type KATS_BON::TransportImpl::getType()
+{
+	std::string val = FCOImpl::getAttribute("Type")->getStringValue();
+
+	if ( val == "None") return None_Type_Type;
+	else if ( val == "Splice") return Splice_Type_Type;
+	else if ( val == "NDDS") return NDDS_Type_Type;
+	else throw("None of the possible items");
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::TransportImpl::setPersistence( TransportImpl::Persistence_Type val)
+{
+	std::string str_val = "";
+
+	if ( val == Volatile_Persistence_Type) str_val = "Volatile";
+	else if ( val == Persistent_Persistence_Type) str_val = "Persistent";
+	else throw("None of the possible items");
+
+	FCOImpl::getAttribute("Persistence")->setStringValue( str_val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::TransportImpl::setType( TransportImpl::Type_Type val)
+{
+	std::string str_val = "";
+
+	if ( val == None_Type_Type) str_val = "None";
+	else if ( val == Splice_Type_Type) str_val = "Splice";
+	else if ( val == NDDS_Type_Type) str_val = "NDDS";
+	else throw("None of the possible items");
+
+	FCOImpl::getAttribute("Type")->setStringValue( str_val);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
 void KATS_BON::BarrierImpl::accept( KATS_BON::KATSVisitor *pVisitor)
 {
 	// visit the KATS_BON::Barrier
@@ -1127,6 +1280,26 @@ KATS_BON::Host KATS_BON::HostRefImpl::getHost()
 {
 	BON::FCO r = BON::ReferenceImpl::getReferred();
 	return KATS_BON::Host(r);
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+void KATS_BON::TransportRefImpl::accept( KATS_BON::KATSVisitor *pVisitor)
+{
+	// visit the KATS_BON::TransportRef
+	pVisitor->visitTransportRef( KATS_BON::TransportRef( this));
+}
+
+
+//********************************************************************************
+// 
+//********************************************************************************
+KATS_BON::Transport KATS_BON::TransportRefImpl::getTransport()
+{
+	BON::FCO r = BON::ReferenceImpl::getReferred();
+	return KATS_BON::Transport(r);
 }
 
 

@@ -145,6 +145,13 @@ public:
     command_line << "\"";
   }
 
+  void set_transport_file (const std::string & value)
+  {
+    command_line << " -8 \"";
+    command_line << value;
+    command_line << "\"";
+  }
+
   void set_postlaunch (const std::string & value)
   {
     command_line << " -z \"";
@@ -352,6 +359,58 @@ extract_path (const std::string & name)
   return result;
 }
 
+int
+process_transport_file (const std::string & file)
+{
+  // read the file
+  TiXmlDocument doc (file);
+
+  if (!doc.LoadFile ())
+  {
+    ACE_DEBUG ((LM_INFO, 
+      "KATS_BATCH:  Unable to open transport file %s\n", file.c_str ()));
+    return -2;
+  }
+
+  TiXmlElement * root  = doc.FirstChildElement ("transport");
+  TiXmlElement * current = 0;
+
+  if (root)
+  {
+    current = root->FirstChildElement ("type");
+
+    if (current && current->GetText ())
+    {
+      std::string value (current->GetText ());
+      Madara::Utility::lower (value);
+
+      transport_set = true;
+
+      if      ("ndds"      == value)
+        settings.type = Madara::Transport::NDDS;
+      else if ("splice"    == value)
+        settings.type = Madara::Transport::SPLICE;
+      else if ("none"      == value)
+        settings.type = Madara::Transport::NO_TRANSPORT;
+      else
+        transport_set = false;
+
+    }
+
+    current = root->FirstChildElement ("persistence");
+    
+    if (current && current->GetText ())
+    {
+
+    }
+
+  }
+  else
+    return -1;
+  
+  return 0;
+}
+
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
@@ -429,6 +488,33 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     // only load globals from the file if they were not
     // supplied via command line (command line has highest priority)
+
+    if (!transport_set)
+    {
+      // check for stdout redirect
+      element = el_globals->FirstChildElement ("transport");
+      if (element && element->Attribute ("file"))
+      {
+        std::string value (Madara::Utility::clean_dir_name (
+          Madara::Utility::expand_envs (element->Attribute ("file"))));
+
+        if (value != "")
+        {
+          std::stringstream buffer;
+          buffer << working_dir;
+          buffer << "/";
+          buffer << value;
+          
+          value = Madara::Utility::clean_dir_name (buffer.str ().c_str ()); 
+
+          ACE_DEBUG ((LM_DEBUG, 
+            "KATS_BATCH:    Read transport file = %s from process group file\n",
+               value.c_str ()));
+
+          process_transport_file (value);
+        }
+      }
+    }
 
     if (!stdout_set)
     {
@@ -878,7 +964,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     std::string type = element->Value ();
     if (type == "process" || type == "group" ||
         type == "sleep" || type == "observer")
+    {
       ++cur;
+    }
   }
 
   ACE_DEBUG ((LM_DEBUG, 
@@ -1318,6 +1406,31 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       }
     }
 
+    // check for stdout redirect
+    element = el_globals->FirstChildElement ("transport");
+    if (element && element->Attribute ("file"))
+    {
+      std::string value (Madara::Utility::clean_dir_name (
+        Madara::Utility::expand_envs (element->Attribute ("file"))));
+
+      if (value != "")
+      {
+        std::stringstream buffer;
+        buffer << working_dir;
+        buffer << "/";
+        buffer << value;
+
+        value = Madara::Utility::clean_dir_name (buffer.str ().c_str ()); 
+
+        ACE_DEBUG ((LM_DEBUG, 
+          "KATS_BATCH:    Read transport file = %s from process group file\n",
+          value.c_str ()));
+
+        processes[cur].set_transport_file (value);
+      }
+    }
+
+
     // check the settings that are overridable from command line
 
     if (realtime || element->FirstChildElement ("realtime"))
@@ -1441,6 +1554,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     ++cur;
   }
 
+  // clear the XML document so we're not wasting memory anymore
+  doc.Clear ();
+
   // post launch occurs after all processes have been launched.
   // if parallel was set, then this will be between start and finish
   // if sequential mode was set, then this will be after the last process
@@ -1547,7 +1663,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:9:f:n:i:l:o:d:a:s:t:v:y:z:mgrh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:8:9:f:n:i:l:o:d:a:s:t:v:y:z:mgrh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -1556,6 +1672,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("transfile"), '8', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("transport"), '9', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("barriername"), 'a', ACE_Get_Opt::ARG_REQUIRED);
@@ -1621,6 +1738,14 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         DLINFO "KATS_BATCH: stderr redirected to %s\n",
         Madara::Utility::clean_dir_name (cmd_opts.opt_arg ()).c_str ()));
 
+      break;
+    case '8':
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: reading transport settings from %s\n",
+        cmd_opts.opt_arg ()));
+
+      process_transport_file (cmd_opts.opt_arg ());
+      
       break;
     case '9':
       // transport protocol
@@ -1859,6 +1984,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -0 (--stdin)       redirect stdin from a file \n\
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\
+      -8 (--transfile)   read transport settings from a file \n\
+      -9 (--transport)   use the specified transport protocol: \n\
+                         0   ==  No transport \n\
+                         1   ==  Open Splice DDS \n\
+                         2   ==  NDDS         \n\
       -a (--testname)    name of the test (for barriers) \n\
          (--barriername) \n\
       -b (--precondition) precondition to wait for after barrier \n\
@@ -1872,10 +2002,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -m (--timing)      print timing information \n\
                          (add -g for kats conditional timing) \n\
       -n (--processes)   number of testing processes \n\
-      -p (--transport)   use the specified transport protocol: \n\
-                         0   ==  No transport \n\
-                         1   ==  Open Splice DDS \n\
-                         2   ==  NDDS         \n\
+      -p (--parallel)    launch the processes in parallel:\n\
       -o (--host)        host identifier        \n\
       -r (--realtime)    run the process with real time scheduling \n\
       -s (--postcondition) postcondition to evaluate after process exits \n\

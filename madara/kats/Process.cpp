@@ -21,6 +21,7 @@
 
 #include "madara/utility/Log_Macros.h"
 #include "madara/kats/Test_Framework.h"
+#include "madara/kats/tinyxml.h"
 
 Madara::KATS::Settings settings;
 ACE_Process_Options process_options;
@@ -50,6 +51,52 @@ std::string post_launch;
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
+int
+process_transport_file (const std::string & file)
+{
+  // read the file
+  TiXmlDocument doc (file);
+
+  if (!doc.LoadFile ())
+  {
+    ACE_DEBUG ((LM_INFO, 
+      "KATS_BATCH:  Unable to open transport file %s\n", file.c_str ()));
+    return -2;
+  }
+
+  TiXmlElement * root  = doc.FirstChildElement ("transport");
+  TiXmlElement * current = 0;
+
+  if (root)
+  {
+    current = root->FirstChildElement ("type");
+
+    if (current && current->GetText ())
+    {
+      std::string value (current->GetText ());
+      Madara::Utility::lower (value);
+
+      if      ("ndds"      == value)
+        settings.type = Madara::Transport::NDDS;
+      else if ("splice"    == value)
+        settings.type = Madara::Transport::SPLICE;
+      else if ("none"      == value)
+        settings.type = Madara::Transport::NO_TRANSPORT;
+    }
+
+    current = root->FirstChildElement ("persistence");
+    
+    if (current && current->GetText ())
+    {
+
+    }
+
+  }
+  else
+    return -1;
+  
+  return 0;
+}
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -313,7 +360,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:9:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:y:z:gmrh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:8:9:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:y:z:gmrh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -322,6 +369,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("transfile"), '8', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("transport"), '9', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("barriername"), 'a', ACE_Get_Opt::ARG_REQUIRED);
@@ -388,6 +436,14 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         DLINFO "KATS_PROCESS: stderr redirected to %s\n",
         cmd_opts.opt_arg ()));
 
+      break;
+    case '8':
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: reading transport settings from %s\n",
+        cmd_opts.opt_arg ()));
+
+      process_transport_file (cmd_opts.opt_arg ());
+      
       break;
     case '9':
       // transport protocol
@@ -657,6 +713,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -0 (--stdin)       redirect stdin from a file \n\
       -1 (--stdout)      redirect stdout to a file \n\
       -2 (--stderr)      redirect stderr to a file \n\
+      -8 (--transfile)   read transport settings from a file \n\
       -9 (--transport)   use the specified transport protocol: \n\
                          0   ==  No transport \n\
                          1   ==  Open Splice DDS \n\

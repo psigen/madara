@@ -49,7 +49,7 @@
 namespace BON
 {
 
-  const char * interpreter_version = "0.4.3";
+  const char * interpreter_version = "0.4.12";
 
   /**
    * Comparison for derived classes of Ordered
@@ -145,6 +145,34 @@ void Component::process_process_base (KATS_BON::ProcessBase & current,
     TiXmlElement element ("timing");
     xml_setup.InsertEndChild (element);
   }
+
+
+  // get the transport
+  std::set<KATS_BON::TransportRef> transports = current->getTransportRef ();
+  std::set<KATS_BON::TransportRef>::iterator tbegin = transports.begin();
+  if (tbegin != transports.end ())
+  {
+    KATS_BON::TransportRef tref = *tbegin;
+    KATS_BON::Transport transport = tref->getTransport ();
+
+    Util::GenRefCounted * ref_ptr = transport.getCounted (false);
+
+    TiXmlElement element ("transport");
+
+    // check to see if the user initialized the reference to an
+    // actual transport
+    if (ref_ptr)
+    {
+      std::stringstream buffer;
+      buffer << "transports/";
+      buffer << transport->getName ();
+      buffer << ".xml";
+
+      element.SetAttribute ("file", buffer.str ().c_str ());
+      xml_setup.InsertEndChild (element);
+    }
+  }
+ 
 
   // get the host name
   std::set<KATS_BON::HostRef> hosts = current->getHostRef ();
@@ -324,6 +352,19 @@ void Component::process_process_base (KATS_BON::ProcessBase & current,
 
     element.InsertEndChild (text);
 
+    xml_setup.InsertEndChild (element);
+  }
+
+  // did the user set a stderr redirect?
+  if (current->getDuplicates () != "")
+  {
+    TiXmlElement element ("duplicates");
+    TiXmlText text (current->getDuplicates ().c_str ());
+
+    text.SetValue (KATS::Utility::expand_model_vars (current,
+      text.ValueStr ()));
+
+    element.InsertEndChild (text);
     xml_setup.InsertEndChild (element);
   }
 
@@ -735,6 +776,19 @@ void Component::process_group_ref (KATS_BON::GroupRef & current,
         xml_setup.InsertEndChild (element);
       }
 
+      // did the user set a stderr redirect?
+      if (current->getDuplicates () != "")
+      {
+        TiXmlElement element ("duplicates");
+        TiXmlText text (current->getDuplicates ().c_str ());
+
+        text.SetValue (KATS::Utility::expand_model_vars (current,
+          text.ValueStr ()));
+
+        element.InsertEndChild (text);
+        xml_setup.InsertEndChild (element);
+      }
+
       // did the user set a stdout redirect?
       if (current->getStdout () != "")
       {
@@ -893,6 +947,76 @@ void Component::process_process_group (KATS_BON::Group & current)
   }
 }
 
+void Component::process_transport (KATS_BON::Transport & current)
+{
+	using namespace GMEConsole;
+  Console::Out::WriteLine(CString ("......Processing the transport ") + 
+      current->getName ().c_str () + "...");
+
+  TiXmlElement xml_setup ("transport");
+
+  // what is the type?
+  {
+    TiXmlElement element ("type");
+
+    char * types [] = {
+      "None",
+      "Splice",
+      "NDDS"
+    };
+
+    TiXmlText text (types[current->getType ()]);
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // what is the persistence?
+  {
+    TiXmlElement element ("persistence");
+
+    char * types [] = {
+      "Volatile",
+      "Persistent"
+    };
+
+    TiXmlText text (types[current->getPersistence ()]);
+
+    element.InsertEndChild (text);
+    xml_setup.InsertEndChild (element);
+  }
+
+  // write the file out
+  {
+    // create an xml directory
+    ::CreateDirectory ("xml", 0);
+    ::CreateDirectory ("xml\\transports", 0);
+    std::stringstream buffer;
+    buffer << "xml\\transports\\";
+    buffer << current->getName ();
+    buffer << ".xml";
+
+    TiXmlDocument xml_doc (buffer.str ().c_str ());
+    xml_doc.InsertEndChild (xml_setup);
+
+    Console::Out::WriteLine(CString ("......Writing to file ") + 
+      buffer.str ().c_str ());
+
+    xml_doc.SaveFile (buffer.str ().c_str ());
+  }
+}
+
+void Component::process_transports_folder (KATS_BON::Transports & current)
+{
+	using namespace GMEConsole;
+	Console::Out::WriteLine("....Iterating through process groups...");
+  std::set<KATS_BON::Transport> groups = current->getTransport ();
+  for (std::set<KATS_BON::Transport>::iterator group = groups.begin(); group != groups.end(); ++group)
+  {
+    process_transport (*group);
+  }
+}
+
 void Component::process_processes_folder (KATS_BON::Processes & process_folder)
 {
 	using namespace GMEConsole;
@@ -935,6 +1059,13 @@ void Component::invokeEx( Project& project, FCO& currentFCO, const std::set<FCO>
       Console::Out::WriteLine(CString ("....Processing ") +
         process_folder->getName ().c_str () + " folder...");
       process_processes_folder (process_folder);
+    }
+    else if ((*folder)->getFolderMeta ().name () == "Transports")
+    {
+      KATS_BON::Transports transports_folder = (*folder);
+      Console::Out::WriteLine(CString ("....Processing ") +
+        transports_folder->getName ().c_str () + " folder...");
+      process_transports_folder (transports_folder);
     }
   }
 

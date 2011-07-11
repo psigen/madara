@@ -19,6 +19,7 @@
 #include "ace/Process.h"
 
 #include "madara/utility/Log_Macros.h"
+#include "madara/kats/tinyxml.h"
 #include "madara/kats/Test_Framework.h"
 
 Madara::KATS::Settings settings;
@@ -49,6 +50,53 @@ std::string post_launch;
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
+
+int
+process_transport_file (const std::string & file)
+{
+  // read the file
+  TiXmlDocument doc (file);
+
+  if (!doc.LoadFile ())
+  {
+    ACE_DEBUG ((LM_INFO, 
+      "KATS_BATCH:  Unable to open transport file %s\n", file.c_str ()));
+    return -2;
+  }
+
+  TiXmlElement * root  = doc.FirstChildElement ("transport");
+  TiXmlElement * current = 0;
+
+  if (root)
+  {
+    current = root->FirstChildElement ("type");
+
+    if (current && current->GetText ())
+    {
+      std::string value (current->GetText ());
+      Madara::Utility::lower (value);
+
+      if      ("ndds"      == value)
+        settings.type = Madara::Transport::NDDS;
+      else if ("splice"    == value)
+        settings.type = Madara::Transport::SPLICE;
+      else if ("none"      == value)
+        settings.type = Madara::Transport::NO_TRANSPORT;
+    }
+
+    current = root->FirstChildElement ("persistence");
+    
+    if (current && current->GetText ())
+    {
+
+    }
+
+  }
+  else
+    return -1;
+  
+  return 0;
+}
 
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
@@ -256,7 +304,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:9:n:i:o:e:w:l:t:x:a:c:d:b:s:v:k:y:z:grmh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:8:9:n:i:o:e:w:l:t:x:a:c:d:b:s:v:k:y:z:grmh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -265,6 +313,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stdin"), '0', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stdout"), '1', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stderr"), '2', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("transfile"), '8', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("transport"), '9', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("testname"), 'a', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("precondition"), 'b',
@@ -327,6 +376,14 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         DLINFO "KATS_SLEEP: stderr redirected to %s\n",
         cmd_opts.opt_arg ()));
 
+      break;
+    case '8':
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_BATCH: reading transport settings from %s\n",
+        cmd_opts.opt_arg ()));
+
+      process_transport_file (cmd_opts.opt_arg ());
+      
       break;
     case '9':
       // transport protocol
@@ -521,7 +578,13 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         short_arg));
 
     case 'h':
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, "Program Options:    \n\
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+"kats_observer options:    \n\
+      -8 (--transfile)   read transport settings from a file \n\
+      -9 (--transport)   use the specified transport protocol: \n\
+                         0   ==  No transport \n\
+                         1   ==  Open Splice DDS \n\
+                         2   ==  NDDS         \n\
       -a (--testname)    name of the test (for barriers) \n\
       -b (--precondition) precondition to wait for after barrier \n\
       -d (--domain)      knowledge domain to isolate knowledge into \n\
@@ -534,10 +597,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
                          (add -g for kats conditional timing) \n\
       -n (--processes)   number of testing processes \n\
       -o (--host)        host identifier        \n\
-      -p (--transport)   use the specified transport protocol: \n\
-                         0   ==  No transport \n\
-                         1   ==  Open Splice DDS \n\
-                         2   ==  NDDS         \n\
       -r (--realtime)    run the process with real time scheduling \n\
       -s (--postcondition) postcondition to set after process exits \n\
       -t (--timeout)     time in seconds to wait before killing \n\

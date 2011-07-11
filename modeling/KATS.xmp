@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="KATS" version="0.4.7" guid="{0C550A87-D610-4B6A-910E-2E6D83CBDF25}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
+<paradigm name="KATS" version="0.4.12" guid="{2ABCDE90-B986-42FD-B4C2-A7A4C90A74D7}" cdate="Sun May 01 15:50:59 2011" mdate="Sun May 01 15:50:59 2011" >
 
 	<comment></comment>
 
 	<author>James Edmondson</author>
 
-	<folder name = "RootFolder" metaref = "1000"  subfolders = "Barriers Domains Hosts Processes" rootobjects = "Barrier Domain Host" >
+	<folder name = "RootFolder" metaref = "1000"  subfolders = "Barriers Domains Hosts Processes Transports" rootobjects = "Barrier Domain Host Transport" >
 		<attrdef name="CommandLine" metaref = "1001" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Add command line arguments?"></regnode>
 		</attrdef>
@@ -16,6 +16,9 @@
 		</attrdef>
 		<attrdef name="Delay" metaref = "1003" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "Seconds to delay after barrier and precondition?"></regnode>
+		</attrdef>
+		<attrdef name="Duplicates" metaref = "1182" valuetype = "string" defvalue = "">
+			<regnode name="help" value = "How many duplicates of this object?"></regnode>
 		</attrdef>
 		<attrdef name="Enabled" metaref = "1099" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Generate in XML?"></regnode>
@@ -49,6 +52,11 @@
 		</attrdef>
 		<attrdef name="Parallel" metaref = "1006" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Run tests in parallel?"></regnode>
+		</attrdef>
+		<attrdef name="Persistence" metaref = "1167" valuetype = "enum" defvalue = "Volatile">
+			<enumitem dispname = "Volatile" value = "Volatile"></enumitem>
+			<enumitem dispname = "Persistent" value = "Persistent"></enumitem>
+			<regnode name="help" value = "What kind of persistence would you like in the transport?"></regnode>
 		</attrdef>
 		<attrdef name="PostDelay" metaref = "1162" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "KaRL Expression to evaluate after the temporal delay and before application launch"></regnode>
@@ -86,6 +94,12 @@
 		<attrdef name="Timing" metaref = "1124" valuetype = "boolean" defvalue = "true">
 			<regnode name="help" value = "Print timing information?"></regnode>
 		</attrdef>
+		<attrdef name="Type" metaref = "1168" valuetype = "enum" defvalue = "Splice">
+			<enumitem dispname = "None" value = "None"></enumitem>
+			<enumitem dispname = "Splice" value = "Splice"></enumitem>
+			<enumitem dispname = "NDDS" value = "NDDS"></enumitem>
+			<regnode name="help" value = "Type of dissemination transport to use"></regnode>
+		</attrdef>
 		<attrdef name="WorkingDir" metaref = "1090" valuetype = "string" defvalue = "">
 			<regnode name="help" value = "What should the working directory be?"></regnode>
 		</attrdef>
@@ -121,7 +135,8 @@
 				<pointeritem desc = "Domain"></pointeritem>
 			</pointerspec>
 		</reference>
-		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order OverrideSettings OverrideHost OverrideDomain OverrideBarrier Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch">
+		<reference name = "GroupRef" metaref = "1096" attributes = "Enabled Order OverrideSettings OverrideHost OverrideDomain OverrideBarrier Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates">
+			<dispname>Group</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 			<pointerspec name = "ref">
 				<pointeritem desc = "Group"></pointeritem>
@@ -135,10 +150,42 @@
 				<pointeritem desc = "Host"></pointeritem>
 			</pointerspec>
 		</reference>
-		<model name = "Group" metaref = "1058" attributes = "Parallel Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+		<reference name = "TransportRef" metaref = "1169">
+			<dispname>Transport</dispname>
+				<regnode name = "namePosition" value ="4"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Transport"></pointeritem>
+			</pointerspec>
+		</reference>
+		<model name = "Group" metaref = "1058" attributes = "Parallel Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="buttongroup.jpg"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidProcessBasePartCardinality1" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "BarrierRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality2" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "DomainRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality3" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "HostRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality4" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Kill" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality5" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "TransportRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
 			<role name = "BarrierRef" metaref = "1078" kind = "BarrierRef"></role>
 			<role name = "DomainRef" metaref = "1059" kind = "DomainRef"></role>
 			<role name = "Group" metaref = "1094" kind = "Group"></role>
@@ -148,7 +195,8 @@
 			<role name = "Observer" metaref = "1120" kind = "Observer"></role>
 			<role name = "Process" metaref = "1060" kind = "Process"></role>
 			<role name = "Sleep" metaref = "1121" kind = "Sleep"></role>
-			<aspect name = "GroupConfig" metaref = "1126" attributes = "Parallel Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+			<role name = "TransportRef" metaref = "1170" kind = "TransportRef"></role>
+			<aspect name = "GroupConfig" metaref = "1126" attributes = "Parallel Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<dispname>Config</dispname>
 				<part metaref = "1127" role = "BarrierRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1128" role = "DomainRef" primary = "yes" linked = "no"></part>
@@ -158,54 +206,143 @@
 				<part metaref = "1132" role = "Observer" primary = "yes" linked = "no"></part>
 				<part metaref = "1133" role = "Process" primary = "yes" linked = "no"></part>
 				<part metaref = "1134" role = "Sleep" primary = "yes" linked = "no"></part>
+				<part metaref = "1171" role = "TransportRef" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
-		<model name = "Observer" metaref = "1100" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+		<model name = "Observer" metaref = "1100" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="binoculars.jpg"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidProcessBasePartCardinality1" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "BarrierRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality2" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "DomainRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality3" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "HostRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality4" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Kill" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality5" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "TransportRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
 			<role name = "BarrierRef" metaref = "1101" kind = "BarrierRef"></role>
 			<role name = "DomainRef" metaref = "1102" kind = "DomainRef"></role>
 			<role name = "HostRef" metaref = "1103" kind = "HostRef"></role>
 			<role name = "Kill" metaref = "1104" kind = "Kill"></role>
-			<aspect name = "ProcessConfig" metaref = "1150" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+			<role name = "TransportRef" metaref = "1172" kind = "TransportRef"></role>
+			<aspect name = "ProcessConfig" metaref = "1150" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<dispname>Config</dispname>
 				<part metaref = "1151" role = "BarrierRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1152" role = "DomainRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1153" role = "HostRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1154" role = "Kill" primary = "yes" linked = "no"></part>
+				<part metaref = "1173" role = "TransportRef" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
-		<model name = "Process" metaref = "1066" attributes = "Enabled Order CommandLine Executable Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+		<model name = "Process" metaref = "1066" attributes = "Enabled Order CommandLine Executable Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="blue_play.jpg"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidProcessBasePartCardinality1" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "BarrierRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality2" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "DomainRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality3" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "HostRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality4" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Kill" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality5" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "TransportRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
 			<role name = "BarrierRef" metaref = "1080" kind = "BarrierRef"></role>
 			<role name = "DomainRef" metaref = "1067" kind = "DomainRef"></role>
 			<role name = "HostRef" metaref = "1085" kind = "HostRef"></role>
 			<role name = "Kill" metaref = "1068" kind = "Kill"></role>
-			<aspect name = "ProcessConfig" metaref = "1140" attributes = "Enabled Order CommandLine Executable Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+			<role name = "TransportRef" metaref = "1174" kind = "TransportRef"></role>
+			<aspect name = "ProcessConfig" metaref = "1140" attributes = "Enabled Order CommandLine Executable Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<dispname>Config</dispname>
 				<part metaref = "1141" role = "BarrierRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1142" role = "DomainRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1143" role = "HostRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1144" role = "Kill" primary = "yes" linked = "no"></part>
+				<part metaref = "1175" role = "TransportRef" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
-		<model name = "Sleep" metaref = "1110" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+		<model name = "Sleep" metaref = "1110" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "icon" value ="sleep.jpg"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidProcessBasePartCardinality1" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "BarrierRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality2" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "DomainRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality3" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "HostRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality4" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Kill" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidProcessBasePartCardinality5" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "TransportRef" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by ProcessBase, has to match 0..1.</dispname>
+			</constraint>
 			<role name = "BarrierRef" metaref = "1111" kind = "BarrierRef"></role>
 			<role name = "DomainRef" metaref = "1112" kind = "DomainRef"></role>
 			<role name = "HostRef" metaref = "1113" kind = "HostRef"></role>
 			<role name = "Kill" metaref = "1114" kind = "Kill"></role>
-			<aspect name = "ProcessConfig" metaref = "1155" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch" >
+			<role name = "TransportRef" metaref = "1176" kind = "TransportRef"></role>
+			<aspect name = "ProcessConfig" metaref = "1155" attributes = "Enabled Order Realtime Debug Timing LogLevel Delay Id Stdin Processes Stderr Precondition Stdout Postcondition WorkingDir PostDelay PostLaunch Duplicates" >
 				<dispname>Config</dispname>
 				<part metaref = "1156" role = "BarrierRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1157" role = "DomainRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1158" role = "HostRef" primary = "yes" linked = "no"></part>
 				<part metaref = "1159" role = "Kill" primary = "yes" linked = "no"></part>
+				<part metaref = "1177" role = "TransportRef" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Transport" metaref = "1178" attributes = "Type Persistence" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "TransportConfig" metaref = "1181" attributes = "Type Persistence" >
+				<dispname>Configuration</dispname>
 			</aspect>
 		</model>
 		<folder name = "Barriers" metaref = "1043"  rootobjects = "Barrier" >
@@ -215,6 +352,8 @@
 		<folder name = "Hosts" metaref = "1086"  rootobjects = "Host" >
 		</folder>
 		<folder name = "Processes" metaref = "1074"  rootobjects = "Group" >
+		</folder>
+		<folder name = "Transports" metaref = "1180"  rootobjects = "Transport" >
 		</folder>
 	</folder>
 </paradigm>

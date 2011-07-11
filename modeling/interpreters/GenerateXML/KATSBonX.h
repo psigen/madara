@@ -14,14 +14,16 @@ namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, BarriersImpl, Bar
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, DomainsImpl, Domains ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, HostsImpl, Hosts ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, ProcessesImpl, Processes ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Folder, TransportsImpl, Transports ); }
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, ConfigureBaseImpl, ConfigureBase ); }
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION( BON::FCO, OrderedImpl, Ordered ); }
 namespace KATS_BON {        DECLARE_ABSTRACT_BONEXTENSION2( BON::Model, ConfigureBase, ProcessBaseImpl, ProcessBase ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION3( BON::Reference, ConfigureBase, Ordered, GroupRefImpl, GroupRef ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION3( BON::Reference, Ordered, ConfigureBase, GroupRefImpl, GroupRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( ProcessBase, GroupImpl, Group ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ObserverImpl, Observer ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, ProcessImpl, Process ); }
-namespace KATS_BON {        DECLARE_BONEXTENSION2( Ordered, ProcessBase, SleepImpl, Sleep ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ObserverImpl, Observer ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, ProcessImpl, Process ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION2( ProcessBase, Ordered, SleepImpl, Sleep ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Model, TransportImpl, Transport ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, BarrierImpl, Barrier ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, DomainImpl, Domain ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, HostImpl, Host ); }
@@ -29,6 +31,7 @@ namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Atom, KillImpl, Kill ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Reference, BarrierRefImpl, BarrierRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Reference, DomainRefImpl, DomainRef ); }
 namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Reference, HostRefImpl, HostRef ); }
+namespace KATS_BON {        DECLARE_BONEXTENSION( BON::Reference, TransportRefImpl, TransportRef ); }
 
 
 #include "KATSVisitor.h"
@@ -128,6 +131,29 @@ public:
 namespace KATS_BON
 {
 //*******************************************************************
+//   C  L  A  S  S   TransportsImpl
+//*******************************************************************
+class TransportsImpl :
+	  public BON::FolderImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+	//
+	// kind and subfolder getters
+	virtual std::set<KATS_BON::Transport>   getTransport();
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
 //   C  L  A  S  S   ConfigureBaseImpl
 //*******************************************************************
 class ConfigureBaseImpl :
@@ -141,6 +167,7 @@ public:
 	//
 	// attribute getters and setters
 	virtual std::string getDelay() ;
+	virtual std::string getDuplicates() ;
 	virtual std::string getId() ;
 	virtual std::string getLogLevel() ;
 	virtual std::string getPostDelay() ;
@@ -157,6 +184,7 @@ public:
 	virtual bool        isTiming() ;
 	virtual void        setDebug( bool val);
 	virtual void        setDelay( const std::string& val);
+	virtual void        setDuplicates( const std::string& val);
 	virtual void        setId( const std::string& val);
 	virtual void        setLogLevel( const std::string& val);
 	virtual void        setPostDelay( const std::string& val);
@@ -225,6 +253,7 @@ public:
 	virtual std::set<KATS_BON::DomainRef>   getDomainRef();
 	virtual std::set<KATS_BON::HostRef>     getHostRef();
 	virtual std::set<KATS_BON::Kill>        getKill();
+	virtual std::set<KATS_BON::TransportRef>          getTransportRef();
 
 	///BUP
 	// add your own members here
@@ -240,8 +269,8 @@ namespace KATS_BON
 //*******************************************************************
 class GroupRefImpl :
 	  virtual public BON::ReferenceImpl
-	, public ConfigureBaseImpl
 	, public OrderedImpl
+	, public ConfigureBaseImpl
 {
 public:
 	virtual void        initialize() { };
@@ -308,8 +337,8 @@ namespace KATS_BON
 //   C  L  A  S  S   ObserverImpl
 //*******************************************************************
 class ObserverImpl :
-	  public OrderedImpl
-	, public ProcessBaseImpl
+	  public ProcessBaseImpl
+	, public OrderedImpl
 {
 public:
 	virtual void        initialize() { };
@@ -330,8 +359,8 @@ namespace KATS_BON
 //   C  L  A  S  S   ProcessImpl
 //*******************************************************************
 class ProcessImpl :
-	  public OrderedImpl
-	, public ProcessBaseImpl
+	  public ProcessBaseImpl
+	, public OrderedImpl
 {
 public:
 	virtual void        initialize() { };
@@ -358,14 +387,52 @@ namespace KATS_BON
 //   C  L  A  S  S   SleepImpl
 //*******************************************************************
 class SleepImpl :
-	  public OrderedImpl
-	, public ProcessBaseImpl
+	  public ProcessBaseImpl
+	, public OrderedImpl
 {
 public:
 	virtual void        initialize() { };
 	virtual void        finalize() { };
 	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
 
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
+//   C  L  A  S  S   TransportImpl
+//*******************************************************************
+class TransportImpl :
+	  virtual public BON::ModelImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+	typedef enum
+	{
+		Volatile_Persistence_Type,
+		Persistent_Persistence_Type
+	} Persistence_Type;
+	typedef enum
+	{
+		None_Type_Type,
+		Splice_Type_Type,
+		NDDS_Type_Type
+	} Type_Type;
+
+	//
+	// attribute getters and setters
+	virtual KATS_BON::TransportImpl::Persistence_Type getPersistence();
+	virtual KATS_BON::TransportImpl::Type_Type        getType();
+	virtual void        setPersistence( TransportImpl::Persistence_Type val);
+	virtual void        setType( TransportImpl::Type_Type val);
 
 	///BUP
 	// add your own members here
@@ -544,6 +611,30 @@ public:
 	//
 	// ref getters
 	virtual KATS_BON::Host                  getHost();
+
+	///BUP
+	// add your own members here
+	///EUP
+}; // class
+}  // namespace
+
+
+namespace KATS_BON
+{
+//*******************************************************************
+//   C  L  A  S  S   TransportRefImpl
+//*******************************************************************
+class TransportRefImpl :
+	  virtual public BON::ReferenceImpl
+{
+public:
+	virtual void        initialize() { };
+	virtual void        finalize() { };
+	virtual void        accept( KATS_BON::KATSVisitor *pVisitor);
+
+	//
+	// ref getters
+	virtual KATS_BON::Transport             getTransport();
 
 	///BUP
 	// add your own members here
