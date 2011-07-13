@@ -7,7 +7,7 @@ project (NDDS_Transport_IDL) : using_ndds_idl, build_files {
   
   Build_Files {
     $(MADARA_ROOT)/default.features
-    RTI_DDS_Transport.mpc
+    NDDS_Transport.mpc
     using_ndds.mpb
   }
   

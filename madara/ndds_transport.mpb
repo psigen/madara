@@ -2,6 +2,8 @@ feature (ndds) {
 
   dynamicflags += _USE_NDDS_
 
+  after += NDDS_Transport_IDL
+
   Source_Files {
     transport/ndds/NDDS_Transport.cpp
     transport/ndds/NDDS_Listener.cpp

@@ -1,41 +1,41 @@
 
-project (Splice_DDS_Transport) : using_splice, using_splice_idl, build_files {
+// project (Splice_DDS_Transport) : using_splice, using_splice_idl, build_files {
+//
+//  requires += opensplice
 
-  requires += opensplice
-
-  libout = $(MADARA_ROOT)/lib
-  dynamicflags += OSPL_TRANSPORT_BUILD_DLL
-  includes += $(ACE_ROOT)
+//  libout = $(MADARA_ROOT)/lib
+//  dynamicflags += OSPL_TRANSPORT_BUILD_DLL
+//  includes += $(ACE_ROOT)
   
-  after += Splice_DDS_Transport_IDL
+//  after += Splice_DDS_Transport_IDL
   
-  specific(prop:microsoft) {
-    macros += _CRT_SECURE_NO_WARNINGS
-  }
+//  specific(prop:microsoft) {
+//    macros += _CRT_SECURE_NO_WARNINGS
+//  }
   
-  Build_Files {
-    $(MADARA_ROOT)/default.features
-    Splice_DDS_Transport.mpc
-    using_splice.mpb
-    using_splice_idl.mpb
-  }
+//  Build_Files {
+//    $(MADARA_ROOT)/default.features
+//    Splice_DDS_Transport.mpc
+//    using_splice.mpb
+//    using_splice_idl.mpb
+//  }
 
-  Source_Files {
-    transport/splice/Splice_Knowledge_Update.cpp
-    transport/splice/Splice_Knowledge_UpdateDcps.cpp
-    transport/splice/Splice_Knowledge_UpdateDcps_impl.cpp
-    transport/splice/Splice_Knowledge_UpdateSplDcps.cpp
-  }
+//  Source_Files {
+//    transport/splice/Splice_Knowledge_Update.cpp
+//    transport/splice/Splice_Knowledge_UpdateDcps.cpp
+//    transport/splice/Splice_Knowledge_UpdateDcps_impl.cpp
+//    transport/splice/Splice_Knowledge_UpdateSplDcps.cpp
+//  }
 
-  Header_Files {
-    transport/splice/ccpp_Splice_Knowledge_Update.h 
-    transport/splice/Splice_Knowledge_Update.h
-    transport/splice/Splice_Knowledge_UpdateDcps_impl.h
-    transport/splice/Splice_Knowledge_UpdateSplDcps.h
-    transport/splice/Splice_Knowledge_UpdateDcps.h
-    OSPL_Transport_Export.h
-  }
-}
+//  Header_Files {
+//    transport/splice/ccpp_Splice_Knowledge_Update.h 
+//    transport/splice/Splice_Knowledge_Update.h
+//    transport/splice/Splice_Knowledge_UpdateDcps_impl.h
+//    transport/splice/Splice_Knowledge_UpdateSplDcps.h
+//    transport/splice/Splice_Knowledge_UpdateDcps.h
+//    OSPL_Transport_Export.h
+//  }
+//}
 
 project (Splice_DDS_Transport_IDL) : using_splice, using_splice_idl, build_files {
 
@@ -43,9 +43,9 @@ project (Splice_DDS_Transport_IDL) : using_splice, using_splice_idl, build_files
 
   custom_only = 1
 
-  specific(prop:microsoft) {
-    splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
-  }
+//  specific(prop:microsoft) {
+//    splice_ts_flags += -P OSPL_Transport_Export,OSPL_Transport_export.h
+//  }
   
   splice_ts_flags += -d transport/splice
   
