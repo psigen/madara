@@ -58,25 +58,25 @@ Madara::Transport::Splice_DDS_Transport::close (void)
 {
   this->invalidate_transport ();
 
-  if (subscriber_)
+  if (subscriber_.in ())
   {
     subscriber_->delete_datareader (update_reader_);
   }
 
-  if (publisher_)
+  if (publisher_.in ())
   {
     publisher_->delete_datawriter (update_writer_);
   }
 
 
-  if (domain_participant_)
+  if (domain_participant_.in ())
   {
     domain_participant_->delete_subscriber (subscriber_);
     domain_participant_->delete_publisher (publisher_);
     domain_participant_->delete_topic (update_topic_);
   }
 
-  if (domain_factory_)
+  if (domain_factory_.in ())
     domain_factory_->delete_participant (domain_participant_);
 
   update_reader_ = 0;
@@ -231,7 +231,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   datawriter_ = publisher_->create_datawriter (update_topic_, 
     datawriter_qos_, NULL, DDS::STATUS_MASK_NONE);
   check_handle(datawriter_, "DDS::Publisher::create_datawriter (Update)");
-  update_writer_ = dynamic_cast<Knowledge::UpdateDataWriter_ptr> (datawriter_);
+  update_writer_ = dynamic_cast<Knowledge::UpdateDataWriter_ptr> (datawriter_.in ());
   check_handle(update_writer_, "Knowledge::UpdateDataWriter_ptr::narrow");
 
 
@@ -263,7 +263,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   // have so far not implemented on_subscription_matched.
 
   check_handle(datareader_, "DDS::Subscriber::create_datareader (Update)");
-  update_reader_ = dynamic_cast<Knowledge::UpdateDataReader_ptr>(datareader_);
+  update_reader_ = dynamic_cast<Knowledge::UpdateDataReader_ptr>(datareader_.in ());
   check_handle(update_reader_, "Knowledge::UpdateDataReader_ptr::narrow");
 
   // Create Mutex datareader

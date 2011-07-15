@@ -108,15 +108,15 @@ namespace Madara
       DDS::DataReaderQos                 datareader_qos_;
 
       DDS::DomainId_t                    domain_;
-      DDS::DomainParticipantFactory_ptr  domain_factory_;
-      DDS::DomainParticipant_ptr         domain_participant_;
-      DDS::Publisher_ptr                 publisher_;
-      DDS::Subscriber_ptr                subscriber_;
-      DDS::DataWriter_ptr                datawriter_;
-      DDS::DataReader_ptr                datareader_;
+      DDS::DomainParticipantFactory_var  domain_factory_;
+      DDS::DomainParticipant_var         domain_participant_;
+      DDS::Publisher_var                 publisher_;
+      DDS::Subscriber_var                subscriber_;
+      DDS::DataWriter_var                datawriter_;
+      DDS::DataReader_var                datareader_;
 
-      Knowledge::UpdateDataWriter_ptr    update_writer_;
-      Knowledge::UpdateDataReader_ptr    update_reader_;
+      Knowledge::UpdateDataWriter_var    update_writer_;
+      Knowledge::UpdateDataReader_var    update_reader_;
       Knowledge::UpdateTypeSupport       update_type_support_;
 
       DDS::Topic_ptr                     update_topic_;
