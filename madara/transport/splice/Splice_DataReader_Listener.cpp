@@ -250,7 +250,7 @@ Madara::Transport::Splice_DataReader_Listener::on_data_available(
         // if we don't check originator for null, we get phantom sends
         // when the program exits.
         MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-          DLINFO "nSplice_DataReader_Listener::on_data_available:" \
+          DLINFO "\nSplice_DataReader_Listener::on_data_available:" \
           " discarding null originator event.\n"));
 
         continue;
@@ -259,7 +259,7 @@ Madara::Transport::Splice_DataReader_Listener::on_data_available(
       if (Madara::Knowledge_Engine::ASSIGNMENT == update_data_list_[i].type)
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "nSplice_DataReader_Listener::on_data_available:" \
+          DLINFO "\nSplice_DataReader_Listener::on_data_available:" \
           " processing %s=%q from %s with time %Q and quality %u.\n", 
           update_data_list_[i].key.val (), update_data_list_[i].value, 
           update_data_list_[i].originator.val (),
@@ -270,7 +270,7 @@ Madara::Transport::Splice_DataReader_Listener::on_data_available(
       else if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list_[i].type)
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "nSplice_DataReader_Listener::on_data_available:" \
+          DLINFO "\nSplice_DataReader_Listener::on_data_available:" \
           " processing multassignment from %s with time %Q and quality %u.\n",
           update_data_list_[i].originator.val (),
           update_data_list_[i].clock, update_data_list_[i].quality));

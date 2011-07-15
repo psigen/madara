@@ -112,10 +112,22 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   // reset the valid setup flag
   //valid_setup_ = false;
 
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Creating a participant for topic (%s)\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Participant settings are being read from the OSPL_URI environment"
+      " variable\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
+
   // get the domain participant factory
   domain_factory_ = DDS::DomainParticipantFactory::get_instance ();
   domain_factory_->get_default_participant_qos (part_qos_);
-	domain_participant_ = domain_factory_->create_participant (domain_, 
+	domain_participant_ = domain_factory_->create_participant (
+    domain_, 
     part_qos_, NULL, DDS::STATUS_MASK_NONE);
 
   // if dp == NULL, we've got an error
@@ -143,6 +155,12 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //topic_qos_.resource_limits.max_samples_per_instance= 10;
   domain_participant_->set_default_topic_qos(topic_qos_);
 
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Registering type support\n"));
+
+
   //  Register Update type
   status = this->update_type_support_.register_type (
     domain_participant_, "Knowledge::Update");
@@ -155,7 +173,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Splice_DDS_Transport::setup:" \
-      " Setting up domain (%s)\n", 
+      " Setting up knowledge domain via topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
   // Create Update topic
@@ -179,6 +197,11 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     //topic_qos_.
   }
 
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Creating publisher for topic (%s)\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
+
   // Create publisher
   pub_qos_.partition.name.length (1);
   pub_qos_.partition.name[0] = DDS::string_dup (partition_);
@@ -197,6 +220,11 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     sub_qos_.presentation.coherent_access = true;
     sub_qos_.presentation.ordered_access = false;
   }
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Creating subscriber for topic (%s)\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
   sub_qos_.partition.name.length (1);
   sub_qos_.partition.name[0] = DDS::string_dup (partition_);
@@ -227,6 +255,11 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
       DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Creating datawriter for topic (%s)\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
+
   // Create Update writer
   datawriter_ = publisher_->create_datawriter (update_topic_, 
     datawriter_qos_, NULL, DDS::STATUS_MASK_NONE);
@@ -252,6 +285,11 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
     // unlike the other qos, we do not set max_samples_per_instance here.
     // that shouldn't be as necessary, since we are using take on the reader
   }
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::setup:" \
+      " Creating datareader for topic (%s)\n", 
+      Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
   // Create Update datareader
   datareader_ = subscriber_->create_datareader (update_topic_, 
