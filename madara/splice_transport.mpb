@@ -13,7 +13,10 @@ feature (opensplice) {
   
   Source_Files {
       transport/splice/Splice_DDS_Transport.cpp
-      transport/splice/Splice_Transport_Read_Thread.cpp
+      transport/splice/Splice_DataReader_Listener.cpp
+      transport/splice/Splice_Subscriber_Listener.cpp
+//      we've converted to using listeners instead of waitsets
+//      transport/splice/Splice_Transport_Read_Thread.cpp
       transport/splice/Splice_Knowledge_Update.cpp
       transport/splice/Splice_Knowledge_UpdateDcps.cpp
       transport/splice/Splice_Knowledge_UpdateDcps_impl.cpp
@@ -22,7 +25,10 @@ feature (opensplice) {
 
   Header_Files {
       transport/splice/Splice_DDS_Transport.h
-      transport/splice/Splice_Transport_Read_Thread.h
+      transport/splice/Splice_DataReader_Listener.h
+      transport/splice/Splice_Subscriber_Listener.h
+//      we've converted to using listeners instead of waitsets
+//      transport/splice/Splice_Transport_Read_Thread.h
       transport/splice/ccpp_Splice_Knowledge_Update.h 
       transport/splice/Splice_Knowledge_Update.h
       transport/splice/Splice_Knowledge_UpdateDcps_impl.h

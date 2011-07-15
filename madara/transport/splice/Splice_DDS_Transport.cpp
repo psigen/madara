@@ -1,5 +1,4 @@
 #include "madara/transport/splice/Splice_DDS_Transport.h"
-#include "madara/transport/splice/Splice_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
@@ -40,7 +39,7 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   datawriter_ (0), datareader_ (0), 
   update_writer_ (0), update_reader_ (0),
   update_topic_ (0), 
-  thread_ (0)
+  dr_listener_ (id, context), sub_listener_ (id, context)
   //reliability_ (reliability), 
   //valid_setup_ (false),
   //data_topic_name_ (topic_names_[0]),
@@ -58,12 +57,6 @@ void
 Madara::Transport::Splice_DDS_Transport::close (void)
 {
   this->invalidate_transport ();
-
-  if (thread_)
-  {
-    thread_->close ();
-    //delete thread_;
-  }
 
   if (subscriber_)
   {
@@ -86,7 +79,6 @@ Madara::Transport::Splice_DDS_Transport::close (void)
   if (domain_factory_)
     domain_factory_->delete_participant (domain_participant_);
 
-  thread_ = 0;
   update_reader_ = 0;
   update_writer_ = 0;
   update_topic_ = 0;
@@ -209,7 +201,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   sub_qos_.partition.name.length (1);
   sub_qos_.partition.name[0] = DDS::string_dup (partition_);
   subscriber_ = domain_participant_->create_subscriber (
-    sub_qos_, NULL, DDS::STATUS_MASK_NONE);
+    sub_qos_, &sub_listener_, DDS::DATA_AVAILABLE_STATUS | DDS::DATA_ON_READERS_STATUS);
   check_handle(subscriber_, "DDS::DomainParticipant::create_subscriber");
 
   if (!subscriber_ || !publisher_)
@@ -263,7 +255,13 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
   // Create Update datareader
   datareader_ = subscriber_->create_datareader (update_topic_, 
-    datareader_qos_, NULL, DDS::STATUS_MASK_NONE);
+    datareader_qos_, &dr_listener_, DDS::STATUS_MASK_NONE);
+
+  // notes: we set the mask to none because the listener will be called
+  // by the subscriber listener with notify_datareaders. This is the Splice
+  // way of doing this, since we require subscription information and they
+  // have so far not implemented on_subscription_matched.
+
   check_handle(datareader_, "DDS::Subscriber::create_datareader (Update)");
   update_reader_ = dynamic_cast<Knowledge::UpdateDataReader_ptr>(datareader_);
   check_handle(update_reader_, "Knowledge::UpdateDataReader_ptr::narrow");
@@ -275,8 +273,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //mutex_reader_ = dynamic_cast<Knowledge::MutexDataReader_ptr>(datareader_);
   //check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
 
-  thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
-    update_reader_);
+  //thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
+  //  update_reader_);
   
   this->validate_transport ();
 
