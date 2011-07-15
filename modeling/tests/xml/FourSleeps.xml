@@ -4,25 +4,36 @@
         <realtime />
         <timing />
     </setup>
-    <group file="TwoSleeps.xml" />
     <sleep>
         <realtime />
         <timing />
-        <barrier name="sleep" />
-        <id>2</id>
+        <barrier name="four_sleeps" />
+        <id>0</id>
         <processes>4</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/sleep3.err</stderr>
-        <stdout>$(RESULTS)/sleep3.out</stdout>
     </sleep>
     <sleep>
         <realtime />
         <timing />
-        <barrier name="sleep" />
+        <barrier name="four_sleeps" />
+        <id>1</id>
+        <processes>4</processes>
+        <delay>5</delay>
+    </sleep>
+    <sleep>
+        <realtime />
+        <timing />
+        <barrier name="four_sleeps" />
+        <id>2</id>
+        <processes>4</processes>
+        <delay>5</delay>
+    </sleep>
+    <sleep>
+        <realtime />
+        <timing />
+        <barrier name="four_sleeps" />
         <id>3</id>
         <processes>4</processes>
         <delay>5</delay>
-        <stderr>$(RESULTS)/sleep4.err</stderr>
-        <stdout>$(RESULTS)/sleep4.out</stdout>
     </sleep>
 </group>

@@ -1642,7 +1642,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         DLINFO "KATS_BATCH: All conditions took %Q ns\n",
         allconditions_elapsed ));
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO, 
-        DLINFO "KATS_BATCH: From kats_process start to finish took %Q ns\n",
+        DLINFO "KATS_BATCH: From start to finish took %Q ns\n",
         starttofinish_elapsed ));
     }
   }
