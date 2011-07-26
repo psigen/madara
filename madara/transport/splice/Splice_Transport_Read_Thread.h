@@ -43,14 +43,15 @@ namespace Madara
 
       const std::string                                    id_;
       ::Madara::Knowledge_Engine::Thread_Safe_Context &    context_;
-      ::Knowledge::UpdateDataReader_ptr                    update_reader_;
+      ::Knowledge::UpdateDataReader_var                    update_reader_;
       /// typdef for a threadsafe counter
       ACE_Barrier barrier_;
       ACE_Atomic_Op<ACE_Mutex,bool>                        terminated_;
 
       //DDS::ConditionSeq_var              condition_list_;
-      DDS::WaitSet                       waitset_;
-      DDS::StatusCondition_ptr           condition_;
+      /*DDS::WaitSet_var                   waitset_;
+      DDS::StatusCondition_var           condition_;*/
+
       ACE_Thread_Mutex                   mutex_;
       Madara::Transport::Condition       is_not_ready_;
       bool                               is_ready_;

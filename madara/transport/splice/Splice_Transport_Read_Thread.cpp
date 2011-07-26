@@ -17,11 +17,6 @@ Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
   assignment_symbols_.push_back ("=");
   assignment_symbols_.push_back (";");
 
-  // Add update datareader statuscondition to waitset
-  condition_ = update_reader_->get_statuscondition ();
-  condition_->set_enabled_statuses (DDS::DATA_AVAILABLE_STATUS);
-  waitset_.attach_condition (condition_);
-
   this->activate (THR_NEW_LWP | THR_DETACHED, 1);
   
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -217,6 +212,13 @@ Madara::Transport::Splice_Read_Thread::svc (void)
   int                    amount;
   DDS::Boolean           result = false;
   Knowledge::UpdateSeq_var update_data_list_ = new Knowledge::UpdateSeq;
+
+  DDS::WaitSet                   waitset_;
+  DDS::StatusCondition_ptr           condition_;
+  // Add update datareader statuscondition to waitset
+  condition_ = update_reader_->get_statuscondition ();
+  condition_->set_enabled_statuses (DDS::DATA_AVAILABLE_STATUS);
+  waitset_.attach_condition (condition_);
 
   ::DDS::Duration_t wait_time;
   wait_time.sec = 3;
