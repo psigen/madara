@@ -1,8 +1,8 @@
 
-#define MADARA_NTRACE    0
-#define ACE_NTRACE    0
-//#define ACE_NLOGGING  0
-#define ACE_NDEBUG    0
+//#define MADARA_NTRACE    0
+//#define ACE_NTRACE    0
+////#define ACE_NLOGGING  0
+//#define ACE_NDEBUG    0
 
 #include <string>
 #include <vector>
