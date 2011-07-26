@@ -3,8 +3,9 @@
 
 #include <string>
 
-#include "madara/transport/splice/Splice_DataReader_Listener.h"
-#include "madara/transport/splice/Splice_Subscriber_Listener.h"
+//#include "madara/transport/splice/Splice_DataReader_Listener.h"
+//#include "madara/transport/splice/Splice_Subscriber_Listener.h"
+#include "madara/transport/splice/Splice_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include "ccpp_dds_dcps.h"
@@ -121,8 +122,9 @@ namespace Madara
 
       DDS::Topic_ptr                     update_topic_;
 
-      Splice_DataReader_Listener dr_listener_;
-      Splice_Subscriber_Listener sub_listener_;
+      Splice_Read_Thread *               thread_;
+      //Splice_DataReader_Listener dr_listener_;
+      //Splice_Subscriber_Listener sub_listener_;
 
       /**
        * Splice handle checker
