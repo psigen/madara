@@ -120,7 +120,7 @@ namespace Madara
       Knowledge::UpdateDataReader_var    update_reader_;
       Knowledge::UpdateTypeSupport       update_type_support_;
 
-      DDS::Topic_ptr                     update_topic_;
+      DDS::Topic_var                     update_topic_;
 
       Splice_Read_Thread *               thread_;
       //Splice_DataReader_Listener dr_listener_;
