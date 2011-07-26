@@ -246,6 +246,11 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Splice_DDS_Transport::setup:" \
+        " Enabling reliable transport for (%s) datawriters\n", 
+        Madara::Utility::dds_topicify (settings_.domains).c_str ()));
+
     datawriter_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datawriter_qos_.history.depth = this->settings_.queue_length;
     datawriter_qos_.resource_limits.max_samples = this->settings_.queue_length;
@@ -253,6 +258,13 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
       this->settings_.queue_length;
     datawriter_qos_.destination_order.kind = 
       DDS::BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Splice_DDS_Transport::setup:" \
+        " Enabling unreliable transport for (%s) datawriters\n", 
+        Madara::Utility::dds_topicify (settings_.domains).c_str ()));
   }
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -274,8 +286,15 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //publisher_->copy_from_topic_qos(datawriter_qos_, topic_qos_);
   check_status(status, "DDS::Subscriber::get_default_datareader_qos");
 
+  datareader_qos_.reader_data_lifecycle.enable_invalid_samples = FALSE;
+
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Splice_DDS_Transport::setup:" \
+        " Enabling reliable transport for (%s) datareaders\n", 
+        Madara::Utility::dds_topicify (settings_.domains).c_str ()));
+
     datareader_qos_.reliability.kind = DDS::RELIABLE_RELIABILITY_QOS;
     datareader_qos_.history.depth = this->settings_.queue_length;
     datareader_qos_.resource_limits.max_samples = this->settings_.queue_length;
@@ -284,6 +303,13 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
     // unlike the other qos, we do not set max_samples_per_instance here.
     // that shouldn't be as necessary, since we are using take on the reader
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Splice_DDS_Transport::setup:" \
+        " Enabling unreliable transport for (%s) datareaders\n", 
+        Madara::Utility::dds_topicify (settings_.domains).c_str ()));
   }
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
