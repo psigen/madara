@@ -10,6 +10,7 @@
 import os, subprocess
 import sys
 import time
+import re
 import random
 import string
 
@@ -378,21 +379,20 @@ def remove (serial, target, recursive=False):
   return adb (serial, cmd='shell', args=args)
 
 ## Runs an adb command. Note that this does not necessary run a shell
-# command as well. This is the equivalent of saying "adb 
+# command as well. This is the equivalent of saying "adb -s serial cmd args"
 # @param  cmd      the command to run in adb
 # @param  args     the command args. this should be a list not a string
 # @param  serial   the phone or emulator serial we are running a command to
 # @param  sleep_time   Time to sleep after running the command, if any
 # @param  print_stderr Whether or not to print the stderr of the command
 # @param  print_stdout Whether or not to print the stdout of the command
-# @param  echo     echo the adb command
-# @return              tuple of (stdout, stderr)
-def adb (cmd, args=[], serial=None, sleep_time=0, print_stderr=False,
+# @param  echo         Whether or not to print the command that is executed
+# @returns  a tuple containing stdout and stderr (stdout, stderr) printouts
+def adb (cmd, args, serial, sleep_time=0, print_stderr=False,
                  print_stdout=False, echo=False):
    
   popen_args = ['adb']
  
-#  return subprocess.check_output ("adb", "-s", serial, cmd, args)
   if serial:
     popen_args.append ('-s');
     popen_args.append (serial);
@@ -402,11 +402,9 @@ def adb (cmd, args=[], serial=None, sleep_time=0, print_stderr=False,
 
   if echo:
     print "  " + ' '.join (popen_args)
+
   process = subprocess.Popen (popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   (my_out, my_err) = process.communicate ()
-
-  my_out = my_out.rstrip ()
-  my_err = my_err.rstrip ()
 
   if print_stderr:
     print "  MAML: STDERR for " + ' '.join (popen_args)
@@ -415,8 +413,12 @@ def adb (cmd, args=[], serial=None, sleep_time=0, print_stderr=False,
     print "  MAML: STDOUT for " + ' '.join (popen_args)
     print my_out
 
-  # return the output and error in a tuple
+  if sleep_time > 0:
+    sleep (sleep_time)
+
   return (my_out, my_err)
+
+
 
 ## Types a random string into the current focus
 # @param  serial       the phone or emulator serial we are running a command to
@@ -462,3 +464,111 @@ def random_type (serial, length=15, types='a', clear_input = False, sleep_time =
 
   text = ''.join (random.choice (choices) for x in range (length))
   type (serial, text, clear_input=clear_input, sleep_time=sleep_time)
+
+## Runs an adb logcat command
+# @param  serial   the phone or emulator serial we are running a command to
+# @param  flush    if true, flushes the current logcat   
+# @param  file     saves the logcat contents to the specified file
+# @param  filters  also called tags in logcat. These help filter the logcat contents
+#                  so you can find specific information. For instance, 'MyApp:I' would
+#                  show all (I)nformation level logs for the app 'MyApp'. If you want
+#                  multiple filters, simply add more filters into the list (note this
+#                  is not a string)
+# @param  format   format the output according to logcat formats ('brief', 'process', etc.
+#                  are valid options). See the Android adb logcat help for more options.
+#                  'brief' is default for adb logcat.
+# @param  sleep_time   Time to sleep after running the command, if any
+# @returns  a tuple containing stdout and stderr (stdout, stderr) printouts
+def logcat (serial, flush=False, file=None, filters=[], format=None, sleep_time=0):
+
+  args = []
+
+  if flush:
+    args.append ('-c')
+  else:
+    args.append ('-d')
+
+  if format:
+    args.append ('-v')
+    args.append (format)
+
+  if len (filters) > 0:
+    args.extend (filters)
+
+  (my_out, my_err) = adb ('logcat', args, serial, sleep_time)
+
+  if file:
+    outfile = open (file, 'w')
+    outfile.write (my_out)
+    outfile.close ()
+
+  if sleep_time > 0:
+    sleep (sleep_time)
+
+  return (my_out, my_err)
+  
+
+## prints CPU and memory usage information for the connected device
+# @param  device       the phone or emulator serial we are running a command to
+# @param  append_file  a file to write to (default is stdout)
+# @param  simplified   use a simplified print format (default is top output) 
+# @param  sleep_time   time to sleep after running the command, if any
+def print_device_stats (serial=None, append_file=False, simplified=False, sleep_time=0):
+  
+  args = []
+
+  args.append ('top')
+  args.append ('-m')
+  args.append ('5')
+  args.append ('-n')
+  args.append ('1')
+
+  (cpu_out, cpu_err) = adb ('shell', args, serial, sleep_time)
+
+  args = []
+  args.append ('cat /proc/meminfo')
+
+  (mem_out, mem_err) = adb ('shell', args, serial, sleep_time)
+
+  match = re.search ('MemTotal:\s+(\d+\s[^\s]+)\s+MemFree:\s+(\d+\s[^\s]+)', 
+                     mem_out)
+    
+  mem_total = "Error"
+  mem_free = "Error"
+
+  if match:
+    (mem_total, mem_free) = match.group (1, 2)
+
+  device_output = 'Memory: ' + mem_free + ' free of ' + mem_total 
+
+  if simplified:
+
+    match = re.search ('User\s+(\d+)%,\s+System\s+(\d+)%', cpu_out)
+    #match = re.search ('User\s+(\d+)%, System', cpu_out)
+
+    if match:
+      (cpu_user, cpu_sys) = match.group (1,2)
+    
+      cpu_total = int (cpu_user) + int (cpu_sys)
+      cpu_out = "Total " + str (cpu_total) + "% (User: " + str (cpu_user) + "% "
+      cpu_out += "Sys: " + str (cpu_sys) + "%)"
+    else:
+      cpu_out = "Error in top output"
+
+    device_output += '. CPU: ' + cpu_out
+  else:
+    cpu_out = cpu_out.rstrip ()
+    cpu_out = cpu_out.lstrip ()
+
+    device_output += "\n" + cpu_out
+    device_output += "\n-------------"
+
+
+  if append_file:
+   append_file.write (mem_out)
+  else:
+   print device_output
+  
+  if sleep_time > 0:
+    sleep (sleep_time)
+
