@@ -512,14 +512,16 @@ def logcat (serial, flush=False, file=None, filters=[], format=None, sleep_time=
 # @param  device       the phone or emulator serial we are running a command to
 # @param  append_file  a file to write to (default is stdout)
 # @param  simplified   use a simplified print format (default is top output) 
+# @param  processes    if not-simplified, the number of cpu-intensive processes
+#                      to print to the file or terminal
 # @param  sleep_time   time to sleep after running the command, if any
-def print_device_stats (serial=None, append_file=False, simplified=False, sleep_time=0):
+def print_device_stats (serial=None, append_file=False, simplified=False, processes=5, sleep_time=0):
   
   args = []
 
   args.append ('top')
   args.append ('-m')
-  args.append ('5')
+  args.append (str (processes))
   args.append ('-n')
   args.append ('1')
 

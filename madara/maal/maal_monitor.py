@@ -25,6 +25,10 @@ def main ():
                      default=120,
                      help="Total time to monitor the device stats",
                      type='int')
+  parser.add_option ("--processes", "-p", dest="processes",
+                     default=5,
+                     help="Number of processes to display in the long format",
+                     type='int')
   parser.add_option ("--iters", "-i", "-n", dest="iters", 
                      default=-1,
                      help="Optional way to specify iterations",
@@ -72,7 +76,8 @@ def main ():
     num_attempts = options.iters
 
   for n in range (num_attempts):
-    maal.print_device_stats (options.device, stats_file, options.simplified)
+    maal.print_device_stats (options.device, stats_file, 
+      options.simplified, options.processes)
     if n != num_attempts - 1:
       maal.sleep (options.period)
 

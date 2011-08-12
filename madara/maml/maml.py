@@ -12,6 +12,7 @@ import sys
 import time
 import random
 import string
+import re
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice
 
 ## MAML version number (major.minor.revision)
@@ -45,7 +46,7 @@ def reinstall (device, package, apk):
 # @param  sleep_time   Time to sleep after performing all actions
 def up (device, num=1, sleep_time=0):
   for i in range (num):
-    device.press ('KEYCODE_DPAD_UP', 'DOWN_AND_UP')
+    device.press ('KEYCODE_DPAD_UP', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -56,7 +57,7 @@ def up (device, num=1, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def down (device, num=1, sleep_time=0):
   for i in range (num):
-    device.press ('KEYCODE_DPAD_DOWN', 'DOWN_AND_UP')
+    device.press ('KEYCODE_DPAD_DOWN', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -67,7 +68,7 @@ def down (device, num=1, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def left (device, num=1, sleep_time=0):
   for i in range (num):
-    device.press ('KEYCODE_DPAD_LEFT', 'DOWN_AND_UP')
+    device.press ('KEYCODE_DPAD_LEFT', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -78,7 +79,7 @@ def left (device, num=1, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def right (device, num=1, sleep_time=0):
   for i in range (num):
-    device.press ('KEYCODE_DPAD_RIGHT', 'DOWN_AND_UP')
+    device.press ('KEYCODE_DPAD_RIGHT', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -87,7 +88,7 @@ def right (device, num=1, sleep_time=0):
 # @param  device   the phone or emulator we are instrumenting
 # @param  sleep_time   Time to sleep after performing all actions
 def press (device, sleep_time=0):
-  device.press ('KEYCODE_DPAD_CENTER', 'DOWN_AND_UP')
+  device.press ('KEYCODE_DPAD_CENTER', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -100,7 +101,7 @@ def press (device, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def click (device, x=0, y=0, num=1, sleep_time=0):
   for i in range (num):
-    device.touch (x, y, 'DOWN_AND_UP')
+    device.touch (x, y, MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -137,7 +138,7 @@ def drag (device, start=(0,0), end=(0,0), seconds=2.0, sleep_time=0):
 # @param  device   the phone or emulator we are instrumenting
 # @param  sleep_time   Time to sleep after performing all actions
 def menu (device, sleep_time=0):
-  device.press ('KEYCODE_MENU', 'DOWN_AND_UP')
+  device.press ('KEYCODE_MENU', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -148,7 +149,7 @@ def menu (device, sleep_time=0):
 # @param  sleep_time   Time to sleep after performing all actions
 def back (device, num=1, sleep_time=0):
   for i in range (num):
-    device.press ('KEYCODE_BACK', 'DOWN_AND_UP')
+    device.press ('KEYCODE_BACK', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -162,7 +163,7 @@ def sleep (seconds):
 # @param  device   the phone or emulator we are instrumenting
 # @param  sleep_time   Time to sleep after performing action
 def move_home (device, sleep_time=0):
-  device.press ('KEYCODE_MOVE_HOME', 'DOWN_AND_UP')
+  device.press ('KEYCODE_MOVE_HOME', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -171,7 +172,7 @@ def move_home (device, sleep_time=0):
 # @param  device   the phone or emulator we are instrumenting
 # @param  sleep_time   Time to sleep after performing action
 def move_end (device, sleep_time=0):
-  device.press ('KEYCODE_MOVE_END', 'DOWN_AND_UP')
+  device.press ('KEYCODE_MOVE_END', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -180,7 +181,7 @@ def move_end (device, sleep_time=0):
 # @param  device   the phone or emulator we are instrumenting
 # @param  sleep_time   Time to sleep after performing action
 def page_down (device, sleep_time=0):
-  device.press ('KEYCODE_PAGE_DOWN', 'DOWN_AND_UP')
+  device.press ('KEYCODE_PAGE_DOWN', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -191,9 +192,9 @@ def page_down (device, sleep_time=0):
 # @param  num      the number of maximum deletes necessary
 # @param  sleep_time   Time to sleep after clearing the text
 def clear (device, num=100, sleep_time=0):
-  device.press ('KEYCODE_MOVE_END', 'DOWN_AND_UP')
+  device.press ('KEYCODE_MOVE_END', MonkeyDevice.DOWN_AND_UP)
   for i in range (num):
-    device.press ('KEYCODE_DEL', 'DOWN_AND_UP')
+    device.press ('KEYCODE_DEL', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -212,12 +213,12 @@ def type (device, text, clear_input=False, sleep_time=0):
 
   for i in range (len (tokens)):
     if i != 0:
-      device.press ('KEYCODE_SPACE', 'DOWN_AND_UP')
+      device.press ('KEYCODE_SPACE', MonkeyDevice.DOWN_AND_UP)
     device.type (tokens[i])
 
   # special case - the user has provided just a space
   if text == ' ':
-    device.press ('KEYCODE_SPACE', 'DOWN_AND_UP')
+    device.press ('KEYCODE_SPACE', MonkeyDevice.DOWN_AND_UP)
 
   if sleep_time > 0:
     sleep (sleep_time)
@@ -230,9 +231,10 @@ def type (device, text, clear_input=False, sleep_time=0):
 # @param  sleep_time   Time to sleep after running the command, if any
 # @param  print_stderr Whether or not to print the stderr of the command
 # @param  print_stdout Whether or not to print the stdout of the command
+# @param  echo         Whether or not to print the command that is executed
 # @returns  a tuple containing stdout and stderr (stdout, stderr) printouts
 def adb (cmd, args, serial, sleep_time=0, print_stderr=False,
-                 print_stdout=False):
+                 print_stdout=False, echo=False):
    
   popen_args = ['adb']
  
@@ -243,7 +245,8 @@ def adb (cmd, args, serial, sleep_time=0, print_stderr=False,
   popen_args.append (cmd);
   popen_args.extend (args);
 
-  print "  " + ' '.join (popen_args)
+  if echo:
+    print "  " + ' '.join (popen_args)
   process = subprocess.Popen (popen_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   (my_out, my_err) = process.communicate ()
 
@@ -348,3 +351,71 @@ def random_type (device, length=15, types='a', clear_input = False, sleep_time =
 
   text = ''.join (random.choice (choices) for x in range (length))
   type (device, text, clear_input=clear_input, sleep_time=sleep_time)
+
+
+## prints CPU and memory usage information for the connected device
+# @param  device       the phone or emulator serial we are running a command to
+# @param  append_file  a file to write to (default is stdout)
+# @param  simplified   use a simplified print format (default is top output) 
+# @param  processes    if not-simplified, the number of cpu-intensive processes
+#                      to print to the file or terminal
+# @param  sleep_time   time to sleep after running the command, if any
+def print_device_stats (serial=None, append_file=False, simplified=False, processes=5, sleep_time=0):
+  
+  args = []
+
+  args.append ('top')
+  args.append ('-m')
+  args.append (str (processes))
+  args.append ('-n')
+  args.append ('1')
+
+  (cpu_out, cpu_err) = adb ('shell', args, serial, sleep_time)
+
+  args = []
+  args.append ('cat /proc/meminfo')
+
+  (mem_out, mem_err) = adb ('shell', args, serial, sleep_time)
+
+  match = re.search ('MemTotal:\s+(\d+\s[^\s]+)\s+MemFree:\s+(\d+\s[^\s]+)', 
+                     mem_out)
+    
+  mem_total = "Error"
+  mem_free = "Error"
+
+  if match:
+    (mem_total, mem_free) = match.group (1, 2)
+
+  device_output = 'Memory: ' + mem_free + ' free of ' + mem_total 
+
+  if simplified:
+
+    match = re.search ('User\s+(\d+)%,\s+System\s+(\d+)%', cpu_out)
+    #match = re.search ('User\s+(\d+)%, System', cpu_out)
+
+    if match:
+      (cpu_user, cpu_sys) = match.group (1,2)
+    
+      cpu_total = int (cpu_user) + int (cpu_sys)
+      cpu_out = "Total " + str (cpu_total) + "% (User: " + str (cpu_user) + "% "
+      cpu_out += "Sys: " + str (cpu_sys) + "%)"
+    else:
+      cpu_out = "Error in top output"
+
+    device_output += '. CPU: ' + cpu_out
+  else:
+    cpu_out = cpu_out.rstrip ()
+    cpu_out = cpu_out.lstrip ()
+
+    device_output += "\n" + cpu_out
+    device_output += "\n-------------"
+
+
+  if append_file:
+   append_file.write (mem_out)
+  else:
+   print device_output
+  
+  if sleep_time > 0:
+    sleep (sleep_time)
+
