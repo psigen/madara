@@ -229,6 +229,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // clock the process time
   process_timer.start ();
 
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "KATS_PROCESS: Launching: %s %s\n",
+      process_name.c_str (), command_line.str ().c_str () ));
   process.spawn (process_options);
 
   if (post_launch != "")
