@@ -3,7 +3,7 @@
         <parallel />
         <realtime />
         <timing />
-        <transport file="transports/OSPL.xml" />
+        <transport file="transports/Splice.xml" />
         <host>$(HOST)</host>
         <domain>$(DOMAIN)</domain>
         <barrier name="$(BARRIER)" />
@@ -11,7 +11,7 @@
     <process>
         <realtime />
         <timing />
-        <transport file="transports/OSPL.xml" />
+        <transport file="transports/Splice.xml" />
         <host>$(HOST)</host>
         <domain>$(DOMAIN)</domain>
         <barrier name="$(BARRIER)" />

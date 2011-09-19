@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project SYSTEM "mga.dtd">
 
-<project guid="{26044ED0-E393-4F40-977D-B862A5DE3738}" cdate="Mon Sep 19 13:51:53 2011" mdate="Mon Sep 19 13:51:53 2011" version="" metaguid="{4018E785-8C67-463B-9BBC-672A363F3D71}" metaversion="0.4.12" metaname="KATS">
+<project guid="{170EDF7A-40D2-44AA-BF0D-0D3A5A0AF561}" cdate="Mon Sep 19 13:51:53 2011" mdate="Mon Sep 19 13:51:53 2011" version="" metaguid="{4018E785-8C67-463B-9BBC-672A363F3D71}" metaversion="0.4.12" metaname="KATS">
 	<name>RootFolder</name>
 	<comment></comment>
 	<author></author>
@@ -283,7 +283,7 @@
 		<folder id="id-006a-00000003" relid="0x2" childrelidcntr="0x2" kind="Transports" guid="{4c0ddaa1-e6d6-4b0a-9d48-e52c85c680eb}">
 			<name>Transports</name>
 			<model id="id-0065-00000002" kind="Transport" guid="{5ba3ff9d-ece2-41b6-9c06-8fb6830a5d74}" relid="0x1" childrelidcntr="0x0">
-				<name>OSPL</name>
+				<name>Splice</name>
 				<attribute kind="Persistence" status="meta">
 					<value>Volatile</value>
 				</attribute>
