@@ -567,7 +567,8 @@ def print_device_stats (serial=None, append_file=False, simplified=False, proces
 
 
   if append_file:
-   append_file.write (mem_out)
+   device_output += "\n"
+   append_file.write (device_output)
   else:
    print device_output
   
