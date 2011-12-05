@@ -27,3 +27,7 @@ kats                    = 1
 /// @feature ndds
 /// Enable this feature if you would like to generate NDDS Transports
 ndds                    = 0
+
+/// @feature old
+/// Enable this feature if you would like to generate the old CID heuristic
+cid                     = 0

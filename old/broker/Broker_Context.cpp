@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include "ace/High_Res_Timer.h"
 
 #include "Madara_Common.h"
 #include "Broker_Context.h"
@@ -37,7 +38,7 @@ Madara::Broker_Context::write (const std::string& filename)
 int 
 Madara::Broker_Context::averageLatency (Madara::PeerLatency & list, int degree)
 {
-  std::sort (list.vector.begin (), list.vector.end (), Madara::SortByPairValue);
+  //std::sort (list.vector.begin (), list.vector.end (), Madara::SortByPairValue);
 
   int total = 0;
   int min = !average_all_ && degree < list.vector.size () ? 
@@ -67,6 +68,11 @@ Madara::Broker_Context::learnDeployment (void)
   int num_candidates = map_.size ();
   int max_nerds = lookahead < num_candidates ? lookahead : num_candidates;
   int j = 0;
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  timer.start ();
 
   //std::cout << "Computing averages over the deployment degree.\n";
 
@@ -76,6 +82,13 @@ Madara::Broker_Context::learnDeployment (void)
        nerds[j] = Madara::LatencyPair (i->first, i->second.avg);
        //std::cout << i->first << ".avg = " << i->second.avg << std::endl;
     }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+  unsigned long long nanoseconds = measured;
+
+  std::cerr << "***Averaging latencies took " << nanoseconds
+         << " ns" << std::endl;
 
   std::sort (nerds.begin (), nerds.end (), Madara::SortByPairValue);
 
