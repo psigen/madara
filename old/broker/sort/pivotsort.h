@@ -118,7 +118,6 @@ namespace std
 
     _RanIt g_1 = first, g_2 = first;
 
-    while (predicate (*partitions[0], *(last - 9)) 
   }
 
   template <class _RanIt> inline
