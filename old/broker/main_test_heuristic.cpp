@@ -13,6 +13,7 @@
 #include "Agent_Messages.h"
 #include "Broker_Context.h"
 #include "Madara_Common.h"
+#include "sort/pivotsort.h"
 
 typedef std::pair <int, int> LatencyRecord;
 typedef std::vector <LatencyRecord> Latencies;
@@ -27,6 +28,16 @@ static bool SortByPairValue (const LatencyRecord & u, const LatencyRecord & v)
 static bool SortBySize (const Latencies & u, const Latencies & v)
 {
   return u.size () > v.size ();
+}
+
+static bool Increasing (const int & u, const int & v)
+{
+  return u < v;
+}
+
+static bool Decreasing (const int & u, const int & v)
+{
+  return v < u;
 }
 
 void testDeploymentSize (int size, std::ostream & output)
@@ -84,7 +95,7 @@ void testDeploymentSize (int size, std::ostream & output)
 
 }
 
-void testRawHeuristic (int size, std::ostream & output)
+void testRawHeuristic (int size, std::ostream & output, int sort_type)
 {
 
   // latencies
@@ -104,6 +115,7 @@ void testRawHeuristic (int size, std::ostream & output)
   allLatencies.resize (size);
   averages.resize (size);
   deployment.resize (size);
+  solution.resize (size);
 
 
   // allocate memory to hold individual latencies
@@ -118,7 +130,12 @@ void testRawHeuristic (int size, std::ostream & output)
       allLatencies[i][j].second = rand () % 100 + 10;
     }
 
-    std::sort (allLatencies[i].begin (), allLatencies[i].end (), SortByPairValue);
+    if (sort_type == 0)
+      std::sort (allLatencies[i].begin (), allLatencies[i].end (),
+                 SortByPairValue);
+    else
+      std::pivotsort (allLatencies[i].begin (), allLatencies[i].end (),
+                 SortByPairValue);
   }
 
   // second element of the deployment is a broadcasting node to everyone
@@ -138,7 +155,10 @@ void testRawHeuristic (int size, std::ostream & output)
   }
 
   // sort the deployment by degree
-  std::sort (deployment.begin (), deployment.end (), SortBySize);
+  if (sort_type == 0)
+    std::sort (deployment.begin (), deployment.end (), SortBySize);
+  else
+    std::pivotsort (deployment.begin (), deployment.end (), SortBySize);
 
   averaging.start ();
 
@@ -147,6 +167,10 @@ void testRawHeuristic (int size, std::ostream & output)
   {
     averages[i].first = i;
     averages[i].second = 0;
+    //Latencies::iterator j_end = allLatencies[i].end ();
+    //for (Latencies::iterator j = allLatencies[i].begin ();
+    //  j != j_end; ++j)
+    //  averages[i].second += j->second;
     for (int j = 0; j < size; ++j)
     {
       averages[i].second += allLatencies[i][j].second;
@@ -162,7 +186,10 @@ void testRawHeuristic (int size, std::ostream & output)
 
   sorting.start ();
 
-  std::sort (averages.begin (), averages.end (), SortByPairValue);
+  if (sort_type == 0)
+    std::sort (averages.begin (), averages.end (), SortByPairValue);
+  else
+    std::pivotsort (averages.begin (), averages.end (), SortByPairValue);
 
   sorting.stop ();
   sorting.elapsed_time (measured);
@@ -175,7 +202,7 @@ void testRawHeuristic (int size, std::ostream & output)
 
   // for each process that a user wants deployed, start with
   // largest
-  for (int i; i < deployment.size (); ++i)
+  for (unsigned int i = 0; i < deployment.size (); ++i)
   {
     solution[i] = averages[i].first;
   }
@@ -199,22 +226,22 @@ void testRawHeuristic (int size, std::ostream & output)
          << " ns" << std::endl;
 
 
-  output << "  Network provided:\n"; 
-  for (int i = 0; i < size; ++i)
-  {
-    output << "    " << averages[i].first << " had avg latency of " 
-       << averages[i].second << "\n";
-  }
+  //output << "  Network provided:\n"; 
+  //for (int i = 0; i < size; ++i)
+  //{
+  //  output << "    " << averages[i].first << " had avg latency of " 
+  //     << averages[i].second << "\n";
+  //}
 
-  output << "  Deployment request:\n"; 
-  for (int i = 0; i < size; ++i)
-  {
-    if (deployment[i].size () > 0)
-    {
-      output << "    " << deployment[i][0].first << " had degree of " 
-        << deployment[i].size () << " so set to " << averages[i].first << "\n";
-    }
-  }
+  //output << "  Deployment request:\n"; 
+  //for (int i = 0; i < size; ++i)
+  //{
+  //  if (deployment[i].size () > 0)
+  //  {
+  //    output << "    " << deployment[i][0].first << " had degree of " 
+  //      << deployment[i].size () << " so set to " << averages[i].first << "\n";
+  //  }
+  //}
 
 }
 
@@ -233,12 +260,135 @@ int main (int argc, char *argv[])
      ACE_SCOPE_THREAD);
   ACE_OS::thr_setprio (prio);
 
-  srand (time (0));
-  
+  srand ((unsigned int) time (0));
+
+  //ACE_High_Res_Timer timer;
+  //ACE_hrtime_t measured;
+  //unsigned long long average_time;
+  //
+  std::vector <int> ints;
+
+  //ints.resize (100);
+  //int j = 100;
+
+  //for (std::vector<int>::iterator i = ints.begin (); i != ints.end (); ++i, --j)
+  //  *i = j;
+
+  //std::pivotsort (ints.begin (), ints.end (), Increasing);
+
+  //for (std::vector<int>::iterator i = ints.begin (); i != ints.end (); ++i)
+  //  std::cout << *i << ", ";
+
+  //std::vector <std::vector<int>::iterator> pivots;
+  //ints.resize (10);
+  //pivots.resize (3);
+
+  //ints[0] = 8;
+  //ints[1] = 3;
+  //ints[2] = 4;
+  //ints[3] = 7;
+  //ints[4] = 0;
+  //ints[5] = 2;
+  //ints[6] = 1;
+  //ints[7] = 9;
+  //ints[8] = 5;
+  //ints[9] = 6;
+
+  ////std::insertsort (ints.begin (), ints.end (), Increasing);
+
+  ints.resize (100);
+  int j = 100;
+
+  for (std::vector<int>::iterator i = ints.begin (); i != ints.end (); ++i, --j)
+    *i = j;
+  //  *i = rand () % 100 + 10;
+
+  //std::_choose_pivots (ints.begin (), ints.end ());
+
+  //timer.start ();
+
+  std::pivotsort (ints.begin (), ints.end (), Increasing);
+  ////std::sort (ints.begin (), ints.end (), Increasing);
+
+  //timer.stop ();
+
+  //timer.elapsed_time (measured);
+
+  //average_time = measured;
+
+  //std::locale loc(""); 
+  //std::cout.imbue (loc); 
+
+  //std::cout << "std::pivotsort took " << average_time << 
+  //  " ns to sort " << ints.size () << " ints.\n\n";
+
+  //for (std::vector<int>::iterator i = ints.begin (); i != ints.end (); ++i)
+  //  //std::cout << *i << ", ";
+  //  *i = rand () % 100 + 10;
+
+
+  //timer.reset ();
+  //timer.start ();
+
+  ////std::pivotsort (ints.begin (), ints.end (), Increasing);
+  //std::sort (ints.begin (), ints.end (), Increasing);
+
+  //timer.stop ();
+
+  //timer.elapsed_time (measured);
+
+  //average_time = measured;
+
+  //std::cout << "std::sort took " << average_time << 
+  //  " ns to sort " << ints.size () << " ints.\n\n";
+
+
+  //std::pivotsort (ints.begin (), ints.end (), Decreasing);
+  //std::sort (ints.begin (), ints.end (), Decreasing);
+
+  for (std::vector<int>::iterator i = ints.begin (); i != ints.end (); ++i)
+    std::cout << *i << ", ";
+
+  std::cout << std::endl;
+
+  //ints.resize (16000000);
+
+  //int total = 0;
+
+  //for (i = 0; i < 16000; ++i) 
+  //{
+  //  ints[i] = rand () % 100 + 10;
+  //}
+
+  //timer.start ();
+
+  //for (i = 0; i < 16000000; ++i)
+  //  total += ints[i];
+
+  //total /= 16000000;
+
+  //timer.stop ();
+
+  //timer.elapsed_time (measured);
+
+  //average_time = measured;
+
+  //output << "**Raw average of " << ints.size () << " integers**";
+  //output << "  " << average_time << "\n\n";
+  //
+
+  output << "\n**CID heuristic with std::sort**\n";
   for (i = 1000; i <= 4000; i += count)
     {
       output << "Testing deployment of size " << i << std::endl;
-      testRawHeuristic (i, output);
+      testRawHeuristic (i, output, 0);
+    }
+
+  output << "\n**CID heuristic with std::pivotsort**\n";
+  for (i = 1000; i <= 4000; i += count)
+    {
+      output << "Testing deployment of size " << i << std::endl;
+      testRawHeuristic (i, output, 1);
     }
 
   output.close ();
