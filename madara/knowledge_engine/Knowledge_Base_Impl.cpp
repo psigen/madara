@@ -428,6 +428,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   ACE_hrtime_t maximum;
   timer.start ();
 
+  // print the post statement at highest log level (cannot be masked)
+  if (settings.pre_print_statement != "")
+    map_.print (settings.pre_print_statement, MADARA_LOG_EMERGENCY);
+
   // lock the context
   map_.lock ();
 
@@ -580,7 +584,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   } // end while (!last)
 
   // print the post statement at highest log level (cannot be masked)
-  map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
+  if (settings.post_print_statement != "")
+    map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
+
   // release the context lock
   map_.unlock ();
   return last_value;

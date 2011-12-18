@@ -25,6 +25,8 @@ int ACE_TMAIN (int argc, char * argv[])
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
   std::string expression = "++.count && 0";
+  wait_settings.pre_print_statement =
+    "WAIT STARTED: Waiting for 10 seconds.\n";
   wait_settings.post_print_statement =
     "WAIT ENDED: Number of executed waits was {.count}.\n";
 
@@ -48,6 +50,8 @@ int ACE_TMAIN (int argc, char * argv[])
   knowledge.clear ();
 
   expression = "++.count && 1";
+  wait_settings.pre_print_statement =
+    "WAIT STARTED: .count == {.count}. Waiting for .count == 1.\n";
 
   // start waiting
   knowledge.wait (expression, wait_settings);
@@ -60,6 +64,9 @@ int ACE_TMAIN (int argc, char * argv[])
   knowledge.clear ();
 
   expression = "++.count && .count == 2";
+  wait_settings.pre_print_statement =
+    "WAIT STARTED: .count == {.count}. Waiting for .count == 2.\n";
+
 
   // start waiting
   knowledge.wait (expression, wait_settings);
@@ -72,6 +79,8 @@ int ACE_TMAIN (int argc, char * argv[])
   knowledge.clear ();
 
   expression = "++.count && .count == 10";
+  wait_settings.pre_print_statement =
+    "WAIT STARTED: .count == {.count}. Waiting for .count == 10.\n";
 
   // start waiting
   knowledge.wait (expression, wait_settings);
