@@ -211,6 +211,18 @@ namespace Madara
       long long wait (const ::std::string & expression, bool send_modifieds);
 
       /**
+       * Waits for an expression to be non-zero. Provides additional settings
+       * for fine-tuning the time to wait and atomic print statements.
+       *
+       * @param expression      KaRL expression to wait on
+       * @param settings        Settings for the underlying expression
+       *                        evaluation and printing
+       * @return                value of expression
+       **/
+      long long wait (const ::std::string & expression,
+                      const Wait_Settings & settings);
+
+      /**
        * Applies current time and modified to all global variables and tries
        * to send them.
        **/

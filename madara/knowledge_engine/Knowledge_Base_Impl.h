@@ -21,10 +21,94 @@ namespace Madara
 
   namespace Knowledge_Engine
   {
+
+    /**
+     * @class Eval_Settings
+     * @brief Encapsulates settings for an evaluation statement
+     **/
+    struct Eval_Settings
+     {
+       /**
+        * Constructor
+        **/
+       Eval_Settings ()
+         : send_modifieds (true),
+           pre_print_statement (""), post_print_statement ("")
+       {
+       }
+
+       /**
+        * Constructor
+        **/
+       Eval_Settings (bool t_send_modifieds,
+         std::string t_pre_print_statement,
+         std::string t_post_print_statement)
+         : send_modifieds (t_send_modifieds),
+           pre_print_statement (t_pre_print_statement),
+           post_print_statement (t_post_print_statement)
+       {
+       }
+
+       /**
+        * Toggle for sending modifieds in a single update event
+        * after each evaluation.
+        **/
+       bool send_modifieds;
+
+       /**
+        * Statement to print before evaluations
+        **/
+       std::string pre_print_statement;
+
+       /**
+        * Statement to print after evaluations
+        **/
+       std::string post_print_statement;
+     };
+
+    /**
+     * @class Wait_Settings
+     * @brief Encapsulates settings for a wait statement
+     **/
+    struct Wait_Settings : public Eval_Settings
+     {
+       /**
+        * Constructor
+        **/
+       Wait_Settings ()
+         : Eval_Settings (), poll_frequency (0.010), max_wait_time (-1.0)
+       {
+       }
+
+       /**
+        * Constructor
+        **/
+       Wait_Settings (bool t_send_modifieds,
+         std::string t_pre_print_statement,
+         std::string t_post_print_statement,
+         double t_poll_frequency, double t_max_wait_time)
+         : Eval_Settings (t_send_modifieds, 
+              t_pre_print_statement, t_post_print_statement),
+           poll_frequency (t_poll_frequency), max_wait_time (t_max_wait_time)
+       {
+       }
+
+       /**
+        * Frequency to poll an expression for truth
+        **/
+       double poll_frequency;
+
+       /**
+        * Maximum time to wait for an expression to become true
+        **/
+       double max_wait_time;
+     };
+
+     
     /**
      * @class Knowledge_Base_Impl
      * @brief This class provides a distributed knowledge base implementation
-     */
+     **/
     class Knowledge_Base_Impl
     {
     public:
@@ -199,6 +283,18 @@ namespace Madara
        * @return                value of expression
        **/
       long long wait (const ::std::string & expression, bool send_modifieds);
+
+      /**
+       * Waits for an expression to be non-zero. Provides additional settings
+       * for fine-tuning the time to wait and atomic print statements.
+       *
+       * @param expression      KaRL expression to wait on
+       * @param settings        Settings for the underlying expression
+       *                        evaluation and printing
+       * @return                value of expression
+       **/
+      long long wait (const ::std::string & expression,
+        const Wait_Settings & settings);
 
       /**
        * Prints the permanent knowledge rules (unimplemented)

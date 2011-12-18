@@ -7,6 +7,8 @@
 
 #include <sstream>
 
+#include "ace/OS_NS_Thread.h"
+#include "ace/High_Res_Timer.h"
 
 #ifdef _USE_OPEN_SPLICE_
   #include "madara/transport/splice/Splice_DDS_Transport.h"
@@ -408,6 +410,177 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     map_.signal ();
   }
 
+  // release the context lock
+  map_.unlock ();
+  return last_value;
+}
+
+long long
+Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
+                                                const Wait_Settings & settings)
+{
+  // return an error message
+  if (expression == "")
+    return 0;
+
+  ACE_High_Res_Timer timer;
+  ACE_hrtime_t elapsed;
+  ACE_hrtime_t maximum;
+  timer.start ();
+
+  // lock the context
+  map_.lock ();
+
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::wait:" \
+      " waiting on %s\n", expression.c_str ()));
+
+  // resulting tree of the expression
+  Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
+    map_, expression);
+
+  long long last_value = tree.evaluate ();
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::wait:" \
+      " completed first eval to get %d\n",
+    last_value));
+
+  if (transport_ && settings.send_modifieds)
+  {
+    Madara::String_Vector modified;
+    map_.get_modified (modified);
+    std::stringstream string_builder;
+    if (modified.size () > 0)
+    {
+      /// generate a new clock time and set our variable's clock to
+      /// this new clock
+      unsigned long long cur_clock = map_.inc_clock ();
+      unsigned long quality = 0;
+
+      for (Madara::String_Vector::const_iterator k = modified.begin ();
+             k != modified.end (); ++k)
+      {
+        map_.set_clock (*k, cur_clock);
+        unsigned long cur_quality = map_.get_write_quality (*k);
+
+        // every knowledge update via multiassignment has the quality
+        // of the highest update. This is to ensure consistency for
+        // updating while also providing quality indicators for sensors,
+        // actuators, controllers, etc.
+        if (cur_quality > quality)
+          quality = cur_quality;
+
+        string_builder << *k << " = " << map_.get (*k) << " ; ";
+          //transport_->send_data (*k, map_.get (*k));
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " will be sending %s\n", 
+        string_builder.str ().c_str ()));
+
+      transport_->send_multiassignment (string_builder.str (), quality);
+      map_.reset_modified ();
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::wait:" \
+          " no modifications to send during this wait\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " not sending knowledge mutations \n"));
+  }
+
+  ACE_Time_Value poll_frequency;
+
+  if (!last_value)
+  {
+    ACE_Time_Value max_tv;
+    poll_frequency.set (settings.poll_frequency);
+    max_tv.set (settings.max_wait_time);
+    maximum = max_tv.sec () * 1000000000;
+    maximum += max_tv.usec () * 1000;
+
+    timer.stop ();
+    timer.elapsed_time (elapsed);
+
+  }
+
+  // wait for expression to be true
+  while (!last_value &&
+    (settings.max_wait_time > 0 && maximum > elapsed))
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " elapsed is %Q and max is %Q\n",
+        elapsed, maximum));
+
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " last value didn't result in success\n"));
+
+    // Unlike the other wait statements, we allow for a time based wait.
+    // To do this, we allow a user to specify a 
+    ACE_OS::sleep (poll_frequency);
+
+    // relock - basically we need to evaluate the tree again, and
+    // we can't have a bunch of people changing the variables as 
+    // while we're evaluating the tree.
+    map_.lock ();
+    last_value = tree.evaluate ();
+
+    if (transport_ && settings.send_modifieds)
+    {
+      Madara::String_Vector modified;
+      map_.get_modified (modified);
+      std::stringstream string_builder;
+      if (modified.size () > 0)
+      {
+        /// generate a new clock time and set our variable's clock to
+        /// this new clock
+        unsigned long long cur_clock = map_.inc_clock ();
+        unsigned long quality = 0;
+
+        for (Madara::String_Vector::const_iterator k = modified.begin ();
+               k != modified.end (); ++k)
+        {
+          map_.set_clock (*k, cur_clock);
+          unsigned long cur_quality = map_.get_write_quality (*k);
+
+          // every knowledge update via multiassignment has the quality
+          // of the highest update. This is to ensure consistency for
+          // updating while also providing quality indicators for sensors,
+          // actuators, controllers, etc.
+          if (cur_quality > quality)
+            quality = cur_quality;
+          string_builder << *k << " = " << map_.get (*k) << " ; ";
+          //transport_->send_data (*k, map_.get (*k));
+        }
+
+        transport_->send_multiassignment (string_builder.str (), quality);
+        map_.reset_modified ();
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+            DLINFO "Knowledge_Base_Impl::wait:" \
+            " no modifications to send during this wait\n"));
+      }
+    }
+
+    map_.signal ();
+    timer.stop ();
+    timer.elapsed_time (elapsed);
+  } // end while (!last)
+
+  // print the post statement at highest log level (cannot be masked)
+  map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
   // release the context lock
   map_.unlock ();
   return last_value;

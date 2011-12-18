@@ -143,6 +143,13 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
   return impl_->wait (expression, send_modifieds);
 }
 
+long long
+Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression, 
+                                                const Wait_Settings & settings)
+{
+  return impl_->wait (expression, settings);
+}
+
 void
 Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (
   unsigned int level) const

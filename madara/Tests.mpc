@@ -146,6 +146,27 @@ project (Test_Print_Statement) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Timed_Wait) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_timed_wait
+  after += Madara
+  
+  requires += tests
+  
+  libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_timed_wait.cpp
+  }
+}
+
 project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_wait_with_ace
