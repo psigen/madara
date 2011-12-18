@@ -665,6 +665,76 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   return last_value;
 }
 
+long long
+Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
+  const ::std::string & expression, const Eval_Settings & settings)
+{
+  if (expression == "")
+    return 0;
+
+  long long last_value = 0;
+
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " evaluting %s\n", expression.c_str ()));
+
+  // iterators and tree for evaluation of interpreter results
+  Madara::Expression_Tree::Expression_Tree tree;
+
+  // print the post statement at highest log level (cannot be masked)
+  if (settings.pre_print_statement != "")
+    map_.print (settings.pre_print_statement, MADARA_LOG_EMERGENCY);
+
+  // lock the context from being updated by any ongoing threads
+  map_.lock ();
+
+  // interpret the current expression and then evaluate it
+  tree = interpreter_.interpret (map_, expression);
+  last_value = tree.evaluate ();
+
+  // if we have a transport and we've been asked to send modified knowledge
+  // to any interested parties...
+  if (transport_ && settings.send_modifieds)
+  {
+    Madara::String_Vector modified;
+    map_.get_modified (modified);
+    std::stringstream string_builder;
+
+    /// generate a new clock time and set our variable's clock to
+    /// this new clock
+    unsigned long long cur_clock = map_.inc_clock ();
+    unsigned long quality = 0;
+
+    for (Madara::String_Vector::const_iterator k = modified.begin ();
+         k != modified.end (); ++k)
+    {
+      map_.set_clock (*k, cur_clock);
+      unsigned long cur_quality = map_.get_write_quality (*k);
+
+      // every knowledge update via multiassignment has the quality
+      // of the highest update. This is to ensure consistency for
+      // updating while also providing quality indicators for sensors,
+      // actuators, controllers, etc.
+      if (cur_quality > quality)
+        quality = cur_quality;
+
+      string_builder << *k << " = " << map_.get (*k) << " ; ";
+    }
+
+    if (modified.size () > 0)
+      transport_->send_multiassignment (string_builder.str (), quality);
+    map_.reset_modified ();
+  }
+
+  // print the post statement at highest log level (cannot be masked)
+  if (settings.post_print_statement != "")
+    map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
+
+  map_.unlock ();
+
+  return last_value;
+}
+
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (
   unsigned int level) const

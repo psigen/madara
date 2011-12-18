@@ -193,6 +193,16 @@ namespace Madara
         bool send_modifieds);
 
       /**
+       * Evaluates an expression
+       *
+       * @param expression      KaRL expression to evaluate
+       * @param settings        Settings for evaluating and printing
+       * @return                value of expression
+       **/
+      long long evaluate (const ::std::string & expression,
+        const Eval_Settings & settings);
+
+      /**
        * Waits for an expression to be non-zero.
        * Always disseminates modifications.
        *

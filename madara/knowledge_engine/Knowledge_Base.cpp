@@ -203,3 +203,11 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 {
   return impl_->evaluate (expression, send_modifieds);
 }
+
+// evaluate a knowledge expression and choose to send any modifications
+long long
+Madara::Knowledge_Engine::Knowledge_Base::evaluate (
+  const ::std::string & expression, const Eval_Settings & settings)
+{
+  return impl_->evaluate (expression, settings);
+}
