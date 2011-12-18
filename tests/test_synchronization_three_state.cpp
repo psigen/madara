@@ -5,6 +5,7 @@
 //#define ACE_NDEBUG    0
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <iostream>
 #include <assert.h>
@@ -13,6 +14,8 @@
 #include "ace/Get_Opt.h"
 #include "ace/Signal.h"
 
+
+#include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 bool logical_print = false;
@@ -23,6 +26,7 @@ int stop = 3;
 long value = 0;
 volatile bool terminated = 0;
 std::string host = "localhost";
+std::string domain = "three_state";
 
 // signal handler for someone hitting control+c
 extern "C" void terminate (int)
@@ -40,17 +44,21 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_INFO, ACE_Log_Msg::PROCESS);
-
-  ACE_TRACE (ACE_TEXT ("main"));
-
   // signal handler for clean exit
   ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
 
-  Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
+  // transport settings
+  Madara::Transport::Settings ts;
+  ts.domains = domain;
+  ts.type = Madara::Transport::SPLICE;
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) synchronizing to %d\n",
-                        id, processes, stop));
+  // start the knowledge engine
+  Madara::Knowledge_Engine::Knowledge_Base knowledge (
+    host, ts);
+
+  // variables for compiled expressions and wait settings
+  Madara::Knowledge_Engine::Compiled_Expression compiled;
+  Madara::Knowledge_Engine::Wait_Settings wait_settings;
 
   // set my id
   knowledge.set (".self", id);
@@ -72,18 +80,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // set my initial value
   knowledge.set (".init", value);
 
-  // flag myself as having started, so everyone knows
-  knowledge.evaluate ("S{.self}.started = 1");
+  // set my state to an initial value (see command line args to change)
+  knowledge.evaluate ("S{.self}=.init");
 
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  std::string expression;
+  std::string expression = "(S{.self}.started = 1) && S{.left}.started && S{.right}.started";
+  wait_settings.pre_print_statement = " Waiting on S{.left}.started and S{.right}.started\n";
+  compiled = knowledge.compile (expression);
 
-  std::string s0_logic = "(S0 + 1) % 3 == S1 => S0 = (S0 + 3 - 1) % 3;";
-
-  std::string s1_logic = "(S1+1) % 3 == S0 => S1 = S0; (S1+1) % 3 == S2 => S1 = S2;";
-
-  std::string s2_logic = "S1 == S0 && (S1 + 1) % 3 != S2 => S2 = (S1 + 1) % 3;";
+  // wait for left and right processes to startup before executing application logic
+  knowledge.wait (compiled, wait_settings);
 
   if (id == 0)
   {
@@ -116,48 +123,20 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     //expression = s1_logic;
   }
 
-  ACE_DEBUG ((LM_INFO, "(%P|%t) Wait expression will be %s\n", expression.c_str ()));
-
-  knowledge.evaluate (expression);
-
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Current Knowledge\n"));
-  knowledge.print_knowledge ();
-
-
-  ACE_DEBUG ((LM_INFO, "(%P|%t) Waiting on S%d.started and S%d.started\n", 
-    knowledge.get (".left"), knowledge.get (".right")));
-
-  // wait for left and right processes to startup before executing application logic
-  knowledge.wait ("(S{.self}.started = 1) && S{.left}.started && S{.right}.started");
-
-  // set my state to an initial value (see command line args to change)
-  knowledge.evaluate ("S{.self}=.init");
+  // setup the main loop
+  compiled = knowledge.compile (expression);
+  wait_settings.pre_print_statement = "";
+  wait_settings.post_print_statement = "  {S{.left}} {S{.self}} {S{.right}}\n";
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
   {
-    knowledge.wait (expression);
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) Current Knowledge\n"));
-    if (logical_print)
-    {
-      ACE_DEBUG ((LM_INFO, "  %d %d %d\n", knowledge.get ("S0"),
-        knowledge.get ("S1"), knowledge.get ("S2")));
-    }
-    else
-    {
-      ACE_DEBUG ((LM_INFO, "  %d %d %d\n", knowledge.evaluate ("S{.left}"),
-        knowledge.evaluate ("S{.self}"), knowledge.evaluate ("S{.right}")));
-    }
-    knowledge.print_knowledge ();
+    knowledge.wait (compiled, wait_settings);
     ACE_OS::sleep (1);
   }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Wait expression was %s\n", expression.c_str ()));
-
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Exiting\n"));
   return 0;
 }
 
@@ -190,20 +169,36 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
-    case 'l':
-      logical_print = true;
-      break;
     case 'i':
-      id = atoi (cmd_opts.opt_arg ());
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> id;
+      }
+      break;
+    case 'd':
+      domain = cmd_opts.opt_arg ();
       break;
     case 's':
-      stop = atoi (cmd_opts.opt_arg ());
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> stop;
+      }
       break;
     case 'p':
-      processes = atoi (cmd_opts.opt_arg ());
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> processes;
+      }
       break;
     case 'v':
-      value = atoi (cmd_opts.opt_arg ());
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> value;
+      }
 
       if (value > 2 || value < 0)
       ACE_ERROR_RETURN ((LM_ERROR, 
@@ -223,11 +218,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     default:
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
       -p (--processes) number of processes that will be running\n\
+      -d (--domain)    domain to separate all traffic into\n\
       -i (--id)        set process id (0 default)  \n\
       -s (--stop)      stop condition (3 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
-      -l (--logical)   print logical ordering of state (S0, S1, S2)\n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
         ACE_TEXT ("Returning from Help Menu")), -1); 
