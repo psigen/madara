@@ -435,8 +435,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   const Wait_Settings & settings)
 {
   ACE_High_Res_Timer timer;
-  ACE_hrtime_t elapsed;
-  ACE_hrtime_t maximum;
+  ACE_hrtime_t elapsed (0);
+  ACE_hrtime_t maximum (0);
   timer.start ();
 
   // print the post statement at highest log level (cannot be masked)
@@ -518,9 +518,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   {
     ACE_Time_Value max_tv;
     poll_frequency.set (settings.poll_frequency);
-    max_tv.set (settings.max_wait_time);
-    maximum = max_tv.sec () * 1000000000;
-    maximum += max_tv.usec () * 1000;
+
+    if (settings.max_wait_time > 0)
+    {
+      max_tv.set (settings.max_wait_time);
+      maximum = max_tv.sec () * 1000000000;
+      maximum += max_tv.usec () * 1000;
+    }
 
     timer.stop ();
     timer.elapsed_time (elapsed);
@@ -529,12 +533,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
   // wait for expression to be true
   while (!last_value &&
-    (settings.max_wait_time > 0 && maximum > elapsed))
+    (settings.max_wait_time < 0 || maximum > elapsed))
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
-        " elapsed is %Q and max is %Q\n",
-        elapsed, maximum));
+        " elapsed is %Q and max is %Q (poll freq is %f)\n",
+        elapsed, maximum, settings.poll_frequency));
 
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
@@ -542,7 +546,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
     // Unlike the other wait statements, we allow for a time based wait.
     // To do this, we allow a user to specify a 
-    ACE_OS::sleep (poll_frequency);
+    if (settings.max_wait_time > 0)
+      ACE_OS::sleep (poll_frequency);
+    else
+      map_.wait_for_change (true);
 
     // relock - basically we need to evaluate the tree again, and
     // we can't have a bunch of people changing the variables as 

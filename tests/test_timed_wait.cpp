@@ -9,7 +9,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 int ACE_TMAIN (int argc, char * argv[])

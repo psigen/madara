@@ -30,6 +30,7 @@ ACE_Process_Options process_options;
 std::string test_name;
 std::string process_name;
 std::stringstream command_line;
+std::string print_statement;
 bool realtime = false;
 bool process_set = false;
 bool test_set = false;
@@ -250,7 +251,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
     ACE_Time_Value process_elapsed;
 
-    testing.dump ();
+    if (print_statement == "")
+      testing.dump ();
+    else
+      testing.log (print_statement, 0);
 
     // sleep for a set amount of time after the barrier (if specified)
     ACE_OS::sleep (to_sleep);
@@ -342,7 +346,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:8:9:n:i:o:e:w:l:t:x:a:c:d:b:s:k:v:y:z:grmh");
+  ACE_TCHAR options [] = ACE_TEXT ("0:1:2:8:9:n:i:o:e:w:l:t:x:a:c:d:b:p:s:k:v:y:z:grmh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -370,6 +374,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("timing"), 'm', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'n', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("print"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("realtime"), 'r', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("postcondition"), 's',
       ACE_Get_Opt::ARG_REQUIRED);
@@ -580,6 +585,21 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         settings.host.c_str ()));
 
       break;
+    case 'p':
+      // special print statement
+
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer << "\n";
+        print_statement = buffer.str ();
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "KATS_OBSERVER: print statement set to %s\n",
+        cmd_opts.opt_arg ()));
+
+      break;
     case 'r':
       // enable realtime scheduling
       realtime = true;
@@ -697,6 +717,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
                          (add -g for kats conditional timing) \n\
       -n (--processes)   number of testing processes \n\
       -o (--host)        host identifier        \n\
+      -p (--print)       statement that the user is interested in watching\n\
+                         This statement can be a KaRL logic and does perform\n\
+                         variable expansion (e.g., {.i} would be 5 if .i=5)\n\
       -r (--realtime)    run the process with real time scheduling \n\
       -s (--postcondition) postcondition to set after process exits \n\
       -t (--timeout)     time in seconds to wait before killing \n\

@@ -13,6 +13,7 @@
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
 #include "ace/Signal.h"
+#include "ace/Sched_Params.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
@@ -22,6 +23,7 @@ int processes = 1;
 int stop = 10;
 long value = 0;
 std::string host = "localhost";
+std::string domain = "n_state";
 
 volatile bool terminated = 0;
 
@@ -34,6 +36,29 @@ extern "C" void terminate (int)
   terminated = true;
 }
 
+std::string build_wait ()
+{
+  std::stringstream buffer;
+  buffer << "(S" << id << ".init = 1)";
+
+  for (int i = 0; i < processes; ++i)
+    buffer << " && S" << i << ".init";
+
+  return buffer.str ();
+}
+
+std::string build_state_print ()
+{
+  std::stringstream buffer;
+  buffer << " ";
+
+  for (int i = 0; i < processes; ++i)
+    buffer << " {S" << i << "}";
+
+  buffer << "\n";
+  return buffer.str ();
+}
+
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   int retcode = parse_args (argc, argv);
@@ -41,20 +66,32 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_DEBUG | LM_INFO, ACE_Log_Msg::PROCESS);
+  // use ACE real time scheduling class
+  int prio  = ACE_Sched_Params::next_priority
+    (ACE_SCHED_FIFO,
+     ACE_Sched_Params::priority_max (ACE_SCHED_FIFO),
+     ACE_SCOPE_THREAD);
+  ACE_OS::thr_setprio (prio);
 
-  ACE_TRACE (ACE_TEXT ("main"));
+  // transport settings
+  Madara::Transport::Settings ts;
+  ts.domains = domain;
+  ts.type = Madara::Transport::SPLICE;
+
+  // start the knowledge engine
+  Madara::Knowledge_Engine::Knowledge_Base knowledge (
+    host, ts);
 
   // signal handler for clean exit
   ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
 
-  Madara::Knowledge_Engine::Knowledge_Base knowledge(host, Madara::Transport::SPLICE);
-
-  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) synchronizing to %d\n",
-                        id, processes, stop));
+  Madara::Knowledge_Engine::Compiled_Expression compiled;
+  Madara::Knowledge_Engine::Wait_Settings wait_settings;
+  Madara::Knowledge_Engine::Eval_Settings eval_settings;
 
   // set my id
   knowledge.set (".self", id);
+  knowledge.set (".processes", processes);
 
   // The state of the process to my left dictates my next state
   // if I am the bottom process, I look at the last process
@@ -68,21 +105,21 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // set my initial value
   knowledge.set (".init", value);
 
-  ACE_DEBUG ((LM_INFO, 
-    "(%P|%t) (%d of %d) Waiting on my left (S%d) and right (S%d)\n",
-    id, processes, knowledge.get (".left"), knowledge.get (".right")));
+  // by default, the expression to evaluate is for a non-bottom process
+  // if my state does not equal the left state, change my state to left state
+  std::string expression = build_wait ();
+  wait_settings.pre_print_statement = 
+    "  Waiting on all {.processes} processes to join\n";
+  wait_settings.post_print_statement = 
+    "  Finished waiting on S{.left}.started and S{.right}.started\n";
+  compiled = knowledge.compile (expression);
 
-  // wait for left and right processes to startup before
-  // executing application logic
-  knowledge.wait (
-    "(S{.self}.started = 1) && S{.left}.started && S{.right}.started");
-
-  // set my state to an initial value (see command line args to change)
-  knowledge.evaluate ("S{.self}=.init");
+  // wait for left and right processes to startup before executing application logic
+  knowledge.wait (compiled, wait_settings);
 
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  std::string expression ("S{.self} != S{.left} => S{.self} = S{.left}");
+  expression = "S{.self} != S{.left} => S{.self} = S{.left}";
 
   // if I am the bottom process, however, I do NOT want to be my left state
   // so if the top process becomes my state, I move on to my next state
@@ -93,26 +130,22 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     expression = "S{.self} == S{.left} => S{.self} = (S{.self} + 1) % .stop";   
   }
 
-  ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) expression: %s\n",
-    id, processes, expression.c_str ()));
+  knowledge.evaluate (compiled, eval_settings);
 
-
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Starting Knowledge\n"));
-  knowledge.print_knowledge ();
+  compiled = knowledge.compile (expression);
+  wait_settings.pre_print_statement = "";
+  wait_settings.post_print_statement = build_state_print ();
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
   {
-    knowledge.wait (expression);
-    knowledge.print("  {S{.left}} {S{.self}} {S{.right}}\n");
+    knowledge.wait (compiled, wait_settings);
 
     ACE_OS::sleep (1);
   }
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();
 
-  ACE_DEBUG ((LM_DEBUG, "(%P|%t) Exiting\n"));
   return 0;
 }
 
@@ -121,12 +154,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("i:s:p:o:v:h");
+  ACE_TCHAR options [] = ACE_TEXT ("d:i:s:p:o:v:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
+  cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
@@ -144,25 +178,39 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     //arg = cmd_opts.opt_arg ();
     switch (option)
     {
+    case 'd':
+      domain = cmd_opts.opt_arg ();
+      break;
     case 'i':
-      // thread number
-      id = atoi (cmd_opts.opt_arg ());
-      break;
-    case 's':
-      // thread number
-      stop = atoi (cmd_opts.opt_arg ());
-      break;
-    case 'p':
-      // thread number
-      processes = atoi (cmd_opts.opt_arg ());
-      break;
-    case 'v':
-      // thread number
-      value = atoi (cmd_opts.opt_arg ());
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> id;
+      }
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
-      ACE_DEBUG ((LM_DEBUG, "(%P|%t) host set to %s\n", host.c_str ()));
+      break;
+    case 'p':
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> processes;
+      }
+      break;
+    case 's':
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> stop;
+      }
+      break;
+    case 'v':
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> value;
+      }
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 
@@ -171,10 +219,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'h':
     default:
       ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
-      -p (--processes) number of processes that will be running\n\
+      -d (--domain)    domain to separate all traffic into\n\
       -i (--id)        set process id (0 default)  \n\
-      -s (--stop)      stop condition (10 default) \n\
       -o (--host)      this host ip/name (localhost default) \n\
+      -p (--processes) number of processes that will be running\n\
+      -s (--stop)      stop condition (10 default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 
