@@ -15,6 +15,7 @@
 #include "madara/transport/Transport.h"
 #include "ace/SOCK_Acceptor.h"
 #include "madara/expression_tree/Interpreter.h"
+#include "madara/knowledge_engine/Compiled_Expression.h"
 
 namespace Madara
 {
@@ -104,7 +105,6 @@ namespace Madara
        double max_wait_time;
      };
 
-     
     /**
      * @class Knowledge_Base_Impl
      * @brief This class provides a distributed knowledge base implementation
@@ -172,6 +172,15 @@ namespace Madara
        * @return                   expanded statement
        **/
       std::string expand_statement (const ::std::string & statement) const;
+
+      /**
+       * Compiles a KaRL expression into an expression tree
+       *
+       * @param expression         expression to compile
+       * @return                   compiled, optimized expression tree
+       **/
+      Compiled_Expression
+        compile (const ::std::string & expression);
 
       /**
        * Read a file into the knowledge base
@@ -269,11 +278,12 @@ namespace Madara
       /**
        * Evaluates an expression
        *
-       * @param expression      KaRL expression to evaluate
+       * @param expression      KaRL expression to wait on (result of compile)
        * @param settings        Settings for evaluating and printing
        * @return                value of expression
        **/
-      long long evaluate (const ::std::string & expression,
+      long long evaluate (
+        Compiled_Expression & expression,
         const Eval_Settings & settings);
 
       /**
@@ -298,12 +308,12 @@ namespace Madara
        * Waits for an expression to be non-zero. Provides additional settings
        * for fine-tuning the time to wait and atomic print statements.
        *
-       * @param expression      KaRL expression to wait on
+       * @param expression      KaRL expression to wait on (result of compile)
        * @param settings        Settings for the underlying expression
        *                        evaluation and printing
        * @return                value of expression
        **/
-      long long wait (const ::std::string & expression,
+      long long wait (Compiled_Expression & expression,
         const Wait_Settings & settings);
 
       /**

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 int ACE_TMAIN (int argc, char * argv[])
@@ -19,12 +20,15 @@ int ACE_TMAIN (int argc, char * argv[])
   // don't use a transport for this test.
   Madara::Transport::Settings transport_settings;
   transport_settings.type = Madara::Transport::NO_TRANSPORT;
+  
+  // holder for expression trees
+  Madara::Knowledge_Engine::Compiled_Expression expression;
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge ("nohost",
     transport_settings);
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  std::string expression = "++.count && 0";
+  std::string logic = "++.count && 0";
   wait_settings.pre_print_statement =
     "WAIT STARTED: Waiting for 10 seconds.\n";
   wait_settings.post_print_statement =
@@ -39,6 +43,8 @@ int ACE_TMAIN (int argc, char * argv[])
   // *         since we are setting a 10 second limit, it will finish
   // **********************************************
 
+  expression = knowledge.compile (logic);
+
   // start waiting
   knowledge.wait (expression, wait_settings);
 
@@ -49,9 +55,11 @@ int ACE_TMAIN (int argc, char * argv[])
   // clear any existing knowledge
   knowledge.clear ();
 
-  expression = "++.count && 1";
+  logic = "++.count && 1";
   wait_settings.pre_print_statement =
     "WAIT STARTED: .count == {.count}. Waiting for .count == 1.\n";
+
+  expression = knowledge.compile (logic);
 
   // start waiting
   knowledge.wait (expression, wait_settings);
@@ -63,9 +71,10 @@ int ACE_TMAIN (int argc, char * argv[])
   // clear any existing knowledge
   knowledge.clear ();
 
-  expression = "++.count && .count == 2";
+  logic = "++.count && .count == 2";
   wait_settings.pre_print_statement =
     "WAIT STARTED: .count == {.count}. Waiting for .count == 2.\n";
+  expression = knowledge.compile (logic);
 
 
   // start waiting
@@ -78,9 +87,10 @@ int ACE_TMAIN (int argc, char * argv[])
   // clear any existing knowledge
   knowledge.clear ();
 
-  expression = "++.count && .count == 10";
+  logic = "++.count && .count == 10";
   wait_settings.pre_print_statement =
     "WAIT STARTED: .count == {.count}. Waiting for .count == 10.\n";
+  expression = knowledge.compile (logic);
 
   // start waiting
   knowledge.wait (expression, wait_settings);

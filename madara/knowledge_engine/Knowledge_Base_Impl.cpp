@@ -271,6 +271,20 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
   return result;
 }
 
+Madara::Knowledge_Engine::Compiled_Expression
+Madara::Knowledge_Engine::Knowledge_Base_Impl::compile (
+  const ::std::string & expression)
+{
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::compile:" \
+      " compiling %s\n", expression.c_str ()));
+
+  Compiled_Expression ce;
+  ce.logic = expression;
+  ce.expression = interpreter_.interpret (map_, expression);
+
+  return ce;
+}
 
 long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
@@ -416,13 +430,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 }
 
 long long
-Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
-                                                const Wait_Settings & settings)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
+  Compiled_Expression & ce, 
+  const Wait_Settings & settings)
 {
-  // return an error message
-  if (expression == "")
-    return 0;
-
   ACE_High_Res_Timer timer;
   ACE_hrtime_t elapsed;
   ACE_hrtime_t maximum;
@@ -437,13 +448,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
-      " waiting on %s\n", expression.c_str ()));
+      " waiting on %s\n", ce.logic.c_str ()));
 
   // resulting tree of the expression
-  Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
-    map_, expression);
+  //Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
+  //  map_, expression);
 
-  long long last_value = tree.evaluate ();
+  long long last_value = ce.expression.evaluate ();
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
@@ -537,7 +548,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     // we can't have a bunch of people changing the variables as 
     // while we're evaluating the tree.
     map_.lock ();
-    last_value = tree.evaluate ();
+    last_value = ce.expression.evaluate ();
 
     if (transport_ && settings.send_modifieds)
     {
@@ -613,7 +624,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   long long last_value = 0;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::wait:" \
+        DLINFO "Knowledge_Base_Impl::evaluate:" \
         " evaluting %s\n", expression.c_str ()));
 
   // iterators and tree for evaluation of interpreter results
@@ -667,19 +678,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 
 long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const ::std::string & expression, const Eval_Settings & settings)
+  Compiled_Expression & ce,
+  const Eval_Settings & settings)
 {
-  if (expression == "")
-    return 0;
-
   long long last_value = 0;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::wait:" \
-        " evaluting %s\n", expression.c_str ()));
+        DLINFO "Knowledge_Base_Impl::evaluate:" \
+        " evaluating %s.\n", ce.logic.c_str ()));
 
   // iterators and tree for evaluation of interpreter results
-  Madara::Expression_Tree::Expression_Tree tree;
+  //Madara::Expression_Tree::Expression_Tree tree;
 
   // print the post statement at highest log level (cannot be masked)
   if (settings.pre_print_statement != "")
@@ -689,8 +698,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   map_.lock ();
 
   // interpret the current expression and then evaluate it
-  tree = interpreter_.interpret (map_, expression);
-  last_value = tree.evaluate ();
+  //tree = interpreter_.interpret (map_, expression);
+  last_value = ce.expression.evaluate ();
 
   // if we have a transport and we've been asked to send modified knowledge
   // to any interested parties...

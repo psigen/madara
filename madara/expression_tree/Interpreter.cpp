@@ -1857,7 +1857,6 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
   if (found != cache_.end ())
     return found->second;
 
-
   ::std::list<Symbol *> list;
   //list.clear ();
   Symbol * lastValidInput = 0;

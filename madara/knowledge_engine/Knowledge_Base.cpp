@@ -107,6 +107,13 @@ Madara::Knowledge_Engine::Knowledge_Base::expand_statement (
   return impl_->expand_statement (statement);
 }
 
+Madara::Knowledge_Engine::Compiled_Expression
+Madara::Knowledge_Engine::Knowledge_Base::compile (
+  const ::std::string & expression)
+{
+  return impl_->compile (expression);
+}
+
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
                                                long long value)
@@ -144,8 +151,9 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression
 }
 
 long long
-Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression, 
-                                                const Wait_Settings & settings)
+Madara::Knowledge_Engine::Knowledge_Base::wait (
+  Compiled_Expression & expression, 
+  const Wait_Settings & settings)
 {
   return impl_->wait (expression, settings);
 }
@@ -207,7 +215,8 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 // evaluate a knowledge expression and choose to send any modifications
 long long
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
-  const ::std::string & expression, const Eval_Settings & settings)
+  Compiled_Expression & expression,
+  const Eval_Settings & settings)
 {
   return impl_->evaluate (expression, settings);
 }
