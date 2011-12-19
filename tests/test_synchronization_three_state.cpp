@@ -132,7 +132,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     expression = 
     // if we are the bottom process, (id == 0), then logic is
     // if (S+1)     % 3 == R       then S        = (S-1)          % 3
-      "(S{.self}+1) % 3 == S{.right} => S{.self} = (S{.self}+3-1) % 3";
+      "(S{.self}+1) % 3 == S{.right} => ((S{.self} = (S{.self}+3-1) % 3) ; 1)";
 
     //expression = s0_logic;
   }
@@ -141,7 +141,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     // top process logic
     expression = 
     // if  L   == R        && (L       +l)%3 != S       then S       = (L        + 1)%3
-      "S{.left}==S{.right} && (S{.left}+1)%3 != S{.self} => S{.self} = (S{.left} + 1)%3";
+      "S{.left}==S{.right} && (S{.left}+1)%3 != S{.self} " \
+      "        => (S{.self} = (S{.left} + 1)%3 ; 1)";
 
     //expression = s2_logic;
   }
@@ -151,9 +152,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     // to try to synchronize with two sources. Here is the logic:
     expression = 
     // if( S     + 1)%3 == L       then S        = L
-      "(S{.self} + 1)%3 == S{.left} => S{.self} = S{.left};" \
+      "(S{.self} + 1)%3 == S{.left} => (S{.self} = S{.left} ; 1);" \
     // if( S      + 1) % 3 ==    R    then   S     =    R
-      "(S{.self} + 1)%3 == S{.right} => S{.self} = S{.right}";
+      "(S{.self} + 1)%3 == S{.right} => (S{.self} = S{.right} ; 1)";
     
     //expression = s1_logic;
   }

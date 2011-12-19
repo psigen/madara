@@ -27,12 +27,9 @@ namespace Madara
   public:
     enum
     {
-      // note that these should be logically or'd together
-      // SET | MODIFIED = 3
-      // UNSET | MODIFIED = 2
-      // 
-      UNMODIFIED = 0,
-      MODIFIED = 1
+      UNCREATED = 0,
+      UNMODIFIED = 1,
+      MODIFIED = 2
     };
 
     enum
@@ -43,7 +40,7 @@ namespace Madara
 
     /* default constructor */
     Knowledge_Record ()
-      : status (UNMODIFIED), value (UNMODIFIED), clock (0), scope (LOCAL_SCOPE),
+      : status (UNCREATED), value (0), clock (0), scope (LOCAL_SCOPE),
         quality (0), write_quality (0) 
     {}
 

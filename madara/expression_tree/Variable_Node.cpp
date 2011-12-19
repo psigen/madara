@@ -8,7 +8,7 @@
 
 Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key, 
                               Madara::Knowledge_Engine::Thread_Safe_Context &context)
-: key_ (key), context_ (context), key_expansion_necessary_ (false)
+: key_ (key), record_ (0), context_ (context), key_expansion_necessary_ (false)
 {
   // this key requires expansion. We do the compilation and error checking here
   // as the key shouldn't change, and this allows us to only have to do this
@@ -45,10 +45,18 @@ Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key,
       }
     }
   }
+  // no variable expansion necessary. Create a hard link to the record_->
+  // this will save us lots of clock cycles each variable access or
+  // mutation.
+  else
+  {
+    record_ = context_.get_record (key);
+  }
 }
 
 Madara::Expression_Tree::Variable_Node::~Variable_Node ()
 {
+  // do not clean up record_. Let the context clean that up.
 }
 
 std::string
@@ -99,7 +107,10 @@ Madara::Expression_Tree::Variable_Node::accept (Visitor &visitor) const
 long long
 Madara::Expression_Tree::Variable_Node::item () const
 {
-  return context_.get (expand_key ());
+  if (record_)
+    return record_->value;
+  else
+    return context_.get (expand_key ());
 }
 
 /// Prune the tree of unnecessary nodes. 
@@ -114,7 +125,10 @@ Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
 
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
-  return context_.get (expand_key ());
+  if (record_)
+    return record_->value;
+  else
+    return context_.get (expand_key ());
 }
 
 /// Evaluates the node and its children. This does not prune any of
@@ -124,7 +138,10 @@ Madara::Expression_Tree::Variable_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
-  return context_.get (expand_key ());
+  if (record_)
+    return record_->value;
+  else
+    return context_.get (expand_key ());
 }
 
 const std::string &
@@ -136,18 +153,75 @@ Madara::Expression_Tree::Variable_Node::key () const
 long long
 Madara::Expression_Tree::Variable_Node::set (const long long & value)
 {
-  return context_.set (expand_key (), value);
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (record_->write_quality < record_->quality)
+      return -2;
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    if (record_->status != Madara::Knowledge_Record::MODIFIED)
+      record_->status = Madara::Knowledge_Record::MODIFIED;
+  
+    context_.signal ();
+    return record_->value = value;
+  }
+  else
+    return context_.set (expand_key (), value);
 }
 
 long long
 Madara::Expression_Tree::Variable_Node::dec (void)
 {
-  return context_.dec (expand_key ());
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (record_->write_quality < record_->quality)
+      return -2;
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    if (record_->status != Madara::Knowledge_Record::MODIFIED)
+      record_->status = Madara::Knowledge_Record::MODIFIED;
+  
+    context_.signal ();
+    return --record_->value;
+  }
+  else
+    return context_.dec (expand_key ());
 }
 
 long long
 Madara::Expression_Tree::Variable_Node::inc (void)
 {
-  return context_.inc (expand_key ());
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (record_->write_quality < record_->quality)
+      return -2;
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    if (record_->status != Madara::Knowledge_Record::MODIFIED)
+      record_->status = Madara::Knowledge_Record::MODIFIED;
+  
+    context_.signal ();
+    return ++record_->value;
+  }
+  else
+    return context_.inc (expand_key ());
 }
 

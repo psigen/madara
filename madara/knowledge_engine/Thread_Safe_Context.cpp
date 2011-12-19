@@ -41,6 +41,25 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) c
   return Madara::Knowledge_Record::UNMODIFIED;
 }
 
+/**
+ * Retrieves a knowledge record from the key. This function is useful
+ * for performance reasons and also for using a Knowledge_Record that
+ * can be one of multiple types
+ **/
+Madara::Knowledge_Record *
+Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
+  const ::std::string & key)
+{
+  if (key == "")
+    return 0;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // if the variable doesn't exist, hash maps create a record automatically
+  // when used in this manner
+  return &map_[expand_statement(key)];
+}
 
 // set the value of a variable
 int

@@ -56,10 +56,11 @@ namespace Madara
        * Retrieves a knowledge record from the key. This function is useful
        * for performance reasons and also for using a Knowledge_Record that
        * can be one of multiple types
-       * @param   key    unique identifier of the variable
+       * @param   key    unique identifier of the variable. Allows variable 
+       *                 expansion.
        * @return         the knowledge record for the variable
        **/
-      Madara::Knowledge_Record * get_record (const ::std::string & key) const;
+      Madara::Knowledge_Record * get_record (const ::std::string & key);
 
       /**
        * Atomically sets the value of a variable.

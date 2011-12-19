@@ -71,7 +71,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::exists (const ::std::string & key
 
     // if it's found, then return the value
     if (found != map_.end ())
-      return true;
+      return found->second.status != Knowledge_Record::UNCREATED;
   }
 
   // if no match, return empty (0)
@@ -258,7 +258,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::clear (void)
   // enter the mutex
   Context_Guard guard (mutex_);
 
-  map_.clear ();
+  // we no longer blow everything away to allow for cached variables
+  // in the expression tree. If we allow this clear, there will be
+  // segmentation faults if the tree is used later.
+  //map_.clear ();
+
+  for (Madara::Knowledge_Map::iterator i = map_.begin (); 
+       i != map_.end (); ++i)
+  {
+    i->second.clock = 0;
+    i->second.quality = 0;
+    i->second.status = Madara::Knowledge_Record::UNCREATED;
+    i->second.value = 0;
+    i->second.write_quality = 0;
+  }
+
   changed_.signal ();
 }
 

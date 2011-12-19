@@ -7,6 +7,7 @@
 
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/Globals.h"
 
 namespace Madara
 {
@@ -66,6 +67,7 @@ namespace Madara
     private:
       /// Key for retrieving value of this variable.
       const ::std::string key_;
+      Madara::Knowledge_Record * record_;
 
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
 

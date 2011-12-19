@@ -119,7 +119,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  expression = "S{.self} != S{.left} => S{.self} = S{.left}";
+  expression = "S{.self} != S{.left} => (S{.self} = S{.left} ; 1)";
 
   // if I am the bottom process, however, I do NOT want to be my left state
   // so if the top process becomes my state, I move on to my next state
@@ -127,7 +127,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // end goal (in our case the .stop condition)
   if (id == 0)
   {
-    expression = "S{.self} == S{.left} => S{.self} = (S{.self} + 1) % .stop";   
+    expression = 
+      "S{.self} == S{.left} => ((S{.self} = (S{.self} + 1) % .stop) ; 1)";   
   }
 
   knowledge.evaluate (compiled, eval_settings);
