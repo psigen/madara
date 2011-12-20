@@ -87,7 +87,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::Knowledge_Engine::Compiled_Expression compiled;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  Madara::Knowledge_Engine::Eval_Settings eval_settings;
 
   // set my id
   knowledge.set (".self", id);
@@ -102,6 +101,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // set my stop state
   knowledge.set (".stop", stop);
+
   // set my initial value
   knowledge.set (".init", value);
 
@@ -117,9 +117,12 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // wait for left and right processes to startup before executing application logic
   knowledge.wait (compiled, wait_settings);
 
+  // set initial value of this state to the initial value
+  knowledge.set ("S{.self}", value);
+
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  expression = "S{.self} != S{.left} => (S{.self} = S{.left} ; 1)";
+  expression = "S{.self} != S{.left} => S{.self} = S{.left}";
 
   // if I am the bottom process, however, I do NOT want to be my left state
   // so if the top process becomes my state, I move on to my next state
@@ -128,14 +131,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (id == 0)
   {
     expression = 
-      "S{.self} == S{.left} => ((S{.self} = (S{.self} + 1) % .stop) ; 1)";   
+      "S{.self} == S{.left} => (S{.self} = (S{.self} + 1) % .stop)";   
   }
 
-  knowledge.evaluate (compiled, eval_settings);
-
-  compiled = knowledge.compile (expression);
   wait_settings.pre_print_statement = "";
   wait_settings.post_print_statement = build_state_print ();
+
+  compiled = knowledge.compile (expression);
+
+  knowledge.print (wait_settings.post_print_statement);
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)

@@ -89,7 +89,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // variables for compiled expressions and wait settings
   Madara::Knowledge_Engine::Compiled_Expression compiled;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  Madara::Knowledge_Engine::Eval_Settings eval_settings;
 
   // set my id
   knowledge.set (".self", id);
@@ -112,9 +111,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // set my initial value
   knowledge.set (".init", value);
 
-  // set my state to an initial value (see command line args to change)
-  knowledge.evaluate ("S{.self}=.init");
-
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
   std::string expression = build_wait ();
@@ -127,14 +123,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // wait for left and right processes to startup before executing application logic
   knowledge.wait (compiled, wait_settings);
 
+  // set initial value of this state to the initial value
+  //knowledge.evaluate ("S{.self}=.init");
+  knowledge.set ("S{.self}", value);
+
   if (id == 0)
   {
     expression = 
     // if we are the bottom process, (id == 0), then logic is
     // if (S+1)     % 3 == R       then S        = (S-1)          % 3
-      "(S{.self}+1) % 3 == S{.right} => ((S{.self} = (S{.self}+3-1) % 3) ; 1)";
-
-    //expression = s0_logic;
+      "(S{.self}+1) % 3 == S{.right} => S{.self} = (S{.self}+3-1) % 3";
   }
   else if (id == processes - 1)
   {
@@ -142,9 +140,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     expression = 
     // if  L   == R        && (L       +l)%3 != S       then S       = (L        + 1)%3
       "S{.left}==S{.right} && (S{.left}+1)%3 != S{.self} " \
-      "        => (S{.self} = (S{.left} + 1)%3 ; 1)";
-
-    //expression = s2_logic;
+      "        => S{.self} = (S{.left} + 1)%3";
   }
   else
   {
@@ -152,19 +148,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     // to try to synchronize with two sources. Here is the logic:
     expression = 
     // if( S     + 1)%3 == L       then S        = L
-      "(S{.self} + 1)%3 == S{.left} => (S{.self} = S{.left} ; 1);" \
+      "(S{.self} + 1)%3 == S{.left} => S{.self} = S{.left};" \
     // if( S      + 1) % 3 ==    R    then   S     =    R
-      "(S{.self} + 1)%3 == S{.right} => (S{.self} = S{.right} ; 1)";
-    
-    //expression = s1_logic;
+      "(S{.self} + 1)%3 == S{.right} => S{.self} = S{.right}";
   }
-
-  knowledge.evaluate (compiled, eval_settings);
 
   // setup the main loop
   compiled = knowledge.compile (expression);
   wait_settings.pre_print_statement = "";
   wait_settings.post_print_statement = build_state_print ();
+
+  knowledge.print (wait_settings.post_print_statement);
 
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
@@ -183,7 +177,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("d:i:s:p:o:v:lh");
+  ACE_TCHAR options [] = ACE_TEXT ("d:i:p:o:v:lh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -195,7 +189,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("logical"), 'l', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
-  cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("value"), 'v', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
@@ -228,13 +221,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer >> processes;
       }
       break;
-    case 's':
-      {
-        std::stringstream buffer;
-        buffer << cmd_opts.opt_arg ();
-        buffer >> stop;
-      }
-      break;
     case 'v':
       {
         std::stringstream buffer;
@@ -259,7 +245,6 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -i (--id)        set process id (0 default)  \n\
       -o (--host)      this host ip/name (localhost default) \n\
       -p (--processes) number of processes that will be running\n\
-      -s (--stop)      stop condition (3 default) \n\
       -v (--value)     start process with a certain value (0 default) \n\
       -h (--help)      print this menu             \n"));
       ACE_ERROR_RETURN ((LM_ERROR, 

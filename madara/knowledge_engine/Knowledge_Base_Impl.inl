@@ -14,14 +14,17 @@
  */
 
 inline long long
-Madara::Knowledge_Engine::Knowledge_Base_Impl::get (const ::std::string & key) const
+Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
+  const ::std::string & t_key)
 {
+  std::string key = map_.expand_statement (t_key);
+
   return map_.get (key);
 }
 
 inline std::string
 Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
-  const ::std::string & statement) const
+  const ::std::string & statement)
 {
   return map_.expand_statement (statement);
 }
@@ -51,7 +54,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
 }
 
 inline int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
                                                long long value)
 {
   return set (key, value, true);
@@ -60,14 +63,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
 /// Set quality of writing to a variable
 inline void 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
-  const ::std::string & key, unsigned long quality)
+  const ::std::string & t_key, unsigned long quality)
 {
+  std::string key = map_.expand_statement (t_key);
+
   map_.set_write_quality (key, quality);
 }
 
 
 inline long long
-Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
+  const ::std::string & expression)
 {
   return wait (expression, true);
 }
@@ -80,7 +86,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 }
 
 inline void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (unsigned int level) const
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (
+  unsigned int level)
 {
   MADARA_DEBUG (level, (LM_INFO, 
     "\nKnowledge in Knowledge Base:\n"));
@@ -89,7 +96,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (unsigned int lev
 
 inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::print (
-  const std::string & statement, unsigned int level) const
+  const std::string & statement, unsigned int level)
 {
   map_.print (statement, level);
 }

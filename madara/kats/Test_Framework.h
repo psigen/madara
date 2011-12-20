@@ -143,7 +143,7 @@ namespace Madara
        * @param key                knowledge location
        * @return                   value at knowledge location
        **/
-      long long get (const ::std::string & key) const;
+      long long get (const ::std::string & key);
 
       /**
        * Sets a knowledge value to a specified value

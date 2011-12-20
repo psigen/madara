@@ -36,15 +36,15 @@ namespace Madara
       /** 
        * Prunes the expression tree of unnecessary nodes. 
        * @param     can_change   set to true if variable nodes are contained
-       * @return    0 if left expression is 0, and the value of the right
-       *            expression otherwise
+       * @return    the value of the condition (left expression)
        **/
       virtual long long prune (bool & can_change);
 
       /** 
-       * Evaluates the expression tree. 
-       * @return    0 if left expression is 0, and the value of the right
-       *            expression otherwise
+       * Evaluates the expression tree. If the left expression is
+       * true, then the right expression is evaluated. The right
+       * expression's value does not percolate back up.
+       * @return    the value of the condition (left expression)
        **/
       virtual long long evaluate (void);
 

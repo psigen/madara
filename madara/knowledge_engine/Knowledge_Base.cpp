@@ -72,7 +72,7 @@ Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
 }
 
 long long
-Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key) const
+Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key)
 {
   return impl_->get (key);
 }
@@ -102,7 +102,7 @@ Madara::Knowledge_Engine::Knowledge_Base::write_file (const std::string & knowle
 
 std::string
 Madara::Knowledge_Engine::Knowledge_Base::expand_statement (
-  const ::std::string & statement) const
+  const ::std::string & statement)
 {
   return impl_->expand_statement (statement);
 }
@@ -160,14 +160,14 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (
 
 void
 Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (
-  unsigned int level) const
+  unsigned int level)
 {
   impl_->print_knowledge (level);
 }
 
 void
 Madara::Knowledge_Engine::Knowledge_Base::print (
-  const std::string & statement, unsigned int level) const
+  const std::string & statement, unsigned int level)
 {
   impl_->print (statement, level);
 }

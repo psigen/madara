@@ -1693,6 +1693,10 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     else
     {
       // error. We currently don't allow logical and (A & B)
+      MADARA_DEBUG (MADARA_LOG_NONFATAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        " Logical And (&) not available\n." \
+        " You may want to use && instead in %s.\n", input.c_str ()));
     }
     ++i;
   }
@@ -1713,6 +1717,10 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     else
     {
       // error. We don't currently support logical or
+      MADARA_DEBUG (MADARA_LOG_NONFATAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        " Logical And (|) not available\n." \
+        " You may want to use || instead in %s.\n", input.c_str ()));
     }
     ++i;
   }
@@ -1802,6 +1810,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
   ::std::list<Symbol *> list;
 
   handled = false;
+  bool closed = false;
   while (i < input.length ())
   {
     main_loop (context, input, i, lastValidInput, 
@@ -1810,10 +1819,19 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
     if (input[i] == ')')
     {
       handled = true;
+      closed = true;
       ++i;
       accumulated_precedence -= PARENTHESIS_PRECEDENCE;
       break;
     }
+  }
+
+  if (!closed)
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL COMPILE ERROR: " \
+      "Forgot to close parenthesis in %s.\n", input.c_str ()));
+    exit (-1);
   }
 
   if (master_list.size () > 0 && list.size () > 0)

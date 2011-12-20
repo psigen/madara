@@ -13,7 +13,8 @@
 #include "Agent_Messages.h"
 #include "Broker_Context.h"
 #include "Madara_Common.h"
-#include "sort/pivotsort.h"
+#include "sort/pivotsort_v2.h"
+//#include "sort/MPivotSort.h"
 
 typedef std::pair <int, int> LatencyRecord;
 typedef std::vector <LatencyRecord> Latencies;
@@ -134,6 +135,7 @@ void testRawHeuristic (int size, std::ostream & output, int sort_type)
       std::sort (allLatencies[i].begin (), allLatencies[i].end (),
                  SortByPairValue);
     else
+      //::pivotSort (allLatencies[i], allLatencies[i].size (), SortByPairValue); 
       std::pivotsort (allLatencies[i].begin (), allLatencies[i].end (),
                  SortByPairValue);
   }
@@ -158,6 +160,7 @@ void testRawHeuristic (int size, std::ostream & output, int sort_type)
   if (sort_type == 0)
     std::sort (deployment.begin (), deployment.end (), SortBySize);
   else
+    //::pivotSort (deployment, deployment.size (), SortBySize);
     std::pivotsort (deployment.begin (), deployment.end (), SortBySize);
 
   averaging.start ();
@@ -189,6 +192,7 @@ void testRawHeuristic (int size, std::ostream & output, int sort_type)
   if (sort_type == 0)
     std::sort (averages.begin (), averages.end (), SortByPairValue);
   else
+    //::pivotSort (averages, averages.size (), SortByPairValue);
     std::pivotsort (averages.begin (), averages.end (), SortByPairValue);
 
   sorting.stop ();
@@ -307,8 +311,11 @@ int main (int argc, char *argv[])
 
   //timer.start ();
 
+  //__int64 numMoves, numCompares;
+
+  //::pivotSort (ints, ints.size (), Increasing); 
   std::pivotsort (ints.begin (), ints.end (), Increasing);
-  ////std::sort (ints.begin (), ints.end (), Increasing);
+  //std::sort (ints.begin (), ints.end (), Increasing);
 
   //timer.stop ();
 

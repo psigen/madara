@@ -36,7 +36,7 @@ Madara::KATS::Test_Framework::~Test_Framework ()
 
 /// Retrieves a knowledge value
 long long
-Madara::KATS::Test_Framework::get (const ::std::string & key) const
+Madara::KATS::Test_Framework::get (const ::std::string & key)
 {
   return knowledge_.get (key);
 }

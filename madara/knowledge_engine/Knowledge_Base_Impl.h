@@ -161,7 +161,7 @@ namespace Madara
        * @param key                knowledge location
        * @return                   value at knowledge location
        **/
-      long long get (const ::std::string & key) const;
+      long long get (const ::std::string & key);
 
       /**
        * Expands a statement using variable expansion. For example, if the
@@ -171,7 +171,7 @@ namespace Madara
        * @param statement          statement to expand
        * @return                   expanded statement
        **/
-      std::string expand_statement (const ::std::string & statement) const;
+      std::string expand_statement (const ::std::string & statement);
 
       /**
        * Compiles a KaRL expression into an expression tree
@@ -326,7 +326,7 @@ namespace Madara
        * Prints knowledge variables and values at a logging level
        * @param   level    level to log the knowledge at
        **/
-      void print_knowledge (unsigned int level) const;
+      void print_knowledge (unsigned int level);
 
       /**
        * Expands and prints a user provided statement at a logging level.
@@ -336,7 +336,7 @@ namespace Madara
        * @param   statement  statement to expand with variable values
        * @param   level      level to log the knowledge at
        **/
-      void print (const std::string & statement, unsigned int level) const;
+      void print (const std::string & statement, unsigned int level);
 
       /**
        * Clears the knowledge base

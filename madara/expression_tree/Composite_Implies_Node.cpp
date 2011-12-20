@@ -74,7 +74,7 @@ Madara::Expression_Tree::Composite_Implies_Node::prune (bool & can_change)
   can_change = left_child_can_change || right_child_can_change;
 
   // if left_value, then return the right_value. Otherwise, 0
-  return left_value ? right_value : 0;
+  return left_value;
 }
 
 /// Evaluates the node and its children. This does not prune any of
@@ -82,11 +82,13 @@ Madara::Expression_Tree::Composite_Implies_Node::prune (bool & can_change)
 long long 
 Madara::Expression_Tree::Composite_Implies_Node::evaluate (void)
 {
-  // only evaluate right if left evaluates to non-zero
-  if (left_->evaluate ())
-    return right_->evaluate ();
+  long long left_value = left_->evaluate ();
 
-  return 0;
+  // only evaluate right if left evaluates to non-zero
+  if (left_value)
+    right_->evaluate ();
+
+  return left_value;
 }
 
 

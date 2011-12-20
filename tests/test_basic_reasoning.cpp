@@ -36,8 +36,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
-  ACE_LOG_MSG->priority_mask (LM_INFO | LM_DEBUG, ACE_Log_Msg::PROCESS);
-
   ACE_TRACE (ACE_TEXT ("main"));
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
@@ -520,6 +518,15 @@ void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.evaluate (".var1 = 0; .var2 = 0; .var1 => .var2 = 1");
   assert (knowledge.get (".var2") == 0);
+
+  knowledge.evaluate (".var1 = 0; .var2 = 0; .var3 = (!.var1 => .var2 = 1)");
+  assert (knowledge.get (".var2") == 1 && knowledge.get (".var3") != 0);
+
+  knowledge.evaluate (
+    ".var1 = 0; .var2 = 1;" \
+    ".var3 = (.var1 => .var2 = 0) || .var2");
+  assert (knowledge.get (".var2") == 1 && knowledge.get (".var3") == 1);
+
 }
 
 /// Tests the math ops (+, -, *, /)

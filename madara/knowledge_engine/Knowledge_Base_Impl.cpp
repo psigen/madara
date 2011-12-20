@@ -242,10 +242,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
 
 int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key, 
-                          long long value, bool send_modifieds)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const ::std::string & t_key, 
+  long long value, bool send_modifieds)
 {
   // everything after this point is done on a string with at least 1 char
+  std::string key = map_.expand_statement (t_key);
+
+  if (key == "")
+    return -1;
+
   int result = map_.set (key, value);
 
   // only send an update if we have a transport, we have been asked to send
