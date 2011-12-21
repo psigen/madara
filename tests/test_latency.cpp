@@ -120,7 +120,9 @@ unsigned long long test_latency (
 
   // keep track of time
   ACE_hrtime_t count = 0;
-  ACE_High_Res_Timer timer;
+  ACE_High_Res_Timer compile_timer;
+  ACE_High_Res_Timer eval_timer;
+  ACE_High_Res_Timer latency_timer;
 
 
   // make the processes play tag
@@ -137,28 +139,28 @@ unsigned long long test_latency (
     expression = "P0 != P1 => P1 = P0";
   }
 
+  Madara::Knowledge_Engine::Wait_Settings wait_settings;
+  Madara::Knowledge_Engine::Eval_Settings eval_settings;
+  eval_settings.send_modifieds = false;
+
   // test compilation latency
-  timer.start ();
-  knowledge.evaluate (expression, false);
-  timer.stop ();
+  compile_timer.start ();
+  Madara::Knowledge_Engine::Compiled_Expression compiled = 
+    knowledge.compile (expression);
+  compile_timer.stop ();
 
   // get the amount of time it took
-  timer.elapsed_time (compile_latency);
+  compile_timer.elapsed_time (compile_latency);
 
-  // reset the timer
-  timer.reset ();
 
   // test evaluation latency
-  timer.start ();
-  knowledge.evaluate (expression, false);
-  timer.stop ();
+  eval_timer.start ();
+  knowledge.evaluate (compiled, eval_settings);
+  eval_timer.stop ();
 
   // get the amount of time it took
-  timer.elapsed_time (eval_latency);
+  eval_timer.elapsed_time (eval_latency);
 
-  // reset the timer
-  timer.reset ();
-  
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic compile latency was %s ns\n",
     id, processes, ull_to_string (compile_latency).c_str ()));
 
@@ -179,26 +181,18 @@ unsigned long long test_latency (
 
   ACE_hrtime_t total_latency = 0;
 
-  timer.start ();
+  knowledge.print ("Beginning {.iterations} roundtrip tests.\n");
+
+  latency_timer.start ();
 
   for (unsigned long i = 0; i < iterations; ++i)
   {
-    knowledge.wait (expression);
-    timer.stop ();
-  
-    // note that the first loop results in no time change
-    // also, this is roundtrip latency.
-    timer.elapsed_time (count);
-    total_latency += count;
-
-    ACE_DEBUG ((LM_DEBUG, "(%P|%t) (%d of %d) Latency test: i = %d, round trip = %d\n",
-      id, processes, i, count));
-
-    // start the next timer
-    timer.start ();
+    knowledge.wait (compiled, wait_settings);
   }
 
-  timer.stop ();
+  latency_timer.stop ();
+  latency_timer.elapsed_time (total_latency);
+
   return total_latency;
 }
 
