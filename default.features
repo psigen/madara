@@ -29,5 +29,5 @@ kats                    = 1
 ndds                    = 0
 
 /// @feature old
-/// Enable this feature if you would like to generate the old CID heuristic
-cid                     = 0
+/// Enable this feature if you would like to generate the CID heuristic
+cid                     = 1
