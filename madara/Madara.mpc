@@ -8,6 +8,10 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
   includes += $(MADARA_ROOT)
   libpaths += $(MADARA_ROOT)/lib 
 
+  verbatim (gnuace, local) {
+    CPPFLAGS += -w
+  }
+
   Build_Files {
     $(MADARA_ROOT)/Madara.mwc
     $(MADARA_ROOT)/default.features
