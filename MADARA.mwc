@@ -8,5 +8,4 @@ workspace {
   madara/NDDS_Transport.mpc
   madara/Tests.mpc
   madara/Traffic_Lights_Ambulance.mpc
-  old/Cid.mpc
 }

@@ -355,3 +355,23 @@ project (Test_KATS_syncs) : using_kats, using_ace {
     ../tests/test_kats_syncs.cpp
   }
 }
+
+project (Test_CID) : using_madara, using_ace {
+  requires += tests cid
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_cid
+  
+  // libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_cid.cpp
+  }
+}
