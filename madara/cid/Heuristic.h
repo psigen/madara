@@ -28,13 +28,25 @@ namespace Madara
 
     /**
      * Approximates the solution with the CID heuristic
+     * @param    settings    container for network averages, target
+     *                       deployment, and generated solution
+     *                       (@see Madara::Cid::Settings)
+     * @param    node        the deployment node we are approximating
+     **/
+    MADARA_Export void approximate (Settings & settings, unsigned int node);
+
+    /**
+     * Approximates the solution with the CID heuristic
      * @param    network_averages  sorted array of network averages
      *                             (@see Madara::Cid::Settings)
      * @param    target_deployment sorted target deployment by degree
      * @param    solution          results of heuristic
+     * @param    solution_lookup   map of network ids to their deployments
+     * @param    node        the deployment node we are approximating
      **/
-    MADARA_Export void approximate (Latency_Vector & network_averages, 
-      LV_Vector & target_deployment, Deployment & solution);
+    MADARA_Export void approximate (Averages_Map & network_averages, 
+      LV_Vector & target_deployment, Deployment & solution, 
+      Solution_Map & solution_lookup, unsigned int node);
 
     /**
      * Sorts the target deployment by degree to prepare it for the CID heuristic
@@ -48,8 +60,8 @@ namespace Madara
      **/
     MADARA_Export void prepare_deployment (LV_Vector & target_deployment);
 
-
-
+    MADARA_Export void fill_by_highest_degree (Settings & settings,
+      unsigned int start);
   } // end Cid namespace
 } // end Madara namespace
 

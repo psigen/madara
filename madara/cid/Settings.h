@@ -12,6 +12,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace Madara
 {
@@ -41,8 +42,18 @@ namespace Madara
     /**
      * A list of latencies, mostly used for averages
      **/
-    typedef std::vector <unsigned int>    Latencies;
+    typedef std::vector <unsigned int>               Latencies;
     
+    /**
+     * A map of degree to the average latencies for that degree
+     */
+    typedef std::map <unsigned int, Latency_Vector>  Averages_Map;
+
+    /**
+     * A map of the solution which allows reverse lookup by identifier
+     **/
+    typedef std::map <unsigned int, unsigned int>    Solution_Map;
+
     /**
      * A mapping of ids to string names. Using strings natively in the
      * algorithm would result high overhead (orders of magnitude) even
@@ -160,7 +171,7 @@ namespace Madara
        * [2] =  63
        * [3] =  66
        **/
-      Latency_Vector     network_averages;
+      Averages_Map         network_averages;
 
       /**
        * This is the target workflow that is being optimized. Note that the
@@ -204,6 +215,15 @@ namespace Madara
        * can be made to the ids array
        **/
       Deployment    solution;
+
+      /**
+       * The solution_lookup allows for reverse lookup by network identifier
+       * to find its corresponding deployment solution id. This is used by
+       * the Madara::Cid::approximate function to check if a network id
+       * has already been assigned to one of the other components in the
+       * deployment.
+       **/
+      Solution_Map  solution_lookup;
     };
   }
 }
