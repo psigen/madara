@@ -30,7 +30,7 @@ Madara::Cid::generate_random_network (unsigned int size,
     for (unsigned int j = 0; j < size; ++j)
     {
       network_latencies[i][j].first = j;
-      network_latencies[i][j].second = rand () % 100 + 10;
+      network_latencies[i][j].second = rand () % 1000 + 10;
     }
 
     // sort each row of the network_latencies in order of increasing latency

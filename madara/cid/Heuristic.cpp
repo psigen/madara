@@ -68,6 +68,35 @@ Madara::Cid::approximate (Averages_Map & network_averages,
   }
 }
 
+unsigned long long
+Madara::Cid::calculate_latency (Settings & settings)
+{
+  return calculate_latency (settings.network_latencies,
+    settings.target_deployment, settings.solution);
+}
+
+unsigned long long
+Madara::Cid::calculate_latency (LV_Vector & latencies, LV_Vector & workflow,
+                                Deployment & solution)
+{
+  unsigned long long total_latency = 0;
+
+  for (LV_Vector::iterator i = workflow.begin (); 
+       i != workflow.end (); ++i)
+  {
+    for (Latency_Vector::iterator source = i->begin (); 
+         source != i->end (); ++source)
+    {
+      /* source->first      source in a directed edge
+       * source->second     destination in a directed edge */
+      total_latency += 
+        latencies[solution[source->first]][solution[source->second]].second;
+    }
+  }
+
+  return total_latency;
+}
+
 void
 Madara::Cid::fill_by_highest_degree (Settings & settings, unsigned int start)
 {

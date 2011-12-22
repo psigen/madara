@@ -49,6 +49,42 @@ namespace Madara
       Solution_Map & solution_lookup, unsigned int node);
 
     /**
+     * Calculates the total utility (i.e., latency) for the deployment.
+     * Useful for determining gains made from deployment changes.
+     * @param    settings    container which contains the target_deployment
+     * @return               total latency on nodes with degree > 0
+     **/
+    MADARA_Export unsigned long long calculate_latency (Settings & settings);
+
+    /**
+     * Calculates the total utility (i.e., latency) for the deployment.
+     * Useful for determining gains made from deployment changes.
+     * @param    settings    container which contains the target_deployment
+     * @return               total latency on nodes with degree > 0
+     **/
+    MADARA_Export unsigned long long calculate_latency (Settings & settings);
+
+    /**
+     * Calculates the total utility (i.e., latency) for the deployment.
+     * Useful for determining gains made from deployment changes.
+     * @param    latencies    network latencies
+     * @param    workflow     the deployment workflow
+     * @param    workflow     the solution that was generated
+     * @return                total latency on nodes with degree > 0
+     **/
+    unsigned long long calculate_latency (LV_Vector & latencies,
+      LV_Vector & workflow, Deployment & solution);
+
+    /**
+     * Fills the remaining deployment from [start, end) with the best 
+     * candidates from the lower averages of the highest degree.
+     * @param    settings    container which contains the target_deployment
+     * @param    start       first element of the deployment to approximate
+     **/
+    MADARA_Export void fill_by_highest_degree (Settings & settings,
+      unsigned int start);
+
+    /**
      * Sorts the target deployment by degree to prepare it for the CID heuristic
      * @param    settings    container which contains the target_deployment
      **/
@@ -60,8 +96,6 @@ namespace Madara
      **/
     MADARA_Export void prepare_deployment (LV_Vector & target_deployment);
 
-    MADARA_Export void fill_by_highest_degree (Settings & settings,
-      unsigned int start);
   } // end Cid namespace
 } // end Madara namespace
 
