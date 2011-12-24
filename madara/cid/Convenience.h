@@ -41,6 +41,19 @@ namespace Madara
       LV_Vector & network_latencies);
 
     /**
+     * Generates a random solution
+     * @param    settings    container for solution and solution_lookup
+     **/
+    MADARA_Export void generate_random_solution (Settings & settings);
+
+    /**
+     * Generates the worst solution by applying the worst averages to the
+     * deployment
+     * @param    settings    container for solution and solution_lookup
+     **/
+    MADARA_Export void generate_worst_solution (Settings & settings);
+
+    /**
      * Sorts the latencies in a network topology and averages them into a format
      * that can be used by CID. This function performs averages for all possible
      * degrees in the deployment.

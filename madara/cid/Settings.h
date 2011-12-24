@@ -18,6 +18,9 @@ namespace Madara
 {
   namespace Cid
   {
+    // Uncomment if you would like CID logging enabled
+    //#define ENABLE_CID_LOGGING
+
     /**
      * A pairing of a target (first) and a latency (second)
      **/
