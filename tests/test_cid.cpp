@@ -29,25 +29,29 @@ void genetic_naive (Madara::Cid::Settings & settings)
 void naive_cid_ga_naive (Madara::Cid::Settings & settings)
 {  
   Madara::Cid::fill_by_highest_degree (settings);
-  genetic_naive (settings);
+  for (unsigned int i = 0; i < 400; ++i)
+    Madara::Cid::ga_naive (settings, 5);
 }
 
 void naive_cid_ga_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::fill_by_highest_degree (settings);
-  genetic_degree (settings);
+  for (unsigned int i = 0; i < 400; ++i)
+    Madara::Cid::ga_degree (settings, 5);
 }
 
 void cid_ga_naive (Madara::Cid::Settings & settings)
 {
   Madara::Cid::approximate (settings);
-  genetic_naive (settings);
+  for (unsigned int i = 0; i < 400; ++i)
+    Madara::Cid::ga_naive (settings, 5);
 }
 
 void cid_ga_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::approximate (settings);
-  genetic_degree (settings);
+  for (unsigned int i = 0; i < 400; ++i)
+    Madara::Cid::ga_degree (settings, 5);
 }
 
 void hand_coded (Madara::Cid::Settings & settings)
@@ -272,34 +276,7 @@ void test_cid (unsigned int size, std::ostream & output)
 
   unsigned int quarter = size / 4;
   unsigned int mid = size / 2;
-
-  // create the target workflow
-
-  unsigned int source = 0;
-  settings.target_deployment.resize (size);
-  settings.target_deployment[source].resize (mid);
-  for (unsigned int i = 0; i < settings.target_deployment[source].size (); ++i)
-  {
-    settings.target_deployment[source][i].first = source;
-    settings.target_deployment[source][i].second = i + 1;
-  }
-
-  source = 1;
-  settings.target_deployment[source].resize (mid);
-  for (unsigned int i = 0; i < settings.target_deployment[source].size (); ++i)
-  {
-    settings.target_deployment[source][i].first = source;
-    settings.target_deployment[source][i].second = i + quarter;
-  }
-
-  source = 2;
-  settings.target_deployment[source].resize (mid);
-  for (unsigned int i = 0; i < settings.target_deployment[source].size (); ++i)
-  {
-    settings.target_deployment[source][i].first = source;
-    settings.target_deployment[source][i].second = i + mid - 1;
-  }
-
+  unsigned int third = size / 3;
 
   //// first element of the deployment sends stuff to 0-3
   //settings.target_deployment[0].resize (mid);
@@ -523,7 +500,7 @@ void verify_algorithms (std::ostream & output)
       output << "\n";
   }
 
-  output << "\nPrinting the network latencies\n\n";
+  output << "\nPrinting the network latencies\n\n  ";
 
   for (unsigned int i = 0; i < 10; ++i)
   {
@@ -535,9 +512,9 @@ void verify_algorithms (std::ostream & output)
         std::setw (3) << cur_latencies[j].second;
 
       if (j % 5 == 4)
-        std::cerr << "\n";
+        output << "\n  ";
       else
-        std::cerr << " ";
+        output << " ";
     }
   }
 
