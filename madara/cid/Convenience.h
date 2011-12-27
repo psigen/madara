@@ -17,12 +17,10 @@ namespace Madara
   namespace Cid
   {
     /**
-     * Initializes attributes of a container to a specified size. Does
-     * not adjust the target_deployment size.
-     * @param       size         the number of nodes in the network
-     * @param       settings     container to adjust
+     * Checks a solution for duplicate entries
+     * @param    settings    container for solution and solution_lookup
      **/
-    MADARA_Export void init (unsigned int size, Settings & settings);
+    MADARA_Export bool check_solution (Settings & settings);
 
     /**
      * Generates a random, fully-connected network of latencies
@@ -52,6 +50,14 @@ namespace Madara
      * @param    settings    container for solution and solution_lookup
      **/
     MADARA_Export void generate_worst_solution (Settings & settings);
+
+    /**
+     * Initializes attributes of a container to a specified size. Does
+     * not adjust the target_deployment size.
+     * @param       size         the number of nodes in the network
+     * @param       settings     container to adjust
+     **/
+    MADARA_Export void init (unsigned int size, Settings & settings);
 
     /**
      * Sorts the latencies in a network topology and averages them into a format
@@ -86,7 +92,7 @@ namespace Madara
      **/
     MADARA_Export void prepare_latencies (LV_Vector & network_latencies,
                             Averages_Map & network_averages,
-                            LV_Vector & target_deployment, unsigned int node);
+                            Workflow & target_deployment, unsigned int node);
 
   } // end Cid namespace
 } // end Madara namespace

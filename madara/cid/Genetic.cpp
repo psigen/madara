@@ -4,6 +4,7 @@
 
 #include "Genetic.h"
 #include "Heuristic.h"
+#include "madara/utility/Log_Macros.h"
 
 
 void
@@ -110,7 +111,7 @@ void Madara::Cid::ga_degree (Settings & settings, unsigned int max_mutations)
   unsigned long long orig_latency = calculate_latency (settings);
 
   unsigned int num_degreed_nodes = 0;
-  LV_Vector & deployment = settings.target_deployment;
+  Workflow & deployment = settings.target_deployment;
   Averages_Map & averages = settings.network_averages;
   Solution_Map solution_lookup;
 

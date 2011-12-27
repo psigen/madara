@@ -58,7 +58,7 @@ Madara::Cid::approximate (Settings & settings, unsigned int node)
 
 void
 Madara::Cid::approximate (Averages_Map & network_averages,
-      LV_Vector & target_deployment, Deployment & solution, 
+      Workflow & target_deployment, Deployment & solution, 
       Solution_Map & solution_lookup, unsigned int node)
 {
   /**
@@ -70,7 +70,7 @@ Madara::Cid::approximate (Averages_Map & network_averages,
    * This entire function is for solving 1 node and that is solution[node]
    **/
 
-  Latency_Vector & current_flow = target_deployment[node];
+  Directed_Edges & current_flow = target_deployment[node];
   unsigned int degree = current_flow.size ();
   Latency_Vector & cur_averages = network_averages[degree];
   unsigned int source;
@@ -93,13 +93,14 @@ Madara::Cid::approximate (Averages_Map & network_averages,
        * this solution before, then we have a match
        **/
 
-      if (node == 0 || 
-        solution_lookup.find (cur_averages[i].first) == solution_lookup.end ())
+      if (solution_lookup.find (cur_averages[i].first) == solution_lookup.end ())
       {
+#ifdef ENABLE_CID_LOGGING
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
           DLINFO "Madara::Cid::approximate:" \
           " degree=%u, source=%u, i=%u: found solution for %u\n",
             degree, source, i, cur_averages[i].first));
+#endif
 
         solution_lookup[cur_averages[i].first] = source;
         solution[source] = cur_averages[i].first;
@@ -117,14 +118,14 @@ Madara::Cid::calculate_latency (Settings & settings)
 }
 
 unsigned long long
-Madara::Cid::calculate_latency (LV_Vector & latencies, LV_Vector & workflow,
+Madara::Cid::calculate_latency (LV_Vector & latencies, Workflow & workflow,
                                 Deployment & solution)
 {
   unsigned long long total_latency = 0;
 
   for (unsigned int i = 0; i < workflow.size (); ++i)
   {
-    Latency_Vector & current = workflow[i];
+    Directed_Edges & current = workflow[i];
 
     if (current.size () > 0)
     {
@@ -165,11 +166,11 @@ Madara::Cid::calculate_latency (LV_Vector & latencies, LV_Vector & workflow,
 void
 Madara::Cid::fill_by_highest_degree (Settings & settings)
 {
-  fill_by_highest_degree (settings, 0);
+  fill_by_highest_degree (settings, true);
 }
 
 void
-Madara::Cid::fill_by_highest_degree (Settings & settings, unsigned int start)
+Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
 {
   if (settings.target_deployment.size () < 1)
     return;
@@ -187,7 +188,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, unsigned int start)
    * have the lowest latency in case of conflicts with other workflows. These
    * nodes are more likely to fit within a heuristic's good destination ids
    **/
-  unsigned int degree = settings.network_latencies.size ();
+  unsigned int degree = settings.solution.size ();
 
   if (degree == 0 || degree == 1)
     MADARA_DEBUG (MADARA_LOG_ERROR, (LM_DEBUG, 
@@ -196,42 +197,124 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, unsigned int start)
         degree));
 
   Latency_Vector & cur_averages = settings.network_averages[degree];
-  Solution_Map & solution_lookup = settings.solution_lookup;
+  Solution_Map & lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
-  LV_Vector & deployment = settings.target_deployment;
+  Workflow & deployment = settings.target_deployment;
 
-  for (unsigned int i = 0; 
-    start < solution.size () && i < deployment.size (); ++i)
+  unsigned int candidate = 0;
+  
+  if (use_workflow)
   {
-    if (start == 0 ||
-      solution_lookup.find (cur_averages[i].first) == solution_lookup.end ())
-    {    
+    // solve the high degree nodes in the deployment first 
+    for (unsigned int i = 0; i < deployment.size (); ++i)
+    {
+      Directed_Edges & source_flow = deployment[i];
+      if (source_flow.size () > 0)
+      {
+        unsigned int & source = source_flow[0].first;
+        unsigned int & source_id = solution[source];
+
+        Solution_Map::iterator found = lookup.find (source_id);
+
+        // if we haven't solved for source_id, then do that.
+        if (found == lookup.end () || found->second != source)
+        {
+          for (; candidate < cur_averages.size (); ++candidate)
+          {
+            if (lookup.find (cur_averages[candidate].first) == lookup.end ())
+            {
+              source_id = cur_averages[candidate].first;
+              lookup[cur_averages[candidate].first] = source;
+              break;
+            }
+          }
+        }
+        
+      } // end if the degree was greater than 0
+      else
+        // break out of solving the source nodes
+        break;
+    }
+
+    // solve for all connected nodes in the deployment
+    for (unsigned int i = 0; i < deployment.size (); ++i)
+    {
+      Directed_Edges & source_flow = deployment[i];
+      if (source_flow.size () > 0)
+      { 
+        for (unsigned int j = 0; j < source_flow.size (); ++j)
+        {
+          unsigned int & dest = source_flow[j].second;
+          unsigned int & dest_id = solution[dest];
+
+          Solution_Map::iterator found = lookup.find (dest_id);
+
+          // if we can't find the id, we need to place our best candidate
+          if (found == lookup.end () || found->second != dest)
+          {
+            for (; candidate < cur_averages.size (); ++candidate)
+            {
+              // if we find a winner, place it and break back to j loop
+              if (lookup.find (cur_averages[candidate].first) == lookup.end ())
+              {
+  #ifdef ENABLE_CID_LOGGING
+                MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+                DLINFO "Madara::Cid::fill_from_solution_map:" \
+                " found solution[%u]=%u\n",
+                dest, latencies[k].first));
+  #endif
+
+                dest_id = cur_averages[candidate].first;
+                lookup[cur_averages[candidate].first] = dest;
+                break;
+              }
+            } // end for k
+          } // end couldn't find dest_id
+        } // end for j
+      } // end if the degree was greater than 0
+    }
+  } // end if use_workflow
+
+  // loop through solution and solve any outstanding nodes
+  for (unsigned int i = 0; i < solution.size (); ++i)
+  {
+    Solution_Map::iterator found = lookup.find (solution[i]);
+    if (found == lookup.end () || found->second != i)
+    {
+      // we haven't solved this solution element yet. Look to the averages
+      for (; candidate < cur_averages.size (); ++candidate)
+      {
+        // if we find a winner, place it and break back to j loop
+        if (lookup.find (cur_averages[candidate].first) == lookup.end ())
+        {
 #ifdef ENABLE_CID_LOGGING
-      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
-      DLINFO "Madara::Cid::fill_by_highest_degree:" \
-      " found solution[%u]=%u\n",
-      start, cur_averages[i].first));
+          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+          DLINFO "Madara::Cid::fill_by_highest_degree:" \
+          " found solution[%u]=%u\n",
+          dest, cur_averages[candidate].first));
 #endif
 
-      solution_lookup[cur_averages[i].first] = start;
-      solution[start] = cur_averages[i].first;
-      ++start;
-    }
-  }
+          solution[i] = cur_averages[candidate].first;
+          lookup[cur_averages[candidate].first] = i;
+          break;
+        }
+      } // end for k
+    } // end if solution[i] not found in lookup
+  } // end for i -> solution.size ()
 }
 
 void
 Madara::Cid::fill_from_solution_map (Settings & settings)
 {
   // setup some references for simplicity
-  LV_Vector & deployment = settings.target_deployment;
+  Workflow & deployment = settings.target_deployment;
   Solution_Map & lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
 
   // iterate until we find a 0 degree deployment node
   for (unsigned int i = 0; i < deployment.size (); ++i)
   {
-    Latency_Vector & source_flow = deployment[i];
+    Directed_Edges & source_flow = deployment[i];
     if (source_flow.size () > 0)
     {
       unsigned int & source = source_flow[0].first;
@@ -248,7 +331,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
         Solution_Map::iterator found = lookup.find (dest_id);
 
         // if we can't find the id, we need to place our best latency endpoint
-        if (found == lookup.end () || found->second != j)
+        if (found == lookup.end () || found->second != dest)
         {
           for (; k < latencies.size (); ++k)
           {
@@ -259,12 +342,11 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
               MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
               DLINFO "Madara::Cid::fill_from_solution_map:" \
               " found solution[%u]=%u\n",
-              dest_id, latencies[k].first));
+              dest, latencies[k].first));
 #endif
 
               dest_id = latencies[k].first;
-              lookup[latencies[k].first] = dest_id;
-              ++k;
+              lookup[latencies[k].first] = dest;
               break;
             }
           } // end for k
@@ -274,7 +356,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
     else
     {
       // fill the remaining in with arbitrary ids
-      fill_by_highest_degree (settings);
+      fill_by_highest_degree (settings, false);
       i = deployment.size ();
     }
   }
@@ -287,7 +369,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
 }
 
 void
-Madara::Cid::prepare_deployment (LV_Vector & target_deployment)
+Madara::Cid::prepare_deployment (Workflow & target_deployment)
 {
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 

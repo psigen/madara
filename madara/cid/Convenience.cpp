@@ -5,6 +5,49 @@
 #include "madara/utility/Log_Macros.h"
 
 /**
+ * Checks a solution for duplicate entries
+ **/
+bool
+Madara::Cid::check_solution (Settings & settings)
+{
+  Deployment & solution = settings.solution;
+
+  Solution_Map instances;
+  bool multiple_entries = false;
+
+  for (unsigned int i = 0; i < solution.size (); ++i)
+  {
+    ++instances[solution[i]];
+
+    if (instances[solution[i]] > 1)
+      multiple_entries = true;
+  }
+
+  if (multiple_entries)
+  {
+    for (unsigned int i = 0; i < solution.size (); ++i)
+    {
+      if (instances[solution[i]] > 1)
+      {
+        MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+          DLINFO "Madara::Cid::check_solution:" \
+          " ERROR: %u duplicate entries found for id %u." \
+          " Please save a log and file issue at madara.googlecode.com.\n",
+            instances[solution[i]], solution[i]));
+
+        /**
+         * to stop this from being called multiple times for the same entry,
+         * set the instances[solution[i]] to 1.
+         **/
+        instances[solution[i]] = 1;
+      }
+    }
+  }
+
+  return multiple_entries;
+}
+
+/**
  * Generates a random, fully-connected network of latencies
  **/
 void
@@ -124,7 +167,7 @@ Madara::Cid::generate_worst_solution (Settings & settings)
   Latency_Vector & cur_averages = settings.network_averages[degree];
   Solution_Map & solution_lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
-  LV_Vector & deployment = settings.target_deployment;
+  Workflow & deployment = settings.target_deployment;
 
   for (unsigned int i = 0; 
     start < solution.size () && i < deployment.size (); ++i)
@@ -196,7 +239,7 @@ Madara::Cid::prepare_latencies (Settings & settings, unsigned int node)
 void
 Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
                                 Averages_Map & network_averages,
-                                LV_Vector & target_deployment,
+                                Workflow & target_deployment,
                                 unsigned int node)
 {
 #ifdef ENABLE_CID_LOGGING
@@ -250,7 +293,6 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
 
       // remember which id this average is for and reset the total to zero
       cur_averages[i].first = i;
-      unsigned long long total = 0;
 
       // for each element of the list, add the latency to the running total
       for (unsigned int j = 0; j < degree; ++j)
@@ -262,7 +304,8 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
           j));
 #endif
 
-        total += network_latencies[i][j].second;
+        // nothing to gain from averaging except less precision
+        cur_averages[i].second += network_latencies[i][j].second;
       }
 
 #ifdef ENABLE_CID_LOGGING
@@ -271,9 +314,6 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
           " Dividing total by degree to give an average\n"));
 #endif
 
-      // average the total by the number of latencies we added
-      total /= degree;
-      cur_averages[i].second = (unsigned int)total;
   }
 
 #ifdef ENABLE_CID_LOGGING

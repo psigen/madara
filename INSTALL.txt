@@ -168,7 +168,7 @@ Compiling the Madara library on your system
 
   * Linux
       cd $MADARA_ROOT
-      make opensplice=1 tests=1 
+      make opensplice=1 tests=1 kats=1 cid=1
 
   * Windows
       cd $MADARA_ROOT

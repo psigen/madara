@@ -24,7 +24,7 @@ namespace Madara
     /**
      * A pairing of a target (first) and a latency (second)
      **/
-    typedef std::pair <unsigned int, unsigned int>   Latency_Record;
+    typedef std::pair <unsigned int, unsigned long long>   Latency_Record;
 
     /**
      * A vector of @see Latency_Record
@@ -35,6 +35,21 @@ namespace Madara
      * A vector of @see Latency_Vector
      **/
     typedef std::vector <Latency_Vector>             LV_Vector;
+
+    /**
+     * A directed edge has a source and destination pair
+     **/
+    typedef std::pair <unsigned int, unsigned int>   Directed_Edge;
+
+    /**
+     * A vector of @see Directed_Edge
+     **/
+    typedef std::vector <Directed_Edge>              Directed_Edges;
+
+    /**
+     * A vector of @see Directed_Edge
+     **/
+    typedef std::vector <Directed_Edges>             Workflow;
 
     /**
      * A list of deployment ids which correspond to individuals
@@ -79,28 +94,28 @@ namespace Madara
      * Comparator for a list of decreasing sizes of latency vectors
      **/
     static bool Decreasing_Size (
-      const Latency_Vector & u, const Latency_Vector & v)
+      const Directed_Edges & u, const Directed_Edges & v)
     {
       return u.size () > v.size ();
     }
 
-    /**
-     * Comparator for a list of increasing integers
-     **/
-    static bool Increasing (
-      const int & u, const int & v)
-    {
-      return u < v;
-    }
+    ///**
+    // * Comparator for a list of increasing integers
+    // **/
+    //static bool Increasing (
+    //  const int & u, const int & v)
+    //{
+    //  return u < v;
+    //}
 
-    /**
-     * Comparator for a list of decreasing integers
-     **/
-    static bool Decreasing (
-      const int & u, const int & v)
-    {
-      return v < u;
-    }
+    ///**
+    // * Comparator for a list of decreasing integers
+    // **/
+    //static bool Decreasing (
+    //  const int & u, const int & v)
+    //{
+    //  return v < u;
+    //}
 
     /**
      * A public container for CID operations
@@ -201,7 +216,7 @@ namespace Madara
        *              1  - 4
        *              
        **/
-      LV_Vector     target_deployment;
+      Workflow     target_deployment;
 
       /**
        * This is the solution to the target_deployment according

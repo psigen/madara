@@ -45,7 +45,7 @@ namespace Madara
      * @param    node        the deployment node we are approximating
      **/
     MADARA_Export void approximate (Averages_Map & network_averages, 
-      LV_Vector & target_deployment, Deployment & solution, 
+      Workflow & target_deployment, Deployment & solution, 
       Solution_Map & solution_lookup, unsigned int node);
 
     /**
@@ -65,7 +65,7 @@ namespace Madara
      * @return                total latency on nodes with degree > 0
      **/
     MADARA_Export unsigned long long calculate_latency (LV_Vector & latencies,
-      LV_Vector & workflow, Deployment & solution);
+      Workflow & workflow, Deployment & solution);
 
     /**
      * Fills the remaining deployment from [start, end) with the best 
@@ -75,19 +75,21 @@ namespace Madara
     MADARA_Export void fill_by_highest_degree (Settings & settings);
 
     /**
+     * Fills the remaining deployment from [start, end) with the best 
+     * candidates from the lower averages of the highest degree.
+     * @param    settings       container which contains the target_deployment
+     * @param    use_workflow   use workflow information. This should be
+     *                          true unless you are only using this method
+     *                          to fill in unconnected nodes of the deployment
+     **/
+    MADARA_Export void fill_by_highest_degree (Settings & settings,
+      bool use_workflow);
+
+    /**
      * Fills according to the solution lookup and remaining workflow.
      * @param    settings    container which contains the target_deployment
      **/
     MADARA_Export void fill_from_solution_map (Settings & settings);
-
-    /**
-     * Fills the remaining deployment from [start, end) with the best 
-     * candidates from the lower averages of the highest degree.
-     * @param    settings    container which contains the target_deployment
-     * @param    start       first element of the deployment to approximate
-     **/
-    MADARA_Export void fill_by_highest_degree (Settings & settings,
-      unsigned int start);
 
     /**
      * Sorts the target deployment by degree to prepare it for the CID heuristic
@@ -99,7 +101,7 @@ namespace Madara
      * Sorts the target deployment by degree to prepare it for the CID heuristic
      * @param    settings    container which contains the target_deployment
      **/
-    MADARA_Export void prepare_deployment (LV_Vector & target_deployment);
+    MADARA_Export void prepare_deployment (Workflow & target_deployment);
 
   } // end Cid namespace
 } // end Madara namespace

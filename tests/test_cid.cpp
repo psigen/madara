@@ -56,7 +56,7 @@ void cid_ga_degree (Madara::Cid::Settings & settings)
 
 void hand_coded (Madara::Cid::Settings & settings)
 {
-  Madara::Cid::LV_Vector & deployment = settings.target_deployment;
+  Madara::Cid::Workflow & deployment = settings.target_deployment;
   Madara::Cid::Averages_Map & averages = settings.network_averages;
   Madara::Cid::Solution_Map & lookup = settings.solution_lookup;
 
@@ -97,10 +97,10 @@ void hand_coded (Madara::Cid::Settings & settings)
   Madara::Cid::fill_by_highest_degree (settings, fill_starting);
 }
 
-#define NUM_TESTS           10
-#define PREPARATION         10
+#define NUM_TESTS           9
+#define PREPARATION         9
 #define MIN_TEST_RANGE      0
-#define MAX_TEST_RANGE      10
+#define MAX_TEST_RANGE      9
 
 char * testnames [] = {
   "CID Heuristic",
@@ -112,7 +112,6 @@ char * testnames [] = {
   "Naive CID-NGA",
   "Naive CID-DGA",
   "Random Deployment",
-  "Hand Coded"
 };
 
 
@@ -126,7 +125,6 @@ void (* test_impls []) (Madara::Cid::Settings &) = {
   ::naive_cid_ga_naive,
   ::naive_cid_ga_degree,
   Madara::Cid::generate_worst_solution,
-  hand_coded
 
 };
 
@@ -286,22 +284,13 @@ void test_cid (unsigned int size, std::ostream & output)
   //  settings.target_deployment[0][i].second = i + quarter;
   //}
 
-  output << "  Preparing deployment\n";
-
-  // sort the deployment by degree
-  Madara::Cid::prepare_deployment (settings);
-
-  output << "  Preparing latencies\n";
-
-  ::prepare_latencies (settings);
-
   std::string test_divider (79, '*');
 
   output << test_divider << std::endl;
   output << "  Testing full-sized, complete overlap fanouts\n";
   output << test_divider << std::endl;
 
-  Madara::Cid::LV_Vector & deployment = settings.target_deployment;
+  Madara::Cid::Workflow & deployment = settings.target_deployment;
 
   deployment.resize (size);
 
@@ -311,7 +300,7 @@ void test_cid (unsigned int size, std::ostream & output)
   }
 
   // test full-sized fanouts from 1-3 source nodes targeting the same nodes
-  for (unsigned int fan_outs = 1; fan_outs < 3; ++fan_outs)
+  for (unsigned int fan_outs = 1; fan_outs <= 3; ++fan_outs)
   {
     output << test_divider << std::endl;
     output << "  Testing " << fan_outs << " full-sized, complete overlap fanouts\n";
@@ -329,6 +318,13 @@ void test_cid (unsigned int size, std::ostream & output)
       }
     }
 
+    output << "  Preparing deployment\n";\
+    Madara::Cid::prepare_deployment (settings);
+
+    output << "  Preparing latencies\n";
+    settings.network_averages.clear ();
+    ::prepare_latencies (settings);
+
     // iterate through all tests on this constraint satisfaction problem
     for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
     {
@@ -353,6 +349,13 @@ void test_cid (unsigned int size, std::ostream & output)
 
       // save the overall utility of the solution (less is better)
       latencies[i] = Madara::Cid::calculate_latency (settings);
+
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        DLINFO "test_cid:" \
+        " Running check solution on %s, %u full-fanouts.\n",
+          testnames[i], fan_outs));
+
+      Madara::Cid::check_solution (settings);
 
       //print_solutions (output, settings, i, 1);
     }
@@ -370,7 +373,7 @@ void test_cid (unsigned int size, std::ostream & output)
   }
 
   // test half-sized fanouts from 1-3 source nodes targeting the same nodes
-  for (unsigned int fan_outs = 1; fan_outs < 3; ++fan_outs)
+  for (unsigned int fan_outs = 1; fan_outs <= 3; ++fan_outs)
   {
     output << test_divider << std::endl;
     output << "  Testing " << fan_outs << " half-sized, complete overlap fanouts\n";
@@ -386,6 +389,14 @@ void test_cid (unsigned int size, std::ostream & output)
         deployment[source][i].second = quarter + i;
       }
     }
+
+    output << "  Preparing deployment\n";\
+    Madara::Cid::prepare_deployment (settings);
+
+    output << "  Preparing latencies\n";
+    settings.network_averages.clear ();
+    ::prepare_latencies (settings);
+
 
     // iterate through all tests on this constraint satisfaction problem
     for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
@@ -411,6 +422,13 @@ void test_cid (unsigned int size, std::ostream & output)
 
       // save the overall utility of the solution (less is better)
       latencies[i] = Madara::Cid::calculate_latency (settings);
+
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        DLINFO "test_cid:" \
+        " Running check solution on %s, %u half-fanouts.\n",
+          testnames[i], fan_outs));
+
+      Madara::Cid::check_solution (settings);
 
       //print_solutions (output, settings, i, 1);
     }
@@ -444,7 +462,7 @@ void verify_algorithms (std::ostream & output)
 
   Madara::Cid::init (10, settings);
 
-  Madara::Cid::LV_Vector & deployment = settings.target_deployment;
+  Madara::Cid::Workflow & deployment = settings.target_deployment;
   Madara::Cid::LV_Vector & network_latencies = settings.network_latencies;
   Madara::Cid::Latency_Vector & averages = settings.network_averages[10];
   Madara::Cid::Deployment & solution = settings.solution;
@@ -615,7 +633,7 @@ int main (int argc, char *argv[])
 {
   std::ofstream output ("test_results.txt");
 
-  MADARA_debug_level = 1;
+  MADARA_debug_level = 10;
 
   // use ACE real time scheduling class
   int prio  = ACE_Sched_Params::next_priority
@@ -628,7 +646,7 @@ int main (int argc, char *argv[])
 
   verify_algorithms (output);
 
-  for (unsigned int i = 1000; i <= 10000; i += 1000)
+  for (unsigned int i = 1000; i <= 5000; i += 1000)
   {
     test_cid (i, output);
   }
