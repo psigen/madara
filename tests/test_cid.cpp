@@ -22,7 +22,7 @@ void genetic_degree (Madara::Cid::Settings & settings)
 void genetic_naive (Madara::Cid::Settings & settings)
 {
   Madara::Cid::generate_worst_solution (settings);
-  for (unsigned int i = 0; i < 400; ++i)
+  for (unsigned int i = 0; i < 100; ++i)
     Madara::Cid::ga_naive (settings, 5);
 }
 
@@ -36,7 +36,7 @@ void naive_cid_ga_naive (Madara::Cid::Settings & settings)
 void naive_cid_ga_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::fill_by_highest_degree (settings);
-  for (unsigned int i = 0; i < 400; ++i)
+  for (unsigned int i = 0; i < 100; ++i)
     Madara::Cid::ga_degree (settings, 5);
 }
 
@@ -50,7 +50,7 @@ void cid_ga_naive (Madara::Cid::Settings & settings)
 void cid_ga_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::approximate (settings);
-  for (unsigned int i = 0; i < 400; ++i)
+  for (unsigned int i = 0; i < 100; ++i)
     Madara::Cid::ga_degree (settings, 5);
 }
 
@@ -350,12 +350,10 @@ void test_cid (unsigned int size, std::ostream & output)
       // save the overall utility of the solution (less is better)
       latencies[i] = Madara::Cid::calculate_latency (settings);
 
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        DLINFO "test_cid:" \
-        " Running check solution on %s, %u full-fanouts.\n",
-          testnames[i], fan_outs));
 
-      Madara::Cid::check_solution (settings);
+      if (Madara::Cid::check_solution (settings))
+        output << "  " << testnames[i] << " appears to be broken. " <<
+                  " Please report this at madara.googlecode.com\n";
 
       //print_solutions (output, settings, i, 1);
     }
@@ -423,12 +421,9 @@ void test_cid (unsigned int size, std::ostream & output)
       // save the overall utility of the solution (less is better)
       latencies[i] = Madara::Cid::calculate_latency (settings);
 
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        DLINFO "test_cid:" \
-        " Running check solution on %s, %u half-fanouts.\n",
-          testnames[i], fan_outs));
-
-      Madara::Cid::check_solution (settings);
+      if (Madara::Cid::check_solution (settings))
+        output << "  " << testnames[i] << " appears to be broken. " <<
+                  " Please report this at madara.googlecode.com\n";
 
       //print_solutions (output, settings, i, 1);
     }
@@ -631,7 +626,64 @@ void verify_algorithms (std::ostream & output)
 
 int main (int argc, char *argv[])
 {
-  std::ofstream output ("test_results.txt");
+  unsigned int begin = 1000;
+  unsigned int end = 10000;
+  unsigned int increment = 1000;
+  std::string output_file ("test_results.txt");
+
+  for (int i = 1; i < argc; ++i)
+  {
+    std::string arg (argv[i]);
+    std::stringstream buffer;
+
+    if      (i + 1 < argc && arg == "-b" || arg == "--begin")
+    {
+      buffer << argv[i + 1];
+      buffer >> begin;
+      ++i;
+    }
+    else if (i + 1 < argc && arg == "-e" || arg == "--end")
+    {
+      buffer << argv[i + 1];
+      buffer >> end;
+      ++i;
+    }
+    else if (i + 1 < argc && arg == "-i" || arg == "--increment")
+    {
+      buffer << argv[i + 1];
+      buffer >> increment;
+      ++i;
+    }
+    else if (i + 1 < argc && arg == "-o" || arg == "--output-file")
+    {
+      buffer << argv[i + 1];
+      buffer >> output_file;
+      ++i;
+    }
+    else
+    {
+      buffer << "\nHelp for " << argv[0] << "\n\n";
+      buffer << "  This application tests the CID heuristics and genetic\n";
+      buffer << "  algorithms with a range of sizes and deployment types.\n\n";
+      buffer << "Usage information for " << argv[0] << "\n\n";
+      buffer << "  -b <value> || --begin <value>\n";
+      buffer << "      First size to try. Default is 1000 (1,000)\n\n";
+      buffer << "  -e <value> || --end <value>\n";
+      buffer << "      Last size to try. Default is 10000 (10,000)\n\n";
+      buffer << "  -h  || --help\n";
+      buffer << "      Print this help menu\n\n";
+      buffer << "  -i <value> || --increment <value>\n";
+      buffer << "      Increment size by. Default is 1000 (1,000)\n\n";
+      buffer << "  -o <filename> || --output-file <filename>\n";
+      buffer << "      Print output to the filename."
+             << " Default is test_results.txt\n\n";
+
+      std::cout << buffer.str ();
+      exit (0);
+    }
+  }
+
+  std::ofstream output (output_file.c_str ());
 
   MADARA_debug_level = 10;
 
@@ -646,7 +698,7 @@ int main (int argc, char *argv[])
 
   verify_algorithms (output);
 
-  for (unsigned int i = 1000; i <= 5000; i += 1000)
+  for (unsigned int i = begin; i <= end; i += increment)
   {
     test_cid (i, output);
   }
