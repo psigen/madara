@@ -431,6 +431,65 @@ void test_cid (unsigned int size, std::ostream & output)
     print_stats (output, size);
   } // end half-sized fanouts
 
+
+  // test even-sized fanouts from 1-4 source nodes targeting disjoint nodes
+  for (unsigned int fan_outs = 1; fan_outs <= 4; ++fan_outs)
+  {
+    // create filename 
+    std::stringstream filename;
+    filename << getenv ("MADARA_ROOT");
+    filename << "/configs/cid/deployments/test_cid/";
+    filename << fan_outs << "_even_fans_disjoint.template";
+
+    // notify user of current est
+    output << test_divider << std::endl;
+    output << "  Testing " << fan_outs << " even-sized, disjoint fanouts\n";
+    output << test_divider << std::endl;
+
+    settings.solution.resize (size);
+    Madara::Cid::read_deployment (settings, filename.str ());
+
+    output << "  Preparing latencies\n";
+    settings.network_averages.clear ();
+    ::prepare_latencies (settings);
+
+
+    // iterate through all tests on this constraint satisfaction problem
+    for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
+    {
+      settings.solution_lookup.clear ();
+
+      // high res timers provided by ACE
+      ACE_hrtime_t measured;
+      ACE_High_Res_Timer timer;
+
+      output << "  Approximating with " << testnames[i] << std::endl;
+
+      timer.start ();
+
+      // sort and average the latencies from each vertex
+      test_impls [i] (settings);
+
+      timer.stop ();
+      timer.elapsed_time (measured);
+
+      // save wall clock time that passed during the test
+      clocks[i] = measured;
+
+      // save the overall utility of the solution (less is better)
+      latencies[i] = Madara::Cid::calculate_latency (settings);
+
+      if (Madara::Cid::check_solution (settings))
+        output << "  " << testnames[i] << " appears to be broken. " <<
+                  " Please report this at madara.googlecode.com\n";
+
+      //print_solutions (output, settings, i, 1);
+    }
+
+    print_stats (output, size);
+  } // end even-sized fanouts
+
+
 }
 
 void verify_algorithms (std::ostream & output)

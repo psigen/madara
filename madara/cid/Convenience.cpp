@@ -339,11 +339,11 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
  * 
  * =====start of file======
  * 10               // number of processes in the deployment
- * 0 -> *           // this means process 0 is sending to all processes
+ * 0 -> size           // this means process 0 is sending to all processes
  * 0 -> [0,9]       // this means the same thing
  * 0 -> [1,4)       // process 0 is sending to processes 1 through 3
  * 0 -> 1           // process 0 is sending to process 1
- * 0 -> [* / 4, * / 2]   // process 0 is sending to processes 2 through 5
+ * 0 -> [size / 4, size / 2]   // process 0 is sending to processes 2 through 5
  * =====end of file======
  * 
  * @param       contents     string containing the deployment info.
@@ -353,6 +353,8 @@ bool
 Madara::Cid::process_deployment (Settings & settings,
                                  const std::string & orig)
 {
+  // a knowledge base for translation of integer logics
+  Madara::Knowledge_Engine::Knowledge_Base knowledge;
   typedef std::map <unsigned int, unsigned int>    End;
   typedef std::map <unsigned int, End>             Deployment_Map;
 
@@ -410,28 +412,20 @@ Madara::Cid::process_deployment (Settings & settings,
       // clear the old deployment, resize it, and the solution
       deployment.resize (size);
       solution.resize (size);
+      knowledge.set ("size", size);
     }
     else
     {
       // user is using solution.size 
       deployment.resize (solution.size ());
       input.str (contents);
+      knowledge.set ("size", solution.size ());
     }
 
     buffer << solution.size ();
     buffer >> temp_string;
 
     current = input.str ();
-
-    // replace * with size
-    std::string::size_type found = current.find ("*");
-    while (found != std::string::npos) 
-    {
-      current.replace (found, strlen ("*"), temp_string);
-      found = current.find ("*", found + temp_string.length ());
-    }
-
-    input.str (current);
   }
 
   while (std::getline (input, current))
@@ -442,8 +436,6 @@ Madara::Cid::process_deployment (Settings & settings,
           " evaluating %s.\n", current.c_str ()));
 #endif
 
-    // a knowledge base for translation of integer logics
-    Madara::Knowledge_Engine::Knowledge_Base knowledge;
     std::vector <std::string> tokens, pivots;
 
     // strip all white space

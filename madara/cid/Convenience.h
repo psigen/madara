@@ -100,11 +100,11 @@ namespace Madara
      * 
      * =====start of file======
      * 10 // define the number of processes in the deployment
-     * 0 -> [*]  // this means process 0 is sending to all 10 processes
+     * 0 -> [size]  // this means process 0 is sending to all 10 processes
      * 0 -> [0,9] // this means the same thing
      * 0 -> [1,4)       // process 0 is sending to processes 1 through 3
      * 0 -> 1            // process 0 is sending to process 1
-     * 0 -> [* / 4, * / 2]   // process 0 is sending to processes 2 through 5
+     * 0 -> [size / 4, size / 2]   // process 0 is sending to processes 2 through 5
      * =====end of file======
      * 
      * @param       contents     string containing the deployment info.
