@@ -22,6 +22,9 @@ namespace Madara
     /// Strip all whitespace
     MADARA_Export ::std::string & strip_white_space (::std::string & input);
 
+    /// Strip all comments
+    MADARA_Export ::std::string & strip_comments (::std::string & input);
+
     /// Strip whitespace from front and end of string and also
     /// condense multiple whitespace into a single space
     MADARA_Export ::std::string & strip_extra_white_space (

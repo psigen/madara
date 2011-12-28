@@ -94,6 +94,34 @@ namespace Madara
                             Averages_Map & network_averages,
                             Workflow & target_deployment, unsigned int node);
 
+    /**
+     * Processes a deployment from a string. The contents may use special
+     * characters to ease deployment definition. Examples:
+     * 
+     * =====start of file======
+     * 10 // define the number of processes in the deployment
+     * 0 -> [*]  // this means process 0 is sending to all 10 processes
+     * 0 -> [0,9] // this means the same thing
+     * 0 -> [1,4)       // process 0 is sending to processes 1 through 3
+     * 0 -> 1            // process 0 is sending to process 1
+     * 0 -> [* / 4, * / 2]   // process 0 is sending to processes 2 through 5
+     * =====end of file======
+     * 
+     * @param       contents     string containing the deployment info.
+     * @return      false if there was a problem with the contents
+     **/
+    MADARA_Export bool process_deployment (Settings & settings,
+      const std::string & contents);
+
+    /**
+     * Reads the deployment from a file. @see process_deployment for
+     * deployment file configuration information.
+     * @param       filename     the name of the file to read
+     * @return      true if the file existed and was read
+     **/
+    MADARA_Export bool read_deployment (Settings & settings,
+      const std::string & filename);
+
   } // end Cid namespace
 } // end Madara namespace
 

@@ -261,7 +261,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
                 MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
                 DLINFO "Madara::Cid::fill_from_solution_map:" \
                 " found solution[%u]=%u\n",
-                dest, latencies[k].first));
+                dest, cur_averages[candidate].first));
   #endif
 
                 dest_id = cur_averages[candidate].first;
@@ -291,7 +291,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
           MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
           DLINFO "Madara::Cid::fill_by_highest_degree:" \
           " found solution[%u]=%u\n",
-          dest, cur_averages[candidate].first));
+          i, cur_averages[candidate].first));
 #endif
 
           solution[i] = cur_averages[candidate].first;

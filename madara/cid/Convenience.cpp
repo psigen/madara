@@ -1,8 +1,12 @@
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 #include "Convenience.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/utility/Utility.h"
+#include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/cid/Heuristic.h"
 
 /**
  * Checks a solution for duplicate entries
@@ -328,3 +332,229 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
     Increasing_Latency);
 }
 
+
+/**
+ * Processes a deployment from a string. The contents may use special
+ * characters to ease deployment definition. Examples:
+ * 
+ * =====start of file======
+ * 10               // number of processes in the deployment
+ * 0 -> *           // this means process 0 is sending to all processes
+ * 0 -> [0,9]       // this means the same thing
+ * 0 -> [1,4)       // process 0 is sending to processes 1 through 3
+ * 0 -> 1           // process 0 is sending to process 1
+ * 0 -> [* / 4, * / 2]   // process 0 is sending to processes 2 through 5
+ * =====end of file======
+ * 
+ * @param       contents     string containing the deployment info.
+ * @return      false if there was a problem with the contents
+ **/
+bool
+Madara::Cid::process_deployment (Settings & settings,
+                                 const std::string & orig)
+{
+  typedef std::map <unsigned int, unsigned int>    End;
+  typedef std::map <unsigned int, End>             Deployment_Map;
+
+  // copy the original and strip the comments
+  std::string contents (orig), current;
+  Deployment_Map map;
+  std::stringstream input;
+  Madara::Utility::strip_comments (contents);
+
+  Workflow & deployment = settings.target_deployment;
+  Deployment & solution = settings.solution;
+
+  // setup splitters for later
+  std::vector <std::string> splitters;
+  splitters.resize (7);
+  splitters[0] = "->";
+  splitters[1] = "=>";
+  splitters[2] = "[";
+  splitters[3] = ",";
+  splitters[4] = "]";
+  splitters[5] = "(";
+  splitters[6] = ")";
+
+  // keep track of the line number
+  unsigned int line = 0;
+
+  // clear the deployment. We use deployment.size () for determining success.
+  deployment.clear ();
+
+  // copy contents into a string stream
+  input << contents;
+
+#ifdef ENABLE_CID_LOGGING
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Madara::Cid::process_deployment:" \
+          " processing a new deployment.\n"));
+#endif
+
+  if (std::getline (input, current))
+  {
+    std::stringstream buffer;
+    std::string temp_string;
+    std::vector <std::string> tokens, pivots;
+
+    Madara::Utility::tokenizer (current, splitters, tokens, pivots);
+
+    // user is specifying a size
+    unsigned int size = 0;
+
+    if (tokens.size () == 1)
+    {
+      buffer << tokens[0];
+      buffer >> size;
+
+      // clear the old deployment, resize it, and the solution
+      deployment.resize (size);
+      solution.resize (size);
+    }
+    else
+    {
+      // user is using solution.size 
+      deployment.resize (solution.size ());
+      input.str (contents);
+    }
+
+    buffer << solution.size ();
+    buffer >> temp_string;
+
+    current = input.str ();
+
+    // replace * with size
+    std::string::size_type found = current.find ("*");
+    while (found != std::string::npos) 
+    {
+      current.replace (found, strlen ("*"), temp_string);
+      found = current.find ("*", found + temp_string.length ());
+    }
+
+    input.str (current);
+  }
+
+  while (std::getline (input, current))
+  {
+#ifdef ENABLE_CID_LOGGING
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+        DLINFO "Madara::Cid::process_deployment:" \
+          " evaluating %s.\n", current.c_str ()));
+#endif
+
+    // a knowledge base for translation of integer logics
+    Madara::Knowledge_Engine::Knowledge_Base knowledge;
+    std::vector <std::string> tokens, pivots;
+
+    // strip all white space
+    Madara::Utility::strip_white_space (current);
+
+    // split the line by our defined splitters
+    Madara::Utility::tokenizer (current, splitters, tokens, pivots);
+
+    if (tokens.size () == 2)
+    {
+      // We have a source->dest
+      unsigned int source = (unsigned int) knowledge.evaluate (tokens[0]);
+      unsigned int dest = (unsigned int) knowledge.evaluate (tokens[1]);
+
+      // create the map entry for source->dest
+      map[source][dest];
+    }
+    else if (tokens.size () >= 3)
+    {
+      // we have a token of the form "source->mod([begin, end] or [*])"
+      std::string source_string (tokens[0]);
+      std::string end_string (tokens[tokens.size () - 1]);
+      std::string modifier_string ("1");
+      std::string start_string ("0");
+      bool left_inclusive = pivots[pivots.size () - 2] == "[";
+      bool right_inclusive = pivots[pivots.size () - 1] == "]";
+
+      // modifier can be applied to the start and end points of a range
+      if (tokens[1] != "")
+        modifier_string = tokens[1];
+
+      if (tokens.size () >= 4)
+      {
+        start_string = tokens[2];
+
+        if (tokens.size () == 4)
+          left_inclusive = pivots[pivots.size () - 3] == "[";
+      }
+
+
+      unsigned int source = (unsigned int) knowledge.evaluate (source_string);
+      unsigned int modifier = (unsigned int) knowledge.evaluate (modifier_string);
+      unsigned int start = (unsigned int) knowledge.evaluate (start_string);
+      unsigned int end = (unsigned int) knowledge.evaluate (end_string);
+
+      if (modifier != 1)
+      {
+        start *= modifier;
+        end *= modifier;
+      }
+
+      if (!left_inclusive)
+        ++start;
+
+      if (!right_inclusive)
+        --end;
+
+      if (end > solution.size () - 1)
+        end = solution.size () - 1;
+
+      for (; start <= end; ++start)
+      {
+        map[source][start];
+      }
+    }
+  }
+
+#ifdef ENABLE_CID_LOGGING
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+        DLINFO "Madara::Cid::process_deployment:" \
+        " Deployment map contains:\n"));
+#endif
+
+  for (Deployment_Map::iterator i = map.begin (); i != map.end (); ++i)
+  {
+    deployment[i->first].resize (i->second.size ());
+
+    unsigned int index = 0;
+
+    for (End::iterator j = i->second.begin (); 
+      j != i->second.end (); ++j, ++index)
+    {
+      Madara::Cid::Directed_Edge & edge = deployment[i->first][index];
+
+#ifdef ENABLE_CID_LOGGING
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+        DLINFO "Madara::Cid::process_deployment:" \
+        " %u -> %u:\n", i->first, j->first));
+#endif
+
+      edge.first = i->first;
+      edge.second = j->first;
+    }
+  }
+
+  // sort the deployments by degree
+  prepare_deployment (settings);
+
+  return deployment.size () > 0;
+}
+
+/**
+* Reads the deployment from a file. @see process_deployment for
+* deployment file configuration information.
+* @param       filename     the name of the file to read
+* @return      true if the file existed and was read
+**/
+bool
+Madara::Cid::read_deployment (Settings & settings,
+      const std::string & filename)
+{
+  std::string input (Madara::Utility::file_to_string (filename));
+  return process_deployment (settings, input);
+}

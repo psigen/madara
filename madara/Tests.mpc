@@ -375,3 +375,23 @@ project (Test_CID) : using_madara, using_ace {
     ../tests/test_cid.cpp
   }
 }
+
+project (Test_CID_Read_Deployment) : using_madara, using_ace {
+  requires += tests cid
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_cid_read_deployment
+  
+  // libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_cid_read_deployment.cpp
+  }
+}

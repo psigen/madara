@@ -626,6 +626,8 @@ void verify_algorithms (std::ostream & output)
 
 int main (int argc, char *argv[])
 {
+  MADARA_debug_level = 1;
+
   unsigned int begin = 1000;
   unsigned int end = 10000;
   unsigned int increment = 1000;
@@ -685,8 +687,6 @@ int main (int argc, char *argv[])
 
   std::ofstream output (output_file.c_str ());
 
-  MADARA_debug_level = 10;
-
   // use ACE real time scheduling class
   int prio  = ACE_Sched_Params::next_priority
     (ACE_SCHED_FIFO,
@@ -698,8 +698,11 @@ int main (int argc, char *argv[])
 
   verify_algorithms (output);
 
+  std::cout << "\nSaving results to " << output_file << "\n";
+
   for (unsigned int i = begin; i <= end; i += increment)
   {
+    std::cout << "  Running tests for size " << i << "\n";
     test_cid (i, output);
   }
 

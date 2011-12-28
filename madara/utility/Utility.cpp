@@ -113,6 +113,35 @@ Madara::Utility::strip_white_space (::std::string & input)
   return input;
 }
 
+std::string &
+Madara::Utility::strip_comments (std::string & input)
+{
+  std::stringstream source, dest;
+  std::string cur;
+  std::vector <std::string> splitters;
+  splitters.resize (2);
+
+  splitters[0] = "//";
+
+  // place the input in the string stream
+  source << input;
+  
+  while (std::getline (source, cur))
+  {
+    std::vector <std::string> tokens;
+    std::vector <std::string> pivots;
+    tokenizer (cur, splitters, tokens, pivots);
+
+    if (tokens.size ())
+    {
+      dest << tokens[0];
+      dest << "\n";
+    }
+  }
+
+  input = dest.str ();
+  return input;
+}
 
 
 /// Split a string into tokens 
@@ -150,7 +179,7 @@ Madara::Utility::tokenizer (const ::std::string & input,
             // need to update this to only have as many pivots as tokens - 1
             pivots.push_back (input.substr (cur, j));
 
-            if (cur - last >= j)
+            if (cur - last >= splitters[i].size () - 1)
               tokens.push_back (input.substr (last, cur - last));
             else
               tokens.push_back ("");

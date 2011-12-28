@@ -21,7 +21,7 @@
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
-: files_ (map_), transport_ (0)
+: settings_ (), files_ (map_), transport_ (0)
 {
   activate_transport ();
   // no hope of transporting, so don't setup uniquehostport
@@ -69,25 +69,28 @@ void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
   const std::string & host)
 {
-  // start from 50k, which is just above the bottom of the user
-  // definable port range (hopefully avoid conflicts with 49152-49999
-  unsigned short port =  50000;
-
-  if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, port) == -1)
+  if (settings_.type != Madara::Transport::NO_TRANSPORT)
   {
-    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
-      DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
-      " unable to bind to any ephemeral port." \
-      " Check firewall.\n"));
-    exit (-1);
-  }
- 
-  // we were able to bind to an ephemeral port
-  Madara::Utility::merge_hostport_identifier (id_, host, port);
+    // start from 50k, which is just above the bottom of the user
+    // definable port range (hopefully avoid conflicts with 49152-49999
+    unsigned short port =  50000;
 
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
-    " unique bind to %s\n", id_.c_str ()));
+    if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, port) == -1)
+    {
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
+        DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
+        " unable to bind to any ephemeral port." \
+        " Check firewall.\n"));
+      exit (-1);
+    }
+   
+    // we were able to bind to an ephemeral port
+    Madara::Utility::merge_hostport_identifier (id_, host, port);
+
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
+      " unique bind to %s\n", id_.c_str ()));
+  }
 }
 
 void
