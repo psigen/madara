@@ -303,7 +303,10 @@ void test_cid (unsigned int size, std::ostream & output)
   for (unsigned int fan_outs = 1; fan_outs <= 3; ++fan_outs)
   {
     output << test_divider << std::endl;
-    output << "  Testing " << fan_outs << " full-sized, complete overlap fanouts\n";
+    output << "  Testing " << fan_outs << 
+      " full-sized, complete overlap fanouts\n";
+    std::cout << "  Testing " << fan_outs << 
+      " full-sized, complete overlap fanouts\n";
     output << test_divider << std::endl;
 
     // create a 100% fanout in the targeted workflows
@@ -335,6 +338,7 @@ void test_cid (unsigned int size, std::ostream & output)
       ACE_High_Res_Timer timer;
 
       output << "  Approximating with " << testnames[i] << std::endl;
+      std::cout << "    Approximating with " << testnames[i] << std::endl;
 
       timer.start ();
 
@@ -374,7 +378,10 @@ void test_cid (unsigned int size, std::ostream & output)
   for (unsigned int fan_outs = 1; fan_outs <= 3; ++fan_outs)
   {
     output << test_divider << std::endl;
-    output << "  Testing " << fan_outs << " half-sized, complete overlap fanouts\n";
+    output << "  Testing " << fan_outs << 
+      " half-sized, complete overlap fanouts\n";
+    std::cout << "  Testing " << fan_outs << 
+      " half-sized, complete overlap fanouts\n";
     output << test_divider << std::endl;
 
     // create a 100% fanout in the targeted workflows
@@ -406,6 +413,7 @@ void test_cid (unsigned int size, std::ostream & output)
       ACE_High_Res_Timer timer;
 
       output << "  Approximating with " << testnames[i] << std::endl;
+      std::cout << "    Approximating with " << testnames[i] << std::endl;
 
       timer.start ();
 
@@ -443,7 +451,10 @@ void test_cid (unsigned int size, std::ostream & output)
 
     // notify user of current est
     output << test_divider << std::endl;
-    output << "  Testing " << fan_outs << " even-sized, disjoint fanouts\n";
+    output << "  Testing " << fan_outs << 
+      " even-sized, disjoint fanouts\n";
+    std::cout << "  Testing " << fan_outs << 
+      " even-sized, disjoint fanouts\n";
     output << test_divider << std::endl;
 
     settings.solution.resize (size);
@@ -464,6 +475,7 @@ void test_cid (unsigned int size, std::ostream & output)
       ACE_High_Res_Timer timer;
 
       output << "  Approximating with " << testnames[i] << std::endl;
+      std::cout << "    Approximating with " << testnames[i] << std::endl;
 
       timer.start ();
 
@@ -690,7 +702,7 @@ int main (int argc, char *argv[])
   unsigned int begin = 1000;
   unsigned int end = 10000;
   unsigned int increment = 1000;
-  std::string output_file ("test_results.txt");
+  std::string output_file ("test_cid_results.txt");
 
   for (int i = 1; i < argc; ++i)
   {

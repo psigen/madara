@@ -149,6 +149,10 @@ Madara::Cid::calculate_latency (LV_Vector & latencies, Workflow & workflow,
       unsigned int & source = current[0].first;
       Latency_Vector source_latencies = latencies[solution[source]];
 
+      // sort by ID so we can use the array as a O(1) lookup
+      std::sort (source_latencies.begin (), source_latencies.end (),
+                 Increasing_Id);
+
       for (unsigned int j = 0; j < current.size (); ++j)
       {
 #ifdef ENABLE_CID_LOGGING
@@ -161,6 +165,10 @@ Madara::Cid::calculate_latency (LV_Vector & latencies, Workflow & workflow,
         unsigned int & dest = current[j].second;
         total_latency += source_latencies [solution[dest]].second;
       }
+
+      // resort the latencies by Increasing Latency
+      std::sort (source_latencies.begin (), source_latencies.end (),
+                 Increasing_Latency);
     }
   }
 
@@ -236,6 +244,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
             {
               source_id = cur_averages[candidate].first;
               lookup[cur_averages[candidate].first] = source;
+              ++candidate;
               break;
             }
           }
@@ -277,6 +286,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
 
                 dest_id = cur_averages[candidate].first;
                 lookup[cur_averages[candidate].first] = dest;
+                ++candidate;
                 break;
               }
             } // end for k
@@ -307,6 +317,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
 
           solution[i] = cur_averages[candidate].first;
           lookup[cur_averages[candidate].first] = i;
+          ++candidate;
           break;
         }
       } // end for k
@@ -358,6 +369,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
 
               dest_id = latencies[candidate].first;
               lookup[latencies[candidate].first] = dest;
+              ++candidate;
               break;
             }
           } // end for k

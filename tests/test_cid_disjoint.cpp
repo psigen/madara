@@ -287,8 +287,8 @@ void generate_fanout_latencies (unsigned int fan_outs,
     unsigned int end = (i + 1) * size;
 
     // the last segment is the biggest
-    if (i == fan_outs - 1)
-      end = latencies.size () - 1;
+    if (i == fan_outs - 1 && latencies.size () % fan_outs > 0)
+      end += latencies.size () % fan_outs;
 
     for (unsigned int j = begin; j < end; ++j)
     {
@@ -299,7 +299,6 @@ void generate_fanout_latencies (unsigned int fan_outs,
   for (unsigned int i = 0; i < latencies.size (); ++i)
     std::sort (latencies[i].begin (), latencies[i].end (),
       Madara::Cid::Increasing_Latency);
-
 
   //std::cerr << "\n\nPrinting latencies for size " << latencies.size () <<
   //             " and fanouts " << fan_outs << "\n\n";
@@ -373,8 +372,8 @@ void test_cid (unsigned int size, std::ostream & output)
         output << "  " << testnames[i] << " appears to be broken. " <<
                   " Please report this at madara.googlecode.com\n";
 
-      output << "Solution was...\n";
-      print_solutions (output, settings, i, size);
+      //output << "Solution was...\n";
+      //print_solutions (output, settings, i, size);
     }
 
     print_stats (output, size);
@@ -578,10 +577,10 @@ int main (int argc, char *argv[])
 {
   MADARA_debug_level = 1;
 
-  unsigned int begin = 20;
-  unsigned int end = 100;
-  unsigned int increment = 20;
-  std::string output_file ("test_results.txt");
+  unsigned int begin = 1000;
+  unsigned int end = 10000;
+  unsigned int increment = 1000;
+  std::string output_file ("test_cid_disjoint_results.txt");
 
   for (int i = 1; i < argc; ++i)
   {

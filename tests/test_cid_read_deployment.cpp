@@ -57,7 +57,7 @@ int main (int argc, char *argv[])
       << second_deployment << "\n";
   }
 
-  for (unsigned int fan_out = 1; fan_out < 4; ++fan_out)
+  for (unsigned int fan_out = 1; fan_out <= 4; ++fan_out)
   {
     // create filename 
     std::stringstream filename;

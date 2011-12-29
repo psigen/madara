@@ -444,11 +444,6 @@ Madara::Cid::process_deployment (Settings & settings,
       input.str (contents);
       knowledge.set ("size", solution.size ());
     }
-
-    buffer << solution.size ();
-    buffer >> temp_string;
-
-    current = input.str ();
   }
 
   while (std::getline (input, current))

@@ -91,6 +91,15 @@ namespace Madara
     }
 
     /**
+     * Comparator for a list of increasing latency records
+     **/
+    static bool Increasing_Id (
+      const Latency_Record & u, const Latency_Record & v)
+    {
+      return u.first < v.first;
+    }
+
+    /**
      * Comparator for a list of decreasing sizes of latency vectors
      **/
     static bool Decreasing_Size (
