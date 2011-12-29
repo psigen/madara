@@ -332,6 +332,29 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
     Increasing_Latency);
 }
 
+/**
+ * Prints the latencies in the settings container
+ * @param    settings    container for network_latencies 
+ **/
+void
+Madara::Cid::print_latencies (Settings & settings)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+    "Printing latencies\n"));
+
+  LV_Vector & latencies = settings.network_latencies;
+
+  for (unsigned int i = 0; i < latencies.size (); ++i)
+  {
+    for (unsigned int j = 0; j < latencies[i].size (); ++j)
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        "  latencies[%u][%u]=%Q\n",
+        i, j, latencies[i][j].second));
+    }
+  }
+}
+
 
 /**
  * Processes a deployment from a string. The contents may use special

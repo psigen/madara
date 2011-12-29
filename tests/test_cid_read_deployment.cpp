@@ -7,6 +7,24 @@
 
 #include "madara/cid/Convenience.h"
 
+void check_fanout_deployment (unsigned int fanout, Madara::Cid::Settings & settings)
+{
+  unsigned int size = settings.solution.size () / fanout;
+
+  for (unsigned int i = 0; i < fanout; ++i)
+  {
+    if (!(settings.target_deployment[i].size () == size || 
+           (i == 0 && fanout == 3)))
+    {
+      std::cerr << " read_deployment failed on " << fanout << " fanouts\n.";
+      std::cerr << " deployment[" << i << "] was " << 
+        settings.target_deployment[i].size () << " instead of " << 
+        size << "\n";
+      return;
+    }
+  }
+}
+
 int main (int argc, char *argv[])
 {
   // container for the deployment settings
@@ -37,6 +55,22 @@ int main (int argc, char *argv[])
   {
     std::cerr << "ERROR: Deployment size is 0 for " 
       << second_deployment << "\n";
+  }
+
+  for (unsigned int fan_out = 1; fan_out < 4; ++fan_out)
+  {
+    // create filename 
+    std::stringstream filename;
+    filename << getenv ("MADARA_ROOT");
+    filename << "/configs/cid/deployments/test_cid/";
+    filename << fan_out << "_even_fans_disjoint.template";
+
+    // notify user of current est
+    std::cout << "  Testing " << filename.str () << "\n";
+
+    Madara::Cid::read_deployment (settings, filename.str ());
+
+    ::check_fanout_deployment (fan_out, settings);
   }
 
   return 0;

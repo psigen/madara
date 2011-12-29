@@ -17,21 +17,32 @@
 void
 Madara::Cid::approximate (Settings & settings)
 {
-  for (unsigned int i = 0; i < settings.target_deployment.size (); ++i)
-  {
-    if (settings.target_deployment[i].size ())
-    {
-// see Settings.h
-#ifdef ENABLE_CID_LOGGING
-      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Madara::Cid::approximate:" \
-          " calling approximate (averages, ..., %u)\n",
-          i));
-#endif
+  typedef std::map <unsigned int, unsigned int>  Candidate_Map;
 
-      approximate (settings.network_averages, 
-        settings.target_deployment, settings.solution,
-        settings.solution_lookup, i);
+  Workflow & deployment = settings.target_deployment;
+  Solution_Map & lookup = settings.solution_lookup;
+  Deployment & solution = settings.solution;
+  Candidate_Map candidates;
+
+  for (unsigned int i = 0; i < deployment.size (); ++i)
+  {
+    unsigned int degree = deployment[i].size ();
+    if (degree)
+    {
+      unsigned int & candidate = candidates[degree];
+      Latency_Vector & cur_averages = settings.network_averages[degree];
+
+      unsigned int & source = deployment[i][0].first;
+
+      for (; lookup.find (cur_averages[candidate].first) != lookup.end ();
+               ++candidate);
+
+      unsigned int & source_id = cur_averages[candidate].first;
+
+      solution[source] = source_id;
+      lookup[source_id] = source;
+
+      ++candidate;
     }
     else
     {
@@ -43,7 +54,7 @@ Madara::Cid::approximate (Settings & settings)
 #endif
 
       fill_from_solution_map (settings);
-      i = settings.target_deployment.size ();
+      i = deployment.size ();
     }
   }
 }
@@ -321,7 +332,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
       unsigned int & source_id = solution[source];
       Latency_Vector & latencies = settings.network_latencies[source_id];
       
-      unsigned int k = 0;
+      unsigned int candidate = 0;
 
       for (unsigned int j = 0; j < source_flow.size (); ++j)
       {
@@ -333,20 +344,20 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
         // if we can't find the id, we need to place our best latency endpoint
         if (found == lookup.end () || found->second != dest)
         {
-          for (; k < latencies.size (); ++k)
+          for (; candidate < latencies.size (); ++candidate)
           {
             // if we find a winner, place it and break back to j loop
-            if (lookup.find (latencies[k].first) == lookup.end ())
+            if (lookup.find (latencies[candidate].first) == lookup.end ())
             {
 #ifdef ENABLE_CID_LOGGING
               MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
               DLINFO "Madara::Cid::fill_from_solution_map:" \
               " found solution[%u]=%u\n",
-              dest, latencies[k].first));
+              dest, latencies[candidate].first));
 #endif
 
-              dest_id = latencies[k].first;
-              lookup[latencies[k].first] = dest;
+              dest_id = latencies[candidate].first;
+              lookup[latencies[candidate].first] = dest;
               break;
             }
           } // end for k

@@ -95,6 +95,12 @@ namespace Madara
                             Workflow & target_deployment, unsigned int node);
 
     /**
+     * Prints the latencies in the settings container
+     * @param    settings    container for network_latencies 
+     **/
+    MADARA_Export void print_latencies (Settings & settings);
+
+    /**
      * Processes a deployment from a string. The contents may use special
      * characters to ease deployment definition. Examples:
      * 
@@ -107,6 +113,7 @@ namespace Madara
      * 0 -> [size / 4, size / 2]   // process 0 is sending to processes 2 through 5
      * =====end of file======
      * 
+     * @param       settings     container for CID settings
      * @param       contents     string containing the deployment info.
      * @return      false if there was a problem with the contents
      **/
