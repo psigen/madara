@@ -362,11 +362,11 @@ Madara::Cid::print_latencies (Settings & settings)
  * 
  * =====start of file======
  * 10               // number of processes in the deployment
- * 0 -> size           // this means process 0 is sending to all processes
- * 0 -> [0,9]       // this means the same thing
+ * 0 -> [0,9]       // 0 sends to 0-9
  * 0 -> [1,4)       // process 0 is sending to processes 1 through 3
  * 0 -> 1           // process 0 is sending to process 1
  * 0 -> [size / 4, size / 2]   // process 0 is sending to processes 2 through 5
+ * [1,3] -> [source-1, source+1] // 1 -> [0, 2], 2 -> [1, 3], 3 -> [2, 4]
  * =====end of file======
  * 
  * @param       contents     string containing the deployment info.
@@ -390,16 +390,13 @@ Madara::Cid::process_deployment (Settings & settings,
   Workflow & deployment = settings.target_deployment;
   Deployment & solution = settings.solution;
 
-  // setup splitters for later
-  std::vector <std::string> splitters;
-  splitters.resize (7);
-  splitters[0] = "->";
-  splitters[1] = "=>";
-  splitters[2] = "[";
-  splitters[3] = ",";
-  splitters[4] = "]";
-  splitters[5] = "(";
-  splitters[6] = ")";
+  std::vector <std::string> link_splitters;
+  link_splitters.resize (1);
+  link_splitters[0] = "->";
+
+  std::vector <std::string> range_splitters;
+  range_splitters.resize (1);
+  range_splitters[0] = ",";
 
   // keep track of the line number
   unsigned int line = 0;
@@ -422,28 +419,39 @@ Madara::Cid::process_deployment (Settings & settings,
     std::string temp_string;
     std::vector <std::string> tokens, pivots;
 
-    Madara::Utility::tokenizer (current, splitters, tokens, pivots);
+    Madara::Utility::tokenizer (current, link_splitters, tokens, pivots);
 
     // user is specifying a size
     unsigned int size = 0;
 
     if (tokens.size () == 1)
     {
-      buffer << tokens[0];
-      buffer >> size;
+      knowledge.evaluate (tokens[0]);
 
-      // clear the old deployment, resize it, and the solution
+      size = (unsigned int)knowledge.get ("size");
+    }
+
+    if (size == 0)
+    {
+      size = solution.size ();
+      // user is using solution.size 
       deployment.resize (size);
-      solution.resize (size);
+      input.str (contents);
       knowledge.set ("size", size);
     }
     else
     {
-      // user is using solution.size 
-      deployment.resize (solution.size ());
-      input.str (contents);
-      knowledge.set ("size", solution.size ());
+      // clear the old deployment, resize it, and the solution
+      deployment.resize (size);
+      solution.resize (size);
     }
+
+#ifdef ENABLE_CID_LOGGING
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+        DLINFO "Madara::Cid::process_deployment:" \
+          " using size=%u.\n", size));
+#endif
+
   }
 
   while (std::getline (input, current))
@@ -460,64 +468,229 @@ Madara::Cid::process_deployment (Settings & settings,
     Madara::Utility::strip_white_space (current);
 
     // split the line by our defined splitters
-    Madara::Utility::tokenizer (current, splitters, tokens, pivots);
+    Madara::Utility::tokenizer (current, link_splitters, tokens, pivots);
 
+    // current[0] == source and current[1] == dest or current[0] == evaluate
     if (tokens.size () == 2)
     {
-      // We have a source->dest
-      unsigned int source = (unsigned int) knowledge.evaluate (tokens[0]);
-      unsigned int dest = (unsigned int) knowledge.evaluate (tokens[1]);
+      std::vector <std::string> source_tokens, dest_tokens,
+        source_pivots, dest_pivots;
+      unsigned int source_begin = 0;
+      unsigned int source_end = 0;
+      unsigned int source_inc = 1;
 
-      // create the map entry for source->dest
-      map[source][dest];
+      std::string dest_begin ("0");
+      std::string dest_end ("0");
+      std::string dest_inc ("1");
+
+      bool source_left_inclusive = true;
+      bool source_right_inclusive = true;
+      bool dest_left_inclusive = true;
+      bool dest_right_inclusive = true;
+
+      // if we split with [](), developers will lose ability to use parens.
+      Madara::Utility::tokenizer (tokens[0], range_splitters,
+        source_tokens, source_pivots);
+      Madara::Utility::tokenizer (tokens[1], range_splitters,
+        dest_tokens, dest_pivots);
+
+      if (source_tokens.size () >= 1)
+      {
+        // if we have a right parenthesis, we're not right inclusive
+        if (source_tokens.size () >= 2)
+        {
+          std::vector<std::string>::size_type last_el =
+            source_tokens.size () - 1;
+
+          if (source_tokens[last_el].size ())
+          {
+            std::string::size_type last_char = source_tokens[1].size () - 1;
+            // resize the ending parenthesis or brace out
+            if (source_tokens[last_el][last_char] == ')')
+            {
+              // parenthesis is not right inclusive
+              source_right_inclusive = false;
+              source_tokens[last_el].resize (last_char);
+            }
+            else if (source_tokens[last_el][last_char] == ']')
+              source_tokens[last_el].resize (last_char);
+          }
+        }
+
+        // if we have a left parenthesis, we're not left inclusive
+        if (source_tokens[0].size ())
+        {
+          if (source_tokens[0][0] == '(')
+          {
+            source_left_inclusive = false;
+            source_tokens[0].erase (0, 1);
+          }
+          else if (source_tokens[0][0] == '[')
+          {
+            source_tokens[0].erase (0, 1);
+          }
+
+          // if this is the only token, then we need to resize
+          if (source_tokens.size () == 1)
+          {
+            if (source_tokens[0].size ())
+            {
+              // if the last char is a paren or brace, resize by 1
+              std::string::size_type last = source_tokens[0].size () - 1;
+              if (source_tokens[0][last] == ')' || 
+                source_tokens[0][last] == ']')
+                source_tokens[0].resize (last);
+
+              // set source begin and end
+              source_begin = 
+                (unsigned int)knowledge.evaluate (source_tokens[0]);
+              source_end = source_begin;
+            }
+          }
+
+          else
+          {
+            // assign begin to token[0], end to token[1] and inc to token[2]
+            source_begin =
+              (unsigned int) knowledge.evaluate (source_tokens[0]);
+            source_end =
+              (unsigned int) knowledge.evaluate (source_tokens[1]);
+
+            if (source_tokens.size () >= 3)
+            {
+              long long value = knowledge.evaluate (source_tokens[2]);
+              if (value != 0)
+                source_inc = (unsigned int)value;
+            }
+          }
+
+          if (!source_left_inclusive)
+            ++source_begin;
+
+          if (!source_right_inclusive)
+            --source_end;
+
+          if (source_end > solution.size () - 1)
+            source_end = solution.size () - 1;
+
+
+          // Start dest parsing
+
+          if (dest_tokens.size () >= 1)
+          {
+            // if we have a right parenthesis, we're not right inclusive
+            if (dest_tokens.size () >= 2)
+            {
+              std::vector<std::string>::size_type last_el =
+                dest_tokens.size () - 1;
+
+              if (dest_tokens[last_el].size ())
+              {
+                std::string::size_type last_char = dest_tokens[1].size () - 1;
+                // resize the ending parenthesis or brace out
+                if (dest_tokens[last_el][last_char] == ')')
+                {
+                  // parenthesis is not right inclusive
+                  dest_right_inclusive = false;
+                  dest_tokens[last_el].resize (last_char);
+                }
+                else if (dest_tokens[last_el][last_char] == ']')
+                  dest_tokens[last_el].resize (last_char);
+              }
+            }
+
+            // if we have a left parenthesis, we're not left inclusive
+            if (dest_tokens[0].size ())
+            {
+              if (dest_tokens[0][0] == '(')
+              {
+                dest_left_inclusive = false;
+                dest_tokens[0].erase (0, 1);
+              }
+              else if (dest_tokens[0][0] == '[')
+              {
+                dest_tokens[0].erase (0, 1);
+              }
+
+              // if this is the only token, then we need to resize
+              if (dest_tokens.size () == 1)
+              {
+                if (dest_tokens[0].size ())
+                {
+                  // if the last char is a paren or brace, resize by 1
+                  std::string::size_type last = dest_tokens[0].size () - 1;
+                  if (dest_tokens[0][last] == ')' || 
+                    dest_tokens[0][last] == ']')
+                    dest_tokens[0].resize (last);
+
+                  // set source begin and end
+                  dest_begin = 
+                    (unsigned int)knowledge.evaluate (dest_tokens[0]);
+                  dest_end = dest_begin;
+                }
+              }
+
+              else
+              {
+                dest_begin = dest_tokens[0];
+                dest_end = dest_tokens[1];
+
+                if (dest_tokens.size () >= 3)
+                {
+                  dest_inc = dest_tokens[2];
+                }
+              }
+            }
+          }
+#ifdef ENABLE_CID_LOGGING
+          MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+            DLINFO "Madara::Cid::process_deployment:" \
+            " %u,%u,%u -> %s, %s, %s:\n",
+            source_begin, source_end, source_inc,
+            dest_begin.c_str (), dest_end.c_str (), dest_inc.c_str ()));
+#endif
+
+          for (; source_begin <= source_end; source_begin += source_inc)
+          {
+            knowledge.set ("source", source_begin);
+            
+            unsigned int begin =
+              (unsigned int) knowledge.evaluate (dest_begin);
+
+            unsigned int end =
+              (unsigned int) knowledge.evaluate (dest_end);
+
+            unsigned int inc =
+              (unsigned int) knowledge.evaluate (dest_inc);
+
+            if (!dest_left_inclusive)
+              ++begin;
+
+            if (!dest_right_inclusive)
+              --end;
+
+            if (end > solution.size () - 1)
+              end = solution.size () - 1;
+
+            for (; begin <= end; begin += inc)
+              map[source_begin][begin];
+          }
+        } // end dest range construction
+
+        // the source tokens are now prepped for 
+      }
     }
-    else if (tokens.size () >= 3)
+    else if (tokens.size () == 1)
     {
-      // we have a token of the form "source->mod([begin, end] or [*])"
-      std::string source_string (tokens[0]);
-      std::string end_string (tokens[tokens.size () - 1]);
-      std::string modifier_string ("1");
-      std::string start_string ("0");
-      bool left_inclusive = pivots[pivots.size () - 2] == "[";
-      bool right_inclusive = pivots[pivots.size () - 1] == "]";
+#ifdef ENABLE_CID_LOGGING
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+        DLINFO "Madara::Cid::process_deployment:" \
+        " tokens==1, Evaluating %s:\n", tokens[0].c_str ()));
+#endif
 
-      // modifier can be applied to the start and end points of a range
-      if (tokens[1] != "")
-        modifier_string = tokens[1];
-
-      if (tokens.size () >= 4)
-      {
-        start_string = tokens[2];
-
-        if (tokens.size () == 4)
-          left_inclusive = pivots[pivots.size () - 3] == "[";
-      }
-
-
-      unsigned int source = (unsigned int) knowledge.evaluate (source_string);
-      unsigned int modifier = (unsigned int) knowledge.evaluate (modifier_string);
-      unsigned int start = (unsigned int) knowledge.evaluate (start_string);
-      unsigned int end = (unsigned int) knowledge.evaluate (end_string);
-
-      if (modifier != 1)
-      {
-        start *= modifier;
-        end *= modifier;
-      }
-
-      if (!left_inclusive)
-        ++start;
-
-      if (!right_inclusive)
-        --end;
-
-      if (end > solution.size () - 1)
-        end = solution.size () - 1;
-
-      for (; start <= end; ++start)
-      {
-        map[source][start];
-      }
+      // allow evaluations of 1 token lines but skip pure white space
+      if (tokens[0].size () > 0)
+        knowledge.evaluate (tokens[0]);
     }
   }
 

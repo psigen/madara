@@ -1,2 +1,2 @@
-0 -> [size)       // 0 sends everyone
+0 -> [0,size)       // 0 sends everyone
 

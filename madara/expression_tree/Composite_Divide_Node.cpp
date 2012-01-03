@@ -58,11 +58,10 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
   if (this->right_)
   {
     right_value = this->right_->prune (right_child_can_change);
+
     if (!right_child_can_change && dynamic_cast <Leaf_Node *> (right_) == 0)
     {
-      delete this->right_;
-      this->right_ = new Leaf_Node (right_value);
-
+      // leave this check which is important
       if (right_value == 0)
       {
         MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
@@ -70,7 +69,20 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
           " results in permanent divide by zero\n"));
         exit (-1);
       }
+      // the only time we should delete right is if we have a clean division
+      if (!left_child_can_change && left_value % right_value == 0)
+      {
+        // don't worry about allocating anything. This is about to be
+        // reclaimed anyway since !right_can_change and !left_can_change
+        delete this->right_;
+        this->right_ = 0;
+      }
+      else
+        right_child_can_change = true;
     }
+
+    //if (!right_child_can_change)
+    //  right_child_can_change = true;
   }
   else
   {

@@ -105,12 +105,12 @@ namespace Madara
      * characters to ease deployment definition. Examples:
      * 
      * =====start of file======
-     * 10 // define the number of processes in the deployment
-     * 0 -> [size]  // this means process 0 is sending to all 10 processes
-     * 0 -> [0,9] // this means the same thing
+     * 10               // number of processes in the deployment
+     * 0 -> [0,9]       // 0 sends to 0-9
      * 0 -> [1,4)       // process 0 is sending to processes 1 through 3
-     * 0 -> 1            // process 0 is sending to process 1
-     * 0 -> [size / 4, size / 2]   // process 0 is sending to processes 2 through 5
+     * 0 -> 1           // process 0 is sending to process 1
+     * 0 -> [size / 4, size / 2]     // 0 -> [2, 5]
+     * [1,3] -> [source-1, source+1] // 1 -> [0, 2], 2 -> [1, 3], 3 -> [2, 4]
      * =====end of file======
      * 
      * @param       settings     container for CID settings

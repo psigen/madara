@@ -38,7 +38,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) c
   }
 
   // if no match, return empty (0)
-  return Madara::Knowledge_Record::UNMODIFIED;
+  return Madara::Knowledge_Record::UNCREATED;
 }
 
 /**

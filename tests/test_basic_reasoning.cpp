@@ -584,7 +584,11 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate (".var2 = 3; .var1 = 8; .var3 = (.var1 + 1 - 1) % .var2");
   assert (knowledge.get (".var3") == 2);
 
+  knowledge.evaluate (".var2 = 8; .var3 = .var2 * 3 / 8");
+  assert (knowledge.get (".var3") == 3);
 
+  knowledge.evaluate (".var2 = 8; .var3 = .var2 * 3 / 3");
+  assert (knowledge.get (".var3") == 8);
 }
 
 /// Tests the both operator (;)

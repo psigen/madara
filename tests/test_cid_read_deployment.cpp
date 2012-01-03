@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "madara/cid/Convenience.h"
+#include "madara/utility/Log_Macros.h"
 
 void check_fanout_deployment (unsigned int fanout, Madara::Cid::Settings & settings)
 {
@@ -27,18 +28,58 @@ void check_fanout_deployment (unsigned int fanout, Madara::Cid::Settings & setti
 
 int main (int argc, char *argv[])
 {
+  MADARA_debug_level = 10;
   // container for the deployment settings
   Madara::Cid::Settings settings;
 
   // create the filenames for the deployments to read
   std::string first_deployment (::getenv ("MADARA_ROOT"));
   std::string second_deployment (first_deployment);
+  std::string third_deployment (first_deployment);
+  std::string fourth_deployment (first_deployment);
+  std::string fifth_deployment (first_deployment);
+  std::string mway_deployment (first_deployment);
 
   first_deployment += 
     "/configs/cid/deployments/10_procs_2_full_fans_disjoint.txt";
 
   second_deployment +=
     "/configs/cid/deployments/2_full_fans_disjoint.template";
+
+  third_deployment +=
+    "/configs/cid/deployments/size10_toall_forloop.txt";
+
+  fourth_deployment +=
+    "/configs/cid/deployments/test_cid/3waytree.txt";
+
+  fifth_deployment +=
+    "/configs/cid/deployments/test_cid/3waytree_strict.txt";
+
+  mway_deployment +=
+    "/configs/cid/deployments/test_cid/mwaytree.txt";
+
+  settings.solution.resize (20);
+
+  // read the for loop first
+  if (!Madara::Cid::read_deployment (settings, mway_deployment))
+  {
+    std::cerr << "ERROR: Deployment size is 0 for " 
+      << mway_deployment << "\n";
+  }
+
+  // read the for loop first
+  if (!Madara::Cid::read_deployment (settings, fifth_deployment))
+  {
+    std::cerr << "ERROR: Deployment size is 0 for " 
+      << fifth_deployment << "\n";
+  }
+
+  // read the for loop first
+  if (!Madara::Cid::read_deployment (settings, fourth_deployment))
+  {
+    std::cerr << "ERROR: Deployment size is 0 for " 
+      << fourth_deployment << "\n";
+  }
 
   // read the first deployment
   if (!Madara::Cid::read_deployment (settings, first_deployment))
