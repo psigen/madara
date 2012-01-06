@@ -92,16 +92,26 @@ namespace Madara
     MADARA_Export void fill_from_solution_map (Settings & settings);
 
     /**
-     * Sorts the target deployment by degree to prepare it for the CID heuristic
+     * Approximates the solution with path information
      * @param    settings    container which contains the target_deployment
      **/
-    MADARA_Export void prepare_deployment (Settings & settings);
+    MADARA_Export void pathwise_approximate (Settings & settings);
+
+    /**
+     * Adds links to the source from the connected Links container
+     * @param    paths       All paths
+     * @param    source      source instance
+     * @param    connected   connected instance to populate more links from
+     * @param    depth       current depth
+     **/
+    MADARA_Export void populate_links (Paths & paths, Links & source,
+      Links & connected, unsigned int depth);
 
     /**
      * Sorts the target deployment by degree to prepare it for the CID heuristic
      * @param    settings    container which contains the target_deployment
      **/
-    MADARA_Export void prepare_deployment (Workflow & target_deployment);
+    MADARA_Export void prepare_deployment (Settings & settings);
 
   } // end Cid namespace
 } // end Madara namespace

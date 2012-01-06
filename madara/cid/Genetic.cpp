@@ -6,12 +6,22 @@
 #include "Heuristic.h"
 #include "madara/utility/Log_Macros.h"
 
+#include "ace/OS_NS_Thread.h"
+#include "ace/High_Res_Timer.h"
+
 
 void
-Madara::Cid::ga_naive (Settings & settings, unsigned int max_mutations)
+Madara::Cid::ga_naive (Settings & settings, double duration)
 {
-  // how many mutations are we going to try?
-  unsigned int actual_mutations = rand () % max_mutations + 1;
+  ACE_High_Res_Timer timer;
+  ACE_Time_Value max_tv;
+  ACE_hrtime_t elapsed (0);
+  ACE_hrtime_t maximum (0);
+  timer.start ();
+
+  max_tv.set (duration);
+  maximum = max_tv.sec () * 1000000000;
+  maximum += max_tv.usec () * 1000;
 
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -32,8 +42,9 @@ Madara::Cid::ga_naive (Settings & settings, unsigned int max_mutations)
 #endif
 
   unsigned long long orig_latency = calculate_latency (settings);
+  unsigned long long new_latency;
 
-  for (unsigned int i = 0; i < actual_mutations; ++i)
+  while (maximum > elapsed)
   {
     // generate some candidates for mutating
     unsigned int candidate1 = rand () % settings.solution.size ();
@@ -60,41 +71,47 @@ Madara::Cid::ga_naive (Settings & settings, unsigned int max_mutations)
     // attempt the swap
     std::swap (current[candidate1], current[candidate2]);
 
-    unsigned long long new_latency = calculate_latency (
+    new_latency = calculate_latency (
       settings.network_latencies, settings.target_deployment, current);
-
-#ifdef ENABLE_CID_LOGGING
-    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
-      DLINFO "Madara::Cid::ga_naive:" \
-      " latency improvement: %Q->%Q\n",
-      orig_latency, new_latency));
-#endif
 
     if (new_latency < orig_latency)
     {
-#ifdef ENABLE_CID_LOGGING
+  #ifdef ENABLE_CID_LOGGING
       MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Madara::Cid::ga_naive:" \
         " latency improvement: %Q->%Q. Copying solution.\n",
         orig_latency, new_latency));
-#endif
+  #endif
 
       std::copy (current.begin (), current.end (), settings.solution.begin ());
-   
-      for (unsigned int i = 0; i < settings.solution.size (); ++i)
-      {
-        if (settings.solution_lookup[settings.solution[i]] != i)
-          settings.solution_lookup[settings.solution[i]] = i;
-      }
-      return;
+      orig_latency = new_latency;
     }
+    timer.stop ();
+    timer.elapsed_time (elapsed);
+
+  }
+
+  for (unsigned int i = 0; i < settings.solution.size (); ++i)
+  {
+    if (settings.solution_lookup[settings.solution[i]] != i)
+      settings.solution_lookup[settings.solution[i]] = i;
   }
 }
 
-void Madara::Cid::ga_degree (Settings & settings, unsigned int max_mutations)
+void Madara::Cid::ga_degree (Settings & settings, double duration)
 {
   if (settings.solution.size () < 2)
     return;
+
+  ACE_High_Res_Timer timer;
+  ACE_Time_Value max_tv;
+  ACE_hrtime_t elapsed (0);
+  ACE_hrtime_t maximum (0);
+  timer.start ();
+
+  max_tv.set (duration);
+  maximum = max_tv.sec () * 1000000000;
+  maximum += max_tv.usec () * 1000;
 
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -144,11 +161,11 @@ void Madara::Cid::ga_degree (Settings & settings, unsigned int max_mutations)
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
     DLINFO "Madara::Cid::ga_degree:" \
-    " Attempting up to %u mutations to find better solution\n",
-    max_mutations));
+    " Attempting up to %f seconds worth of mutations to find better solution\n",
+    duration));
 #endif
 
-  for (unsigned int i = 0; i < max_mutations; ++i)
+  while (maximum > elapsed)
   {
     /**
      * 1/5 times, choose a naive solution.
@@ -305,8 +322,10 @@ void Madara::Cid::ga_degree (Settings & settings, unsigned int max_mutations)
           if (settings.solution_lookup[settings.solution[j]] != j)
             settings.solution_lookup[settings.solution[j]] = j;
         }
-        return;
+        orig_latency = new_latency;
       }
     }
+    timer.stop ();
+    timer.elapsed_time (elapsed);
   }
 }

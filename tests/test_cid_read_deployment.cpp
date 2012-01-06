@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "madara/cid/Convenience.h"
+#include "madara/cid/Heuristic.h"
 #include "madara/utility/Log_Macros.h"
 
 void check_fanout_deployment (unsigned int fanout, Madara::Cid::Settings & settings)
@@ -39,6 +40,8 @@ int main (int argc, char *argv[])
   std::string fourth_deployment (first_deployment);
   std::string fifth_deployment (first_deployment);
   std::string mway_deployment (first_deployment);
+  std::string three_deep_deployment (first_deployment);
+  std::string specialized_deployment (first_deployment);
 
   first_deployment += 
     "/configs/cid/deployments/10_procs_2_full_fans_disjoint.txt";
@@ -50,38 +53,58 @@ int main (int argc, char *argv[])
     "/configs/cid/deployments/size10_toall_forloop.txt";
 
   fourth_deployment +=
-    "/configs/cid/deployments/test_cid/3waytree.txt";
+    "/configs/cid/deployments/test_cid/3waytree.template";
 
   fifth_deployment +=
-    "/configs/cid/deployments/test_cid/3waytree_strict.txt";
+    "/configs/cid/deployments/test_cid/3waytree_strict.template";
 
   mway_deployment +=
-    "/configs/cid/deployments/test_cid/mwaytree.txt";
+    "/configs/cid/deployments/test_cid/mwaytree.template";
+
+  three_deep_deployment +=
+    "/configs/cid/deployments/test_cid/3_deep_tree.template";
+
+  specialized_deployment +=
+    "/configs/cid/deployments/test_cid/specialized.template";
+
+  // read a three deep tree
+  if (!Madara::Cid::read_deployment (settings, specialized_deployment))
+  {
+    std::cerr << "ERROR: Deployment size is 0 for " 
+      << specialized_deployment << "\n";
+  }
 
   settings.solution.resize (20);
 
-  // read the for loop first
+  // read a three deep tree
+  if (!Madara::Cid::read_deployment (settings, three_deep_deployment))
+  {
+    std::cerr << "ERROR: Deployment size is 0 for " 
+      << three_deep_deployment << "\n";
+  }
+
+  // read an mway tree
   if (!Madara::Cid::read_deployment (settings, mway_deployment))
   {
     std::cerr << "ERROR: Deployment size is 0 for " 
       << mway_deployment << "\n";
   }
 
-  // read the for loop first
+  // read the strict 3-way tree (0-size)
   if (!Madara::Cid::read_deployment (settings, fifth_deployment))
   {
     std::cerr << "ERROR: Deployment size is 0 for " 
       << fifth_deployment << "\n";
   }
 
-  // read the for loop first
+  // read the loose 3-way tree (1-size, 1 extra)
   if (!Madara::Cid::read_deployment (settings, fourth_deployment))
   {
     std::cerr << "ERROR: Deployment size is 0 for " 
       << fourth_deployment << "\n";
   }
 
-  // read the first deployment
+  // read the two full fanout deployments
   if (!Madara::Cid::read_deployment (settings, first_deployment))
   {
     std::cerr << "ERROR: Deployment size is 0 for " 

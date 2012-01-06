@@ -17,10 +17,10 @@ namespace Madara
   namespace Cid
   {
     MADARA_Export void ga_naive (Settings & settings,
-      unsigned int max_mutations);
+      double duration);
 
     MADARA_Export void ga_degree (Settings & settings,
-      unsigned int max_mutations);
+      double duration);
 
   } // end namespace Cid
 

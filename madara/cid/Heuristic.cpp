@@ -386,20 +386,148 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
 }
 
 void
-Madara::Cid::prepare_deployment (Settings & settings)
+Madara::Cid::pathwise_approximate (Settings & settings)
 {
-  prepare_deployment (settings.target_deployment);
+  // need to use the updates from prepare_deployment and populate_links
+  Paths & paths = settings.paths;
+  Solution_Map & lookup = settings.solution_lookup;
+  Deployment & solution = settings.solution;
+
+  for (unsigned int i = 0; i < paths.size (); ++i)
+  {
+    unsigned int & source = paths[i].source;
+    unsigned int & source_id = solution[source];
+
+    Solution_Map::iterator found = lookup.find (source_id);
+    if (found != lookup.end () || found->second != source)
+    {
+      unsigned int degree = paths[i].degree;
+      Latency_Vector & cur_averages = settings.network_averages[degree];
+
+      unsigned int candidate = 0;
+      unsigned int candidate_id = cur_averages[candidate].first;
+
+      found = lookup.find (candidate_id);
+
+      for (; found == lookup.end () || found->second == candidate ; ++candidate)
+      {
+        candidate_id = cur_averages[candidate].first;
+        found = lookup.find (candidate_id);
+      }
+
+      // we've found a solution to the current pivot
+      solution[source] = candidate_id;
+      lookup[candidate_id] = source;
+
+      // now, follow the chain everywhere
+      Link_Map & links = paths[i].dest;
+      for (Link_Map::iterator j = links.begin (); j != links.end (); ++j)
+      {
+        if (j->second.length == 1)
+        {
+          
+        }
+      }
+    }
+  }
 }
 
 void
-Madara::Cid::prepare_deployment (Workflow & target_deployment)
+Madara::Cid::populate_links (Paths & paths, Links & source, Links & connected,
+                             unsigned int depth)
 {
+  // go through the candidates in connected's list
+  for (Link_Map::iterator j = connected.dest.begin ();
+    j != connected.dest.end (); ++j)
+  {
+    unsigned int dest_id = j->first;
+    bool needs_expanding = false;
+
+    Link_Map::iterator found = source.dest.find (dest_id);
+
+    if (found == source.dest.end ())
+    {
+      needs_expanding = true;
+      source.dest[dest_id].length = depth + 1;
+    }
+    else if (found->second.length > depth + 1)
+    {
+      needs_expanding = true;
+      source.dest[dest_id].length = depth + 1;
+    }
+
+    if (needs_expanding)
+    {
+      Links & dest = paths[dest_id];
+      populate_links (paths, source, dest, depth + 1);
+    }
+  }
+}
+
+void
+Madara::Cid::prepare_deployment (Settings & settings)
+{
+  Workflow & deployment = settings.target_deployment;
+  Paths & paths = settings.paths;
+
+  paths.clear ();
+
+  if (paths.size () != deployment.size ())
+  {
+    paths.resize (deployment.size ());
+
+    for (unsigned int i = 0; i < deployment.size (); ++i)
+    {
+      paths[i].source = i;
+    }
+  }
+
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
   DLINFO "Madara::Cid::prepare_deployment:" \
   " sorting the target_deployment\n"));
 #endif
+  std::sort (deployment.begin (), deployment.end (),
+             Decreasing_Size_Directed_Edges);
 
-  std::sort (target_deployment.begin (), target_deployment.end (),
-    Decreasing_Size);
+  // 1. create links from current deployment degrees
+  for (unsigned int i = 0;
+    i < deployment.size () && deployment[i].size (); ++i)
+  {
+    unsigned int & source = deployment[i][0].first;
+
+    for (unsigned int j = 0; j < deployment[i].size (); ++j)
+    {
+      unsigned int & dest = deployment[i][j].second;
+
+      // copy degrees over to paths, except consider all links bidirectional
+      paths[source].dest[dest].target = 1;
+      paths[source].dest[dest].length = 1;
+      paths[dest].dest[source].target = 1;
+      paths[dest].dest[source].length = 1;
+    }
+  }
+
+  // 2. update degree information inside of the paths structure.
+  for (unsigned int i = 0;   
+         i < paths.size () && paths[i].dest.size () > 0; ++i)
+  {
+    paths[i].degree = paths[i].dest.size ();
+  }
+
+  // 3. iterate over these links until we have all possible links
+  for (unsigned int i = 0;
+         i < paths.size () && paths[i].dest.size () > 0; ++i)
+  {
+    for (Link_Map::iterator j = paths[i].dest.begin ();
+      j != paths[i].dest.end (); ++j)
+    {
+      unsigned int dest_id = j->first;
+      Links & dest = paths[dest_id];
+      populate_links (paths, paths[i], dest, 1);
+    }
+  }
+
+  // 4. sort 
+  std::sort (paths.begin (), paths.end (), Decreasing_Size_And_Degrees_Links);
 }

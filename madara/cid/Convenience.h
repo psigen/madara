@@ -60,6 +60,19 @@ namespace Madara
     MADARA_Export void init (unsigned int size, Settings & settings);
 
     /**
+     * From the current deployment plan, overlay perfect latencies that mimic
+     * the deployment
+     * 
+     * @param       settings         container for CID settings
+     * @param       min_latency      the latency to overlay on the deployment.
+     * @param       min_noise        the minimum noise latency to overlay off
+     *                               the deployment
+     * @return      minimum total latency of the deployment
+     **/
+    MADARA_Export unsigned long long overlay_latencies (Settings & settings,
+      unsigned int min_latency, unsigned int min_noise);
+
+    /**
      * Sorts the latencies in a network topology and averages them into a format
      * that can be used by CID. This function performs averages for all possible
      * degrees in the deployment.

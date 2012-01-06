@@ -14,6 +14,15 @@
 
 double ga_time = 1.0;
 
+void worst_case (Madara::Cid::Settings & settings)
+{
+  for (int i = (int)settings.solution.size () - 1; i >= 0 ; --i)
+  {
+    settings.solution[i] = i;
+    settings.solution_lookup[i] = i;
+  }
+}
+
 void genetic_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::generate_worst_solution (settings);
@@ -52,65 +61,33 @@ void cid_ga_degree (Madara::Cid::Settings & settings)
 
 void hand_coded (Madara::Cid::Settings & settings)
 {
-  Madara::Cid::Workflow & deployment = settings.target_deployment;
-  Madara::Cid::Averages_Map & averages = settings.network_averages;
-  Madara::Cid::Solution_Map & lookup = settings.solution_lookup;
-
-  unsigned int fill_starting = deployment.size ();
-  unsigned int first_degree = deployment[0].size ();
-  unsigned int second_degree = deployment[1].size ();
-
-  if (first_degree > 1 && second_degree > 1)
+  for (unsigned int i = 0; i < settings.solution.size (); ++i)
   {
-    // set node 1 to the best average latency from the highest degree
-    settings.solution[deployment[0][0].first] = 
-      averages[first_degree][0].first;
-
-    lookup[averages[first_degree][0].first] = deployment[0][0].first;
-
-    // set node 0 to either the best latency from degree 4 or to the
-    // second best latency in 4, if solution[1] was the same
-    if (averages[first_degree][0].first != averages[second_degree][0].first)
-    {
-      settings.solution[deployment[1][0].first] = 
-        averages[second_degree][0].first;
-
-      lookup[averages[second_degree][0].first] = deployment[1][0].first;
-    }
-    else
-    {
-      settings.solution[deployment[1][0].first] = 
-        averages[first_degree][1].first;
-
-      lookup[averages[first_degree][0].first] = deployment[1][0].first;
-    }
+    settings.solution[i] = i;
+    settings.solution_lookup[i] = i;
   }
-  else
-  {
-    fill_starting = 0;
-  }
-
-  Madara::Cid::fill_by_highest_degree (settings, fill_starting);
 }
 
 bool use_csv_format (true);
 
-#define NUM_TESTS           9
-#define PREPARATION         9
+#define NUM_TESTS           10
+#define PREPARATION         10
 #define MIN_TEST_RANGE      0
-#define MAX_TEST_RANGE      9
+#define MAX_TEST_RANGE      10
 
 char * testnames [] = {
   "CID Heuristic",
-  "Blind CID Heuristic",
-  "Blind Genetic Algorithm",
-  "Guided Genetic Algorithm",
-  "CID-BGA",
-  "CID-GGA",
-  "BCID-BGA",
-  "BCID-GGA",
+  "Naive CID Heuristic",
+  "Naive Genetic Algorithm",
+  "Degreed Genetic Algorithm",
+  "CID-NGA",
+  "CID-DGA",
+  "Naive CID-NGA",
+  "Naive CID-DGA",
   "Random Deployment",
+  "Hand Coded",
 };
+
 
 void (* test_impls []) (Madara::Cid::Settings &) = {
   Madara::Cid::approximate,
@@ -122,6 +99,7 @@ void (* test_impls []) (Madara::Cid::Settings &) = {
   ::naive_cid_ga_naive,
   ::naive_cid_ga_degree,
   Madara::Cid::generate_worst_solution,
+  ::hand_coded
 
 };
 
@@ -204,6 +182,7 @@ void print_stats (std::ostream & output, const std::string & id,
 
     output << "\n Statistics for tests on size " << size << "\n";
 
+
     output << divider << "\n";
 
     output << std::setw (30) << "            " << 
@@ -235,6 +214,7 @@ void print_stats (std::ostream & output, const std::string & id,
   }
 }
 
+
 void prepare_latencies (Madara::Cid::Settings & settings)
 {
   // high res timers provided by ACE
@@ -257,26 +237,27 @@ void print_solutions (std::ostream & output, Madara::Cid::Settings & settings,
 {
   output << std::setw (30) << testnames[test_type];
   output << ":\n";
+
+  for (unsigned int i = 0; i < settings.target_deployment.size (); ++i)
+  {
+    unsigned int degree = settings.target_deployment[i].size ();
+    if (degree > 0)
+      output << "  needed to solve solution[" 
+             << settings.target_deployment[i][0].first
+             << "] (degree=" << degree << ")\n";
+  }
+
   for (unsigned int i = 0; i < size; ++i)
   {
-    //unsigned int degree = settings.target_deployment[i].size ();
-
-    //if (degree > 0)
-    //{
-    //  unsigned int source = settings.target_deployment[i][0].first;
-
-      output << "  solution[" << i << "] is " << settings.solution[i] << "\n"; 
-    //}
-    //else
-    //{
-    //  break;
-    //}
+    output << "  solution[" << i << "] is " << settings.solution[i] << "\n"; 
   }
   output << "\n";
 }
 
 void test_cid (unsigned int size, std::ostream & output)
 {
+  std::string test_divider (79, '*');
+
   if (!use_csv_format)
     output << "\n\nTesting deployment of size " << size << std::endl;
 
@@ -284,226 +265,34 @@ void test_cid (unsigned int size, std::ostream & output)
 
   // initialize network
   Madara::Cid::init (size, settings);
-  Madara::Cid::generate_random_network (size, settings);
 
-  unsigned int quarter = size / 4;
-  unsigned int mid = size / 2;
-  unsigned int third = size / 3;
-
-  //// first element of the deployment sends stuff to 0-3
-  //settings.target_deployment[0].resize (mid);
-  //for (unsigned int i = 0; i < mid; ++i)
-  //{
-  //  settings.target_deployment[0][i].first = 0;
-  //  settings.target_deployment[0][i].second = i + quarter;
-  //}
-
-  std::string test_divider (79, '*');
-
-  if (!use_csv_format)
-  {
-    output << test_divider << std::endl;
-    output << "  Testing full-sized, complete overlap fanouts\n";
-    output << test_divider << std::endl;
-  }
-
-  Madara::Cid::Workflow & deployment = settings.target_deployment;
-
-  deployment.resize (size);
-
-  for (unsigned int i = 0; i < deployment.size (); ++i)
-  {
-    deployment[i].clear ();
-  }
-
-  // test full-sized fanouts from 1-3 source nodes targeting the same nodes
-  for (unsigned int fan_outs = 1; fan_outs <= 4; ++fan_outs)
-  {
-    if (!use_csv_format)
-    {
-      output << test_divider << std::endl;
-      output << "  Testing " << fan_outs << 
-        " full-sized, complete overlap fanouts\n";
-      output << test_divider << std::endl;
-    }
-    std::cout << "  Testing " << fan_outs << 
-      " full-sized, complete overlap fanouts\n";
-
-    // create a 100% fanout in the targeted workflows
-    for (unsigned int source = 0; source < fan_outs; ++source)
-    {
-      deployment[source].resize (size);
-      unsigned int actual = 0;
-      for (unsigned int i = 0; i < deployment[source].size (); ++i)
-      {
-        deployment[source][i].first = source;
-        deployment[source][i].second = i;
-      }
-    }
-
-    if (!use_csv_format)
-      output << "  Preparing deployment\n";\
-    Madara::Cid::prepare_deployment (settings);
-
-    if (!use_csv_format)
-      output << "  Preparing latencies\n";
-    settings.network_averages.clear ();
-    ::prepare_latencies (settings);
-
-    // iterate through all tests on this constraint satisfaction problem
-    for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
-    {
-      settings.solution_lookup.clear ();
-
-      // high res timers provided by ACE
-      ACE_hrtime_t measured;
-      ACE_High_Res_Timer timer;
-
-      if (!use_csv_format)
-        output << "  Approximating with " << testnames[i] << std::endl;
-      std::cout << "    Approximating with " << testnames[i] << std::endl;
-
-      timer.start ();
-
-      // sort and average the latencies from each vertex
-      test_impls [i] (settings);
-
-      timer.stop ();
-      timer.elapsed_time (measured);
-
-      // save wall clock time that passed during the test
-      clocks[i] = measured;
-
-      // save the overall utility of the solution (less is better)
-      latencies[i] = Madara::Cid::calculate_latency (settings);
-
-
-      if (Madara::Cid::check_solution (settings))
-        std::cerr << "  " << testnames[i] << " appears to be broken. " <<
-                  " Please report this at madara.googlecode.com\n";
-
-      //print_solutions (output, settings, i, 1);
-    }
-
-    std::stringstream testid;
-    testid << size << " with " << fan_outs << " max degrees";
-    print_stats (output, testid.str (), size);
-  } // end full-sized fanouts
-
-  if (!use_csv_format)
-  {
-    output << test_divider << std::endl;
-    output << "  Testing half-sized, complete overlap fanouts\n";
-    output << test_divider << std::endl;
-  }
-
-  for (unsigned int i = 0; i < deployment.size (); ++i)
-  {
-    deployment[i].clear ();
-  }
-
-  // test half-sized fanouts from 1-3 source nodes targeting the same nodes
-  for (unsigned int fan_outs = 1; fan_outs <= 4; ++fan_outs)
-  {
-    if (!use_csv_format)
-    {
-      output << test_divider << std::endl;
-      output << "  Testing " << fan_outs << 
-        " half-sized, complete overlap fanouts\n";
-      output << test_divider << std::endl;
-    }
-    std::cout << "  Testing " << fan_outs << 
-      " half-sized, complete overlap fanouts\n";
-
-    // create a 100% fanout in the targeted workflows
-    for (unsigned int source = 0; source < fan_outs; ++source)
-    {
-      deployment[source].resize (mid);
-      for (unsigned int i = 0; i < deployment[source].size (); ++i)
-      {
-        deployment[source][i].first = source;
-        deployment[source][i].second = quarter + i;
-      }
-    }
-
-    if (!use_csv_format)
-      output << "  Preparing deployment\n";\
-    Madara::Cid::prepare_deployment (settings);
-
-    if (!use_csv_format)
-      output << "  Preparing latencies\n";
-    settings.network_averages.clear ();
-    ::prepare_latencies (settings);
-
-
-    // iterate through all tests on this constraint satisfaction problem
-    for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
-    {
-      settings.solution_lookup.clear ();
-
-      // high res timers provided by ACE
-      ACE_hrtime_t measured;
-      ACE_High_Res_Timer timer;
-
-      if (!use_csv_format)
-        output << "  Approximating with " << testnames[i] << std::endl;
-      std::cout << "    Approximating with " << testnames[i] << std::endl;
-
-      timer.start ();
-
-      // sort and average the latencies from each vertex
-      test_impls [i] (settings);
-
-      timer.stop ();
-      timer.elapsed_time (measured);
-
-      // save wall clock time that passed during the test
-      clocks[i] = measured;
-
-      // save the overall utility of the solution (less is better)
-      latencies[i] = Madara::Cid::calculate_latency (settings);
-
-      if (Madara::Cid::check_solution (settings))
-        std::cerr << "  " << testnames[i] << " appears to be broken. " <<
-                  " Please report this at madara.googlecode.com\n";
-
-      //print_solutions (output, settings, i, 1);
-    }
-
-    std::stringstream testid;
-    testid << size << " with " << fan_outs << " half overlapping degrees";
-    print_stats (output, testid.str (), size);
-  } // end half-sized fanouts
-
-
-  // test even-sized fanouts from 1-4 source nodes targeting disjoint nodes
-  for (unsigned int fan_outs = 1; fan_outs <= 4; ++fan_outs)
   {
     // create filename 
     std::stringstream filename;
     filename << getenv ("MADARA_ROOT");
-    filename << "/configs/cid/deployments/test_cid/";
-    filename << fan_outs << "_even_fans_disjoint.template";
+    filename << "/configs/cid/deployments/test_cid/3waytree_strict.template";
 
     if (!use_csv_format)
     {
       // notify user of current est
       output << test_divider << std::endl;
-      output << "  Testing " << fan_outs << 
-        " even-sized, disjoint fanouts\n";
+      output << "  Testing 3-way tree\n";
       output << test_divider << std::endl;
     }
-    std::cout << "  Testing " << fan_outs << 
-      " even-sized, disjoint fanouts\n";
+    std::cout << "  Testing 3-way tree\n";
 
     settings.solution.resize (size);
     Madara::Cid::read_deployment (settings, filename.str ());
+
+    unsigned long long minimum =
+      Madara::Cid::overlay_latencies (settings, 500, 600);
 
     if (!use_csv_format)
       output << "  Preparing latencies\n";
     settings.network_averages.clear ();
     ::prepare_latencies (settings);
 
+    output << "  Minimum latency is " << minimum << std::endl;
 
     // iterate through all tests on this constraint satisfaction problem
     for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
@@ -517,6 +306,7 @@ void test_cid (unsigned int size, std::ostream & output)
       if (!use_csv_format)
         output << "  Approximating with " << testnames[i] << std::endl;
       std::cout << "    Approximating with " << testnames[i] << std::endl;
+
 
       timer.start ();
 
@@ -536,15 +326,83 @@ void test_cid (unsigned int size, std::ostream & output)
         std::cerr << "  " << testnames[i] << " appears to be broken. " <<
                   " Please report this at madara.googlecode.com\n";
 
-      //print_solutions (output, settings, i, 1);
+      //output << "Solution was...\n";
+      //print_solutions (output, settings, i, size);
     }
 
     std::stringstream testid;
-    testid << size << " with " << fan_outs << " even disjoint degrees";
+    testid << size << " with 3-way tree";
     print_stats (output, testid.str (), size);
-  } // end even-sized fanouts
+  }
+  
+  {
+    // create filename 
+    std::stringstream filename;
+    filename << getenv ("MADARA_ROOT");
+    filename << "/configs/cid/deployments/test_cid/3_deep_tree.template";
+
+    if (!use_csv_format)
+    {
+      // notify user of current est
+      output << test_divider << std::endl;
+      output << "  Testing 3-deep tree\n";
+      output << test_divider << std::endl;
+    }
+    std::cout << "  Testing 3-deep tree\n";
+
+    settings.solution.resize (size);
+    Madara::Cid::read_deployment (settings, filename.str ());
+
+    unsigned long long minimum =
+      Madara::Cid::overlay_latencies (settings, 500, 600);
+
+    if (!use_csv_format)
+      output << "  Preparing latencies\n";
+    settings.network_averages.clear ();
+    ::prepare_latencies (settings);
+
+    output << "  Minimum latency is " << minimum << std::endl;
+
+    // iterate through all tests on this constraint satisfaction problem
+    for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
+    {
+      settings.solution_lookup.clear ();
+
+      // high res timers provided by ACE
+      ACE_hrtime_t measured;
+      ACE_High_Res_Timer timer;
+
+      if (!use_csv_format)
+        output << "  Approximating with " << testnames[i] << std::endl;
+      std::cout << "    Approximating with " << testnames[i] << std::endl;
 
 
+      timer.start ();
+
+      // sort and average the latencies from each vertex
+      test_impls [i] (settings);
+
+      timer.stop ();
+      timer.elapsed_time (measured);
+
+      // save wall clock time that passed during the test
+      clocks[i] = measured;
+
+      // save the overall utility of the solution (less is better)
+      latencies[i] = Madara::Cid::calculate_latency (settings);
+
+      if (Madara::Cid::check_solution (settings))
+        std::cerr << "  " << testnames[i] << " appears to be broken. " <<
+                  " Please report this at madara.googlecode.com\n";
+
+      //output << "Solution was...\n";
+      //print_solutions (output, settings, i, size);
+    }
+
+    std::stringstream testid;
+    testid << size << " with 3-deep tree";
+    print_stats (output, testid.str (), size);
+  }
 }
 
 void verify_algorithms (std::ostream & output)
@@ -726,7 +584,7 @@ void verify_algorithms (std::ostream & output)
   if (alg_latencies[NAIVE_CID] != 55)
     output << "  fill_by_highest_degree (i.e. Naive CID heuristic)\n";
 
-  if (alg_latencies[NAIVE_GA] > 56)
+  if (alg_latencies[NAIVE_GA] > 70)
     output << "  ga_naive (i.e. Naive Genetic Algorithm)\n";
 
   if (alg_latencies[DEGREED_GA] != 55)
@@ -746,7 +604,7 @@ int main (int argc, char *argv[])
   unsigned int end = 10000;
   unsigned int increment = 1000;
   unsigned int repeat = 1;
-  std::string output_file ("test_cid_results.txt");
+  std::string output_file ("test_cid_linked_results.txt");
 
   for (int i = 1; i < argc; ++i)
   {
@@ -798,12 +656,10 @@ int main (int argc, char *argv[])
     {
       buffer << "\nHelp for " << argv[0] << "\n\n";
       buffer << "  This application tests the CID heuristics and genetic\n";
-      buffer << "  algorithms with a range of sizes and deployment types.\n\n";
+      buffer << "  algorithms on disjoint deployments.\n\n";
       buffer << "Usage information for " << argv[0] << "\n\n";
       buffer << "  -b <value> || --begin <value>\n";
       buffer << "      First size to try. Default is 1000 (1,000)\n\n";
-      buffer << "  -c || --csv\n";
-      buffer << "      Toggle csv formatting (on by default)\n\n";
       buffer << "  -e <value> || --end <value>\n";
       buffer << "      Last size to try. Default is 10000 (10,000)\n\n";
       buffer << "  -h  || --help\n";
@@ -834,8 +690,7 @@ int main (int argc, char *argv[])
 
   srand ((unsigned int) time (0));
 
-  if (!use_csv_format)
-    verify_algorithms (output);
+  //verify_algorithms (output);
 
   std::cout << "\nSaving results to " << output_file << "\n";
 
@@ -850,6 +705,7 @@ int main (int argc, char *argv[])
     }
     output << "\n";
   }
+
 
   for (unsigned int i = begin; i <= end; i += increment)
   {

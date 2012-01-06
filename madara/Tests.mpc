@@ -416,3 +416,23 @@ project (Test_CID_Disjoint) : using_madara, using_ace {
   }
 }
 
+project (Test_CID_Linked) : using_madara, using_ace {
+  requires += tests cid
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_cid_linked
+  
+  // libs += Madara
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    ../tests/test_cid_linked.cpp
+  }
+}
+

@@ -22,6 +22,39 @@ namespace Madara
     //#define ENABLE_CID_LOGGING
 
     /**
+     * Container class for a link established within a deployment
+     **/
+    class Link
+    {
+    public:
+      unsigned int target;
+      unsigned int length;
+
+      /**
+       * Default constructor
+       **/
+      Link () : target (0), length (0)
+      {  
+      }
+    };
+
+    /**
+     * A vector of @see Link
+     **/
+    typedef std::map <unsigned int, Link>            Link_Map;
+
+    /**
+     * A container for all links from a source
+     **/
+    class Links
+    {
+    public:
+      unsigned int source;
+      unsigned int degree;
+      Link_Map dest;
+    };
+
+    /**
      * A pairing of a target (first) and a latency (second)
      **/
     typedef std::pair <unsigned int, unsigned long long>   Latency_Record;
@@ -52,11 +85,16 @@ namespace Madara
     typedef std::vector <Directed_Edges>             Workflow;
 
     /**
+     * A lookup for all paths in the deployment.
+     **/
+    typedef std::vector <Links>                      Paths;
+
+    /**
      * A list of deployment ids which correspond to individuals
      * in a @see LV_Vector
      **/
     typedef std::vector <unsigned int>               Deployment;
-    
+
     /**
      * A list of latencies, mostly used for averages
      **/
@@ -102,10 +140,55 @@ namespace Madara
     /**
      * Comparator for a list of decreasing sizes of latency vectors
      **/
-    static bool Decreasing_Size (
+    static bool Decreasing_Size_Directed_Edges (
       const Directed_Edges & u, const Directed_Edges & v)
     {
       return u.size () > v.size ();
+    }
+
+    /**
+     * Comparator for a list of decreasing sizes of number of links
+     **/
+    static bool Decreasing_Size_Link_Map (
+      const Link_Map & u, const Link_Map & v)
+    {
+      return u.size () > v.size ();
+    }
+
+    /**
+     * Comparator for a list of decreasing sizes of number of links
+     **/
+    static bool Decreasing_Size_And_Degrees_Links (
+      const Links & u, const Links & v)
+    {
+      return u.dest.size () >= v.dest.size () && u.degree > v.degree;
+    }
+
+    /**
+     * Comparator for an increasing path length
+     **/
+    static bool Increasing_Path_Length (
+      const Link & u, const Link & v)
+    {
+      return u.length < v.length;
+    }
+
+    /**
+     * Comparator for an increasing target
+     **/
+    static bool Increasing_Target (
+      const Link & u, const Link & v)
+    {
+      return u.target < v.target;
+    }
+
+    /**
+     * Comparator for an increasing source
+     **/
+    static bool Increasing_Source (
+      const Links & u, const Links & v)
+    {
+      return u.source < v.source;
     }
 
     ///**
@@ -226,6 +309,11 @@ namespace Madara
        *              
        **/
       Workflow     target_deployment;
+
+      /**
+       * A listing of all paths
+       **/
+      Paths        paths;
 
       /**
        * This is the solution to the target_deployment according

@@ -12,46 +12,42 @@
 #include "madara/cid/Heuristic.h"
 #include "madara/utility/Log_Macros.h"
 
+double ga_time = 1.0;
+
 void genetic_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::generate_worst_solution (settings);
-  for (unsigned int i = 0; i < 400; ++i)
-    Madara::Cid::ga_degree (settings, 5);
+  Madara::Cid::ga_degree (settings, ga_time);
 }
 
 void genetic_naive (Madara::Cid::Settings & settings)
 {
   Madara::Cid::generate_worst_solution (settings);
-  for (unsigned int i = 0; i < 100; ++i)
-    Madara::Cid::ga_naive (settings, 5);
+  Madara::Cid::ga_naive (settings, ga_time);
 }
 
 void naive_cid_ga_naive (Madara::Cid::Settings & settings)
 {  
   Madara::Cid::fill_by_highest_degree (settings);
-  for (unsigned int i = 0; i < 400; ++i)
-    Madara::Cid::ga_naive (settings, 5);
+  Madara::Cid::ga_naive (settings, ga_time);
 }
 
 void naive_cid_ga_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::fill_by_highest_degree (settings);
-  for (unsigned int i = 0; i < 100; ++i)
-    Madara::Cid::ga_degree (settings, 5);
+  Madara::Cid::ga_degree (settings, ga_time);
 }
 
 void cid_ga_naive (Madara::Cid::Settings & settings)
 {
   Madara::Cid::approximate (settings);
-  for (unsigned int i = 0; i < 400; ++i)
-    Madara::Cid::ga_naive (settings, 5);
+  Madara::Cid::ga_naive (settings, ga_time);
 }
 
 void cid_ga_degree (Madara::Cid::Settings & settings)
 {
   Madara::Cid::approximate (settings);
-  for (unsigned int i = 0; i < 100; ++i)
-    Madara::Cid::ga_degree (settings, 5);
+  Madara::Cid::ga_degree (settings, ga_time);
 }
 
 void hand_coded (Madara::Cid::Settings & settings)
@@ -763,6 +759,12 @@ int main (int argc, char *argv[])
       buffer >> repeat;
       ++i;
     }
+    else if (i + 1 < argc && arg == "-t" || arg == "--max-time")
+    {
+      buffer << argv[i + 1];
+      buffer >> ga_time;
+      ++i;
+    }
     else
     {
       buffer << "\nHelp for " << argv[0] << "\n\n";
@@ -782,6 +784,8 @@ int main (int argc, char *argv[])
       buffer << "  -r <filename> || --repeat <filename>\n";
       buffer << "      Repeats every test a certain number of times.\n"
              << "      Useful when combined with --csv for results.\n\n";
+      buffer << "  -t <value> || --max-time <value>\n";
+      buffer << "      Maximum time to give genetic algorithms\n\n";
 
       std::cout << buffer.str ();
       exit (0);

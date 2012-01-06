@@ -211,6 +211,7 @@ Madara::Cid::init (unsigned int size, Settings & settings)
   settings.network_latencies.resize (size);
   settings.ids.resize (size);
   settings.solution.resize (size);
+  settings.paths.resize (size);
 
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -222,13 +223,85 @@ Madara::Cid::init (unsigned int size, Settings & settings)
   for (unsigned int i = 0; i < settings.network_latencies.size (); i++)
   {
     settings.network_latencies[i].resize (size);
+    settings.paths[i].source = i;
   }
+}
+
+/**
+ * From the current deployment plan, overlay perfect latencies that mimic
+ * the deployment
+ * 
+ * @param       settings     container for CID settings
+ * @param       min_latency      the latency to overlay on the deployment.
+ * @param       min_noise        the minimum noise latency to overlay off
+ *                               the deployment
+ * @return      minimum latency deployment in the network
+ **/
+unsigned long long
+Madara::Cid::overlay_latencies (Settings & settings, 
+                                unsigned int min_latency,
+                                unsigned int min_noise)
+{
+  LV_Vector & latencies = settings.network_latencies;
+  Workflow & deployment = settings.target_deployment;
+  unsigned long long total = 0;
+
+  // place the minimal noise
+  for (unsigned int i = 0; i < latencies.size (); ++i)
+  {
+    for (unsigned int j = 0; j < latencies[i].size (); ++j)
+    {
+      latencies[i][j].first = j;
+      latencies[i][j].second = rand () + min_noise;
+    }
+  }
+
+  // place the minimal latencies
+  for (unsigned int i = 0; i < deployment.size (); ++i)
+  {
+    Directed_Edges & edges = deployment[i];
+    for (unsigned int j = 0; j < edges.size (); ++j)
+    {
+      latencies[edges[j].first][edges[j].second].second =
+        (unsigned long long) min_latency;
+
+      total += latencies[edges[j].first][edges[j].second].second;
+    }
+  }
+  return total;
 }
 
 
 void
 Madara::Cid::prepare_latencies (Settings & settings)
 {
+  // setup an average where degree == size
+
+  unsigned int degree = settings.solution.size ();
+
+
+  // we're dealing with a std::map which has O(log n) lookup. Use ref.
+  Latency_Vector & cur_averages = settings.network_averages[degree];
+  LV_Vector & latencies = settings.network_latencies;
+ 
+  // make sure cur_averages has the right size
+  if (cur_averages.size () != latencies.size ())
+    cur_averages.resize (latencies.size ());
+
+  for (unsigned int i = 0; i < latencies.size (); ++i)
+  {
+    cur_averages[i].first = i;
+    cur_averages[i].second = 0;
+    for (unsigned int j = 0; j < latencies[i].size (); ++j)
+    {
+      cur_averages[i].second += latencies[i][j].second;
+    }
+  }
+  
+  std::sort (cur_averages.begin (), cur_averages.end (),
+    Increasing_Latency);
+
+  // Now create averages[degrees] for the degrees of the deployment
   for (unsigned int i = 0; i < settings.target_deployment.size (); ++i)
     prepare_latencies (settings, i);
 }
@@ -624,8 +697,7 @@ Madara::Cid::process_deployment (Settings & settings,
                     dest_tokens[0].resize (last);
 
                   // set source begin and end
-                  dest_begin = 
-                    (unsigned int)knowledge.evaluate (dest_tokens[0]);
+                  dest_begin = dest_tokens[0];
                   dest_end = dest_begin;
                 }
               }
@@ -673,7 +745,10 @@ Madara::Cid::process_deployment (Settings & settings,
               end = solution.size () - 1;
 
             for (; begin <= end; begin += inc)
+            {
               map[source_begin][begin];
+              //map[begin][source_begin];
+            }
           }
         } // end dest range construction
 
