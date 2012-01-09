@@ -13,6 +13,7 @@
 
 #include "Heuristic.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/cid/Convenience.h"
 
 void
 Madara::Cid::approximate (Settings & settings)
@@ -385,13 +386,36 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
   }
 }
 
+
+void
+Madara::Cid::pathwise_approximate (Settings & settings,
+             Deployment & solution, Solution_Map & lookup)
+{
+
+}
+
 void
 Madara::Cid::pathwise_approximate (Settings & settings)
 {
+#define    MAX_SOLUTIONS     5
   // need to use the updates from prepare_deployment and populate_links
   Paths & paths = settings.paths;
   Solution_Map & lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
+  LV_Vector & latencies = settings.network_latencies;
+  std::vector<Deployment> solutions;
+  std::vector<Solution_Map> lookups;
+  Latency_Vector utilities;
+  utilities.resize (MAX_SOLUTIONS);
+  solutions.resize (MAX_SOLUTIONS);
+  lookups.resize (MAX_SOLUTIONS);
+
+  // this approximation algorithm will find 5 solutions
+  for (unsigned int i = 0; i < MAX_SOLUTIONS; ++i)
+  {
+    solutions[i].resize (solution.size ());
+    utilities[i].first = i;
+  }
 
   for (unsigned int i = 0; i < paths.size (); ++i)
   {
@@ -399,48 +423,128 @@ Madara::Cid::pathwise_approximate (Settings & settings)
     unsigned int & source_id = solution[source];
 
     Solution_Map::iterator found = lookup.find (source_id);
-    if (found != lookup.end () || found->second != source)
+    if (found == lookup.end () || found->second != source)
     {
-      unsigned int degree = paths[i].degree;
-      Latency_Vector & cur_averages = settings.network_averages[degree];
+      // we know that this neighborhood is not solved yet
+      unsigned int neighborhood_size = paths[i].degree > 0 ?
+        paths[i].degree : solution.size ();
 
-      unsigned int candidate = 0;
-      unsigned int candidate_id = cur_averages[candidate].first;
+      // 
+      Latency_Vector & cur_averages =
+        settings.network_averages[neighborhood_size];
 
-      found = lookup.find (candidate_id);
-
-      for (; found == lookup.end () || found->second == candidate ; ++candidate)
+      unsigned int best = 0;
+      for (unsigned int j = 0; j < MAX_SOLUTIONS && j < paths.size (); ++j)
       {
-        candidate_id = cur_averages[candidate].first;
-        found = lookup.find (candidate_id);
-      }
+        // use the current lookup
+        lookups[j] = lookup;
+        std::copy (solution.begin (), solution.end (), solutions[j].begin ());
 
-      // we've found a solution to the current pivot
-      solution[source] = candidate_id;
-      lookup[candidate_id] = source;
-
-      // now, follow the chain everywhere
-      Link_Map & links = paths[i].dest;
-      for (Link_Map::iterator j = links.begin (); j != links.end (); ++j)
-      {
-        if (j->second.length == 1)
+        for (; best < cur_averages.size (); ++best)
         {
-          
+          found = lookups[j].find (cur_averages[best].first);
+          if (found == lookups[j].end ())
+          {
+            solutions[j][source] = cur_averages[best].first;
+            lookups[j][cur_averages[best].first] = source;
+            ++best;
+            break;
+          }
         }
+
+        // solve for everything in source's neighborhood
+        Link_Vector & list = paths[i].list;
+        Latency_Vector & source_latencies = latencies[cur_averages[j].first];
+
+        std::sort (source_latencies.begin (), source_latencies.end (),
+          Increasing_Id);
+
+        for (unsigned int k = 0; k < list.size (); ++k)
+        {
+          // is it even possible for this to be duplicated?
+          found = lookups[j].find (solutions[j][list[k].target]);
+          if (found == lookups[j].end () || found->second != list[k].target)
+          {
+            Latency_Record path_latencies[MAX_SOLUTIONS];
+            //Latency_Vector path_latencies;
+            //path_latencies.resize (MAX_SOLUTIONS);
+
+            unsigned int & degree = list[k].degree;
+            Latency_Vector & target_averages = 
+              settings.network_averages[degree];
+
+            unsigned int m = 0;
+            unsigned int actuals = 0;
+            // take the best latency of the first MAX_SOLUTIONS
+            for (unsigned int l = 0;
+              l < MAX_SOLUTIONS && l < target_averages.size (); ++l)
+            {
+              for (; m < target_averages.size (); ++m)
+              {
+                // this should only happen if the lookup doesn't contain
+                // the target_averages[m]
+                found = lookups[j].find (target_averages[m].first);
+                if (found == lookups[j].end ())
+                {
+                  path_latencies[l].first = target_averages[m].first;
+                  path_latencies[l].second = 
+                    source_latencies[target_averages[m].first].second +
+                    target_averages[m].second;
+                  ++m;
+                  ++actuals;
+                  break;
+                }
+              }
+            }
+
+            if (actuals > 1)
+              std::sort (path_latencies, &path_latencies[actuals],
+                Increasing_Latency);
+
+            solutions[j][list[k].target] = path_latencies[0].first;
+            lookups[j][path_latencies[0].first] = list[k].target;
+          }
+        }
+
+        std::sort (source_latencies.begin (), source_latencies.end (),
+          Increasing_Latency);
+
+        //pathwise_approximate (settings, solutions[j], lookups[j]);
+
+        utilities[j].second = calculate_latency (settings.network_latencies,
+          settings.target_deployment, solutions[j]);
       }
+
+      // sort the results by latency. Smallest will be the best.
+      std::sort (utilities.begin (), utilities.end (), Increasing_Latency);
+
+      // copy the best solution to the one in the settings container
+      std::copy (solutions[utilities[0].first].begin (),
+        solutions[utilities[0].first].end (), solution.begin ());
+
+      // most importantly, copy the lookup or we'll refill everything
+      lookup = lookups[utilities[0].first];
     }
   }
 }
 
 void
-Madara::Cid::populate_links (Paths & paths, Links & source, Links & connected,
+Madara::Cid::populate_links (Settings & settings, Links & source, Links & connected,
                              unsigned int depth)
 {
+  Paths & paths = settings.paths;
+  Workflow & deployment = settings.target_deployment;
+
   // go through the candidates in connected's list
-  for (Link_Map::iterator j = connected.dest.begin ();
-    j != connected.dest.end (); ++j)
+  for (Directed_Edges::iterator j = deployment[connected.source].begin ();
+    j != deployment[connected.source].end (); ++j)
   {
-    unsigned int dest_id = j->first;
+    unsigned int dest_id = j->second;
+
+    // don't add the source to the list of paths
+    if (dest_id == source.source)
+      continue;
+
     bool needs_expanding = false;
 
     Link_Map::iterator found = source.dest.find (dest_id);
@@ -448,18 +552,23 @@ Madara::Cid::populate_links (Paths & paths, Links & source, Links & connected,
     if (found == source.dest.end ())
     {
       needs_expanding = true;
-      source.dest[dest_id].length = depth + 1;
+      source.dest[dest_id].length = depth + connected.dest[dest_id].length;
+      source.dest[dest_id].target = dest_id;
+      source.dest[dest_id].degree = deployment[dest_id].size ();
     }
-    else if (found->second.length > depth + 1)
+    else if (found->second.length > depth + connected.dest[dest_id].length)
     {
       needs_expanding = true;
-      source.dest[dest_id].length = depth + 1;
+      source.dest[dest_id].length = depth + connected.dest[dest_id].length;
+      source.dest[dest_id].target = dest_id;
+      source.dest[dest_id].degree = deployment[dest_id].size ();
     }
 
     if (needs_expanding)
     {
       Links & dest = paths[dest_id];
-      populate_links (paths, source, dest, depth + 1);
+      populate_links (settings, source, dest,
+        source.dest[dest_id].length);
     }
   }
 }
@@ -485,49 +594,100 @@ Madara::Cid::prepare_deployment (Settings & settings)
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
   DLINFO "Madara::Cid::prepare_deployment:" \
-  " sorting the target_deployment\n"));
+  " filling paths with deployment info\n"));
 #endif
-  std::sort (deployment.begin (), deployment.end (),
-             Decreasing_Size_Directed_Edges);
-
   // 1. create links from current deployment degrees
   for (unsigned int i = 0;
-    i < deployment.size () && deployment[i].size (); ++i)
+    i < deployment.size (); ++i)
   {
-    unsigned int & source = deployment[i][0].first;
-
-    for (unsigned int j = 0; j < deployment[i].size (); ++j)
+    if (deployment[i].size () != 0)
     {
-      unsigned int & dest = deployment[i][j].second;
+      unsigned int & source = deployment[i][0].first;
 
-      // copy degrees over to paths, except consider all links bidirectional
-      paths[source].dest[dest].target = 1;
-      paths[source].dest[dest].length = 1;
-      paths[dest].dest[source].target = 1;
-      paths[dest].dest[source].length = 1;
+      for (unsigned int j = 0; j < deployment[i].size (); ++j)
+      {
+        unsigned int & dest = deployment[i][j].second;
+        Link & current = paths[source].dest[dest];
+
+        // copy degrees over to paths, except consider all links bidirectional
+        current.target = dest;
+        current.length = 1;
+        current.degree = deployment[i].size ();
+        //paths[dest].dest[source].target = source;
+        //paths[dest].dest[source].length = 1;
+      }
     }
   }
 
   // 2. update degree information inside of the paths structure.
-  for (unsigned int i = 0;   
-         i < paths.size () && paths[i].dest.size () > 0; ++i)
+  for (unsigned int source = 0;   
+         source < paths.size () && paths[source].dest.size () > 0; ++source)
   {
-    paths[i].degree = paths[i].dest.size ();
+    paths[source].degree = paths[source].dest.size ();
+
+    Link_Map & dest_map = paths[source].dest;
+
+    for (Link_Map::iterator dest = dest_map.begin ();
+         dest != dest_map.end (); ++dest)
+    {
+      dest->second.degree = paths[dest->second.target].dest.size ();
+    }
   }
 
+#ifdef ENABLE_CID_LOGGING
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+  DLINFO "Madara::Cid::prepare_deployment:" \
+  " searching to fill all local neighborhoods\n"));
+#endif
   // 3. iterate over these links until we have all possible links
   for (unsigned int i = 0;
          i < paths.size () && paths[i].dest.size () > 0; ++i)
   {
-    for (Link_Map::iterator j = paths[i].dest.begin ();
-      j != paths[i].dest.end (); ++j)
+    for (unsigned int j = 0; j < deployment[i].size (); ++j)
     {
-      unsigned int dest_id = j->first;
+      unsigned int dest_id = deployment[i][j].second;
       Links & dest = paths[dest_id];
-      populate_links (paths, paths[i], dest, 1);
+      populate_links (settings, paths[i], dest, 1);
     }
   }
 
-  // 4. sort 
+#ifdef ENABLE_CID_LOGGING
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+  DLINFO "Madara::Cid::prepare_deployment:" \
+  " copying the map to the vector\n"));
+#endif
+  // 4. copy the map to a vector
+  for (unsigned int i = 0;
+         i < paths.size () && paths[i].dest.size () > 0; ++i)
+  {
+    // create a list for sortable referencing
+    paths[i].list.resize (paths[i].dest.size ());
+
+    unsigned int cur = 0;
+    // 
+    for (Link_Map::iterator j = paths[i].dest.begin ();
+      j != paths[i].dest.end (); ++j, ++cur)
+    {
+      paths[i].list[cur] = j->second;
+    }
+
+    // we won't use the map anymore. Can potentially save us a lot of space.
+    paths[i].dest.clear ();
+
+    // sort the list by decreasing depth
+    std::sort (paths[i].list.begin (), paths[i].list.end (),
+      Decreasing_Degree);
+
+    // prepare latencies based on the size of the neighborhood
+  }
+
+#ifdef ENABLE_CID_LOGGING
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+  DLINFO "Madara::Cid::prepare_deployment:" \
+  " sorting the deployment and paths\n"));
+#endif
+  // 5. sort 
+  std::sort (deployment.begin (), deployment.end (),
+             Decreasing_Size_Directed_Edges);
   std::sort (paths.begin (), paths.end (), Decreasing_Size_And_Degrees_Links);
 }

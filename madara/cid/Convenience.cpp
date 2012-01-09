@@ -244,6 +244,7 @@ Madara::Cid::overlay_latencies (Settings & settings,
 {
   LV_Vector & latencies = settings.network_latencies;
   Workflow & deployment = settings.target_deployment;
+  Paths & paths = settings.paths;
   unsigned long long total = 0;
 
   // place the minimal noise
@@ -257,17 +258,31 @@ Madara::Cid::overlay_latencies (Settings & settings,
   }
 
   // place the minimal latencies
-  for (unsigned int i = 0; i < deployment.size (); ++i)
-  {
-    Directed_Edges & edges = deployment[i];
-    for (unsigned int j = 0; j < edges.size (); ++j)
-    {
-      latencies[edges[j].first][edges[j].second].second =
-        (unsigned long long) min_latency;
+  //for (unsigned int i = 0; i < deployment.size (); ++i)
+  //{
+  //  Directed_Edges & edges = deployment[i];
+  //  for (unsigned int j = 0; j < edges.size (); ++j)
+  //  {
+  //    latencies[edges[j].first][edges[j].second].second =
+  //      (unsigned long long) min_latency;
 
-      total += latencies[edges[j].first][edges[j].second].second;
+  //    total += latencies[edges[j].first][edges[j].second].second;
+  //  }
+  //}
+
+  // place the minimal edges
+  for (unsigned int i = 0; i < paths.size (); ++i)
+  {
+    unsigned int & source = paths[i].source;
+    for (unsigned int j = 0; j < paths[i].list.size (); ++j)
+    {
+      unsigned int & dest = paths[i].list[j].target;
+      unsigned int & length = paths[i].list[j].length;
+
+      latencies[source][dest].second = length * min_latency;
     }
   }
+
   return total;
 }
 
@@ -288,56 +303,41 @@ Madara::Cid::prepare_latencies (Settings & settings)
   if (cur_averages.size () != latencies.size ())
     cur_averages.resize (latencies.size ());
 
-  for (unsigned int i = 0; i < latencies.size (); ++i)
-  {
-    cur_averages[i].first = i;
-    cur_averages[i].second = 0;
-    for (unsigned int j = 0; j < latencies[i].size (); ++j)
-    {
-      cur_averages[i].second += latencies[i][j].second;
-    }
-  }
+  prepare_latencies (settings, cur_averages.size ());
   
   std::sort (cur_averages.begin (), cur_averages.end (),
     Increasing_Latency);
 
   // Now create averages[degrees] for the degrees of the deployment
   for (unsigned int i = 0; i < settings.target_deployment.size (); ++i)
-    prepare_latencies (settings, i);
+    prepare_latencies (settings, settings.target_deployment[i].size ());
+
+  // Now create averages[degrees] for the degrees and neighborhoods
+  for (unsigned int i = 0; i < settings.paths.size (); ++i)
+  {
+    prepare_latencies (settings, settings.paths[i].degree);
+    prepare_latencies (settings, settings.paths[i].list.size ());
+  }
 }
 
 void
-Madara::Cid::prepare_latencies (Settings & settings, unsigned int node)
+Madara::Cid::prepare_latencies (Settings & settings, unsigned int degree)
 {
-  prepare_latencies (settings.network_latencies, settings.network_averages,
-    settings.target_deployment, node);
+  if (degree != 0)
+    prepare_latencies (settings.network_latencies, settings.network_averages,
+      settings.target_deployment, degree);
 }
 
 void
 Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
                                 Averages_Map & network_averages,
                                 Workflow & target_deployment,
-                                unsigned int node)
+                                unsigned int degree)
 {
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
     DLINFO "Madara::Cid::prepare_latencies:" \
-      " Calculating degree\n"));
-#endif
-
-  // if user provided a bogus index into the target_deployment, return
-  if (node >= target_deployment.size ())
-    return;
-
-  // if no outgoing degree, we need a best of the deployment size
-  unsigned int degree = target_deployment[node].size () > 0 ?
-    target_deployment[node].size () : network_latencies.size ();
-
-#ifdef ENABLE_CID_LOGGING
-  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-    DLINFO "Madara::Cid::prepare_latencies:" \
-      " Degree set to %u\n", 
-      degree));
+      " Calculating averages for %u\n", degree));
 #endif
 
   // if we've already done this degree, continue to the next deployed element
@@ -471,6 +471,9 @@ Madara::Cid::process_deployment (Settings & settings,
   range_splitters.resize (1);
   range_splitters[0] = ",";
 
+  // user is specifying a size
+  unsigned int size = 0;
+
   // keep track of the line number
   unsigned int line = 0;
 
@@ -493,9 +496,6 @@ Madara::Cid::process_deployment (Settings & settings,
     std::vector <std::string> tokens, pivots;
 
     Madara::Utility::tokenizer (current, link_splitters, tokens, pivots);
-
-    // user is specifying a size
-    unsigned int size = 0;
 
     if (tokens.size () == 1)
     {
@@ -747,7 +747,7 @@ Madara::Cid::process_deployment (Settings & settings,
             for (; begin <= end; begin += inc)
             {
               map[source_begin][begin];
-              //map[begin][source_begin];
+              map[begin][source_begin];
             }
           }
         } // end dest range construction
@@ -796,6 +796,8 @@ Madara::Cid::process_deployment (Settings & settings,
       edge.second = j->first;
     }
   }
+
+  init (size, settings);
 
   // sort the deployments by degree
   prepare_deployment (settings);

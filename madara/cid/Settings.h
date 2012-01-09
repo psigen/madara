@@ -19,7 +19,7 @@ namespace Madara
   namespace Cid
   {
     // Uncomment if you would like CID logging enabled
-    //#define ENABLE_CID_LOGGING
+    #define ENABLE_CID_LOGGING
 
     /**
      * Container class for a link established within a deployment
@@ -29,19 +29,25 @@ namespace Madara
     public:
       unsigned int target;
       unsigned int length;
+      unsigned int degree;
 
       /**
        * Default constructor
        **/
-      Link () : target (0), length (0)
+      Link () : target (0), length (0), degree (0)
       {  
       }
     };
 
     /**
-     * A vector of @see Link
+     * A map of @see Link
      **/
     typedef std::map <unsigned int, Link>            Link_Map;
+
+    /**
+     * A vector of @see Link
+     **/
+    typedef std::vector <Link>                       Link_Vector;
 
     /**
      * A container for all links from a source
@@ -52,6 +58,7 @@ namespace Madara
       unsigned int source;
       unsigned int degree;
       Link_Map dest;
+      Link_Vector list;
     };
 
     /**
@@ -189,6 +196,33 @@ namespace Madara
       const Links & u, const Links & v)
     {
       return u.source < v.source;
+    }
+
+    /**
+     * Comparator for an increasing length
+     **/
+    static bool Increasing_Length (
+      const Link & u, const Link & v)
+    {
+      return u.length < v.length;
+    }
+
+    /**
+     * Comparator for an decreasing length
+     **/
+    static bool Decreasing_Length (
+      const Link & u, const Link & v)
+    {
+      return u.length > v.length;
+    }
+
+    /**
+     * Comparator for decreasing degree
+     **/
+    static bool Decreasing_Degree (
+      const Link & u, const Link & v)
+    {
+      return u.degree > v.degree;
     }
 
     ///**

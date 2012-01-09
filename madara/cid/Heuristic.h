@@ -61,7 +61,7 @@ namespace Madara
      * Useful for determining gains made from deployment changes.
      * @param    latencies    network latencies
      * @param    workflow     the deployment workflow
-     * @param    workflow     the solution that was generated
+     * @param    solution     the solution that was generated
      * @return                total latency on nodes with degree > 0
      **/
     MADARA_Export unsigned long long calculate_latency (LV_Vector & latencies,
@@ -98,13 +98,22 @@ namespace Madara
     MADARA_Export void pathwise_approximate (Settings & settings);
 
     /**
+     * Approximates the solution with path information
+     * @param    settings    container which contains the target_deployment
+     * @param    solution    the solution that will be filled
+     * @param    lookup      a map of the solution locations
+     **/
+    MADARA_Export void pathwise_approximate (Settings & settings,
+      Deployment & solution, Solution_Map & lookup);
+
+    /**
      * Adds links to the source from the connected Links container
-     * @param    paths       All paths
+     * @param    settings    Settings container
      * @param    source      source instance
      * @param    connected   connected instance to populate more links from
      * @param    depth       current depth
      **/
-    MADARA_Export void populate_links (Paths & paths, Links & source,
+    MADARA_Export void populate_links (Settings & settings, Links & source,
       Links & connected, unsigned int depth);
 
     /**

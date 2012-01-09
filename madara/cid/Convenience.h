@@ -86,10 +86,10 @@ namespace Madara
      * that can be used by CID
      * @param    settings    container for network_latencies and network_averages
      *                       used by the method
-     * @param    node        index of the deployment to use degree of
+     * @param    degree      degree to average
      **/
     MADARA_Export void prepare_latencies (Settings & settings,
-      unsigned int node);
+      unsigned int degree);
     
     /**
      * Sorts the latencies in a network topology and averages them into a format
@@ -100,12 +100,12 @@ namespace Madara
      *                                network_latencies
      *                                (@see Madara::Cid::Settings)
      * @param    target_deployment    application workflow to approximate
-     * @param    node                 index of the deployment to use degree of
+     * @param    degree               degree to average
      *                       
      **/
     MADARA_Export void prepare_latencies (LV_Vector & network_latencies,
                             Averages_Map & network_averages,
-                            Workflow & target_deployment, unsigned int node);
+                            Workflow & target_deployment, unsigned int degree);
 
     /**
      * Prints the latencies in the settings container

@@ -70,10 +70,10 @@ void hand_coded (Madara::Cid::Settings & settings)
 
 bool use_csv_format (true);
 
-#define NUM_TESTS           10
-#define PREPARATION         10
+#define NUM_TESTS           11
+#define PREPARATION         11
 #define MIN_TEST_RANGE      0
-#define MAX_TEST_RANGE      10
+#define MAX_TEST_RANGE      11
 
 char * testnames [] = {
   "CID Heuristic",
@@ -86,6 +86,7 @@ char * testnames [] = {
   "Naive CID-DGA",
   "Random Deployment",
   "Hand Coded",
+  "CIP"
 };
 
 
@@ -99,7 +100,8 @@ void (* test_impls []) (Madara::Cid::Settings &) = {
   ::naive_cid_ga_naive,
   ::naive_cid_ga_degree,
   Madara::Cid::generate_worst_solution,
-  ::hand_coded
+  ::hand_coded,
+  Madara::Cid::pathwise_approximate
 
 };
 
@@ -598,10 +600,10 @@ void verify_algorithms (std::ostream & output)
 
 int main (int argc, char *argv[])
 {
-  MADARA_debug_level = 1;
+  MADARA_debug_level = MADARA_LOG_EVENT_TRACE;
 
-  unsigned int begin = 1000;
-  unsigned int end = 10000;
+  unsigned int begin = 100;
+  unsigned int end = 100;
   unsigned int increment = 1000;
   unsigned int repeat = 1;
   std::string output_file ("test_cid_linked_results.txt");

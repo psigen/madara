@@ -74,6 +74,10 @@ int main (int argc, char *argv[])
       << specialized_deployment << "\n";
   }
 
+  Madara::Cid::overlay_latencies (settings, 500, 501);
+  Madara::Cid::prepare_latencies (settings);
+  Madara::Cid::pathwise_approximate (settings);
+
   settings.solution.resize (20);
 
   // read a three deep tree
