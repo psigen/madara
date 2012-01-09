@@ -317,7 +317,7 @@ Madara::Transport::NDDS_Transport::send_data (const std::string & key,
     key.c_str (), data.value, cur_clock, data.quality));
 
   DDS_InstanceHandle_t handle = update_writer_->register_instance (data);
-  rc = update_writer_->write (data, handle); 
+  rc = update_writer_->write (data, handle);
 
   NDDS_Knowledge_Update_finalize (&data);
 
