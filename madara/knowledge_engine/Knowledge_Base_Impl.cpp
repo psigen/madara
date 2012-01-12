@@ -148,7 +148,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         settings_.type));
 
       transport_ = new Madara::Transport::TCP_Transport (id_, map_,
-        Madara::Transport::TCP_Transport::RELIABLE);
+        settings_, true);
     }
     else
     {

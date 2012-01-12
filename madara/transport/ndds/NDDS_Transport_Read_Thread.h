@@ -22,6 +22,11 @@ namespace Madara
 {
   namespace Transport
   {
+    /**
+     * @class NDDS_Read_Thread
+     * @brief Thread for reading knowledge updates via a NDDS waitset
+     *        (deprecated and unused).
+     **/
     class NDDS_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
     {
     public:

@@ -16,9 +16,21 @@ namespace Madara
 {
   namespace Cid
   {
+    /**
+     * Randomly mutates chromosomes in the solution and updates solution
+     * with best total latency, if found.
+     * @param settings the constraint settings for the deployment
+     * @param duration the time in seconds to allow the algorithm to run
+     **/
     MADARA_Export void ga_naive (Settings & settings,
       double duration);
 
+    /**
+     * Randomly mutates chromosomes in the solution with a preference for
+     * high constraint degree (the number of connections from the target).
+     * @param settings the constraint settings for the deployment
+     * @param duration the time in seconds to allow the algorithm to run
+     **/
     MADARA_Export void ga_degree (Settings & settings,
       double duration);
 

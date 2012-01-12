@@ -11,6 +11,10 @@ namespace Madara
 {
   namespace Transport
   {
+    /**
+     * @class TCP_Transport
+     * @brief TCP-based transport (skeleton code)
+     **/
     class TCP_Transport : public Base
     {
     public:
@@ -25,12 +29,42 @@ namespace Madara
 
       static const int PROFILES = 1;
 
-      TCP_Transport (const std::string & id,
+      /**
+       * Constructor
+       * @param   id   unique identifer - usually a combination of host:port
+       * @param   context  knowledge context
+       * @param   config   transport configuration settings
+       * @param   launch_transport  whether or not to launch this transport
+       **/
+      TCP_Transport (const std::string & id, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
-        const int & reliability);
+        const Settings & config, bool launch_transport);
+
+      /**
+       * Destructor
+       **/
       ~TCP_Transport ();
+
+      /**
+       * Sends a single knowledge assignment
+       * @param   key     knowledge location for global variable
+       * @param   value   value of the knowledge location
+       * @return  result of write operation or -1 if we are shutting down
+       **/
       long send_data (const std::string & key, const long long & value);
+
+      /**
+       * Accesses reliability setting. If this returns zero, it doesn't
+       * make much sense.
+       * @return  whether we are using reliable dissemination or not
+       **/
       int reliability (void) const;
+
+      /**
+       * Accesses reliability setting. If this returns zero, it doesn't
+       * make much sense.
+       * @return  whether we are using reliable dissemination or not
+       **/
       int reliability (const int & setting);
       long read (void);
       void close (void);

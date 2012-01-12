@@ -1,10 +1,4 @@
 
-//#define MADARA_NTRACE    0
-//#define ACE_NTRACE    0
-//
-////#define ACE_NLOGGING  0
-//#define ACE_NDEBUG    0
-
 #include <string>
 #include <vector>
 #include <iostream>
@@ -67,7 +61,11 @@ ACE_Time_Value delay_time (0);
 std::string path;
 std::string working_dir;
 
-
+/**
+ * @class KATS_Process
+ * @brief Builder class for setting up a call to one of the kats tools (i.e.,
+ * kats_process, kats_batch, kats_observer.
+ **/
 class KATS_Process
 {
 public:

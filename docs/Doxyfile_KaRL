@@ -31,7 +31,7 @@ PROJECT_NAME           = KaRL
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = 0.5.3
+PROJECT_NUMBER         = 0.7.10
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description for a project that appears at the top of each page and should give viewer a quick idea about the purpose of the project. Keep the description short.
 
@@ -609,7 +609,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = madara
+INPUT                  = ../madara/knowledge_engine ../madara/transport ../madara/expression_tree ../madara/utility
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

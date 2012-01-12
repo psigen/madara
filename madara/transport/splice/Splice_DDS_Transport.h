@@ -123,8 +123,6 @@ namespace Madara
       DDS::Topic_var                     update_topic_;
 
       Splice_Read_Thread *               thread_;
-      //Splice_DataReader_Listener dr_listener_;
-      //Splice_Subscriber_Listener sub_listener_;
 
       /**
        * Splice handle checker

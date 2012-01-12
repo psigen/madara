@@ -21,7 +21,10 @@ namespace Madara
 {
   namespace Transport
   {
-    /* The class containing DDS event callbacks */
+    /**
+     * @class Splice_DataReader_Listener
+     * @brief Container for DDS-related callbacks (deprecated and unused)
+     **/
     class Splice_DataReader_Listener: public DDS::DataReaderListener
     {
     public:

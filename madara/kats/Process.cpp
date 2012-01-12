@@ -1,9 +1,4 @@
 
-//#undef MADARA_NTRACE
-//#undef ACE_NTRACE 
-//#define ACE_NLOGGING  0
-//#define ACE_NDEBUG    0
-
 #include <string>
 #include <vector>
 #include <iostream>

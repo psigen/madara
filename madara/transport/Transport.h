@@ -87,38 +87,61 @@ namespace Madara
     };
 
     typedef    ACE_Condition <ACE_Thread_Mutex>    Condition;
+
+    /**
+     * Base class from which all transports must be derived
+     **/
     class Base
     {
     public:
-      /// public typedef for the hosts vector
+      /**
+       * Used to define a vector of hosts to contact
+       **/
       typedef    std::vector <std::string>           Hosts_Vector;
 
-      /// default constructor
+      /**
+       * Default constructor
+       **/
       Base () : is_valid_ (false), shutting_down_ (false),
         valid_setup_ (mutex_), settings_ ()
       {
       }
 
-      /// default constructor
+      /**
+       * Constructor for settings
+       * @param   new_settings      settings to apply to the transport
+       **/
       Base (const Settings & new_settings) 
         : is_valid_ (false), shutting_down_ (false),
         valid_setup_ (mutex_), settings_ (new_settings)
       {
       }
 
+      /**
+       * Add a vector of hosts to the current host list
+       * @param   host        a vector of hosts to add to the list
+       * @return  0 if successful
+       **/
       virtual long setHosts (const Hosts_Vector & hosts) 
       { 
         hosts_ = hosts; 
         return 0;
       }
 
+      /**
+       * Add a host to the list of hosts (if the transport allows it)
+       * @param   host        a host to add to the @see Hosts_Vector
+       * @return  0 if successful
+       **/
       virtual long addHost (const std::string & host) 
       { 
         hosts_.push_back (host); 
         return 0;
       }
 
-      /// all subclasses should call this method at the end of its setup
+      /**
+       * Validates a transport to indicate it is not shutting down
+       **/
       inline int validate_transport (void) 
       { 
         is_valid_ = true; 
@@ -131,13 +154,17 @@ namespace Madara
         return 0;
       }
 
-      /// all subclasses should call this method at the end of its setup
+      /**
+       * all subclasses should call this method at the end of its setup
+       **/
       inline int setup (void) 
       { 
         return validate_transport ();
       }
 
-      /// all subclasses should call this method at the beginning of send_data
+      /**
+       * all subclasses should call this method at the beginning of send_data
+       **/
       inline int check_transport (void) 
       {
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
@@ -152,27 +179,45 @@ namespace Madara
         return 0;
       }
 
+      /**
+       * Applies the configuration to this transport
+       * @param   config     the settings to apply
+       **/
       void settings (const Settings & config)
       {
         settings_ = config;
       }
 
+      /**
+       * Getter for the transport settings
+       * @return   the current transport settings
+       **/
       Settings settings (void)
       {
         return settings_;
       }
 
+      /**
+       * Send a single assignment
+       * @return  result of send operation or -1 if we are shutting down
+       **/
       virtual long send_data (const std::string &, const long long &)
       {
         return check_transport ();
       }
 
+      /**
+       * Sends a multiple assignment of knowledge variables
+       * @return  result of operation or -1 if we are shutting down
+       **/
       virtual long send_multiassignment (const std::string &, unsigned long)
       {
         return check_transport ();
       }
 
-      /// all subclasses should call this method at the beginning of close
+      /**
+       * Invalidates a transport to indicate it is shutting down
+       **/
       inline void invalidate_transport (void)
       {
         is_valid_ = false;
@@ -183,6 +228,9 @@ namespace Madara
           DLINFO "Transport::invalidate_transport: invalidating transport"));
       }
 
+      /**
+       * Closes this transport
+       **/
       virtual void close (void)
       {
         invalidate_transport ();

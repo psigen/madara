@@ -12,7 +12,6 @@
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
-#include "ace/SOCK_Acceptor.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/utility/Refcounter.h"
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"

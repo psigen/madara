@@ -21,7 +21,10 @@ namespace Madara
 {
   namespace Transport
   {
-    /* The class containing DDS event callbacks */
+    /**
+     * @class Splice_Subscriber_Listener
+     * @brief Container for subscriber callbacks (deprecated and unused)
+     **/
     class Splice_Subscriber_Listener: public DDS::SubscriberListener
     {
     public:
