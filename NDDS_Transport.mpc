@@ -11,9 +11,9 @@ project (NDDS_Transport_IDL) : using_ndds_idl, build_files {
     using_ndds.mpb
   }
   
-  ndds_notao_ts_flags += -d transport/ndds
+  ndds_notao_ts_flags += -d include/madara/transport/ndds
   
   NDDSNoTaoTypeSupport_Files {
-    transport/ndds/Ndds_Knowledge_Update.idl
+    include/madara/transport/ndds/Ndds_Knowledge_Update.idl
   }
 }

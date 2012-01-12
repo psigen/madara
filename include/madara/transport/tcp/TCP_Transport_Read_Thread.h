@@ -18,6 +18,11 @@ namespace Madara
 {
   namespace Transport
   {
+    /**
+     * @class TCP_Transport_Read_Thread
+     * @brief Thread for reading knowledge updates through a TCP socket
+     *        (unused but planned)
+     **/
     class TCP_Transport_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
     {
     public:

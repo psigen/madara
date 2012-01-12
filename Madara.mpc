@@ -1,0 +1,62 @@
+
+project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_transport, cid {
+
+  sharedname = Madara
+  dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL
+  libout = $(MADARA_ROOT)/lib
+  
+  includes += $(MADARA_ROOT)/include
+  libpaths += $(MADARA_ROOT)/lib 
+
+  verbatim (gnuace, local) {
+    CPPFLAGS += -w
+  }
+
+  Build_Files {
+    $(MADARA_ROOT)/Madara.mwc
+    $(MADARA_ROOT)/default.features
+    Madara.mpc
+    Splice_DDS_Transport.mpc
+    NDDS_Transport.mpc
+    splice_transport.mpb
+    ndds_transport.mpb
+    using_ace.mpb
+    using_madara.mpb
+    using_splice.mpb
+    using_splice_idl.mpb
+    using_ndds.mpb
+    using_ndds_idl.mpb
+  }
+
+  Inline_Files {
+    include/madara/knowledge_engine
+  }
+
+  Template_Files {
+    include/madara/utility/LQueue.cpp
+    include/madara/utility/LStack.cpp
+  }
+
+  Source_Files {
+    include/madara/expression_tree
+    include/madara/knowledge_engine
+    include/madara/utility/Utility.cpp
+    include/madara/utility/Refcounter.cpp
+    include/madara/utility/Log_Macros.cpp
+    include/madara/transport/tcp/TCP_Transport.cpp
+    include/madara/transport/tcp/TCP_Transport_Read_Thread.cpp
+    include/madara/Thread_Pool.cpp
+  }
+
+  Header_Files {
+    include/madara/expression_tree
+    include/madara/knowledge_engine
+    include/madara/utility
+    include/madara/transport/Transport.h
+    include/madara/transport/tcp/TCP_Transport.h
+    include/madara/transport/tcp/TCP_Transport_Read_Thread.h
+    include/madara/Globals.h
+    include/madara/Thread_Pool.h
+    include/madara/MADARA_export.h
+  }
+}

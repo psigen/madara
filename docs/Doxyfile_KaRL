@@ -609,7 +609,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = ../madara/knowledge_engine ../madara/transport ../madara/expression_tree ../madara/utility
+INPUT                  = ../include/madara/knowledge_engine ../include/madara/transport ../include/madara/expression_tree ../include/madara/utility
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

@@ -14,6 +14,7 @@
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
 !include "winmessages.nsh"
+!include "WordFunc.nsh"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -39,7 +40,8 @@
 
 ; Language files
 !insertmacro MUI_LANGUAGE "English"
-
+!insertmacro WordAdd
+!insertmacro un.WordAdd
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
@@ -178,7 +180,7 @@ Section "ace" SEC10
   File "$%ACE_ROOT%\lib\ACE.lib"
   File "$%ACE_ROOT%\lib\ACEd.lib"
   
-  SetOutPath "$INSTDIR\include\ace"
+  SetOutPath "$INSTDIR\include"
 
   File /r $%ACE_ROOT%\ace
 
@@ -247,66 +249,26 @@ SectionEnd
 
 Section "-include" SEC07
   SetOutPath "$INSTDIR\include\madara"
-  File "..\..\madara\Globals.h"
-  File "..\..\madara\MADARA_export.h"
-  File "..\..\madara\Thread_Pool.h"
-  File "..\..\madara\Thread_Pool.cpp"
-  SetOutPath "$INSTDIR\include\madara\utility"
-  File "..\..\madara\utility\Log_Macros.h"
-  File "..\..\madara\utility\LQueue.h"
-  File "..\..\madara\utility\LStack.h"
-  File "..\..\madara\utility\MADARA_Logger_export.h"
-  File "..\..\madara\utility\Refcounter.h"
-  File "..\..\madara\utility\Utility.h"
-  File "..\..\madara\utility\Log_Macros.cpp"
-  File "..\..\madara\utility\LQueue.cpp"
-  File "..\..\madara\utility\LStack.cpp"
-  File "..\..\madara\utility\Refcounter.cpp"
-  File "..\..\madara\utility\Utility.cpp"
-  SetOutPath "$INSTDIR\include\madara\transport"
-  File "..\..\madara\transport\Transport.h"
-  SetOutPath "$INSTDIR\include\madara\transport\tcp"
-  File "..\..\madara\transport\tcp\TCP_Transport.h"
-  File "..\..\madara\transport\tcp\TCP_Transport_Read_Thread.h"
-  File "..\..\madara\transport\tcp\TCP_Transport.cpp"
-  File "..\..\madara\transport\tcp\TCP_Transport_Read_Thread.cpp"
-  SetOutPath "$INSTDIR\include\madara\transport\splice"
-  File "..\..\madara\transport\splice\ccpp_Splice_Knowledge_Update.h"
-  File "..\..\madara\transport\splice\OSPL_Transport_export.h"
-  File "..\..\madara\transport\splice\Splice_DataReader_Listener.h"
-  File "..\..\madara\transport\splice\Splice_DDS_Transport.h"
-  File "..\..\madara\transport\splice\Splice_Knowledge_Update.h"
-  File "..\..\madara\transport\splice\Splice_Knowledge_UpdateDcps.h"
-  File "..\..\madara\transport\splice\Splice_Knowledge_UpdateDcps_impl.h"
-  File "..\..\madara\transport\splice\Splice_Knowledge_UpdateSplDcps.h"
-  File "..\..\madara\transport\splice\Splice_Mutex_export.h"
-  File "..\..\madara\transport\splice\Splice_Subscriber_Listener.h"
-  File "..\..\madara\transport\splice\Splice_Transport_Read_Thread.h"
-  File "..\..\madara\transport\splice\Splice_DataReader_Listener.cpp"
-  File "..\..\madara\transport\splice\Splice_DDS_Transport.cpp"
-  File "..\..\madara\transport\splice\Splice_Knowledge_Update.cpp"
-  File "..\..\madara\transport\splice\Splice_Knowledge_UpdateDcps.cpp"
-  File "..\..\madara\transport\splice\Splice_Knowledge_UpdateDcps_impl.cpp"
-  File "..\..\madara\transport\splice\Splice_Knowledge_UpdateSplDcps.cpp"
-  File "..\..\madara\transport\splice\Splice_Subscriber_Listener.cpp"
-  File "..\..\madara\transport\splice\Splice_Transport_Read_Thread.cpp"
-  File "..\..\madara\transport\splice\Splice_Knowledge_Update.idl"
-  File "..\..\madara\transport\splice\Splice_Mutex_Message.idl"
-  SetOutPath "$INSTDIR\include\madara\transport\ndds"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_Update.h"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_UpdatePlugin.h"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_UpdateSupport.h"
-  File "..\..\madara\transport\ndds\NDDS_Listener.h"
-  File "..\..\madara\transport\ndds\NDDS_Transport.h"
-  File "..\..\madara\transport\ndds\NDDS_Transport_export.h"
-  File "..\..\madara\transport\ndds\NDDS_Transport_Read_Thread.h"
-  File "..\..\madara\transport\ndds\NDDS_Listener.cpp"
-  File "..\..\madara\transport\ndds\NDDS_Transport.cpp"
-  File "..\..\madara\transport\ndds\NDDS_Transport_Read_Thread.cpp"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_Update.cxx"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_UpdatePlugin.cxx"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_UpdateSupport.cxx"
-  File "..\..\madara\transport\ndds\Ndds_Knowledge_Update.idl"
+  File "..\..\include\madara\Globals.h"
+  File "..\..\include\madara\MADARA_export.h"
+  File "..\..\include\madara\Thread_Pool.h"
+  File "..\..\include\madara\Thread_Pool.cpp"
+  
+  ; copy the madara directories
+  File /r "..\..\include\madara\utility"
+  File /r "..\..\include\madara\transport"
+  File /r "..\..\include\madara\knowledge_engine"
+  File /r "..\..\include\madara\kats"
+  File /r "..\..\include\madara\expression_tree"
+  File /r "..\..\include\madara\cid"
+  File /r "..\..\include\madara\maml"
+  File /r "..\..\include\madara\maal"
+  
+SectionEnd
+
+Section "-tests"
+  SetOutPath "$INSTDIR"
+  File /r "..\..\tests"
 SectionEnd
 
 Section "-basic" SEC08
@@ -339,7 +301,17 @@ Section -Post
    ; include for some of the windows messages defines
    ; HKLM (all users) vs HKCU (current user) defines
    ; set variable
-   WriteRegExpandStr ${env_hkcu} MADARA_ROOT $INSTDIR
+   WriteRegExpandStr ${env_hklm} MADARA_ROOT $INSTDIR
+   
+   ; read the path variable
+   ReadRegStr $1 ${env_hklm} PATH
+
+   ; remove references to MADARA in the PATH variable
+   ${WordAdd} $1 ";" "+%MADARA_ROOT%\lib;%MADARA_ROOT%\bin;%MADARA_ROOT%\include" $2
+   
+   ; now add them back
+   WriteRegExpandStr ${env_hklm} PATH $2
+
    ; make sure windows knows about the change
    SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
 
@@ -517,20 +489,29 @@ Section Uninstall
   RMDir /r "$INSTDIR\gme"
   RMDir /r "$INSTDIR\docs"
   RMDir /r "$INSTDIR\configs"
+  RMDir /r "$INSTDIR\modeling"
+  RMDir /r "$INSTDIR\tests"
   RMDir /r "$INSTDIR\bin"
-  RMDir "$INSTDIR"
+  RMDir /r "$INSTDIR"
 
-  ReadRegStr $0 HKCU "${PRODUCT_UNINST_KEY}" "OldMadaraRoot"
+  ReadRegStr $0 ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "OldMadaraRoot"
 
   ;ReadRegStr $0 HKLM "SOFTWARE\Microsoft" "Bob"
 
   StrCmp $0 '' 0 revert
    ; delete variable
-   DeleteRegValue ${env_hkcu} MADARA_ROOT
+   DeleteRegValue ${env_hklm} MADARA_ROOT
+   ReadRegStr $1 ${env_hklm} PATH
+   
+   ; remove references to MADARA in the PATH variable
+   ${WordAdd} $1 ";" "-%MADARA_ROOT%\lib;%MADARA_ROOT%\bin;%MADARA_ROOT%\include" $2
+
+   WriteRegExpandStr ${env_hklm} PATH $2
+   
    Goto done
    ; revert to the old MADARA variable
    revert:
-   WriteRegExpandStr ${env_hkcu} MADARA_ROOT $0
+   WriteRegExpandStr ${env_hklm} MADARA_ROOT $0
    ; make sure windows knows about the change
 
    SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000

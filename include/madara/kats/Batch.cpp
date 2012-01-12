@@ -64,7 +64,7 @@ std::string working_dir;
 /**
  * @class KATS_Process
  * @brief Builder class for setting up a call to one of the kats tools (i.e.,
- * kats_process, kats_batch, kats_observer.
+ * kats_process, kats_batch, kats_observer).
  **/
 class KATS_Process
 {

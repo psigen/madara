@@ -7,11 +7,11 @@ project (Traffic_Light) : using_madara, using_ace, using_splice, logic_files, ma
   requires += tests
   
   Logic_Files {
-    ../configs/logics/traffic_light.klf
+    configs/logics/traffic_light.klf
   }
   
   Map_Files {
-    ../configs/maps
+    configs/maps
   }
   
   Build_Files {
@@ -22,7 +22,7 @@ project (Traffic_Light) : using_madara, using_ace, using_splice, logic_files, ma
   }
 
   Source_Files {
-    ../tests/traffic_lights/traffic_light.cpp
+    tests/traffic_lights/traffic_light.cpp
   }
 }
 
@@ -36,15 +36,15 @@ project (Traffic_Simulator) : using_madara, using_ace, using_splice, logic_files
   libs += Madara
 
   Logic_Files {
-    ../configs/logics/simulator_looppost.klf
-    ../configs/logics/simulator_loopmain.klf
-    ../configs/settings/default_simulation.klf
-    ../configs/logics/traffic_light.klf
-    ../configs/logics/traffic_light_setup.klf
+    configs/logics/simulator_looppost.klf
+    configs/logics/simulator_loopmain.klf
+    configs/settings/default_simulation.klf
+    configs/logics/traffic_light.klf
+    configs/logics/traffic_light_setup.klf
   }
   
   Map_Files {
-    ../configs/maps
+    configs/maps
   }
   
   Build_Files {
@@ -55,7 +55,7 @@ project (Traffic_Simulator) : using_madara, using_ace, using_splice, logic_files
   }
 
   Source_Files {
-    ../tests/traffic_lights/traffic_simulator.cpp
+    tests/traffic_lights/traffic_simulator.cpp
   }
 }
 
@@ -69,11 +69,11 @@ project (Ambulance) : using_madara, using_ace, using_splice, logic_files, map_fi
   libs += Madara
 
   Logic_Files {
-    ../configs/logics/ambulance.klf
+    configs/logics/ambulance.klf
   }
   
   Map_Files {
-    ../configs/maps
+    configs/maps
   }
   
   Build_Files {
@@ -84,7 +84,7 @@ project (Ambulance) : using_madara, using_ace, using_splice, logic_files, map_fi
   }
 
   Source_Files {
-    ../tests/traffic_lights/ambulance.cpp
+    tests/traffic_lights/ambulance.cpp
   }
 }
 

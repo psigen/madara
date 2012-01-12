@@ -16,7 +16,7 @@ project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_basic_reasoning.cpp
+    tests/test_basic_reasoning.cpp
   }
 }
 
@@ -37,7 +37,7 @@ project (Test_Latency) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_latency.cpp
+    tests/test_latency.cpp
   }
 }
 
@@ -58,7 +58,7 @@ project (Test_Dissemination) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_dissemination.cpp
+    tests/test_dissemination.cpp
   }
 }
 
@@ -79,7 +79,7 @@ project (Test_Reasoning_Throughput) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_reasoning_throughput.cpp
+    tests/test_reasoning_throughput.cpp
   }
 }
 
@@ -100,7 +100,7 @@ project (Test_Files) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_files.cpp
+    tests/test_files.cpp
   }
 }
 
@@ -121,7 +121,7 @@ project (Test_Key_Expansion) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_key_expansion.cpp
+    tests/test_key_expansion.cpp
   }
 }
 
@@ -142,7 +142,7 @@ project (Test_Print_Statement) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_print_statement.cpp
+    tests/test_print_statement.cpp
   }
 }
 
@@ -163,7 +163,7 @@ project (Test_Timed_Wait) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_timed_wait.cpp
+    tests/test_timed_wait.cpp
   }
 }
 
@@ -184,7 +184,7 @@ project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_wait_with_ace.cpp
+    tests/test_wait_with_ace.cpp
   }
 }
 
@@ -206,7 +206,7 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_distributed_finisher.cpp
+    tests/test_distributed_finisher.cpp
   }
 }
 
@@ -227,7 +227,7 @@ project (Test_Knowledge_Domains) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_knowledge_domains.cpp
+    tests/test_knowledge_domains.cpp
   }
 }
 
@@ -248,7 +248,7 @@ project (Test_Synchronization) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_synchronization.cpp
+    tests/test_synchronization.cpp
   }
 }
 
@@ -269,7 +269,7 @@ project (Test_Synchronization_Three_State) : using_madara, using_ace, using_spli
   }
 
   Source_Files {
-    ../tests/test_synchronization_three_state.cpp
+    tests/test_synchronization_three_state.cpp
   }
 }
 
@@ -290,7 +290,7 @@ project (Test_Quality) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    ../tests/test_quality.cpp
+    tests/test_quality.cpp
   }
 }
 
@@ -311,12 +311,12 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
   }
 
   Source_Files {
-    ../tests/test_distributed_finisher_with_set.cpp
+    tests/test_distributed_finisher_with_set.cpp
   }
 }
 
 
-project (Test_KATS_barriers) : using_kats, using_ace {
+project (Test_KATS_barriers) : using_madara, using_kats, using_ace {
   requires += tests
   
   exeout = $(MADARA_ROOT)/bin
@@ -332,11 +332,11 @@ project (Test_KATS_barriers) : using_kats, using_ace {
   }
 
   Source_Files {
-    ../tests/test_kats_barriers.cpp
+    tests/test_kats_barriers.cpp
   }
 }
 
-project (Test_KATS_syncs) : using_kats, using_ace {
+project (Test_KATS_syncs) : using_madara, using_kats, using_ace {
   requires += tests
   
   exeout = $(MADARA_ROOT)/bin
@@ -352,7 +352,7 @@ project (Test_KATS_syncs) : using_kats, using_ace {
   }
 
   Source_Files {
-    ../tests/test_kats_syncs.cpp
+    tests/test_kats_syncs.cpp
   }
 }
 
@@ -372,7 +372,7 @@ project (Test_CID) : using_madara, using_ace {
   }
 
   Source_Files {
-    ../tests/test_cid.cpp
+    tests/test_cid.cpp
   }
 }
 
@@ -392,7 +392,7 @@ project (Test_CID_Read_Deployment) : using_madara, using_ace {
   }
 
   Source_Files {
-    ../tests/test_cid_read_deployment.cpp
+    tests/test_cid_read_deployment.cpp
   }
 }
 
@@ -412,7 +412,7 @@ project (Test_CID_Disjoint) : using_madara, using_ace {
   }
 
   Source_Files {
-    ../tests/test_cid_disjoint.cpp
+    tests/test_cid_disjoint.cpp
   }
 }
 
@@ -432,7 +432,7 @@ project (Test_CID_Linked) : using_madara, using_ace {
   }
 
   Source_Files {
-    ../tests/test_cid_linked.cpp
+    tests/test_cid_linked.cpp
   }
 }
 

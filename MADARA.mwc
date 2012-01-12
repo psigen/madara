@@ -2,10 +2,10 @@
 workspace {
   cmdline += -feature_file $MADARA_ROOT/default.features
 
-  madara/Madara.mpc
-  madara/Kats.mpc
-  madara/Splice_DDS_Transport.mpc
-  madara/NDDS_Transport.mpc
-  madara/Tests.mpc
-  madara/Traffic_Lights_Ambulance.mpc
+  Madara.mpc
+  Kats.mpc
+  Splice_DDS_Transport.mpc
+  NDDS_Transport.mpc
+  Tests.mpc
+  Traffic_Lights_Ambulance.mpc
 }

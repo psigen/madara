@@ -1,0 +1,23 @@
+
+feature (cid) {
+  
+  requires += cid
+
+  Build_Files {
+    cid.mpb
+  }
+
+  Header_Files {
+    include/madara/cid/Convenience.h
+    include/madara/cid/Genetic.h
+    include/madara/cid/Heuristic.h
+    include/madara/cid/Settings.h
+  }
+
+  Source_Files {
+    include/madara/cid/Convenience.cpp
+    include/madara/cid/Genetic.cpp
+    include/madara/cid/Heuristic.cpp
+  }
+}
+
