@@ -32,7 +32,7 @@
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\LICENSE.txt"
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
 !insertmacro MUI_PAGE_FINISH
 
 ; Uninstaller pages
@@ -54,17 +54,17 @@ ShowUnInstDetails hide
 Section "debug-libs" SEC01
   SetOutPath "$INSTDIR\lib"
   SetOverwrite ifnewer
-  File "..\..\lib\Katsd.dll"
-  File "..\..\lib\Madarad.dll"
-  File "..\..\lib\Katsd.lib"
-  File "..\..\lib\Madarad.lib"
+  File "..\..\lib\KATSd.dll"
+  File "..\..\lib\MADARAd.dll"
+  File "..\..\lib\KATSd.lib"
+  File "..\..\lib\MADARAd.lib"
 SectionEnd
 
 Section "-release-libs" SEC02
-  File "..\..\lib\Kats.dll"
-  File "..\..\lib\Madara.dll"
-  File "..\..\lib\Kats.lib"
-  File "..\..\lib\Madara.lib"
+  File "..\..\lib\KATS.dll"
+  File "..\..\lib\MADARA.dll"
+  File "..\..\lib\KATS.lib"
+  File "..\..\lib\MADARA.lib"
   File "..\..\lib\maal.py"
   File "..\..\lib\maml.py"
 SectionEnd
@@ -161,16 +161,13 @@ Section "configs" SEC06
   File "..\..\configs\cid\deployments\test_cid\4_even_fans_disjoint.template"
   File "..\..\configs\cid\deployments\test_cid\mwaytree.template"
   File "..\..\configs\cid\deployments\test_cid\specialized.template"
-  SetOutPath "$INSTDIR\configs\xml"
-  File "..\..\modeling\tests\xml\FourSleeps.xml"
-  File "..\..\modeling\tests\xml\Generics.xml"
-  File "..\..\modeling\tests\xml\ospl_start.xml"
-  File "..\..\modeling\tests\xml\Timeout.xml"
-  File "..\..\modeling\tests\xml\TwoSleeps.xml"
-  SetOutPath "$INSTDIR\configs\xml\transports"
-  File "..\..\modeling\tests\xml\transports\NDDS.xml"
-  File "..\..\modeling\tests\xml\transports\NoTransport.xml"
-  File "..\..\modeling\tests\xml\transports\Splice.xml"
+  SetOutPath "$INSTDIR\configs\kats"
+  File "..\..\configs\kats\FourSleeps.xml"
+  File "..\..\configs\kats\Generics.xml"
+  File "..\..\configs\kats\ospl_start.xml"
+  File "..\..\configs\kats\Timeout.xml"
+  File "..\..\configs\kats\TwoSleeps.xml"
+  File /r "..\..\configs\kats\transports"
 SectionEnd
 
 Section "ace" SEC10
@@ -277,6 +274,8 @@ Section "-basic" SEC08
   CreateShortCut "$SMPROGRAMS\MADARA\VERSION.lnk" "$INSTDIR\VERSION.txt"
   File "..\..\LICENSE.txt"
   CreateShortCut "$SMPROGRAMS\MADARA\LICENSE.lnk" "$INSTDIR\LICENSE.txt"
+  File "..\..\README.txt"
+  CreateShortCut "$SMPROGRAMS\MADARA\README.lnk" "$INSTDIR\README.txt"
 SectionEnd
 
 Section -AdditionalIcons
@@ -307,7 +306,7 @@ Section -Post
    ReadRegStr $1 ${env_hklm} PATH
 
    ; remove references to MADARA in the PATH variable
-   ${WordAdd} $1 ";" "+%MADARA_ROOT%\lib;%MADARA_ROOT%\bin;%MADARA_ROOT%\include" $2
+   ${WordAdd} $1 ";" "+%MADARA_ROOT%\lib;%MADARA_ROOT%\bin" $2
    
    ; now add them back
    WriteRegExpandStr ${env_hklm} PATH $2
@@ -504,7 +503,7 @@ Section Uninstall
    ReadRegStr $1 ${env_hklm} PATH
    
    ; remove references to MADARA in the PATH variable
-   ${WordAdd} $1 ";" "-%MADARA_ROOT%\lib;%MADARA_ROOT%\bin;%MADARA_ROOT%\include" $2
+   ${WordAdd} $1 ";" "-%MADARA_ROOT%\lib;%MADARA_ROOT%\bin" $2
 
    WriteRegExpandStr ${env_hklm} PATH $2
    

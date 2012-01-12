@@ -3,11 +3,9 @@ project (Kats) : using_madara, using_ace, using_splice {
 
   requires += kats
 
-  sharedname = Kats
+  sharedname = KATS
   dynamicflags += KATS_BUILD_DLL
   libout = $(MADARA_ROOT)/lib
-
-  libs += Madara
 
   Build_Files {
     Kats.mpc
