@@ -72,7 +72,12 @@ Section "docs" SEC03
   File "..\..\docs\Doxyfile_KaRL"
   File "..\..\docs\Doxyfile_KATS"
   File "..\..\docs\Doxyfile_MAML"
+  File "..\..\docs\Doxyfile_MAAL"
+  File "..\..\docs\Doxyfile_CID"
   File "..\..\docs\README.txt"
+
+  SetOutPath "$INSTDIR\docs\cid"
+  File /r ..\..\docs\cid\html\*.*
 
   SetOutPath "$INSTDIR\docs\kats"
   File /r ..\..\docs\kats\html\*.*
@@ -82,7 +87,10 @@ Section "docs" SEC03
   
   SetOutPath "$INSTDIR\docs\maml"
   File /r ..\..\docs\maml\html\*.*
-  
+
+  SetOutPath "$INSTDIR\docs\maal"
+  File /r ..\..\docs\maal\html\*.*
+
   CreateDirectory "$SMPROGRAMS\MADARA"
   CreateShortCut "$SMPROGRAMS\MADARA\README.lnk" "$INSTDIR\docs\README.txt"
 SectionEnd
