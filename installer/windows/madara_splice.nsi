@@ -171,6 +171,12 @@ Section "configs" SEC06
 SectionEnd
 
 Section "ace" SEC10
+
+  SetOutPath "$INSTDIR"
+  
+  File /oname=$INSTDIR\ACE-LICENSE.txt "$%ACE_ROOT%\COPYING"
+  CreateShortCut "$SMPROGRAMS\MADARA\ACE-LICENSE.lnk" "$INSTDIR\ACE-LICENSE.txt"
+
   SetOutPath "$INSTDIR\lib"
   File "$%ACE_ROOT%\lib\ACE.dll"
   File "$%ACE_ROOT%\lib\ACEd.dll"
@@ -184,6 +190,11 @@ Section "ace" SEC10
 SectionEnd
 
 Section "opensplice" SEC11
+
+  SetOutPath "$INSTDIR"
+
+  File /oname=$INSTDIR\SPLICE-LICENSE.txt "$%OSPL_HOME%\LICENSE"
+  CreateShortCut "$SMPROGRAMS\MADARA\SPLICE-LICENSE.lnk" "$INSTDIR\SPLICE-LICENSE.txt"
 
   SetOutPath "$INSTDIR\lib"
 
