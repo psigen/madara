@@ -50,6 +50,18 @@ void cid_ga_degree (Madara::Cid::Settings & settings)
   Madara::Cid::ga_degree (settings, ga_time);
 }
 
+void cidapl_ga_degree (Madara::Cid::Settings & settings)
+{
+  Madara::Cid::pathwise_approximate (settings);
+  Madara::Cid::ga_degree (settings, ga_time);
+}
+
+void cidapl_ga_naive (Madara::Cid::Settings & settings)
+{
+  Madara::Cid::pathwise_approximate (settings);
+  Madara::Cid::ga_naive (settings, ga_time);
+}
+
 void hand_coded (Madara::Cid::Settings & settings)
 {
   Madara::Cid::Workflow & deployment = settings.target_deployment;
@@ -93,12 +105,15 @@ void hand_coded (Madara::Cid::Settings & settings)
   Madara::Cid::fill_by_highest_degree (settings, fill_starting);
 }
 
-bool use_csv_format (true);
+bool use_csv_format (false);
 
-#define NUM_TESTS           9
-#define PREPARATION         9
+#define NUM_TESTS           12
+#define PREPARATION         12
 #define MIN_TEST_RANGE      0
-#define MAX_TEST_RANGE      9
+#define MAX_TEST_RANGE      11
+
+unsigned int min_test (MIN_TEST_RANGE);
+unsigned int max_test (MAX_TEST_RANGE);
 
 char * testnames [] = {
   "CID Heuristic",
@@ -110,6 +125,9 @@ char * testnames [] = {
   "Naive CID-NGA",
   "Naive CID-DGA",
   "Random Deployment",
+  "CIDAPL",
+  "CIDAPL-NGA",
+  "CIDAPL-DGA",
 };
 
 
@@ -123,6 +141,9 @@ void (* test_impls []) (Madara::Cid::Settings &) = {
   ::naive_cid_ga_naive,
   ::naive_cid_ga_degree,
   Madara::Cid::generate_worst_solution,
+  Madara::Cid::pathwise_approximate,
+  ::cidapl_ga_naive,
+  ::cidapl_ga_degree
 
 };
 
@@ -375,7 +396,7 @@ void test_cid (unsigned int size, std::ostream & output)
   Madara::Cid::init (size, settings);
 
   // test even-sized fanouts from 1-4 source nodes targeting disjoint nodes
-  for (unsigned int fan_outs = 1; fan_outs <= 4; ++fan_outs)
+  for (unsigned int fan_outs = 4; fan_outs <= 4; ++fan_outs)
   {
     // create filename 
     std::stringstream filename;
@@ -404,7 +425,7 @@ void test_cid (unsigned int size, std::ostream & output)
 
 
     // iterate through all tests on this constraint satisfaction problem
-    for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
+    for (unsigned int i = min_test; i <= max_test; ++i)
     {
       settings.solution_lookup.clear ();
 
@@ -446,7 +467,7 @@ void test_cid (unsigned int size, std::ostream & output)
 
 
   // test even-sized fanouts from 1-4 source nodes targeting disjoint nodes
-  for (unsigned int fan_outs = 1; fan_outs <= 4; ++fan_outs)
+  for (unsigned int fan_outs = 4; fan_outs <= 4; ++fan_outs)
   {
     // create filename 
     std::stringstream filename;
@@ -477,7 +498,7 @@ void test_cid (unsigned int size, std::ostream & output)
 
 
     // iterate through all tests on this constraint satisfaction problem
-    for (unsigned int i = MIN_TEST_RANGE; i < MAX_TEST_RANGE; ++i)
+    for (unsigned int i = min_test; i <= max_test; ++i)
     {
       settings.solution_lookup.clear ();
 
@@ -713,11 +734,11 @@ int main (int argc, char *argv[])
 {
   MADARA_debug_level = 1;
 
-  unsigned int begin = 1000;
-  unsigned int end = 10000;
+  unsigned int begin = 100;
+  unsigned int end = 100;
   unsigned int increment = 1000;
   unsigned int repeat = 1;
-  std::string output_file ("test_cid_disjoint_results.txt");
+  std::string output_file ("test_cid_disjoint_results");
 
   for (int i = 1; i < argc; ++i)
   {
@@ -747,6 +768,12 @@ int main (int argc, char *argv[])
       buffer >> increment;
       ++i;
     }
+    else if (i + 1 < argc && arg == "-m" || arg == "--min-test")
+    {
+      buffer << argv[i + 1];
+      buffer >> min_test;
+      ++i;
+    }
     else if (i + 1 < argc && arg == "-o" || arg == "--output-file")
     {
       buffer << argv[i + 1];
@@ -765,6 +792,12 @@ int main (int argc, char *argv[])
       buffer >> ga_time;
       ++i;
     }
+    else if (i + 1 < argc && arg == "-x" || arg == "--max-test")
+    {
+      buffer << argv[i + 1];
+      buffer >> max_test;
+      ++i;
+    }
     else
     {
       buffer << "\nHelp for " << argv[0] << "\n\n";
@@ -779,6 +812,8 @@ int main (int argc, char *argv[])
       buffer << "      Print this help menu\n\n";
       buffer << "  -i <value> || --increment <value>\n";
       buffer << "      Increment size by. Default is 1000 (1,000)\n\n";
+      buffer << "  -m <value> || --min-test <value>\n";
+      buffer << "      Minimum test type to run\n\n";
       buffer << "  -o <filename> || --output-file <filename>\n";
       buffer << "      Print output to the filename.\n\n";
       buffer << "  -r <filename> || --repeat <filename>\n";
@@ -786,11 +821,18 @@ int main (int argc, char *argv[])
              << "      Useful when combined with --csv for results.\n\n";
       buffer << "  -t <value> || --max-time <value>\n";
       buffer << "      Maximum time to give genetic algorithms\n\n";
+      buffer << "  -x <value> || --max-test <value>\n";
+      buffer << "      Maximum test type to run\n\n";
 
       std::cout << buffer.str ();
       exit (0);
     }
   }
+
+  if (use_csv_format)
+    output_file += ".csv";
+  else
+    output_file += ".txt";
 
   std::ofstream output (output_file.c_str ());
 

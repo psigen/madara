@@ -14,9 +14,10 @@ void
 Madara::Cid::ga_naive (Settings & settings, double duration)
 {
   ACE_High_Res_Timer timer;
-  ACE_Time_Value max_tv;
+  ACE_Time_Value max_tv (0, 0);
   ACE_hrtime_t elapsed (0);
   ACE_hrtime_t maximum (0);
+  timer.reset ();
   timer.start ();
 
   max_tv.set (duration);
@@ -104,9 +105,10 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
     return;
 
   ACE_High_Res_Timer timer;
-  ACE_Time_Value max_tv;
+  ACE_Time_Value max_tv (0, 0);
   ACE_hrtime_t elapsed (0);
   ACE_hrtime_t maximum (0);
+  timer.reset ();
   timer.start ();
 
   max_tv.set (duration);

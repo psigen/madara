@@ -19,7 +19,9 @@ namespace Madara
   namespace Cid
   {
     // Uncomment if you would like CID logging enabled
-    #define ENABLE_CID_LOGGING
+    //#define ENABLE_CID_LOGGING
+
+    #define    INVALID_LOOKUP                (unsigned int)(0-1)
 
     /**
      * Container class for a link established within a deployment

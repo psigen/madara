@@ -258,17 +258,17 @@ Madara::Cid::overlay_latencies (Settings & settings,
   }
 
   // place the minimal latencies
-  //for (unsigned int i = 0; i < deployment.size (); ++i)
-  //{
-  //  Directed_Edges & edges = deployment[i];
-  //  for (unsigned int j = 0; j < edges.size (); ++j)
-  //  {
-  //    latencies[edges[j].first][edges[j].second].second =
-  //      (unsigned long long) min_latency;
+  for (unsigned int i = 0; i < deployment.size (); ++i)
+  {
+    Directed_Edges & edges = deployment[i];
+    for (unsigned int j = 0; j < edges.size (); ++j)
+    {
+      latencies[edges[j].first][edges[j].second].second =
+        (unsigned long long) min_latency;
 
-  //    total += latencies[edges[j].first][edges[j].second].second;
-  //  }
-  //}
+      total += latencies[edges[j].first][edges[j].second].second;
+    }
+  }
 
   // place the minimal edges
   for (unsigned int i = 0; i < paths.size (); ++i)
@@ -290,24 +290,12 @@ Madara::Cid::overlay_latencies (Settings & settings,
 void
 Madara::Cid::prepare_latencies (Settings & settings)
 {
-  // setup an average where degree == size
-
-  unsigned int degree = settings.solution.size ();
-
-
-  // we're dealing with a std::map which has O(log n) lookup. Use ref.
-  Latency_Vector & cur_averages = settings.network_averages[degree];
-  LV_Vector & latencies = settings.network_latencies;
- 
-  // make sure cur_averages has the right size
-  if (cur_averages.size () != latencies.size ())
-    cur_averages.resize (latencies.size ());
-
-  prepare_latencies (settings, cur_averages.size ());
+  // setup averages for the size of the underlying environment
+  prepare_latencies (settings, settings.network_latencies.size ());
   
-  std::sort (cur_averages.begin (), cur_averages.end (),
-    Increasing_Latency);
-
+  // setup averages for the size of the intended solution
+  prepare_latencies (settings, settings.solution.size ());
+  
   // Now create averages[degrees] for the degrees of the deployment
   for (unsigned int i = 0; i < settings.target_deployment.size (); ++i)
     prepare_latencies (settings, settings.target_deployment[i].size ());
@@ -747,7 +735,7 @@ Madara::Cid::process_deployment (Settings & settings,
             for (; begin <= end; begin += inc)
             {
               map[source_begin][begin];
-              map[begin][source_begin];
+              //map[begin][source_begin];
             }
           }
         } // end dest range construction

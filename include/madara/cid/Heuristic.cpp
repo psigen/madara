@@ -28,7 +28,7 @@ Madara::Cid::approximate (Settings & settings)
   for (unsigned int i = 0; i < deployment.size (); ++i)
   {
     unsigned int degree = deployment[i].size ();
-    if (degree)
+    if (degree > 0)
     {
       unsigned int & candidate = candidates[degree];
       Latency_Vector & cur_averages = settings.network_averages[degree];
@@ -87,7 +87,7 @@ Madara::Cid::approximate (Averages_Map & network_averages,
   Latency_Vector & cur_averages = network_averages[degree];
   unsigned int source;
 
-  if (current_flow.size ())
+  if (degree > 0)
   {
     source = current_flow[0].first;
 
@@ -251,7 +251,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
           }
         }
         
-      } // end if the degree was greater than 0
+      } // end if the degree was greater than 1
       else
         // break out of solving the source nodes
         break;
@@ -285,7 +285,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
                 dest, cur_averages[candidate].first));
   #endif
 
-                dest_id = cur_averages[candidate].first;
+                solution[dest] = cur_averages[candidate].first;
                 lookup[cur_averages[candidate].first] = dest;
                 ++candidate;
                 break;
@@ -293,7 +293,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
             } // end for k
           } // end couldn't find dest_id
         } // end for j
-      } // end if the degree was greater than 0
+      } // end if the degree was greater than 1
     }
   } // end if use_workflow
 
@@ -334,7 +334,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
   Solution_Map & lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
 
-  // iterate until we find a 0 degree deployment node
+  // iterate until we find a 1 degree deployment node
   for (unsigned int i = 0; i < deployment.size (); ++i)
   {
     Directed_Edges & source_flow = deployment[i];
@@ -397,25 +397,28 @@ Madara::Cid::pathwise_approximate (Settings & settings,
 void
 Madara::Cid::pathwise_approximate (Settings & settings)
 {
-#define    MAX_SOLUTIONS     5
+#define    MAX_SOLUTIONS     1
+#define    MAX_PATHS         5
   // need to use the updates from prepare_deployment and populate_links
   Paths & paths = settings.paths;
   Solution_Map & lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
   LV_Vector & latencies = settings.network_latencies;
-  std::vector<Deployment> solutions;
-  std::vector<Solution_Map> lookups;
-  Latency_Vector utilities;
-  utilities.resize (MAX_SOLUTIONS);
-  solutions.resize (MAX_SOLUTIONS);
-  lookups.resize (MAX_SOLUTIONS);
+//  std::vector<Deployment> solutions;
+  //std::vector<Solution_Map> lookups;
+//  Deployment new_lookup (settings.network_latencies.size (),
+//    Madara::Cid::INVALID_LOOKUP);
+//  Latency_Vector utilities;
+//  utilities.resize (MAX_SOLUTIONS);
+//  solutions.resize (MAX_SOLUTIONS);
+//  lookups.resize (MAX_SOLUTIONS);
 
   // this approximation algorithm will find 5 solutions
-  for (unsigned int i = 0; i < MAX_SOLUTIONS; ++i)
-  {
-    solutions[i].resize (solution.size ());
-    utilities[i].first = i;
-  }
+  //for (unsigned int i = 0; i < MAX_SOLUTIONS; ++i)
+  //{
+  //  solutions[i].resize (solution.size ());
+  //  utilities[i].first = i;
+  //}
 
   for (unsigned int i = 0; i < paths.size (); ++i)
   {
@@ -437,16 +440,16 @@ Madara::Cid::pathwise_approximate (Settings & settings)
       for (unsigned int j = 0; j < MAX_SOLUTIONS && j < paths.size (); ++j)
       {
         // use the current lookup
-        lookups[j] = lookup;
-        std::copy (solution.begin (), solution.end (), solutions[j].begin ());
+        //lookups[j] = lookup;
+        //std::copy (solution.begin (), solution.end (), solutions[j].begin ());
 
         for (; best < cur_averages.size (); ++best)
         {
-          found = lookups[j].find (cur_averages[best].first);
-          if (found == lookups[j].end ())
+          found = lookup.find (cur_averages[best].first);
+          if (found == lookup.end ())
           {
-            solutions[j][source] = cur_averages[best].first;
-            lookups[j][cur_averages[best].first] = source;
+            solution[source] = cur_averages[best].first;
+            lookup[cur_averages[best].first] = source;
             ++best;
             break;
           }
@@ -462,10 +465,10 @@ Madara::Cid::pathwise_approximate (Settings & settings)
         for (unsigned int k = 0; k < list.size (); ++k)
         {
           // is it even possible for this to be duplicated?
-          found = lookups[j].find (solutions[j][list[k].target]);
-          if (found == lookups[j].end () || found->second != list[k].target)
+          found = lookup.find (solution[list[k].target]);
+          if (found == lookup.end () || found->second != list[k].target)
           {
-            Latency_Record path_latencies[MAX_SOLUTIONS];
+            Latency_Record path_latencies[MAX_PATHS];
             //Latency_Vector path_latencies;
             //path_latencies.resize (MAX_SOLUTIONS);
 
@@ -477,14 +480,14 @@ Madara::Cid::pathwise_approximate (Settings & settings)
             unsigned int actuals = 0;
             // take the best latency of the first MAX_SOLUTIONS
             for (unsigned int l = 0;
-              l < MAX_SOLUTIONS && l < target_averages.size (); ++l)
+              l < MAX_PATHS && l < target_averages.size (); ++l)
             {
               for (; m < target_averages.size (); ++m)
               {
                 // this should only happen if the lookup doesn't contain
                 // the target_averages[m]
-                found = lookups[j].find (target_averages[m].first);
-                if (found == lookups[j].end ())
+                found = lookup.find (target_averages[m].first);
+                if (found == lookup.end ())
                 {
                   path_latencies[l].first = target_averages[m].first;
                   path_latencies[l].second = 
@@ -501,8 +504,8 @@ Madara::Cid::pathwise_approximate (Settings & settings)
               std::sort (path_latencies, &path_latencies[actuals],
                 Increasing_Latency);
 
-            solutions[j][list[k].target] = path_latencies[0].first;
-            lookups[j][path_latencies[0].first] = list[k].target;
+            solution[list[k].target] = path_latencies[0].first;
+            lookup[path_latencies[0].first] = list[k].target;
           }
         }
 
@@ -511,19 +514,19 @@ Madara::Cid::pathwise_approximate (Settings & settings)
 
         //pathwise_approximate (settings, solutions[j], lookups[j]);
 
-        utilities[j].second = calculate_latency (settings.network_latencies,
-          settings.target_deployment, solutions[j]);
+        //utilities[j].second = calculate_latency (settings.network_latencies,
+          //settings.target_deployment, solutions[j]);
       }
 
       // sort the results by latency. Smallest will be the best.
-      std::sort (utilities.begin (), utilities.end (), Increasing_Latency);
+      //std::sort (utilities.begin (), utilities.end (), Increasing_Latency);
 
       // copy the best solution to the one in the settings container
-      std::copy (solutions[utilities[0].first].begin (),
-        solutions[utilities[0].first].end (), solution.begin ());
+      //std::copy (solutions[utilities[0].first].begin (),
+        //solutions[utilities[0].first].end (), solution.begin ());
 
       // most importantly, copy the lookup or we'll refill everything
-      lookup = lookups[utilities[0].first];
+      //lookup = lookups[utilities[0].first];
     }
   }
 }
@@ -613,8 +616,8 @@ Madara::Cid::prepare_deployment (Settings & settings)
         current.target = dest;
         current.length = 1;
         current.degree = deployment[i].size ();
-        //paths[dest].dest[source].target = source;
-        //paths[dest].dest[source].length = 1;
+        paths[dest].dest[source].target = source;
+        paths[dest].dest[source].length = 1;
       }
     }
   }
