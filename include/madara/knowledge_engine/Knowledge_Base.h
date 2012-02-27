@@ -187,6 +187,11 @@ namespace Madara
       void print_my_latencies (void);
 
       /**
+       * Prints all latencies in the context for all processes
+       **/
+      void print_all_latencies (void);
+
+      /**
        * Returns a non-const reference to the Transport Settings
        * @return  settings reference
        **/

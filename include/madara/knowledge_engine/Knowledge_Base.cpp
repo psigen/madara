@@ -149,6 +149,12 @@ Madara::Knowledge_Engine::Knowledge_Base::print_my_latencies (void)
   impl_->print_my_latencies ();
 }
 
+void
+Madara::Knowledge_Engine::Knowledge_Base::print_all_latencies (void)
+{
+  impl_->print_all_latencies ();
+}
+
 Madara::Transport::Settings &
 Madara::Knowledge_Engine::Knowledge_Base::transport_settings (void)
 {

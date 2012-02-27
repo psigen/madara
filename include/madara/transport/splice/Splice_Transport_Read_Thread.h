@@ -87,6 +87,12 @@ namespace Madara
       void handle_latency (Knowledge::Update & data);
 
       /**
+       * Handles a latency aggregation
+       * @param  data  the aggregation that was made
+       **/
+      void handle_latency_aggregation (Knowledge::Update & data);
+
+      /**
        * Handles a multi-assignment update
        * @param  data  the update that was made
        **/

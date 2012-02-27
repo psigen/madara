@@ -87,13 +87,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         knowledge.start_latency ();
         ACE_OS::sleep (2);
+        knowledge.print_all_latencies ();
       }
       else if (input[0] == 'p' || input[0] == 'P')
-        knowledge.print_my_latencies ();
+        knowledge.print_all_latencies ();
     }
   }
 
-  knowledge.print_my_latencies ();
+  knowledge.print_all_latencies ();
 
   return 0;
 }

@@ -76,6 +76,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_my_latencies (void)
   settings_.print_my_latencies ();
 }
 
+inline void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_all_latencies (void)
+{
+  settings_.print_all_latencies ();
+}
+
 inline long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::start_latency (void)
 {

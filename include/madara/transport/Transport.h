@@ -2,6 +2,7 @@
 #define TRANSPORT_H
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <iostream>
 #include "ace/Thread_Mutex.h"
@@ -38,7 +39,8 @@ namespace Madara
       ASSIGN = 0,
       OPERATION = 1,
       MULTIASSIGN = 2,
-      LATENCY = 10
+      LATENCY = 10,
+      LATENCY_AGGREGATE = 11
     };
 
     /**
@@ -199,16 +201,102 @@ namespace Madara
        **/
       void print_my_latencies (void)
       {
-        Context_Guard guard (mutex);
+        // we do not use a guard here because we want to do I/O operations
+        // outside of the mutex.
+        std::stringstream buffer;
+
+        mutex.acquire ();
         Madara::Cid::Identifiers & ids = latencies.ids;
         Madara::Cid::Latency_Vector & current = latencies.network_latencies[id];
 
-        std::cout << "Latencies for id = " << id << std::endl;
+        buffer << "Latencies for id = " << id << std::endl;
 
         // print each id -> latency
         for (unsigned int i = 0; i < processes; ++i)
         {
-          std::cout << ids[i] << " = " << current[i].second << std::endl;
+          buffer << ids[i] << " = " << current[i].second << std::endl;
+        }
+
+        mutex.release ();
+
+        std::cout << buffer.str ();
+      }
+
+      /**
+       * Prints all latencies from this id in the format id -> latency
+       **/
+      void print_all_latencies (void)
+      {
+        // we do not use a guard here because we want to do I/O operations
+        // outside of the mutex.
+        std::stringstream buffer;
+
+        mutex.acquire ();
+        Madara::Cid::Identifiers & ids = latencies.ids;
+
+        buffer << "\nAll latencies in the context:\n\n";
+
+        // print each id -> latency
+        for (unsigned int i = 0; i < processes; ++i)
+        {
+          Madara::Cid::Latency_Vector & current = latencies.network_latencies[i];
+          for (unsigned int j = 0; j < processes; ++j)
+          {
+            buffer << ids[i] << " to " << ids[j] << 
+                      " = " << current[j].second << std::endl;
+          }
+        }
+
+        mutex.release ();
+
+        // print the buffer
+        std::cout << buffer.str ();
+      }
+
+      /**
+       * Aggregates all latencies from this id in the format id=latency;
+       * @return  aggregation of all latencies to this id
+       **/
+      std::string aggregate_latencies (void)
+      {
+        std::stringstream buffer;
+        Context_Guard guard (mutex);
+        Madara::Cid::Latency_Vector & current = latencies.network_latencies[id];
+
+        // print each id -> latency
+        for (unsigned int i = 0; i < processes; ++i)
+        {
+          buffer << i << "=" << current[i].second << ";";
+        }
+
+        return buffer.str ();
+      }
+
+      /**
+       * Un-aggregates all latencies from this id in the format id=latency;
+       * @param     source        the id of the process to update
+       * @param     aggregation   the aggregation of latencies
+       **/
+      void unaggregate_latencies (unsigned long source, 
+        const std::string & aggregation)
+      {
+        std::stringstream stream (aggregation);
+        Context_Guard guard (mutex);
+        Madara::Cid::Latency_Vector & current = latencies.network_latencies[source];
+
+        // key symbol value symbol
+        // 0 = 15     or 24 = 13847169741, for instance
+        char symbol;
+        unsigned int key;
+        unsigned long long value;
+
+        while (!stream.eof ())
+        {
+          stream >> key >> symbol >> value >> symbol;
+
+          // make a quick check to see if these values are indeed useful
+          if (key < processes && current[key].second != value)
+            current[key].second = value;
         }
       }
 
