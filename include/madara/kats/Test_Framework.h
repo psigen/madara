@@ -46,12 +46,6 @@ namespace Madara
         host = DEFAULT_HOST;
       }
 
-      /// our test framework id (0 ... processes-1 are valid ids)
-      unsigned long id;
-
-      /// number of testing processes in the network
-      unsigned long processes;
-
       /// our host name/ip (localhost by default, if multiple hosts
       /// please use actual ips or valid hosts). This is not used for
       /// creating communication channels but is used to identify the

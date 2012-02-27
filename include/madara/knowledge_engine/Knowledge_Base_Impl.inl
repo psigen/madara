@@ -70,6 +70,27 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
   map_.set_write_quality (key, quality);
 }
 
+inline void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_my_latencies (void)
+{
+  settings_.print_my_latencies ();
+}
+
+inline long
+Madara::Knowledge_Engine::Knowledge_Base_Impl::start_latency (void)
+{
+  if (transport_)
+    return transport_->start_latency ();
+  else
+    return -1;
+}
+
+inline Madara::Transport::Settings &
+Madara::Knowledge_Engine::Knowledge_Base_Impl::transport_settings (void)
+{
+  return settings_;
+}
+
 
 inline long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (

@@ -137,6 +137,24 @@ Madara::Knowledge_Engine::Knowledge_Base::set_quality (
   impl_->set_quality (key, quality);
 }
 
+long
+Madara::Knowledge_Engine::Knowledge_Base::start_latency (void)
+{
+  return impl_->start_latency ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::print_my_latencies (void)
+{
+  impl_->print_my_latencies ();
+}
+
+Madara::Transport::Settings &
+Madara::Knowledge_Engine::Knowledge_Base::transport_settings (void)
+{
+  return impl_->transport_settings ();
+}
+
 long long
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)
 {

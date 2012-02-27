@@ -176,6 +176,23 @@ namespace Madara
       void set_quality (const ::std::string & key, unsigned long quality);
 
       /**
+       * Starts a latency round
+       * @return  result of operation or -1 if we are shutting down
+       **/
+      long start_latency (void);
+
+      /**
+       * Prints latencies associated with this process id
+       **/
+      void print_my_latencies (void);
+
+      /**
+       * Returns a non-const reference to the Transport Settings
+       * @return  settings reference
+       **/
+      Madara::Transport::Settings & transport_settings (void);
+
+      /**
        * Checks if a knowledge location exists in the context
        *
        * @param key             knowledge variable location

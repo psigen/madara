@@ -1,11 +1,11 @@
-#ifndef SPLICE_DDS_TRANSPORT_H
-#define SPLICE_DDS_TRANSPORT_H
+#ifndef INCONSISTENT_DDS_TRANSPORT_H
+#define INCONSISTENT_DDS_TRANSPORT_H
 
 #include <string>
 
 //#include "madara/transport/splice/Splice_DataReader_Listener.h"
 //#include "madara/transport/splice/Splice_Subscriber_Listener.h"
-#include "madara/transport/splice/Splice_Transport_Read_Thread.h"
+#include "madara/transport/splice/Inconsistent_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include "ccpp_dds_dcps.h"
@@ -16,11 +16,11 @@ namespace Madara
   namespace Transport
   {
     /**
-     * @class Splice_DDS_Transport
+     * @class Inconsistent_Transport
      * @brief This class provides an interface into the Open Splice
      *        dissemination transport
      */
-    class Splice_DDS_Transport : public Base
+    class Inconsistent_Transport : public Base
     {
     public:
 
@@ -39,14 +39,14 @@ namespace Madara
        * @param   config   transport configuration settings
        * @param   launch_transport  whether or not to launch this transport
        **/
-      Splice_DDS_Transport (const std::string & id, 
+      Inconsistent_Transport (const std::string & id, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Settings & config, bool launch_transport);
 
       /**
        * Destructor
        **/
-      ~Splice_DDS_Transport ();
+      ~Inconsistent_Transport ();
 
       /**
        * Sends a single knowledge assignment
@@ -105,7 +105,6 @@ namespace Madara
       const static char *                             topic_names_[];
       const static char *                             partition_;
       const static char *                             ret_code_names[];
-
       //DDS::pong_handler                        *active_handler;
 
       DDS::DomainParticipantQos          part_qos_;
@@ -131,7 +130,7 @@ namespace Madara
 
       DDS::Topic_var                     update_topic_;
 
-      Splice_Read_Thread *               thread_;
+      Inconsistent_Read_Thread *               thread_;
 
       /**
        * Splice handle checker
@@ -151,4 +150,4 @@ namespace Madara
   }
 }
 
-#endif
+#endif // INCONSISTENT_DDS_TRANSPORT_H

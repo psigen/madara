@@ -52,6 +52,25 @@ Madara::Cid::check_solution (Settings & settings)
 }
 
 /**
+ * Reset latencies
+ **/
+void
+Madara::Cid::reset_latencies (Settings & settings, unsigned long long worst)
+{
+  for (unsigned int i = 0; i < settings.network_latencies.size (); ++i)
+  {
+    Latency_Vector & latencies = settings.network_latencies[i];
+    for (Latency_Vector::iterator j = latencies.begin ();
+      j != latencies.end (); ++j)
+    {
+      // expect most to be the worst
+      if (j->second != worst)
+        j->second = worst;
+    }
+  }
+}
+
+/**
  * Generates a random, fully-connected network of latencies
  **/
 void

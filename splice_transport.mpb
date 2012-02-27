@@ -11,6 +11,8 @@ feature (opensplice) {
   Source_Files {
       include/madara/transport/splice/Splice_DDS_Transport.cpp
       include/madara/transport/splice/Splice_Transport_Read_Thread.cpp
+      include/madara/transport/splice/Inconsistent_Transport.cpp
+      include/madara/transport/splice/Inconsistent_Read_Thread.cpp
       include/madara/transport/splice/Splice_Knowledge_Update.cpp
       include/madara/transport/splice/Splice_Knowledge_UpdateDcps.cpp
       include/madara/transport/splice/Splice_Knowledge_UpdateDcps_impl.cpp
@@ -20,6 +22,8 @@ feature (opensplice) {
   Header_Files {
       include/madara/transport/splice/Splice_DDS_Transport.h
       include/madara/transport/splice/Splice_Transport_Read_Thread.h
+      include/madara/transport/splice/Inconsistent_Transport.h
+      include/madara/transport/splice/Inconsistent_Read_Thread.h
       include/madara/transport/splice/ccpp_Splice_Knowledge_Update.h 
       include/madara/transport/splice/Splice_Knowledge_Update.h
       include/madara/transport/splice/Splice_Knowledge_UpdateDcps_impl.h

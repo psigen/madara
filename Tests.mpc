@@ -36,6 +36,42 @@ project (Test_Latency) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Latency_Rounds) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_latency_rounds
+
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_latency_rounds.cpp
+  }
+}
+
+project (Test_Consistency) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_consistency
+
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_consistency.cpp
+  }
+}
+
 project (Test_Dissemination) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_dissemination

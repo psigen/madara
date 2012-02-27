@@ -1,5 +1,5 @@
-#ifndef SPLICE_TRANSPORT_READ_THREAD_H
-#define SPLICE_TRANSPORT_READ_THREAD_H
+#ifndef INCONSISTENT_READ_THREAD_H
+#define INCONSISTENT_READ_THREAD_H
 
 /**
  * @file Splice_Transport_Read_Thread.h
@@ -30,10 +30,10 @@ namespace Madara
   namespace Transport
   {
     /**
-     * @class Splice_Read_Thread
+     * @class Inconsistent_Read_Thread
      * @brief Thread for reading knowledge updates via waitsets
      **/
-    class Splice_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
+    class Inconsistent_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
     {
     public:
       /**
@@ -42,7 +42,7 @@ namespace Madara
        * @param context where to store and access knowledge
        * @param update_reader reader created in @see Splice_DDS_Transport
        **/
-      Splice_Read_Thread (
+      Inconsistent_Read_Thread (
         const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Knowledge::UpdateDataReader_ptr & update_reader,
@@ -52,7 +52,7 @@ namespace Madara
       /**
        * Destructor
        **/
-      ~Splice_Read_Thread ();
+      ~Inconsistent_Read_Thread ();
 
       /**
        * Enters a barrier with the calling thread and any spawned threads
@@ -152,4 +152,4 @@ namespace Madara
   }
 }
 
-#endif
+#endif // INCONSISTENT_READ_THREAD_H

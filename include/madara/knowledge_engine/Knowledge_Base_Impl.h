@@ -230,6 +230,23 @@ namespace Madara
         bool send_modifieds);
 
       /**
+       * Starts a latency round
+       * @return  result of operation or -1 if we are shutting down
+       **/
+      long start_latency (void);
+
+      /**
+       * Prints latencies associated with this process id
+       **/
+      void print_my_latencies (void);
+
+      /**
+       * Returns a non-const reference to the Transport Settings
+       * @return  settings reference
+       **/
+      Madara::Transport::Settings & transport_settings (void);
+
+      /**
        * Updates all global variables to current clock and then
        * sends them if a transport is available. This is useful
        * when trying to synchronize to late joiners (this process

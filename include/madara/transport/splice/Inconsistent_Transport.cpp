@@ -1,4 +1,4 @@
-#include "madara/transport/splice/Splice_DDS_Transport.h"
+#include "madara/transport/splice/Inconsistent_Transport.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
@@ -6,13 +6,13 @@
 #include <iostream>
 #include <sstream>
 
-const char * Madara::Transport::Splice_DDS_Transport::topic_names_[] = {
+const char * Madara::Transport::Inconsistent_Transport::topic_names_[] = {
   "MADARA_KaRL_Data",
   "MADARA_KaRL_Control"
 };
 
 /* Array to hold the names for all ReturnCodes. */
-const char * Madara::Transport::Splice_DDS_Transport::ret_code_names[] = { 
+const char * Madara::Transport::Inconsistent_Transport::ret_code_names[] = { 
     "DDS_RETCODE_OK",
     "DDS_RETCODE_ERROR",
     "DDS_RETCODE_UNSUPPORTED",
@@ -27,9 +27,9 @@ const char * Madara::Transport::Splice_DDS_Transport::ret_code_names[] = {
     "DDS_RETCODE_NO_DATA",
     "DDS_RETCODE_ILLEGAL_OPERATION" };
 
-const char * Madara::Transport::Splice_DDS_Transport::partition_ = "Madara_knowledge";
+const char * Madara::Transport::Inconsistent_Transport::partition_ = "Madara_knowledge";
 
-Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
+Madara::Transport::Inconsistent_Transport::Inconsistent_Transport (
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Settings & config, bool launch_transport)
@@ -49,13 +49,13 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   if (launch_transport)
     setup ();
 }
-Madara::Transport::Splice_DDS_Transport::~Splice_DDS_Transport ()
+Madara::Transport::Inconsistent_Transport::~Inconsistent_Transport ()
 {
   close ();
 }
 
 void
-Madara::Transport::Splice_DDS_Transport::close (void)
+Madara::Transport::Inconsistent_Transport::close (void)
 {
   this->invalidate_transport ();
 
@@ -99,19 +99,19 @@ Madara::Transport::Splice_DDS_Transport::close (void)
 }
 
 int
-Madara::Transport::Splice_DDS_Transport::reliability (void) const
+Madara::Transport::Inconsistent_Transport::reliability (void) const
 {
   return this->settings_.reliability;
 }
 
 int
-Madara::Transport::Splice_DDS_Transport::reliability (const int & setting)
+Madara::Transport::Inconsistent_Transport::reliability (const int & setting)
 {
   return this->settings_.reliability = setting;
 }
 
 int
-Madara::Transport::Splice_DDS_Transport::setup (void)
+Madara::Transport::Inconsistent_Transport::setup (void)
 {
   DDS::ReturnCode_t                         status;
 
@@ -121,12 +121,12 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //valid_setup_ = false;
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Creating a participant for topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Participant settings are being read from the OSPL_URI environment"
       " variable\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
@@ -142,7 +142,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   if (domain_participant_ == NULL)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nSplice_DDS_Transport::setup:" \
+      "\nInconsistent_Transport::setup:" \
       " splice daemon not running. Try 'ospl start'...\n"));
     exit (-2);
   }
@@ -165,7 +165,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Registering type support\n"));
 
 
@@ -180,7 +180,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //check_status(status, "Knowledge::MutexTypeSupport::register_type");
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Setting up knowledge domain via topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -206,7 +206,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   }
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Creating publisher for topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -230,7 +230,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   }
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Creating subscriber for topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -244,7 +244,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   if (!subscriber_ || !publisher_)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nSplice_DDS_Transport::setup:" \
+      "\nInconsistent_Transport::setup:" \
       " pub or sub could not be created. Try 'ospl stop; ospl start'...\n"));
     exit (-2);
   }
@@ -256,7 +256,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Splice_DDS_Transport::setup:" \
+        DLINFO "Inconsistent_Transport::setup:" \
         " Enabling reliable transport for (%s) datawriters\n", 
         Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -271,13 +271,13 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   else
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Splice_DDS_Transport::setup:" \
+        DLINFO "Inconsistent_Transport::setup:" \
         " Enabling unreliable transport for (%s) datawriters\n", 
         Madara::Utility::dds_topicify (settings_.domains).c_str ()));
   }
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Creating datawriter for topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -307,7 +307,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   if (Madara::Transport::RELIABLE == this->settings_.reliability)
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Splice_DDS_Transport::setup:" \
+        DLINFO "Inconsistent_Transport::setup:" \
         " Enabling reliable transport for (%s) datareaders\n", 
         Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -323,13 +323,13 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   else
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Splice_DDS_Transport::setup:" \
+        DLINFO "Inconsistent_Transport::setup:" \
         " Enabling unreliable transport for (%s) datareaders\n", 
         Madara::Utility::dds_topicify (settings_.domains).c_str ()));
   }
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::setup:" \
+      DLINFO "Inconsistent_Transport::setup:" \
       " Creating datareader for topic (%s)\n", 
       Madara::Utility::dds_topicify (settings_.domains).c_str ()));
 
@@ -354,7 +354,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //mutex_reader_ = dynamic_cast<Knowledge::MutexDataReader_ptr>(datareader_);
   //check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
 
-  thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
+  thread_ = new Madara::Transport::Inconsistent_Read_Thread (id_, context_, 
     update_reader_, latency_update_writer_, this->settings_);
   
   this->validate_transport ();
@@ -363,7 +363,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 }
 
 long
-Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key, 
+Madara::Transport::Inconsistent_Transport::send_data (const std::string & key, 
                                                const long long & value)
 {
   // check to see if we are shutting down
@@ -371,13 +371,13 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_data: transport has been told to shutdown")); 
+      DLINFO "Inconsistent_Transport::send_data: transport has been told to shutdown")); 
     return ret;
   }
   else if (-2 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_data: transport is not valid")); 
+      DLINFO "Inconsistent_Transport::send_data: transport is not valid")); 
     return ret;
   }
 
@@ -396,7 +396,7 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
   data.type = Madara::Transport::ASSIGN;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Splice_DDS_Transport::send:" \
+    DLINFO "Inconsistent_Transport::send:" \
     " sending data: %s=%q, time=%Q, quality=%u\n", 
     key.c_str (), data.value, cur_clock, data.quality));
 
@@ -408,7 +408,7 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
 }
 
 long
-Madara::Transport::Splice_DDS_Transport::send_multiassignment (
+Madara::Transport::Inconsistent_Transport::send_multiassignment (
   const std::string & expression, unsigned long quality)
 {
   // check to see if we are shutting down
@@ -416,13 +416,13 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is shutting down")); 
+      DLINFO "Inconsistent_Transport::send_multiassignment: transport is shutting down")); 
     return ret;
   }
   else if (-2 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is not valid")); 
+      DLINFO "Inconsistent_Transport::send_multiassignment: transport is not valid")); 
     return ret;
   }
   
@@ -442,7 +442,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   data.type = Madara::Transport::MULTIASSIGN;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Splice_DDS_Transport::send:" \
+    DLINFO "Inconsistent_Transport::send:" \
     " sending multiassignment: %s, time=%Q, quality=%u\n", 
     expression.c_str (), cur_clock, quality));
 
@@ -454,21 +454,21 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
 }
 
 long
-Madara::Transport::Splice_DDS_Transport::start_latency ()
+Madara::Transport::Inconsistent_Transport::start_latency ()
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::start_latency:"
+      DLINFO "Inconsistent_Transport::start_latency:"
       " transport has been told to shutdown")); 
     return ret;
   }
   else if (-2 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::start_latency:"
+      DLINFO "Inconsistent_Transport::start_latency:"
       " transport is not valid")); 
     return ret;
   }
@@ -488,7 +488,7 @@ Madara::Transport::Splice_DDS_Transport::start_latency ()
   data.type = Madara::Transport::LATENCY;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Splice_DDS_Transport::start_latency:" \
+    DLINFO "Inconsistent_Transport::start_latency:" \
     " originator=%s, time=%Q\n", 
     id_.c_str (), cur_clock));
 
@@ -502,20 +502,20 @@ Madara::Transport::Splice_DDS_Transport::start_latency ()
 }
 
 void
-Madara::Transport::Splice_DDS_Transport::check_handle (void * handle, 
+Madara::Transport::Inconsistent_Transport::check_handle (void * handle, 
                                                       const char * info)
 {
   if (!handle)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nSplice_DDS_Transport::check_handle:" \
+      "\nInconsistent_Transport::check_handle:" \
       " error in %s: Creation failed: invalid handle\n", info));
     exit (-2);
   }
 }
 
 void
-Madara::Transport::Splice_DDS_Transport::check_status (DDS::ReturnCode_t status,
+Madara::Transport::Inconsistent_Transport::check_status (DDS::ReturnCode_t status,
                                                        const char * info)
 {
   // if the status is okay, then return without issue
@@ -523,14 +523,14 @@ Madara::Transport::Splice_DDS_Transport::check_status (DDS::ReturnCode_t status,
     return;
   
   MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nSplice_DDS_Transport::check_status:" \
+      "\nInconsistent_Transport::check_status:" \
       " error in %s: Creation failed: %s\n", 
       info, get_error_name(status)));
   exit (-2);
 }
 
 const char *
-Madara::Transport::Splice_DDS_Transport::get_error_name(DDS::ReturnCode_t status)
+Madara::Transport::Inconsistent_Transport::get_error_name(DDS::ReturnCode_t status)
 {
     return ret_code_names[status];
 }

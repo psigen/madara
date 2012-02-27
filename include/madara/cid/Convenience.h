@@ -31,6 +31,14 @@ namespace Madara
       Settings & settings);
 
     /**
+     * Generates latencies 
+     * @param       settings     container for the network_latencies
+     * @param       worst        the worst case latency to set each to
+     **/
+    MADARA_Export void reset_latencies (Settings & settings,
+      unsigned long long worst);
+
+    /**
      * Generates a random, fully-connected network of latencies
      * @param       size                  the number of nodes in the network
      * @param       network_latencies     the generated network latencies
