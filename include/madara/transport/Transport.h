@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <iostream>
+#include <ostream>
 #include "ace/Thread_Mutex.h"
 #include "ace/Recursive_Thread_Mutex.h"
 #include "ace/Condition_T.h"
@@ -13,6 +13,7 @@
 #include "ace/High_Res_Timer.h"
 #include "madara/cid/Settings.h"
 #include "madara/cid/Convenience.h"
+#include "madara/utility/Utility.h"
 
 namespace Madara
 {
@@ -40,7 +41,8 @@ namespace Madara
       OPERATION = 1,
       MULTIASSIGN = 2,
       LATENCY = 10,
-      LATENCY_AGGREGATE = 11
+      LATENCY_AGGREGATE = 11,
+      LATENCY_SUMMATION = 12
     };
 
     /**
@@ -120,7 +122,8 @@ namespace Madara
         processes (settings.processes),
         latency_enabled (settings.latency_enabled),
         latency_timeout (settings.latency_timeout),
-        latency_default (settings.latency_default)
+        latency_default (settings.latency_default),
+        latencies (settings.latencies)
       {
       }
 
@@ -136,6 +139,7 @@ namespace Madara
         latency_enabled = settings.latency_enabled;
         latency_timeout = settings.latency_timeout;
         latency_default = settings.latency_default;
+        latencies = settings.latencies;
       }
 
       /**
@@ -199,7 +203,7 @@ namespace Madara
       /**
        * Prints all latencies from this id in the format id -> latency
        **/
-      void print_my_latencies (void)
+      void print_my_latencies (std::ostream & output)
       {
         // we do not use a guard here because we want to do I/O operations
         // outside of the mutex.
@@ -219,13 +223,13 @@ namespace Madara
 
         mutex.release ();
 
-        std::cout << buffer.str ();
+        output << buffer.str ();
       }
 
       /**
        * Prints all latencies from this id in the format id -> latency
        **/
-      void print_all_latencies (void)
+      void print_all_latencies (std::ostream & output)
       {
         // we do not use a guard here because we want to do I/O operations
         // outside of the mutex.
@@ -250,7 +254,42 @@ namespace Madara
         mutex.release ();
 
         // print the buffer
-        std::cout << buffer.str ();
+        output << buffer.str ();
+      }
+
+      /**
+       * Prints all summations in the format id -> latency
+       **/
+      void print_all_summations (std::ostream & output)
+      {
+        // we do not use a guard here because we want to do I/O operations
+        // outside of the mutex.
+        std::stringstream buffer;
+
+        mutex.acquire ();
+        Madara::Cid::Identifiers & ids = latencies.ids;
+        Madara::Cid::Summations_Map & summation_map =
+          latencies.network_summations;
+
+        buffer << "\nAll summations in the context:\n\n";
+
+        // print each id -> latency
+        for (Madara::Cid::Summations_Map::iterator i = summation_map.begin ();
+          i != summation_map.end (); ++i)
+        {
+          buffer << "Degree = " << i->first << std::endl;
+          Madara::Cid::Latency_Vector & current = i->second;
+          for (unsigned int j = 0; j < current.size (); ++j)
+          {
+            buffer << "  " << current[j].first << " = " << 
+                      current[j].second << "\n";
+          }
+        }
+
+        mutex.release ();
+
+        // print the buffer
+        output << buffer.str ();
       }
 
       /**
@@ -290,14 +329,89 @@ namespace Madara
         unsigned int key;
         unsigned long long value;
 
-        while (!stream.eof ())
+        for (unsigned int i = 0; !stream.eof (); ++i)
         {
           stream >> key >> symbol >> value >> symbol;
 
           // make a quick check to see if these values are indeed useful
-          if (key < processes && current[key].second != value)
-            current[key].second = value;
+          if (i < processes)
+          {
+            current[i].first = key;
+            current[i].second = value;
+          }
         }
+      }
+
+      /**
+       * Packs all latency data into summations based on workflow degrees
+       **/
+      std::string pack_summations (void)
+      {
+        Context_Guard guard (mutex);
+
+        return Madara::Cid::prepare_summations (id, latencies);
+      }
+
+      /**
+       * Unpacks all latency summaries from this id in the format id=latency;
+       * @param     source        the id of the process to update
+       * @param     summations   the aggregation of latencies
+       **/
+      void unpack_summations (unsigned long source, 
+        const std::string & summations)
+      {
+        std::stringstream stream (summations);
+        Context_Guard guard (mutex);
+        Madara::Cid::Latency_Vector & current =
+          latencies.network_latencies[source];
+        Madara::Cid::Summations_Map & summations_map =
+          latencies.network_summations;
+
+        // key symbol value symbol
+        // 0 = 15     or 24 = 13847169741, for instance
+        char symbol;
+        unsigned int key;
+        unsigned long long value;
+
+        while (!stream.eof ())
+        {
+          stream >> key >> symbol >> value >> symbol;
+
+          Madara::Cid::Latency_Vector & cur_summation = summations_map[key];
+
+          if (cur_summation.size () == processes)
+          {
+            // if the array had already been created, sort by Id
+            std::sort (cur_summation.begin (), cur_summation.end (),
+              Madara::Cid::Increasing_Id);
+          }
+          else
+          {
+            // if the size of this entry is 0, create a new processes-length
+            // summation for this degree, and set each element to the
+            // corresponding id of that process (essentially sorting by Id)
+            cur_summation.resize (processes);
+            for (unsigned int i = 0; i < processes; ++i)
+              cur_summation[i].first = i;
+          }
+
+          // make a quick check to see if these values are indeed useful
+          if (source < processes && cur_summation[source].second != value)
+          {
+            cur_summation[source].second = value;
+          }
+        }
+      }
+
+      /**
+       * Reads a user provided dataflow that the Madara framework
+       * should be approximating
+       **/
+      void read_dataflow (const std::string & filename)
+      {
+        latencies.network_summations.clear ();
+        Madara::Cid::read_deployment (latencies,
+          Madara::Utility::clean_dir_name (filename));
       }
 
       /// All class members are accessible to users for easy setup

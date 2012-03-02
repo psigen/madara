@@ -64,6 +64,12 @@ namespace Madara
     };
 
     /**
+     * A vector of degrees
+     **/
+
+    typedef std::vector <unsigned int>                     Degrees;
+
+    /**
      * A pairing of a target (first) and a latency (second)
      **/
     typedef std::pair <unsigned int, unsigned long long>   Latency_Record;
@@ -112,7 +118,7 @@ namespace Madara
     /**
      * A map of degree to the average latencies for that degree
      */
-    typedef std::map <unsigned int, Latency_Vector>  Averages_Map;
+    typedef std::map <unsigned int, Latency_Vector>  Summations_Map;
 
     /**
      * A map of the solution which allows reverse lookup by identifier
@@ -227,14 +233,23 @@ namespace Madara
       return u.degree > v.degree;
     }
 
-    ///**
-    // * Comparator for a list of increasing integers
-    // **/
-    //static bool Increasing (
-    //  const int & u, const int & v)
-    //{
-    //  return u < v;
-    //}
+    /**
+     * Comparator for increasing degree
+     **/
+    static bool Increasing_Degree (
+      const Link & u, const Link & v)
+    {
+      return u.degree < v.degree;
+    }
+
+    /**
+     * Comparator for a list of increasing integers
+     **/
+    static bool Increasing_Int (
+      const unsigned int & u, const unsigned int & v)
+    {
+      return u < v;
+    }
 
     ///**
     // * Comparator for a list of decreasing integers
@@ -250,6 +265,13 @@ namespace Madara
      **/
     struct Settings
     {
+      /**
+       * A list of all the degrees in the deployment--including those that
+       * are bidirectional degrees. This is useful in reducing workload during
+       * prepare_summation
+       **/
+      Degrees      degrees;
+
       /**
        * Mapping of network unique ids to human-readables. These
        * ids correspond to an entry in the network_latencies table.
@@ -317,7 +339,7 @@ namespace Madara
        * [2] =  63
        * [3] =  66
        **/
-      Averages_Map         network_averages;
+      Summations_Map         network_summations;
 
       /**
        * This is the target workflow that is being optimized. Note that the
@@ -353,7 +375,7 @@ namespace Madara
 
       /**
        * This is the solution to the target_deployment according
-       * to the averages in network_averages. These integers should
+       * to the averages in network_summations. These integers should
        * be mapped to the ids listing for user-readable deployments.
        * e.g., if the target deployment was
        * 
@@ -375,6 +397,8 @@ namespace Madara
        * deployment.
        **/
       Solution_Map  solution_lookup;
+
+
     };
   }
 }

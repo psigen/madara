@@ -37,14 +37,14 @@ namespace Madara
 
     /**
      * Approximates the solution with the CID heuristic
-     * @param    network_averages  sorted array of network averages
+     * @param    network_summations  sorted array of network averages
      *                             (@see Madara::Cid::Settings)
      * @param    target_deployment sorted target deployment by degree
      * @param    solution          results of heuristic
      * @param    solution_lookup   map of network ids to their deployments
      * @param    node        the deployment node we are approximating
      **/
-    MADARA_Export void approximate (Averages_Map & network_averages, 
+    MADARA_Export void approximate (Summations_Map & network_summations, 
       Workflow & target_deployment, Deployment & solution, 
       Solution_Map & solution_lookup, unsigned int node);
 

@@ -71,15 +71,24 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
 }
 
 inline void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_my_latencies (void)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_my_latencies (
+  std::ostream & output)
 {
-  settings_.print_my_latencies ();
+  settings_.print_my_latencies (output);
 }
 
 inline void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_all_latencies (void)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_all_latencies (
+  std::ostream & output)
 {
-  settings_.print_all_latencies ();
+  settings_.print_all_latencies (output);
+}
+
+inline void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_all_summations (
+  std::ostream & output)
+{
+  settings_.print_all_summations (output);
 }
 
 inline long

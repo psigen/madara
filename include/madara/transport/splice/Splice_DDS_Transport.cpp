@@ -492,6 +492,7 @@ Madara::Transport::Splice_DDS_Transport::start_latency ()
     " originator=%s, time=%Q\n", 
     id_.c_str (), cur_clock));
 
+  settings_.reset_timers ();
   settings_.start_all_timers ();
 
   handle = update_writer_->register_instance (data);

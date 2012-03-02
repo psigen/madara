@@ -131,7 +131,7 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
 
   unsigned int num_degreed_nodes = 0;
   Workflow & deployment = settings.target_deployment;
-  Averages_Map & averages = settings.network_averages;
+  Summations_Map & averages = settings.network_summations;
   Solution_Map solution_lookup;
 
 #ifdef ENABLE_CID_LOGGING
@@ -208,8 +208,8 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
       // use degree and latency information to form ideal candidates
       candidate1 = deployment[choice][0].first;
 
-      Latency_Vector & cur_averages = 
-        settings.network_averages[deployment[choice].size ()];
+      Latency_Vector & cur_summations = 
+        settings.network_summations[deployment[choice].size ()];
   
       /**
        * the other candidate can be from a range:
@@ -219,16 +219,16 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
        **/
       int candidate_type = rand () % 5;
       unsigned int range;
-      if (cur_averages.size () < 50)
+      if (cur_summations.size () < 50)
       {
-        range = cur_averages.size () / 10 + 1;
-        candidate2 = solution_lookup[cur_averages[rand () % range].first];
+        range = cur_summations.size () / 10 + 1;
+        candidate2 = solution_lookup[cur_summations[rand () % range].first];
       }
       else if (candidate_type <= 2)
       {
         if (num_degreed_nodes < 5)
         {
-          range = cur_averages.size () / 20;
+          range = cur_summations.size () / 20;
         }
         else
         {
@@ -242,12 +242,12 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
           range));
 #endif
 
-        candidate2 = solution_lookup[cur_averages[rand () % range].first];
+        candidate2 = solution_lookup[cur_summations[rand () % range].first];
       }
       else if (candidate_type == 3)
       {
         // choose candidate2 from the top 10%
-        range = cur_averages.size () / 10; 
+        range = cur_summations.size () / 10; 
 
 #ifdef ENABLE_CID_LOGGING
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
@@ -256,12 +256,12 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
           range));
 #endif
 
-        candidate2 = solution_lookup[cur_averages[rand () % range].first];
+        candidate2 = solution_lookup[cur_summations[rand () % range].first];
       }
       else
       {
         // choose candidate2 from the top 25%
-        range = cur_averages.size () / 4; 
+        range = cur_summations.size () / 4; 
 
 #ifdef ENABLE_CID_LOGGING
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
@@ -270,7 +270,7 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
           range));
 #endif
 
-        candidate2 = solution_lookup[cur_averages[rand () % range].first];
+        candidate2 = solution_lookup[cur_summations[rand () % range].first];
       }
 
 #ifdef ENABLE_CID_LOGGING
@@ -282,7 +282,7 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
 
       // loop until we have two different candidates
       while (range >= 2 && candidate1 == candidate2)
-        candidate2 = solution_lookup[cur_averages[rand () % range].first];
+        candidate2 = solution_lookup[cur_summations[rand () % range].first];
     }
 
 #ifdef ENABLE_CID_LOGGING

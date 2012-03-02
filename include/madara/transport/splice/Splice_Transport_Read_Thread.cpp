@@ -78,6 +78,26 @@ Madara::Transport::Splice_Read_Thread::handle_latency_aggregation (
   settings_.unaggregate_latencies (data.quality, data.key.in ());
 }
 
+/**
+ * originator == person who started the latency rounds
+ * key == the person replying to the round
+ * clock == the time the round was started
+ * value == the step in the round (0 = initial, 1 = reply, 2 = reply to reply)
+ **/
+
+void
+Madara::Transport::Splice_Read_Thread::handle_latency_summation (
+  Knowledge::Update & data)
+{
+  Madara::Transport::Settings::Context_Guard guard (settings_.mutex);
+  
+  // if we were the aggregator, don't apply the updates to ourself.
+  if (data.quality == settings_.id)
+    return;
+
+  settings_.unpack_summations (data.quality, data.key.in ());
+}
+
 
 /**
  * originator == person who started the latency rounds
@@ -90,6 +110,7 @@ void
 Madara::Transport::Splice_Read_Thread::handle_latency (
   Knowledge::Update & data)
 {
+//  DDS::InstanceHandle_t  handle;
   Madara::Transport::Settings::Context_Guard guard (settings_.mutex);
   /**
    * During value == 0 (initial), the originator called start_latency.
@@ -104,6 +125,10 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
     {
       settings_.num_responses = 1;
       settings_.stop_timer (data.quality, false);
+
+      if (settings_.num_responses == settings_.processes)
+        settings_.pack_summations ();
+
       return;
     }
     else
@@ -112,21 +137,23 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
     // everyone else needs to respond though
 
     Knowledge::Update reply_data;
-    reply_data.key = id_.c_str ();
+    reply_data.key = data.originator.val ();
     reply_data.value = 1;
     reply_data.clock = data.clock;
     reply_data.quality = this->settings_.id;
-    reply_data.originator = data.originator.val ();
+    reply_data.originator = id_.c_str ();
     reply_data.type = Madara::Transport::LATENCY;
 
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "Splice_DDS_Transport::handle_latency:" \
-      " originator=%s, replier=%s, time=%Q, step=%q\n", 
-      reply_data.originator.val (), id_.c_str (),
-      reply_data.clock, reply_data.value));
+      " originator=%s, key=%s, quality=%u, step=%q\n", 
+      reply_data.originator.val (), reply_data.key.val (),
+      reply_data.quality, reply_data.value));
 
+    settings_.reset_timers ();
     settings_.start_all_timers ();
 
+    //handle = update_writer_->register_instance (data);
     update_writer_->write (reply_data, 0); 
   }
 
@@ -135,18 +162,23 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
    **/
   else if (data.value == 1)
   {
-    if (settings_.latencies.ids[data.quality] != data.key.val ())
-      settings_.latencies.ids[data.quality] = data.key.val ();
+    if (settings_.latencies.ids[data.quality] != data.originator.val ())
+      settings_.latencies.ids[data.quality] = data.originator.val ();
 
     // key doesn't respond to itself
-    if (data.key.val () == id_)
+    if (data.originator.val () == id_)
     {
       settings_.stop_timer (data.quality, false);
+      ++settings_.num_responses;
+
+      if (settings_.num_responses == settings_.processes)
+        settings_.pack_summations ();
+
       return;
     }
 
     // if we're the originator, send a reply then record our latency
-    if (data.originator.val () == id_)
+    if (data.key.val () == id_)
     {
       // stop stored timer
       settings_.stop_timer (data.quality);
@@ -164,31 +196,50 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
         reply_data.originator = id_.c_str ();
         reply_data.type = Madara::Transport::LATENCY_AGGREGATE;
 
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Splice_DDS_Transport::handle_latency:" \
-          " originator=%s, replier=%s, time=%Q, step=%q\n", 
-          reply_data.originator.val (), id_.c_str (),
-          reply_data.clock, reply_data.value));
-
         update_writer_->write (reply_data, 0);
+
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_DDS_Transport::handle_latency::aggregate:" \
+          " originator=%s, key=%s, quality=%u, step=%q\n", 
+          reply_data.originator.val (), reply_data.key.val (),
+          reply_data.quality, reply_data.value));
+
+        Knowledge::Update summation;
+        summation.value = settings_.processes;
+        summation.clock = data.clock;
+        summation.quality = this->settings_.id;
+        summation.originator = id_.c_str ();
+        summation.key = settings_.pack_summations ().c_str ();
+        summation.type = Madara::Transport::LATENCY_SUMMATION;
+
+        //handle = update_writer_->register_instance (data);
+        update_writer_->write (summation, 0);
+
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_DDS_Transport::handle_latency::summation:" \
+          " originator=%s, key=%s, quality=%u, step=%q\n", 
+          summation.originator.val (), summation.key.val (),
+          summation.quality, summation.value));
+
       }
     }
 
     // everyone sends a response to the key as the orig
     Knowledge::Update reply_data;
-    reply_data.key = id_.c_str ();
+    reply_data.key = data.originator.val ();
     reply_data.value = 2;
     reply_data.clock = data.clock;
     reply_data.quality = this->settings_.id;
-    reply_data.originator = data.key.val ();
+    reply_data.originator = id_.c_str ();
     reply_data.type = Madara::Transport::LATENCY;
 
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "Splice_DDS_Transport::handle_latency:" \
-      " originator=%s, replier=%s, time=%Q, step=%q\n", 
-      reply_data.originator.val (), id_.c_str (),
-      reply_data.clock, reply_data.value));
+      " originator=%s, key=%s, quality=%u, step=%q\n", 
+      reply_data.originator.val (), reply_data.key.val (),
+      reply_data.quality, reply_data.value));
 
+    //handle = update_writer_->register_instance (data);
     update_writer_->write (reply_data, 0); 
   }
 
@@ -196,17 +247,17 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
    * During value == 2 (reply-reply), people are replying to a reply
    * The only person who cares about this is the originator in the data
    **/
-  else if (data.value == 2 && data.originator.val () == id_)
+  else if (data.value == 2 && data.key.val () == id_)
   {
     // stop the timer and store the latency
     settings_.stop_timer (data.quality);
     ++settings_.num_responses;
 
-    if (settings_.latencies.ids[data.quality] != data.key.val ())
-      settings_.latencies.ids[data.quality] = data.key.val ();
+    if (settings_.latencies.ids[data.quality] != data.originator.val ())
+      settings_.latencies.ids[data.quality] = data.originator.val ();
 
     
-    if (settings_.num_responses == settings_.processes - 1)
+    if (settings_.num_responses == settings_.processes)
     {
       // everyone sends their aggregation once it's complete
       Knowledge::Update reply_data;
@@ -217,13 +268,32 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
       reply_data.originator = id_.c_str ();
       reply_data.type = Madara::Transport::LATENCY_AGGREGATE;
 
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Splice_DDS_Transport::handle_latency:" \
-        " originator=%s, replier=%s, time=%Q, step=%q\n", 
-        reply_data.originator.val (), id_.c_str (),
-        reply_data.clock, reply_data.value));
-
+      //handle = update_writer_->register_instance (data);
       update_writer_->write (reply_data, 0);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_DDS_Transport::handle_latency::aggregate:" \
+        " originator=%s, key=%s, quality=%u, step=%q\n", 
+        reply_data.originator.val (), reply_data.key.val (),
+        reply_data.quality, reply_data.value));
+
+      Knowledge::Update summation;
+      summation.value = settings_.processes;
+      summation.clock = data.clock;
+      summation.quality = this->settings_.id;
+      summation.originator = id_.c_str ();
+      summation.key = settings_.pack_summations ().c_str ();
+      summation.type = Madara::Transport::LATENCY_SUMMATION;
+
+      //handle = update_writer_->register_instance (data);
+      update_writer_->write (summation, 0);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Splice_DDS_Transport::handle_latency::summation:" \
+        " originator=%s, key=%s, quality=%u, step=%q\n", 
+        summation.originator.val (), summation.key.val (),
+        summation.quality, summation.value));
+
     }
   }
 }
@@ -452,6 +522,12 @@ Madara::Transport::Splice_Read_Thread::svc (void)
           continue;
         }
 
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_Read_Thread::svc:" \
+          " processing %u type message from %s and quality %u.\n",
+          update_data_list_[i].type, update_data_list_[i].originator.val (),
+          update_data_list_[i].quality));
+
         // a latency packet can have the same originator val
         if (Madara::Transport::LATENCY == update_data_list_[i].type)
         {
@@ -499,6 +575,18 @@ Madara::Transport::Splice_Read_Thread::svc (void)
               update_data_list_[i].clock, update_data_list_[i].quality));
 
             handle_latency_aggregation (update_data_list_[i]);
+          }
+          else if (
+            Madara::Transport::LATENCY_SUMMATION == update_data_list_[i].type)
+          {
+            MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Splice_Read_Thread::svc:" \
+              " processing latency summation from %s with time"
+              " %Q and quality %u.\n",
+              update_data_list_[i].originator.val (),
+              update_data_list_[i].clock, update_data_list_[i].quality));
+
+            handle_latency_summation (update_data_list_[i]);
           }
         }
 

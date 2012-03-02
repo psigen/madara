@@ -17,6 +17,8 @@
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 
+#include <ostream>
+
 namespace Madara
 {
 
@@ -237,13 +239,21 @@ namespace Madara
 
       /**
        * Prints latencies associated with this process id
+       * @param   output    stream to print latencies to
        **/
-      void print_my_latencies (void);
+      void print_my_latencies (std::ostream & output);
 
       /**
        * Prints all latencies in the context for all processes
+       * @param   output    stream to print latencies to
        **/
-      void print_all_latencies (void);
+      void print_all_latencies (std::ostream & output);
+
+      /**
+       * Prints all summations in the context for all processes
+       * @param   output    stream to print summations to
+       **/
+      void print_all_summations (std::ostream & output);
 
       /**
        * Returns a non-const reference to the Transport Settings

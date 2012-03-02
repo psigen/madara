@@ -84,15 +84,24 @@ namespace Madara
      * Sorts the latencies in a network topology and averages them into a format
      * that can be used by CID. This function performs averages for all possible
      * degrees in the deployment.
-     * @param    settings    container for network_latencies and network_averages
+     * @param    settings    container for network_latencies and network_summations
      *                       used by the method
      **/
     MADARA_Export void prepare_latencies (Settings & settings);
     
     /**
+     * Sorts the latencies and sums them for the degrees in the deployment as
+     * they apply to this source id.
+     * @param    settings    container for network_latencies and network_summations
+     *                       used by the method
+     **/
+    MADARA_Export std::string prepare_summations (unsigned int source,
+      Settings & settings);
+    
+    /**
      * Sorts the latencies in a network topology and averages them into a format
      * that can be used by CID
-     * @param    settings    container for network_latencies and network_averages
+     * @param    settings    container for network_latencies and network_summations
      *                       used by the method
      * @param    degree      degree to average
      **/
@@ -104,7 +113,7 @@ namespace Madara
      * that can be used by CID
      * @param    network_latencies    source latency matrix which will be sorted
      *                                (@see Madara::Cid::Settings)
-     * @param    network_averages     averaged latencies from each row of  
+     * @param    network_summations     averaged latencies from each row of  
      *                                network_latencies
      *                                (@see Madara::Cid::Settings)
      * @param    target_deployment    application workflow to approximate
@@ -112,7 +121,7 @@ namespace Madara
      *                       
      **/
     MADARA_Export void prepare_latencies (LV_Vector & network_latencies,
-                            Averages_Map & network_averages,
+                            Summations_Map & network_summations,
                             Workflow & target_deployment, unsigned int degree);
 
     /**

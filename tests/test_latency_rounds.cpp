@@ -66,10 +66,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
      ACE_SCOPE_THREAD);
   ACE_OS::thr_setprio (prio);
 
+  std::stringstream filename;
+  filename << getenv ("MADARA_ROOT");
+  filename << "/configs/cid/deployments/one_to_all.template";
+
   settings.type = Madara::Transport::SPLICE;
   settings.domains = "KaRL_Latency_Rounds";
   settings.reliability = Madara::Transport::RELIABLE;
   settings.latency_enabled = true;
+  settings.setup ();
+  settings.read_dataflow (filename.str ());
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 
@@ -87,14 +93,19 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       {
         knowledge.start_latency ();
         ACE_OS::sleep (2);
-        knowledge.print_all_latencies ();
+        knowledge.print_all_latencies (std::cout);
+        knowledge.print_all_summations (std::cout);
       }
       else if (input[0] == 'p' || input[0] == 'P')
-        knowledge.print_all_latencies ();
+      {
+        knowledge.print_all_latencies (std::cout);
+        knowledge.print_all_summations (std::cout);
+      }
     }
   }
 
-  knowledge.print_all_latencies ();
+  knowledge.print_all_latencies (std::cout);
+        knowledge.print_all_summations (std::cout);
 
   return 0;
 }
@@ -116,6 +127,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("level"), 'v', ACE_Get_Opt::ARG_REQUIRED);
  
   // temp for current switched option
   int option;
@@ -154,6 +166,18 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     case 'o':
       host = cmd_opts.opt_arg ();
       ACE_DEBUG ((LM_INFO, "(%P|%t) host set to %s\n", host.c_str ()));
+      break;
+    case 'v':
+      // log level
+      {
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> MADARA_debug_level;
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG,
+        DLINFO "KATS_PROCESS: logging level set to %u\n",
+        MADARA_debug_level));
       break;
     case ':':
       ACE_ERROR_RETURN ((LM_ERROR, 

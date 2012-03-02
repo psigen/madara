@@ -65,7 +65,7 @@ void cidapl_ga_naive (Madara::Cid::Settings & settings)
 void hand_coded (Madara::Cid::Settings & settings)
 {
   Madara::Cid::Workflow & deployment = settings.target_deployment;
-  Madara::Cid::Averages_Map & averages = settings.network_averages;
+  Madara::Cid::Summations_Map & averages = settings.network_summations;
   Madara::Cid::Solution_Map & lookup = settings.solution_lookup;
 
   unsigned int fill_starting = deployment.size ();
@@ -159,17 +159,17 @@ void print_averages (std::ostream & output,
   std::string divider (79, '=');
 
   std::vector <unsigned int> degrees;
-  degrees.resize (settings.network_averages.size ());
+  degrees.resize (settings.network_summations.size ());
   unsigned int size = settings.solution.size ();
 
   output << "\nPrinting averages by degree for tests.\n";
   output << divider << std::endl;
 
-  Madara::Cid::Averages_Map & averages = settings.network_averages;
+  Madara::Cid::Summations_Map & averages = settings.network_summations;
 
   unsigned int j = 0;
 
-  for (Madara::Cid::Averages_Map::iterator i = averages.begin ();
+  for (Madara::Cid::Summations_Map::iterator i = averages.begin ();
                                            i != averages.end (); ++i)
   {
     if (i->first)
@@ -420,7 +420,7 @@ void test_cid (unsigned int size, std::ostream & output)
 
     if (!use_csv_format)
       output << "  Preparing latencies\n";
-    settings.network_averages.clear ();
+    settings.network_summations.clear ();
     ::prepare_latencies (settings);
 
 
@@ -493,7 +493,7 @@ void test_cid (unsigned int size, std::ostream & output)
 
     if (!use_csv_format)
       output << "  Preparing latencies\n";
-    settings.network_averages.clear ();
+    settings.network_summations.clear ();
     ::prepare_latencies (settings);
 
 
@@ -565,7 +565,7 @@ void verify_algorithms (std::ostream & output)
 
   Madara::Cid::Workflow & deployment = settings.target_deployment;
   Madara::Cid::LV_Vector & network_latencies = settings.network_latencies;
-  Madara::Cid::Latency_Vector & averages = settings.network_averages[10];
+  Madara::Cid::Latency_Vector & averages = settings.network_summations[10];
   Madara::Cid::Deployment & solution = settings.solution;
   Madara::Cid::Solution_Map & lookup = settings.solution_lookup;
 

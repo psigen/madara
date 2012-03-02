@@ -187,7 +187,7 @@ Madara::Cid::generate_worst_solution (Settings & settings)
    **/
   unsigned int degree = settings.network_latencies.size ();
 
-  Latency_Vector & cur_averages = settings.network_averages[degree];
+  Latency_Vector & cur_summations = settings.network_summations[degree];
   Solution_Map & solution_lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
   Workflow & deployment = settings.target_deployment;
@@ -195,19 +195,19 @@ Madara::Cid::generate_worst_solution (Settings & settings)
   for (unsigned int i = 0; 
     start < solution.size () && i < deployment.size (); ++i)
   {
-    unsigned int actual = cur_averages.size () - i - 1;
+    unsigned int actual = cur_summations.size () - i - 1;
     if (start == 0 ||
-      solution_lookup.find (cur_averages[actual].first) == solution_lookup.end ())
+      solution_lookup.find (cur_summations[actual].first) == solution_lookup.end ())
     {    
 #ifdef ENABLE_CID_LOGGING
       MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
       DLINFO "Madara::Cid::fill_by_highest_degree:" \
       " found solution[%u]=%u\n",
-      start, cur_averages[i].first));
+      start, cur_summations[i].first));
 #endif
 
-      solution_lookup[cur_averages[actual].first] = start;
-      solution[start] = cur_averages[actual].first;
+      solution_lookup[cur_summations[actual].first] = start;
+      solution[start] = cur_summations[actual].first;
       ++start;
     }
   }
@@ -327,17 +327,57 @@ Madara::Cid::prepare_latencies (Settings & settings)
   }
 }
 
+std::string
+Madara::Cid::prepare_summations (unsigned int source, Settings & settings)
+{
+  if (source >= settings.network_latencies.size ())
+    return "";
+
+  Latency_Vector & latencies = settings.network_latencies[source];
+  Summations_Map & network_summations = settings.network_summations;
+  Degrees & degrees = settings.degrees;
+
+  // sort the latencies of this source 
+  std::sort (latencies.begin (), latencies.end (), Increasing_Latency);
+
+  unsigned long long total = 0;
+  std::stringstream buffer;
+  unsigned int j = 0;
+  unsigned int cur_degree = 0;
+
+  for (Degrees::iterator i = degrees.begin (); i != degrees.end (); ++i)
+  {
+    cur_degree = *i;
+    buffer << cur_degree << "=";
+    for (; j < cur_degree && j < latencies.size (); ++j)
+    {
+      total += latencies[j].second;
+    }
+    buffer << total << ";";
+
+    network_summations[cur_degree].resize (latencies.size ());
+    network_summations[cur_degree][source].second = total;
+
+    //std::cout << "recording summation of " << total << 
+    //  " at degree = " << cur_degree << "\n";
+  }
+
+  //std::cout << "result is " << buffer.str () << "\n";
+
+  return buffer.str ();
+}
+
 void
 Madara::Cid::prepare_latencies (Settings & settings, unsigned int degree)
 {
   if (degree != 0)
-    prepare_latencies (settings.network_latencies, settings.network_averages,
+    prepare_latencies (settings.network_latencies, settings.network_summations,
       settings.target_deployment, degree);
 }
 
 void
 Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
-                                Averages_Map & network_averages,
+                                Summations_Map & network_summations,
                                 Workflow & target_deployment,
                                 unsigned int degree)
 {
@@ -348,15 +388,15 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
 #endif
 
   // if we've already done this degree, continue to the next deployed element
-  if (network_averages.find (degree) != network_averages.end ())
+  if (network_summations.find (degree) != network_summations.end ())
     return;
 
   // we're dealing with a std::map which has O(log n) lookup. Use ref.
-  Latency_Vector & cur_averages = network_averages[degree];
+  Latency_Vector & cur_summations = network_summations[degree];
 
-  // make sure cur_averages has the right size
-  if (cur_averages.size () != network_latencies.size ())
-    cur_averages.resize (network_latencies.size ());
+  // make sure cur_summations has the right size
+  if (cur_summations.size () != network_latencies.size ())
+    cur_summations.resize (network_latencies.size ());
 
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -376,7 +416,7 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
 #endif
 
       // remember which id this average is for and reset the total to zero
-      cur_averages[i].first = i;
+      cur_summations[i].first = i;
 
       // for each element of the list, add the latency to the running total
       for (unsigned int j = 0; j < degree; ++j)
@@ -389,7 +429,7 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
 #endif
 
         // nothing to gain from averaging except less precision
-        cur_averages[i].second += network_latencies[i][j].second;
+        cur_summations[i].second += network_latencies[i][j].second;
       }
 
 #ifdef ENABLE_CID_LOGGING
@@ -403,12 +443,12 @@ Madara::Cid::prepare_latencies (LV_Vector & network_latencies,
 #ifdef ENABLE_CID_LOGGING
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
     DLINFO "Madara::Cid::prepare_latencies:" \
-    " Sorting averages. network_averages[%u]\n",
+    " Sorting averages. network_summations[%u]\n",
     degree));
 #endif
 
   // sort the network averages in increasing order. Best average is smallest.
-  std::sort (cur_averages.begin (), cur_averages.end (),
+  std::sort (cur_summations.begin (), cur_summations.end (),
     Increasing_Latency);
 }
 

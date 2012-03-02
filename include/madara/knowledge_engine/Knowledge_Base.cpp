@@ -144,15 +144,24 @@ Madara::Knowledge_Engine::Knowledge_Base::start_latency (void)
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base::print_my_latencies (void)
+Madara::Knowledge_Engine::Knowledge_Base::print_my_latencies (
+  std::ostream & output)
 {
-  impl_->print_my_latencies ();
+  impl_->print_my_latencies (output);
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base::print_all_latencies (void)
+Madara::Knowledge_Engine::Knowledge_Base::print_all_latencies (
+  std::ostream & output)
 {
-  impl_->print_all_latencies ();
+  impl_->print_all_latencies (output);
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::print_all_summations (
+  std::ostream & output)
+{
+  impl_->print_all_summations (output);
 }
 
 Madara::Transport::Settings &

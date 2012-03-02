@@ -31,14 +31,14 @@ Madara::Cid::approximate (Settings & settings)
     if (degree > 0)
     {
       unsigned int & candidate = candidates[degree];
-      Latency_Vector & cur_averages = settings.network_averages[degree];
+      Latency_Vector & cur_summations = settings.network_summations[degree];
 
       unsigned int & source = deployment[i][0].first;
 
-      for (; lookup.find (cur_averages[candidate].first) != lookup.end ();
+      for (; lookup.find (cur_summations[candidate].first) != lookup.end ();
                ++candidate);
 
-      unsigned int & source_id = cur_averages[candidate].first;
+      unsigned int & source_id = cur_summations[candidate].first;
 
       solution[source] = source_id;
       lookup[source_id] = source;
@@ -63,13 +63,13 @@ Madara::Cid::approximate (Settings & settings)
 void
 Madara::Cid::approximate (Settings & settings, unsigned int node)
 {
-  approximate (settings.network_averages, 
+  approximate (settings.network_summations, 
     settings.target_deployment, settings.solution,
     settings.solution_lookup, node);
 }
 
 void
-Madara::Cid::approximate (Averages_Map & network_averages,
+Madara::Cid::approximate (Summations_Map & network_summations,
       Workflow & target_deployment, Deployment & solution, 
       Solution_Map & solution_lookup, unsigned int node)
 {
@@ -77,14 +77,14 @@ Madara::Cid::approximate (Averages_Map & network_averages,
    * Some things to remember:
    * node = the node you are trying to solve
    * degree = target_deployment[node].size ()
-   * network_averages[node] = sorted list of averages for that degree
+   * network_summations[node] = sorted list of averages for that degree
    *                          remember that this is a map and to use a ref
    * This entire function is for solving 1 node and that is solution[node]
    **/
 
   Directed_Edges & current_flow = target_deployment[node];
   unsigned int degree = current_flow.size ();
-  Latency_Vector & cur_averages = network_averages[degree];
+  Latency_Vector & cur_summations = network_summations[degree];
   unsigned int source;
 
   if (degree > 0)
@@ -98,24 +98,24 @@ Madara::Cid::approximate (Averages_Map & network_averages,
         degree, source));
 #endif
 
-    for (unsigned int i = 0; i < cur_averages.size (); ++i)
+    for (unsigned int i = 0; i < cur_summations.size (); ++i)
     {
       /**
        * If this is the first node in the deployment, or if we haven't tried
        * this solution before, then we have a match
        **/
 
-      if (solution_lookup.find (cur_averages[i].first) == solution_lookup.end ())
+      if (solution_lookup.find (cur_summations[i].first) == solution_lookup.end ())
       {
 #ifdef ENABLE_CID_LOGGING
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
           DLINFO "Madara::Cid::approximate:" \
           " degree=%u, source=%u, i=%u: found solution for %u\n",
-            degree, source, i, cur_averages[i].first));
+            degree, source, i, cur_summations[i].first));
 #endif
 
-        solution_lookup[cur_averages[i].first] = source;
-        solution[source] = cur_averages[i].first;
+        solution_lookup[cur_summations[i].first] = source;
+        solution[source] = cur_summations[i].first;
         break;
       }
     }
@@ -216,7 +216,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
       " ERROR: highest degree equals %u\n",
         degree));
 
-  Latency_Vector & cur_averages = settings.network_averages[degree];
+  Latency_Vector & cur_summations = settings.network_summations[degree];
   Solution_Map & lookup = settings.solution_lookup;
   Deployment & solution = settings.solution;
   Workflow & deployment = settings.target_deployment;
@@ -239,12 +239,12 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
         // if we haven't solved for source_id, then do that.
         if (found == lookup.end () || found->second != source)
         {
-          for (; candidate < cur_averages.size (); ++candidate)
+          for (; candidate < cur_summations.size (); ++candidate)
           {
-            if (lookup.find (cur_averages[candidate].first) == lookup.end ())
+            if (lookup.find (cur_summations[candidate].first) == lookup.end ())
             {
-              source_id = cur_averages[candidate].first;
-              lookup[cur_averages[candidate].first] = source;
+              source_id = cur_summations[candidate].first;
+              lookup[cur_summations[candidate].first] = source;
               ++candidate;
               break;
             }
@@ -273,20 +273,20 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
           // if we can't find the id, we need to place our best candidate
           if (found == lookup.end () || found->second != dest)
           {
-            for (; candidate < cur_averages.size (); ++candidate)
+            for (; candidate < cur_summations.size (); ++candidate)
             {
               // if we find a winner, place it and break back to j loop
-              if (lookup.find (cur_averages[candidate].first) == lookup.end ())
+              if (lookup.find (cur_summations[candidate].first) == lookup.end ())
               {
   #ifdef ENABLE_CID_LOGGING
                 MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
                 DLINFO "Madara::Cid::fill_from_solution_map:" \
                 " found solution[%u]=%u\n",
-                dest, cur_averages[candidate].first));
+                dest, cur_summations[candidate].first));
   #endif
 
-                solution[dest] = cur_averages[candidate].first;
-                lookup[cur_averages[candidate].first] = dest;
+                solution[dest] = cur_summations[candidate].first;
+                lookup[cur_summations[candidate].first] = dest;
                 ++candidate;
                 break;
               }
@@ -304,20 +304,20 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
     if (found == lookup.end () || found->second != i)
     {
       // we haven't solved this solution element yet. Look to the averages
-      for (; candidate < cur_averages.size (); ++candidate)
+      for (; candidate < cur_summations.size (); ++candidate)
       {
         // if we find a winner, place it and break back to j loop
-        if (lookup.find (cur_averages[candidate].first) == lookup.end ())
+        if (lookup.find (cur_summations[candidate].first) == lookup.end ())
         {
 #ifdef ENABLE_CID_LOGGING
           MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
           DLINFO "Madara::Cid::fill_by_highest_degree:" \
           " found solution[%u]=%u\n",
-          i, cur_averages[candidate].first));
+          i, cur_summations[candidate].first));
 #endif
 
-          solution[i] = cur_averages[candidate].first;
-          lookup[cur_averages[candidate].first] = i;
+          solution[i] = cur_summations[candidate].first;
+          lookup[cur_summations[candidate].first] = i;
           ++candidate;
           break;
         }
@@ -433,8 +433,8 @@ Madara::Cid::pathwise_approximate (Settings & settings)
         paths[i].degree : solution.size ();
 
       // 
-      Latency_Vector & cur_averages =
-        settings.network_averages[neighborhood_size];
+      Latency_Vector & cur_summations =
+        settings.network_summations[neighborhood_size];
 
       unsigned int best = 0;
       for (unsigned int j = 0; j < MAX_SOLUTIONS && j < paths.size (); ++j)
@@ -443,13 +443,13 @@ Madara::Cid::pathwise_approximate (Settings & settings)
         //lookups[j] = lookup;
         //std::copy (solution.begin (), solution.end (), solutions[j].begin ());
 
-        for (; best < cur_averages.size (); ++best)
+        for (; best < cur_summations.size (); ++best)
         {
-          found = lookup.find (cur_averages[best].first);
+          found = lookup.find (cur_summations[best].first);
           if (found == lookup.end ())
           {
-            solution[source] = cur_averages[best].first;
-            lookup[cur_averages[best].first] = source;
+            solution[source] = cur_summations[best].first;
+            lookup[cur_summations[best].first] = source;
             ++best;
             break;
           }
@@ -457,7 +457,7 @@ Madara::Cid::pathwise_approximate (Settings & settings)
 
         // solve for everything in source's neighborhood
         Link_Vector & list = paths[i].list;
-        Latency_Vector & source_latencies = latencies[cur_averages[j].first];
+        Latency_Vector & source_latencies = latencies[cur_summations[j].first];
 
         std::sort (source_latencies.begin (), source_latencies.end (),
           Increasing_Id);
@@ -474,7 +474,7 @@ Madara::Cid::pathwise_approximate (Settings & settings)
 
             unsigned int & degree = list[k].degree;
             Latency_Vector & target_averages = 
-              settings.network_averages[degree];
+              settings.network_summations[degree];
 
             unsigned int m = 0;
             unsigned int actuals = 0;
@@ -583,6 +583,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
   Paths & paths = settings.paths;
 
   paths.clear ();
+  std::map <unsigned int, bool> degrees;
 
   if (paths.size () != deployment.size ())
   {
@@ -616,6 +617,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
         current.target = dest;
         current.length = 1;
         current.degree = deployment[i].size ();
+        degrees[current.degree] = true;
         paths[dest].dest[source].target = source;
         paths[dest].dest[source].length = 1;
       }
@@ -627,6 +629,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
          source < paths.size () && paths[source].dest.size () > 0; ++source)
   {
     paths[source].degree = paths[source].dest.size ();
+    degrees[paths[source].degree] = true;
 
     Link_Map & dest_map = paths[source].dest;
 
@@ -693,4 +696,26 @@ Madara::Cid::prepare_deployment (Settings & settings)
   std::sort (deployment.begin (), deployment.end (),
              Decreasing_Size_Directed_Edges);
   std::sort (paths.begin (), paths.end (), Decreasing_Size_And_Degrees_Links);
+
+  // 6. populate settings.degrees, so we can cheat in prepare_summation
+  degrees[settings.network_latencies.size ()] = true;
+  settings.degrees.resize (degrees.size ());
+  unsigned int k = 0;
+  for (std::map <unsigned int, bool>::iterator i = degrees.begin ();
+       i != degrees.end (); ++i, ++k)
+  {
+    // setup degrees array
+    settings.degrees[k] = i->first;
+
+    // setup the summations vector for this degree
+    Latency_Vector & summations = settings.network_summations[i->first];
+    summations.resize (settings.network_latencies.size ());
+    for (unsigned int l = 0; l < summations.size (); ++l)
+    {
+      summations[l].first = l;
+    }
+  }
+
+  std::sort (settings.degrees.begin (), settings.degrees.end (),
+    Increasing_Int);
 }
