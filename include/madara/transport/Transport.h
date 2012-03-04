@@ -13,6 +13,8 @@
 #include "ace/High_Res_Timer.h"
 #include "madara/cid/Settings.h"
 #include "madara/cid/Convenience.h"
+#include "madara/cid/Heuristic.h"
+#include "madara/cid/Genetic.h"
 #include "madara/utility/Utility.h"
 
 namespace Madara
@@ -53,7 +55,6 @@ namespace Madara
     public:
       // for ease-of-use, typedef the templated guard
       typedef ACE_Guard <ACE_Recursive_Thread_Mutex> Context_Guard;
-
 
       /// Default knowledge domain
       #define DEFAULT_DOMAIN      "KaRL"
@@ -201,6 +202,18 @@ namespace Madara
       }
 
       /**
+       * Allocates algorithm configurations and results inside of the
+       * CID latency settings
+       **/
+      inline void setup (Madara::Cid::Algorithm_Configs & configs)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.algorithm_configs = configs;
+        latencies.results.resize (configs.size ());
+      }
+
+      /**
        * Prints all latencies from this id in the format id -> latency
        **/
       void print_my_latencies (std::ostream & output)
@@ -287,6 +300,50 @@ namespace Madara
         }
 
         mutex.release ();
+
+        // print the buffer
+        output << buffer.str ();
+      }
+
+      /**
+       * Prints all algorithm results
+       **/
+      void print_all_results (std::ostream & output)
+      {
+        // we do not use a guard here because we want to do I/O operations
+        // outside of the mutex.
+        std::stringstream buffer;
+
+        mutex.acquire ();
+        Madara::Cid::Identifiers & ids = latencies.ids;
+        Madara::Cid::Algorithm_Configs & configs = latencies.algorithm_configs;
+        Madara::Cid::Algorithm_Results & results = latencies.results;
+
+        buffer << "\nAll redeployment algorithm results in the context:\n\n";
+
+        // print each id -> latency
+        for (unsigned int i = 0; i < configs.size (); ++i)
+        {
+          if (     results[i].algorithm == Madara::Cid::CID)
+            buffer << "CID,";
+          else if (results[i].algorithm == Madara::Cid::BCID)
+            buffer << "BCID,";
+          else if (results[i].algorithm == Madara::Cid::BCID_GGA)
+            buffer << "BCID-GGA (" << configs[i].time << "),";
+          else if (results[i].algorithm == Madara::Cid::BCID_BGA)
+            buffer << "BCID-BGA (" << configs[i].time << "),";
+          else if (results[i].algorithm == Madara::Cid::CID_BGA)
+            buffer << "CID-BGA (" << configs[i].time << "),";
+          else if (results[i].algorithm == Madara::Cid::CID_GGA)
+            buffer << "CID-GGA (" << configs[i].time << "),";
+
+          buffer << results[i].latency << "\n  ";
+          buffer << results[i].deployment << "\n";
+        }
+
+        mutex.release ();
+
+        buffer << "\n";
 
         // print the buffer
         output << buffer.str ();
@@ -414,6 +471,166 @@ namespace Madara
           Madara::Utility::clean_dir_name (filename));
       }
 
+      /**
+       * Run CID
+       * @param    index     index into the Algorithm Results array
+       **/
+      void run_cid (unsigned int index)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.solution_lookup.clear ();
+        Madara::Cid::reset_solution (latencies);
+
+        Madara::Cid::approximate (latencies);
+        
+        latencies.results[index].algorithm = Madara::Cid::CID;
+        latencies.results[index].deployment = Madara::Cid::stringify_solution (latencies);
+        latencies.results[index].latency =
+          Madara::Cid::calculate_latency (latencies);
+      }
+
+      /**
+       * Run Blind CID
+       * @param    index     index into the Algorithm Results array
+       **/
+      void run_bcid (unsigned int index)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.solution_lookup.clear ();
+        Madara::Cid::reset_solution (latencies);
+
+        Madara::Cid::fill_by_highest_degree (latencies);
+        
+        latencies.results[index].algorithm = Madara::Cid::BCID;
+        latencies.results[index].deployment =
+          Madara::Cid::stringify_solution (latencies);
+        latencies.results[index].latency =
+          Madara::Cid::calculate_latency (latencies);
+      }
+
+      /**
+       * Run BCID BGA
+       * @param    index     index into the Algorithm Results array
+       **/
+      void run_bcid_bga (unsigned int index)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.solution_lookup.clear ();
+        Madara::Cid::reset_solution (latencies);
+
+        Madara::Cid::fill_by_highest_degree (latencies);
+        Madara::Cid::ga_naive (latencies, 
+          latencies.algorithm_configs[index].time);
+
+        latencies.results[index].algorithm = Madara::Cid::BCID_BGA;
+        latencies.results[index].deployment =
+          Madara::Cid::stringify_solution (latencies);
+        latencies.results[index].latency =
+          Madara::Cid::calculate_latency (latencies);
+      }
+
+      /**
+       * Run BCID GGA
+       * @param    index     index into the Algorithm Results array
+       **/
+      void run_bcid_gga (unsigned int index)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.solution_lookup.clear ();
+        Madara::Cid::reset_solution (latencies);
+
+        Madara::Cid::fill_by_highest_degree (latencies);
+        Madara::Cid::ga_degree (latencies, 
+          latencies.algorithm_configs[index].time);
+
+        latencies.results[index].algorithm = Madara::Cid::BCID_GGA;
+        latencies.results[index].deployment =
+          Madara::Cid::stringify_solution (latencies);
+        latencies.results[index].latency =
+          Madara::Cid::calculate_latency (latencies);
+      }
+
+      /**
+       * Run CID BGA
+       * @param    index     index into the Algorithm Results array
+       **/
+      void run_cid_bga (unsigned int index)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.solution_lookup.clear ();
+        Madara::Cid::reset_solution (latencies);
+
+        Madara::Cid::approximate (latencies);
+        Madara::Cid::ga_naive(latencies, 
+          latencies.algorithm_configs[index].time);
+
+        latencies.results[index].algorithm = Madara::Cid::CID_BGA;
+        latencies.results[index].deployment =
+          Madara::Cid::stringify_solution (latencies);
+        latencies.results[index].latency =
+          Madara::Cid::calculate_latency (latencies);
+      }
+
+      /**
+       * Run CID GGA
+       * @param    index     index into the Algorithm Results array
+       **/
+      void run_cid_gga (unsigned int index)
+      {
+        Context_Guard guard (mutex);
+
+        latencies.solution_lookup.clear ();
+        Madara::Cid::reset_solution (latencies);
+
+        Madara::Cid::approximate (latencies);
+        Madara::Cid::ga_degree(latencies, 
+          latencies.algorithm_configs[index].time);
+
+        latencies.results[index].algorithm = Madara::Cid::CID_GGA;
+        latencies.results[index].deployment =
+          Madara::Cid::stringify_solution (latencies);
+        latencies.results[index].latency =
+          Madara::Cid::calculate_latency (latencies);
+      }
+
+      /**
+       * Run an algorithm
+       * @param    index     index into the Algorithm Config array
+       **/
+      void run (unsigned int index)
+      {
+        int algorithm = latencies.algorithm_configs[index].algorithm;
+        if (     algorithm == Madara::Cid::CID)
+          run_cid (index);
+        else if (algorithm == Madara::Cid::BCID)
+          run_bcid (index);
+        else if (algorithm == Madara::Cid::BCID_GGA)
+          run_bcid_gga (index);
+        else if (algorithm == Madara::Cid::BCID_BGA)
+          run_bcid_bga (index);
+        else if (algorithm == Madara::Cid::CID_BGA)
+          run_cid_bga (index);
+        else if (algorithm == Madara::Cid::CID_GGA)
+          run_cid_gga (index);
+      }
+
+      /**
+       * Runs all algorithms
+       **/
+      void run_all (void)
+      {
+        for (unsigned int i = 0; i < latencies.algorithm_configs.size (); ++i)
+          run (i);
+
+        std::sort (latencies.results.begin (), latencies.results.end (),
+          Madara::Cid::Increasing_Algorithm_Latency);
+      }
+
       /// All class members are accessible to users for easy setup
 
       /// Domains should be separated by commas
@@ -461,6 +678,8 @@ namespace Madara
 
       /// number of responses received so far
       unsigned long num_responses;
+
+      /// 
     };
 
     typedef    ACE_Condition <ACE_Thread_Mutex>    Condition;

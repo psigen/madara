@@ -114,6 +114,19 @@ Madara::Knowledge_Engine::Knowledge_Base::compile (
   return impl_->compile (expression);
 }
 
+void
+Madara::Knowledge_Engine::Knowledge_Base::print_all_redeployment_results (
+  std::ostream & output)
+{
+  return impl_->print_all_redeployment_results (output);
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::run_all (void)
+{
+  return impl_->run_all ();
+}
+
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
                                                long long value)

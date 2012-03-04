@@ -159,6 +159,16 @@ namespace Madara
     MADARA_Export bool read_deployment (Settings & settings,
       const std::string & filename);
 
+    /**
+     * Resets solution and solution_map to the defaults
+     **/
+    MADARA_Export void reset_solution (Settings & settings);
+
+    /**
+     * Converts the solution deployment into a string
+     **/
+    MADARA_Export std::string stringify_solution (Settings & settings);
+
   } // end Cid namespace
 } // end Madara namespace
 

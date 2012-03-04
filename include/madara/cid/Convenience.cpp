@@ -865,3 +865,26 @@ Madara::Cid::read_deployment (Settings & settings,
   std::string input (Madara::Utility::file_to_string (filename));
   return process_deployment (settings, input);
 }
+
+void
+Madara::Cid::reset_solution (Settings & settings)
+{
+  for (unsigned int i = 0; i < settings.solution.size (); ++i)
+  {
+    settings.solution [i] = i;
+  }
+}
+
+std::string
+Madara::Cid::stringify_solution (Settings & settings)
+{
+  std::stringstream buffer;
+  Deployment & solution = settings.solution;
+
+  for (unsigned i = 0; i < solution.size (); ++i)
+  {
+    buffer << i << "=" << settings.ids[solution[i]] << ";";
+  }
+
+  return buffer.str ();
+}

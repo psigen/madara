@@ -53,6 +53,19 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
   return files_.write_file (knowledge_key, file_name);
 }
 
+inline void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print_all_redeployment_results (
+  std::ostream & output)
+{
+  settings_.print_all_results (output);
+}
+
+inline void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::run_all (void)
+{
+  settings_.run_all ();
+}
+
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
                                                long long value)

@@ -68,6 +68,7 @@ project (Kats_Batch) : using_kats, using_madara, using_ace {
     include/madara/kats/tinyxml.h
     include/madara/kats/tinystr.h
     include/madara/utility/Log_Macros.h
+    include/madara/kats/Redeployment.h
   }
 
   Source_Files {
@@ -76,6 +77,7 @@ project (Kats_Batch) : using_kats, using_madara, using_ace {
     include/madara/kats/tinyxmlerror.cpp
     include/madara/kats/tinystr.cpp
     include/madara/kats/Batch.cpp
+    include/madara/kats/Redeployment.cpp
   }
 }
 

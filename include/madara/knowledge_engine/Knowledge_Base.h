@@ -147,6 +147,17 @@ namespace Madara
         compile (const ::std::string & expression);
 
       /**
+       * Print all redeployment algorithm results
+       **/
+      void print_all_redeployment_results (std::ostream & output);
+
+      /**
+       * Run all redeployment algorithms specified in Transport Settings,
+       * within the latencies.algorithm_configs variable.
+       **/
+      void run_all (void);
+
+      /**
        * Sets a knowledge value to a specified value
        *
        * @param key          knowledge variable location

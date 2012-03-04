@@ -70,11 +70,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   filename << getenv ("MADARA_ROOT");
   filename << "/configs/cid/deployments/one_to_all.template";
 
+  Madara::Cid::Algorithm_Configs configs;
+  configs.resize (2);
+  configs[0].algorithm = Madara::Cid::CID;
+  configs[1].algorithm = Madara::Cid::BCID;
+
   settings.type = Madara::Transport::SPLICE;
   settings.domains = "KaRL_Latency_Rounds";
   settings.reliability = Madara::Transport::RELIABLE;
   settings.latency_enabled = true;
   settings.setup ();
+  settings.setup (configs);
   settings.read_dataflow (filename.str ());
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
@@ -95,11 +101,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         ACE_OS::sleep (2);
         knowledge.print_all_latencies (std::cout);
         knowledge.print_all_summations (std::cout);
+        knowledge.run_all ();
+        knowledge.print_all_redeployment_results (std::cout);
       }
       else if (input[0] == 'p' || input[0] == 'P')
       {
         knowledge.print_all_latencies (std::cout);
         knowledge.print_all_summations (std::cout);
+        knowledge.run_all ();
+        knowledge.print_all_redeployment_results (std::cout);
       }
     }
   }

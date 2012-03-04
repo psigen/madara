@@ -18,6 +18,17 @@ namespace Madara
 {
   namespace Cid
   {
+
+    enum Types {
+      CID        = 0,
+      BCID       = 1,
+      BCID_GGA   = 2,
+      BCID_BGA   = 3,
+      CID_BGA    = 4,
+      CID_GGA    = 5
+    };
+
+
     // Uncomment if you would like CID logging enabled
     //#define ENABLE_CID_LOGGING
 
@@ -73,6 +84,35 @@ namespace Madara
      * A pairing of a target (first) and a latency (second)
      **/
     typedef std::pair <unsigned int, unsigned long long>   Latency_Record;
+
+    /**
+     * Holds results of running an algorithm
+     **/
+    struct Algorithm_Result
+    {
+      int algorithm;
+      std::string deployment;
+      unsigned long long latency;
+    };
+
+    /**
+     * Holds all algorithm results
+     **/
+    typedef std::vector <Algorithm_Result>  Algorithm_Results;
+
+    /**
+     * Configuration for algorithm
+     **/
+    struct Algorithm_Config
+    {
+      int algorithm;
+      double   time;
+    };
+
+    /**
+     * All configurations for algorithms
+     **/
+    typedef std::vector <Algorithm_Config>   Algorithm_Configs;
 
     /**
      * A vector of @see Latency_Record
@@ -141,6 +181,15 @@ namespace Madara
       const Latency_Record & u, const Latency_Record & v)
     {
       return u.second < v.second;
+    }
+
+    /**
+     * Comparator for a list of increasing algorithm latency records
+     **/
+    static bool Increasing_Algorithm_Latency (
+      const Algorithm_Result & u, const Algorithm_Result & v)
+    {
+      return u.latency < v.latency;
     }
 
     /**
@@ -399,6 +448,15 @@ namespace Madara
       Solution_Map  solution_lookup;
 
 
+      /**
+       * The current round of algorithm results
+       **/
+      Algorithm_Results results;
+
+      /**
+       * configurations for all algorithms
+       **/
+      Algorithm_Configs algorithm_configs;
     };
   }
 }
