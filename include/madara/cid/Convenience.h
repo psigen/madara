@@ -161,13 +161,26 @@ namespace Madara
 
     /**
      * Resets solution and solution_map to the defaults
+     * @param       settings     container for CID settings
      **/
     MADARA_Export void reset_solution (Settings & settings);
 
     /**
      * Converts the solution deployment into a string
+     * @param       settings     container for CID settings
      **/
     MADARA_Export std::string stringify_solution (Settings & settings);
+
+    
+    /**
+     * Overwrites the current ids to those indicated in the string. Format
+     * for this comes from the stringify_solution function and appears as
+     * the following: 0=host:port;1=host:port;2=host:port...
+     * @param       settings     container for CID settings
+     * @param       source       solution to apply to the CID settings
+     **/
+    MADARA_Export void read_solution (Settings & settings,
+      const std::string & source);
 
   } // end Cid namespace
 } // end Madara namespace

@@ -875,6 +875,40 @@ Madara::Cid::reset_solution (Settings & settings)
   }
 }
 
+void
+Madara::Cid::read_solution (Settings & settings, const std::string & source)
+{
+  unsigned int id;
+  //std::string host_port;
+
+  std::vector <std::string> tokens;
+  std::vector <std::string> splitters;
+  std::vector <std::string> pivot_list;
+
+  tokens.resize (2);
+  tokens[0] = ";";
+  tokens[1] = "=";
+
+  Madara::Utility::tokenizer (source, splitters, tokens, pivot_list);
+
+  for (unsigned int i = 0; i + 1 < tokens.size (); i += 2)
+  {
+    std::stringstream buffer (tokens[i]);
+    buffer >> id;
+
+    settings.ids[id] = tokens[i + 1];
+
+  }
+
+  //while (!stream.eof ())
+  //{
+  //  stream >> id >> symbol >> host_port >> symbol;
+
+  //  if (id < settings.ids.size ())
+  //    settings.ids[id] = host_port;
+  //}
+}
+
 std::string
 Madara::Cid::stringify_solution (Settings & settings)
 {

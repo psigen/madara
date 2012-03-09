@@ -66,10 +66,16 @@ namespace Madara
         unsigned long quality);
 
       /**
-       * Start a three phase latency round with all other participants
+       * Starts a three phase latency round with all other participants
        * @return  result of dds write operation or -1 if we are shutting down
        **/
       long start_latency (void);
+
+      /**
+       * Submits our best Algorithm_Result to the other participants
+       * @return  result of dds write operation or -1 if we are shutting down
+       **/
+      long vote (void);
 
       /**
        * Accesses reliability setting

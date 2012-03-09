@@ -330,6 +330,14 @@ namespace Madara
         const Eval_Settings & settings);
 
       /**
+       * Votes with the lowest algorithm results current in the Transport settings.
+       * This is only useful if latency collection is enabled and run_all has been
+       * populated with useful redeployment algorithms before being ran. See the
+       * Madara::Transport::Settings class for all voting parameters.
+       **/
+      long vote (void);
+
+      /**
        * Waits for an expression to be non-zero.
        * Always disseminates modifications.
        *

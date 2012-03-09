@@ -78,6 +78,73 @@ Madara::Transport::Splice_Read_Thread::handle_latency_aggregation (
   settings_.unaggregate_latencies (data.quality, data.key.in ());
 }
 
+void
+Madara::Transport::Splice_Read_Thread::handle_vote (
+  Knowledge::Update & data)
+{
+  Madara::Transport::Settings::Context_Guard guard (settings_.mutex);
+  
+  unsigned long long vote_best = (unsigned long long) data.value;
+
+  if (settings_.latencies.results.size () == 0)
+  {
+    settings_.latencies.results.resize (1);
+    settings_.latencies.results[0].deployment = data.key.in ();
+    settings_.latencies.results[0].latency = vote_best;
+  }
+  else
+  {
+    if (settings_.latencies.results[0].latency > vote_best)
+    {
+      settings_.latencies.results[0].deployment = data.key.in ();
+      settings_.latencies.results[0].latency = vote_best;
+    }
+  }
+
+  // increment 
+  ++settings_.num_votes_received;
+  if (settings_.num_votes_received == settings_.num_voters)
+  {
+    // check the best result compared to 
+    Madara::Cid::reset_solution (settings_.latencies);
+    unsigned long long cur_latency = 
+      Madara::Cid::calculate_latency (settings_.latencies);
+
+    // grab the current voted best
+    vote_best = settings_.latencies.results[0].latency;
+    double & acceptable = settings_.redeployment_percentage_allowed;
+  
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::handle_vote:" \
+      " cur_latency is %Q, voted_best is %Q\n", 
+      cur_latency, vote_best));
+
+    // if the voted best is worse than our current latency, then we don't
+    // do anything (we're already best latency
+    if (vote_best < cur_latency)
+    {
+      // grab the absolute difference
+      double difference = (double) (cur_latency - vote_best);
+
+      if (acceptable < difference / (double)cur_latency)
+      {
+        // redeployment requirement has been met
+        settings_.read_solution (settings_.latencies.results[0].deployment,
+          id_);
+              
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Splice_DDS_Transport::handle_vote:" \
+          " updating solution with latency of %Q\n", 
+          vote_best));
+
+      }
+    }
+
+    // vote finished
+    settings_.num_votes_received = 0;
+  }
+}
+
 /**
  * originator == person who started the latency rounds
  * key == the person replying to the round
@@ -91,11 +158,32 @@ Madara::Transport::Splice_Read_Thread::handle_latency_summation (
 {
   Madara::Transport::Settings::Context_Guard guard (settings_.mutex);
   
-  // if we were the aggregator, don't apply the updates to ourself.
-  if (data.quality == settings_.id)
-    return;
+  ++settings_.num_summations;
 
-  settings_.unpack_summations (data.quality, data.key.in ());
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_DDS_Transport::handle_latency_summation:" \
+    " originator=%s, key=%s, quality=%u, step=%q\n", 
+    data.originator.val (), data.key.val (),
+    data.quality, data.value));
+
+  // if we were the aggregator, don't apply the updates to ourself.
+  if (data.quality != settings_.id)
+    settings_.unpack_summations (data.quality, data.key.in ());
+
+  // if we've collected all summations, then sort our summations for CID
+  if (settings_.num_summations == settings_.processes)
+  {
+    Madara::Cid::Summations_Map & summations =
+      settings_.latencies.network_summations;
+    for (Madara::Cid::Summations_Map::iterator i = summations.begin ();
+      i != summations.end (); ++i)
+    {
+      std::sort (i->second.begin (), i->second.end (),
+        Madara::Cid::Increasing_Latency);
+    }
+
+    settings_.num_summations = 0;
+  }
 }
 
 
@@ -124,6 +212,7 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
     if (data.originator.val () == id_)
     {
       settings_.num_responses = 1;
+      settings_.num_summations = 0;
       settings_.stop_timer (data.quality, false);
 
       if (settings_.num_responses == settings_.processes)
@@ -132,7 +221,10 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
       return;
     }
     else
+    {
       settings_.num_responses = 0;
+      settings_.num_summations = 0;
+    }
 
     // everyone else needs to respond though
 
@@ -538,6 +630,16 @@ Madara::Transport::Splice_Read_Thread::svc (void)
             update_data_list_[i].clock, update_data_list_[i].quality));
 
           handle_latency (update_data_list_[i]);
+        }
+        else if (Madara::Transport::VOTE == update_data_list_[i].type)
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "Splice_Read_Thread::svc:" \
+            " processing vote from %s with time %Q and value %q.\n",
+            update_data_list_[i].originator.val (),
+            update_data_list_[i].clock, update_data_list_[i].value));
+
+          handle_vote (update_data_list_[i]);
         }
         // everything else cannot
         else if (id_ != update_data_list_[i].originator.val ())

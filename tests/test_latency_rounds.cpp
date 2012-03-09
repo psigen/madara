@@ -76,6 +76,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   configs[1].algorithm = Madara::Cid::BCID;
 
   settings.type = Madara::Transport::SPLICE;
+  // broadcaster is the voter
+  settings.num_voters = 1;
   settings.domains = "KaRL_Latency_Rounds";
   settings.reliability = Madara::Transport::RELIABLE;
   settings.latency_enabled = true;
@@ -103,6 +105,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         knowledge.print_all_summations (std::cout);
         knowledge.run_all ();
         knowledge.print_all_redeployment_results (std::cout);
+        knowledge.vote ();
       }
       else if (input[0] == 'p' || input[0] == 'P')
       {
@@ -110,6 +113,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
         knowledge.print_all_summations (std::cout);
         knowledge.run_all ();
         knowledge.print_all_redeployment_results (std::cout);
+        //knowledge.vote ();
       }
     }
   }
@@ -169,9 +173,12 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       buffer >> stop;
       break;
     case 'p':
-      // changing the processes is not allowed
+      // changing the processes to the command line arg
       buffer << cmd_opts.opt_arg ();
       buffer >> settings.processes;
+
+      // change the number of voters to the number of processes
+      //settings.num_voters = settings.processes;
       break;
     case 'o':
       host = cmd_opts.opt_arg ();

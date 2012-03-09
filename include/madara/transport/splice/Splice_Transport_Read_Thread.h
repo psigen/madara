@@ -105,6 +105,12 @@ namespace Madara
       void handle_multiassignment (Knowledge::Update & data);
 
       /**
+       * Handles a vote operation
+       * @param  data  the vote that was made
+       **/
+      void handle_vote (Knowledge::Update & data);
+
+      /**
        * We currently allow multiassignments completely through the key. This
        * is probably the least efficient way to handle this and should be
        * changed.

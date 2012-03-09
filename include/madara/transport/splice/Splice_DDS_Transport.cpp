@@ -454,7 +454,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
 }
 
 long
-Madara::Transport::Splice_DDS_Transport::start_latency ()
+Madara::Transport::Splice_DDS_Transport::start_latency (void)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -494,6 +494,65 @@ Madara::Transport::Splice_DDS_Transport::start_latency ()
 
   settings_.reset_timers ();
   settings_.start_all_timers ();
+
+  handle = update_writer_->register_instance (data);
+  dds_result = update_writer_->write (data, handle); 
+  //update_writer_->unregister_instance (data, handle);
+
+  return dds_result;
+}
+
+long
+Madara::Transport::Splice_DDS_Transport::vote (void)
+{
+  // check to see if we are shutting down
+  long ret = this->check_transport ();
+  if (-1 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::vote:"
+      " transport has been told to shutdown")); 
+    return ret;
+  }
+  else if (-2 == ret)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::vote:"
+      " transport is not valid")); 
+    return ret;
+  }
+
+  /// update the clock 
+  unsigned long long cur_clock = context_.inc_clock ();
+
+  DDS::ReturnCode_t      dds_result;
+  DDS::InstanceHandle_t  handle;
+
+  Madara::Cid::Algorithm_Results & results = settings_.latencies.results;
+
+  if (results.size () == 0)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Splice_DDS_Transport::vote:"
+      " Unable to vote. No algorithm results present.")); 
+    return ret;
+  }
+
+  std::sort (results.begin (), results.end (),
+    Madara::Cid::Increasing_Algorithm_Latency);
+
+  Knowledge::Update data;
+  data.key = results[0].deployment.c_str ();
+  data.value = (long long) results[0].latency;
+  data.clock = cur_clock;
+  data.quality = this->settings_.id;
+  data.originator = id_.c_str ();
+  data.type = Madara::Transport::VOTE;
+
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Splice_DDS_Transport::vote:" \
+    " originator=%s, time=%Q, best=%Q\n", 
+    id_.c_str (), cur_clock, results[0].latency));
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 

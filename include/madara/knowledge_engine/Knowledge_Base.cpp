@@ -183,6 +183,12 @@ Madara::Knowledge_Engine::Knowledge_Base::transport_settings (void)
   return impl_->transport_settings ();
 }
 
+long
+Madara::Knowledge_Engine::Knowledge_Base::vote (void)
+{
+  return impl_->vote ();
+}
+
 long long
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)
 {

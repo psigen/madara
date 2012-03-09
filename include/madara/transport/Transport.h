@@ -44,7 +44,8 @@ namespace Madara
       MULTIASSIGN = 2,
       LATENCY = 10,
       LATENCY_AGGREGATE = 11,
-      LATENCY_SUMMATION = 12
+      LATENCY_SUMMATION = 12,
+      VOTE = 20
     };
 
     /**
@@ -58,6 +59,8 @@ namespace Madara
 
       /// Default knowledge domain
       #define DEFAULT_DOMAIN      "KaRL"
+
+      typedef std::vector <std::string>    Voters;
 
       /// Default queue length for event history (must be high for
       /// reliable transport
@@ -97,6 +100,11 @@ namespace Madara
        **/
       #define DEFAULT_LATENCY          200000000000
 
+      /**
+       * Set default latency to 200 seconds
+       **/
+      #define DEFAULT_REDEPLOYMENT_PERCENTAGE     0.10
+
       /// Constructor for this class
       Settings () : 
         domains (DEFAULT_DOMAIN), 
@@ -108,7 +116,12 @@ namespace Madara
         processes (DEFAULT_PROCESSES),
         latency_enabled (DEFAULT_LATENCY_ENABLED),
         latency_timeout (DEFAULT_LATENCY_TIMEOUT),
-        latency_default (DEFAULT_LATENCY)
+        latency_default (DEFAULT_LATENCY),
+        num_responses (0),
+        num_summations (0),
+        num_voters (0),
+        num_votes_received (0),
+        redeployment_percentage_allowed (DEFAULT_REDEPLOYMENT_PERCENTAGE)
       {
       }
 
@@ -124,7 +137,13 @@ namespace Madara
         latency_enabled (settings.latency_enabled),
         latency_timeout (settings.latency_timeout),
         latency_default (settings.latency_default),
-        latencies (settings.latencies)
+        latencies (settings.latencies),
+        num_responses (0),
+        num_summations (0),
+        num_voters (settings.num_voters),
+        num_votes_received (0),
+        redeployment_percentage_allowed (
+         settings.redeployment_percentage_allowed)
       {
       }
 
@@ -141,6 +160,12 @@ namespace Madara
         latency_timeout = settings.latency_timeout;
         latency_default = settings.latency_default;
         latencies = settings.latencies;
+        num_responses = 0;
+        num_summations = 0;
+        num_voters = settings.num_voters;
+        num_votes_received = 0;
+        redeployment_percentage_allowed = 
+          settings.redeployment_percentage_allowed;
       }
 
       /**
@@ -292,6 +317,12 @@ namespace Madara
         {
           buffer << "Degree = " << i->first << std::endl;
           Madara::Cid::Latency_Vector & current = i->second;
+
+          // temporary, since we can't figure out why the summations aren't
+          // sorting in the read thread.
+          std::sort (current.begin (), current.end (),
+            Madara::Cid::Increasing_Latency);
+
           for (unsigned int j = 0; j < current.size (); ++j)
           {
             buffer << "  " << current[j].first << " = " << 
@@ -466,9 +497,36 @@ namespace Madara
        **/
       void read_dataflow (const std::string & filename)
       {
+        Context_Guard guard (mutex);
         latencies.network_summations.clear ();
         Madara::Cid::read_deployment (latencies,
           Madara::Utility::clean_dir_name (filename));
+      }
+
+      void read_solution (const std::string & source,
+        const std::string & my_host_port)
+      {
+        Context_Guard guard (mutex);
+        unsigned int id;
+        std::string host_port;
+
+        std::vector <std::string> tokens;
+        std::vector <std::string> splitters;
+        std::vector <std::string> pivot_list;
+
+        tokens.resize (2);
+        tokens[0] = ";";
+        tokens[1] = "=";
+
+        Madara::Utility::tokenizer (source, splitters, tokens, pivot_list);
+
+        for (unsigned int i = 0; i + 1 < tokens.size (); i += 2)
+        {
+          std::stringstream buffer (tokens[i]);
+          buffer >> id;
+
+          latencies.ids[id] = tokens[i + 1];
+        }
       }
 
       /**
@@ -679,7 +737,20 @@ namespace Madara
       /// number of responses received so far
       unsigned long num_responses;
 
-      /// 
+      /// number of summations received so far
+      unsigned long num_summations;
+
+      /// number of voters
+      unsigned long num_voters;
+
+      /// number of votes received
+      unsigned long num_votes_received;
+
+      /// percentage allowed to be off before forced redeployment
+      double  redeployment_percentage_allowed;
+
+      /// a list of voters
+      Voters voters;
     };
 
     typedef    ACE_Condition <ACE_Thread_Mutex>    Condition;
@@ -796,6 +867,25 @@ namespace Madara
         {
           MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
               DLINFO "Splice_DDS_Transport::start_latency:" \
+              " Latency enabled is not set in your"
+              " Madara::Transport::Settings instance. Update your"
+              " program's code and set settings.latency_enabled = true.\n"));
+
+          return -2;
+        }
+        return check_transport ();
+      }
+
+      /**
+       * Vote for an algorithm result
+       * @return  result of operation or -1 if we are shutting down
+       **/
+      virtual long vote (void)
+      {
+        if (!settings_.latency_enabled)
+        {
+          MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+              DLINFO "Splice_DDS_Transport::vote:" \
               " Latency enabled is not set in your"
               " Madara::Transport::Settings instance. Update your"
               " program's code and set settings.latency_enabled = true.\n"));

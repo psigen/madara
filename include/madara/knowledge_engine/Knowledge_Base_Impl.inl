@@ -119,6 +119,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::transport_settings (void)
   return settings_;
 }
 
+inline long
+Madara::Knowledge_Engine::Knowledge_Base_Impl::vote (void)
+{
+  if (transport_)
+    return transport_->vote ();
+  else
+    return -1;
+}
 
 inline long long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
