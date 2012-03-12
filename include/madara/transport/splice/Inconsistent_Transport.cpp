@@ -429,7 +429,7 @@ Madara::Transport::Inconsistent_Transport::send_multiassignment (
   {
     std::stringstream buffer (tokens[i]);
     buffer >> key;
-    buffer << tokens[i+1];
+    buffer.str(tokens[i+1]);
     buffer >> value;
 
     ret_value = this->send_data (key, value);

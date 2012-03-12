@@ -120,7 +120,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  expression = "++.states; y != x * 2 => ++.inconsistent; z != x * 3 => ++.inconsistent";
+  expression = ".oldx != x || .oldy != y || .oldz != z => (++.states; y != x * 2 => ++.inconsistent; z != x * 3 => ++.inconsistent; .oldx = x; .oldy = y; .oldz = z)";
 
   // if I am the bottom process, however, I do NOT want to be my left state
   // so if the top process becomes my state, I move on to my next state
