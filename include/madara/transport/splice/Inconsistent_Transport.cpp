@@ -411,46 +411,34 @@ long
 Madara::Transport::Inconsistent_Transport::send_multiassignment (
   const std::string & expression, unsigned long quality)
 {
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
+  // temporaries for holding key/value
+  std::string key;
+  long long value;
+  long ret_value;
+
+  // temporaries for tokenizer
+  std::vector <std::string> tokens, pivots, splitters;
+
+  splitters.resize (2);
+  splitters[0] = "=";
+  splitters[1] = ";";
+
+  Madara::Utility::tokenizer (expression, splitters, tokens, pivots);
+
+  for (unsigned int i = 0; i + 1 < tokens.size (); i+=2)
   {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Inconsistent_Transport::send_multiassignment: transport is shutting down")); 
-    return ret;
+    std::stringstream buffer (tokens[i]);
+    buffer >> key;
+    buffer << tokens[i+1];
+    buffer >> value;
+
+    ret_value = this->send_data (key, value);
+
+    if (ret_value < 0)
+      return ret_value;
   }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Inconsistent_Transport::send_multiassignment: transport is not valid")); 
-    return ret;
-  }
-  
 
-  /// get current lamport clock. 
-  unsigned long long cur_clock = context_.get_clock ();
-
-  DDS::ReturnCode_t      dds_result;
-  DDS::InstanceHandle_t  handle;
-
-  Knowledge::Update data;
-  data.key = expression.c_str ();
-  data.value = 0;
-  data.clock = cur_clock;
-  data.quality = quality;
-  data.originator = id_.c_str ();
-  data.type = Madara::Transport::MULTIASSIGN;
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Inconsistent_Transport::send:" \
-    " sending multiassignment: %s, time=%Q, quality=%u\n", 
-    expression.c_str (), cur_clock, quality));
-
-  handle = update_writer_->register_instance (data);
-  dds_result = update_writer_->write (data, handle); 
-  //update_writer_->unregister_instance (data, handle);
-
-  return dds_result;
+  return 0;
 }
 
 long

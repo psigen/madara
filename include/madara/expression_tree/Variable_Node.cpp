@@ -165,7 +165,8 @@ Madara::Expression_Tree::Variable_Node::set (const long long & value)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    if (record_->status != Madara::Knowledge_Record::MODIFIED)
+    if (key_[0] != '.' &&
+      record_->status != Madara::Knowledge_Record::MODIFIED)
       record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
@@ -190,7 +191,8 @@ Madara::Expression_Tree::Variable_Node::dec (void)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    if (record_->status != Madara::Knowledge_Record::MODIFIED)
+    if (key_[0] != '.' &&
+      record_->status != Madara::Knowledge_Record::MODIFIED)
       record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
@@ -215,7 +217,8 @@ Madara::Expression_Tree::Variable_Node::inc (void)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    if (record_->status != Madara::Knowledge_Record::MODIFIED)
+    if (key_[0] != '.' &&
+      record_->status != Madara::Knowledge_Record::MODIFIED)
       record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
