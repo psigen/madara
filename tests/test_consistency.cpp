@@ -125,7 +125,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       "  Waiting on all {.processes} processes to join\n";
     wait_settings.post_print_statement = 
       "  Finished waiting on S{.left}.started and S{.right}.started\n";
-    wait_settings.max_wait_time = 10.0;
     compiled = knowledge.compile (expression);
 
     // wait for left and right processes to startup 
@@ -135,9 +134,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  expression = ".oldx != x || .oldy != y || .oldz != z =>"
+  expression = "(.oldx != x || .oldy != y || .oldz != z) => "
     "(++.states; y != x * 2 => ++.inconsistent; z != x * 3 => ++.inconsistent;"
-    ".oldx = x; .oldy = y; .oldz = z)";
+    " .oldx = x; .oldy = y; .oldz = z)";
 
   // if I am the bottom process, however, I do NOT want to be my left state
   // so if the top process becomes my state, I move on to my next state
@@ -150,6 +149,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   wait_settings.pre_print_statement = "";
   wait_settings.post_print_statement = build_state_print ();
+  //wait_settings.max_wait_time = 10.0;
+  //wait_settings.poll_frequency = 0.5;
 
   compiled = knowledge.compile (expression);
 

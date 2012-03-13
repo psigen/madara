@@ -405,8 +405,6 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
         " waiting to process assignment\n"));
 
     context_.lock ();
-    unsigned long long cur_clock = context_.get_clock (key);
-    unsigned long cur_quality = context_.get_quality (key);
 
     // if the data we are updating had a lower clock value or less quality
     // then that means this update is the latest value. Among
@@ -421,6 +419,7 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
                                       data.quality, data.clock, false);
 
     context_.unlock ();
+    context_.set_changed ();
     
     // if we actually updated the value
     if (result == 1)
@@ -448,15 +447,15 @@ void Madara::Transport::Splice_Read_Thread::handle_assignment (
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Splice_Read_Thread::handle_assignment:" \
-        " discarded data[%s]=%q due to lower quality (%u vs %u).\n",
-        key.c_str (), value, cur_quality, data.quality));
+        " discarded data[%s]=%q due to lower quality.\n",
+        key.c_str (), value));
     }
     else if (result == -3)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Splice_Read_Thread::handle_assignment:" \
-        " discarded data[%s]=%q due to older timestamp (%Q vs %Q).\n",
-        key.c_str (), value, cur_clock, data.clock));
+        " discarded data[%s]=%q due to older timestamp.\n",
+        key.c_str (), value));
     }
   }
 }
@@ -466,14 +465,17 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
 {
   if (data.key.val ())
   {
-    std::string key;
-    char symbol;
     long long value;
-    std::stringstream stream (data.key.val ());
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG, 
         DLINFO "Splice_Read_Thread::multiassignment:" \
         " waiting to process multiassignment\n"));
+
+    std::vector <std::string> tokens, pivots, splitters;
+
+    splitters.resize (2);
+    splitters[0] = "=";
+    splitters[1] = ";";
 
     context_.lock ();
     
@@ -482,13 +484,15 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
         " processing multiassignment (%s).\n",
           data.key.val ()));
 
-    while (!stream.eof ())
+    Madara::Utility::tokenizer (data.key.val (), splitters, tokens, pivots);
+
+    for (unsigned int i = 0; i + 1 < tokens.size (); i+=2)
     {
-      stream >> key >> symbol >> value >> symbol;
+      std::string key (tokens[i]);
+      std::stringstream buffer (tokens[i + 1]);
+      buffer >> value;
 
       int result = 0;
-      unsigned long long cur_clock = context_.get_clock (key);
-      unsigned long cur_quality = context_.get_quality (key);
 
       // if the data we are updating had a lower clock value
       // then that means this update is the latest value. Among
@@ -524,18 +528,19 @@ void Madara::Transport::Splice_Read_Thread::handle_multiassignment (
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Splice_Read_Thread::handle_multiassignment:" \
           " discarded data[%s]=%q due to lower quality (%u vs %u).\n",
-          key.c_str (), value, cur_quality, data.quality));
+          key.c_str (), value));
       }
       else if (result == -3)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Splice_Read_Thread::handle_multiassignment:" \
-          " discarded data[%s]=%q due to older timestamp (%Q vs %Q).\n",
-          key.c_str (), value, cur_clock, data.clock));
+          " discarded data[%s]=%q due to older timestamp.\n",
+          key.c_str (), value));
       }
     }
     
     context_.unlock ();
+    context_.set_changed ();
   }
 }
 

@@ -167,8 +167,7 @@ Madara::Expression_Tree::Variable_Node::set (const long long & value)
 
     record_->value = value;
 
-    if (key_[0] != '.' &&
-      record_->status != Madara::Knowledge_Record::MODIFIED)
+    if (key_[0] != '.')
     {
       context_.mark_modified (key_, *record_);
   /*    context_.changed_map_[key].value = value;

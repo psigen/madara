@@ -330,7 +330,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (
        ++i)
   {
     modified << i->first;
-    modified << " =";
+    modified << "=";
     modified << i->second->value;
     modified << ";";
 

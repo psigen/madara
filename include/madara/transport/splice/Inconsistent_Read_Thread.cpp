@@ -180,8 +180,7 @@ void Madara::Transport::Inconsistent_Read_Thread::handle_assignment (
 
     context_.lock ();
 
-    unsigned long long cur_clock = context_.inc_clock ();
-    unsigned long cur_quality = 0;
+    unsigned long long clock = context_.inc_clock ();
 
     // if the data we are updating had a lower clock value or less quality
     // then that means this update is the latest value. Among
@@ -193,9 +192,10 @@ void Madara::Transport::Inconsistent_Read_Thread::handle_assignment (
     // other things, this means our solution will work even
     // without FIFO channel transports
     result = context_.set_if_unequal (key, value, 
-                                      0, cur_clock, false);
+                                      0, clock, false);
 
     context_.unlock ();
+    context_.set_changed ();
     
     // if we actually updated the value
     if (result == 1)
@@ -223,15 +223,15 @@ void Madara::Transport::Inconsistent_Read_Thread::handle_assignment (
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Inconsistent_Read_Thread::handle_assignment:" \
-        " discarded data[%s]=%q due to lower quality (%u vs %u).\n",
-        key.c_str (), value, cur_quality, data.quality));
+        " discarded data[%s]=%q due to lower quality.\n",
+        key.c_str (), value));
     }
     else if (result == -3)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Inconsistent_Read_Thread::handle_assignment:" \
-        " discarded data[%s]=%q due to older timestamp (%Q vs %Q).\n",
-        key.c_str (), value, cur_clock, data.clock));
+        " discarded data[%s]=%q due to older timestamp.\n",
+        key.c_str (), value));
     }
   }
 }
@@ -300,19 +300,20 @@ void Madara::Transport::Inconsistent_Read_Thread::handle_multiassignment (
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Inconsistent_Read_Thread::handle_multiassignment:" \
-          " discarded data[%s]=%q due to lower quality (%u vs %u).\n",
-          key.c_str (), value, cur_quality, data.quality));
+          " discarded data[%s]=%q due to lower quality.\n",
+          key.c_str (), value));
       }
       else if (result == -3)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Inconsistent_Read_Thread::handle_multiassignment:" \
-          " discarded data[%s]=%q due to older timestamp (%Q vs %Q).\n",
-          key.c_str (), value, cur_clock, data.clock));
+          " discarded data[%s]=%q due to older timestamp.\n",
+          key.c_str (), value));
       }
     }
     
     context_.unlock ();
+    context_.set_changed ();
   }
 }
 
