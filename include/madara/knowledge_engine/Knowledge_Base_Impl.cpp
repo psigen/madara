@@ -221,32 +221,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
   if (transport_)
   {
-    Madara::String_Vector modified;
-    map_.get_modified (modified);
-    std::stringstream string_builder;
-    if (modified.size () > 0)
+    std::stringstream modified;
+    unsigned long quality;
+    unsigned long long cur_clock = map_.get_clock ();
+
+    map_.get_modified (modified, quality);
+
+    std::string expression = modified.str ();
+
+    if (expression.size () > 0)
     {
-      /// grab the clock time that was created with the apply_modified call
-      unsigned long long cur_clock = map_.get_clock ();
-      unsigned long quality = 0;
-
-      for (Madara::String_Vector::const_iterator k = modified.begin ();
-             k != modified.end (); ++k)
-      {
-        map_.set_clock (*k, cur_clock);
-        unsigned long cur_quality = map_.get_write_quality (*k);
-
-        // every knowledge update via multiassignment has the quality
-        // of the highest update. This is to ensure consistency for
-        // updating while also providing quality indicators for sensors,
-        // actuators, controllers, etc.
-        if (cur_quality > quality)
-          quality = cur_quality;
-
-        string_builder << *k << " = " << map_.get (*k) << " ; ";
-      }
-
-      transport_->send_multiassignment (string_builder.str (), quality);
+      transport_->send_multiassignment (expression, quality);
       map_.reset_modified ();
     }
   }
@@ -342,39 +327,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   if (transport_ && send_modifieds)
   {
-    Madara::String_Vector modified;
-    map_.get_modified (modified);
-    std::stringstream string_builder;
-    if (modified.size () > 0)
+    std::stringstream modified;
+    unsigned long quality;
+    unsigned long long cur_clock = map_.get_clock ();
+
+    map_.get_modified (modified, quality);
+
+    std::string expression = modified.str ();
+
+    if (expression.size () > 0)
     {
-      /// generate a new clock time and set our variable's clock to
-      /// this new clock
-      unsigned long long cur_clock = map_.inc_clock ();
-      unsigned long quality = 0;
-
-      for (Madara::String_Vector::const_iterator k = modified.begin ();
-             k != modified.end (); ++k)
-      {
-        map_.set_clock (*k, cur_clock);
-        unsigned long cur_quality = map_.get_write_quality (*k);
-
-        // every knowledge update via multiassignment has the quality
-        // of the highest update. This is to ensure consistency for
-        // updating while also providing quality indicators for sensors,
-        // actuators, controllers, etc.
-        if (cur_quality > quality)
-          quality = cur_quality;
-
-        string_builder << *k << " = " << map_.get (*k) << " ; ";
-          //transport_->send_data (*k, map_.get (*k));
-      }
-
-      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
-        DLINFO "Knowledge_Base_Impl::wait:" \
-        " will be sending %s\n", 
-        string_builder.str ().c_str ()));
-
-      transport_->send_multiassignment (string_builder.str (), quality);
+      transport_->send_multiassignment (expression, quality);
       map_.reset_modified ();
     }
     else
@@ -412,33 +375,22 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
     if (transport_ && send_modifieds)
     {
-      Madara::String_Vector modified;
-      map_.get_modified (modified);
-      std::stringstream string_builder;
-      if (modified.size () > 0)
+      std::stringstream modified;
+      unsigned long quality;
+      unsigned long long cur_clock = map_.get_clock ();
+
+      map_.get_modified (modified, quality);
+
+      std::string expression = modified.str ();
+
+      if (expression.size () > 0)
       {
-        /// generate a new clock time and set our variable's clock to
-        /// this new clock
-        unsigned long long cur_clock = map_.inc_clock ();
-        unsigned long quality = 0;
+        MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+          DLINFO "Knowledge_Base_Impl::wait:" \
+          " will be sending %s\n", 
+          expression.c_str ()));
 
-        for (Madara::String_Vector::const_iterator k = modified.begin ();
-               k != modified.end (); ++k)
-        {
-          map_.set_clock (*k, cur_clock);
-          unsigned long cur_quality = map_.get_write_quality (*k);
-
-          // every knowledge update via multiassignment has the quality
-          // of the highest update. This is to ensure consistency for
-          // updating while also providing quality indicators for sensors,
-          // actuators, controllers, etc.
-          if (cur_quality > quality)
-            quality = cur_quality;
-          string_builder << *k << " = " << map_.get (*k) << " ; ";
-          //transport_->send_data (*k, map_.get (*k));
-        }
-
-        transport_->send_multiassignment (string_builder.str (), quality);
+        transport_->send_multiassignment (expression, quality);
         map_.reset_modified ();
       }
       else
@@ -491,39 +443,22 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
   if (transport_ && settings.send_modifieds)
   {
-    Madara::String_Vector modified;
-    map_.get_modified (modified);
-    std::stringstream string_builder;
-    if (modified.size () > 0)
+    std::stringstream modified;
+    unsigned long quality;
+    unsigned long long cur_clock = map_.get_clock ();
+
+    map_.get_modified (modified, quality);
+
+    std::string expression = modified.str ();
+
+    if (expression.size () > 0)
     {
-      /// generate a new clock time and set our variable's clock to
-      /// this new clock
-      unsigned long long cur_clock = map_.inc_clock ();
-      unsigned long quality = 0;
-
-      for (Madara::String_Vector::const_iterator k = modified.begin ();
-             k != modified.end (); ++k)
-      {
-        map_.set_clock (*k, cur_clock);
-        unsigned long cur_quality = map_.get_write_quality (*k);
-
-        // every knowledge update via multiassignment has the quality
-        // of the highest update. This is to ensure consistency for
-        // updating while also providing quality indicators for sensors,
-        // actuators, controllers, etc.
-        if (cur_quality > quality)
-          quality = cur_quality;
-
-        string_builder << *k << " = " << map_.get (*k) << " ; ";
-          //transport_->send_data (*k, map_.get (*k));
-      }
-
       MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
         DLINFO "Knowledge_Base_Impl::wait:" \
         " will be sending %s\n", 
-        string_builder.str ().c_str ()));
+        expression.c_str ()));
 
-      transport_->send_multiassignment (string_builder.str (), quality);
+      transport_->send_multiassignment (expression, quality);
       map_.reset_modified ();
     }
     else
@@ -587,33 +522,22 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
     if (transport_ && settings.send_modifieds)
     {
-      Madara::String_Vector modified;
-      map_.get_modified (modified);
-      std::stringstream string_builder;
-      if (modified.size () > 0)
+      std::stringstream modified;
+      unsigned long quality;
+      unsigned long long cur_clock = map_.get_clock ();
+
+      map_.get_modified (modified, quality);
+
+      std::string expression = modified.str ();
+
+      if (expression.size () > 0)
       {
-        /// generate a new clock time and set our variable's clock to
-        /// this new clock
-        unsigned long long cur_clock = map_.inc_clock ();
-        unsigned long quality = 0;
+        MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+          DLINFO "Knowledge_Base_Impl::wait:" \
+          " will be sending %s\n", 
+          expression.c_str ()));
 
-        for (Madara::String_Vector::const_iterator k = modified.begin ();
-               k != modified.end (); ++k)
-        {
-          map_.set_clock (*k, cur_clock);
-          unsigned long cur_quality = map_.get_write_quality (*k);
-
-          // every knowledge update via multiassignment has the quality
-          // of the highest update. This is to ensure consistency for
-          // updating while also providing quality indicators for sensors,
-          // actuators, controllers, etc.
-          if (cur_quality > quality)
-            quality = cur_quality;
-          string_builder << *k << " = " << map_.get (*k) << " ; ";
-          //transport_->send_data (*k, map_.get (*k));
-        }
-
-        transport_->send_multiassignment (string_builder.str (), quality);
+        transport_->send_multiassignment (expression, quality);
         map_.reset_modified ();
       }
       else
@@ -622,6 +546,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
             DLINFO "Knowledge_Base_Impl::wait:" \
             " no modifications to send during this wait\n"));
       }
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::wait:" \
+          " no modifications to send during this wait\n"));
     }
 
     map_.signal ();
@@ -676,34 +606,24 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   // to any interested parties...
   if (transport_ && send_modifieds)
   {
-    Madara::String_Vector modified;
-    map_.get_modified (modified);
-    std::stringstream string_builder;
+    std::stringstream modified;
+    unsigned long quality;
+    unsigned long long cur_clock = map_.get_clock ();
 
-    /// generate a new clock time and set our variable's clock to
-    /// this new clock
-    unsigned long long cur_clock = map_.inc_clock ();
-    unsigned long quality = 0;
+    map_.get_modified (modified, quality);
 
-    for (Madara::String_Vector::const_iterator k = modified.begin ();
-         k != modified.end (); ++k)
+    std::string expression = modified.str ();
+
+    if (expression.size () > 0)
     {
-      map_.set_clock (*k, cur_clock);
-      unsigned long cur_quality = map_.get_write_quality (*k);
+      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+        DLINFO "Knowledge_Base_Impl::evaluate:" \
+        " will be sending %s\n", 
+        expression.c_str ()));
 
-      // every knowledge update via multiassignment has the quality
-      // of the highest update. This is to ensure consistency for
-      // updating while also providing quality indicators for sensors,
-      // actuators, controllers, etc.
-      if (cur_quality > quality)
-        quality = cur_quality;
-
-      string_builder << *k << " = " << map_.get (*k) << " ; ";
+      transport_->send_multiassignment (expression, quality);
+      map_.reset_modified ();
     }
-
-    if (modified.size () > 0)
-      transport_->send_multiassignment (string_builder.str (), quality);
-    map_.reset_modified ();
   }
 
   map_.unlock ();
@@ -740,34 +660,24 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   // to any interested parties...
   if (transport_ && settings.send_modifieds)
   {
-    Madara::String_Vector modified;
-    map_.get_modified (modified);
-    std::stringstream string_builder;
+    std::stringstream modified;
+    unsigned long quality;
+    unsigned long long cur_clock = map_.get_clock ();
 
-    /// generate a new clock time and set our variable's clock to
-    /// this new clock
-    unsigned long long cur_clock = map_.inc_clock ();
-    unsigned long quality = 0;
+    map_.get_modified (modified, quality);
 
-    for (Madara::String_Vector::const_iterator k = modified.begin ();
-         k != modified.end (); ++k)
+    std::string expression = modified.str ();
+
+    if (expression.size () > 0)
     {
-      map_.set_clock (*k, cur_clock);
-      unsigned long cur_quality = map_.get_write_quality (*k);
+      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+        DLINFO "Knowledge_Base_Impl::evaluate:" \
+        " will be sending %s\n", 
+        expression.c_str ()));
 
-      // every knowledge update via multiassignment has the quality
-      // of the highest update. This is to ensure consistency for
-      // updating while also providing quality indicators for sensors,
-      // actuators, controllers, etc.
-      if (cur_quality > quality)
-        quality = cur_quality;
-
-      string_builder << *k << " = " << map_.get (*k) << " ; ";
+      transport_->send_multiassignment (expression, quality);
+      map_.reset_modified ();
     }
-
-    if (modified.size () > 0)
-      transport_->send_multiassignment (string_builder.str (), quality);
-    map_.reset_modified ();
   }
 
   // print the post statement at highest log level (cannot be masked)

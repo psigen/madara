@@ -14,6 +14,8 @@
 #include "ace/Synch.h"
 #include "madara/utility/Log_Macros.h"
 
+#include <sstream>
+
 
 
 // Atomically increment a stored value. This function is only used in one place
@@ -48,9 +50,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
   ++record.value;
 
   if (key[0] != '.')
-    record.status = Madara::Knowledge_Record::MODIFIED;
-  else
-    record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
+  {
+    mark_modified (key, record);
+  }
+  //  record.status = Madara::Knowledge_Record::MODIFIED;
+  //else
+  //  record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
@@ -111,9 +116,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
   --record.value;
 
   if (key[0] != '.')
-    record.status = Madara::Knowledge_Record::MODIFIED;
-  else
-    record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
+  {
+    mark_modified (key, record);
+  }
+  //  record.status = Madara::Knowledge_Record::MODIFIED;
+  //else
+  //  record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
@@ -273,6 +281,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::clear (void)
     i->second.write_quality = 0;
   }
 
+  changed_map_.clear ();
   changed_.signal ();
 }
 
@@ -296,20 +305,41 @@ Madara::Knowledge_Engine::Thread_Safe_Context::wait_for_change (
   changed_.wait ();  
 }
 
+inline void
+Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
+  const std::string & key, Madara::Knowledge_Record & record)
+{
+  Mutated_Entry & update = changed_map_[key];
+
+  if (update.quality != record.quality)
+    update.quality = record.quality;
+
+  if (update.value != record.value)
+    update.value = record.value;
+
+  if (record.status != Madara::Knowledge_Record::MODIFIED)
+    record.status = Madara::Knowledge_Record::MODIFIED;
+}
+
 /// Return list of variables that have been modified
 inline void
 Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (
-  Madara::String_Vector & modified) const
+  std::stringstream & modified, unsigned long & quality) const
 {
-  modified.clear ();
   Context_Guard guard (mutex_);
+  quality = 0;
 
-  for (Madara::Knowledge_Map::const_iterator i = map_.begin ();
-       i != map_.end (); 
+  for (Madara::Knowledge_Engine::Mutations::const_iterator i = changed_map_.begin ();
+       i != changed_map_.end (); 
        ++i)
   {
-    if (Madara::Knowledge_Record::MODIFIED == i->second.status)
-      modified.push_back (i->first);
+    modified << i->first;
+    modified << "=";
+    modified << i->second.value;
+    modified << ";";
+
+    if (i->second.quality > quality)
+      quality = i->second.quality;
   }
 }
 
@@ -318,13 +348,7 @@ inline void
 Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (void)
 {
   Context_Guard guard (mutex_);
-  for (Madara::Knowledge_Map::iterator i = map_.begin ();
-       i != map_.end (); 
-       ++i)
-  {
-    if (Madara::Knowledge_Record::MODIFIED == i->second.status)
-      i->second.status = Madara::Knowledge_Record::UNMODIFIED;
-  }
+  changed_map_.clear ();
 }
 
 /// Changes all global variables to modified at current time
@@ -336,7 +360,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::apply_modified (void)
   // each synchronization counts as an event, since this is a
   // pretty important networking event
 
-  ++this->clock_;
+  //++this->clock_;
 
   for (Madara::Knowledge_Map::iterator i = map_.begin ();
        i != map_.end (); 
@@ -346,8 +370,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::apply_modified (void)
     {
       // local or global doesn't matter. Clock and modification
       // aren't really a part of local variable checking anyway
-      i->second.status = Madara::Knowledge_Record::MODIFIED;
-      i->second.clock = this->clock_;
+      //i->second.status = Madara::Knowledge_Record::MODIFIED;
+
+      mark_modified (i->first, i->second);
+
+      //i->second.clock = this->clock_;
     }
   }
 }
@@ -358,10 +385,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (
   const std::string & variable)
 {
   Context_Guard guard (mutex_);
-  Madara::Knowledge_Map::iterator i = map_.find (variable);
-  
-  if (i->second.status == Madara::Knowledge_Record::MODIFIED)
-    i->second.status = Madara::Knowledge_Record::UNMODIFIED;
+  changed_map_.erase (variable);
 }
 
 

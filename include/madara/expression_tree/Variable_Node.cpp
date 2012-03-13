@@ -165,12 +165,19 @@ Madara::Expression_Tree::Variable_Node::set (const long long & value)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
+    record_->value = value;
+
     if (key_[0] != '.' &&
       record_->status != Madara::Knowledge_Record::MODIFIED)
-      record_->status = Madara::Knowledge_Record::MODIFIED;
+    {
+      context_.mark_modified (key_, *record_);
+  /*    context_.changed_map_[key].value = value;
+      context_.changed_map_[key].quality = record_->quality;*/
+    }
+      //record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
-    return record_->value = value;
+    return value;
   }
   else
     return context_.set (expand_key (), value);
@@ -191,12 +198,18 @@ Madara::Expression_Tree::Variable_Node::dec (void)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    if (key_[0] != '.' &&
-      record_->status != Madara::Knowledge_Record::MODIFIED)
-      record_->status = Madara::Knowledge_Record::MODIFIED;
+    --record_->value;
+
+    if (key_[0] != '.')
+    {
+      context_.mark_modified (key_, *record_);
+      //context_.changed_map_[key].value = record_->value;
+      //context_.changed_map_[key].quality = record_->quality;
+    }
+      //record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
-    return --record_->value;
+    return record_->value;
   }
   else
     return context_.dec (expand_key ());
@@ -217,12 +230,18 @@ Madara::Expression_Tree::Variable_Node::inc (void)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    if (key_[0] != '.' &&
-      record_->status != Madara::Knowledge_Record::MODIFIED)
-      record_->status = Madara::Knowledge_Record::MODIFIED;
+    ++record_->value;
+
+    if (key_[0] != '.')
+    {
+      context_.mark_modified (key_, *record_);
+      //context_.changed_map_[key].value = record_->value;
+      //context_.changed_map_[key].quality = record_->quality;
+    }
+      //record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
-    return ++record_->value;
+    return record_->value;
   }
   else
     return context_.inc (expand_key ());

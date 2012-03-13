@@ -96,10 +96,13 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   if (key[0] != '.')
   {
     if (modified)
-      record.status = Madara::Knowledge_Record::MODIFIED;
+    {
+      mark_modified (key, record);
+    }
+      //record.status = Madara::Knowledge_Record::MODIFIED;
   }
-  else
-    record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
+  //else
+  //  record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
@@ -225,13 +228,15 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = 0;
   }
 
+  Madara::Knowledge_Record & record = map_[key];
+
   // if we need to update quality, then update it
-  if (result != -2 && map_[key].quality != quality)
-    map_[key].quality = quality;
+  if (result != -2 && record.quality != quality)
+    record.quality = quality;
 
   // if we need to update the variable clock, then update it
-  if (clock > map_[key].clock)
-    map_[key].clock = clock;
+  if (clock > record.clock)
+    record.clock = clock;
 
   // if we need to update the global clock, then update it
   if (clock > this->clock_)
@@ -240,16 +245,18 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   if (result == 1)
   {
     // we have a situation where the value needs to be changed
-    map_[key].value = value;
+    record.value = value;
   
     // otherwise set the value
     if (key[0] != '.')
     {
       if (modified)
-        map_[key].status = Madara::Knowledge_Record::MODIFIED;
+      {
+        mark_modified (key, record);
+      }
     }
-    else
-      map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
+    //else
+    //  map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
     changed_.signal ();
   }
