@@ -263,23 +263,36 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
-  if (result == 0 && transport_ && send_modifieds && 
-      key.size () > 0 && key[0] != '.')
+
+  if (transport_ && send_modifieds)
   {
-    map_.lock ();
+    std::stringstream modified;
+    unsigned long quality;
+    unsigned long long cur_clock = map_.get_clock ();
 
-    /// generate a new clock time and set our variable's clock to
-    /// this new clock
-    unsigned long long cur_clock = map_.inc_clock ();
-    map_.set_clock (key, cur_clock);
+    map_.get_modified (modified, quality);
 
-    /// now send the data and reset the modified state
-    transport_->send_data (key, value);
-    map_.reset_modified (key);
+    std::string expression = modified.str ();
 
-    /// unlock the knowledge map
-    map_.unlock ();
+    if (expression.size () > 0)
+    {
+      transport_->send_multiassignment (expression, quality);
+      map_.reset_modified ();
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
   }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
 
   return result;
 }
