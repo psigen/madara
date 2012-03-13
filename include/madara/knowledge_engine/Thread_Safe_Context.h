@@ -30,6 +30,7 @@ namespace Madara
     class Mutated_Entry
     {
     public:
+      Mutated_Entry (): value (0), quality (0) {}
       long long value;
       unsigned long quality;
     };
