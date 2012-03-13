@@ -8,6 +8,7 @@
 #include "ace/Get_Opt.h"
 #include "ace/Signal.h"
 #include "ace/Sched_Params.h"
+#include "ace/High_Res_Timer.h"
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
@@ -17,6 +18,8 @@ int processes = 1;
 int stop = 10;
 long value = 0;
 unsigned long transport = Madara::Transport::SPLICE;
+
+ACE_Time_Value max_tv (10, 0);
 
 bool skip_barrier = false;
 
@@ -60,6 +63,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   if (retcode < 0)
     return retcode;
 
+  // allow for setting a timer
+  ACE_High_Res_Timer timer;
+  ACE_hrtime_t elapsed (0);
+  ACE_hrtime_t maximum (0);
+
+  // setup the maximum elapsed time we can have before ending
+  maximum = max_tv.sec () * 1000000000;
+  maximum += max_tv.usec () * 1000;
+
   // use ACE real time scheduling class
   int prio  = ACE_Sched_Params::next_priority
     (ACE_SCHED_FIFO,
@@ -69,6 +81,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   ts.domains = domain;
   ts.type = transport;
+  ts.queue_length = 10000000;
 
   // start the knowledge engine
   Madara::Knowledge_Engine::Knowledge_Base knowledge (
@@ -112,15 +125,19 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       "  Waiting on all {.processes} processes to join\n";
     wait_settings.post_print_statement = 
       "  Finished waiting on S{.left}.started and S{.right}.started\n";
+    wait_settings.max_wait_time = 10.0;
     compiled = knowledge.compile (expression);
 
-    // wait for left and right processes to startup before executing application logic
+    // wait for left and right processes to startup 
+    // before executing application logic
     knowledge.wait (compiled, wait_settings);
   }
 
   // by default, the expression to evaluate is for a non-bottom process
   // if my state does not equal the left state, change my state to left state
-  expression = ".oldx != x || .oldy != y || .oldz != z => (++.states; y != x * 2 => ++.inconsistent; z != x * 3 => ++.inconsistent; .oldx = x; .oldy = y; .oldz = z)";
+  expression = ".oldx != x || .oldy != y || .oldz != z =>"
+    "(++.states; y != x * 2 => ++.inconsistent; z != x * 3 => ++.inconsistent;"
+    ".oldx = x; .oldy = y; .oldz = z)";
 
   // if I am the bottom process, however, I do NOT want to be my left state
   // so if the top process becomes my state, I move on to my next state
@@ -138,10 +155,14 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   knowledge.print (wait_settings.post_print_statement);
 
+  timer.start ();
+
   // termination is done via signalling from the user (Control+C)
-  while (!terminated)
+  while (!terminated && maximum > elapsed)
   {
     knowledge.wait (compiled, wait_settings);
+    timer.stop ();
+    timer.elapsed_time (elapsed);
   }
 
   knowledge.print_knowledge ();
@@ -154,7 +175,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("kd:l:i:s:p:o:v:t:xh");
+  ACE_TCHAR options [] = ACE_TEXT ("kd:l:i:s:m:p:o:v:t:xh");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
@@ -165,6 +186,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   cmd_opts.long_option (ACE_TEXT ("stop"), 's', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("processes"), 'p', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
+  cmd_opts.long_option (ACE_TEXT ("time"), 'm', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("skip"), 'k', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("transport"), 't', ACE_Get_Opt::ARG_REQUIRED);
@@ -199,6 +221,16 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         std::stringstream buffer;
         buffer << cmd_opts.opt_arg ();
         buffer >> value;
+      }
+      break;
+    case 'm':
+      {
+        double kill_time = 0.0;
+        std::stringstream buffer;
+        buffer << cmd_opts.opt_arg ();
+        buffer >> kill_time;
+
+        max_tv.set (kill_time);
       }
       break;
     case 'o':
@@ -250,6 +282,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -d (--domain)    domain to separate all traffic into\n\
       -i (--id)        set process id (0 default)  \n\
       -l (--value)     start process with a certain value (0 default) \n\
+      -m (--time)      time in seconds to run for (10 default)\n\
       -o (--host)      this host ip/name (localhost default) \n\
       -p (--processes) number of processes that will be running\n\
       -s (--stop)      stop condition (10 default) \n\
