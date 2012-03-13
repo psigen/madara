@@ -27,18 +27,20 @@ namespace Madara
      * @class Mutated_Entry
      * @brief This class holds the quality and value of a mutation
      **/
-    class Mutated_Entry
-    {
-    public:
-      Mutated_Entry (): value (0), quality (0) {}
-      long long value;
-      unsigned long quality;
-    };
+    //class Mutated_Entry
+    //{
+    //public:
+    //  Mutated_Entry (): value (0), quality (0) {}
+    //  long long value;
+    //  unsigned long quality;
+    //};
+
+    
 
     /**
      * Typedef used to hold a map of mutations
      **/
-    typedef std::map <std::string, Mutated_Entry>  Mutations;
+    typedef std::map <std::string, Madara::Knowledge_Record *>  Mutations;
 
     /**
      * @class Thread_Safe_Context
@@ -291,7 +293,7 @@ namespace Madara
       mutable ACE_Recursive_Thread_Mutex mutex_;
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
-      unsigned long long clock_;
+      mutable unsigned long long clock_;
       Mutations changed_map_;
     };
   }

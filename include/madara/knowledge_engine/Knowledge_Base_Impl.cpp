@@ -342,7 +342,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   {
     std::stringstream modified;
     unsigned long quality;
-    unsigned long long cur_clock = map_.get_clock ();
 
     map_.get_modified (modified, quality);
 
@@ -390,7 +389,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     {
       std::stringstream modified;
       unsigned long quality;
-      unsigned long long cur_clock = map_.get_clock ();
 
       map_.get_modified (modified, quality);
 
@@ -458,7 +456,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   {
     std::stringstream modified;
     unsigned long quality;
-    unsigned long long cur_clock = map_.get_clock ();
 
     map_.get_modified (modified, quality);
 
@@ -537,7 +534,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     {
       std::stringstream modified;
       unsigned long quality;
-      unsigned long long cur_clock = map_.get_clock ();
 
       map_.get_modified (modified, quality);
 

@@ -302,20 +302,14 @@ Madara::Knowledge_Engine::Thread_Safe_Context::wait_for_change (
   if (extra_release)
     mutex_.release ();
 
-  changed_.wait ();  
+  changed_.wait ();
 }
 
 inline void
 Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
   const std::string & key, Madara::Knowledge_Record & record)
 {
-  Mutated_Entry & update = changed_map_[key];
-
-  if (update.quality != record.quality)
-    update.quality = record.quality;
-
-  if (update.value != record.value)
-    update.value = record.value;
+  changed_map_[key] = &record;
 
   if (record.status != Madara::Knowledge_Record::MODIFIED)
     record.status = Madara::Knowledge_Record::MODIFIED;
@@ -329,17 +323,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (
   Context_Guard guard (mutex_);
   quality = 0;
 
+  ++clock_;
+
   for (Madara::Knowledge_Engine::Mutations::const_iterator i = changed_map_.begin ();
        i != changed_map_.end (); 
        ++i)
   {
     modified << i->first;
-    modified << "=";
-    modified << i->second.value;
+    modified << " =";
+    modified << i->second->value;
     modified << ";";
 
-    if (i->second.quality > quality)
-      quality = i->second.quality;
+    if (i->second->quality > quality)
+      quality = i->second->quality;
+
+    i->second->clock = clock_;
   }
 }
 
