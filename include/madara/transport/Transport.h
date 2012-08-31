@@ -30,6 +30,7 @@ namespace Madara
       SPLICE       = 1,
       NDDS         = 2,
       TCP          = 3,
+      UDP          = 4,
       INCONSISTENT = 100
     };
 

@@ -280,7 +280,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   unsigned long long evaluations = num_iterations * num_runs;
 
   for (int i = 0; i < num_test_types; ++i)
+  {
+    // avoid blowing up with a division by zero on fast processors. Culprit here
+    // is the C++ optimization of the for loop which simply sets a register to the
+    // max increment, so time taken is often 0 ns.
+    if (results[i] == 0)
+      results[i] = 1;
+
     averages[i] = (1000000000 * evaluations) / results[i];
+  }
 
   ACE_DEBUG ((LM_INFO, 
     "\n\nTotal time taken for each test with %d iterations * %d tests was:\n", 

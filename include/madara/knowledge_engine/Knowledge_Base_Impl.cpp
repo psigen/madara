@@ -2,6 +2,7 @@
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/transport/udp/UDP_Transport.h"
 #include "madara/transport/tcp/TCP_Transport.h"
 #include "madara/utility/Log_Macros.h"
 
@@ -140,6 +141,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 
       exit (-2);
     #endif
+    }
+    else if (settings_.type == Madara::Transport::UDP)
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::activate_transport:" \
+        " creating UDP transport.\n",
+        settings_.type));
+
+      transport_ = new Madara::Transport::UDP_Transport (id_, map_,
+        settings_, true);
     }
     else if (settings_.type == Madara::Transport::TCP)
     {
