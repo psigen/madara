@@ -272,3 +272,11 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 {
   return impl_->evaluate (expression, settings);
 }
+
+
+// Defines a function
+void Madara::Knowledge_Engine::Knowledge_Base::define_function (
+  const std::string & name, VALUE_TYPE (*func) (Variables *))
+{
+  impl_->define_function (name, func);
+}

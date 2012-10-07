@@ -30,6 +30,12 @@ namespace Madara
        * @param     node  the node to evaluate
        **/
       virtual void visit (const Variable_Node &node);
+      
+      /** 
+       * Evaluates a list
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const List_Node &node);
 
       /** 
        * Evaluates an integer negation
@@ -145,6 +151,18 @@ namespace Madara
        * @param     node  the node to evaluate
        **/
       virtual void visit (const Composite_Both_Node &node);
+      
+      /** 
+       * Evaluates a left and right expression
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Composite_Sequential_Node &node);
+      
+      /** 
+       * Evaluates a function
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Composite_Function_Node &node);
 
       /** 
        * Evaluates an inference rule

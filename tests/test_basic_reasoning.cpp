@@ -17,6 +17,32 @@
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
+Madara::Knowledge_Engine::VALUE_TYPE
+  return_1 (Madara::Knowledge_Engine::Variables * variables)
+{
+  return 1;
+}
+
+Madara::Knowledge_Engine::VALUE_TYPE
+  return_2 (Madara::Knowledge_Engine::Variables * variables)
+{
+  return 2;
+}
+
+Madara::Knowledge_Engine::VALUE_TYPE
+  return_3 (Madara::Knowledge_Engine::Variables * variables)
+{
+  return 3;
+}
+
+Madara::Knowledge_Engine::VALUE_TYPE
+  return_var1 (Madara::Knowledge_Engine::Variables * variables)
+{
+  return variables->get (".var1");
+}
+
+
+
 // test functions
 void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_implies (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
@@ -28,6 +54,7 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
 void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_comments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -53,6 +80,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_implies (knowledge);
   test_both_operator (knowledge);
   test_dijkstra_sync (knowledge);
+  test_functions (knowledge);
 
   knowledge.print_knowledge ();
 
@@ -594,7 +622,7 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 /// Tests the both operator (;)
 void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
-  ACE_TRACE (ACE_TEXT ("test_both_operator"));
+  ACE_DEBUG ((LM_INFO, "Testing both operator (;)\n"));
 
   long long result = 0;
 
@@ -620,7 +648,12 @@ void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.evaluate (".id=1;Running1=0;Running2=0");
   result = knowledge.evaluate ("(Running{.id} = 0); 1 && !Running1 && !Running2");
-  assert (result == 1);
+  
+  ACE_DEBUG ((LM_INFO, "Testing sequence operator (,)\n"));
+
+  knowledge.clear ();
+  knowledge.evaluate (".var1 = (1, 3, 5); .var2 = (0, 2, 4)");
+  assert (knowledge.get (".var1") == 1 && knowledge.get (".var2") == 0);
 }
 
 /// Tests the both operator (;)
@@ -663,7 +696,7 @@ void test_comments (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
 }
 
-/// Tests the conditionals (==, !=, <, <=, >, >=)
+/// Test the ability to compile expressions into the cache
 void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_tree_compilation"));
@@ -689,6 +722,41 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
   assert (result == 1392);
 
 }
+
+
+/// Test the ability to use external functions
+void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_functions"));
+
+  knowledge.clear ();
+  long long result = 0;
+
+  ACE_DEBUG ((LM_INFO, "Testing embedded external functions\n"));
+
+  knowledge.set (".var1", 5);
+
+  knowledge.define_function ("function1", return_1);
+  knowledge.define_function ("function2", return_2);
+  knowledge.define_function ("function3", return_3);
+
+  result = knowledge.evaluate (".var2 = function1()");
+  assert (result == 1);
+
+  result = knowledge.evaluate (".var3 = function2(.var1,.var2,.var3); .var6=3");
+  assert (result == 2 && knowledge.get (".var6") == 3);
+
+  result = knowledge.evaluate (".var4 = function3 (); .var7 = (200, 100, 96)");
+  assert (result == 3 && knowledge.get (".var7") == 96);
+
+  knowledge.define_function ("function1", return_var1);
+  result = knowledge.evaluate (".var5 = function1 (8)");
+  assert (result == 5);
+  
+  knowledge.print ("function results: .var2={.var2}, .var3={.var3}," \
+    ".var4={.var4}, .var5={.var5}, .var6={.var6}, .var7={.var7}\n");
+}
+
 
 int parse_args (int argc, ACE_TCHAR * argv[])
 {

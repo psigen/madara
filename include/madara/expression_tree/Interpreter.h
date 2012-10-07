@@ -81,6 +81,13 @@ namespace Madara
        * @return   true if the input is alphanumeric
        **/
       static bool is_alphanumeric (char input);
+      
+      /**
+       * Checks a character to see if it is whitespace
+       * @param    input      char to check
+       * @return   true if the input is whitespace
+       **/
+      static bool is_whitespace (char input);
 
     private:
       /**

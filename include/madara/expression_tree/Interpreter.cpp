@@ -7,6 +7,7 @@
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
 #include "madara/expression_tree/Composite_Preincrement_Node.h"
@@ -26,6 +27,8 @@
 #include "madara/expression_tree/Composite_Multiply_Node.h"
 #include "madara/expression_tree/Composite_Modulus_Node.h"
 #include "madara/expression_tree/Composite_Both_Node.h"
+#include "madara/expression_tree/Composite_Function_Node.h"
+#include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/utility/Log_Macros.h"
@@ -170,7 +173,33 @@ namespace Madara
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
 
+    
+    /**
+    * @class List
+    * @brief Parameter List
+    */
 
+    class List : public Symbol
+    {
+    public:
+      /// constructors
+      List ( 
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~List (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    private:
+
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
 
     /**
     * @class Subtract
@@ -273,6 +302,28 @@ namespace Madara
 
       /// destructor
       virtual ~Both (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    };
+    
+    /**
+    * @class Sequence
+    * @brief Evaluates both left and right children, regardless of values
+    */
+
+    class Sequence : public Operator
+    {
+    public:
+      /// constructor
+      Sequence (void);
+
+      /// destructor
+      virtual ~Sequence (void);
 
       /// returns the precedence level
       //virtual int precedence (void);
@@ -457,6 +508,32 @@ namespace Madara
       /// builds an equivalent Expression_Tree node
       virtual Component_Node *build (void);
     };
+    
+    /**
+    * @class Function
+    * @brief Function node of the parse tree
+    */
+
+    class Function : public Unary_Operator
+    {
+    public:
+      /// constructor
+      Function (const std::string & name,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~Function (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+
+      std::string name_;
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
 
     /**
     * @class Negate
@@ -579,7 +656,7 @@ namespace Madara
       /// constructor
       Modulus (void);
 
-      /// destructor
+      /// destructorm
       virtual ~Modulus (void);
 
       /// returns the precedence level
@@ -714,6 +791,40 @@ Madara::Expression_Tree::Negate::build ()
 }
 
 // constructor
+Madara::Expression_Tree::Function::Function (const std::string & name,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: name_ (name), context_ (context), Unary_Operator (0, VARIABLE_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Function::~Function (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Function::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Function::build ()
+{
+  if (right_)
+    return new Composite_Function_Node (name_, context_, right_->build ());
+  else
+  {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+        "KARL COMPILE: Function %s contains no arguments.\n",
+        name_.c_str ()));
+    return new Composite_Function_Node (name_, context_, 0);
+  }
+}
+
+// constructor
 Madara::Expression_Tree::Predecrement::Predecrement (void)
 : Unary_Operator (0, NEGATE_PRECEDENCE)
 {
@@ -815,6 +926,32 @@ Madara::Expression_Tree::Variable::build (void)
 }
 
 // constructor
+Madara::Expression_Tree::List::List (
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Symbol (0, 0, VARIABLE_PRECEDENCE), context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::List::~List (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::List::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::List::build (void)
+{
+  return new List_Node (context_);
+}
+
+// constructor
 Madara::Expression_Tree::Add::Add (void)
 : Operator (0, 0, ADD_PRECEDENCE)
 {
@@ -911,6 +1048,47 @@ Madara::Expression_Tree::Both::add_precedence (int precedence)
 // builds an equivalent Expression_Tree node
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Both::build (void)
+{
+  // Since users can say something like ";;;;;;;;", it is very possible
+  // that a both operation contains no valid children. So, we need
+  // to check whether or not we have a valid child.
+  if (left_ && right_)
+    return new Composite_Both_Node (left_->build (), right_->build ());
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node ((long long)0);
+}
+
+// constructor
+Madara::Expression_Tree::Sequence::Sequence (void)
+: Operator (0, 0, BOTH_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Sequence::~Sequence (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Sequence::add_precedence (int precedence)
+{
+  return this->precedence_ = BOTH_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Sequence::build (void)
 {
   // Since users can say something like ";;;;;;;;", it is very possible
   // that a both operation contains no valid children. So, we need
@@ -1278,6 +1456,13 @@ Madara::Expression_Tree::Interpreter::is_alphanumeric (char input)
     || input == '{' || input == '}';
 }
 
+// method for checking if input is whitespace
+bool
+Madara::Expression_Tree::Interpreter::is_whitespace (char input)
+{
+  return input == ' ' || input == '\t' || input == '\r' || input == '\n';
+}
+
 
 // inserts a variable (leaf node / number) into the parse tree
 void
@@ -1288,27 +1473,61 @@ Madara::Expression_Tree::Interpreter::variable_insert (Madara::Knowledge_Engine:
                                                        ::std::list<Symbol *>& list,
                                                        Symbol *& lastValidInput)
 {
-  // merge all consecutive number chars into a single
-  // Number symbol, eg '123' = int (123). Scope of j needs
-  // to be outside of the for loop.
-
+  // build a potential variable name (this could also be a function)
   ::std::string::size_type j = 1;
 
-  for (; i + j <= input.length () && is_alphanumeric (input[i + j]); ++j)
+  for (; i + j < input.length () && is_alphanumeric (input[i + j]); ++j)
     continue;
 
-  // make a Number out of the integer
+  // the variable or function name is stored in input.substr (i,j)
+  // is the next char a parenthesis?
 
-  Variable * variable = new Variable (input.substr (i,j), context);
-  variable->add_precedence (accumulated_precedence);
-
-  lastValidInput = variable;
-
-  // update i to next char for main loop or handle parenthesis.
-
+  std::string name = input.substr (i, j);
+  
   i += j;
+  
+  //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, DLINFO
+  //    "Checking %s, before is_whitespace. i=%d, j=%Q\n",
+  //    name.c_str (), i, j));
 
-  precedence_insert (variable, list);
+  // eat up whitespace so we can check for a parenthesis (function)
+  for (; i < input.length () && is_whitespace (input[i]); ++i);
+  
+  //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, DLINFO
+  //    "Checking %s, after is_whitespace. i=%d, j=%Q\n",
+  //    name.c_str (), i, j));
+
+  if (i < input.length () && input[i] == '(')
+  {
+    // save the function name and update i
+    Function * function = new Function (name, context);
+    bool handled = false;
+
+    ::std::list<Symbol *> param_list;
+    
+    ++i;
+
+    // we have a function instead of a variable
+    handle_parenthesis (context, input, i, lastValidInput, handled,
+      accumulated_precedence, param_list);
+
+    //if (param_list.size () > 0)
+    //  function->right_ = param_list.back ();
+
+    function->right_ = new List (context);
+
+    precedence_insert (function, list);
+  }
+  else
+  {
+    Variable * variable = new Variable (name, context);
+    variable->add_precedence (accumulated_precedence);
+
+    lastValidInput = variable;
+
+    precedence_insert (variable, list);
+  }
+
 }
 
 // inserts a leaf node / number into the parse tree
@@ -1735,6 +1954,17 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
     precedence_insert (op, list);
     ++i;
   }
+  else if (input[i] == ',')
+  {
+    handled = true;
+    Symbol * op = new Sequence ();
+
+    // insert the op according to precedence relationships
+    op->add_precedence (accumulated_precedence);
+    lastValidInput = 0;
+    precedence_insert (op, list);
+    ++i;
+  }
   else if (input[i] == '<')
   {
     handled = true;
@@ -1843,12 +2073,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
 
 
     // is it a node with 2 children?
-    if (op)
-    {
-      precedence_insert (list.back (), master_list);
-    }
-    else if (unary)
-      // is it a unary node (like negate)
+    if (op || unary)
     {
       precedence_insert (list.back (), master_list);
     }

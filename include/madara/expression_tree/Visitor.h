@@ -8,12 +8,15 @@ namespace Madara
   {
     class Leaf_Node;
     class Variable_Node;
+    class List_Node;
     class Composite_Negate_Node;
     class Composite_Predecrement_Node;
     class Composite_Preincrement_Node;
     class Composite_Not_Node;
     class Composite_Add_Node;
     class Composite_Both_Node;
+    class Composite_Sequential_Node;
+    class Composite_Function_Node;
     class Composite_Implies_Node;
     class Composite_Assignment_Node;
     class Composite_And_Node;
@@ -45,6 +48,9 @@ namespace Madara
 
       /// Visit a Variable_Node.
       virtual void visit (const Variable_Node &node) = 0;
+      
+      /// Visit a List_Node.
+      virtual void visit (const List_Node &node) = 0;
 
       /// Visit a Composite_Negate_Node.
       virtual void visit (const Composite_Negate_Node &node) = 0;
@@ -102,6 +108,12 @@ namespace Madara
 
       /// Visit a Composite_Both_Node.
       virtual void visit (const Composite_Both_Node &node) = 0;
+      
+      /// Visit a Composite_Sequential_Node.
+      virtual void visit (const Composite_Sequential_Node &node) = 0;
+      
+      /// Visit a Composite_Function_Node.
+      virtual void visit (const Composite_Function_Node &node) = 0;
 
       /// Visit a Composite_Implies_Node.
       virtual void visit (const Composite_Implies_Node &node) = 0;

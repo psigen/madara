@@ -9,6 +9,7 @@
  */
 
 #include "madara/Globals.h"
+#include "madara/Functions.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
@@ -339,6 +340,14 @@ namespace Madara
        * previously called @ acquire.
        **/
       void release (void);
+      
+      /**
+       * Defines a function
+       * @param  name       name of the function
+       * @param  func       external function to call with this name
+       **/
+      void define_function (const std::string & name,
+        VALUE_TYPE (*func) (Variables *));
 
     private:
 

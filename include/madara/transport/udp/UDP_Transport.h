@@ -13,7 +13,7 @@ namespace Madara
   {
     /**
      * @class UDP_Transport
-     * @brief TCP-based transport (skeleton code)
+     * @brief UDP-based transport (skeleton code)
      **/
     class UDP_Transport : public Base
     {
@@ -24,7 +24,7 @@ namespace Madara
       };
 
       enum {
-        ERROR_TCP_NOT_STARTED = -1,
+        ERROR_UDP_NOT_STARTED = -1,
       };
 
       static const int PROFILES = 1;

@@ -725,3 +725,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (
         "%s\n", (*i).c_str ()));
   }
 }
+
+// Defines a function
+void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
+  const std::string & name, VALUE_TYPE (*func) (Variables *))
+{
+  map_.define_function (name, func);
+}

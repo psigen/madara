@@ -8,6 +8,7 @@
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
 #include "madara/expression_tree/Composite_Preincrement_Node.h"
@@ -27,6 +28,8 @@
 #include "madara/expression_tree/Composite_Multiply_Node.h"
 #include "madara/expression_tree/Composite_Modulus_Node.h"
 #include "madara/expression_tree/Composite_Both_Node.h"
+#include "madara/expression_tree/Composite_Sequential_Node.h"
+#include "madara/expression_tree/Composite_Function_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
 
 #include "madara/expression_tree/Evaluation_Visitor.h"
@@ -45,6 +48,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
   const Madara::Expression_Tree::Variable_Node &node)
 {
   stack_.push (node.item ());
+}
+
+/// Evaluate a List_Node (holds a dynamic list)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::List_Node &node)
+{
 }
 
 /// evaluation of a negation (Composite_Negate_Node)
@@ -254,6 +264,36 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
       " requires both a left and right expression\n"));
     exit (-1);
   }
+}
+
+/// evaluation of both left and right (Composite_Sequential_Node)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Composite_Sequential_Node &)
+{
+  if (stack_.size () >= 2)
+  {
+    long long right_v = stack_.pop ();
+    long long left_v = stack_.pop ();
+
+    // I was trying to use std::max, but it was giving me
+    // some grief, so I just implemented it as is
+    stack_.push (left_v > right_v ? right_v : left_v);
+  }
+  else
+  {
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      "\nKARL EVAL ERROR: And" \
+      " requires both a left and right expression\n"));
+    exit (-1);
+  }
+}
+
+/// evaluation of function (Composite_Function_Node)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Composite_Function_Node &)
+{
 }
 
 /// evaluation of an equality comparison (Composite_Equality_Node)

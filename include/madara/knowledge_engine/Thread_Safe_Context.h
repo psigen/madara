@@ -18,6 +18,7 @@
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
 #include "madara/Globals.h"
+#include "madara/knowledge_engine/Function_Map.h"
 
 namespace Madara
 {
@@ -285,6 +286,22 @@ namespace Madara
        **/
       std::string expand_statement (const std::string & statement) const;
 
+
+      /**
+       * Defines a function
+       * @param  name       name of the function
+       * @param  func       external function to call with this name
+       **/
+      void define_function (const std::string & name,
+        VALUE_TYPE (*func) (Variables *));
+
+      /**
+       * Retrieves an external function
+       * @param  name       name of the function to retrieve
+       * @return            the mapped external function
+       **/
+      Function * retrieve_function (const std::string & name);
+
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
 
@@ -295,6 +312,9 @@ namespace Madara
       std::vector< std::string> expansion_splitters_;
       mutable unsigned long long clock_;
       Mutations changed_map_;
+
+      /// map of function names to functions
+      Function_Map functions_;
     };
   }
 }

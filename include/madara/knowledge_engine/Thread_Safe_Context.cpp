@@ -346,3 +346,25 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
 
   return builder.str ();
 }
+
+// defines a function by name
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
+  const std::string & name, VALUE_TYPE (*func) (Variables *))
+{
+  functions_[name] = func;
+}
+
+
+/**
+  * Retrieves an external function
+  * @param  name       name of the function to retrieve
+  * @param  func       pointer to the function pointer
+  * @return            the mapped external function
+  **/
+Madara::Knowledge_Engine::Function *
+  Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_function (
+       const std::string & name)
+{
+  return &functions_[name];
+}

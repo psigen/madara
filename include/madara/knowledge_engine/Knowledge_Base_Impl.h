@@ -417,6 +417,14 @@ namespace Madara
        * previously called @ acquire.
        **/
       void release (void);
+      
+      /**
+       * Defines a function
+       * @param  name       name of the function
+       * @param  func       external function to call with this name
+       **/
+      void define_function (const std::string & name,
+        VALUE_TYPE (*func) (Variables *));
 
     private:
       void setup_uniquehostport (const std::string & host);
