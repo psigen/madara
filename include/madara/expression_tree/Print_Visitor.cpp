@@ -6,6 +6,8 @@
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Variable_Increment_Node.h"
+#include "madara/expression_tree/Variable_Compare_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
@@ -28,6 +30,7 @@
 #include "madara/expression_tree/Composite_Both_Node.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Function_Node.h"
+#include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Print_Visitor.h"
 
@@ -47,6 +50,22 @@ Madara::Expression_Tree::Print_Visitor::visit (const Variable_Node &node)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "%s ", node.key ().c_str ()));
+}
+
+/// visit function - prints Variable_Increment_Node value to std::cout
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Variable_Increment_Node &node)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "++%s ", node.key ().c_str ()));
+}
+
+/// visit function - prints Variable_Compare_Node value to std::cout
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Variable_Compare_Node &node)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "compare(%s) ", node.key ().c_str ()));
 }
 
 /// visit function - prints List_Node value to std::cout
@@ -237,6 +256,15 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Function_Node &)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "function call "));
+}
+
+/// visit function - prints Composite_For_Loop contents to std::cout
+
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Composite_For_Loop &)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "for loop "));
 }
 
 /// visit function - prints Composite_Implies_Node contents to std::cout

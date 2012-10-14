@@ -55,6 +55,7 @@ void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_comments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -71,6 +72,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_for_loops (knowledge);
   test_comments (knowledge);
   test_assignments (knowledge);
   test_unaries (knowledge);
@@ -755,6 +757,41 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   
   knowledge.print ("function results: .var2={.var2}, .var3={.var3}," \
     ".var4={.var4}, .var5={.var5}, .var6={.var6}, .var7={.var7}\n");
+}
+
+/// Test the ability to use for loops
+void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_for_loops"));
+
+  knowledge.clear ();
+  long long result = 0;
+
+  ACE_DEBUG ((LM_INFO, "Testing embedded for loops\n"));
+
+  result = knowledge.evaluate (".i[ 0 -> 10 ) (agent{.i}.state=1)");
+  assert (result == 10 && knowledge.get ("agent3.state") == 1);
+  
+  result = knowledge.evaluate (".i[0->10] (agent{.i}.state=0)");
+  assert (result == 11 && knowledge.get ("agent3.state") == 0);
+  
+  result = knowledge.evaluate (".i[0-2>10] (agent{.i}.state=2)");
+  assert (result == 6 && knowledge.get ("agent3.state") == 2);
+  
+  result = knowledge.evaluate (".i[ 1 -2> 9 ] (agent{.i}.state=1)");
+  assert (result == 5 && knowledge.get ("agent3.state") == 1);
+  
+  result = knowledge.evaluate (".i[9)");
+  assert (result == 9 && knowledge.get (".i") == 9);
+
+  result = knowledge.evaluate (".i[9]");
+  assert (result == 10 && knowledge.get (".i") == 10);
+
+  result = knowledge.evaluate (
+    "agent11.state = 15; .i[9); .j[9]; .k[0->10) (agent{.k}.state=20)");
+  assert (result == 15 && knowledge.get (".i") == 9 &&
+    knowledge.get (".j") == 10 && knowledge.get (".k") == 10 &&
+    knowledge.get ("agent3.state") == 20);
 }
 
 

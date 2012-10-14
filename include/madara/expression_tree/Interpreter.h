@@ -91,6 +91,32 @@ namespace Madara
 
     private:
       /**
+       * extracts precondition, condition, postcondition, and body from input
+       * @param    context       interpreter context
+       * @param    variable      name of the variable the for loop is based on
+       * @param    input         expression to compile
+       * @param    i             current position in expression
+       * @param    accumulated_precedence  current precedence
+       * @param    list          list of symbols to insert for loop into
+       * @param    precondition  (x ; _ ; _) {_} before loop
+       * @param    condition     (_ ; x ; _) {_} condition of loop
+       * @param    postcondition (_ ; _ ; x) {_} after body
+       * @param    body          (_ ; _ ; _) {x} iterated body of loop
+       **/
+      void handle_for_loop (
+        Madara::Knowledge_Engine::Thread_Safe_Context &context,
+                                         ::std::string &variable,
+                                            const ::std::string &input,
+                                           ::std::string::size_type &i,
+                                          int & accumulated_precedence,
+                                           ::std::list<Symbol *>& list //,
+                                               // Symbol *& precondition,
+                                               //    Symbol *& condition,
+                                               //Symbol *& postcondition,
+                                               //        Symbol *& body
+                                                       );
+
+      /**
        * Inserts a variable into the tree
        * @param    context    interpreter context
        * @param    input      expression to compile

@@ -7,6 +7,8 @@
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Variable_Compare_Node.h"
+#include "madara/expression_tree/Variable_Increment_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
@@ -28,6 +30,7 @@
 #include "madara/expression_tree/Composite_Modulus_Node.h"
 #include "madara/expression_tree/Composite_Both_Node.h"
 #include "madara/expression_tree/Composite_Function_Node.h"
+#include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/Interpreter.h"
@@ -52,7 +55,9 @@ namespace Madara
       NEGATE_PRECEDENCE = 7,
       PARENTHESIS_PRECEDENCE = 8,
       NUMBER_PRECEDENCE = 8,
-      VARIABLE_PRECEDENCE = 8
+      VARIABLE_PRECEDENCE = 8,
+      FUNCTION_PRECEDENCE = 8,
+      FOR_LOOP_PRECEDENCE = 8
     };
 
     /**
@@ -139,7 +144,7 @@ namespace Madara
 
       /// builds an equivalent Expression_Tree node
       virtual Component_Node *build (void);
-    private:
+ //   private:
       /// contains the value of the leaf node
       long long item_;
     };
@@ -165,9 +170,84 @@ namespace Madara
 
       /// builds an equivalent Expression_Tree node
       virtual Component_Node *build (void);
-    private:
+    //private:
       /// Key for retrieving value of this variable.
       const ::std::string key_;
+
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
+
+    /**
+    * @class Variable_Increment
+    * @brief Increment a variable by a certain amount
+    */
+
+    class Variable_Increment : public Symbol
+    {
+    public:
+      /// constructors
+      Variable_Increment (const ::std::string & key, long long value,
+        Symbol * rhs,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~Variable_Increment (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    //private:
+      /// Key for retrieving value of this variable.
+      const ::std::string key_;
+
+      /// value can be faster than rhs_, so use it if possible
+      long long value_;
+
+      /// rhs is used for complex rhs types (not a simple number)
+      Symbol * rhs_;
+
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
+
+    /**
+    * @class Variable_Compare
+    * @brief Increment a variable by a certain amount
+    */
+
+    class Variable_Compare : public Symbol
+    {
+    public:
+      /// constructors
+      Variable_Compare (const ::std::string & key, long long value,
+        Symbol * rhs, int compare_type,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~Variable_Compare (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    //private:
+      /// Key for retrieving value of this variable.
+      const ::std::string key_;
+      
+      /// value can be faster than rhs_, so use it if possible
+      long long value_;
+
+      /// rhs is used for complex rhs types (not a simple number)
+      Symbol * rhs_;
+
+      /// type of comparison. See madara/Globals.h
+      int compare_type_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -534,6 +614,36 @@ namespace Madara
       std::string name_;
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
+    
+    /**
+    * @class For_Loop
+    * @brief Iterative looping node of the parse tree
+    */
+
+    class For_Loop : public Unary_Operator
+    {
+    public:
+      /// constructor
+      For_Loop (Symbol * precondition, Symbol * condition,
+        Symbol * postcondition, Symbol * body,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~For_Loop (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+
+      Symbol * precondition_;
+      Symbol * condition_;
+      Symbol * postcondition_;
+      Symbol * body_;
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
 
     /**
     * @class Negate
@@ -825,6 +935,46 @@ Madara::Expression_Tree::Function::build ()
 }
 
 // constructor
+Madara::Expression_Tree::For_Loop::For_Loop (Symbol * precondition,
+        Symbol * condition, Symbol * postcondition,
+        Symbol * body,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: precondition_ (precondition), condition_ (condition),
+  postcondition_ (postcondition), body_ (body), context_ (context),
+  Unary_Operator (0, VARIABLE_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::For_Loop::~For_Loop (void)
+{
+  delete precondition_;
+  delete postcondition_;
+  delete condition_;
+  delete body_;
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::For_Loop::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::For_Loop::build ()
+{
+  if (body_)
+    return new Composite_For_Loop (
+         precondition_->build (), condition_->build (), 
+         postcondition_->build (), body_->build (), context_);
+  else
+  return new Composite_Assignment_Node (precondition_->left_->build (),
+                                          condition_->right_->build ());
+}
+
+// constructor
 Madara::Expression_Tree::Predecrement::Predecrement (void)
 : Unary_Operator (0, NEGATE_PRECEDENCE)
 {
@@ -924,6 +1074,75 @@ Madara::Expression_Tree::Variable::build (void)
 {
   return new Variable_Node (key_, context_);
 }
+
+
+
+// constructor
+Madara::Expression_Tree::Variable_Increment::Variable_Increment (const ::std::string & key, 
+  long long value, Symbol * rhs,
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Symbol (0, 0, VARIABLE_PRECEDENCE), key_ (key), value_(value), rhs_ (rhs),
+  context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Variable_Increment::~Variable_Increment (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Variable_Increment::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Variable_Increment::build (void)
+{
+  if (rhs_)
+    return new Variable_Increment_Node (key_, value_, rhs_->build (), context_);
+  else
+    return new Variable_Increment_Node (key_, value_, 0, context_);
+}
+
+
+// constructor
+Madara::Expression_Tree::Variable_Compare::Variable_Compare (const ::std::string & key, 
+  long long value, Symbol * rhs, int compare_type,
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Symbol (0, 0, VARIABLE_PRECEDENCE), key_ (key), value_(value), rhs_ (rhs),
+  compare_type_ (compare_type), context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Variable_Compare::~Variable_Compare (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Variable_Compare::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Variable_Compare::build (void)
+{
+  if (rhs_)
+    return new Variable_Compare_Node (key_, value_, compare_type_,
+    rhs_->build (), context_);
+  else
+    return new Variable_Compare_Node (key_, value_, compare_type_,
+    0, context_);
+}
+
+
 
 // constructor
 Madara::Expression_Tree::List::List (
@@ -1463,10 +1682,368 @@ Madara::Expression_Tree::Interpreter::is_whitespace (char input)
   return input == ' ' || input == '\t' || input == '\r' || input == '\n';
 }
 
+// extracts precondition, condition, postcondition, and body from input 
+void
+  Madara::Expression_Tree::Interpreter::handle_for_loop (
+                Madara::Knowledge_Engine::Thread_Safe_Context &context,
+                                         ::std::string &variable,
+                                            const ::std::string &input,
+                                           ::std::string::size_type &i,
+                                          int & accumulated_precedence,
+                                           ::std::list<Symbol *>& list //,
+                                               // Symbol *& precondition,
+                                               //    Symbol *& condition,
+                                               //Symbol *& postcondition,
+                                               //        Symbol *& body
+                                                       )
+{
+  ::std::list <Symbol *> substr_list;
+  Symbol * lastValidInput (0);
+  ::std::string::size_type begin = i;
+  Operator * precondition (0); //, * condition (0), * postcondition (0);
+  Symbol * body (0), * user_pre (0), * user_cond (0), * user_post (0);
+
+  // for extracting and using substrings of input
+  ::std::string::size_type count (0);
+  std::string substr;
+
+  if (variable == "")
+    variable = ".MADARA_I";
+
+  bool delimiter_found = false, handled = false, equal_to = false;
+  ::std::string::size_type delimiter_begin = 0;
+  ::std::string::size_type delimiter_end = 0;
+
+  // search for end of for_loop conditions. Be on lookout for delimiter.
+  for (; i < input.length () && input[i] != ']' && input[i] != ')'; ++i)
+  {
+    if (input[i] == '-')
+    {
+      delimiter_found = true;
+      delimiter_begin = i;
+    }
+    if (delimiter_found && input[i] == '>')
+    {
+      delimiter_end = i;
+    }
+  }
+
+  // What did we end with? Less than? Greater than?
+  if (input[i] == ']')
+    equal_to = true;
+  else if (input[i] != ')')
+  {
+    // this is an error. Essentially, it means the user did not close the
+    // for loop.
+  }
+    
+  // if at all possible, don't touch i
+  ::std::string::size_type end = i;
+
+  // get the precondition, postcondition and condition ready
+  precondition = new Assignment ();
+  precondition->left_ = new Variable (variable, context);
+  
+  //// setup postcondition
+  //postcondition = new Assignment ();
+  //postcondition->left_ = new Variable (variable, context);
+
+  //postcondition->right_ = new Add ();
+  //postcondition->right_->left_ = new Variable (variable, context);
+  //    
+  //// setup loop condition
+  //if (equal_to)
+  //  condition = new Less_Than_Equal ();
+  //else
+  //  condition = new Less_Than ();
+
+  //condition->left_ = new Variable (variable, context);
+  //
+
+  // this is the non-short-hand way of specifying, e.g., var[0,30] {}
+  if (delimiter_found)
+  {
+    // setup precondition
+    if (delimiter_begin - begin > 0)
+    {
+      // run main_loop on the precondition substring
+      substr = input.substr (begin, delimiter_begin - begin);
+
+      for (count = 0;
+        count < substr.length (); )
+      {
+        main_loop (context, substr, count, lastValidInput,
+                  handled, accumulated_precedence, substr_list);
+      }
+      
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+        "Precondition is set to %s\n",
+        substr.c_str ()));
+
+      // we have a precondition
+      if (!substr_list.empty ())
+      {
+        user_pre = substr_list.back ();
+        substr_list.clear ();
+      }
+    }
+    
+    // check for special increment
+    if (delimiter_end - delimiter_begin > 1)
+    {
+      count = 0;
+      lastValidInput = 0;
+      substr = input.substr (delimiter_begin + 1, delimiter_end - (delimiter_begin + 1));
+
+      for (count = 0;
+        count < substr.length (); )
+      {
+        main_loop (context, substr, count, lastValidInput,
+                  handled, accumulated_precedence, substr_list);
+      }
+      
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+        "Postcondition is set to %s\n",
+        substr.c_str ()));
+
+      // we have a precondition
+      if (!substr_list.empty ())
+      {
+        user_post = substr_list.back ();
+
+        substr_list.clear ();
+      }
+    }
+    
+    // set condition
+    if (i - (delimiter_end + 1) > 1)
+    {
+      lastValidInput = 0;
+      substr = input.substr (delimiter_end+1, i - (delimiter_end + 1));
+
+      for (count = 0;
+        count < substr.length (); )
+      {
+        main_loop (context, substr, count, lastValidInput,
+                  handled, accumulated_precedence, substr_list);
+      }
+      
+      // we have a condition
+      if (!substr_list.empty ())
+      {
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+          "Condition is set to %s\n",
+          substr.c_str ()));
+
+        user_cond = substr_list.back ();
+        substr_list.clear ();
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+          "Condition was not set to %s\n",
+          substr.c_str ()));
+
+      }
+    }
+  }
+  // if no delimiter found, this is the shorthand
+  else
+  {
+    lastValidInput = 0;
+    substr = input.substr (begin, i - begin);
+    
+    for (count = 0;
+      count < substr.length (); )
+    {
+      main_loop (context, substr, count, lastValidInput,
+                handled, accumulated_precedence, substr_list);
+    }
+      
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+      "Condition only is set to %s\n",
+      substr.c_str ()));
+
+    // we have a condition
+    if (!substr_list.empty ())
+    {
+      user_cond = substr_list.back ();
+      substr_list.clear ();
+    }
+  }
+  
+  // if precondition not set, set to default
+  if (!user_pre)
+    user_pre = new Number (0);
+
+  // set condition to default if not yet set
+  if (!user_cond)
+    user_cond = new Number (-1);
+    
+  // set postcondition to default if not yet set
+  if (!user_post)
+  {
+    user_post = new Number (1);
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+      "Postcondition is set to 1 (def)\n"));
+  }
+
+  // debugging the postcondition
+  //if (MADARA_debug_level >= MADARA_LOG_DETAILED_TRACE)
+  //{
+  //  Number * number = dynamic_cast <Number *> (user_);
+  //  Variable * variable_node = dynamic_cast <Variable *> (postcondition->right_->left_);
+  //  Variable * holder = dynamic_cast <Variable *> (postcondition->left_);
+
+  //  if (number && variable_node)
+  //  {
+  //    if (holder->key_ == variable_node->key_)
+  //    {
+  //      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+  //        "For_Loop: Postcondition is an addition of %q to %s\n",
+  //        number->item_, variable_node->key_.c_str ()));
+  //    }
+  //    else
+  //    {
+  //      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+  //        "For_Loop: ERROR: Postcondition keys not matching: %s != %s\n",
+  //        holder->key_.c_str (), variable_node->key_.c_str ()));
+  //    }
+  //  }
+  //  else if (variable_node)
+  //  {
+  //    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+  //      "For_Loop: Postcondition is an addition to %s\n",
+  //      variable_node->key_.c_str ()));
+  //  }
+  //}
+
+  // eat up whitespace so we can check for a parenthesis (function)
+  for (++i; i < input.length () && is_whitespace (input[i]); ++i);
+  
+  // can't have a body without a parenthesis or brace
+  if (i < input.length () && input[i] == '(')
+  {
+    ++i;
+    lastValidInput = 0;
+    
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+        "Body is reading from %s\n",
+        input.substr (i, input.size () - i).c_str ()));
+
+    // we have a function instead of a variable
+    handle_parenthesis (context, input, i, lastValidInput, handled,
+      accumulated_precedence, substr_list);
+
+    if (!substr_list.empty ())
+    {
+      body = substr_list.back ();
+      substr_list.clear ();
+    }
+  }
+
+  // now, see if we can locate a body for the for loop
+  if (body)
+  {
+    if (MADARA_debug_level >= MADARA_LOG_DETAILED_TRACE) //MADARA_LOG_DETAILED_TRACE)
+    {
+      Assignment * assignment = dynamic_cast <Assignment *> (body);
+      if (assignment)
+      {
+        Variable * variable_node = dynamic_cast <Variable *> (assignment->left_);
+        Number * number = dynamic_cast <Number *> (assignment->right_);
+
+        if (variable_node && number)
+        {
+          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+            "For_Loop: Body is a simple assignment of variable %s to %q\n",
+            variable_node->key_.c_str (), number->item_));
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+            "For loop has a complex body\n"));
+        }
+      }
+    }
+
+    precondition->right_ = user_pre;
+    Madara::Knowledge_Record::VALUE_TYPE post_val = 0;
+    Madara::Knowledge_Record::VALUE_TYPE cond_val = 0;
+
+    // optimize postcondition
+    Number * number = dynamic_cast <Number *> (user_post);
+    if (number)
+    {
+      post_val = number->item_;
+      delete number;
+      user_post = 0;
+    }
+    
+    // optimize condition
+    number = dynamic_cast <Number *> (user_cond);
+    if (number)
+    {
+      cond_val = number->item_;
+      delete number;
+      user_cond = 0;
+    }
+
+    int compare_type (0);
+
+    if (equal_to)
+      compare_type = 1;
+
+    Variable_Increment * postcondition = new Variable_Increment (variable, post_val,
+      user_post, context);
+    postcondition->add_precedence (accumulated_precedence + FOR_LOOP_PRECEDENCE);
+
+    Variable_Compare * condition = new Variable_Compare (variable, cond_val,
+      user_cond, compare_type, context);
+    condition->add_precedence (accumulated_precedence + FOR_LOOP_PRECEDENCE);
+
+    Symbol * op = new For_Loop (precondition, condition, postcondition, body, context);
+    op->add_precedence (accumulated_precedence);
+
+    precedence_insert (op, list);
+  }
+  else
+  {
+    // user forgot to specify a for loop body, so they apparently just want us to loop
+    // the variable from the precondition to the condition. Since we assume the user
+    // doesn't want a busy loop, which this is, we instead create an assignment for
+    // the variable to equal the condition and clean up the pointers
+
+    // if they specified a ']', they actually want something 1 greater than the condition
+    if (equal_to)
+    {
+      Number * number = dynamic_cast <Number *> (user_cond);
+
+      if (number)
+        ++number->item_;
+      else
+      {
+        // if it wasn't already a number, then it must be something more complex. We'll
+        // just add one to it and see if the prune () method can optimize it a bit.
+        Add * add = new Add ();
+        add->left_ = new Number (1);
+        add->right_ = user_cond;
+        user_cond = add;
+      }
+    }
+
+    delete precondition->right_;
+    precondition->right_ = user_cond;
+    precondition->add_precedence (accumulated_precedence);
+
+    precedence_insert (precondition, list);
+  }
+}
 
 // inserts a variable (leaf node / number) into the parse tree
 void
-Madara::Expression_Tree::Interpreter::variable_insert (Madara::Knowledge_Engine::Thread_Safe_Context &context,
+Madara::Expression_Tree::Interpreter::variable_insert (
+                           Madara::Knowledge_Engine::Thread_Safe_Context &context,
                                                        const ::std::string &input,
                                                        ::std::string::size_type &i,
                                                        int & accumulated_precedence,
@@ -1501,6 +2078,8 @@ Madara::Expression_Tree::Interpreter::variable_insert (Madara::Knowledge_Engine:
   {
     // save the function name and update i
     Function * function = new Function (name, context);
+    function->add_precedence (accumulated_precedence);
+
     bool handled = false;
 
     ::std::list<Symbol *> param_list;
@@ -1517,6 +2096,11 @@ Madara::Expression_Tree::Interpreter::variable_insert (Madara::Knowledge_Engine:
     function->right_ = new List (context);
 
     precedence_insert (function, list);
+  }
+  else if (i < input.length () && input[i] == '[')
+  {
+    ++i;
+    handle_for_loop (context, name, input, i, accumulated_precedence, list);
   }
   else
   {

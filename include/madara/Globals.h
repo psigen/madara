@@ -44,6 +44,18 @@ namespace Madara
         quality (0), write_quality (0) 
     {}
 
+    typedef  long long      VALUE_TYPE;
+    
+    static bool lt (VALUE_TYPE lhs, VALUE_TYPE rhs);
+
+    static bool lte (VALUE_TYPE lhs, VALUE_TYPE rhs);
+
+    static bool eq (VALUE_TYPE lhs, VALUE_TYPE rhs);
+
+    static bool gt (VALUE_TYPE lhs, VALUE_TYPE rhs);
+
+    static bool gte (VALUE_TYPE lhs, VALUE_TYPE rhs);
+
     /**
      * status of the knowledge record
      **/
@@ -52,7 +64,7 @@ namespace Madara
     /**
      * value of the knowledge record
      **/
-    long long value;
+    VALUE_TYPE value;
 
     /**
      * last modification time
@@ -81,6 +93,10 @@ namespace Madara
 
   typedef ::std::string     Knowledge_Key;
   typedef long              Knowledge_Value;
+
 }
+
+
+
 
 #endif

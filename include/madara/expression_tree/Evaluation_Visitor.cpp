@@ -8,6 +8,8 @@
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Variable_Increment_Node.h"
+#include "madara/expression_tree/Variable_Compare_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
@@ -30,6 +32,7 @@
 #include "madara/expression_tree/Composite_Both_Node.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Function_Node.h"
+#include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
 
 #include "madara/expression_tree/Evaluation_Visitor.h"
@@ -293,6 +296,13 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
   const Madara::Expression_Tree::Composite_Function_Node &)
+{
+}
+
+/// evaluation of function (Composite_Function_Node)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Composite_For_Loop &)
 {
 }
 

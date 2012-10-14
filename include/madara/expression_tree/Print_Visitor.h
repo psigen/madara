@@ -30,6 +30,18 @@ namespace Madara
       virtual void visit (const Variable_Node &node);
       
       /** 
+       * Prints a variable incrementer node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Increment_Node &node);
+      
+      /** 
+       * Prints a variable incrementer node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Compare_Node &node);
+      
+      /** 
        * Prints a list
        * @param     node  the node to evaluate
        **/
@@ -151,16 +163,22 @@ namespace Madara
       virtual void visit (const Composite_Both_Node &node);
       
       /** 
-       * Evaluates a left and right expression
+       * Prints a left and right expression
        * @param     node  the node to evaluate
        **/
       virtual void visit (const Composite_Sequential_Node &node);
       
       /** 
-       * Evaluates a function
+       * Prints a function
        * @param     node  the node to evaluate
        **/
       virtual void visit (const Composite_Function_Node &node);
+      
+      /** 
+       * Prints a for loop
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Composite_For_Loop &node);
 
       /** 
        * Prints an inference rule

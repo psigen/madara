@@ -41,6 +41,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/expression_tree
     include/madara/knowledge_engine
     include/madara/Functions.cpp
+    include/madara/Globals.cpp
     include/madara/utility/Utility.cpp
     include/madara/utility/Refcounter.cpp
     include/madara/utility/Log_Macros.cpp

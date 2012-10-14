@@ -62,6 +62,20 @@ unsigned long long test_compiled_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      unsigned long iterations);
 
+
+unsigned long long test_looped_sr (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned long iterations);
+unsigned long long test_looped_si (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned long iterations);
+unsigned long long test_optimal_loop (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned long iterations);
+unsigned long long test_looped_li (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     unsigned long iterations);
+
 // C++ function for increment with boolean check, rather than allowing C++ 
 // to optimize by putting things in registers
 long increment (bool check, long value);
@@ -207,7 +221,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
-  const int num_test_types = 12;
+  const int num_test_types = 16;
 
   // make everything all pretty and for-loopy
   unsigned long long results[num_test_types];
@@ -223,6 +237,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "KaRL: Compiled LR             ",
     "KaRL: Compiled SI             ",
     "KaRL: Compiled LI             ",
+    "KaRL: Looped SR               ",
+    "KaRL: Optimal Loop            ",
+    "KaRL: Looped SI               ",
+    "KaRL: Looped LI               ",
     "C++: Optimized Reinforcements ",
     "C++: Optimized Inferences     ",
     "C++: Volatile Reinforcements  ",
@@ -239,6 +257,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     CompiledLR,
     CompiledSI,
     CompiledLI,
+    LoopedSR,
+    OptimalLoop,
+    LoopedSI,
+    LoopedLI,
     OptimizedReinforcement,
     OptimizedInference,
     VolatileReinforcement,
@@ -258,6 +280,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[CompiledLR] = test_compiled_lr;
   test_functions[CompiledSI] = test_compiled_si;
   test_functions[CompiledLI] = test_compiled_li;
+  
+  test_functions[LoopedSR] = test_looped_sr;
+  test_functions[OptimalLoop] = test_optimal_loop;
+  test_functions[LoopedSI] = test_looped_si;
+  test_functions[LoopedLI] = test_looped_li;
 
   test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
   test_functions[OptimizedInference] = test_optimal_inference;
@@ -448,6 +475,49 @@ unsigned long long test_compiled_sr (
   return measured;
 }
 
+/// Tests looped long inferences (++.var1)
+unsigned long long test_looped_sr (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     unsigned long iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_looped_sr"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  // build a large chain of simple reinforcements
+   std::string buffer;
+
+  unsigned max_size = iterations > 10000 ? 10000 : iterations;
+  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+
+  knowledge.set (".iterations", (long long) iterations);
+  knowledge.set (".actual_iterations", (long long) actual_iterations);
+
+  buffer = ".var2[.iterations) (++.var1)";
+
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (buffer);
+
+  timer.start ();
+
+  // execute that chain of reinforcements
+  knowledge.evaluate (ce, es);
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled Looped LR: ");
+
+  return measured;
+}
+
 /// Tests logicals operators (&&, ||)
 unsigned long long test_large_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
@@ -531,6 +601,49 @@ unsigned long long test_compiled_lr (
   return measured;
 }
 
+/// Tests looped long inferences (1 => ++.var1)
+unsigned long long test_optimal_loop (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     unsigned long iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_optimal_loop"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  // build a large chain of simple reinforcements
+   std::string buffer;
+
+  unsigned max_size = iterations > 10000 ? 10000 : iterations;
+  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+
+  knowledge.set (".iterations", (long long) iterations);
+  knowledge.set (".actual_iterations", (long long) actual_iterations);
+
+  buffer = ".var2[.iterations)";
+
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (buffer);
+
+  timer.start ();
+
+  // execute that chain of reinforcements
+  knowledge.evaluate (ce, es);
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Optimal Loop: ");
+
+  return measured;
+}
+
 unsigned long long test_simple_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
      unsigned long iterations)
@@ -590,6 +703,48 @@ unsigned long long test_compiled_si (
 
   print (measured, knowledge.get (".var1"), iterations,
     "Compiled SI: ");
+
+  return measured;
+}
+
+/// Tests looped simple inferences (1 => ++.var1)
+unsigned long long test_looped_si (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     unsigned long iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_looped_si"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  // build a large chain of simple reinforcements
+   std::string buffer;
+
+  unsigned max_size = iterations > 10000 ? 10000 : iterations;
+  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+
+  knowledge.set (".iterations", (long long) iterations);
+  
+  buffer = ".var2[.iterations) (1 => ++.var1)";
+
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (buffer);
+
+  timer.start ();
+
+  // execute that chain of reinforcements
+  knowledge.evaluate (ce, es);
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled Looped LR: ");
 
   return measured;
 }
@@ -671,6 +826,49 @@ unsigned long long test_compiled_li (
 
   print (measured, knowledge.get (".var1"), iterations,
     "Compiled LI: ");
+
+  return measured;
+}
+
+/// Tests looped long inferences (1 => ++.var1)
+unsigned long long test_looped_li (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     unsigned long iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_looped_lr"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  // build a large chain of simple reinforcements
+   std::string buffer;
+
+  unsigned max_size = iterations > 10000 ? 10000 : iterations;
+  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+
+  knowledge.set (".iterations", (long long) iterations);
+  knowledge.set (".actual_iterations", (long long) actual_iterations);
+
+  buffer = ".var2[.iterations) (1 => ++.var1)";
+
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (buffer);
+
+  timer.start ();
+
+  // execute that chain of reinforcements
+  knowledge.evaluate (ce, es);
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled Looped LR: ");
 
   return measured;
 }
