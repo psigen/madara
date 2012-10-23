@@ -8,7 +8,10 @@
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Variable_Decrement_Node.h"
+#include "madara/expression_tree/Variable_Divide_Node.h"
 #include "madara/expression_tree/Variable_Increment_Node.h"
+#include "madara/expression_tree/Variable_Multiply_Node.h"
 #include "madara/expression_tree/Variable_Compare_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
@@ -49,6 +52,38 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
   const Madara::Expression_Tree::Variable_Node &node)
+{
+  stack_.push (node.item ());
+}
+
+/// Evaluate a Variable_Decrement_Node (holds a dynamic value)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Variable_Decrement_Node &node)
+{
+  stack_.push (node.item ());
+}
+
+/// Evaluate a Variable_Divide_Node (holds a dynamic value)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Variable_Divide_Node &node)
+{
+  stack_.push (node.item ());
+}
+
+/// Evaluate a Variable_Increment_Node (holds a dynamic value)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Variable_Increment_Node &node)
+{
+  stack_.push (node.item ());
+}
+
+/// Evaluate a Variable_Multiply_Node (holds a dynamic value)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Variable_Multiply_Node &node)
 {
   stack_.push (node.item ());
 }

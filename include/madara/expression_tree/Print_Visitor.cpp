@@ -6,7 +6,10 @@
 
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Variable_Decrement_Node.h"
+#include "madara/expression_tree/Variable_Divide_Node.h"
 #include "madara/expression_tree/Variable_Increment_Node.h"
+#include "madara/expression_tree/Variable_Multiply_Node.h"
 #include "madara/expression_tree/Variable_Compare_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
@@ -52,12 +55,36 @@ Madara::Expression_Tree::Print_Visitor::visit (const Variable_Node &node)
     "%s ", node.key ().c_str ()));
 }
 
+/// visit function - prints Variable_Decrement_Node value to std::cout
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Variable_Decrement_Node &node)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "%s -= ", node.key ().c_str ()));
+}
+
+/// visit function - prints Variable_Divide_Node value to std::cout
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Variable_Divide_Node &node)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "%s /= ", node.key ().c_str ()));
+}
+
 /// visit function - prints Variable_Increment_Node value to std::cout
 void 
 Madara::Expression_Tree::Print_Visitor::visit (const Variable_Increment_Node &node)
 {
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
-    "++%s ", node.key ().c_str ()));
+    "%s += ", node.key ().c_str ()));
+}
+
+/// visit function - prints Variable_Multiply_Node value to std::cout
+void 
+Madara::Expression_Tree::Print_Visitor::visit (const Variable_Multiply_Node &node)
+{
+  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
+    "%s *= ", node.key ().c_str ()));
 }
 
 /// visit function - prints Variable_Compare_Node value to std::cout

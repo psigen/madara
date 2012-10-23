@@ -50,12 +50,15 @@ void test_conditionals (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_assignments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
-void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_tree_compilation (
+  Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_comments (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
+void test_simplification_operators (
+  Madara::Knowledge_Engine::Knowledge_Base & knowledge);
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
@@ -72,6 +75,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_simplification_operators (knowledge);
   test_for_loops (knowledge);
   test_comments (knowledge);
   test_assignments (knowledge);
@@ -792,6 +796,30 @@ void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   assert (result == 15 && knowledge.get (".i") == 9 &&
     knowledge.get (".j") == 10 && knowledge.get (".k") == 10 &&
     knowledge.get ("agent3.state") == 20);
+}
+
+/// Test the ability to use +=, -=, *=, /=
+void test_simplification_operators (
+  Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_simplification_operators"));
+
+  knowledge.clear ();
+  long long result = 0;
+
+  ACE_DEBUG ((LM_INFO, "Testing simplification operators (+=, -=, *=, /=)\n"));
+
+  result = knowledge.evaluate (".i=0; .i+=5; .i+=10");
+  assert (result == 15 && knowledge.get (".i") == 15);
+
+  result = knowledge.evaluate (".i=200; .i-=125; .i-=10");
+  assert (result == 200 && knowledge.get (".i") == 65);
+
+  result = knowledge.evaluate (".i=5; .i*=3; .i*=10");
+  assert (result == 150 && knowledge.get (".i") == 150);
+
+  result = knowledge.evaluate (".i=200; .i/=10; .i/=4");
+  assert (result == 200 && knowledge.get (".i") == 5);
 }
 
 

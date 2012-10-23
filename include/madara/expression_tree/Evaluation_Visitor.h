@@ -32,10 +32,28 @@ namespace Madara
       virtual void visit (const Variable_Node &node);
       
       /** 
+       * Evaluates a variable decrementer node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Decrement_Node &node);
+      
+      /** 
+       * Evaluates a variable divider node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Divide_Node &node);
+      
+      /** 
        * Evaluates a variable incrementer node
        * @param     node  the node to evaluate
        **/
       virtual void visit (const Variable_Increment_Node &node);
+      
+      /** 
+       * Evaluates a variable multiplier node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Multiply_Node &node);
       
       /** 
        * Evaluates a variable comparison node

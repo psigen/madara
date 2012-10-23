@@ -8,7 +8,10 @@
 #include "madara/expression_tree/Leaf_Node.h"
 #include "madara/expression_tree/Variable_Node.h"
 #include "madara/expression_tree/Variable_Compare_Node.h"
+#include "madara/expression_tree/Variable_Decrement_Node.h"
+#include "madara/expression_tree/Variable_Divide_Node.h"
 #include "madara/expression_tree/Variable_Increment_Node.h"
+#include "madara/expression_tree/Variable_Multiply_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
@@ -177,13 +180,79 @@ namespace Madara
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
+    
+    /**
+    * @class Variable_Decrement
+    * @brief Decrement a variable by a certain amount
+    */
+
+    class Variable_Decrement : public Operator
+    {
+    public:
+      /// constructors
+      Variable_Decrement (const ::std::string & key, long long value,
+        Symbol * rhs,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~Variable_Decrement (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    //private:
+      /// Key for retrieving value of this variable.
+      const ::std::string key_;
+
+      /// value can be faster than rhs_, so use it if possible
+      long long value_;
+
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
+
+    /**
+    * @class Variable_Divide
+    * @brief Divide a variable by a certain amount
+    */
+
+    class Variable_Divide : public Operator
+    {
+    public:
+      /// constructors
+      Variable_Divide (const ::std::string & key, long long value,
+        Symbol * rhs,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~Variable_Divide (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    //private:
+      /// Key for retrieving value of this variable.
+      const ::std::string key_;
+
+      /// value can be faster than rhs_, so use it if possible
+      long long value_;
+
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
 
     /**
     * @class Variable_Increment
     * @brief Increment a variable by a certain amount
     */
 
-    class Variable_Increment : public Symbol
+    class Variable_Increment : public Operator
     {
     public:
       /// constructors
@@ -207,8 +276,38 @@ namespace Madara
       /// value can be faster than rhs_, so use it if possible
       long long value_;
 
-      /// rhs is used for complex rhs types (not a simple number)
-      Symbol * rhs_;
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
+    
+    /**
+    * @class Variable_Multiply
+    * @brief Multiply a variable by a certain amount
+    */
+
+    class Variable_Multiply : public Operator
+    {
+    public:
+      /// constructors
+      Variable_Multiply (const ::std::string & key, long long value,
+        Symbol * rhs,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+
+      /// destructor
+      virtual ~Variable_Multiply (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    //private:
+      /// Key for retrieving value of this variable.
+      const ::std::string key_;
+
+      /// value can be faster than rhs_, so use it if possible
+      long long value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -1076,12 +1175,74 @@ Madara::Expression_Tree::Variable::build (void)
 }
 
 
+// constructor
+Madara::Expression_Tree::Variable_Decrement::Variable_Decrement (const ::std::string & key, 
+  long long value, Symbol * rhs,
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
+  context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Variable_Decrement::~Variable_Decrement (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Variable_Decrement::add_precedence (int precedence)
+{
+  return this->precedence_ = ASSIGNMENT_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Variable_Decrement::build (void)
+{
+  if (this->right_)
+    return new Variable_Decrement_Node (key_, value_, this->right_->build (), context_);
+  else
+    return new Variable_Decrement_Node (key_, value_, 0, context_);
+}
+
+
+// constructor
+Madara::Expression_Tree::Variable_Divide::Variable_Divide (const ::std::string & key, 
+  long long value, Symbol * rhs,
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
+  context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Variable_Divide::~Variable_Divide (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Variable_Divide::add_precedence (int precedence)
+{
+  return this->precedence_ = ASSIGNMENT_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Variable_Divide::build (void)
+{
+  if (this->right_)
+    return new Variable_Divide_Node (key_, value_, this->right_->build (), context_);
+  else
+    return new Variable_Divide_Node (key_, value_, 0, context_);
+}
 
 // constructor
 Madara::Expression_Tree::Variable_Increment::Variable_Increment (const ::std::string & key, 
   long long value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
-: Symbol (0, 0, VARIABLE_PRECEDENCE), key_ (key), value_(value), rhs_ (rhs),
+: Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
 {
 }
@@ -1095,17 +1256,48 @@ Madara::Expression_Tree::Variable_Increment::~Variable_Increment (void)
 int 
 Madara::Expression_Tree::Variable_Increment::add_precedence (int precedence)
 {
-  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+  return this->precedence_ = ASSIGNMENT_PRECEDENCE + precedence;
 }
 
 // builds an equivalent Expression_Tree node
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Variable_Increment::build (void)
 {
-  if (rhs_)
-    return new Variable_Increment_Node (key_, value_, rhs_->build (), context_);
+  if (this->right_)
+    return new Variable_Increment_Node (key_, value_, this->right_->build (), context_);
   else
     return new Variable_Increment_Node (key_, value_, 0, context_);
+}
+
+// constructor
+Madara::Expression_Tree::Variable_Multiply::Variable_Multiply (const ::std::string & key, 
+  long long value, Symbol * rhs,
+                    Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
+  context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Variable_Multiply::~Variable_Multiply (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Variable_Multiply::add_precedence (int precedence)
+{
+  return this->precedence_ = ASSIGNMENT_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Variable_Multiply::build (void)
+{
+  if (this->right_)
+    return new Variable_Multiply_Node (key_, value_, this->right_->build (), context_);
+  else
+    return new Variable_Multiply_Node (key_, value_, 0, context_);
 }
 
 
@@ -2006,6 +2198,8 @@ void
     op->add_precedence (accumulated_precedence);
 
     precedence_insert (op, list);
+
+    lastValidInput = 0;
   }
   else
   {
@@ -2037,6 +2231,8 @@ void
     precondition->add_precedence (accumulated_precedence);
 
     precedence_insert (precondition, list);
+
+    lastValidInput = 0;
   }
 }
 
@@ -2096,6 +2292,7 @@ Madara::Expression_Tree::Interpreter::variable_insert (
     function->right_ = new List (context);
 
     precedence_insert (function, list);
+    lastValidInput = 0;
   }
   else if (i < input.length () && input[i] == '[')
   {
@@ -2285,7 +2482,8 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
 }
 
 void
-Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Thread_Safe_Context & context,
+Madara::Expression_Tree::Interpreter::main_loop (
+       Madara::Knowledge_Engine::Thread_Safe_Context & context,
        const ::std::string &input, ::std::string::size_type &i,
        Madara::Expression_Tree::Symbol *& lastValidInput,
        bool & handled, int & accumulated_precedence,
@@ -2317,6 +2515,24 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       op = new Preincrement ();
       ++i;
     }
+    // is this an atomic increment?
+    else if (i+1 < input.size () && input[i+1] == '=')
+    {
+      Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
+      if (lhs)
+        op = new Variable_Increment (lhs->key_, 0, 0, context);
+      else
+      {
+        // major error here. The left hand side must be a variable
+        op = new Variable_Increment (".MADARA_I", 0, 0, context);
+        
+        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+          DLINFO "KARL COMPILE WARNING (+=): " \
+          "Assignments must have a variable left hand side. Using .MADARA_I by " \
+          "default, but this is likely a major error in the expression.\n"));
+      }
+      ++i;
+    }
     else
       op = new Add ();
 
@@ -2337,6 +2553,24 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       op = new Predecrement ();
       ++i;
     }
+    // is this an atomic decrement?
+    else if (i+1 < input.size () && input[i+1] == '=')
+    {
+      Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
+      if (lhs)
+        op = new Variable_Decrement (lhs->key_, 0, 0, context);
+      else
+      {
+        // major error here. The left hand side must be a variable
+        op = new Variable_Decrement (".MADARA_I", 0, 0, context);
+        
+        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+          DLINFO "KARL COMPILE WARNING (-=): " \
+          "Assignments must have a variable left hand side. Using .MADARA_I by " \
+          "default, but this is likely a major error in the expression.\n"));
+      }
+      ++i;
+    }
     // Negate
     else if (!lastValidInput)
       op = new Negate ();
@@ -2352,9 +2586,29 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
   }
   else if (input[i] == '*')
   {
-    // multiplication operation
     handled = true;
-    Multiply *op = new Multiply ();
+    Symbol * op = 0;
+
+    // is this an atomic multiply?
+    if (i+1 < input.size () && input[i+1] == '=')
+    {
+      Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
+      if (lhs)
+        op = new Variable_Multiply (lhs->key_, 0, 0, context);
+      else
+      {
+        // major error here. The left hand side must be a variable
+        op = new Variable_Multiply (".MADARA_I", 0, 0, context);
+        
+        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+          DLINFO "KARL COMPILE WARNING (*=): " \
+          "Assignments must have a variable left hand side. Using .MADARA_I by " \
+          "default, but this is likely a major error in the expression.\n"));
+      }
+    }
+    // multiplication operation
+    else
+      op = new Multiply ();
 
     // insert the op according to precedence relationships
     op->add_precedence (accumulated_precedence);
@@ -2398,16 +2652,36 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
       else
         i = input.size ();
     }
+    // is this an atomic decrement?
     else
     {
-      // division operation
       handled = true;
-      Divide *op = new Divide ();
+      // division operation
+      Symbol * op = 0;
+
+      // atomic division?
+      if (i+1 < input.size () && input[i+1] == '=')
+      {
+        Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
+        if (lhs)
+          op = new Variable_Divide (lhs->key_, 0, 0, context);
+        else
+        {
+          // major error here. The left hand side must be a variable
+          op = new Variable_Divide (".MADARA_I", 0, 0, context);
+        
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+            DLINFO "KARL COMPILE WARNING (-=): " \
+            "Assignments must have a variable left hand side. Using .MADARA_I by " \
+            "default, but this is likely a major error in the expression.\n"));
+        }
+        ++i;
+      }
+      else
+        op = new Divide ();
+
       op->add_precedence (accumulated_precedence);
-
       lastValidInput = 0;
-
-      // insert the op according to precedence relationships
       precedence_insert (op, list);
     }
     ++i;
@@ -2415,7 +2689,6 @@ Madara::Expression_Tree::Interpreter::main_loop (Madara::Knowledge_Engine::Threa
   else if (input[i] == '=')
   {
     handled = true;
-    // division operation
     Symbol * op = 0;
 
     // is this an equality?

@@ -8,7 +8,10 @@ namespace Madara
   {
     class Leaf_Node;
     class Variable_Node;
+    class Variable_Decrement_Node;
+    class Variable_Divide_Node;
     class Variable_Increment_Node;
+    class Variable_Multiply_Node;
     class Variable_Compare_Node;
     class List_Node;
     class Composite_Negate_Node;
@@ -52,8 +55,17 @@ namespace Madara
       /// Visit a Variable_Node.
       virtual void visit (const Variable_Node &node) = 0;
       
+      /// Visit a Variable_Decrement_Node.
+      virtual void visit (const Variable_Decrement_Node &node) = 0;
+      
+      /// Visit a Variable_Divide_Node.
+      virtual void visit (const Variable_Divide_Node &node) = 0;
+      
       /// Visit a Variable_Increment_Node.
       virtual void visit (const Variable_Increment_Node &node) = 0;
+      
+      /// Visit a Variable_Multiply_Node.
+      virtual void visit (const Variable_Multiply_Node &node) = 0;
       
       /// Visit a Variable_Compare_Node.
       virtual void visit (const Variable_Compare_Node &node) = 0;

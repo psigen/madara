@@ -30,10 +30,28 @@ namespace Madara
       virtual void visit (const Variable_Node &node);
       
       /** 
+       * Prints a variable decrementer node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Decrement_Node &node);
+      
+      /** 
+       * Prints a variable divider node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Divide_Node &node);
+      
+      /** 
        * Prints a variable incrementer node
        * @param     node  the node to evaluate
        **/
       virtual void visit (const Variable_Increment_Node &node);
+      
+      /** 
+       * Prints a variable multiplier node
+       * @param     node  the node to evaluate
+       **/
+      virtual void visit (const Variable_Multiply_Node &node);
       
       /** 
        * Prints a variable incrementer node
