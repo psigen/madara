@@ -88,6 +88,14 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
   stack_.push (node.item ());
 }
 
+/// Evaluate a Variable_Compare_Node (holds a dynamic value)
+void 
+Madara::Expression_Tree::Evaluation_Visitor::visit (
+  const Madara::Expression_Tree::Variable_Compare_Node &node)
+{
+  stack_.push (node.item ());
+}
+
 /// Evaluate a List_Node (holds a dynamic list)
 void 
 Madara::Expression_Tree::Evaluation_Visitor::visit (
