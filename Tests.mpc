@@ -464,3 +464,85 @@ project (Test_CID_Linked) : using_madara, using_ace {
   }
 }
 
+
+project (Test_Multicast) : using_madara, using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_multicast
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/multicast/test_multicast.cpp
+  }
+}
+
+project (Test_Broadcast) : using_madara, using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_broadcast
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/broadcast/test_broadcast.cpp
+  }
+}
+
+
+project (Test_ACE_Broadcast) : using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_ace_broadcast
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/misc/test_ace_broadcast.cpp
+  }
+}
+
+
+project (Test_ACE_Multicast) : using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_ace_multicast
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/misc/test_ace_multicast.cpp
+  }
+}

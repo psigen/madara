@@ -4,6 +4,8 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/transport/udp/UDP_Transport.h"
 #include "madara/transport/tcp/TCP_Transport.h"
+#include "madara/transport/multicast/Multicast_Transport.h"
+#include "madara/transport/broadcast/Broadcast_Transport.h"
 #include "madara/utility/Log_Macros.h"
 
 #include <sstream>
@@ -71,13 +73,17 @@ void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
   const std::string & host)
 {
+  // placeholder for our ip address
+  std::string actual_host;
+
   if (settings_.type != Madara::Transport::NO_TRANSPORT)
   {
     // start from 50k, which is just above the bottom of the user
     // definable port range (hopefully avoid conflicts with 49152-49999
     unsigned short port =  50000;
 
-    if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, port) == -1)
+    if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, actual_host, port)
+         == -1)
     {
       MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
@@ -86,10 +92,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
       exit (-1);
     }
    
-    // we were able to bind to an ephemeral port
-    Madara::Utility::merge_hostport_identifier (id_, host, port);
+    // if the user doesn't want us using the actual host, trust them with the
+    // provided host
+    if (host != "")
+      actual_host = host;
 
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    // we were able to bind to an ephemeral port
+    Madara::Utility::merge_hostport_identifier (id_, actual_host, port);
+
+    MADARA_DEBUG (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
       " unique bind to %s\n", id_.c_str ()));
   }
@@ -103,8 +114,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::activate_transport:" \
       " activating transport type %d\n", settings_.type));
-
-    if (settings_.type == Madara::Transport::SPLICE)
+    if (settings_.type == Madara::Transport::BROADCAST)
+    {
+      transport_ = new Madara::Transport::Broadcast_Transport (id_, map_,
+        settings_, true);
+    }
+    else if (settings_.type == Madara::Transport::MULTICAST)
+    {
+      transport_ = new Madara::Transport::Multicast_Transport (id_, map_,
+        settings_, true);
+    }
+    else if (settings_.type == Madara::Transport::SPLICE)
     {
     #ifdef _USE_OPEN_SPLICE_
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -388,6 +408,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     // the context lock, we may have an update event happen
     // that we cannot be signalled on - which could lead to
     // permanent, unnecessary deadlock
+    //map_.unlock ();
     map_.wait_for_change (true);
 
     // relock - basically we need to evaluate the tree again, and
@@ -496,6 +517,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
         " not sending knowledge mutations \n"));
   }
 
+  map_.unlock ();
+
   ACE_Time_Value poll_frequency;
 
   if (!last_value)
@@ -573,7 +596,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
           DLINFO "Knowledge_Base_Impl::wait:" \
           " no modifications to send during this wait\n"));
     }
-
+    
+    map_.unlock ();
     map_.signal ();
     timer.stop ();
     timer.elapsed_time (elapsed);
@@ -584,7 +608,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
 
   // release the context lock
-  map_.unlock ();
+  //map_.unlock ();
   return last_value;
 }
 

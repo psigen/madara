@@ -21,7 +21,7 @@ unsigned long iterations = 100000;
 
 Madara::Transport::Settings settings;
 
-std::string host = "localhost";
+std::string host = "";
 
 volatile bool terminated = false;
 

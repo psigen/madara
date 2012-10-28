@@ -1,6 +1,18 @@
 #ifndef TRANSPORT_H
 #define TRANSPORT_H
 
+/**
+ * @file Transport.h
+ * @author James Edmondson <jedmondson@gmail.com>
+ *
+ * This file contains the Transport::Base class, which provides an
+ * extensible transport layer for sending knowledge updates in KaRL.
+ * To support knowledge updates, only the send_multiassignment method
+ * is currently required to be extended as the set, evaluate, and wait
+ * methods all call send_multiassignment. For example transport, @see
+ * Madara::Transport::Multicast_Transport.
+ **/
+
 #include <string>
 #include <sstream>
 #include <vector>
@@ -16,6 +28,7 @@
 #include "madara/cid/Heuristic.h"
 #include "madara/cid/Genetic.h"
 #include "madara/utility/Utility.h"
+#include "madara/Globals.h"
 
 namespace Madara
 {
@@ -31,6 +44,8 @@ namespace Madara
       NDDS         = 2,
       TCP          = 3,
       UDP          = 4,
+      MULTICAST    = 5,
+      BROADCAST    = 6,
       INCONSISTENT = 100
     };
 
@@ -122,7 +137,8 @@ namespace Madara
         num_summations (0),
         num_voters (0),
         num_votes_received (0),
-        redeployment_percentage_allowed (DEFAULT_REDEPLOYMENT_PERCENTAGE)
+        redeployment_percentage_allowed (DEFAULT_REDEPLOYMENT_PERCENTAGE),
+        hosts_ ()
       {
       }
 
@@ -144,8 +160,12 @@ namespace Madara
         num_voters (settings.num_voters),
         num_votes_received (0),
         redeployment_percentage_allowed (
-         settings.redeployment_percentage_allowed)
+         settings.redeployment_percentage_allowed),
+         hosts_ ()
       {
+        hosts_.resize (settings.hosts_.size ());
+        for (unsigned int i = 0; i < settings.hosts_.size (); ++i)
+          hosts_[i] = settings.hosts_[i];
       }
 
       void operator= (const Settings & settings)
@@ -167,6 +187,9 @@ namespace Madara
         num_votes_received = 0;
         redeployment_percentage_allowed = 
           settings.redeployment_percentage_allowed;
+        hosts_.resize (settings.hosts_.size ());
+        for (unsigned int i = 0; i < settings.hosts_.size (); ++i)
+          hosts_[i] = settings.hosts_[i];
       }
 
       /**
@@ -752,12 +775,24 @@ namespace Madara
 
       /// a list of voters
       Voters voters;
+
+      /**
+       * Host information for transports that require it. The format of these
+       * is transport specific, but for UDP, you might have "localhost:1234"
+       * for a host named localhost and a port of 1234. See the specific
+       * transport for more information.
+       **/
+      std::vector <std::string> hosts_;
     };
 
     typedef    ACE_Condition <ACE_Thread_Mutex>    Condition;
 
     /**
-     * Base class from which all transports must be derived
+     * Base class from which all transports must be derived.
+     * To support knowledge updates, only the send_multiassignment method
+     * is currently required to be extended as the set, evaluate, and wait
+     * methods all call send_multiassignment. For example transport, @see
+     * Madara::Transport::Multicast_Transport.
      **/
     class Base
     {

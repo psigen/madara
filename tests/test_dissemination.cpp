@@ -35,7 +35,7 @@ unsigned long rate = 1000000;
 // test is 3 minutes long
 unsigned long long time_limit = 3 * 60 * (unsigned long long) 1000000000;
 
-std::string host = "localhost";
+std::string host = "";
 
 volatile bool terminated = false;
 

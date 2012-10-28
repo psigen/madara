@@ -16,7 +16,7 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 bool finisher_mode = false;
-std::string host = "localhost";
+std::string host = "";
 int id = 0;
 int processes = 1;
 

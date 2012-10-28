@@ -25,7 +25,7 @@ int processes = 3;
 int stop = 3;
 long value = 0;
 volatile bool terminated = 0;
-std::string host = "localhost";
+std::string host = "";
 std::string domain = "three_state";
 
 // signal handler for someone hitting control+c

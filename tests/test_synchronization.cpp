@@ -22,7 +22,7 @@ int left = 0;
 int processes = 1;
 int stop = 10;
 long value = 0;
-std::string host = "localhost";
+std::string host = "";
 std::string domain = "n_state";
 
 volatile bool terminated = 0;

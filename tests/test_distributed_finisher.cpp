@@ -15,7 +15,7 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 bool finisher_mode = false;
-std::string host = "localhost";
+std::string host = "";
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);

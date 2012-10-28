@@ -50,7 +50,8 @@ namespace Madara
 
     /// Bind to an ephemeral port
     MADARA_Export int bind_to_ephemeral_port (ACE_SOCK_Acceptor & acceptor,
-      unsigned short & port, bool increase_until_bound = true);
+      std::string & host, unsigned short & port,
+      bool increase_until_bound = true);
 
     /// Return file contents as a string
     MADARA_Export std::string file_to_string (const std::string & filename);

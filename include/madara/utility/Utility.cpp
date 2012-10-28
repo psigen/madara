@@ -251,15 +251,15 @@ Madara::Utility::merge_hostport_identifier (std::string & key,
 /// Bind to an ephemeral port
 int 
 Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
-              unsigned short & port, bool increase_until_bound)
+   std::string & host, unsigned short & port, bool increase_until_bound)
 {
-  //ACE_DEBUG ((LM_DEBUG, 
-  //    "(%P|%t) Binding starting with %d\n",
-  //            port));
   // start with the initial port provided
   // increase port each time we don't properly bind
-  
-  for (ACE_INET_Addr addr (port); port < 65535; ++port, addr.set (port))
+
+  ACE_INET_Addr addr (port);
+  host = addr.get_host_name ();
+
+  for ( ; port < 65535; ++port, addr.set (port))
   {
     //ACE_DEBUG ((LM_DEBUG, 
     //  "(%P|%t) Attempting bind of %d\n",
@@ -268,7 +268,7 @@ Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
     // to get a port
     // return correct if we are able to open the port
     if (acceptor.open (addr) != -1)
-      return 0;     
+      return 0;
 
     // failed to get port
     //ACE_DEBUG ((LM_DEBUG, 

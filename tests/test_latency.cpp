@@ -30,7 +30,7 @@ int stop = 10;
 long value = 0;
 unsigned long iterations = 100000;
 
-std::string host = "localhost";
+std::string host = "";
 
 volatile bool terminated = false;
 

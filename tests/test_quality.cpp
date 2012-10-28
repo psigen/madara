@@ -21,7 +21,7 @@ int left = 0;
 int processes = 1;
 unsigned long quality = 0;
 long value = 0;
-std::string host = "localhost";
+std::string host = "";
 
 volatile bool terminated = 0;
 

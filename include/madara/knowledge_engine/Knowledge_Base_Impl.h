@@ -427,6 +427,9 @@ namespace Madara
         VALUE_TYPE (*func) (Variables *));
 
     private:
+      /**
+       * Binds to an ephemeral port for unique tie breakers in global ordering
+       **/
       void setup_uniquehostport (const std::string & host);
 
       ::std::vector< ::std::string> statement_splitters_;

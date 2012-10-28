@@ -23,7 +23,7 @@ ACE_Time_Value max_tv (10, 0);
 
 bool skip_barrier = false;
 
-std::string host = "localhost";
+std::string host = "";
 std::string domain = "consistency";
 
 // transport settings

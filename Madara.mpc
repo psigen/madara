@@ -40,15 +40,15 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
   Source_Files {
     include/madara/expression_tree
     include/madara/knowledge_engine
+    include/madara/transport/tcp
+    include/madara/transport/udp
+    include/madara/transport/multicast
+    include/madara/transport/broadcast
     include/madara/Functions.cpp
     include/madara/Globals.cpp
     include/madara/utility/Utility.cpp
     include/madara/utility/Refcounter.cpp
     include/madara/utility/Log_Macros.cpp
-    include/madara/transport/tcp/TCP_Transport.cpp
-    include/madara/transport/tcp/TCP_Transport_Read_Thread.cpp
-    include/madara/transport/udp/UDP_Transport.cpp
-    include/madara/transport/udp/UDP_Transport_Read_Thread.cpp
     include/madara/Thread_Pool.cpp
   }
 
@@ -56,14 +56,15 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/expression_tree
     include/madara/knowledge_engine
     include/madara/utility
+    include/madara/transport/tcp
+    include/madara/transport/udp
+    include/madara/transport/multicast
+    include/madara/transport/broadcast
     include/madara/transport/Transport.h
-    include/madara/transport/tcp/TCP_Transport.h
-    include/madara/transport/tcp/TCP_Transport_Read_Thread.h
-    include/madara/transport/udp/UDP_Transport.cpp
-    include/madara/transport/udp/UDP_Transport_Read_Thread.cpp
-    include/madara/Globals.h
+    include/madara/transport/Message_Header.h
     include/madara/Functions.h
-    include/madara/Thread_Pool.h
+    include/madara/Globals.h
     include/madara/MADARA_export.h
+    include/madara/Thread_Pool.h
   }
 }
