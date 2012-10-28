@@ -100,7 +100,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
     // we were able to bind to an ephemeral port
     Madara::Utility::merge_hostport_identifier (id_, actual_host, port);
 
-    MADARA_DEBUG (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, 
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
       " unique bind to %s\n", id_.c_str ()));
   }
