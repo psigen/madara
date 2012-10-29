@@ -232,7 +232,9 @@ int main (int argc, char ** argv)
       profile_file)));
 
   // split the expressions_text by newlines into a tests vector of strings
-  std::vector <std::string> splitters (1, "\n");
+  std::vector <std::string> splitters (2);
+  splitters[0] = "\r\n";
+  splitters[1] = "\n";
   std::vector <std::string> pivot_list;
 
   Madara::Utility::tokenizer (expressions_text, splitters, tests, pivot_list);
