@@ -231,10 +231,11 @@ int main (int argc, char ** argv)
     Madara::Utility::clean_dir_name (Madara::Utility::expand_envs (
       profile_file)));
 
+  // remove pesky control characters that may mess with tokenizer printing
+  Madara::Utility::string_remove (expressions_text, '\r');
+
   // split the expressions_text by newlines into a tests vector of strings
-  std::vector <std::string> splitters (2);
-  splitters[0] = "\r\n";
-  splitters[1] = "\n";
+  std::vector <std::string> splitters (1, "\n");
   std::vector <std::string> pivot_list;
 
   Madara::Utility::tokenizer (expressions_text, splitters, tests, pivot_list);

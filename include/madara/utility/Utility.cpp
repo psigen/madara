@@ -113,6 +113,36 @@ Madara::Utility::strip_white_space (::std::string & input)
   return input;
 }
 
+
+/**
+  * Strips an unwanted character. This function will
+  * modify and return the input, so make a copy if needed.
+  **/
+::std::string &
+Madara::Utility::string_remove (::std::string & input, char unwanted)
+{
+  ::std::string::iterator cur = input.begin ();
+  char prev = 0;
+
+  for (::std::string::iterator eval = cur; 
+    eval != input.end (); ++eval)
+  {
+    // if it isn't whitespace, then copy it over immediately
+    if (*eval != unwanted)
+    {
+      prev = *cur = *eval;
+      ++cur;
+    }
+  }
+
+  // erase everything from cur to end of input string
+  if (cur != input.end ())
+    input.erase (cur, input.end ());
+
+  return input;
+}
+
+
 std::string &
 Madara::Utility::strip_comments (std::string & input)
 {
