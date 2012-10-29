@@ -546,3 +546,23 @@ project (Test_ACE_Multicast) : using_ace {
     tests/misc/test_ace_multicast.cpp
   }
 }
+
+project (Profile_Architecture) : using_ace, using_madara {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = profile_architecture
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/profile_architecture.cpp
+  }
+}

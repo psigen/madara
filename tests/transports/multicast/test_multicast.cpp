@@ -14,24 +14,11 @@ Madara::Transport::Settings settings;
 
 void handle_arguments (int argc, char ** argv)
 {
-  for (int i = 0; i < argc; ++i)
+  for (int i = 1; i < argc; ++i)
   {
     std::string arg1 (argv[i]);
 
-    if (arg1 == "--h" || arg1 == "-h")
-    {
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        "Program arguments for %s:\n" \
-        " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
-        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
-        " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
-        " [-i|--id id]             the id of this agent (should be non-negative)\n" \
-        " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
-        "\n",
-        argv[0]));
-      exit (0);
-    }
-    else if (arg1 == "-m" || arg1 == "--multicast")
+    if (arg1 == "-m" || arg1 == "--multicast")
     {
       if (i + 1 < argc)
         settings.hosts_[0] = argv[i + 1];
@@ -71,6 +58,19 @@ void handle_arguments (int argc, char ** argv)
       }
 
       ++i;
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        "\nProgram arguments for %s:\n" \
+        " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
+        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
+        " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
+        " [-i|--id id]             the id of this agent (should be non-negative)\n" \
+        " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        "\n",
+        argv[0]));
+      exit (0);
     }
   }
 }

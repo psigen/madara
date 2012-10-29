@@ -301,7 +301,7 @@ Madara::Utility::file_to_string (const std::string & filename)
   else
   {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-      DLINFO "Utility::file_to_string:" \
+      "Utility::file_to_string:" \
       " failed to open file: %s\n", 
       filename.c_str ()));
   }
