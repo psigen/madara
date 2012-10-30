@@ -165,8 +165,8 @@ void evaluate_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
       evaluate_time = (unsigned long long) measured;
 
       // update min and max times
-      min_times[i] = std::min (min_times[i], evaluate_time);
-      max_times[i] = std::max (max_times[i], evaluate_time);
+      min_times[i] = std::min <unsigned long long> (min_times[i], evaluate_time);
+      max_times[i] = std::max <unsigned long long> (max_times[i], evaluate_time);
     }
 
     // get an overall_timer for 1000 of the ops for a useful average
