@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stdint.h>
 
 namespace Madara
 {
@@ -44,7 +45,7 @@ namespace Madara
         quality (0), write_quality (0) 
     {}
 
-    typedef  long long      VALUE_TYPE;
+    typedef  int64_t      VALUE_TYPE;
     
     static bool lt (VALUE_TYPE lhs, VALUE_TYPE rhs);
 
@@ -69,22 +70,22 @@ namespace Madara
     /**
      * last modification time
      **/
-    unsigned long long clock;
+    uint64_t clock;
 
     /**
      * scope (global or local)
      **/
-    int scope;
+    int32_t scope;
 
     /**
      * priority of the update
      **/
-    unsigned long quality;
+    uint32_t quality;
 
     /**
      * write priority for any local updates
      **/
-    unsigned long write_quality;
+    uint32_t write_quality;
   };
 
   typedef ::std::map < ::std::string, Knowledge_Record> Knowledge_Map;

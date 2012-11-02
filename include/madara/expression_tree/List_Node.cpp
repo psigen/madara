@@ -25,7 +25,7 @@ Madara::Expression_Tree::List_Node::accept (Visitor &visitor) const
   visitor.visit (*this);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::List_Node::item () const
 {
   return list_.size ();
@@ -34,7 +34,7 @@ Madara::Expression_Tree::List_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::List_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -46,7 +46,7 @@ Madara::Expression_Tree::List_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::List_Node::evaluate (void)
 {
   return list_.size ();

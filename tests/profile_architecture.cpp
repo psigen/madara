@@ -13,10 +13,10 @@
 #include "ace/Sched_Params.h"
 
 std::vector <std::string> tests;
-std::vector <unsigned long long> max_times;
-std::vector <unsigned long long> min_times;
-std::vector <unsigned long long> average_times;
-std::vector <unsigned long long> compile_times;
+std::vector <uint64_t> max_times;
+std::vector <uint64_t> min_times;
+std::vector <uint64_t> average_times;
+std::vector <uint64_t> compile_times;
 std::vector <Madara::Knowledge_Engine::Compiled_Expression> 
   compiled_expressions;
 
@@ -52,7 +52,7 @@ void handle_arguments (int argc, char ** argv)
 }
 
 std::string 
-to_legible_hertz (unsigned long long hertz)
+to_legible_hertz (uint64_t hertz)
 {
   std::stringstream buffer;
 
@@ -132,7 +132,7 @@ void compile_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
     timer.elapsed_time (measured);
 
-    compile_times[i] = (unsigned long long) (measured);
+    compile_times[i] = (uint64_t) (measured);
   }
 }
 
@@ -149,7 +149,7 @@ void evaluate_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
     ACE_hrtime_t overall_time;
     ACE_High_Res_Timer overall_timer;
     Madara::Knowledge_Engine::Eval_Settings defaults;
-    unsigned long long evaluate_time;
+    uint64_t evaluate_time;
 
     // try to establish min/max times with 10 runs
     for (unsigned int j = 0; j < 100; ++j)
@@ -162,11 +162,11 @@ void evaluate_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
       timer.stop ();
 
       timer.elapsed_time (measured);
-      evaluate_time = (unsigned long long) measured;
+      evaluate_time = (uint64_t) measured;
 
       // update min and max times
-      min_times[i] = std::min <unsigned long long> (min_times[i], evaluate_time);
-      max_times[i] = std::max <unsigned long long> (max_times[i], evaluate_time);
+      min_times[i] = std::min <uint64_t> (min_times[i], evaluate_time);
+      max_times[i] = std::max <uint64_t> (max_times[i], evaluate_time);
     }
 
     // get an overall_timer for 1000 of the ops for a useful average
@@ -179,7 +179,7 @@ void evaluate_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
     // compute the average time
     overall_timer.elapsed_time (overall_time);
-    evaluate_time = (unsigned long long) overall_time;
+    evaluate_time = (uint64_t) overall_time;
     average_times[i] = evaluate_time / 10000;
   }
 }

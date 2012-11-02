@@ -139,6 +139,14 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
           " remote id (%s:%d) is not our own\n",
           remote.get_host_addr (), remote.get_port_number ()));
       }
+      
+      // Convert message header to host endian style
+
+      header->clock = Madara::Utility::endian_swap (header->clock);
+      header->quality = Madara::Utility::endian_swap (header->quality);
+      header->size = Madara::Utility::endian_swap (header->size);
+      header->type = Madara::Utility::endian_swap (header->type);
+      header->updates = Madara::Utility::endian_swap (header->updates);
 
       // start of updates is right after message header
       Message_Update * update = (Message_Update *)
@@ -161,11 +169,14 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
         " past the lock\n", update->key, update->value));
 
       // iterate over the updates
-      for (unsigned int i = 0; i < header->updates; ++i, ++update)
+      for (uint32_t i = 0; i < header->updates; ++i, ++update)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Multicast_Transport_Read_Thread::svc:" \
           " attempting to apply %s=%q\n", update->key, update->value));
+        
+        // convert endianness if necessary
+        update->value = Madara::Utility::endian_swap (update->value);
 
         int result = update->apply (context_, header->quality,
           header->clock, false);

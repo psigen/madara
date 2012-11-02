@@ -25,7 +25,7 @@ Madara::Expression_Tree::Composite_Predecrement_Node::~Composite_Predecrement_No
 {
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Composite_Predecrement_Node::item (void) const
 {
   return '-';
@@ -34,11 +34,11 @@ Madara::Expression_Tree::Composite_Predecrement_Node::item (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Composite_Predecrement_Node::prune (bool & can_change)
 {
   bool right_child_can_change = false;
-  long long right_value = 0;
+  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
 
   if (this->right_)
   {
@@ -64,7 +64,7 @@ Madara::Expression_Tree::Composite_Predecrement_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Composite_Predecrement_Node::evaluate (void)
 {
   Variable_Node * right = dynamic_cast <Variable_Node *> (this->right_);

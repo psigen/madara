@@ -28,12 +28,12 @@ int left = 0;
 int processes = 1;
 int stop = 10;
 long value = 0;
-unsigned long iterations = 100000;
+uint32_t iterations = 100000;
 // 1Mhz rate
-unsigned long rate = 1000000;
+uint32_t rate = 1000000;
 
 // test is 3 minutes long
-unsigned long long time_limit = 3 * 60 * (unsigned long long) 1000000000;
+uint64_t time_limit = 3 * 60 * (uint64_t) 1000000000;
 
 std::string host = "";
 
@@ -49,7 +49,7 @@ extern "C" void terminate (int)
 }
 
 std::string 
-to_legible_hertz (unsigned long long hertz)
+to_legible_hertz (uint64_t hertz)
 {
   std::stringstream buffer;
 
@@ -100,14 +100,14 @@ to_legible_hertz (unsigned long long hertz)
 }
 
 ACE_Time_Value
-rate_to_sleep_time (unsigned long long rate)
+rate_to_sleep_time (uint64_t rate)
 {
   ACE_Time_Value sleep_time (0, 0);
   
   // 1,000,000,000 ns in 1 second. This should be the best number
   // to divide by. 
-  unsigned long nanoseconds = 100000000 / (unsigned long)rate;
-  unsigned long microseconds = nanoseconds / 1000;
+  uint32_t nanoseconds = 100000000 / (uint32_t)rate;
+  uint32_t microseconds = nanoseconds / 1000;
 
   // if rate was too fast, make it at least 1 microsecond
   if (microseconds == 0)
@@ -171,7 +171,7 @@ build_wait_string (int id, const std::string & attribute, int count)
 
 void
 broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-           unsigned long iterations)
+           uint32_t iterations)
 {
   ACE_Time_Value sleep_time = rate_to_sleep_time (rate);
 
@@ -185,9 +185,9 @@ broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
     // "backed_cur" is the amount of sleep we haven't taken that we need to
     // "backed_limit is 1,000 microseconds (i.e. 1ms), the upper limit
 
-    unsigned long long backed_cur = 0;
-    unsigned long long backed_inc;
-    unsigned long long backed_limit = 1000;
+    uint64_t backed_cur = 0;
+    uint64_t backed_inc;
+    uint64_t backed_limit = 1000;
 
     // store the microseconds per publish into backed_inc
     sleep_time.to_usec (backed_inc);
@@ -201,7 +201,7 @@ broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
       "(%P|%t) Windows detected. Running in bursty mode\n"));
   #endif
 
-  for (unsigned long i = 1; i <= iterations && !terminated; ++i)
+  for (uint32_t i = 1; i <= iterations && !terminated; ++i)
   {
     knowledge.set ("info", i);
 
@@ -315,7 +315,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   //                      id, processes, iterations));
 
   // find the dissemination rate per process
-  unsigned long long hertz = ((unsigned long long) 1000000000 * iterations)
+  uint64_t hertz = ((uint64_t) 1000000000 * iterations)
                                / measured;
 
 

@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <stdint.h>
 
 namespace Madara
 {
@@ -83,7 +84,7 @@ namespace Madara
     /**
      * A pairing of a target (first) and a latency (second)
      **/
-    typedef std::pair <unsigned int, unsigned long long>   Latency_Record;
+    typedef std::pair <unsigned int, uint64_t>   Latency_Record;
 
     /**
      * Holds results of running an algorithm
@@ -92,7 +93,7 @@ namespace Madara
     {
       int algorithm;
       std::string deployment;
-      unsigned long long latency;
+      uint64_t latency;
     };
 
     /**

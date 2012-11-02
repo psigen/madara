@@ -12,6 +12,7 @@
 
 #include "Settings.h"
 #include "madara/MADARA_export.h"
+#include <stdint.h>
 
 namespace Madara
 {
@@ -54,7 +55,7 @@ namespace Madara
      * @param    settings    container which contains the target_deployment
      * @return               total latency on nodes with degree > 0
      **/
-    MADARA_Export unsigned long long calculate_latency (Settings & settings);
+    MADARA_Export uint64_t calculate_latency (Settings & settings);
 
     /**
      * Calculates the total utility (i.e., latency) for the deployment.
@@ -64,7 +65,7 @@ namespace Madara
      * @param    solution     the solution that was generated
      * @return                total latency on nodes with degree > 0
      **/
-    MADARA_Export unsigned long long calculate_latency (LV_Vector & latencies,
+    MADARA_Export uint64_t calculate_latency (LV_Vector & latencies,
       Workflow & workflow, Deployment & solution);
 
     /**

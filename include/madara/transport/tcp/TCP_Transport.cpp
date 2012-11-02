@@ -54,7 +54,7 @@ Madara::Transport::TCP_Transport::setup (void)
 
 long
 Madara::Transport::TCP_Transport::send_data (const std::string & key, 
-                                               const long long & value)
+  const Madara::Knowledge_Record::VALUE_TYPE & value)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();

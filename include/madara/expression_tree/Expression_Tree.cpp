@@ -200,11 +200,11 @@ Madara::Expression_Tree::Expression_Tree::is_null (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Expression_Tree::prune (void)
 {
   bool root_can_change = false;
-  long long root_value = 0;
+  Madara::Knowledge_Record::VALUE_TYPE root_value = 0;
 
   if (this->root_.get_ptr ())
   {
@@ -222,7 +222,7 @@ Madara::Expression_Tree::Expression_Tree::prune (void)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Expression_Tree::evaluate (void)
 {
   return root_->evaluate ();
@@ -238,7 +238,7 @@ Madara::Expression_Tree::Expression_Tree::get_root (void)
 
 // Return the stored item.
 
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Expression_Tree::item (void) const
 {
   return root_->item ();

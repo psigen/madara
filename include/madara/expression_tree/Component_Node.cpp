@@ -13,7 +13,7 @@ Madara::Expression_Tree::Component_Node::~Component_Node (void)
 {
 }
 
-long long
+int64_t
 Madara::Expression_Tree::Component_Node::item (void) const
 {
   return 0;

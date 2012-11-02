@@ -7,7 +7,7 @@
 #include <sstream>
 
 Madara::Expression_Tree::Variable_Compare_Node::Variable_Compare_Node (
-  const ::std::string &key, long long value, int compare_type,
+  const ::std::string &key, Madara::Knowledge_Record::VALUE_TYPE value, int compare_type,
   Component_Node * rhs, Madara::Knowledge_Engine::Thread_Safe_Context &context)
 : key_ (key), value_ (value), rhs_ (rhs), compare_ (0), record_ (0),
   context_ (context), key_expansion_necessary_ (false)
@@ -117,7 +117,7 @@ Madara::Expression_Tree::Variable_Compare_Node::accept (Visitor &visitor) const
   visitor.visit (*this);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Compare_Node::item () const
 {
   if (record_)
@@ -129,7 +129,7 @@ Madara::Expression_Tree::Variable_Compare_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Compare_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -146,7 +146,7 @@ Madara::Expression_Tree::Variable_Compare_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Variable_Compare_Node::evaluate (void)
 {
   Madara::Knowledge_Record * record = record_;

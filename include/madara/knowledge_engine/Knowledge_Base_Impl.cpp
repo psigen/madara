@@ -253,8 +253,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
   if (transport_)
   {
     std::stringstream modified;
-    unsigned long quality;
-    unsigned long long cur_clock = map_.get_clock ();
+    uint32_t quality;
+    uint64_t cur_clock = map_.get_clock ();
 
     map_.get_modified (modified, quality);
 
@@ -282,7 +282,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   const ::std::string & t_key, 
-  long long value, bool send_modifieds)
+  Madara::Knowledge_Record::VALUE_TYPE value, bool send_modifieds)
 {
   // everything after this point is done on a string with at least 1 char
   std::string key = map_.expand_statement (t_key);
@@ -298,8 +298,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   if (transport_ && send_modifieds)
   {
     std::stringstream modified;
-    unsigned long quality;
-    unsigned long long cur_clock = map_.get_clock ();
+    uint32_t quality;
+    uint64_t cur_clock = map_.get_clock ();
 
     map_.get_modified (modified, quality);
 
@@ -343,7 +343,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::compile (
   return ce;
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
                                                 bool send_modifieds)
 {
@@ -362,7 +362,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
     map_, expression);
 
-  long long last_value = tree.evaluate ();
+  Madara::Knowledge_Record::VALUE_TYPE last_value = tree.evaluate ();
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
@@ -372,7 +372,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   if (transport_ && send_modifieds)
   {
     std::stringstream modified;
-    unsigned long quality;
+    uint32_t quality;
 
     map_.get_modified (modified, quality);
 
@@ -420,7 +420,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
     if (transport_ && send_modifieds)
     {
       std::stringstream modified;
-      unsigned long quality;
+      uint32_t quality;
 
       map_.get_modified (modified, quality);
 
@@ -452,7 +452,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   return last_value;
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   Compiled_Expression & ce, 
   const Wait_Settings & settings)
@@ -477,7 +477,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   //Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
   //  map_, expression);
 
-  long long last_value = ce.expression.evaluate ();
+  Madara::Knowledge_Record::VALUE_TYPE last_value = ce.expression.evaluate ();
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
@@ -487,7 +487,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   if (transport_ && settings.send_modifieds)
   {
     std::stringstream modified;
-    unsigned long quality;
+    uint32_t quality;
 
     map_.get_modified (modified, quality);
 
@@ -567,7 +567,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     if (transport_ && settings.send_modifieds)
     {
       std::stringstream modified;
-      unsigned long quality;
+      uint32_t quality;
 
       map_.get_modified (modified, quality);
 
@@ -623,14 +623,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const ::std::string & e
   rules_.push_back (expression);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const ::std::string & expression, bool send_modifieds)
 {
   if (expression == "")
     return 0;
 
-  long long last_value = 0;
+  Madara::Knowledge_Record::VALUE_TYPE last_value = 0;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::evaluate:" \
@@ -651,8 +651,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   if (transport_ && send_modifieds)
   {
     std::stringstream modified;
-    unsigned long quality;
-    unsigned long long cur_clock = map_.get_clock ();
+    uint32_t quality;
+    uint64_t cur_clock = map_.get_clock ();
 
     map_.get_modified (modified, quality);
 
@@ -675,12 +675,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   return last_value;
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   Compiled_Expression & ce,
   const Eval_Settings & settings)
 {
-  long long last_value = 0;
+  Madara::Knowledge_Record::VALUE_TYPE last_value = 0;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::evaluate:" \
@@ -705,8 +705,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   if (transport_ && settings.send_modifieds)
   {
     std::stringstream modified;
-    unsigned long quality;
-    unsigned long long cur_clock = map_.get_clock ();
+    uint32_t quality;
+    uint64_t cur_clock = map_.get_clock ();
 
     map_.get_modified (modified, quality);
 

@@ -427,7 +427,7 @@ void test_unaries (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   ACE_DEBUG ((LM_INFO, "Testing unary operators\n"));
 
-  long long result = 0;
+  int64_t result = 0;
 
   knowledge.clear ();
 
@@ -630,7 +630,7 @@ void test_both_operator (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_DEBUG ((LM_INFO, "Testing both operator (;)\n"));
 
-  long long result = 0;
+  int64_t result = 0;
 
   knowledge.clear ();
   knowledge.evaluate (";;;;;.var2 = 3;;;.var3 = 4;;;");
@@ -707,7 +707,7 @@ void test_tree_compilation (Madara::Knowledge_Engine::Knowledge_Base & knowledge
 {
   ACE_TRACE (ACE_TEXT ("test_tree_compilation"));
   knowledge.clear ();
-  long long result = 0;
+  int64_t result = 0;
 
   ACE_DEBUG ((LM_INFO, "Testing expression tree compilation and caching\n"));
 
@@ -736,7 +736,7 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   ACE_TRACE (ACE_TEXT ("test_functions"));
 
   knowledge.clear ();
-  long long result = 0;
+  int64_t result = 0;
 
   ACE_DEBUG ((LM_INFO, "Testing embedded external functions\n"));
 
@@ -769,7 +769,7 @@ void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   ACE_TRACE (ACE_TEXT ("test_for_loops"));
 
   knowledge.clear ();
-  long long result = 0;
+  int64_t result = 0;
 
   ACE_DEBUG ((LM_INFO, "Testing embedded for loops\n"));
 
@@ -805,7 +805,7 @@ void test_simplification_operators (
   ACE_TRACE (ACE_TEXT ("test_simplification_operators"));
 
   knowledge.clear ();
-  long long result = 0;
+  int64_t result = 0;
 
   ACE_DEBUG ((LM_INFO, "Testing simplification operators (+=, -=, *=, /=)\n"));
 

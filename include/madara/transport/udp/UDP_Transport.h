@@ -51,7 +51,8 @@ namespace Madara
        * @param   value   value of the knowledge location
        * @return  result of write operation or -1 if we are shutting down
        **/
-      long send_data (const std::string & key, const long long & value);
+      long send_data (const std::string & key, 
+        const Madara::Knowledge_Record::VALUE_TYPE & value);
 	  
       /**
        * Sends a knowledge expression to all connected hosts over UDP
@@ -60,7 +61,7 @@ namespace Madara
        * @return  result of write operation or -1 if we are shutting down
        **/
       long send_multiassignment (const std::string & expression,
-		  unsigned long quality);
+		  uint32_t quality);
 
       /**
        * Accesses reliability setting. If this returns zero, it doesn't

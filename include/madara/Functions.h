@@ -4,6 +4,7 @@
 
 #include <string>
 #include "madara/MADARA_export.h"
+#include "madara/Globals.h"
 
 /**
  * @file Functions.h
@@ -24,7 +25,7 @@ namespace Madara
   {
     class Thread_Safe_Context;
     
-    typedef long long VALUE_TYPE;
+    typedef Madara::Knowledge_Record::VALUE_TYPE VALUE_TYPE;
    
     /**
      * @class Variables

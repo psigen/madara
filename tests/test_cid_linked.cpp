@@ -124,8 +124,8 @@ void (* test_impls []) (Madara::Cid::Settings &) = {
 
 };
 
-unsigned long long clocks [NUM_TESTS + 1];
-unsigned long long latencies [NUM_TESTS];
+uint64_t clocks [NUM_TESTS + 1];
+uint64_t latencies [NUM_TESTS];
 
 void print_averages (std::ostream & output, 
                      Madara::Cid::Settings & settings)
@@ -305,7 +305,7 @@ void test_cid (unsigned int size, std::ostream & output)
     settings.solution.resize (size);
     Madara::Cid::read_deployment (settings, filename.str ());
 
-    unsigned long long minimum =
+    uint64_t minimum =
       Madara::Cid::overlay_latencies (settings, 500, 600);
 
     if (!use_csv_format)
@@ -375,7 +375,7 @@ void test_cid (unsigned int size, std::ostream & output)
     settings.solution.resize (size);
     Madara::Cid::read_deployment (settings, filename.str ());
 
-    unsigned long long minimum =
+    uint64_t minimum =
       Madara::Cid::overlay_latencies (settings, 500, 600);
 
     if (!use_csv_format)
@@ -441,7 +441,7 @@ void verify_algorithms (std::ostream & output)
   #define DEGREED_GA              4
   #define NAIVE_GA                5
 
-  unsigned long long alg_latencies[CHECKED_ALGORITHMS] = {0,0,0,0,0,0};
+  uint64_t alg_latencies[CHECKED_ALGORITHMS] = {0,0,0,0,0,0};
 
   std::string divider (79, '*');
   output << divider << std::endl;
@@ -537,7 +537,7 @@ void verify_algorithms (std::ostream & output)
 
   Madara::Cid::generate_worst_solution (settings);
 
-//  unsigned long long actual_latency, ideal_latency = 0, worst_latency;
+//  uint64_t actual_latency, ideal_latency = 0, worst_latency;
 
   alg_latencies[WORST_LATENCY] = Madara::Cid::calculate_latency (settings);
 

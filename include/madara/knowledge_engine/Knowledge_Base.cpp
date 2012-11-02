@@ -71,7 +71,7 @@ Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
   impl_->close_transport ();
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::get (const ::std::string & key)
 {
   return impl_->get (key);
@@ -128,15 +128,16 @@ Madara::Knowledge_Engine::Knowledge_Base::run_all (void)
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key, 
-                                               long long value)
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const ::std::string & key, 
+  Madara::Knowledge_Record::VALUE_TYPE value)
 {
   return impl_->set (key, value, true);
 }
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key,
-                    long long value, bool send_modifieds)
+  Madara::Knowledge_Record::VALUE_TYPE value, bool send_modifieds)
 {
   return impl_->set (key, value, send_modifieds);
 }
@@ -145,7 +146,7 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const ::std::string & key,
 /// Set quality of writing to a variable
 void 
 Madara::Knowledge_Engine::Knowledge_Base::set_quality (
-  const ::std::string & key, unsigned long quality)
+  const ::std::string & key, uint32_t quality)
 {
   impl_->set_quality (key, quality);
 }
@@ -189,20 +190,20 @@ Madara::Knowledge_Engine::Knowledge_Base::vote (void)
   return impl_->vote ();
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression)
 {
   return impl_->wait (expression, true);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::wait (const ::std::string & expression, 
                                                 bool send_modifieds)
 {
   return impl_->wait (expression, send_modifieds);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::wait (
   Compiled_Expression & expression, 
   const Wait_Settings & settings)
@@ -249,7 +250,7 @@ Madara::Knowledge_Engine::Knowledge_Base::release (void)
 }
 
 // evaluate a knowledge expression and send any modifications
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   const ::std::string & expression)
 {
@@ -257,7 +258,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 }
 
 // evaluate a knowledge expression and choose to send any modifications
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   const ::std::string & expression, bool send_modifieds)
 {
@@ -265,7 +266,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 }
 
 // evaluate a knowledge expression and choose to send any modifications
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   Compiled_Expression & expression,
   const Eval_Settings & settings)

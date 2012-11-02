@@ -6,8 +6,9 @@
 #include <string>
 #include <sstream>
 
-Madara::Expression_Tree::Variable_Node::Variable_Node (const ::std::string &key, 
-                              Madara::Knowledge_Engine::Thread_Safe_Context &context)
+Madara::Expression_Tree::Variable_Node::Variable_Node (
+  const ::std::string &key,
+  Madara::Knowledge_Engine::Thread_Safe_Context &context)
 : key_ (key), record_ (0), context_ (context), key_expansion_necessary_ (false)
 {
   // this key requires expansion. We do the compilation and error checking here
@@ -104,7 +105,7 @@ Madara::Expression_Tree::Variable_Node::accept (Visitor &visitor) const
   visitor.visit (*this);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Node::item () const
 {
   if (record_)
@@ -116,7 +117,7 @@ Madara::Expression_Tree::Variable_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -133,7 +134,7 @@ Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Variable_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary
@@ -150,8 +151,8 @@ Madara::Expression_Tree::Variable_Node::key () const
   return key_;
 }
 
-long long
-Madara::Expression_Tree::Variable_Node::set (const long long & value)
+Madara::Knowledge_Record::VALUE_TYPE
+Madara::Expression_Tree::Variable_Node::set (const int64_t & value)
 {
   if (record_)
   {
@@ -170,10 +171,7 @@ Madara::Expression_Tree::Variable_Node::set (const long long & value)
     if (key_[0] != '.')
     {
       context_.mark_modified (key_, *record_);
-  /*    context_.changed_map_[key].value = value;
-      context_.changed_map_[key].quality = record_->quality;*/
     }
-      //record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
     return value;
@@ -182,7 +180,7 @@ Madara::Expression_Tree::Variable_Node::set (const long long & value)
     return context_.set (expand_key (), value);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Node::dec (void)
 {
   if (record_)
@@ -214,7 +212,7 @@ Madara::Expression_Tree::Variable_Node::dec (void)
     return context_.dec (expand_key ());
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Node::inc (void)
 {
   if (record_)
@@ -234,10 +232,7 @@ Madara::Expression_Tree::Variable_Node::inc (void)
     if (key_[0] != '.')
     {
       context_.mark_modified (key_, *record_);
-      //context_.changed_map_[key].value = record_->value;
-      //context_.changed_map_[key].quality = record_->quality;
     }
-      //record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
     return record_->value;

@@ -88,7 +88,7 @@ Madara::Transport::Broadcast_Transport::setup (void)
 
 long
 Madara::Transport::Broadcast_Transport::send_data (const std::string & key, 
-                                               const long long & value)
+                          const Madara::Knowledge_Record::VALUE_TYPE & value)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -125,7 +125,7 @@ Madara::Transport::Broadcast_Transport::send_data (const std::string & key,
   memset(buffer, 0, size);
 
   // get the clock
-  header->clock = context_.get_clock ();
+  header->clock = Madara::Utility::endian_swap (context_.get_clock ());
 
   // copy the Madara transport version identification
   strncpy (header->madara_id, MADARA_IDENTIFIER, 7);
@@ -135,28 +135,32 @@ Madara::Transport::Broadcast_Transport::send_data (const std::string & key,
     sizeof (header->domain) - 1);
 
   // get the quality of the key
-  header->quality = context_.get_write_quality (key);
+  header->quality = 
+    Madara::Utility::endian_swap (context_.get_write_quality (key));
 
   // copy the message originator (our id)
   strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
 
   // only 1 update in a send_data message
-  header->updates = 1;
+  uint32_t updates = 1;
+  header->updates = Madara::Utility::endian_swap (updates);
 
   // send data is generally an assign type. However, Message_Header is
   // flexible enough to support both, and this will simply our read thread
   // handling
   header->type = Madara::Transport::MULTIASSIGN;
+  header->type = Madara::Utility::endian_swap (header->type);
   
   // compute size of this message
   header->size = sizeof (Message_Header) + 
                  header->updates * sizeof (Message_Update);
+  header->size = Madara::Utility::endian_swap (header->size);
 
   // Message update format
   // [key|value]
 
   strncpy (update->key, key.c_str (), MAX_KNOWLEDGE_KEY_LENGTH - 1);
-  update->value = value;
+  update->value = Madara::Utility::endian_swap (value);
 
   // send the buffer contents to the multicast address
   
@@ -178,7 +182,8 @@ Madara::Transport::Broadcast_Transport::send_data (const std::string & key,
 }
 
 long
-Madara::Transport::Broadcast_Transport::send_multiassignment (const std::string & expression, unsigned long quality)
+Madara::Transport::Broadcast_Transport::send_multiassignment (
+const std::string & expression, uint32_t quality)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -219,7 +224,7 @@ Madara::Transport::Broadcast_Transport::send_multiassignment (const std::string 
   memset(buffer, 0, size);
 
   // get the clock
-  header->clock = context_.get_clock ();
+  header->clock = Madara::Utility::endian_swap (context_.get_clock ());
 
   // copy the Madara transport version identification
   strncpy (header->madara_id, MADARA_IDENTIFIER, 7);
@@ -229,22 +234,25 @@ Madara::Transport::Broadcast_Transport::send_multiassignment (const std::string 
     sizeof (header->domain) - 1);
 
   // get the quality of the key
-  header->quality = quality;
+  header->quality = Madara::Utility::endian_swap (quality);
 
   // copy the message originator (our id)
   strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
 
   // only 1 update in a send_data message
   header->updates = tokens.size () / 2;
+  header->updates = Madara::Utility::endian_swap (header->updates);
 
   // send data is generally an assign type. However, Message_Header is
   // flexible enough to support both, and this will simply our read thread
   // handling
   header->type = Madara::Transport::MULTIASSIGN;
+  header->type = Madara::Utility::endian_swap (header->type);
   
   // compute size of this message
   header->size = sizeof (Message_Header) + 
                  header->updates * sizeof (Message_Update);
+  header->size = Madara::Utility::endian_swap (header->size);
 
   // Message update format
   // [key|value]
@@ -262,6 +270,8 @@ Madara::Transport::Broadcast_Transport::send_multiassignment (const std::string 
       DLINFO "Multicast_Transport::send_multiassignment:" \
       " update[%d] => %s=%d\n",
       i, update->key, update->value));
+
+    update->value = Madara::Utility::endian_swap (update->value);
   }
 
   // send the buffer contents to the multicast address

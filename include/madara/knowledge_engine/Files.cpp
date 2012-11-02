@@ -85,7 +85,7 @@ Madara::Knowledge_Engine::Files::read_file (
     // knowledge key
     if (actual > 0)
     {
-      map_.set (knowledge_key, (long long) actual);
+      map_.set (knowledge_key, (int64_t) actual);
 
       MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
         DLINFO "Files::read_file : file imported with %d bytes\n", actual));
@@ -154,7 +154,7 @@ Madara::Knowledge_Engine::Files::write_file (
     // knowledge key
     if (actual > 0)
     {
-      map_.set (knowledge_key, (long long) actual);
+      map_.set (knowledge_key, (int64_t) actual);
 
       MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
         DLINFO "Files::write_file : file saved with %d bytes\n", actual));

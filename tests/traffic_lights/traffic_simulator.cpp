@@ -285,7 +285,7 @@ void print_connectivity_map (Connectivity_Map & connectivity_map)
 void print_path (const Path & path)
 {
   std::stringstream buffer;
-  for (unsigned long i = 0; i < path.size (); ++i)
+  for (uint32_t i = 0; i < path.size (); ++i)
   {
     buffer << path[i];
     if (i != path.size () - 1)
@@ -442,7 +442,7 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
 
   logical_map.clear ();
 
-  for (unsigned long i = 0; i < map.size (); ++i)
+  for (uint32_t i = 0; i < map.size (); ++i)
   {
     knowledge.set (".x", x);
     knowledge.set (".y", y);
@@ -495,7 +495,7 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
     "After resizing, logical map now has size of %d. max_y = %d\n", 
     logical_map.size (), max_y + 1));
 
-  for (unsigned long i = 0; i < logical_map.size (); ++i)
+  for (uint32_t i = 0; i < logical_map.size (); ++i)
   {
     ACE_DEBUG ((LM_INFO, 
       " logical_map[%d].size = %d\n", 
@@ -505,7 +505,7 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
   x = 0;
   y = 0;
   // build a logical map so we can reference coordinates in [x][y]
-  for (unsigned long i = 0; i < map.size (); ++i)
+  for (uint32_t i = 0; i < map.size (); ++i)
   {
     ACE_DEBUG ((LM_INFO, "Evaluating %d:%d\n", x, y));
 
@@ -660,11 +660,11 @@ inline void process_car (
 .dest_y = .car{.i}.dest.y;\
 .velocity = .car{.i}.velocity;");
 
-  long long cur_x = knowledge.get (".cur_x");
-  long long cur_y = knowledge.get (".cur_y");
+  int64_t cur_x = knowledge.get (".cur_x");
+  int64_t cur_y = knowledge.get (".cur_y");
 
-  long long dest_x = knowledge.get (".dest_x");
-  long long dest_y = knowledge.get (".dest_y");
+  int64_t dest_x = knowledge.get (".dest_x");
+  int64_t dest_y = knowledge.get (".dest_y");
 
 
   std::stringstream source_stream;
@@ -684,7 +684,7 @@ inline void process_car (
   Route route = route_map [source][dest];
   Path path = route.path;
 
-  unsigned long long max_speed = knowledge.get ("max_speed");
+  uint64_t max_speed = knowledge.get ("max_speed");
   unsigned int j;
 
   for (j = 0; j < path.size () && j <= max_speed; ++j)
@@ -839,7 +839,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.print_knowledge ();
 
   // this doesn't change from settings
-  long long spawn_rate = knowledge.get ("spawn_rate");
+  int64_t spawn_rate = knowledge.get ("spawn_rate");
   long max_speed = (long) knowledge.get ("max_speed");
 
   // can't have a max_speed that is zero or we'll have

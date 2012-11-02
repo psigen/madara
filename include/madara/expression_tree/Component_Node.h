@@ -4,6 +4,8 @@
 
 #include <string>
 #include <stdexcept>
+#include <stdint.h>
+#include "madara/Globals.h"
 
 namespace Madara
 {
@@ -32,20 +34,20 @@ namespace Madara
        * Returns the value of the node
        * @return    value of the node
        **/
-      virtual long long item (void) const;
+      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
        * @param     can_change   set to true if variable nodes are contained
        * @return    value of current contained expression tree
        **/
-      virtual long long prune (bool & can_change) = 0;
+      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change) = 0;
 
       /** 
        * Evaluates the expression tree. 
        * @return    value of current contained expression tree
        **/
-      virtual long long evaluate (void) = 0;
+      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void) = 0;
 
       /** 
        * Returns the left expression. 

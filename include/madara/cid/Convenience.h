@@ -36,7 +36,7 @@ namespace Madara
      * @param       worst        the worst case latency to set each to
      **/
     MADARA_Export void reset_latencies (Settings & settings,
-      unsigned long long worst);
+      uint64_t worst);
 
     /**
      * Generates a random, fully-connected network of latencies
@@ -77,7 +77,7 @@ namespace Madara
      *                               the deployment
      * @return      minimum total latency of the deployment
      **/
-    MADARA_Export unsigned long long overlay_latencies (Settings & settings,
+    MADARA_Export uint64_t overlay_latencies (Settings & settings,
       unsigned int min_latency, unsigned int min_noise);
 
     /**

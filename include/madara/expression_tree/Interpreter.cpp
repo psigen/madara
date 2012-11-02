@@ -136,7 +136,7 @@ namespace Madara
     public:
       /// constructors
       Number (::std::string input);
-      Number (long long input);
+      Number (Madara::Knowledge_Record::VALUE_TYPE input);
 
       /// destructor
       virtual ~Number (void);
@@ -149,7 +149,7 @@ namespace Madara
       virtual Component_Node *build (void);
  //   private:
       /// contains the value of the leaf node
-      long long item_;
+      Madara::Knowledge_Record::VALUE_TYPE item_;
     };
 
     /**
@@ -190,7 +190,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Decrement (const ::std::string & key, long long value,
+      Variable_Decrement (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -208,7 +209,7 @@ namespace Madara
       const ::std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -223,7 +224,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Divide (const ::std::string & key, long long value,
+      Variable_Divide (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -241,7 +243,7 @@ namespace Madara
       const ::std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -256,7 +258,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Increment (const ::std::string & key, long long value,
+      Variable_Increment (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -274,7 +277,7 @@ namespace Madara
       const ::std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -289,7 +292,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Multiply (const ::std::string & key, long long value,
+      Variable_Multiply (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -307,7 +311,7 @@ namespace Madara
       const ::std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -322,7 +326,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Compare (const ::std::string & key, long long value,
+      Variable_Compare (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         Symbol * rhs, int compare_type,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -340,7 +345,7 @@ namespace Madara
       const ::std::string key_;
       
       /// value can be faster than rhs_, so use it if possible
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
 
       /// rhs is used for complex rhs types (not a simple number)
       Symbol * rhs_;
@@ -949,7 +954,7 @@ Madara::Expression_Tree::Number::Number (::std::string input)
 }
 
 // constructor
-Madara::Expression_Tree::Number::Number (long long input)
+Madara::Expression_Tree::Number::Number (int64_t input)
 : Symbol (0, 0, NUMBER_PRECEDENCE), 
 item_ (input)
 {
@@ -1177,7 +1182,7 @@ Madara::Expression_Tree::Variable::build (void)
 
 // constructor
 Madara::Expression_Tree::Variable_Decrement::Variable_Decrement (const ::std::string & key, 
-  long long value, Symbol * rhs,
+  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1209,7 +1214,7 @@ Madara::Expression_Tree::Variable_Decrement::build (void)
 
 // constructor
 Madara::Expression_Tree::Variable_Divide::Variable_Divide (const ::std::string & key, 
-  long long value, Symbol * rhs,
+  int64_t value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1240,7 +1245,7 @@ Madara::Expression_Tree::Variable_Divide::build (void)
 
 // constructor
 Madara::Expression_Tree::Variable_Increment::Variable_Increment (const ::std::string & key, 
-  long long value, Symbol * rhs,
+  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1271,7 +1276,7 @@ Madara::Expression_Tree::Variable_Increment::build (void)
 
 // constructor
 Madara::Expression_Tree::Variable_Multiply::Variable_Multiply (const ::std::string & key, 
-  long long value, Symbol * rhs,
+  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1303,7 +1308,7 @@ Madara::Expression_Tree::Variable_Multiply::build (void)
 
 // constructor
 Madara::Expression_Tree::Variable_Compare::Variable_Compare (const ::std::string & key, 
-  long long value, Symbol * rhs, int compare_type,
+  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs, int compare_type,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Symbol (0, 0, VARIABLE_PRECEDENCE), key_ (key), value_(value), rhs_ (rhs),
   compare_type_ (compare_type), context_ (context)
@@ -1476,7 +1481,7 @@ Madara::Expression_Tree::Both::build (void)
   else
     // we've got nothing. This node should eventually be pruned out of the
     // picture if at all possible.
-    return new Leaf_Node ((long long)0);
+    return new Leaf_Node ((int64_t)0);
 }
 
 // constructor
@@ -1517,7 +1522,7 @@ Madara::Expression_Tree::Sequence::build (void)
   else
     // we've got nothing. This node should eventually be pruned out of the
     // picture if at all possible.
-    return new Leaf_Node ((long long)0);
+    return new Leaf_Node ((int64_t)0);
 }
 
 // constructor
@@ -2079,36 +2084,6 @@ void
     MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
       "Postcondition is set to 1 (def)\n"));
   }
-
-  // debugging the postcondition
-  //if (MADARA_debug_level >= MADARA_LOG_DETAILED_TRACE)
-  //{
-  //  Number * number = dynamic_cast <Number *> (user_);
-  //  Variable * variable_node = dynamic_cast <Variable *> (postcondition->right_->left_);
-  //  Variable * holder = dynamic_cast <Variable *> (postcondition->left_);
-
-  //  if (number && variable_node)
-  //  {
-  //    if (holder->key_ == variable_node->key_)
-  //    {
-  //      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
-  //        "For_Loop: Postcondition is an addition of %q to %s\n",
-  //        number->item_, variable_node->key_.c_str ()));
-  //    }
-  //    else
-  //    {
-  //      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
-  //        "For_Loop: ERROR: Postcondition keys not matching: %s != %s\n",
-  //        holder->key_.c_str (), variable_node->key_.c_str ()));
-  //    }
-  //  }
-  //  else if (variable_node)
-  //  {
-  //    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
-  //      "For_Loop: Postcondition is an addition to %s\n",
-  //      variable_node->key_.c_str ()));
-  //  }
-  //}
 
   // eat up whitespace so we can check for a parenthesis (function)
   for (++i; i < input.length () && is_whitespace (input[i]); ++i);

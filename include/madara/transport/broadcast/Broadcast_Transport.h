@@ -14,6 +14,7 @@
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "ace/SOCK_Dgram_Bcast.h"
+#include <stdint.h>
 
 namespace Madara
 {
@@ -48,7 +49,8 @@ namespace Madara
        * @param   value   value of the knowledge location
        * @return  result of write operation or -1 if we are shutting down
        **/
-      long send_data (const std::string & key, const long long & value);
+      long send_data (const std::string & key,
+        const Madara::Knowledge_Record::VALUE_TYPE & value);
 	  
       /**
        * Sends a knowledge expression to all connected hosts over UDP
@@ -57,7 +59,7 @@ namespace Madara
        * @return  result of write operation or -1 if we are shutting down
        **/
       long send_multiassignment (const std::string & expression,
-		  unsigned long quality);
+		  uint32_t quality);
       
       /**
        * Closes the transport

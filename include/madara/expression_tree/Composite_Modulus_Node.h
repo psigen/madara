@@ -2,12 +2,14 @@
 #ifndef _COMPOSITE_MODULUS_NODE_H
 #define _COMPOSITE_MODULUS_NODE_H
 
+#include "madara/expression_tree/Composite_Binary_Node.h"
+#include "madara/Globals.h"
+
 namespace Madara
 {
   namespace Expression_Tree
   {
     class Component_Node;
-    class Composite_Binary_Node;
     class Visitor;
 
     /**
@@ -35,7 +37,7 @@ namespace Madara
        * Returns the printable character of the node
        * @return    value of the node
        **/
-      virtual long long item (void) const;
+      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
@@ -44,7 +46,7 @@ namespace Madara
        *            If right expression is zero, then a compile error is 
        *            logged and the process exits.
        **/
-      virtual long long prune (bool & can_change);
+      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
 
       /** 
        * Evaluates the expression tree. 
@@ -52,7 +54,7 @@ namespace Madara
        *            If right expression is zero, then a compile error is 
        *            logged and the process exits.
        **/
-      virtual long long evaluate (void);
+      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

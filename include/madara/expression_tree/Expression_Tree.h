@@ -8,6 +8,7 @@
 #include "madara/utility/Refcounter.h"
 
 #include "madara/expression_tree/Component_Node.h"
+#include "madara/Globals.h"
 
 namespace Madara
 {
@@ -26,7 +27,7 @@ namespace Madara
     public:
 
       // Define a "trait"
-      typedef long long value_type;
+      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
       typedef Expression_Tree_Iterator iterator;
       typedef Expression_Tree_Const_Iterator const_iterator;
 
@@ -75,7 +76,7 @@ namespace Madara
        * Returns value of tree
        * @return    value of the expression tree
        **/
-      long long item (void) const;
+      Madara::Knowledge_Record::VALUE_TYPE item (void) const;
 
 
       /** 
@@ -83,13 +84,13 @@ namespace Madara
        * @param     can_change   set to true if variable nodes are contained
        * @return    value of expression tree
        **/
-      long long prune (void);
+      Madara::Knowledge_Record::VALUE_TYPE prune (void);
 
       /** 
        * Evaluates the expression tree. 
        * @return    value of expression tree
        **/
-      long long evaluate (void);
+      Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
 
       /** 
        * Returns the left expression of this tree

@@ -25,7 +25,7 @@ Madara::Cid::approximate (Settings & settings)
   Deployment & solution = settings.solution;
   Candidate_Map candidates;
 
-  for (unsigned int i = 0; i < deployment.size (); ++i)
+  for (Workflow::size_type i = 0; i < deployment.size (); ++i)
   {
     unsigned int degree = deployment[i].size ();
     if (degree > 0)
@@ -98,7 +98,7 @@ Madara::Cid::approximate (Summations_Map & network_summations,
         degree, source));
 #endif
 
-    for (unsigned int i = 0; i < cur_summations.size (); ++i)
+    for (Latency_Vector::size_type i = 0; i < cur_summations.size (); ++i)
     {
       /**
        * If this is the first node in the deployment, or if we haven't tried
@@ -122,20 +122,20 @@ Madara::Cid::approximate (Summations_Map & network_summations,
   }
 }
 
-unsigned long long
+uint64_t
 Madara::Cid::calculate_latency (Settings & settings)
 {
   return calculate_latency (settings.network_latencies,
     settings.target_deployment, settings.solution);
 }
 
-unsigned long long
+uint64_t
 Madara::Cid::calculate_latency (LV_Vector & latencies, Workflow & workflow,
                                 Deployment & solution)
 {
-  unsigned long long total_latency = 0;
+  uint64_t total_latency = 0;
 
-  for (unsigned int i = 0; i < workflow.size (); ++i)
+  for (Workflow::size_type i = 0; i < workflow.size (); ++i)
   {
     Directed_Edges & current = workflow[i];
 
@@ -154,7 +154,7 @@ Madara::Cid::calculate_latency (LV_Vector & latencies, Workflow & workflow,
       std::sort (source_latencies.begin (), source_latencies.end (),
                  Increasing_Id);
 
-      for (unsigned int j = 0; j < current.size (); ++j)
+      for (Directed_Edges::size_type j = 0; j < current.size (); ++j)
       {
 #ifdef ENABLE_CID_LOGGING
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
@@ -226,7 +226,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
   if (use_workflow)
   {
     // solve the high degree nodes in the deployment first 
-    for (unsigned int i = 0; i < deployment.size (); ++i)
+    for (Workflow::size_type i = 0; i < deployment.size (); ++i)
     {
       Directed_Edges & source_flow = deployment[i];
       if (source_flow.size () > 0)
@@ -263,7 +263,7 @@ Madara::Cid::fill_by_highest_degree (Settings & settings, bool use_workflow)
       Directed_Edges & source_flow = deployment[i];
       if (source_flow.size () > 0)
       { 
-        for (unsigned int j = 0; j < source_flow.size (); ++j)
+        for (Directed_Edges::size_type j = 0; j < source_flow.size (); ++j)
         {
           unsigned int & dest = source_flow[j].second;
           unsigned int & dest_id = solution[dest];
@@ -335,7 +335,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
   Deployment & solution = settings.solution;
 
   // iterate until we find a 1 degree deployment node
-  for (unsigned int i = 0; i < deployment.size (); ++i)
+  for (Workflow::size_type i = 0; i < deployment.size (); ++i)
   {
     Directed_Edges & source_flow = deployment[i];
     if (source_flow.size () > 0)
@@ -346,7 +346,7 @@ Madara::Cid::fill_from_solution_map (Settings & settings)
       
       unsigned int candidate = 0;
 
-      for (unsigned int j = 0; j < source_flow.size (); ++j)
+      for (Directed_Edges::size_type j = 0; j < source_flow.size (); ++j)
       {
         unsigned int & dest = source_flow[j].second;
         unsigned int & dest_id = solution[dest];
@@ -420,7 +420,7 @@ Madara::Cid::pathwise_approximate (Settings & settings)
   //  utilities[i].first = i;
   //}
 
-  for (unsigned int i = 0; i < paths.size (); ++i)
+  for (Paths::size_type i = 0; i < paths.size (); ++i)
   {
     unsigned int & source = paths[i].source;
     unsigned int & source_id = solution[source];
@@ -437,7 +437,7 @@ Madara::Cid::pathwise_approximate (Settings & settings)
         settings.network_summations[neighborhood_size];
 
       unsigned int best = 0;
-      for (unsigned int j = 0; j < MAX_SOLUTIONS && j < paths.size (); ++j)
+      for (Paths::size_type j = 0; j < MAX_SOLUTIONS && j < paths.size (); ++j)
       {
         // use the current lookup
         //lookups[j] = lookup;
@@ -462,7 +462,7 @@ Madara::Cid::pathwise_approximate (Settings & settings)
         std::sort (source_latencies.begin (), source_latencies.end (),
           Increasing_Id);
 
-        for (unsigned int k = 0; k < list.size (); ++k)
+        for (Link_Vector::size_type k = 0; k < list.size (); ++k)
         {
           // is it even possible for this to be duplicated?
           found = lookup.find (solution[list[k].target]);
@@ -479,7 +479,7 @@ Madara::Cid::pathwise_approximate (Settings & settings)
             unsigned int m = 0;
             unsigned int actuals = 0;
             // take the best latency of the first MAX_SOLUTIONS
-            for (unsigned int l = 0;
+            for (Latency_Vector::size_type l = 0;
               l < MAX_PATHS && l < target_averages.size (); ++l)
             {
               for (; m < target_averages.size (); ++m)
@@ -601,14 +601,14 @@ Madara::Cid::prepare_deployment (Settings & settings)
   " filling paths with deployment info\n"));
 #endif
   // 1. create links from current deployment degrees
-  for (unsigned int i = 0;
+  for (Workflow::size_type i = 0;
     i < deployment.size (); ++i)
   {
     if (deployment[i].size () != 0)
     {
       unsigned int & source = deployment[i][0].first;
 
-      for (unsigned int j = 0; j < deployment[i].size (); ++j)
+      for (Directed_Edges::size_type j = 0; j < deployment[i].size (); ++j)
       {
         unsigned int & dest = deployment[i][j].second;
         Link & current = paths[source].dest[dest];
@@ -625,7 +625,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
   }
 
   // 2. update degree information inside of the paths structure.
-  for (unsigned int source = 0;   
+  for (Paths::size_type source = 0;   
          source < paths.size () && paths[source].dest.size () > 0; ++source)
   {
     paths[source].degree = paths[source].dest.size ();
@@ -646,7 +646,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
   " searching to fill all local neighborhoods\n"));
 #endif
   // 3. iterate over these links until we have all possible links
-  for (unsigned int i = 0;
+  for (Paths::size_type i = 0;
          i < paths.size () && paths[i].dest.size () > 0; ++i)
   {
     for (unsigned int j = 0; j < deployment[i].size (); ++j)
@@ -663,7 +663,7 @@ Madara::Cid::prepare_deployment (Settings & settings)
   " copying the map to the vector\n"));
 #endif
   // 4. copy the map to a vector
-  for (unsigned int i = 0;
+  for (Paths::size_type i = 0;
          i < paths.size () && paths[i].dest.size () > 0; ++i)
   {
     // create a list for sortable referencing

@@ -89,7 +89,7 @@ int main (int argc, char ** argv)
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 
-  knowledge.set (".id", (long long) settings.id);
+  knowledge.set (".id", (int64_t) settings.id);
 
   if (settings.id == 0)
   {

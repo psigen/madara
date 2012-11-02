@@ -55,7 +55,7 @@ Madara::Cid::check_solution (Settings & settings)
  * Reset latencies
  **/
 void
-Madara::Cid::reset_latencies (Settings & settings, unsigned long long worst)
+Madara::Cid::reset_latencies (Settings & settings, uint64_t worst)
 {
   for (unsigned int i = 0; i < settings.network_latencies.size (); ++i)
   {
@@ -256,7 +256,7 @@ Madara::Cid::init (unsigned int size, Settings & settings)
  *                               the deployment
  * @return      minimum latency deployment in the network
  **/
-unsigned long long
+uint64_t
 Madara::Cid::overlay_latencies (Settings & settings, 
                                 unsigned int min_latency,
                                 unsigned int min_noise)
@@ -264,7 +264,7 @@ Madara::Cid::overlay_latencies (Settings & settings,
   LV_Vector & latencies = settings.network_latencies;
   Workflow & deployment = settings.target_deployment;
   Paths & paths = settings.paths;
-  unsigned long long total = 0;
+  uint64_t total = 0;
 
   // place the minimal noise
   for (unsigned int i = 0; i < latencies.size (); ++i)
@@ -283,7 +283,7 @@ Madara::Cid::overlay_latencies (Settings & settings,
     for (unsigned int j = 0; j < edges.size (); ++j)
     {
       latencies[edges[j].first][edges[j].second].second =
-        (unsigned long long) min_latency;
+        (uint64_t) min_latency;
 
       total += latencies[edges[j].first][edges[j].second].second;
     }
@@ -340,7 +340,7 @@ Madara::Cid::prepare_summations (unsigned int source, Settings & settings)
   // sort the latencies of this source 
   std::sort (latencies.begin (), latencies.end (), Increasing_Latency);
 
-  unsigned long long total = 0;
+  uint64_t total = 0;
   std::stringstream buffer;
   unsigned int j = 0;
   unsigned int cur_degree = 0;
@@ -678,7 +678,7 @@ Madara::Cid::process_deployment (Settings & settings,
 
             if (source_tokens.size () >= 3)
             {
-              long long value = knowledge.evaluate (source_tokens[2]);
+              int64_t value = knowledge.evaluate (source_tokens[2]);
               if (value != 0)
                 source_inc = (unsigned int)value;
             }

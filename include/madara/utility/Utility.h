@@ -5,6 +5,7 @@
 #include <string>
 #include "ace/SOCK_Acceptor.h"
 #include "madara/MADARA_export.h"
+#include <stdint.h>
 
 namespace Madara
 {
@@ -173,6 +174,34 @@ namespace Madara
      * @return    a more compliant directory path string
      **/
     MADARA_Export std::string clean_dir_name (const std::string & target);
+    
+    /**
+     * Converts a host format uint64_t into big endian
+     * @param     value      the value to convert
+     * @return    the converted value
+     **/
+    MADARA_Export uint64_t endian_swap (uint64_t value);
+    
+    /**
+     * Converts a host format signed int64_t into big endian
+     * @param     value      the value to convert
+     * @return    the converted value
+     **/
+    MADARA_Export int64_t endian_swap (int64_t value);
+    
+    /**
+     * Converts a host format uint64_t into big endian
+     * @param     value      the value to convert
+     * @return    the converted value
+     **/
+    MADARA_Export uint32_t endian_swap (uint32_t value);
+    
+    /**
+     * Converts a host format signed int64_t into big endian
+     * @param     value      the value to convert
+     * @return    the converted value
+     **/
+    MADARA_Export int32_t endian_swap (int32_t value);
   }
 }
 #endif

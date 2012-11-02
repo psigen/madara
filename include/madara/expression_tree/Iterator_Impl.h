@@ -7,6 +7,7 @@
 
 #include "madara/utility/LStack.h"
 #include "madara/utility/LQueue.h"
+#include "madara/Globals.h"
 
 // Solve circular include problem
 
@@ -71,7 +72,7 @@ namespace Madara
 
       /// = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
-      typedef long value_type;
+      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
       typedef int *pointer;
       typedef int &reference;
       typedef int difference_type;
@@ -126,7 +127,7 @@ namespace Madara
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
-      typedef long value_type;
+      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
       typedef int *pointer;
       typedef int &reference;
       typedef int difference_type;
@@ -182,7 +183,7 @@ namespace Madara
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
-      typedef long value_type;
+      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
       typedef int *pointer;
       typedef int &reference;
       typedef int difference_type;
@@ -238,7 +239,7 @@ namespace Madara
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
-      typedef long value_type;
+      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
       typedef int *pointer;
       typedef int &reference;
       typedef int difference_type;
@@ -293,7 +294,7 @@ namespace Madara
 
       // = Necessary traits
       typedef ::std::forward_iterator_tag iterator_category;
-      typedef long value_type;
+      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
       typedef int *pointer;
       typedef int &reference;
       typedef int difference_type;

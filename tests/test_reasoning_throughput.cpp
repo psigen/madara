@@ -24,57 +24,57 @@
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 // test functions
-unsigned long long test_volatile_reinforcement (
+uint64_t test_volatile_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_volatile_inference (
+     uint32_t iterations);
+uint64_t test_volatile_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_optimal_reinforcement (
+     uint32_t iterations);
+uint64_t test_optimal_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_optimal_inference (
+     uint32_t iterations);
+uint64_t test_optimal_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_simple_reinforcement (
+     uint32_t iterations);
+uint64_t test_simple_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_simple_inference (
+     uint32_t iterations);
+uint64_t test_simple_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_large_reinforcement (
+     uint32_t iterations);
+uint64_t test_large_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_large_inference (
+     uint32_t iterations);
+uint64_t test_large_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
+     uint32_t iterations);
 
-unsigned long long test_compiled_sr (
+uint64_t test_compiled_sr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_compiled_si (
+     uint32_t iterations);
+uint64_t test_compiled_si (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_compiled_lr (
+     uint32_t iterations);
+uint64_t test_compiled_lr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_compiled_li (
+     uint32_t iterations);
+uint64_t test_compiled_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
+     uint32_t iterations);
 
 
-unsigned long long test_looped_sr (
+uint64_t test_looped_sr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_looped_si (
+     uint32_t iterations);
+uint64_t test_looped_si (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_optimal_loop (
+     uint32_t iterations);
+uint64_t test_optimal_loop (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
-unsigned long long test_looped_li (
+     uint32_t iterations);
+uint64_t test_looped_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
+     uint32_t iterations);
 
 // C++ function for increment with boolean check, rather than allowing C++ 
 // to optimize by putting things in registers
@@ -88,10 +88,10 @@ long increment (long value);
 
 
 // default iterations
-unsigned long num_iterations = 100000;
-unsigned long num_runs = 10;
+uint32_t num_iterations = 100000;
+uint32_t num_runs = 10;
 bool conditional = true;
-unsigned long step = 1;
+uint32_t step = 1;
 
 // still trying to stop this darn thing from optimizing the increments
 class Incrementer
@@ -120,8 +120,8 @@ private:
 };
 
 void
-print (unsigned long long time, long long value,
-       unsigned long iterations, const std::string & type)
+print (uint64_t time, int64_t value,
+       uint32_t iterations, const std::string & type)
 {
   std::stringstream buffer;
 
@@ -143,7 +143,7 @@ print (unsigned long long time, long long value,
 
 
 std::string 
-to_legible_hertz (unsigned long long hertz)
+to_legible_hertz (uint64_t hertz)
 {
   std::stringstream buffer;
 
@@ -224,10 +224,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   const int num_test_types = 16;
 
   // make everything all pretty and for-loopy
-  unsigned long long results[num_test_types];
-  unsigned long long averages[num_test_types];
-  unsigned long long (* test_functions [num_test_types]) (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-     unsigned long iterations);
+  uint64_t results[num_test_types];
+  uint64_t averages[num_test_types];
+  uint64_t (* test_functions [num_test_types]) (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
   const char * printouts [num_test_types] = {
     "KaRL: Simple Reinforcements   ",
     "KaRL: Large Reinforcements   ",
@@ -268,8 +268,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   };
 
   // start from zero
-  memset ((void *)results, 0, sizeof (unsigned long long) * num_test_types);
-  memset ((void *)averages, 0, sizeof (unsigned long long) * num_test_types);
+  memset ((void *)results, 0, sizeof (uint64_t) * num_test_types);
+  memset ((void *)averages, 0, sizeof (uint64_t) * num_test_types);
 
   test_functions[SimpleReinforcement] = test_simple_reinforcement;
   test_functions[LargeReinforcement] = test_large_reinforcement;
@@ -291,7 +291,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[VolatileReinforcement] = test_volatile_reinforcement;
   test_functions[VolatileInference] = test_volatile_inference;
 
-  for (unsigned long i = 0; i < num_runs; ++i)
+  for (uint32_t i = 0; i < num_runs; ++i)
   {
     // run tests
     for (int j = 0; j < num_test_types; ++j)
@@ -304,7 +304,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // multiply the numerator by the factor of the result, which is
   // given in microseconds.
 
-  unsigned long long evaluations = num_iterations * num_runs;
+  uint64_t evaluations = num_iterations * num_runs;
 
   for (int i = 0; i < num_test_types; ++i)
   {
@@ -413,9 +413,9 @@ long increment (long value)
 }
 
 /// Tests logicals operators (&&, ||)
-unsigned long long test_simple_reinforcement (
+uint64_t test_simple_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_simple_reinforcement"));
 
@@ -427,7 +427,7 @@ unsigned long long test_simple_reinforcement (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
     knowledge.evaluate ("++.var1");
@@ -442,9 +442,9 @@ unsigned long long test_simple_reinforcement (
   return measured;
 }
 
-unsigned long long test_compiled_sr (
+uint64_t test_compiled_sr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_compiled_sr"));
 
@@ -460,7 +460,7 @@ unsigned long long test_compiled_sr (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
     knowledge.evaluate (ce, es);
@@ -476,9 +476,9 @@ unsigned long long test_compiled_sr (
 }
 
 /// Tests looped long inferences (++.var1)
-unsigned long long test_looped_sr (
+uint64_t test_looped_sr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_looped_sr"));
 
@@ -494,8 +494,8 @@ unsigned long long test_looped_sr (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (long long) iterations);
-  knowledge.set (".actual_iterations", (long long) actual_iterations);
+  knowledge.set (".iterations", (int64_t) iterations);
+  knowledge.set (".actual_iterations", (int64_t) actual_iterations);
 
   buffer = ".var2[.iterations) (++.var1)";
 
@@ -519,9 +519,9 @@ unsigned long long test_looped_sr (
 }
 
 /// Tests logicals operators (&&, ||)
-unsigned long long test_large_reinforcement (
+uint64_t test_large_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_large_reinforcement"));
 
@@ -537,7 +537,7 @@ unsigned long long test_large_reinforcement (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
   
-  for (unsigned long i = 0; i < max_size; ++i)
+  for (uint32_t i = 0; i < max_size; ++i)
   {
     buffer << "++.var1;";
   }
@@ -545,7 +545,7 @@ unsigned long long test_large_reinforcement (
   timer.start ();
 
   // execute that chain of reinforcements
-  for (unsigned long i = 0; i < actual_iterations; ++i)
+  for (uint32_t i = 0; i < actual_iterations; ++i)
     knowledge.evaluate (buffer.str ());
 
   timer.stop ();
@@ -558,9 +558,9 @@ unsigned long long test_large_reinforcement (
 }
 
 /// Tests logicals operators (&&, ||)
-unsigned long long test_compiled_lr (
+uint64_t test_compiled_lr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_compiled_lr"));
 
@@ -576,7 +576,7 @@ unsigned long long test_compiled_lr (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
   
-  for (unsigned long i = 0; i < max_size; ++i)
+  for (uint32_t i = 0; i < max_size; ++i)
   {
     buffer << "++.var1;";
   }
@@ -589,7 +589,7 @@ unsigned long long test_compiled_lr (
   timer.start ();
 
   // execute that chain of reinforcements
-  for (unsigned long i = 0; i < actual_iterations; ++i)
+  for (uint32_t i = 0; i < actual_iterations; ++i)
     knowledge.evaluate (ce, es);
 
   timer.stop ();
@@ -602,9 +602,9 @@ unsigned long long test_compiled_lr (
 }
 
 /// Tests looped long inferences (1 => ++.var1)
-unsigned long long test_optimal_loop (
+uint64_t test_optimal_loop (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_optimal_loop"));
 
@@ -620,8 +620,8 @@ unsigned long long test_optimal_loop (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (long long) iterations);
-  knowledge.set (".actual_iterations", (long long) actual_iterations);
+  knowledge.set (".iterations", (int64_t) iterations);
+  knowledge.set (".actual_iterations", (int64_t) actual_iterations);
 
   buffer = ".var2[.iterations)";
 
@@ -644,9 +644,9 @@ unsigned long long test_optimal_loop (
   return measured;
 }
 
-unsigned long long test_simple_inference (
+uint64_t test_simple_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_simple_inference"));
 
@@ -658,7 +658,7 @@ unsigned long long test_simple_inference (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
     knowledge.evaluate ("1 => ++.var1");
@@ -673,9 +673,9 @@ unsigned long long test_simple_inference (
   return measured;
 }
 
-unsigned long long test_compiled_si (
+uint64_t test_compiled_si (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_compiled_si"));
 
@@ -692,7 +692,7 @@ unsigned long long test_compiled_si (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
     knowledge.evaluate (ce, es);
@@ -708,9 +708,9 @@ unsigned long long test_compiled_si (
 }
 
 /// Tests looped simple inferences (1 => ++.var1)
-unsigned long long test_looped_si (
+uint64_t test_looped_si (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_looped_si"));
 
@@ -726,7 +726,7 @@ unsigned long long test_looped_si (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (long long) iterations);
+  knowledge.set (".iterations", (int64_t) iterations);
   
   buffer = ".var2[.iterations) (1 => ++.var1)";
 
@@ -749,9 +749,9 @@ unsigned long long test_looped_si (
   return measured;
 }
 
-unsigned long long test_large_inference (
+uint64_t test_large_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_large_inference"));
 
@@ -767,7 +767,7 @@ unsigned long long test_large_inference (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
   
-  for (unsigned long i = 0; i < max_size; ++i)
+  for (uint32_t i = 0; i < max_size; ++i)
   {
     buffer << "1 => ++.var1;";
   }
@@ -775,7 +775,7 @@ unsigned long long test_large_inference (
   timer.start ();
 
   // execute that chain of reinforcements
-  for (unsigned long i = 0; i < actual_iterations; ++i)
+  for (uint32_t i = 0; i < actual_iterations; ++i)
     knowledge.evaluate (buffer.str ());
 
   timer.stop ();
@@ -787,9 +787,9 @@ unsigned long long test_large_inference (
   return measured;
 }
 
-unsigned long long test_compiled_li (
+uint64_t test_compiled_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_compiled_li"));
 
@@ -805,7 +805,7 @@ unsigned long long test_compiled_li (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
   
-  for (unsigned long i = 0; i < max_size; ++i)
+  for (uint32_t i = 0; i < max_size; ++i)
   {
     buffer << "1 => ++.var1;";
   }
@@ -818,7 +818,7 @@ unsigned long long test_compiled_li (
   timer.start ();
 
   // execute that chain of reinforcements
-  for (unsigned long i = 0; i < actual_iterations; ++i)
+  for (uint32_t i = 0; i < actual_iterations; ++i)
     knowledge.evaluate (ce, es);
 
   timer.stop ();
@@ -831,9 +831,9 @@ unsigned long long test_compiled_li (
 }
 
 /// Tests looped long inferences (1 => ++.var1)
-unsigned long long test_looped_li (
+uint64_t test_looped_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_looped_lr"));
 
@@ -849,8 +849,8 @@ unsigned long long test_looped_li (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (long long) iterations);
-  knowledge.set (".actual_iterations", (long long) actual_iterations);
+  knowledge.set (".iterations", (int64_t) iterations);
+  knowledge.set (".actual_iterations", (int64_t) actual_iterations);
 
   buffer = ".var2[.iterations) (1 => ++.var1)";
 
@@ -874,9 +874,9 @@ unsigned long long test_looped_li (
 }
 
 /// Tests logicals operators (&&, ||)
-unsigned long long test_optimal_inference (
+uint64_t test_optimal_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_optimal_inference"));
 
@@ -890,7 +890,7 @@ unsigned long long test_optimal_inference (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // we use a global var that can be changed from the command
     // line to trick the compiler into not optimizing out this
@@ -909,9 +909,9 @@ unsigned long long test_optimal_inference (
 }
 
 /// Tests logicals operators (&&, ||)
-unsigned long long test_optimal_reinforcement (
+uint64_t test_optimal_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_optimal_reinforcement"));
 
@@ -925,7 +925,7 @@ unsigned long long test_optimal_reinforcement (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // I'm going to have to admit defeat. I can't use __asm because
     // it's non-portable. The compiler will compile this away
@@ -963,9 +963,9 @@ unsigned long long test_optimal_reinforcement (
 }
 
 /// Tests C++ function inference
-unsigned long long test_volatile_inference (
+uint64_t test_volatile_inference (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_volatile_inference"));
 
@@ -979,7 +979,7 @@ unsigned long long test_volatile_inference (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // guarded increment of the volatile variable
     if (conditional)
@@ -996,9 +996,9 @@ unsigned long long test_volatile_inference (
 }
 
 /// Tests C++ function inference
-unsigned long long test_volatile_reinforcement (
+uint64_t test_volatile_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-     unsigned long iterations)
+     uint32_t iterations)
 {
   ACE_TRACE (ACE_TEXT ("test_volatile_reinforcement"));
 
@@ -1013,7 +1013,7 @@ unsigned long long test_volatile_reinforcement (
 
   timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     // increment the volatile variable
     ++var1;

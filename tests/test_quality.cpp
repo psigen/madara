@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <assert.h>
+#include <stdint.h>
 
 #include "ace/Log_Msg.h"
 #include "ace/Get_Opt.h"
@@ -19,8 +20,8 @@
 int id = 0;
 int left = 0;
 int processes = 1;
-unsigned long quality = 0;
-long value = 0;
+uint32_t quality = 0;
+int64_t value = 0;
 std::string host = "";
 
 volatile bool terminated = 0;

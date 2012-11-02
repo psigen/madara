@@ -566,3 +566,23 @@ project (Profile_Architecture) : using_ace, using_madara {
     tests/profile_architecture.cpp
   }
 }
+
+project (Test_Utility) : using_ace, using_madara {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_utility
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_utility.cpp
+  }
+}

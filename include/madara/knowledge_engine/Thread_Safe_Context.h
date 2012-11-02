@@ -32,8 +32,8 @@ namespace Madara
     //{
     //public:
     //  Mutated_Entry (): value (0), quality (0) {}
-    //  long long value;
-    //  unsigned long quality;
+    //  int64_t value;
+    //  uint32_t quality;
     //};
 
     
@@ -66,9 +66,10 @@ namespace Madara
       /**
        * Atomically returns the value of a variable.
        * @param   key    unique identifier of the variable
-       * @return         the long long value for the variable
+       * @return         the int64_t value for the variable
        **/
-      long long get (const ::std::string & key) const;
+      Madara::Knowledge_Record::VALUE_TYPE
+        get (const ::std::string & key) const;
 
       /**
        * Retrieves a knowledge record from the key. This function is useful
@@ -87,7 +88,8 @@ namespace Madara
        * @param   modified  send modifications after applying the update
        * @return   0 if the value was set. -1 if null key
        **/
-      int set (const ::std::string & key, long long value, 
+      int set (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value, 
         bool modified = true);
 
       /**
@@ -98,8 +100,9 @@ namespace Madara
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
        **/
-      int set_if_unequal (const ::std::string & key, long long value, 
-        unsigned long quality, unsigned long long clock, 
+      int set_if_unequal (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value, 
+        uint32_t quality, uint64_t clock, 
         bool modified = true);
 
       /**
@@ -107,14 +110,14 @@ namespace Madara
        * @param   key       unique identifier of the variable
        * @return   quality associated with the variable
        **/
-      unsigned long get_quality (const ::std::string & key);
+      uint32_t get_quality (const ::std::string & key);
       
       /**
        * Atomically gets write quality of this process for a variable
        * @param   key       unique identifier of the variable
        * @return   write quality associated with the variable
        **/
-      unsigned long get_write_quality (const ::std::string & key);
+      uint32_t get_write_quality (const ::std::string & key);
       
       /**
        * Atomically sets quality of this process for a variable
@@ -123,8 +126,8 @@ namespace Madara
        * @param   force_update   force an update to variable, even if lower
        * @return   write quality associated with the variable
        **/
-      unsigned long set_quality (const ::std::string & key, 
-        unsigned long quality, bool force_update);
+      uint32_t set_quality (const ::std::string & key, 
+        uint32_t quality, bool force_update);
 
        /**
        * Force a change to be registered, waking up anyone waiting on entry
@@ -136,7 +139,7 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @param   quality        write quality of this process
        **/
-      void set_write_quality (const ::std::string & key, unsigned long quality);
+      void set_write_quality (const ::std::string & key, uint32_t quality);
 
       /**
        * Retrieves a list of modified variables. Useful for building a
@@ -144,7 +147,8 @@ namespace Madara
        * @param   modified       string of modified variables (key=value;)
        * @param   quality        write quality of this process
        **/
-      void get_modified (std::stringstream & modified, unsigned long & quality) const;
+      void get_modified (std::stringstream & modified,
+        uint32_t & quality) const;
 
       /**
        * Reset all variables to be unmodified. This will clear all global
@@ -174,7 +178,7 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @return                 new value of variable
        **/
-      long long inc (const ::std::string & key);
+      Madara::Knowledge_Record::VALUE_TYPE inc (const ::std::string & key);
 
       /**
        * Wait for a change to happen to the context.
@@ -187,7 +191,7 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @return                 new value of variable
        **/
-      long long dec (const ::std::string & key);
+      Madara::Knowledge_Record::VALUE_TYPE dec (const ::std::string & key);
 
       /**
        * Atomically checks to see if a variable already exists
@@ -231,7 +235,7 @@ namespace Madara
        * clock time (intended for sending knowledge updates).
        * @return        new clock time
        **/
-      unsigned long long inc_clock (void);
+      uint64_t inc_clock (void);
 
       /**
        * Atomically increments the Lamport clock of a variable and returns the
@@ -239,14 +243,14 @@ namespace Madara
        * @param   key   unique identifier of the variable
        * @return        new clock time for variable
        **/
-      unsigned long long inc_clock (const std::string & key);
+      uint64_t inc_clock (const std::string & key);
 
       /**
        * Atomically sets the lamport clock.
        * @param  clock  new global clock
        * @return        new clock time
        **/
-      unsigned long long set_clock (unsigned long long clock);
+      uint64_t set_clock (uint64_t clock);
 
       /**
        * Atomically sets the Lamport clock of a variable and returns the
@@ -255,21 +259,22 @@ namespace Madara
        * @param    clock   new variable clock
        * @return           new clock time for variable
        **/
-      unsigned long long set_clock (const std::string & key, 
-        unsigned long long clock);
+      uint64_t set_clock (const std::string & key, 
+        uint64_t clock);
 
       /**
        * Atomically gets the Lamport clock
        * @return           current global clock
        **/
-      unsigned long long get_clock (void);
+      uint64_t get_clock (void);
 
       /**
        * Atomically gets the Lamport clock of a variable
        * @param    key     unique identifier of the variable
        * @return           current variable clock
        **/
-      unsigned long long get_clock (const std::string & key);
+      uint64_t get_clock (
+        const std::string & key);
 
       /**
        * Signals that this thread is done with the context. Anyone
@@ -310,7 +315,7 @@ namespace Madara
       mutable ACE_Recursive_Thread_Mutex mutex_;
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
-      mutable unsigned long long clock_;
+      mutable uint64_t clock_;
       Mutations changed_map_;
 
       /// map of function names to functions

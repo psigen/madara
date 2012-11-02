@@ -17,7 +17,7 @@ int left = 0;
 int processes = 1;
 int stop = 10;
 long value = 0;
-unsigned long transport = Madara::Transport::SPLICE;
+uint32_t transport = Madara::Transport::SPLICE;
 
 ACE_Time_Value max_tv (10, 0);
 

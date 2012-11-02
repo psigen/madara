@@ -439,3 +439,103 @@ Madara::Utility::clean_dir_name (const std::string & source)
 
   return target;
 }
+
+
+// helper class for htonll
+class EndiannessChecker
+{
+public:
+  EndiannessChecker ()
+  {
+    x.us = 1;
+
+    if (x.c[sizeof (unsigned short) - 1] == 1)
+      is_little = false;
+    else
+      is_little = true;
+  }
+
+  bool is_little;
+
+private:
+  // by using a union, we can reference the bytes of the short
+  union {
+        unsigned short us;
+        unsigned char c[sizeof (unsigned short)];
+    } x;
+};
+
+EndiannessChecker endianness;
+
+/**
+  * Converts a host format uint64_t into big endian
+  **/
+uint64_t
+Madara::Utility::endian_swap (uint64_t value)
+{
+  // if host is little endian, then we have work to do
+  if (::endianness.is_little)
+  {
+    value = ((value << 8) & 0xFF00FF00FF00FF00ULL )
+          | ((value >> 8) & 0x00FF00FF00FF00FFULL );
+    value = ((value << 16) & 0xFFFF0000FFFF0000ULL )
+          | ((value >> 16) & 0x0000FFFF0000FFFFULL );
+    return (value << 32) | (value >> 32);
+  }
+
+  return value;
+}
+
+/**
+* Converts a host format signed int64_t into big endian
+**/
+int64_t
+Madara::Utility::endian_swap (int64_t value)
+{
+  // if host is little endian, then we have work to do
+  if (::endianness.is_little)
+  {
+    value = ((value << 8) & 0xFF00FF00FF00FF00ULL )
+          | ((value >> 8) & 0x00FF00FF00FF00FFULL );
+    value = ((value << 16) & 0xFFFF0000FFFF0000ULL )
+          | ((value >> 16) & 0x0000FFFF0000FFFFULL );
+    return (value << 32) | ((value >> 32) & 0xFFFFFFFFULL);
+  }
+
+  return value;
+}
+
+
+/**
+  * Converts a host format uint64_t into big endian
+  **/
+uint32_t
+Madara::Utility::endian_swap (uint32_t value)
+{
+  // if host is little endian, then we have work to do
+  if (::endianness.is_little)
+  {
+    value = ((value << 8) & 0xFF00FF00 ) |
+            ((value >> 8) & 0xFF00FF ); 
+    return (value << 16) | (value >> 16);
+  }
+
+  return value;
+}
+
+/**
+* Converts a host format signed int64_t into big endian
+**/
+int32_t
+Madara::Utility::endian_swap (int32_t value)
+{
+  // if host is little endian, then we have work to do
+  if (::endianness.is_little)
+  {
+    value = ((value << 8) & 0xFF00FF00) |
+            ((value >> 8) & 0xFF00FF ); 
+    return (value << 16) | ((value >> 16) & 0xFFFF);
+  }
+
+  return value;
+}

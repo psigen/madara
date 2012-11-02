@@ -80,16 +80,16 @@ namespace Madara
 
       /// Default queue length for event history (must be high for
       /// reliable transport
-      static const unsigned long DEFAULT_QUEUE_LENGTH = 100000;
+      static const uint32_t DEFAULT_QUEUE_LENGTH = 100000;
 
       /// Default deadline
-      static const unsigned long DEFAULT_DEADLINE = 0;
+      static const uint32_t DEFAULT_DEADLINE = 0;
 
       /// Default transport
-      static const unsigned long DEFAULT_TRANSPORT = NO_TRANSPORT;
+      static const uint32_t DEFAULT_TRANSPORT = NO_TRANSPORT;
 
       /// Default reliability
-      static const unsigned long DEFAULT_RELIABILITY = RELIABLE;
+      static const uint32_t DEFAULT_RELIABILITY = RELIABLE;
 
       /**
        * Default id in group
@@ -199,7 +199,7 @@ namespace Madara
       {
         Context_Guard guard (mutex);
 
-        for (unsigned int i = 0; i < processes; ++i)
+        for (uint32_t i = 0; i < processes; ++i)
           timers[i].reset ();
 
         Madara::Cid::reset_latencies (latencies, latency_default);
@@ -230,7 +230,7 @@ namespace Madara
         timers[index].elapsed_time (measured);
 
         latencies.network_latencies[id][index].second = roundtrip ?
-          (unsigned long long) measured / 2 : (unsigned long long) measured;
+          (uint64_t) measured / 2 : (uint64_t) measured;
       }
 
       /**
@@ -278,7 +278,7 @@ namespace Madara
         buffer << "Latencies for id = " << id << std::endl;
 
         // print each id -> latency
-        for (unsigned int i = 0; i < processes; ++i)
+        for (uint32_t i = 0; i < processes; ++i)
         {
           buffer << ids[i] << " = " << current[i].second << std::endl;
         }
@@ -303,10 +303,10 @@ namespace Madara
         buffer << "\nAll latencies in the context:\n\n";
 
         // print each id -> latency
-        for (unsigned int i = 0; i < processes; ++i)
+        for (uint32_t i = 0; i < processes; ++i)
         {
           Madara::Cid::Latency_Vector & current = latencies.network_latencies[i];
-          for (unsigned int j = 0; j < processes; ++j)
+          for (uint32_t j = 0; j < processes; ++j)
           {
             buffer << ids[i] << " to " << ids[j] << 
                       " = " << current[j].second << std::endl;
@@ -347,7 +347,8 @@ namespace Madara
           std::sort (current.begin (), current.end (),
             Madara::Cid::Increasing_Latency);
 
-          for (unsigned int j = 0; j < current.size (); ++j)
+          for (Madara::Cid::Latency_Vector::size_type j = 0;
+            j < current.size (); ++j)
           {
             buffer << "  " << current[j].first << " = " << 
                       current[j].second << "\n";
@@ -377,7 +378,8 @@ namespace Madara
         buffer << "\nAll redeployment algorithm results in the context:\n\n";
 
         // print each id -> latency
-        for (unsigned int i = 0; i < configs.size (); ++i)
+        for (Madara::Cid::Algorithm_Configs::size_type i = 0;
+             i < configs.size (); ++i)
         {
           if (     results[i].algorithm == Madara::Cid::CID)
             buffer << "CID,";
@@ -415,7 +417,7 @@ namespace Madara
         Madara::Cid::Latency_Vector & current = latencies.network_latencies[id];
 
         // print each id -> latency
-        for (unsigned int i = 0; i < processes; ++i)
+        for (uint32_t i = 0; i < processes; ++i)
         {
           buffer << i << "=" << current[i].second << ";";
         }
@@ -428,7 +430,7 @@ namespace Madara
        * @param     source        the id of the process to update
        * @param     aggregation   the aggregation of latencies
        **/
-      void unaggregate_latencies (unsigned long source, 
+      void unaggregate_latencies (uint32_t source, 
         const std::string & aggregation)
       {
         std::stringstream stream (aggregation);
@@ -439,7 +441,7 @@ namespace Madara
         // 0 = 15     or 24 = 13847169741, for instance
         char symbol;
         unsigned int key;
-        unsigned long long value;
+        uint64_t value;
 
         for (unsigned int i = 0; !stream.eof (); ++i)
         {
@@ -469,7 +471,7 @@ namespace Madara
        * @param     source        the id of the process to update
        * @param     summations   the aggregation of latencies
        **/
-      void unpack_summations (unsigned long source, 
+      void unpack_summations (uint32_t source, 
         const std::string & summations)
       {
         std::stringstream stream (summations);
@@ -483,7 +485,7 @@ namespace Madara
         // 0 = 15     or 24 = 13847169741, for instance
         char symbol;
         unsigned int key;
-        unsigned long long value;
+        uint64_t value;
 
         while (!stream.eof ())
         {
@@ -544,7 +546,8 @@ namespace Madara
 
         Madara::Utility::tokenizer (source, splitters, tokens, pivot_list);
 
-        for (unsigned int i = 0; i + 1 < tokens.size (); i += 2)
+        for (std::vector <std::string>::size_type i = 0;
+          i + 1 < tokens.size (); i += 2)
         {
           std::stringstream buffer (tokens[i]);
           buffer >> id;
@@ -719,25 +722,25 @@ namespace Madara
       std::string domains;
 
       /// Length of the buffer used to store history of events
-      unsigned long queue_length;
+      uint32_t queue_length;
 
       /// Deadline for sessions with any other reasoning entity
-      unsigned long deadline;
+      uint32_t deadline;
 
       /// Type of transport. See Madara::Transport::Types for options
-      unsigned long type;
+      uint32_t type;
 
       /// Reliability required of the transport. 
       /// See Madara::Transport::Reliabilities for options
-      unsigned long reliability;
+      uint32_t reliability;
 
       /// the id of this process. May be useful for latency gathering
       /// or testing purposes
-      unsigned long id;
+      uint32_t id;
 
       /// number of processes expected in the network (best to overestimate
       /// if building latency tables
-      unsigned long processes;
+      uint32_t processes;
 
       /// should we try to gather latencies?
       bool latency_enabled;
@@ -747,7 +750,7 @@ namespace Madara
 
       /// default value for latency times in nanoseconds. This is the value
       /// recorded if a process is unreachable.
-      unsigned long long latency_default;
+      uint64_t latency_default;
 
       /// mutex used for mutating latencies or timers
       ACE_Recursive_Thread_Mutex mutex;
@@ -759,16 +762,16 @@ namespace Madara
       Timers timers;
 
       /// number of responses received so far
-      unsigned long num_responses;
+      uint32_t num_responses;
 
       /// number of summations received so far
-      unsigned long num_summations;
+      uint32_t num_summations;
 
       /// number of voters
-      unsigned long num_voters;
+      uint32_t num_voters;
 
       /// number of votes received
-      unsigned long num_votes_received;
+      uint32_t num_votes_received;
 
       /// percentage allowed to be off before forced redeployment
       double  redeployment_percentage_allowed;
@@ -888,7 +891,8 @@ namespace Madara
        * Send a single assignment
        * @return  result of send operation or -1 if we are shutting down
        **/
-      virtual long send_data (const std::string &, const long long &)
+      virtual long send_data (const std::string &,
+        const Madara::Knowledge_Record::VALUE_TYPE &)
       {
         return check_transport ();
       }
@@ -935,7 +939,7 @@ namespace Madara
        * Sends a multiple assignment of knowledge variables
        * @return  result of operation or -1 if we are shutting down
        **/
-      virtual long send_multiassignment (const std::string &, unsigned long)
+      virtual long send_multiassignment (const std::string &, uint32_t)
       {
         return check_transport ();
       }

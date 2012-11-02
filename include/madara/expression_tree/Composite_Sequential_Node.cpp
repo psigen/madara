@@ -21,7 +21,7 @@ Madara::Expression_Tree::Composite_Sequential_Node::Composite_Sequential_Node (
 {    
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Composite_Sequential_Node::item (void) const
 {
   return ';';
@@ -30,13 +30,13 @@ Madara::Expression_Tree::Composite_Sequential_Node::item (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Composite_Sequential_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  long long left_value = 0;
-  long long right_value = 0;
+  Madara::Knowledge_Record::VALUE_TYPE left_value = 0;
+  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
 
   if (this->left_)
   {
@@ -78,11 +78,11 @@ Madara::Expression_Tree::Composite_Sequential_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 /// @ returns    maximum value of the left and right evaluations
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Composite_Sequential_Node::evaluate (void)
 {
-  long long left_value = left_->evaluate ();
-  long long right_value = right_->evaluate ();
+  Madara::Knowledge_Record::VALUE_TYPE left_value = left_->evaluate ();
+  Madara::Knowledge_Record::VALUE_TYPE right_value = right_->evaluate ();
 
   return left_value > right_value ? right_value : left_value;
 }

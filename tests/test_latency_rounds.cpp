@@ -17,7 +17,7 @@
 int left = 0;
 int stop = 10;
 long value = 0;
-unsigned long iterations = 100000;
+uint32_t iterations = 100000;
 
 Madara::Transport::Settings settings;
 
@@ -30,12 +30,12 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 
 
 /**
- * Converts an unsigned long long into a string
+ * Converts an uint64_t into a string
  * @param   source   parameter to convert into a string
  * @return  comma separated version of the source in a string
  */
 std::string
-ull_to_string (unsigned long long source)
+ull_to_string (uint64_t source)
 {
   std::stringstream buffer;
 

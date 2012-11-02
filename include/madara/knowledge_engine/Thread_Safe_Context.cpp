@@ -21,7 +21,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::~Thread_Safe_Context (void)
 }
 
 // return the value of a variable
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) const
 {
   Context_Guard guard (mutex_);
@@ -64,7 +64,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const ::std::string & key, long long value, bool modified)
+  const ::std::string & key,
+  Madara::Knowledge_Record::VALUE_TYPE value,
+  bool modified)
 {
   // check for null key
   if (key == "")
@@ -111,7 +113,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 
 /// get quality of last update to a variable.
 /// @return    quality of the variable 
-unsigned long 
+uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (const ::std::string & key)
 {
   // enter the mutex
@@ -132,8 +134,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (const ::std::string 
 
 /// get quality of last update to a variable.
 /// @return    quality of the variable 
-unsigned long 
-Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (const ::std::string & key)
+uint32_t 
+Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (
+  const ::std::string & key)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -153,9 +156,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (const ::std::s
 
 /// Set quality of last update to a variable.
 /// @return    quality of the variable after this call
-unsigned long 
+uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_quality (
-  const ::std::string & key, unsigned long quality,
+  const ::std::string & key, uint32_t quality,
                            bool force_update)
 {
   // enter the mutex
@@ -177,7 +180,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_quality (
 /// Set quality of this process writing to a variable
 void 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
-  const ::std::string & key, unsigned long quality)
+  const ::std::string & key, uint32_t quality)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -193,8 +196,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
 ///           -1 if null key, -2 if quality not high enough
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
-  const ::std::string & key, long long value,
-  unsigned long quality, unsigned long long clock,
+  const ::std::string & key, Madara::Knowledge_Record::VALUE_TYPE value,
+  uint32_t quality, uint64_t clock,
   bool modified)
 {
   int result = 1;
@@ -306,7 +309,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   std::stringstream builder;
 
   // iterate over the input string
-  for (unsigned int i = 0; i < key.size (); ++i)
+  for (std::string::size_type i = 0; i < key.size (); ++i)
   {
     // if this is an open brace, increase the subcount
     if (key[i] == '{')

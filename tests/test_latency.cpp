@@ -28,7 +28,7 @@ int left = 0;
 int processes = 2;
 int stop = 10;
 long value = 0;
-unsigned long iterations = 100000;
+uint32_t iterations = 100000;
 
 std::string host = "";
 
@@ -45,12 +45,12 @@ extern "C" void terminate (int)
 
 
 /**
- * Converts an unsigned long long into a string
+ * Converts an uint64_t into a string
  * @param   source   parameter to convert into a string
  * @return  comma separated version of the source in a string
  */
 std::string
-ull_to_string (unsigned long long source)
+ull_to_string (uint64_t source)
 {
   std::stringstream buffer;
 
@@ -109,9 +109,9 @@ build_wait_string (int id, const std::string & attribute, int count)
  * @param     compile_latency   return value of compile time
  * @return    total latency for all iterations
  */
-unsigned long long test_latency (
+uint64_t test_latency (
                      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-                     unsigned long iterations, 
+                     uint32_t iterations, 
                      ACE_hrtime_t & compile_latency,
                      ACE_hrtime_t & eval_latency
                      )
@@ -185,7 +185,7 @@ unsigned long long test_latency (
 
   latency_timer.start ();
 
-  for (unsigned long i = 0; i < iterations; ++i)
+  for (uint32_t i = 0; i < iterations; ++i)
   {
     knowledge.wait (compiled, wait_settings);
   }
@@ -266,7 +266,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // find the average event latency. Since round trips were used, this is total latencies
   // divided by iterations divided by 2.
-  unsigned long long latency_avg = (total / iterations) / 2;
+  uint64_t latency_avg = (total / iterations) / 2;
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) Total latency was %s ns\n",
                         id, processes, ull_to_string (total).c_str ()));

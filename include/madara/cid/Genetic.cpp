@@ -42,8 +42,8 @@ Madara::Cid::ga_naive (Settings & settings, double duration)
     " calculating latency for the solution so far\n"));
 #endif
 
-  unsigned long long orig_latency = calculate_latency (settings);
-  unsigned long long new_latency;
+  uint64_t orig_latency = calculate_latency (settings);
+  uint64_t new_latency;
 
   while (maximum > elapsed)
   {
@@ -127,7 +127,7 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
   std::copy (settings.solution.begin (), settings.solution.end (), 
     current.begin ());
 
-  unsigned long long orig_latency = calculate_latency (settings);
+  uint64_t orig_latency = calculate_latency (settings);
 
   unsigned int num_degreed_nodes = 0;
   Workflow & deployment = settings.target_deployment;
@@ -299,7 +299,7 @@ void Madara::Cid::ga_degree (Settings & settings, double duration)
       solution_lookup[current[candidate1]] = candidate1;
       solution_lookup[current[candidate2]] = candidate2;
 
-      unsigned long long new_latency = calculate_latency (
+      uint64_t new_latency = calculate_latency (
         settings.network_latencies, deployment, current);
 
 #ifdef ENABLE_CID_LOGGING

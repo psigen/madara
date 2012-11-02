@@ -26,7 +26,8 @@ namespace Madara
     {
     public:
       /// Ctor.
-      Variable_Increment_Node (const ::std::string &key, long long value,
+      Variable_Increment_Node (const ::std::string &key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         Component_Node * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context &context);
 
@@ -34,10 +35,10 @@ namespace Madara
       virtual ~Variable_Increment_Node (void);
 
       /// Return the item stored in the node.
-      virtual long long item (void) const;
+      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
 
       /// Atomically increment the variable.
-      inline long long inc (void)
+      inline Madara::Knowledge_Record::VALUE_TYPE inc (void)
       {
         Madara::Knowledge_Record * record = record_;
 
@@ -63,10 +64,7 @@ namespace Madara
         if (key_[0] != '.')
         {
           context_.mark_modified (key_, *record);
-          //context_.changed_map_[key].value = record_->value;
-          //context_.changed_map_[key].quality = record_->quality;
         }
-        //record_->status = Madara::Knowledge_Record::MODIFIED;
 
         context_.signal ();
         return record->value;
@@ -75,11 +73,11 @@ namespace Madara
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual long long prune (bool & can_change);
+      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual long long evaluate (void);
+      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
 
       /// Expands the key (if necessary). This allow for keys to be defined
       /// with other variables inserted (e.g. var{.id} with .id = 2 expands
@@ -97,7 +95,7 @@ namespace Madara
       const ::std::string key_;
 
       /// amount to increment by. Note that this can also do decrement.
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
       
       /// holds a right hand side argument if it is not value_
       Component_Node * rhs_;

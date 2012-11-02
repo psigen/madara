@@ -102,7 +102,7 @@ namespace Madara
        * @param key                knowledge location
        * @return                   value at knowledge location
        **/
-      long long get (const ::std::string & key);
+      Madara::Knowledge_Record::VALUE_TYPE get (const ::std::string & key);
 
       /**
        * Read a file into the knowledge base
@@ -166,7 +166,8 @@ namespace Madara
        * @return             0 if successful, -1 if key is null, and
        *                     -2 if quality isn't high enough
        **/
-      int set (const ::std::string & key, long long value =
+      int set (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value =
         Madara::Knowledge_Record::MODIFIED);
 
       /**
@@ -178,7 +179,8 @@ namespace Madara
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
-      int set (const ::std::string & key, long long value,
+      int set (const ::std::string & key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
         bool send_modifieds);
 
       /**
@@ -187,7 +189,7 @@ namespace Madara
        * @param key             knowledge variable location
        * @param quality         quality of writing to this location
        **/
-      void set_quality (const ::std::string & key, unsigned long quality);
+      void set_quality (const ::std::string & key, uint32_t quality);
 
       /**
        * Starts a latency round
@@ -233,7 +235,8 @@ namespace Madara
        * @param expression      KaRL expression to evaluate
        * @return                value of expression
        **/
-      long long evaluate (const ::std::string & expression);
+      Madara::Knowledge_Record::VALUE_TYPE evaluate (
+        const ::std::string & expression);
 
       /**
        * Evaluates an expression
@@ -242,7 +245,8 @@ namespace Madara
        * @param send_modifieds  whether or not to dissemination modifications
        * @return                value of expression
        **/
-      long long evaluate (const ::std::string & expression,
+      Madara::Knowledge_Record::VALUE_TYPE evaluate (
+        const ::std::string & expression,
         bool send_modifieds);
 
       /**
@@ -252,7 +256,7 @@ namespace Madara
        * @param settings        Settings for evaluating and printing
        * @return                value of expression
        **/
-      long long evaluate (
+      Madara::Knowledge_Record::VALUE_TYPE evaluate (
         Compiled_Expression & expression,
         const Eval_Settings & settings);
 
@@ -271,7 +275,8 @@ namespace Madara
        * @param expression      KaRL expression to wait on
        * @return                value of expression
        **/
-      long long wait (const ::std::string & expression);
+      Madara::Knowledge_Record::VALUE_TYPE wait (
+        const ::std::string & expression);
 
       /**
        * Waits for an expression to be non-zero.
@@ -280,7 +285,8 @@ namespace Madara
        * @param send_modifieds  whether or not to dissemination modifications
        * @return                value of expression
        **/
-      long long wait (const ::std::string & expression, bool send_modifieds);
+      Madara::Knowledge_Record::VALUE_TYPE wait (
+        const ::std::string & expression, bool send_modifieds);
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings
@@ -291,8 +297,8 @@ namespace Madara
        *                        evaluation and printing
        * @return                value of expression
        **/
-      long long wait (Compiled_Expression & expression,
-                      const Wait_Settings & settings);
+      Madara::Knowledge_Record::VALUE_TYPE wait (
+        Compiled_Expression & expression, const Wait_Settings & settings);
 
       /**
        * Applies current time and modified to all global variables and tries

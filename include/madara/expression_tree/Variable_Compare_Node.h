@@ -26,8 +26,10 @@ namespace Madara
     {
     public:
       /// Ctor.
-      Variable_Compare_Node (const ::std::string &key, long long value,
-        int type, Component_Node * rhs, Madara::Knowledge_Engine::Thread_Safe_Context &context);
+      Variable_Compare_Node (const ::std::string &key,
+        Madara::Knowledge_Record::VALUE_TYPE value,
+        int type, Component_Node * rhs,
+        Madara::Knowledge_Engine::Thread_Safe_Context &context);
 
       enum Comparators
       {
@@ -42,16 +44,16 @@ namespace Madara
       virtual ~Variable_Compare_Node (void);
 
       /// Return the item stored in the node.
-      virtual long long item (void) const;
+      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual long long prune (bool & can_change);
+      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual long long evaluate (void);
+      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
 
       /// Expands the key (if necessary). This allow for keys to be defined
       /// with other variables inserted (e.g. var{.id} with .id = 2 expands
@@ -69,7 +71,7 @@ namespace Madara
       const ::std::string key_;
 
       /// amount to increment by. Note that this can also do decrement.
-      long long value_;
+      Madara::Knowledge_Record::VALUE_TYPE value_;
       
       /// holds a right hand side argument if it is not value_
       Component_Node * rhs_;

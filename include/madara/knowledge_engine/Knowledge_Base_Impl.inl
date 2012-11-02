@@ -13,7 +13,7 @@
  * This file contains the inline functions for Knowledge_Base_Impl class
  */
 
-inline long long
+inline int64_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
   const ::std::string & t_key)
 {
@@ -68,7 +68,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::run_all (void)
 
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
-                                               long long value)
+                                               int64_t value)
 {
   return set (key, value, true);
 }
@@ -76,7 +76,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
 /// Set quality of writing to a variable
 inline void 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
-  const ::std::string & t_key, unsigned long quality)
+  const ::std::string & t_key, uint32_t quality)
 {
   std::string key = map_.expand_statement (t_key);
 
@@ -128,14 +128,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::vote (void)
     return -1;
 }
 
-inline long long
+inline int64_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   const ::std::string & expression)
 {
   return wait (expression, true);
 }
 
-inline long long
+inline int64_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const ::std::string & expression)
 {

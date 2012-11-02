@@ -3,6 +3,7 @@
 #define _COMPOSITE_PREDECREMENT_NODE_H_
 
 #include "madara/expression_tree/Composite_Unary_Node.h"
+#include "madara/Globals.h"
 
 namespace Madara
 {
@@ -35,7 +36,7 @@ namespace Madara
        * Returns the printable character of the node
        * @return    value of the node
        **/
-      virtual long long item (void) const;
+      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
@@ -43,14 +44,14 @@ namespace Madara
        * @return    one subtracted from the value returned by 
        *            the right expression
        **/
-      virtual long long prune (bool & can_change);
+      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
 
       /** 
        * Evaluates the expression tree. 
        * @return    one subtracted from the value returned by 
        *            the right expression
        **/
-      virtual long long evaluate (void);
+      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

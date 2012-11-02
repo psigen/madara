@@ -7,8 +7,9 @@
 #include <sstream>
 
 Madara::Expression_Tree::Variable_Decrement_Node::Variable_Decrement_Node (
-  const ::std::string &key, long long value, Component_Node * rhs, 
-                  Madara::Knowledge_Engine::Thread_Safe_Context &context)
+  const ::std::string &key, Madara::Knowledge_Record::VALUE_TYPE value,
+  Component_Node * rhs,
+  Madara::Knowledge_Engine::Thread_Safe_Context &context)
 : key_ (key), value_ (value), rhs_ (rhs), record_ (0), context_ (context),
   key_expansion_necessary_ (false)
 {
@@ -106,7 +107,7 @@ Madara::Expression_Tree::Variable_Decrement_Node::accept (Visitor &visitor) cons
   visitor.visit (*this);
 }
 
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Decrement_Node::item () const
 {
   if (record_)
@@ -118,7 +119,7 @@ Madara::Expression_Tree::Variable_Decrement_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-long long
+Madara::Knowledge_Record::VALUE_TYPE
 Madara::Expression_Tree::Variable_Decrement_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -135,7 +136,7 @@ Madara::Expression_Tree::Variable_Decrement_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-long long 
+Madara::Knowledge_Record::VALUE_TYPE 
 Madara::Expression_Tree::Variable_Decrement_Node::evaluate (void)
 {
   return compute ();

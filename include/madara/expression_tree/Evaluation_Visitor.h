@@ -4,6 +4,7 @@
 
 #include "madara/expression_tree/Visitor.h"
 #include "madara/utility/LStack.h"
+#include "madara/Globals.h"
 
 namespace Madara
 {
@@ -210,7 +211,7 @@ namespace Madara
        * Returns the result of the evaluation
        * @return    result of the evaluation
        **/
-      long long total (void);
+      int64_t total (void);
 
       /** 
        * Resets the evaluation
@@ -219,7 +220,7 @@ namespace Madara
 
     private:
       /// Stack used for temporarily storing evaluations.
-      Madara::Utility::LStack<long long> stack_;
+      Madara::Utility::LStack<Madara::Knowledge_Record::VALUE_TYPE> stack_;
     };  
   }
 }

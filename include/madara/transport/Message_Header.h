@@ -3,6 +3,7 @@
 
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include <stdint.h>
 
 namespace Madara
 {
@@ -11,9 +12,9 @@ namespace Madara
     #define MADARA_IDENTIFIER_LENGTH    8
     #define MADARA_IDENTIFIER           "KaRL1.0\0"
     #define MADARA_DOMAIN_MAX_LENGTH    32
-    #define PAIR_COUNT_TYPE             unsigned int
-    #define KNOWLEDGE_QUALITY_TYPE      unsigned int
-    #define CLOCK_TYPE                  unsigned long long
+    #define PAIR_COUNT_TYPE             uint32_t
+    #define KNOWLEDGE_QUALITY_TYPE      uint32_t
+    #define CLOCK_TYPE                  uint64_t
     #define MAX_KNOWLEDGE_KEY_LENGTH    64
     #define MAX_ORIGINATOR_LENGTH       64
     #define KNOWLEDGE_VALUE_TYPE        Madara::Knowledge_Record::VALUE_TYPE
@@ -25,7 +26,7 @@ namespace Madara
       /**
        * the size of this header plus the updates
        **/
-      unsigned int          size;
+      uint64_t          size;
       
       /**
        * the identifier of this transport (MADARA_IDENTIFIER)
@@ -45,22 +46,22 @@ namespace Madara
       /**
        * the type of message @see Madara::Transport::Messages enum
        **/
-      unsigned int          type;
+      uint32_t              type;
 
       /**
        * the number of knowledge variable updates in the message
        **/
-      unsigned int          updates;
+      uint32_t              updates;
       
       /**
        * the quality of the message sender
        **/
-      unsigned int          quality;
+      uint32_t              quality;
       
       /**
        * the clock of the sender when the message was generated
        **/
-      unsigned long long    clock;
+      uint64_t              clock;
     };
 
     class Message_Update
@@ -77,7 +78,7 @@ namespace Madara
       KNOWLEDGE_VALUE_TYPE  value;
 
       int apply (Madara::Knowledge_Engine::Thread_Safe_Context & context,
-        unsigned int quality, unsigned long long clock, bool perform_lock)
+        unsigned int quality, uint64_t clock, bool perform_lock)
       {
         int result = -1;
 

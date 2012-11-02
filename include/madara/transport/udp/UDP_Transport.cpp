@@ -54,7 +54,7 @@ Madara::Transport::UDP_Transport::setup (void)
 
 long
 Madara::Transport::UDP_Transport::send_data (const std::string & key, 
-                                               const long long & value)
+  const Madara::Knowledge_Record::VALUE_TYPE & value)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -72,7 +72,7 @@ Madara::Transport::UDP_Transport::send_data (const std::string & key,
   }
   
   /// get current lamport clock. 
-  unsigned long long cur_clock = context_.get_clock ();
+  uint64_t cur_clock = context_.get_clock ();
 
   
 
@@ -80,7 +80,8 @@ Madara::Transport::UDP_Transport::send_data (const std::string & key,
 }
 
 long
-Madara::Transport::UDP_Transport::send_multiassignment (const std::string & expression, unsigned long quality)
+Madara::Transport::UDP_Transport::send_multiassignment (
+  const std::string & expression, uint32_t quality)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -98,7 +99,7 @@ Madara::Transport::UDP_Transport::send_multiassignment (const std::string & expr
   }
 
   // get current lamport clock. 
-  unsigned long long cur_clock = context_.get_clock ();
+  uint64_t cur_clock = context_.get_clock ();
 
   return 0;
 }
