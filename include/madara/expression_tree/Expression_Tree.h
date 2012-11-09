@@ -8,7 +8,7 @@
 #include "madara/utility/Refcounter.h"
 
 #include "madara/expression_tree/Component_Node.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

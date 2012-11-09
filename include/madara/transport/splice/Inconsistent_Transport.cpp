@@ -364,7 +364,7 @@ Madara::Transport::Inconsistent_Transport::setup (void)
 
 long
 Madara::Transport::Inconsistent_Transport::send_data (const std::string & key, 
-                                               const long long & value)
+                                               const int64_t & value)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -408,29 +408,13 @@ Madara::Transport::Inconsistent_Transport::send_data (const std::string & key,
 }
 
 long
-Madara::Transport::Inconsistent_Transport::send_multiassignment (
-  const std::string & expression, unsigned long quality)
+Madara::Transport::Inconsistent_Transport::send_data (
+  const Madara::Knowledge_Records & updates)
 {
-  // temporaries for holding key/value
-  std::string key;
-  long long value;
-  long ret_value;
-
-  // temporaries for tokenizer
-  std::vector <std::string> tokens, pivots, splitters;
-
-  splitters.resize (2);
-  splitters[0] = "=";
-  splitters[1] = ";";
-
-  Madara::Utility::tokenizer (expression, splitters, tokens, pivots);
-
-  for (unsigned int i = 0; i + 1 < tokens.size (); i+=2)
+  for (Knowledge_Records::const_iterator i = updates.begin ();
+    i != updates.end (); ++i)
   {
-    std::stringstream buffer (tokens[i+1]);
-    buffer >> value;
-
-    ret_value = this->send_data (tokens[i], value);
+    long ret_value = this->send_data (i->first, i->second->value);
 
     if (ret_value < 0)
       return ret_value;

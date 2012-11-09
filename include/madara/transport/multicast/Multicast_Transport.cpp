@@ -93,8 +93,8 @@ Madara::Transport::Multicast_Transport::setup (void)
 }
 
 long
-Madara::Transport::Multicast_Transport::send_data (const std::string & key, 
-  const Madara::Knowledge_Record::VALUE_TYPE & value)
+Madara::Transport::Multicast_Transport::send_data (
+  const Madara::Knowledge_Records & updates)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -110,104 +110,12 @@ Madara::Transport::Multicast_Transport::send_data (const std::string & key,
       DLINFO "Multicast_Transport::send_data: transport is not valid")); 
     return ret;
   }
-  
-  // compute size of this message
-  unsigned int size = sizeof (Message_Header) + 1 * 
-                (MAX_KNOWLEDGE_KEY_LENGTH + sizeof (KNOWLEDGE_VALUE_TYPE));
-
-  // allocate a buffer to send
-  char * buffer = (char *) malloc (size);
-
-  // set the header to the beginning of the buffer
-  Message_Header * header = (Message_Header *) buffer;
-
-  // set the update to the end of the header
-  Message_Update * update = (Message_Update *) (buffer + sizeof (Message_Header));
-  
-  // Message header format
-  // [size|id|domain|originator|type|updates|quality|clock|list of updates]
-
-  // zero out the memory
-  memset(buffer, 0, size);
-
-  // get the clock
-  header->clock = context_.get_clock ();
-
-  // copy the Madara transport version identification
-  strncpy (header->madara_id, MADARA_IDENTIFIER, 7);
-
-  // copy the domain from settings
-  strncpy (header->domain, this->settings_.domains.c_str (),
-    sizeof (header->domain) - 1);
-
-  // get the quality of the key
-  header->quality = context_.get_write_quality (key);
-
-  // copy the message originator (our id)
-  strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
-
-  // only 1 update in a send_data message
-  header->updates = 1;
-
-  // send data is generally an assign type. However, Message_Header is
-  // flexible enough to support both, and this will simply our read thread
-  // handling
-  header->type = Madara::Transport::MULTIASSIGN;
-  
-  // compute size of this message
-  header->size = sizeof (Message_Header) + 
-                 header->updates * sizeof (Message_Update);
-
-  // Message update format
-  // [key|value]
-
-  strncpy (update->key, key.c_str (), MAX_KNOWLEDGE_KEY_LENGTH - 1);
-  update->value = value;
-
-  // send the buffer contents to the multicast address
-  
-  if (addresses_.size () > 0)
-  {
-    int bytes_sent = socket_.send(
-      buffer, size, addresses_[0]);
-    
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_data:" \
-      " Sent %s=%q in packet size %d\n",
-      key.c_str (), value, bytes_sent));
-  }
-
-  // free the buffer we allocated
-  free (buffer);
-
-  return 0;
-}
-
-long
-Madara::Transport::Multicast_Transport::send_multiassignment (
-  const std::string & expression, uint32_t quality)
-{
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_data: transport has been told to shutdown")); 
-    return ret;
-  }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_data: transport is not valid")); 
-    return ret;
-  }
-  
-  std::vector <std::string> tokens;
-  std::vector <std::string> pivot_list;
-  Madara::Utility::tokenizer (expression, splitters_, tokens, pivot_list);
+ 
+  // get the maximum quality from the updates
+  uint32_t quality = Madara::max_quality (updates);
 
   // compute size of this message
-  unsigned int size = sizeof (Message_Header) + (tokens.size () / 2) * 
+  unsigned int size = sizeof (Message_Header) + updates.size () * 
                 (MAX_KNOWLEDGE_KEY_LENGTH + sizeof (KNOWLEDGE_VALUE_TYPE));
 
   // allocate a buffer to send
@@ -242,8 +150,7 @@ Madara::Transport::Multicast_Transport::send_multiassignment (
   strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
 
   // only 1 update in a send_data message
-  header->updates = tokens.size () / 2;
-  header->updates = Madara::Utility::endian_swap (header->updates);
+  header->updates = updates.size ();
 
   // send data is generally an assign type. However, Message_Header is
   // flexible enough to support both, and this will simply our read thread
@@ -255,24 +162,29 @@ Madara::Transport::Multicast_Transport::send_multiassignment (
   header->size = sizeof (Message_Header) + 
                  header->updates * sizeof (Message_Update);
   header->size = Madara::Utility::endian_swap (header->size);
+  
+  // little endianize the updates after we've used it for the last time
+  header->updates = Madara::Utility::endian_swap (header->updates);
 
   // Message update format
   // [key|value]
-
-  for (unsigned int i = 0; i < tokens.size (); i+=2, ++update)
+  
+  int j = 0;
+  for (Knowledge_Records::const_iterator i = updates.begin ();
+    i != updates.end (); ++i, ++j, ++update)
   {
-    strncpy (update->key, tokens[i].c_str (), MAX_KNOWLEDGE_KEY_LENGTH - 1);
+    // copy the key and value over
+    strncpy (update->key, i->first.c_str (),
+      MAX_KNOWLEDGE_KEY_LENGTH - 1);
     
-    std::stringstream tovalue;
-
-    tovalue << tokens[i + 1];
-    tovalue >> update->value;
+    update->value = i->second->value;
 
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_multiassignment:" \
+      DLINFO "Multicast_Transport::send_data:" \
       " update[%d] => %s=%d\n",
-      i, update->key, update->value));
-
+      j, update->key, update->value));
+    
+    // little endianize the value
     update->value = Madara::Utility::endian_swap (update->value);
   }
 
@@ -284,9 +196,9 @@ Madara::Transport::Multicast_Transport::send_multiassignment (
       buffer, size, addresses_[0]);
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_multiassignment:" \
-      " Sent %s in packet size %d\n",
-      expression.c_str (), bytes_sent));
+      DLINFO "Multicast_Transport::send_data:" \
+      " Sent packet with size %d\n",
+      bytes_sent));
   }
 
   // free the buffer we allocated

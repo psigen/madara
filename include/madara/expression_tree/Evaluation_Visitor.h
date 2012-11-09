@@ -4,7 +4,7 @@
 
 #include "madara/expression_tree/Visitor.h"
 #include "madara/utility/LStack.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

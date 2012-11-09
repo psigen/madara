@@ -8,7 +8,7 @@
  * This file contains the Knowledge_Base class
  */
 
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Files.h"

@@ -7,7 +7,7 @@
 
 #include "madara/utility/LStack.h"
 #include "madara/utility/LQueue.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 // Solve circular include problem
 

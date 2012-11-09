@@ -17,32 +17,13 @@
 # pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Function_Map.h"
 
 namespace Madara
 {
   namespace Knowledge_Engine
-  {
-    /**
-     * @class Mutated_Entry
-     * @brief This class holds the quality and value of a mutation
-     **/
-    //class Mutated_Entry
-    //{
-    //public:
-    //  Mutated_Entry (): value (0), quality (0) {}
-    //  int64_t value;
-    //  uint32_t quality;
-    //};
-
-    
-
-    /**
-     * Typedef used to hold a map of mutations
-     **/
-    typedef std::map <std::string, Madara::Knowledge_Record *>  Mutations;
-
+  { 
     /**
      * @class Thread_Safe_Context
      * @brief This class stores variables and their values for use by any entity
@@ -147,8 +128,7 @@ namespace Madara
        * @param   modified       string of modified variables (key=value;)
        * @param   quality        write quality of this process
        **/
-      void get_modified (std::stringstream & modified,
-        uint32_t & quality) const;
+      const Knowledge_Records & get_modified (void) const;
 
       /**
        * Reset all variables to be unmodified. This will clear all global
@@ -316,7 +296,7 @@ namespace Madara
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
       mutable uint64_t clock_;
-      Mutations changed_map_;
+      Knowledge_Records changed_map_;
 
       /// map of function names to functions
       Function_Map functions_;

@@ -2,7 +2,7 @@
 #ifndef _COMPOSITE_MULTIPLY_NODE_H
 #define _COMPOSITE_MULTIPLY_NODE_H
 
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

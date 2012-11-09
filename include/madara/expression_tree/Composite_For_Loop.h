@@ -5,7 +5,7 @@
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/Functions.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

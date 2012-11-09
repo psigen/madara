@@ -44,16 +44,14 @@ namespace Madara
        * Destructor
        **/
       ~TCP_Transport ();
-
+      
       /**
-       * Sends a single knowledge assignment
-       * @param   key     knowledge location for global variable
-       * @param   value   value of the knowledge location
+       * Sends a list of knowledge updates to listeners
+       * @param   updates listing of all updates that must be sent
        * @return  result of write operation or -1 if we are shutting down
        **/
-      long send_data (const std::string & key,
-        const Madara::Knowledge_Record::VALUE_TYPE & value);
-
+      long send_data (const Madara::Knowledge_Records & updates);
+	  
       /**
        * Accesses reliability setting. If this returns zero, it doesn't
        * make much sense.

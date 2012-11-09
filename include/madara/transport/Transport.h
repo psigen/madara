@@ -28,7 +28,7 @@
 #include "madara/cid/Heuristic.h"
 #include "madara/cid/Genetic.h"
 #include "madara/utility/Utility.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {
@@ -888,16 +888,6 @@ namespace Madara
       }
 
       /**
-       * Send a single assignment
-       * @return  result of send operation or -1 if we are shutting down
-       **/
-      virtual long send_data (const std::string &,
-        const Madara::Knowledge_Record::VALUE_TYPE &)
-      {
-        return check_transport ();
-      }
-
-      /**
        * Start latency
        * @return  result of operation or -1 if we are shutting down
        **/
@@ -936,13 +926,11 @@ namespace Madara
       }
 
       /**
-       * Sends a multiple assignment of knowledge variables
+       * Sends a list of updates to the domain. This function must be
+       * implemented by your transport
        * @return  result of operation or -1 if we are shutting down
        **/
-      virtual long send_multiassignment (const std::string &, uint32_t)
-      {
-        return check_transport ();
-      }
+      virtual long send_data (const Madara::Knowledge_Records &) = 0;
 
       /**
        * Invalidates a transport to indicate it is shutting down

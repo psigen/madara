@@ -4,7 +4,7 @@
 
 #include <string>
 #include "madara/MADARA_export.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 /**
  * @file Functions.h

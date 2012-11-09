@@ -2,7 +2,7 @@
 #ifndef _COMPOSITE_SUBTRACT_NODE_H_
 #define _COMPOSITE_SUBTRACT_NODE_H_
 
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

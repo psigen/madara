@@ -363,15 +363,15 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
 }
 
 long
-Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key, 
-                                               const long long & value)
+Madara::Transport::Splice_DDS_Transport::send_data (
+  const Madara::Knowledge_Records & updates)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_data: transport has been told to shutdown")); 
+      DLINFO "Splice_DDS_Transport::send_data: transport is shutting down"));
     return ret;
   }
   else if (-2 == ret)
@@ -380,52 +380,9 @@ Madara::Transport::Splice_DDS_Transport::send_data (const std::string & key,
       DLINFO "Splice_DDS_Transport::send_data: transport is not valid")); 
     return ret;
   }
-
-  /// get current lamport clock. 
-  unsigned long long cur_clock = context_.get_clock ();
-
-  DDS::ReturnCode_t      dds_result;
-  DDS::InstanceHandle_t  handle;
-
-  Knowledge::Update data;
-  data.key = key.c_str ();
-  data.value = value;
-  data.clock = cur_clock;
-  data.quality = context_.get_write_quality (key);
-  data.originator = id_.c_str ();
-  data.type = Madara::Transport::ASSIGN;
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Splice_DDS_Transport::send:" \
-    " sending data: %s=%q, time=%Q, quality=%u\n", 
-    key.c_str (), data.value, cur_clock, data.quality));
-
-  handle = update_writer_->register_instance (data);
-  dds_result = update_writer_->write (data, handle); 
-  //update_writer_->unregister_instance (data, handle);
-
-  return dds_result;
-}
-
-long
-Madara::Transport::Splice_DDS_Transport::send_multiassignment (
-  const std::string & expression, unsigned long quality)
-{
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is shutting down")); 
-    return ret;
-  }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is not valid")); 
-    return ret;
-  }
   
+  // get the maximum quality from the updates
+  uint32_t quality = Madara::max_quality (updates);
 
   /// get current lamport clock. 
   unsigned long long cur_clock = context_.get_clock ();
@@ -433,8 +390,19 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   DDS::ReturnCode_t      dds_result;
   DDS::InstanceHandle_t  handle;
 
+  std::stringstream buffer;
   Knowledge::Update data;
-  data.key = expression.c_str ();
+
+  for (Knowledge_Records::const_iterator i = updates.begin ();
+    i != updates.end (); ++i)
+  {
+    buffer << i->first;
+    buffer << "=";
+    buffer << i->second->value;
+    buffer << ";";
+  }
+
+  data.key = buffer.str ().c_str ();
   data.value = 0;
   data.clock = cur_clock;
   data.quality = quality;
@@ -444,7 +412,7 @@ Madara::Transport::Splice_DDS_Transport::send_multiassignment (
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "Splice_DDS_Transport::send:" \
     " sending multiassignment: %s, time=%Q, quality=%u\n", 
-    expression.c_str (), cur_clock, quality));
+    buffer.str ().c_str (), cur_clock, quality));
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 

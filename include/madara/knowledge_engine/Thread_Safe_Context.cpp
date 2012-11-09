@@ -75,7 +75,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   // enter the mutex
   Context_Guard guard (mutex_);
 
-  // creat the key if it didn't exist
+  // create the key if it didn't exist
   map_[key];
 
   // find the key in the knowledge base. It will be
@@ -101,10 +101,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     {
       mark_modified (key, record);
     }
-      //record.status = Madara::Knowledge_Record::MODIFIED;
   }
-  //else
-  //  record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
@@ -114,7 +111,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 /// get quality of last update to a variable.
 /// @return    quality of the variable 
 uint32_t 
-Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (const ::std::string & key)
+Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (
+  const ::std::string & key)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -258,8 +256,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (key, record);
       }
     }
-    //else
-    //  map_[key].scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
     changed_.signal ();
   }

@@ -97,8 +97,8 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-      " received a message header of %d bytes for %d updates from %s:%d\n",
-      bytes_read, header->updates,
+      " received a message header of %d bytes from %s:%d\n",
+      bytes_read,
       remote.get_host_addr (), remote.get_port_number ()));
     
     if (bytes_read > 0)

@@ -3,7 +3,7 @@
 #define _COMPOSITE_UNARY_NODE_H_
 
 #include "madara/expression_tree/Component_Node.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

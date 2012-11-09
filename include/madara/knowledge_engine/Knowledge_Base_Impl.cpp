@@ -252,17 +252,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
   if (transport_)
   {
-    std::stringstream modified;
-    uint32_t quality;
-    uint64_t cur_clock = map_.get_clock ();
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-    map_.get_modified (modified, quality);
-
-    std::string expression = modified.str ();
-
-    if (expression.size () > 0)
+    if (modified.size () > 0)
     {
-      transport_->send_multiassignment (expression, quality);
+      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
+        DLINFO "Knowledge_Base_Impl::apply_modified:" \
+        " sending %d updates\n", 
+        modified.size ()));
+
+      transport_->send_data (modified);
       map_.reset_modified ();
     }
   }
@@ -297,17 +296,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 
   if (transport_ && send_modifieds)
   {
-    std::stringstream modified;
-    uint32_t quality;
-    uint64_t cur_clock = map_.get_clock ();
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-    map_.get_modified (modified, quality);
-
-    std::string expression = modified.str ();
-
-    if (expression.size () > 0)
+    if (modified.size () > 0)
     {
-      transport_->send_multiassignment (expression, quality);
+      transport_->send_data (modified);
       map_.reset_modified ();
     }
     else
@@ -371,16 +364,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
   if (transport_ && send_modifieds)
   {
-    std::stringstream modified;
-    uint32_t quality;
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-    map_.get_modified (modified, quality);
-
-    std::string expression = modified.str ();
-
-    if (expression.size () > 0)
+    if (modified.size () > 0)
     {
-      transport_->send_multiassignment (expression, quality);
+      transport_->send_data (modified);
       map_.reset_modified ();
     }
     else
@@ -419,21 +407,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
 
     if (transport_ && send_modifieds)
     {
-      std::stringstream modified;
-      uint32_t quality;
+      const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-      map_.get_modified (modified, quality);
-
-      std::string expression = modified.str ();
-
-      if (expression.size () > 0)
+      if (modified.size () > 0)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
           DLINFO "Knowledge_Base_Impl::wait:" \
-          " will be sending %s\n", 
-          expression.c_str ()));
+          " sending %d updates\n", 
+          modified.size ()));
 
-        transport_->send_multiassignment (expression, quality);
+        transport_->send_data (modified);
         map_.reset_modified ();
       }
       else
@@ -486,21 +469,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
   if (transport_ && settings.send_modifieds)
   {
-    std::stringstream modified;
-    uint32_t quality;
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-    map_.get_modified (modified, quality);
-
-    std::string expression = modified.str ();
-
-    if (expression.size () > 0)
+    if (modified.size () > 0)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
         DLINFO "Knowledge_Base_Impl::wait:" \
-        " will be sending %s\n", 
-        expression.c_str ()));
+        " sending %d updates\n", 
+        modified.size ()));
 
-      transport_->send_multiassignment (expression, quality);
+      transport_->send_data (modified);
       map_.reset_modified ();
     }
     else
@@ -566,21 +544,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
     if (transport_ && settings.send_modifieds)
     {
-      std::stringstream modified;
-      uint32_t quality;
+      const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-      map_.get_modified (modified, quality);
-
-      std::string expression = modified.str ();
-
-      if (expression.size () > 0)
+      if (modified.size () > 0)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
           DLINFO "Knowledge_Base_Impl::wait:" \
-          " will be sending %s\n", 
-          expression.c_str ()));
+          " sending %d updates\n", 
+          modified.size ()));
 
-        transport_->send_multiassignment (expression, quality);
+        transport_->send_data (modified);
         map_.reset_modified ();
       }
       else
@@ -650,22 +623,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   // to any interested parties...
   if (transport_ && send_modifieds)
   {
-    std::stringstream modified;
-    uint32_t quality;
-    uint64_t cur_clock = map_.get_clock ();
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-    map_.get_modified (modified, quality);
-
-    std::string expression = modified.str ();
-
-    if (expression.size () > 0)
+    if (modified.size () > 0)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
-        DLINFO "Knowledge_Base_Impl::evaluate:" \
-        " will be sending %s\n", 
-        expression.c_str ()));
+        DLINFO "Knowledge_Base_Impl::evaluates:" \
+        " sending %d updates\n", 
+        modified.size ()));
 
-      transport_->send_multiassignment (expression, quality);
+      transport_->send_data (modified);
       map_.reset_modified ();
     }
   }
@@ -704,22 +671,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   // to any interested parties...
   if (transport_ && settings.send_modifieds)
   {
-    std::stringstream modified;
-    uint32_t quality;
-    uint64_t cur_clock = map_.get_clock ();
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
 
-    map_.get_modified (modified, quality);
-
-    std::string expression = modified.str ();
-
-    if (expression.size () > 0)
+    if (modified.size () > 0)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
         DLINFO "Knowledge_Base_Impl::evaluate:" \
-        " will be sending %s\n", 
-        expression.c_str ()));
+        " sending %d updates\n", 
+        modified.size ()));
 
-      transport_->send_multiassignment (expression, quality);
+      transport_->send_data (modified);
       map_.reset_modified ();
     }
   }

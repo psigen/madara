@@ -99,8 +99,8 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Multicast_Transport_Read_Thread::svc:" \
-      " received a message header of %d bytes for %d updates from %s:%d\n",
-      bytes_read, header->updates,
+      " received a message header of %d bytes from %s:%d\n",
+      bytes_read,
       remote.get_host_addr (), remote.get_port_number ()));
 
     if (bytes_read > 0)
@@ -171,13 +171,13 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
       // iterate over the updates
       for (uint32_t i = 0; i < header->updates; ++i, ++update)
       {
+        // convert endianness if necessary
+        update->value = Madara::Utility::endian_swap (update->value);
+
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Multicast_Transport_Read_Thread::svc:" \
           " attempting to apply %s=%q\n", update->key, update->value));
         
-        // convert endianness if necessary
-        update->value = Madara::Utility::endian_swap (update->value);
-
         int result = update->apply (context_, header->quality,
           header->clock, false);
 

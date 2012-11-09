@@ -1,6 +1,7 @@
 #include "madara/transport/udp/UDP_Transport.h"
 #include "madara/transport/udp/UDP_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 #include <iostream>
 
@@ -53,8 +54,8 @@ Madara::Transport::UDP_Transport::setup (void)
 }
 
 long
-Madara::Transport::UDP_Transport::send_data (const std::string & key, 
-  const Madara::Knowledge_Record::VALUE_TYPE & value)
+Madara::Transport::UDP_Transport::send_data (
+  const Madara::Knowledge_Records & updates)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -70,36 +71,8 @@ Madara::Transport::UDP_Transport::send_data (const std::string & key,
       DLINFO "UDP_Transport::send_data: transport is not valid")); 
     return ret;
   }
-  
-  /// get current lamport clock. 
-  uint64_t cur_clock = context_.get_clock ();
 
-  
-
-  return 0;
-}
-
-long
-Madara::Transport::UDP_Transport::send_multiassignment (
-  const std::string & expression, uint32_t quality)
-{
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is shutting down")); 
-    return ret;
-  }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_multiassignment: transport is not valid")); 
-    return ret;
-  }
-
-  // get current lamport clock. 
-  uint64_t cur_clock = context_.get_clock ();
+  uint32_t quality = Madara::max_quality (updates);
 
   return 0;
 }

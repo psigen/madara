@@ -316,29 +316,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
 }
 
 /// Return list of variables that have been modified
-inline void
-Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (
-  std::stringstream & modified, uint32_t & quality) const
+inline const Madara::Knowledge_Records &
+Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (void) const
 {
   Context_Guard guard (mutex_);
-  quality = 0;
 
-  ++clock_;
-
-  for (Madara::Knowledge_Engine::Mutations::const_iterator i = changed_map_.begin ();
-       i != changed_map_.end (); 
-       ++i)
-  {
-    modified << i->first;
-    modified << "=";
-    modified << i->second->value;
-    modified << ";";
-
-    if (i->second->quality > quality)
-      quality = i->second->quality;
-
-    i->second->clock = clock_;
-  }
+  return changed_map_;
 }
 
 /// Reset all variables to unmodified

@@ -257,7 +257,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
 
   Madara::Transport::Settings settings;
-  settings.type = Madara::Transport::SPLICE;
+  settings.type = Madara::Transport::MULTICAST;
   settings.domains = "KaRL_Dissemination";
   settings.queue_length = 12000000;
   settings.reliability = Madara::Transport::BEST_EFFORT;

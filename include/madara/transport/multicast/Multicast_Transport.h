@@ -14,7 +14,7 @@
 #include "madara/transport/multicast/Multicast_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "ace/SOCK_Dgram.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {
@@ -42,25 +42,14 @@ namespace Madara
        * Destructor
        **/
       ~Multicast_Transport ();
-
+      
       /**
-       * Sends a single knowledge assignment
-       * @param   key     knowledge location for global variable
-       * @param   value   value of the knowledge location
+       * Sends a list of knowledge updates to listeners
+       * @param   updates listing of all updates that must be sent
        * @return  result of write operation or -1 if we are shutting down
        **/
-      long send_data (const std::string & key,
-        const Madara::Knowledge_Record::VALUE_TYPE & value);
+      long send_data (const Madara::Knowledge_Records & updates);
 	  
-      /**
-       * Sends a knowledge expression to all connected hosts over UDP
-       * @param   expression     series of assignments
-       * @param   quality        knowledge quality of all variables in expression
-       * @return  result of write operation or -1 if we are shutting down
-       **/
-      long send_multiassignment (const std::string & expression,
-		  uint32_t quality);
-
       /**
        * Closes the transport
        **/

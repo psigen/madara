@@ -15,7 +15,7 @@
 #include <list>
 #include <map>
 
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 

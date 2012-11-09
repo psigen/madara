@@ -53,8 +53,8 @@ Madara::Transport::TCP_Transport::setup (void)
 }
 
 long
-Madara::Transport::TCP_Transport::send_data (const std::string & key, 
-  const Madara::Knowledge_Record::VALUE_TYPE & value)
+Madara::Transport::TCP_Transport::send_data (
+  const Madara::Knowledge_Records & updates)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -70,10 +70,8 @@ Madara::Transport::TCP_Transport::send_data (const std::string & key,
       DLINFO "TCP_Transport::send_data: transport is not valid")); 
     return ret;
   }
-
-
-  // TO DO
   
+  uint32_t quality = Madara::max_quality (updates);
 
   return 0;
 }

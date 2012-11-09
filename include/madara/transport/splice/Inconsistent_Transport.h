@@ -10,6 +10,7 @@
 #include "madara/transport/Transport.h"
 #include "ccpp_dds_dcps.h"
 #include "madara/transport/splice/ccpp_Splice_Knowledge_Update.h"
+#include <stdint.h>
 
 namespace Madara
 {
@@ -54,17 +55,15 @@ namespace Madara
        * @param   value   value of the knowledge location
        * @return  result of dds write operation or -1 if we are shutting down
        **/
-      long send_data (const std::string & key, const long long & value);
-
+      long send_data (const std::string & key, const int64_t & value);
+      
       /**
-       * Sends a multiple assignment of knowledge variables
-       * @param   expression  key=value pairings separated by commas
-       * @param   quality     maximum quality of knowledge writings
-       * @return  result of dds write operation or -1 if we are shutting down
+       * Sends a list of knowledge updates to listeners
+       * @param   updates listing of all updates that must be sent
+       * @return  result of write operation or -1 if we are shutting down
        **/
-      long send_multiassignment (const std::string & expression, 
-        unsigned long quality);
-
+      long send_data (const Madara::Knowledge_Records & updates);
+	  
       /**
        * Start a three phase latency round with all other participants
        * @return  result of dds write operation or -1 if we are shutting down

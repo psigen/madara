@@ -44,23 +44,12 @@ namespace Madara
       ~Broadcast_Transport ();
 
       /**
-       * Sends a single knowledge assignment
-       * @param   key     knowledge location for global variable
-       * @param   value   value of the knowledge location
+       * Sends a list of knowledge updates to listeners
+       * @param   updates listing of all updates that must be sent
        * @return  result of write operation or -1 if we are shutting down
        **/
-      long send_data (const std::string & key,
-        const Madara::Knowledge_Record::VALUE_TYPE & value);
-	  
-      /**
-       * Sends a knowledge expression to all connected hosts over UDP
-       * @param   expression     series of assignments
-       * @param   quality        knowledge quality of all variables in expression
-       * @return  result of write operation or -1 if we are shutting down
-       **/
-      long send_multiassignment (const std::string & expression,
-		  uint32_t quality);
-      
+      long send_data (const Madara::Knowledge_Records & updates);
+	    
       /**
        * Closes the transport
        **/

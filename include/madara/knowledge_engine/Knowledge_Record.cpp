@@ -1,9 +1,7 @@
+#ifndef _KNOWLEDGE_RECORD_CPP_
+#define _KNOWLEDGE_RECORD_CPP_
 
-
-#ifndef _MADARA_GLOBALS_CPP_
-#define _MADARA_GLOBALS_CPP_
-
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 bool
 Madara::Knowledge_Record::lt (VALUE_TYPE lhs, VALUE_TYPE rhs)
@@ -39,4 +37,4 @@ Madara::Knowledge_Record::gte (VALUE_TYPE lhs, VALUE_TYPE rhs)
 
 
 
-#endif
+#endif   // _KNOWLEDGE_RECORD_CPP_

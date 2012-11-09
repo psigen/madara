@@ -3,7 +3,7 @@
 #define _COMPOSITE_PREINCREMENT_NODE_H_
 
 #include "madara/expression_tree/Composite_Unary_Node.h"
-#include "madara/Globals.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {

@@ -274,59 +274,8 @@ Madara::Transport::NDDS_Transport::setup (void)
 }
 
 long
-Madara::Transport::NDDS_Transport::send_data (const std::string & key, 
-                                               const long long & value)
-{
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "NDDS_Transport::send_data: transport is shutting down")); 
-    return ret;
-  }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "NDDS_Transport::send_data: transport is not valid")); 
-    return ret;
-  }
-  
-  /// get current lamport clock. 
-  unsigned long long cur_clock = context_.get_clock ();
-
-  DDS_ReturnCode_t rc;
-
-  NDDS_Knowledge_Update data;
-
-  NDDS_Knowledge_Update_initialize (&data);
-
-  strcpy (data.key, key.c_str ());
-
-  data.value = value;
-  data.clock = cur_clock;
-  data.quality = context_.get_write_quality (key);
-
-  strcpy (data.originator, id_.c_str ());
-
-  data.type = Madara::Knowledge_Engine::ASSIGNMENT;
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Splice_DDS_Transport::send:" \
-    " sending data: %s=%q, time=%Q, quality=%u\n", 
-    key.c_str (), data.value, cur_clock, data.quality));
-
-  DDS_InstanceHandle_t handle = update_writer_->register_instance (data);
-  rc = update_writer_->write (data, handle);
-
-  NDDS_Knowledge_Update_finalize (&data);
-
-  return rc;
-}
-
-long
-Madara::Transport::NDDS_Transport::send_multiassignment (
-  const std::string & expression, unsigned long quality)
+Madara::Transport::NDDS_Transport::send_data (
+  const Madara::Knowledge_Records & updates)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -343,17 +292,30 @@ Madara::Transport::NDDS_Transport::send_multiassignment (
     return ret;
   }
   
+  // get the maximum quality from the updates
+  uint32_t quality = Madara::max_quality (updates);
+
 
   /// get current lamport clock. 
   unsigned long long cur_clock = context_.get_clock ();
 
   DDS_ReturnCode_t rc;
-
+  
+  std::stringstream buffer;
   NDDS_Knowledge_Update data;
 
   NDDS_Knowledge_Update_initialize (&data);
 
-  strcpy (data.key, expression.c_str ());
+  for (Knowledge_Records::const_iterator i = updates.begin ();
+    i != updates.end (); ++i)
+  {
+    buffer << i->first;
+    buffer << "=";
+    buffer << i->second->value;
+    buffer << ";";
+  }
+
+  strcpy (data.key, buffer.str ().c_str ());
   
   data.value = 0;
   data.clock = cur_clock;
@@ -366,7 +328,7 @@ Madara::Transport::NDDS_Transport::send_multiassignment (
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "NDDS_Transport::send:" \
     " sending multiassignment: %s, time=%Q, quality=%u\n", 
-    expression.c_str (), cur_clock, quality));
+    buffer.str ().c_str (), cur_clock, quality));
 
   DDS_InstanceHandle_t handle = update_writer_->register_instance (data);
   rc = update_writer_->write (data, handle); 
