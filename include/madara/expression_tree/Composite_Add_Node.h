@@ -3,7 +3,6 @@
 #define _COMPOSITE_ADD_NODE_H_
 
 #include "madara/expression_tree/Composite_Binary_Node.h"
-#include <stdint.h>
 
 namespace Madara
 {
