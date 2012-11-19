@@ -2,6 +2,8 @@
 #ifndef _PRINT_VISITOR_H_
 #define _PRINT_VISITOR_H_
 
+#ifdef _USE_VISITORS_
+
 #include "madara/expression_tree/Visitor.h"
 
 namespace Madara
@@ -207,4 +209,7 @@ namespace Madara
     };  
   }
 }
+
+#endif // _USE_VISITORS_
+
 #endif /* _PRINT_VISITOR_H_ */

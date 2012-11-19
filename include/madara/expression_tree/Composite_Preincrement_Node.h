@@ -36,20 +36,20 @@ namespace Madara
        * Returns the printable character of the node
        * @return    value of the node
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
+      virtual Madara::Knowledge_Record item (void) const;
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
        * @param     can_change   set to true if variable nodes are contained
        * @return    one added to the value returned by the right expression
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
+      virtual Madara::Knowledge_Record prune (bool & can_change);
 
       /** 
        * Evaluates the expression tree. 
        * @return    one added to the value returned by the right expression
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (void);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

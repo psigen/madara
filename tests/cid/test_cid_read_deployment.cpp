@@ -5,8 +5,8 @@
 #include <iostream>
 #include <iomanip>
 
-#include "madara/cid/Convenience.h"
-#include "madara/cid/Heuristic.h"
+#include "madara/cid/CID_Convenience.h"
+#include "madara/cid/CID_Heuristic.h"
 #include "madara/utility/Log_Macros.h"
 
 void check_fanout_deployment (unsigned int fanout, Madara::Cid::Settings & settings)

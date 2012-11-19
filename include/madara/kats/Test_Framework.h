@@ -9,7 +9,7 @@
  */
 
 #include "madara/kats/KATS_export.h"
-#include "madara/transport/Transport.h"
+//#include "madara/transport/Transport.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 namespace Madara
@@ -80,7 +80,7 @@ namespace Madara
        * Barriers on all processes until everyone is at the event
        * @param    event_name    name of the event to barrier on
        */
-      long long barrier (const std::string & event_name);
+      Madara::Knowledge_Record::Integer barrier (const std::string & event_name);
 
       /**
        * Attempts to send out all global knowledge
@@ -137,7 +137,7 @@ namespace Madara
        * @param key                knowledge location
        * @return                   value at knowledge location
        **/
-      long long get (const ::std::string & key);
+      Madara::Knowledge_Record::Integer get (const ::std::string & key);
 
       /**
        * Sets a knowledge value to a specified value
@@ -147,8 +147,8 @@ namespace Madara
        * @return             0 if successful, -1 if key is null, and
        *                     -2 if quality isn't high enough
        **/
-      int set (const ::std::string & key, long long value =
-        Madara::Knowledge_Record::MODIFIED);
+      int set (const ::std::string & key,
+        Madara::Knowledge_Record::Integer value = 1);
 
 
       /**

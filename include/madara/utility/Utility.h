@@ -5,26 +5,7 @@
 #include <string>
 #include "ace/SOCK_Acceptor.h"
 #include "madara/MADARA_export.h"
-
-
-// Because Microsoft decided to not support stdint.h
-// from VS 2003 until VS 2010, we simply typedef the
-// symbols that are supported in all MS products when
-// we know we have a MS compiler
-
-#ifdef _MSC_VER
-
-typedef __int32             int32_t;
-typedef unsigned __int32    uint32_t;
-typedef __int64             int64_t;
-typedef unsigned __int64    uint64_t;
-
-#else   // !_MSC_VER
-
-// otherwise, we do something more logical
-#include <stdint.h>
-
-#endif  // _MSC_VER
+#include "madara/utility/stdint.h"
 
 
 namespace Madara
@@ -37,7 +18,7 @@ namespace Madara
      * @param     input         the string to change
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & upper (::std::string & input);
+    MADARA_Export std::string & upper (std::string & input);
     
     /**
      * Converts the string to lower. This function will modify and return the
@@ -45,7 +26,7 @@ namespace Madara
      * @param     input         the string to change
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & lower (::std::string & input);
+    MADARA_Export std::string & lower (std::string & input);
     
     /**
      * Changes periods to underscores in compliance with OpenSplice needs.
@@ -54,7 +35,7 @@ namespace Madara
      * @param     input         the string to change
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & dds_topicify (::std::string & input);
+    MADARA_Export std::string & dds_topicify (std::string & input);
     
     /**
      * Strips all whitespace characters from a string. This function will
@@ -62,7 +43,7 @@ namespace Madara
      * @param     input         the string to change
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & strip_white_space (::std::string & input);
+    MADARA_Export std::string & strip_white_space (std::string & input);
     
     /**
      * Strips all comments (single-line and multi-line). This function will
@@ -70,7 +51,7 @@ namespace Madara
      * @param     input         the string to change
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & strip_comments (::std::string & input);
+    MADARA_Export std::string & strip_comments (std::string & input);
     
     /**
      * Strips an unwanted character. This function will
@@ -79,7 +60,7 @@ namespace Madara
      * @param     unwanted      the character value to remove from input
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & string_remove (::std::string & input,
+    MADARA_Export std::string & string_remove (std::string & input,
       char unwanted);
 
     /**
@@ -89,8 +70,8 @@ namespace Madara
      * @param     input         the string to change
      * @return    a reference to the modified input
      **/
-    MADARA_Export ::std::string & strip_extra_white_space (
-      ::std::string & input);
+    MADARA_Export std::string & strip_extra_white_space (
+      std::string & input);
     
     /**
      * Splits a key of host:port into a corresponding host and port.
@@ -130,10 +111,10 @@ namespace Madara
      * @param     pivot_list  the actual splitters that were found between
      *                        the tokens
      **/
-    MADARA_Export void tokenizer (const ::std::string & input, 
-      const ::std::vector< ::std::string> & splitters,
-      ::std::vector< ::std::string> & tokens,
-      ::std::vector< ::std::string> & pivot_list);
+    MADARA_Export void tokenizer (const std::string & input, 
+      const ::std::vector< std::string> & splitters,
+      ::std::vector< std::string> & tokens,
+      ::std::vector< std::string> & pivot_list);
     
     /**
      * Binds to an ephemeral port
@@ -203,7 +184,7 @@ namespace Madara
     MADARA_Export uint64_t endian_swap (uint64_t value);
     
     /**
-     * Converts a host format signed int64_t into big endian
+     * Converts a host format signed Madara::Knowledge_Record::Integer into big endian
      * @param     value      the value to convert
      * @return    the converted value
      **/
@@ -217,7 +198,7 @@ namespace Madara
     MADARA_Export uint32_t endian_swap (uint32_t value);
     
     /**
-     * Converts a host format signed int64_t into big endian
+     * Converts a host format signed Madara::Knowledge_Record::Integer into big endian
      * @param     value      the value to convert
      * @return    the converted value
      **/

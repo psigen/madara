@@ -2,11 +2,11 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
-#include "Convenience.h"
+#include "madara/cid/CID_Convenience.h"
+#include "madara/cid/CID_Heuristic.h"
+#include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/utility/Utility.h"
-#include "madara/knowledge_engine/Knowledge_Base.h"
-#include "madara/cid/Heuristic.h"
 
 /**
  * Checks a solution for duplicate entries
@@ -548,7 +548,7 @@ Madara::Cid::process_deployment (Settings & settings,
     {
       knowledge.evaluate (tokens[0]);
 
-      size = (unsigned int)knowledge.get ("size");
+      size = (unsigned int)knowledge.get ("size").to_integer ();
     }
 
     if (size == 0)
@@ -557,7 +557,7 @@ Madara::Cid::process_deployment (Settings & settings,
       // user is using solution.size 
       deployment.resize (size);
       input.str (contents);
-      knowledge.set ("size", size);
+      knowledge.set ("size", Madara::Knowledge_Record::Integer (size));
     }
     else
     {
@@ -663,7 +663,7 @@ Madara::Cid::process_deployment (Settings & settings,
 
               // set source begin and end
               source_begin = 
-                (unsigned int)knowledge.evaluate (source_tokens[0]);
+                (unsigned int)knowledge.evaluate (source_tokens[0]).to_integer ();
               source_end = source_begin;
             }
           }
@@ -672,13 +672,13 @@ Madara::Cid::process_deployment (Settings & settings,
           {
             // assign begin to token[0], end to token[1] and inc to token[2]
             source_begin =
-              (unsigned int) knowledge.evaluate (source_tokens[0]);
+              (unsigned int) knowledge.evaluate (source_tokens[0]).to_integer ();
             source_end =
-              (unsigned int) knowledge.evaluate (source_tokens[1]);
+              (unsigned int) knowledge.evaluate (source_tokens[1]).to_integer ();
 
             if (source_tokens.size () >= 3)
             {
-              int64_t value = knowledge.evaluate (source_tokens[2]);
+              Madara::Knowledge_Record::Integer value = knowledge.evaluate (source_tokens[2]).to_integer ();
               if (value != 0)
                 source_inc = (unsigned int)value;
             }
@@ -771,16 +771,17 @@ Madara::Cid::process_deployment (Settings & settings,
 
           for (; source_begin <= source_end; source_begin += source_inc)
           {
-            knowledge.set ("source", source_begin);
+            knowledge.set ("source",
+              Madara::Knowledge_Record::Integer (source_begin));
             
             unsigned int begin =
-              (unsigned int) knowledge.evaluate (dest_begin);
+              (unsigned int) knowledge.evaluate (dest_begin).to_integer ();
 
             unsigned int end =
-              (unsigned int) knowledge.evaluate (dest_end);
+              (unsigned int) knowledge.evaluate (dest_end).to_integer ();
 
             unsigned int inc =
-              (unsigned int) knowledge.evaluate (dest_inc);
+              (unsigned int) knowledge.evaluate (dest_inc).to_integer ();
 
             if (!dest_left_inclusive)
               ++begin;

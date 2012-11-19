@@ -49,7 +49,7 @@ static void * worker(void * &)
   buffer << id;
 
   ACE_DEBUG ((LM_DEBUG, "(%P|%t) Setting %s\n", buffer.str ().c_str ()));
-  knowledge.set (buffer.str (),1);
+  knowledge.set (buffer.str (), Madara::Knowledge_Record::Integer (1));
 
   if (id == max_threads)
   {

@@ -11,11 +11,61 @@
   * @param   key       unique identifier of the variable
   * @return   the value of the keyed variable
   **/
-Madara::Knowledge_Engine::VALUE_TYPE
-  Madara::Knowledge_Engine::Variables::get (const std::string & key) const
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Variables::get (const std::string & key) const
 {
   if (context_)
-    return context_->get (key);
+    return *context_->get_record (key);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+      "Variables context not set. Please don't create your own Madara::" \
+      "Knowledge_Engine::Variables instances.\n"));
+    return Madara::Knowledge_Record ();
+  }
+}
+
+/**
+  * Sets the value of a variable.
+  * @param   key       unique identifier of the variable
+  * @param   value     new value of the variable
+  * @return   the new value of the keyed variable
+  **/
+int
+Madara::Knowledge_Engine::Variables::set (const std::string & key,
+                          Madara::Knowledge_Record::Integer value)
+{
+  if (context_)
+  {
+    context_->set (key, value, true);
+
+    return 1;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+      "Variables context not set. Please don't create your own Madara::" \
+      "Knowledge_Engine::Variables instances.\n"));
+    return 0;
+  }
+}
+   
+/**
+  * Sets the value of a variable.
+  * @param   key       unique identifier of the variable
+  * @param   value     new value of the variable
+  * @return   the new value of the keyed variable
+  **/
+int
+Madara::Knowledge_Engine::Variables::set (const std::string & key,
+                                          double value)
+{
+  if (context_)
+  {
+    context_->set (key, value, true);
+
+    return 1;
+  }
   else
   {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
@@ -31,15 +81,15 @@ Madara::Knowledge_Engine::VALUE_TYPE
   * @param   value     new value of the variable
   * @return   the new value of the keyed variable
   **/
-Madara::Knowledge_Engine::VALUE_TYPE
-  Madara::Knowledge_Engine::Variables::set (const std::string & key,
-                                Madara::Knowledge_Engine::VALUE_TYPE value)
+int
+Madara::Knowledge_Engine::Variables::set (const std::string & key,
+                                          const std::string & value)
 {
   if (context_)
   {
     context_->set (key, value, true);
 
-    return value;
+    return 1;
   }
   else
   {
@@ -49,14 +99,14 @@ Madara::Knowledge_Engine::VALUE_TYPE
     return 0;
   }
 }
-      
+
 /**
   * Atomically increments the value of the variable
   * @param   key            unique identifier of the variable
   * @return                 new value of variable
   **/
-Madara::Knowledge_Engine::VALUE_TYPE
-  Madara::Knowledge_Engine::Variables::inc (const ::std::string & key)
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Variables::inc (const std::string & key)
 {
   if (context_)
   {
@@ -67,7 +117,7 @@ Madara::Knowledge_Engine::VALUE_TYPE
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
       "Variables context not set. Please don't create your own Madara::" \
       "Knowledge_Engine::Variables instances.\n"));
-    return 0;
+    return Madara::Knowledge_Record ();
   }
 }
 
@@ -77,7 +127,7 @@ Madara::Knowledge_Engine::VALUE_TYPE
   * @return                 new value of variable
   **/
 Madara::Knowledge_Engine::VALUE_TYPE
-  Madara::Knowledge_Engine::Variables::dec (const ::std::string & key)
+  Madara::Knowledge_Engine::Variables::dec (const std::string & key)
 {
   if (context_)
   {
@@ -88,7 +138,7 @@ Madara::Knowledge_Engine::VALUE_TYPE
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
       "Variables context not set. Please don't create your own Madara::" \
       "Knowledge_Engine::Variables instances.\n"));
-    return 0;
+    return Madara::Knowledge_Record ();
   }
 }
 

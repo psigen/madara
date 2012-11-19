@@ -19,14 +19,15 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 bool logical_print = false;
-int id = 2;
-int left = 0;
-int processes = 3;
-int stop = 3;
-long value = 0;
+Madara::Knowledge_Record::Integer id = 2;
+Madara::Knowledge_Record::Integer left = 0;
+Madara::Knowledge_Record::Integer processes = 3;
+Madara::Knowledge_Record::Integer stop = 3;
+Madara::Knowledge_Record::Integer value = 0;
 volatile bool terminated = 0;
-std::string host = "";
-std::string domain = "three_state";
+std::string host;
+std::string domain ("three_state");
+std::string multicast ("239.255.0.1:4150");
 
 // signal handler for someone hitting control+c
 extern "C" void terminate (int)
@@ -80,7 +81,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // transport settings
   Madara::Transport::Settings ts;
   ts.domains = domain;
-  ts.type = Madara::Transport::SPLICE;
+  ts.type = Madara::Transport::MULTICAST;
+  ts.hosts_.resize (1);
+  ts.hosts_[0] = multicast;
 
   // start the knowledge engine
   Madara::Knowledge_Engine::Knowledge_Base knowledge (
@@ -88,6 +91,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // variables for compiled expressions and wait settings
   Madara::Knowledge_Engine::Compiled_Expression compiled;
+  Madara::Knowledge_Engine::Compiled_Expression self_state_broadcast;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
 
   // set my id
@@ -118,7 +122,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "  Waiting on all {.processes} processes to join\n";
   wait_settings.post_print_statement = 
     "  Finished waiting on S{.left}.started and S{.right}.started\n";
+  wait_settings.max_wait_time = 30.0;
+
   compiled = knowledge.compile (expression);
+  self_state_broadcast = knowledge.compile ("S{.self} = S{.self}");
 
   // wait for left and right processes to startup before executing application logic
   knowledge.wait (compiled, wait_settings);
@@ -160,11 +167,16 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   knowledge.print (wait_settings.post_print_statement);
 
+  Madara::Knowledge_Engine::Eval_Settings default_eval;
+
   // termination is done via signalling from the user (Control+C)
   while (!terminated)
   {
     knowledge.wait (compiled, wait_settings);
+
     ACE_OS::sleep (1);
+
+    knowledge.evaluate (self_state_broadcast, default_eval);
   }
 
   knowledge.print_knowledge ();
@@ -185,6 +197,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("domain"), 'd', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
+  cmd_opts.long_option (ACE_TEXT ("multicast"), 'm', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("id"), 'i', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("logical"), 'l', ACE_Get_Opt::NO_ARG);
   cmd_opts.long_option (ACE_TEXT ("host"), 'o', ACE_Get_Opt::ARG_REQUIRED);
@@ -210,6 +223,9 @@ int parse_args (int argc, ACE_TCHAR * argv[])
         buffer << cmd_opts.opt_arg ();
         buffer >> id;
       }
+      break;
+    case 'm':
+      multicast = cmd_opts.opt_arg ();
       break;
     case 'o':
       host = cmd_opts.opt_arg ();
@@ -240,15 +256,21 @@ int parse_args (int argc, ACE_TCHAR * argv[])
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      ACE_DEBUG ((LM_DEBUG, "Program Summary for %s:\n\n\
+      This distributed application uses three-state Dijkstra synchronization\n\
+      to form a self-healing ring of legitimate state machines. To execute\n\
+      the logic requires 3+ processes with ids set from 0 to n-1. Control+C\n\
+      ends the application.\n\n\
       -d (--domain)    domain to separate all traffic into\n\
       -i (--id)        set process id (0 default)  \n\
-      -o (--host)      this host ip/name (localhost default) \n\
-      -p (--processes) number of processes that will be running\n\
+      -o (--host)      this host ip/name (\"\" default) \n\
+      -m (--multicast) the multicast ip to send and listen to \n\
+                       (239.255.0.1:4150 default)\n\
+      -p (--processes) number of processes that will be running (3 default)\n\
       -v (--value)     start process with a certain value (0 default) \n\
-      -h (--help)      print this menu             \n"));
+      -h (--help)      print this menu             \n\n", argv[0]));
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("Returning from Help Menu")), -1); 
+        ACE_TEXT ("Returning from Help Menu\n")), -1); 
       break;
     }
   }

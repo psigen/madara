@@ -26,20 +26,22 @@ Madara::Expression_Tree::Composite_Preincrement_Node::~Composite_Preincrement_No
 {
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Preincrement_Node::item (void) const
 {
-  return '-';
+  Madara::Knowledge_Record record;
+  record.set_value ("++");
+  return record;
 }
 
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Preincrement_Node::prune (bool & can_change)
 {
   bool right_child_can_change = false;
-  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
+  Madara::Knowledge_Record right_value;
 
   if (this->right_)
   {
@@ -65,21 +67,21 @@ Madara::Expression_Tree::Composite_Preincrement_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_Preincrement_Node::evaluate (void)
 {
   Variable_Node * right = dynamic_cast <Variable_Node *> (this->right_);
   if (right)
   {
-    //ACE_DEBUG ((LM_DEBUG, "\nPreincrement: %s exists with value %d\n",
-    //  right->key ().c_str (), right->item ()));
     return right->inc ();
   }
-
-  //ACE_DEBUG ((LM_DEBUG, "\nPreincrement: ++%d\n", this->right_->evaluate ()));
-
-
-  return 1 + this->right_->evaluate ();
+  
+  // if we get to this point, we've somehow got a predecrement of a non-var.
+  // We go along with this with a temporary record, but this is highly unusual.
+  Madara::Knowledge_Record record (this->right_->evaluate ());
+  ++record;
+  
+  return record;
 }
 
 // accept a visitor

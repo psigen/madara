@@ -82,6 +82,9 @@ ACE download and install (Windows)
     -- if using Visual Studio 2008
        %ACE_ROOT%/bin/mwc.pl -type vc9 TAO_ACE.mwc
 
+    -- if using Visual Studio 2010
+       %ACE_ROOT%/bin/mwc.pl -type vc10 TAO_ACE.mwc
+
   * Open your Visual Studio solution (TAO_ACE.sln) and build the solution.
 
 
@@ -168,7 +171,7 @@ Compiling the Madara library on your system
 
   * Linux
       cd $MADARA_ROOT
-      make opensplice=1 tests=1 kats=1 cid=1
+      make tests=1
 
   * Windows
       cd $MADARA_ROOT

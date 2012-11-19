@@ -1,5 +1,6 @@
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/utility/Utility.h"
 #include "madara/transport/Message_Header.h"
 #include "ace/Time_Value.h"
 
@@ -147,8 +148,7 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
       header->updates = Madara::Utility::endian_swap (header->updates);
 
       // start of updates is right after message header
-      Message_Update * update = (Message_Update *)
-                                (buffer + sizeof (Message_Header));
+      char * update = buffer + sizeof (Message_Header);
       
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
@@ -157,39 +157,46 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
       
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-        " locking context\n", update->key, update->value));
+        " locking context\n"));
+      
+      // temporary record for reading from the updates buffer
+      Knowledge_Record record;
+      std::string key;
 
       // lock the context
       context_.lock ();
       
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-        " past the lock\n", update->key, update->value));
+        " past the lock\n"));
 
       // iterate over the updates
-      for (uint32_t i = 0; i < header->updates; ++i, ++update)
+      for (uint32_t i = 0; i < header->updates; ++i)
       {
+        // read converts everything into host format from the update stream
+        update += record.read (update, key);
+        
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-          " attempting to apply %s=%q\n", update->key, update->value));
+          " attempting to apply %s=%s\n",
+          key.c_str (), record.to_string ().c_str ()));
         
-        // convert endianness if necessary
-        update->value = Madara::Utility::endian_swap (update->value);
-
-        int result = update->apply (context_, header->quality,
+        int result = record.apply (context_, key, header->quality,
           header->clock, false);
 
         if (result != 1)
         {
           MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
             DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-            " update %s=%q was rejected\n", update->key, update->value));
+            " update %s=%s was rejected\n",
+            key.c_str (), record.to_string ().c_str ()));
         }
         else
         {
           MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
             DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-            " update %s=%q was accepted\n", update->key, update->value));
+            " update %s=%s was accepted\n",
+            key.c_str (), record.to_string ().c_str ()));
         }
       }
 

@@ -7,7 +7,7 @@
 #include <sstream>
 
 Madara::Expression_Tree::Variable_Increment_Node::Variable_Increment_Node (
-  const ::std::string &key, Madara::Knowledge_Record::VALUE_TYPE value,
+  const std::string &key, Madara::Knowledge_Record value,
   Component_Node * rhs, 
   Madara::Knowledge_Engine::Thread_Safe_Context &context)
 : key_ (key), value_ (value), rhs_ (rhs), record_ (0), context_ (context),
@@ -83,7 +83,7 @@ Madara::Expression_Tree::Variable_Increment_Node::expand_key (void) const
         if (count < pivot_list_.size () 
           && pivot_list_[count] == "}")
         {
-          builder << context_.get (*token);
+          builder << *context_.get_record (*token);
         }
         else
         {
@@ -107,11 +107,11 @@ Madara::Expression_Tree::Variable_Increment_Node::accept (Visitor &visitor) cons
   visitor.visit (*this);
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Increment_Node::item () const
 {
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
@@ -119,7 +119,7 @@ Madara::Expression_Tree::Variable_Increment_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Increment_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -129,14 +129,14 @@ Madara::Expression_Tree::Variable_Increment_Node::prune (bool & can_change)
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Variable_Increment_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary

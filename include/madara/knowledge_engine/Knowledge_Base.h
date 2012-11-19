@@ -25,7 +25,6 @@ namespace Madara
 
   namespace Knowledge_Engine
   {
-    class Knowledge_Base_Impl;
 
     /**
      * @class Knowledge_Base
@@ -102,7 +101,7 @@ namespace Madara
        * @param key                knowledge location
        * @return                   value at knowledge location
        **/
-      Madara::Knowledge_Record::VALUE_TYPE get (const ::std::string & key);
+      Madara::Knowledge_Record get (const std::string & key);
 
       /**
        * Read a file into the knowledge base
@@ -136,7 +135,7 @@ namespace Madara
        * @param statement          statement to expand
        * @return                   expanded statement
        **/
-      std::string expand_statement (const ::std::string & statement);
+      std::string expand_statement (const std::string & statement);
 
       /**
        * Compiles a KaRL expression into an expression tree
@@ -145,18 +144,7 @@ namespace Madara
        * @return                   compiled, optimized expression tree
        **/
       Compiled_Expression
-        compile (const ::std::string & expression);
-
-      /**
-       * Print all redeployment algorithm results
-       **/
-      void print_all_redeployment_results (std::ostream & output);
-
-      /**
-       * Run all redeployment algorithms specified in Transport Settings,
-       * within the latencies.algorithm_configs variable.
-       **/
-      void run_all (void);
+        compile (const std::string & expression);
 
       /**
        * Sets a knowledge value to a specified value
@@ -166,9 +154,29 @@ namespace Madara
        * @return             0 if successful, -1 if key is null, and
        *                     -2 if quality isn't high enough
        **/
-      int set (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value =
+      int set (const std::string & key,
+        Madara::Knowledge_Record::Integer value =
         Madara::Knowledge_Record::MODIFIED);
+      
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key          knowledge variable location
+       * @param value        value to set at location
+       * @return             0 if successful, -1 if key is null, and
+       *                     -2 if quality isn't high enough
+       **/
+      int set (const std::string & key, double value);
+      
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key          knowledge variable location
+       * @param value        value to set at location
+       * @return             0 if successful, -1 if key is null, and
+       *                     -2 if quality isn't high enough
+       **/
+      int set (const std::string & key, const std::string & value);
 
       /**
        * Sets a knowledge value to a specified value
@@ -179,8 +187,32 @@ namespace Madara
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
-      int set (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value,
+      int set (const std::string & key,
+        Madara::Knowledge_Record::Integer value,
+        bool send_modifieds);
+       
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           value to set at location
+       * @param send_modifieds  whether or not to dissemination modifications
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set (const std::string & key, double value, 
+        bool send_modifieds);
+      
+      /**
+       * Sets a knowledge value to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           value to set at location
+       * @param send_modifieds  whether or not to dissemination modifications
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set (const std::string & key, const std::string & value, 
         bool send_modifieds);
 
       /**
@@ -189,7 +221,20 @@ namespace Madara
        * @param key             knowledge variable location
        * @param quality         quality of writing to this location
        **/
-      void set_quality (const ::std::string & key, uint32_t quality);
+      void set_quality (const std::string & key, uint32_t quality);
+
+#ifdef _USE_CID_
+      
+      /**
+       * Print all redeployment algorithm results
+       **/
+      void print_all_redeployment_results (std::ostream & output);
+
+      /**
+       * Run all redeployment algorithms specified in Transport Settings,
+       * within the latencies.algorithm_configs variable.
+       **/
+      void run_all (void);
 
       /**
        * Starts a latency round
@@ -214,6 +259,16 @@ namespace Madara
        * @param   output    stream to print summations to
        **/
       void print_all_summations (std::ostream & output);
+      
+      /**
+       * Votes with the lowest algorithm results current in the Transport settings.
+       * This is only useful if latency collection is enabled and run_all has been
+       * populated with useful redeployment algorithms before being ran. See the
+       * Madara::Transport::Settings class for all voting parameters.
+       **/
+      long vote (void);
+
+#endif // _USE_CID_
 
       /**
        * Returns a non-const reference to the Transport Settings
@@ -227,7 +282,7 @@ namespace Madara
        * @param key             knowledge variable location
        * @return                true if location has been set
        **/
-      bool exists (const ::std::string & key) const;
+      bool exists (const std::string & key) const;
 
       /**
        * Evaluates an expression. Always disseminates modifications.
@@ -235,8 +290,8 @@ namespace Madara
        * @param expression      KaRL expression to evaluate
        * @return                value of expression
        **/
-      Madara::Knowledge_Record::VALUE_TYPE evaluate (
-        const ::std::string & expression);
+      Madara::Knowledge_Record evaluate (
+        const std::string & expression);
 
       /**
        * Evaluates an expression
@@ -245,8 +300,8 @@ namespace Madara
        * @param send_modifieds  whether or not to dissemination modifications
        * @return                value of expression
        **/
-      Madara::Knowledge_Record::VALUE_TYPE evaluate (
-        const ::std::string & expression,
+      Madara::Knowledge_Record evaluate (
+        const std::string & expression,
         bool send_modifieds);
 
       /**
@@ -256,17 +311,9 @@ namespace Madara
        * @param settings        Settings for evaluating and printing
        * @return                value of expression
        **/
-      Madara::Knowledge_Record::VALUE_TYPE evaluate (
+      Madara::Knowledge_Record evaluate (
         Compiled_Expression & expression,
         const Eval_Settings & settings);
-
-      /**
-       * Votes with the lowest algorithm results current in the Transport settings.
-       * This is only useful if latency collection is enabled and run_all has been
-       * populated with useful redeployment algorithms before being ran. See the
-       * Madara::Transport::Settings class for all voting parameters.
-       **/
-      long vote (void);
 
       /**
        * Waits for an expression to be non-zero.
@@ -275,8 +322,8 @@ namespace Madara
        * @param expression      KaRL expression to wait on
        * @return                value of expression
        **/
-      Madara::Knowledge_Record::VALUE_TYPE wait (
-        const ::std::string & expression);
+      Madara::Knowledge_Record wait (
+        const std::string & expression);
 
       /**
        * Waits for an expression to be non-zero.
@@ -285,8 +332,8 @@ namespace Madara
        * @param send_modifieds  whether or not to dissemination modifications
        * @return                value of expression
        **/
-      Madara::Knowledge_Record::VALUE_TYPE wait (
-        const ::std::string & expression, bool send_modifieds);
+      Madara::Knowledge_Record wait (
+        const std::string & expression, bool send_modifieds);
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings
@@ -297,7 +344,7 @@ namespace Madara
        *                        evaluation and printing
        * @return                value of expression
        **/
-      Madara::Knowledge_Record::VALUE_TYPE wait (
+      Madara::Knowledge_Record wait (
         Compiled_Expression & expression, const Wait_Settings & settings);
 
       /**

@@ -280,8 +280,93 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
-  const ::std::string & t_key, 
-  Madara::Knowledge_Record::VALUE_TYPE value, bool send_modifieds)
+  const std::string & t_key, 
+  Madara::Knowledge_Record::Integer value, bool send_modifieds)
+{
+  // everything after this point is done on a string with at least 1 char
+  std::string key = map_.expand_statement (t_key);
+
+  if (key == "")
+    return -1;
+
+  int result = map_.set (key, value);
+
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+
+  if (transport_ && send_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      transport_->send_data (modified);
+      map_.reset_modified ();
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
+
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const std::string & t_key, 
+  double value, bool send_modifieds)
+{
+  // everything after this point is done on a string with at least 1 char
+  std::string key = map_.expand_statement (t_key);
+
+  if (key == "")
+    return -1;
+
+  int result = map_.set (key, value);
+
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+
+  if (transport_ && send_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      transport_->send_data (modified);
+      map_.reset_modified ();
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const std::string & t_key, 
+  const std::string & value, bool send_modifieds)
 {
   // everything after this point is done on a string with at least 1 char
   std::string key = map_.expand_statement (t_key);
@@ -323,7 +408,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 
 Madara::Knowledge_Engine::Compiled_Expression
 Madara::Knowledge_Engine::Knowledge_Base_Impl::compile (
-  const ::std::string & expression)
+  const std::string & expression)
 {
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::compile:" \
@@ -336,13 +421,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::compile (
   return ce;
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
-Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expression, 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const std::string & expression, 
                                                 bool send_modifieds)
 {
   // return an error message
   if (expression == "")
-    return 0;
+    return Madara::Knowledge_Record ();
 
   // lock the context
   map_.lock ();
@@ -355,12 +440,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
     map_, expression);
 
-  Madara::Knowledge_Record::VALUE_TYPE last_value = tree.evaluate ();
+  Madara::Knowledge_Record last_value = tree.evaluate ();
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
-      " completed first eval to get %d\n",
-    last_value));
+      " completed first eval to get %s\n",
+    last_value.to_string ().c_str ()));
 
   if (transport_ && send_modifieds)
   {
@@ -386,7 +471,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   }
 
   // wait for expression to be true
-  while (!last_value)
+  while (last_value.is_false ())
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
@@ -435,7 +520,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const ::std::string & expre
   return last_value;
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   Compiled_Expression & ce, 
   const Wait_Settings & settings)
@@ -460,12 +545,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   //Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
   //  map_, expression);
 
-  Madara::Knowledge_Record::VALUE_TYPE last_value = ce.expression.evaluate ();
+  Madara::Knowledge_Record last_value = ce.expression.evaluate ();
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
-      " completed first eval to get %d\n",
-    last_value));
+      " completed first eval to get %s\n",
+    last_value.to_string ().c_str ()));
 
   if (transport_ && settings.send_modifieds)
   {
@@ -499,7 +584,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
   ACE_Time_Value poll_frequency;
 
-  if (!last_value)
+  if (last_value.is_false ())
   {
     ACE_Time_Value max_tv;
     poll_frequency.set (settings.poll_frequency);
@@ -517,7 +602,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   }
 
   // wait for expression to be true
-  while (!last_value &&
+  while (!last_value.to_integer () &&
     (settings.max_wait_time < 0 || maximum > elapsed))
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -586,9 +671,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const ::std::string & expression_copy)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const std::string & expression_copy)
 {
-  ::std::string expression (expression_copy);
+  std::string expression (expression_copy);
   Madara::Utility::strip_white_space (expression);
 
   evaluate (expression);
@@ -596,14 +681,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const ::std::string & e
   rules_.push_back (expression);
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const ::std::string & expression, bool send_modifieds)
+  const std::string & expression, bool send_modifieds)
 {
-  if (expression == "")
-    return 0;
+  Madara::Knowledge_Record last_value;
 
-  Madara::Knowledge_Record::VALUE_TYPE last_value = 0;
+  if (expression == "")
+    return last_value;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::evaluate:" \
@@ -642,12 +727,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   return last_value;
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   Compiled_Expression & ce,
   const Eval_Settings & settings)
 {
-  Madara::Knowledge_Record::VALUE_TYPE last_value = 0;
+  Madara::Knowledge_Record last_value;
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::evaluate:" \

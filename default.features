@@ -18,6 +18,10 @@ opensplice              = 0
 /// Enable this feature if you want to generate test applications
 tests                   = 1
 
+/// @feature deprecated
+/// Enable this feature if you want to generate deprecated test applications
+deprecated              = 0
+
 
 /// @feature kats
 /// Enable this feature if you would like to build the 
@@ -30,4 +34,4 @@ ndds                    = 0
 
 /// @feature old
 /// Enable this feature if you would like to generate the CID heuristic
-cid                     = 1
+cid                     = 0

@@ -107,24 +107,20 @@ Madara::Transport::Broadcast_Transport::send_data (
   
   uint32_t quality = Madara::max_quality (updates);
 
-  // compute size of this message
-  unsigned int size = sizeof (Message_Header) + updates.size () * 
-                (MAX_KNOWLEDGE_KEY_LENGTH + sizeof (KNOWLEDGE_VALUE_TYPE));
-
   // allocate a buffer to send
-  char * buffer = (char *) malloc (size);
+  char buffer [512000];
 
   // set the header to the beginning of the buffer
   Message_Header * header = (Message_Header *) buffer;
 
   // set the update to the end of the header
-  Message_Update * update = (Message_Update *) (buffer + sizeof (Message_Header));
+  char * update = buffer + sizeof (Message_Header);
   
   // Message header format
   // [size|id|domain|originator|type|updates|quality|clock|list of updates]
 
   // zero out the memory
-  memset(buffer, 0, size);
+  //memset(buffer, 0, Madara::Transport::MAX_PACKET_SIZE);
 
   // get the clock
   header->clock = Madara::Utility::endian_swap (context_.get_clock ());
@@ -152,33 +148,31 @@ Madara::Transport::Broadcast_Transport::send_data (
   header->type = Madara::Utility::endian_swap (header->type);
   
   // compute size of this message
-  header->size = sizeof (Message_Header) + 
-                 header->updates * sizeof (Message_Update);
-  header->size = Madara::Utility::endian_swap (header->size);
+  header->size = sizeof (Message_Header);
   
   // little endianize the updates after we've used it for the last time
   header->updates = Madara::Utility::endian_swap (header->updates);
 
   // Message update format
   // [key|value]
-
+  
+  int j = 0;
   for (Knowledge_Records::const_iterator i = updates.begin ();
-    i != updates.end (); ++i, ++update)
+    i != updates.end (); ++i, ++j, ++update)
   {
-    // copy the key and value over
-    strncpy (update->key, i->first.c_str (),
-      MAX_KNOWLEDGE_KEY_LENGTH - 1);
-    
-    update->value = i->second->value;
+    header->size += (uint64_t)i->second->write (update, i->first);
+
+    update = buffer + header->size;
 
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_multiassignment:" \
-      " update[%d] => %s=%d\n",
-      i, update->key, update->value));
-
-    // little endianize the value
-    update->value = Madara::Utility::endian_swap (update->value);
+      DLINFO "Broadcast_Transport::send_data:" \
+      " update[%d] => %s=%s\n",
+      j, i->first.c_str (), i->second->to_string ().c_str ()));
   }
+
+  size_t size = (size_t) header->size;
+
+  header->size = Madara::Utility::endian_swap (header->size);
 
   // send the buffer contents to the multicast address
   
@@ -192,9 +186,6 @@ Madara::Transport::Broadcast_Transport::send_data (
       " Sent packet with size %d\n",
       bytes_sent));
   }
-
-  // free the buffer we allocated
-  free (buffer);
 
   return 0;
 }

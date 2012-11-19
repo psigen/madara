@@ -7,7 +7,7 @@
 #include <sstream>
 
 Madara::Expression_Tree::Variable_Node::Variable_Node (
-  const ::std::string &key,
+  const std::string &key,
   Madara::Knowledge_Engine::Thread_Safe_Context &context)
 : key_ (key), record_ (0), context_ (context), key_expansion_necessary_ (false)
 {
@@ -81,7 +81,7 @@ Madara::Expression_Tree::Variable_Node::expand_key (void) const
         if (count < pivot_list_.size () 
           && pivot_list_[count] == "}")
         {
-          builder << context_.get (*token);
+          builder << *context_.get_record (*token);
         }
         else
         {
@@ -105,11 +105,11 @@ Madara::Expression_Tree::Variable_Node::accept (Visitor &visitor) const
   visitor.visit (*this);
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Node::item () const
 {
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
@@ -117,7 +117,7 @@ Madara::Expression_Tree::Variable_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -127,20 +127,20 @@ Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Variable_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
@@ -151,8 +151,9 @@ Madara::Expression_Tree::Variable_Node::key () const
   return key_;
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
-Madara::Expression_Tree::Variable_Node::set (const int64_t & value)
+int
+Madara::Expression_Tree::Variable_Node::set (
+  const Madara::Knowledge_Record & value)
 {
   if (record_)
   {
@@ -166,7 +167,7 @@ Madara::Expression_Tree::Variable_Node::set (const int64_t & value)
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    record_->value = value;
+    *record_ = value;
 
     if (key_[0] != '.')
     {
@@ -174,13 +175,109 @@ Madara::Expression_Tree::Variable_Node::set (const int64_t & value)
     }
   
     context_.signal ();
-    return value;
+    return 0;
+  }
+  else
+  {
+    if       (value.type () == Madara::Knowledge_Record::INTEGER)
+      return context_.set (expand_key (), value.to_integer ());
+    else if  (value.type () == Madara::Knowledge_Record::DOUBLE)
+      return context_.set (expand_key (), value.to_double ());
+    else if  (value.type () == Madara::Knowledge_Record::STRING)
+      return context_.set (expand_key (), value.to_string ());
+    else
+      return -5;
+  }
+}
+
+int
+Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Integer & value)
+{
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (record_->write_quality < record_->quality)
+      return -2;
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    record_->set_value (value);
+
+    if (key_[0] != '.')
+    {
+      context_.mark_modified (key_, *record_);
+    }
+  
+    context_.signal ();
+    return 0;
   }
   else
     return context_.set (expand_key (), value);
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+int
+Madara::Expression_Tree::Variable_Node::set (double value)
+{
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (record_->write_quality < record_->quality)
+      return -2;
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    record_->set_value (value);
+
+    if (key_[0] != '.')
+    {
+      context_.mark_modified (key_, *record_);
+    }
+  
+    context_.signal ();
+    return 0;
+  }
+  else
+    return context_.set (expand_key (), value);
+}
+
+int
+Madara::Expression_Tree::Variable_Node::set (const std::string & value)
+{
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (record_->write_quality < record_->quality)
+      return -2;
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    record_->set_value (value);
+
+    if (key_[0] != '.')
+    {
+      context_.mark_modified (key_, *record_);
+    }
+  
+    context_.signal ();
+    return 0;
+  }
+  else
+    return context_.set (expand_key (), value);
+}
+
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Variable_Node::dec (void)
 {
   if (record_)
@@ -188,31 +285,28 @@ Madara::Expression_Tree::Variable_Node::dec (void)
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
     if (record_->write_quality < record_->quality)
-      return -2;
+      return *record_;
 
     // cheaper to read than write, so check to see if
     // we actually need to update quality and status
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    --record_->value;
+    --(*record_);
 
     if (key_[0] != '.')
     {
       context_.mark_modified (key_, *record_);
-      //context_.changed_map_[key].value = record_->value;
-      //context_.changed_map_[key].quality = record_->quality;
     }
-      //record_->status = Madara::Knowledge_Record::MODIFIED;
   
     context_.signal ();
-    return record_->value;
+    return *record_;
   }
   else
     return context_.dec (expand_key ());
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Variable_Node::inc (void)
 {
   if (record_)
@@ -220,14 +314,14 @@ Madara::Expression_Tree::Variable_Node::inc (void)
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
     if (record_->write_quality < record_->quality)
-      return -2;
+      return *record_;
 
     // cheaper to read than write, so check to see if
     // we actually need to update quality and status
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    ++record_->value;
+    ++(*record_);
 
     if (key_[0] != '.')
     {
@@ -235,7 +329,7 @@ Madara::Expression_Tree::Variable_Node::inc (void)
     }
   
     context_.signal ();
-    return record_->value;
+    return *record_;
   }
   else
     return context_.inc (expand_key ());

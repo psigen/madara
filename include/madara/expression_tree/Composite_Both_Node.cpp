@@ -21,22 +21,24 @@ Madara::Expression_Tree::Composite_Both_Node::Composite_Both_Node (
 {    
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Both_Node::item (void) const
 {
-  return ';';
+  Madara::Knowledge_Record record;
+  record.set_value (";");
+  return record;
 }
 
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  Madara::Knowledge_Record::VALUE_TYPE left_value = 0;
-  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
+  Madara::Knowledge_Record left_value;
+  Madara::Knowledge_Record right_value;
 
   if (this->left_)
   {
@@ -67,24 +69,24 @@ Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
   {
     ACE_DEBUG ((LM_DEBUG, 
       "\nEXPRESSION COMPILE ERROR: ';' has an empty right expression\n"));
-    return -1;    
+    return Madara::Knowledge_Record ();    
   }
 
   can_change = left_child_can_change || right_child_can_change;
-
-  return left_value > right_value ? left_value : right_value;
+  
+  return (left_value > right_value).is_true () ? left_value : right_value;
 }
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 /// @ returns    maximum value of the left and right evaluations
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_Both_Node::evaluate (void)
 {
-  Madara::Knowledge_Record::VALUE_TYPE left_value = left_->evaluate ();
-  Madara::Knowledge_Record::VALUE_TYPE right_value = right_->evaluate ();
+  Madara::Knowledge_Record left_value = left_->evaluate ();
+  Madara::Knowledge_Record right_value = right_->evaluate ();
 
-  return left_value > right_value ? left_value : right_value;
+  return (left_value > right_value).is_true () ? left_value : right_value;
 }
 
 // accept a visitor

@@ -9,10 +9,10 @@
 #include "ace/Default_Constants.h"
 
 /// Convert string to uppercase
-::std::string &
-Madara::Utility::upper (::std::string &input)
+std::string &
+Madara::Utility::upper (std::string &input)
 {
-  for (::std::string::iterator cur = input.begin ();
+  for (std::string::iterator cur = input.begin ();
        cur != input.end (); ++cur)
     *cur = toupper (*cur);
 
@@ -20,10 +20,10 @@ Madara::Utility::upper (::std::string &input)
 }
 
 /// Convert string to lowercase 
-::std::string & 
-Madara::Utility::dds_topicify (::std::string & input)
+std::string & 
+Madara::Utility::dds_topicify (std::string & input)
 {
-  for (::std::string::iterator cur = input.begin ();
+  for (std::string::iterator cur = input.begin ();
        cur != input.end (); ++cur)
   {
     // change periods to _
@@ -35,10 +35,10 @@ Madara::Utility::dds_topicify (::std::string & input)
 }
 
 /// Convert string to lowercase 
-::std::string &
-Madara::Utility::lower (::std::string &input)
+std::string &
+Madara::Utility::lower (std::string &input)
 {
-  for (::std::string::iterator cur = input.begin ();
+  for (std::string::iterator cur = input.begin ();
        cur != input.end (); ++cur)
     *cur = tolower (*cur);
 
@@ -47,13 +47,13 @@ Madara::Utility::lower (::std::string &input)
 
 /// Strip whitespace from front and end of string and also
 /// condense multiple whitespace into a single space
-::std::string &
-Madara::Utility::strip_extra_white_space (::std::string & input)
+std::string &
+Madara::Utility::strip_extra_white_space (std::string & input)
 {
-  ::std::string::iterator cur = input.begin ();
+  std::string::iterator cur = input.begin ();
   char prev = 0;
 
-  for (::std::string::iterator eval = cur; 
+  for (std::string::iterator eval = cur; 
     eval != input.end (); ++eval)
   {
     // if it isn't whitespace, then copy it over immediately
@@ -89,13 +89,13 @@ Madara::Utility::strip_extra_white_space (::std::string & input)
 
 
 /// Strip all whitespace
-::std::string &
-Madara::Utility::strip_white_space (::std::string & input)
+std::string &
+Madara::Utility::strip_white_space (std::string & input)
 {
-  ::std::string::iterator cur = input.begin ();
+  std::string::iterator cur = input.begin ();
   char prev = 0;
 
-  for (::std::string::iterator eval = cur; 
+  for (std::string::iterator eval = cur; 
     eval != input.end (); ++eval)
   {
     // if it isn't whitespace, then copy it over immediately
@@ -118,13 +118,13 @@ Madara::Utility::strip_white_space (::std::string & input)
   * Strips an unwanted character. This function will
   * modify and return the input, so make a copy if needed.
   **/
-::std::string &
-Madara::Utility::string_remove (::std::string & input, char unwanted)
+std::string &
+Madara::Utility::string_remove (std::string & input, char unwanted)
 {
-  ::std::string::iterator cur = input.begin ();
+  std::string::iterator cur = input.begin ();
   char prev = 0;
 
-  for (::std::string::iterator eval = cur; 
+  for (std::string::iterator eval = cur; 
     eval != input.end (); ++eval)
   {
     // if it isn't whitespace, then copy it over immediately
@@ -176,19 +176,19 @@ Madara::Utility::strip_comments (std::string & input)
 
 /// Split a string into tokens 
 void 
-Madara::Utility::tokenizer (const ::std::string & input, 
-    const ::std::vector< ::std::string> & splitters,
-    ::std::vector< ::std::string> & tokens,
-    ::std::vector< ::std::string> & pivots)
+Madara::Utility::tokenizer (const std::string & input, 
+    const ::std::vector< std::string> & splitters,
+    ::std::vector< std::string> & tokens,
+    ::std::vector< std::string> & pivots)
 {
-  ::std::string::size_type last = 0;
-  ::std::string::size_type cur = 0;
+  std::string::size_type last = 0;
+  std::string::size_type cur = 0;
   tokens.clear ();
   pivots.clear ();
 
   for (; cur < input.size (); ++cur)
   {
-    for (::std::string::size_type i = 0; i < splitters.size (); ++i)
+    for (std::string::size_type i = 0; i < splitters.size (); ++i)
     {
       // if the splitter string length is greater than zero
       if (splitters[i].size () > 0)
@@ -196,8 +196,8 @@ Madara::Utility::tokenizer (const ::std::string & input,
         // if the first char of the splitter string is equal to the char
         if (input[cur] == splitters[i][0])
         {
-          ::std::string::size_type checker = cur;
-          ::std::string::size_type j = 1;
+          std::string::size_type checker = cur;
+          std::string::size_type j = 1;
           for (++checker; 
             checker < input.size () && j < splitters[i].size () &&
             input[checker] == splitters[i][j];
@@ -487,7 +487,7 @@ Madara::Utility::endian_swap (uint64_t value)
 }
 
 /**
-* Converts a host format signed int64_t into big endian
+* Converts a host format signed Madara::Knowledge_Record::Integer into big endian
 **/
 int64_t
 Madara::Utility::endian_swap (int64_t value)
@@ -524,7 +524,7 @@ Madara::Utility::endian_swap (uint32_t value)
 }
 
 /**
-* Converts a host format signed int64_t into big endian
+* Converts a host format signed Madara::Knowledge_Record::Integer into big endian
 **/
 int32_t
 Madara::Utility::endian_swap (int32_t value)

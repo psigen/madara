@@ -2,6 +2,8 @@
 #ifndef _PRINT_VISITOR_CPP_
 #define _PRINT_VISITOR_CPP_
 
+#ifdef  _USE_VISITORS_
+
 #include <iostream>
 
 #include "madara/expression_tree/Leaf_Node.h"
@@ -302,5 +304,7 @@ Madara::Expression_Tree::Print_Visitor::visit (const Composite_Implies_Node &)
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
     "=> "));
 }
+
+#endif // _USE_VISITORS_
 
 #endif /* _PRINT_VISITOR_CPP_ */

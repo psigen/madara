@@ -2,8 +2,8 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Genetic.h"
-#include "Heuristic.h"
+#include "madara/cid/CID_Genetic.h"
+#include "madara/cid/CID_Heuristic.h"
 #include "madara/utility/Log_Macros.h"
 
 #include "ace/OS_NS_Thread.h"

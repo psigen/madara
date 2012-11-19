@@ -9,6 +9,7 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/utility/Utility.h"
 #include "ace/High_Res_Timer.h"
 #include "ace/Sched_Params.h"
 

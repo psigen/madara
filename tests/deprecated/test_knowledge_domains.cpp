@@ -17,8 +17,8 @@
 
 bool finisher_mode = false;
 std::string host = "";
-int id = 0;
-int processes = 1;
+Madara::Knowledge_Record::Integer id = 0;
+Madara::Knowledge_Record::Integer processes = 1;
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
@@ -40,8 +40,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   Madara::Knowledge_Engine::Knowledge_Base specialized_knowledge (
     host, Madara::Transport::SPLICE, "specialized");
 
-  knowledge.set (".id",id);
-  specialized_knowledge.set (".id",id);
+  knowledge.set (".id", id);
+  specialized_knowledge.set (".id", id);
 
   std::stringstream processes_to_wait_for;
   processes_to_wait_for << "(Running{.id} = 1) ";

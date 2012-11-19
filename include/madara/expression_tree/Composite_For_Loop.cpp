@@ -32,16 +32,18 @@ Madara::Expression_Tree::Composite_For_Loop::~Composite_For_Loop (void)
 {
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_For_Loop::item (void) const
 {
-  return '-';
+  Madara::Knowledge_Record record;
+  record.set_value ("for (;;)");
+  return record;
 }
 
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_For_Loop::prune (bool & can_change)
 {
   // user can always change a function, and we have no control over
@@ -49,17 +51,18 @@ Madara::Expression_Tree::Composite_For_Loop::prune (bool & can_change)
   // under any situation
   can_change = true;
   
-  return 0;
+  Madara::Knowledge_Record zero;
+  return zero;
 }
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_For_Loop::evaluate (void)
 {
-  Madara::Knowledge_Record::VALUE_TYPE count = 0;
+  Madara::Knowledge_Record::Integer count = 0;
   for (precondition_->evaluate ();
-       condition_->evaluate ();
+       condition_->evaluate ().is_true ();
        postcondition_->evaluate ())
   {
     body_->evaluate ();
@@ -67,7 +70,10 @@ Madara::Expression_Tree::Composite_For_Loop::evaluate (void)
   }
 
   // return is the number of successful body executions
-  return count;
+  
+  Madara::Knowledge_Record evaluations;
+  evaluations.set_value (count);
+  return evaluations;
 }
 
 // accept a visitor

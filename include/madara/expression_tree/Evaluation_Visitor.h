@@ -2,6 +2,8 @@
 #ifndef _EVALUATION_VISITOR_H_
 #define _EVALUATION_VISITOR_H_
 
+#ifdef _USE_VISITORS_
+
 #include "madara/expression_tree/Visitor.h"
 #include "madara/utility/LStack.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
@@ -211,7 +213,7 @@ namespace Madara
        * Returns the result of the evaluation
        * @return    result of the evaluation
        **/
-      int64_t total (void);
+      Madara::Knowledge_Record::Integer total (void);
 
       /** 
        * Resets the evaluation
@@ -220,9 +222,11 @@ namespace Madara
 
     private:
       /// Stack used for temporarily storing evaluations.
-      Madara::Utility::LStack<Madara::Knowledge_Record::VALUE_TYPE> stack_;
+      Madara::Utility::LStack<Madara::Knowledge_Record> stack_;
     };  
   }
 }
+
+#endif // _USE_VISITORS_
 
 #endif /* _VISITOR_H_ */

@@ -11,9 +11,9 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Heuristic.h"
 #include "madara/utility/Log_Macros.h"
-#include "madara/cid/Convenience.h"
+#include "madara/cid/CID_Convenience.h"
+#include "madara/cid/CID_Heuristic.h"
 
 void
 Madara::Cid::approximate (Settings & settings)

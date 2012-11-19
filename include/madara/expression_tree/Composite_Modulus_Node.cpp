@@ -24,23 +24,25 @@ Madara::Expression_Tree::Composite_Modulus_Node::~Composite_Modulus_Node (void)
 {
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Modulus_Node::item (void) const
 {
-  return '*';
+  Madara::Knowledge_Record record;
+  record.set_value ("%");
+  return record;
 }
 
 
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Modulus_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  Madara::Knowledge_Record::VALUE_TYPE left_value = 0;
-  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
+  Madara::Knowledge_Record left_value;
+  Madara::Knowledge_Record right_value;
 
   if (this->left_)
   {
@@ -67,7 +69,7 @@ Madara::Expression_Tree::Composite_Modulus_Node::prune (bool & can_change)
       delete this->right_;
       this->right_ = new Leaf_Node (right_value);
 
-      if (right_value == 0)
+      if (right_value == Madara::Knowledge_Record::Integer (0))
       {
         MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
           "\nKARL COMPILE ERROR: Modulus" \
@@ -91,19 +93,10 @@ Madara::Expression_Tree::Composite_Modulus_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_Modulus_Node::evaluate (void)
 {
-  //  "return left_->evaluate () * right_->evaluate()"
-  // is a possible here, but we optimize for situation where 
-  // zero is one of the terms. I might revert it
-
-  int64_t lvalue = left_->evaluate ();
-  int64_t rvalue = right_->evaluate ();
-  if (lvalue && rvalue)
-    return lvalue % rvalue;
-
-  return 0;
+  return left_->evaluate () % right_->evaluate ();
 }
 
 

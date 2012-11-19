@@ -32,16 +32,16 @@ namespace Madara
       virtual ~List_Node (void);
 
       /// Return the item stored in the node.
-      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
+      virtual Madara::Knowledge_Record item (void) const;
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
+      virtual Madara::Knowledge_Record prune (bool & can_change);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (void);
       
       /// Define the @a accept() operation used for the Visitor pattern.
       virtual void accept (Visitor &visitor) const; 

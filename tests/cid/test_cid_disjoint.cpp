@@ -7,9 +7,9 @@
 #include "ace/High_Res_Timer.h"
 #include "ace/Sched_Params.h"
 
-#include "madara/cid/Convenience.h"
-#include "madara/cid/Genetic.h"
-#include "madara/cid/Heuristic.h"
+#include "madara/cid/CID_Convenience.h"
+#include "madara/cid/CID_Genetic.h"
+#include "madara/cid/CID_Heuristic.h"
 #include "madara/utility/Log_Macros.h"
 
 double ga_time = 1.0;

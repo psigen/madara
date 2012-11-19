@@ -47,10 +47,10 @@ namespace Madara
       /**
        * Atomically returns the value of a variable.
        * @param   key    unique identifier of the variable
-       * @return         the int64_t value for the variable
+       * @return         the Madara::Knowledge_Record::Integer value for the variable
        **/
-      Madara::Knowledge_Record::VALUE_TYPE
-        get (const ::std::string & key) const;
+      Madara::Knowledge_Record
+        get (const std::string & key) const;
 
       /**
        * Retrieves a knowledge record from the key. This function is useful
@@ -60,17 +60,38 @@ namespace Madara
        *                 expansion.
        * @return         the knowledge record for the variable
        **/
-      Madara::Knowledge_Record * get_record (const ::std::string & key);
+      Madara::Knowledge_Record * get_record (const std::string & key);
 
       /**
-       * Atomically sets the value of a variable.
+       * Atomically sets the value of a variable to an integer.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
        * @param   modified  send modifications after applying the update
        * @return   0 if the value was set. -1 if null key
        **/
-      int set (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value, 
+      int set (const std::string & key,
+        Madara::Knowledge_Record::Integer value, 
+        bool modified = true);
+      
+      /**
+       * Atomically sets the value of a variable to a double.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   modified  send modifications after applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const std::string & key,
+        double value, 
+        bool modified = true);
+      
+      /**
+       * Atomically sets the value of a variable to a string
+       * @param   value     new value of the variable
+       * @param   modified  send modifications after applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const std::string & key,
+        const std::string & value, 
         bool modified = true);
 
       /**
@@ -81,8 +102,34 @@ namespace Madara
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
        **/
-      int set_if_unequal (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value, 
+      int set_if_unequal (const std::string & key,
+        Madara::Knowledge_Record::Integer value, 
+        uint32_t quality, uint64_t clock, 
+        bool modified = true);
+      
+      /**
+       * Atomically sets if the variable value will be different
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   modified  send modifications after applying the update
+       * @return   1 if the value was changed. 0 if not changed.
+       *          -1 if null key
+       **/
+      int set_if_unequal (const std::string & key,
+        double value, 
+        uint32_t quality, uint64_t clock, 
+        bool modified = true);
+      
+      /**
+       * Atomically sets if the variable value will be different
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   modified  send modifications after applying the update
+       * @return   1 if the value was changed. 0 if not changed.
+       *          -1 if null key
+       **/
+      int set_if_unequal (const std::string & key,
+        const std::string & value, 
         uint32_t quality, uint64_t clock, 
         bool modified = true);
 
@@ -91,14 +138,14 @@ namespace Madara
        * @param   key       unique identifier of the variable
        * @return   quality associated with the variable
        **/
-      uint32_t get_quality (const ::std::string & key);
+      uint32_t get_quality (const std::string & key);
       
       /**
        * Atomically gets write quality of this process for a variable
        * @param   key       unique identifier of the variable
        * @return   write quality associated with the variable
        **/
-      uint32_t get_write_quality (const ::std::string & key);
+      uint32_t get_write_quality (const std::string & key);
       
       /**
        * Atomically sets quality of this process for a variable
@@ -107,7 +154,7 @@ namespace Madara
        * @param   force_update   force an update to variable, even if lower
        * @return   write quality associated with the variable
        **/
-      uint32_t set_quality (const ::std::string & key, 
+      uint32_t set_quality (const std::string & key, 
         uint32_t quality, bool force_update);
 
        /**
@@ -120,7 +167,7 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @param   quality        write quality of this process
        **/
-      void set_write_quality (const ::std::string & key, uint32_t quality);
+      void set_write_quality (const std::string & key, uint32_t quality);
 
       /**
        * Retrieves a list of modified variables. Useful for building a
@@ -151,14 +198,14 @@ namespace Madara
        * Resets a variable to unmodified
        * @param   key            unique identifier of the variable
        **/
-      void reset_modified (const ::std::string & key);
+      void reset_modified (const std::string & key);
 
       /**
        * Atomically increments the value of the variable
        * @param   key            unique identifier of the variable
        * @return                 new value of variable
        **/
-      Madara::Knowledge_Record::VALUE_TYPE inc (const ::std::string & key);
+      Madara::Knowledge_Record inc (const std::string & key);
 
       /**
        * Wait for a change to happen to the context.
@@ -171,14 +218,14 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @return                 new value of variable
        **/
-      Madara::Knowledge_Record::VALUE_TYPE dec (const ::std::string & key);
+      Madara::Knowledge_Record dec (const std::string & key);
 
       /**
        * Atomically checks to see if a variable already exists
        * @param   key            unique identifier of the variable
        * @return                 true if variable exists
        **/
-      bool exists (const ::std::string & key) const;
+      bool exists (const std::string & key) const;
 
       /**
        * Atomically prints all variables and values in the context

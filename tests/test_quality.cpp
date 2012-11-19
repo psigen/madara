@@ -37,11 +37,11 @@ typedef unsigned __int64    uint64_t;
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
-int id = 0;
-int left = 0;
-int processes = 1;
+Madara::Knowledge_Record::Integer id = 0;
+Madara::Knowledge_Record::Integer left = 0;
+Madara::Knowledge_Record::Integer processes = 1;
 uint32_t quality = 0;
-int64_t value = 0;
+Madara::Knowledge_Record::Integer value = 0;
 std::string host = "";
 
 volatile bool terminated = 0;
@@ -92,7 +92,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   while (!terminated)
   {
     // try to set the value to the initial value
-    int result = knowledge.set ("important_value", quality);
+    int result = knowledge.set ("important_value",
+      Madara::Knowledge_Record::Integer (quality));
 
     // everyone prints out current value
     knowledge.print("  Cur value: {important_value}\n");

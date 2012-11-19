@@ -26,32 +26,41 @@ namespace Madara
     {
     public:
       /// Ctor.
-      Variable_Node (const ::std::string &key, 
+      Variable_Node (const std::string &key, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
       /// Dtor.
       virtual ~Variable_Node (void);
 
       /// Return the item stored in the node.
-      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
+      virtual Madara::Knowledge_Record item (void) const;
 
-      /// Return the item stored in the node.
-      Madara::Knowledge_Record::VALUE_TYPE set (const int64_t & value);
-
+      /// Sets the value stored in the node.
+      int set (const Madara::Knowledge_Record::Integer & value);
+      
+      /// Sets the value stored in the node.
+      int set (double value);
+      
+      /// Sets the value stored in the node.
+      int set (const std::string & value);
+      
+      /// Sets the value stored in the node.
+      int set (const Madara::Knowledge_Record & value);
+      
       /// Atomically increment the variable.
-      Madara::Knowledge_Record::VALUE_TYPE inc (void);
+      Madara::Knowledge_Record inc (void);
 
       /// Atomically decrement the variable.
-      Madara::Knowledge_Record::VALUE_TYPE dec (void);
+      Madara::Knowledge_Record dec (void);
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
       /// if this node can be changed, that means it shouldn't be pruned.
-      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
+      virtual Madara::Knowledge_Record prune (bool & can_change);
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (void);
 
       /// Expands the key (if necessary). This allow for keys to be defined
       /// with other variables inserted (e.g. var{.id} with .id = 2 expands
@@ -66,7 +75,7 @@ namespace Madara
 
     private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
       Madara::Knowledge_Record * record_;
 
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;

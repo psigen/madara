@@ -19,12 +19,12 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/utility/Utility.h"
 
-int id = 0;
-int left = 0;
-int processes = 1;
-int stop = 10;
-long value = 0;
-std::string host = "localhost";
+Madara::Knowledge_Record::Integer id = 0;
+Madara::Knowledge_Record::Integer left = 0;
+Madara::Knowledge_Record::Integer processes = 1;
+Madara::Knowledge_Record::Integer stop = 10;
+Madara::Knowledge_Record::Integer value = 0;
+std::string host = "";
 
 
 volatile bool terminated = 0;
@@ -102,7 +102,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     knowledge.wait (".cur_time < simulation_time || simulation_finished");
 
-    if (knowledge.get ("simulation_finished"))
+    if (knowledge.get ("simulation_finished").is_true ())
     {
       terminated = true;
     }

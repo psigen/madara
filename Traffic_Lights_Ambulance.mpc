@@ -4,7 +4,7 @@ project (Traffic_Light) : using_madara, using_ace, using_splice, logic_files, ma
   exename = traffic_light
   after += Madara
   
-  requires += tests
+  requires += tests deprecated
   
   Logic_Files {
     configs/logics/traffic_light.klf
@@ -31,7 +31,7 @@ project (Traffic_Simulator) : using_madara, using_ace, using_splice, logic_files
   exename = traffic_simulator
   after += Madara
   
-  requires += tests
+  requires += tests deprecated
   
   libs += MADARA
 
@@ -64,7 +64,7 @@ project (Ambulance) : using_madara, using_ace, using_splice, logic_files, map_fi
   exename = ambulance
   after += Madara
   
-  requires += tests
+  requires += tests deprecated
   
   libs += MADARA
 

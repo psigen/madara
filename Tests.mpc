@@ -22,7 +22,7 @@ project (Test_Latency) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_latency
 
-  requires += tests
+  requires += tests deprecated
   
   Build_Files {
     Tests.mpc
@@ -32,15 +32,15 @@ project (Test_Latency) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_latency.cpp
+    tests/deprecated/test_latency.cpp
   }
 }
 
-project (Test_Latency_Rounds) : using_madara, using_ace, using_splice {
+project (Test_Latency_Rounds) : using_madara, using_ace, using_splice, using_cid {
   exeout = $(MADARA_ROOT)/bin
   exename = test_latency_rounds
 
-  requires += tests
+  requires += tests cid
   
   Build_Files {
     Tests.mpc
@@ -50,7 +50,7 @@ project (Test_Latency_Rounds) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_latency_rounds.cpp
+    tests/cid/test_latency_rounds.cpp
   }
 }
 
@@ -58,7 +58,7 @@ project (Test_Consistency) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_consistency
 
-  requires += tests
+  requires += tests deprecated
   
   Build_Files {
     Tests.mpc
@@ -68,7 +68,7 @@ project (Test_Consistency) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_consistency.cpp
+    tests/deprecated/test_consistency.cpp
   }
 }
 
@@ -76,7 +76,7 @@ project (Test_Dissemination) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_dissemination
 
-  requires += tests
+  requires += tests deprecated
   
   Build_Files {
     Tests.mpc
@@ -86,7 +86,7 @@ project (Test_Dissemination) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_dissemination.cpp
+    tests/deprecated/test_dissemination.cpp
   }
 }
 
@@ -200,7 +200,7 @@ project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   exename = test_wait_with_ace
   
   
-  requires += tests
+  requires += tests deprecated
   
   
 
@@ -212,7 +212,7 @@ project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_wait_with_ace.cpp
+    tests/deprecated/test_wait_with_ace.cpp
   }
 }
 
@@ -222,7 +222,7 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   exename = test_distributed_finisher
   
   
-  requires += tests
+  requires += tests deprecated
   
   
 
@@ -234,7 +234,7 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_distributed_finisher.cpp
+    tests/deprecated/test_distributed_finisher.cpp
   }
 }
 
@@ -243,7 +243,7 @@ project (Test_Knowledge_Domains) : using_madara, using_ace, using_splice {
   exename = test_knowledge_domains
   
   
-  requires += tests
+  requires += tests deprecated
   
   
 
@@ -255,7 +255,7 @@ project (Test_Knowledge_Domains) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_knowledge_domains.cpp
+    tests/deprecated/test_knowledge_domains.cpp
   }
 }
 
@@ -276,7 +276,7 @@ project (Test_Synchronization) : using_madara, using_ace, using_splice {
   }
 
   Source_Files {
-    tests/test_synchronization.cpp
+    tests/transports/test_synchronization.cpp
   }
 }
 
@@ -297,7 +297,7 @@ project (Test_Synchronization_Three_State) : using_madara, using_ace, using_spli
   }
 
   Source_Files {
-    tests/test_synchronization_three_state.cpp
+    tests/transports/test_synchronization_three_state.cpp
   }
 }
 
@@ -306,7 +306,7 @@ project (Test_Quality) : using_madara, using_ace, using_splice {
   exename = test_quality
   
   
-  requires += tests
+  requires += tests deprecated
   
   
 
@@ -327,7 +327,7 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
   exename = test_distributed_finisher_with_set
   
 
-  requires += tests
+  requires += tests deprecated
     
   
 
@@ -339,13 +339,13 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
   }
 
   Source_Files {
-    tests/test_distributed_finisher_with_set.cpp
+    tests/deprecated/test_distributed_finisher_with_set.cpp
   }
 }
 
 
 project (Test_KATS_barriers) : using_madara, using_kats, using_ace {
-  requires += tests
+  requires += tests deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_kats_barriers
@@ -360,12 +360,12 @@ project (Test_KATS_barriers) : using_madara, using_kats, using_ace {
   }
 
   Source_Files {
-    tests/test_kats_barriers.cpp
+    tests/kats/test_kats_barriers.cpp
   }
 }
 
 project (Test_KATS_syncs) : using_madara, using_kats, using_ace {
-  requires += tests
+  requires += tests deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_kats_syncs
@@ -380,12 +380,12 @@ project (Test_KATS_syncs) : using_madara, using_kats, using_ace {
   }
 
   Source_Files {
-    tests/test_kats_syncs.cpp
+    tests/kats/test_kats_syncs.cpp
   }
 }
 
-project (Test_CID) : using_madara, using_ace {
-  requires += tests cid
+project (Test_CID) : using_madara, using_ace, using_cid {
+  requires += tests cid deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid
@@ -400,12 +400,12 @@ project (Test_CID) : using_madara, using_ace {
   }
 
   Source_Files {
-    tests/test_cid.cpp
+    tests/cid/test_cid.cpp
   }
 }
 
-project (Test_CID_Read_Deployment) : using_madara, using_ace {
-  requires += tests cid
+project (Test_CID_Read_Deployment) : using_madara, using_ace, using_cid {
+  requires += tests cid deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid_read_deployment
@@ -420,12 +420,12 @@ project (Test_CID_Read_Deployment) : using_madara, using_ace {
   }
 
   Source_Files {
-    tests/test_cid_read_deployment.cpp
+    tests/cid/test_cid_read_deployment.cpp
   }
 }
 
-project (Test_CID_Disjoint) : using_madara, using_ace {
-  requires += tests cid
+project (Test_CID_Disjoint) : using_madara, using_ace, using_cid {
+  requires += tests cid deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid_disjoint
@@ -440,12 +440,12 @@ project (Test_CID_Disjoint) : using_madara, using_ace {
   }
 
   Source_Files {
-    tests/test_cid_disjoint.cpp
+    tests/cid/test_cid_disjoint.cpp
   }
 }
 
-project (Test_CID_Linked) : using_madara, using_ace {
-  requires += tests cid
+project (Test_CID_Linked) : using_madara, using_ace, using_cid {
+  requires += tests cid deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid_linked
@@ -460,7 +460,7 @@ project (Test_CID_Linked) : using_madara, using_ace {
   }
 
   Source_Files {
-    tests/test_cid_linked.cpp
+    tests/cid/test_cid_linked.cpp
   }
 }
 
@@ -507,7 +507,7 @@ project (Test_Broadcast) : using_madara, using_ace {
 
 
 project (Test_ACE_Broadcast) : using_ace {
-  requires += tests
+  requires += tests deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_ace_broadcast
@@ -528,7 +528,7 @@ project (Test_ACE_Broadcast) : using_ace {
 
 
 project (Test_ACE_Multicast) : using_ace {
-  requires += tests
+  requires += tests deprecated
   
   exeout = $(MADARA_ROOT)/bin
   exename = test_ace_multicast
@@ -584,5 +584,25 @@ project (Test_Utility) : using_ace, using_madara {
 
   Source_Files {
     tests/test_utility.cpp
+  }
+}
+
+project (Test_Primitive_Types) : using_ace, using_madara {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_primitive_types
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/test_primitive_types.cpp
   }
 }

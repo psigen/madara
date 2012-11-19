@@ -20,12 +20,14 @@
 
 // Atomically increment a stored value. This function is only used in one place
 // so we will expand it into that Preincrement_Node
-inline int64_t
-Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
+inline  Madara::Knowledge_Record
+Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key)
 {
+   Madara::Knowledge_Record blank;
+
   // check for null key
   if (key == "")
-    return -1;
+    return blank;
 
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -44,10 +46,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
 
   // check if we have the appropriate write quality
   if (record.write_quality < record.quality)
-    return -2;
+    return blank;
 
   // otherwise go ahead and update
-  ++record.value;
+  ++record;
 
   if (key[0] != '.')
   {
@@ -59,12 +61,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const ::std::string & key)
 
   changed_.signal ();
 
-  return record.value;
+  return record;
 }
 
 // return whether or not the key exists
 inline bool
-Madara::Knowledge_Engine::Thread_Safe_Context::exists (const ::std::string & key) const
+Madara::Knowledge_Engine::Thread_Safe_Context::exists (const std::string & key) const
 {
   Context_Guard guard (mutex_);
 
@@ -86,12 +88,14 @@ Madara::Knowledge_Engine::Thread_Safe_Context::exists (const ::std::string & key
 // Atomically decrement a stored value. Only reason we are inlining this function
 // is because it is called by only one function, and we can save a bit of
 // execution time via expansion into that function call.
-inline int64_t
-Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
+inline Madara::Knowledge_Record
+Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key)
 {
+   Madara::Knowledge_Record blank;
+
   // check for null key
   if (key == "")
-    return -1;
+    return blank;
 
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -110,22 +114,19 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const ::std::string & key)
 
   // check if we have the appropriate write quality
   if (record.write_quality < record.quality)
-    return -2;
+    return blank;
 
   // otherwise go ahead and update
-  --record.value;
+  --record;
 
   if (key[0] != '.')
   {
     mark_modified (key, record);
   }
-  //  record.status = Madara::Knowledge_Record::MODIFIED;
-  //else
-  //  record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
-  return record.value;
+  return record;
 }
 
 /// set the lamport clock (updates with lamport clocks lower
@@ -274,11 +275,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::clear (void)
   for (Madara::Knowledge_Map::iterator i = map_.begin (); 
        i != map_.end (); ++i)
   {
-    i->second.clock = 0;
-    i->second.quality = 0;
-    i->second.status = Madara::Knowledge_Record::UNCREATED;
-    i->second.value = 0;
-    i->second.write_quality = 0;
+    i->second.reset_value ();
   }
 
   changed_map_.clear ();

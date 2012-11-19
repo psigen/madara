@@ -50,7 +50,7 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
-int ACE_TMAIN (int argc, char * argv[])
+int main (int argc, char * argv[])
 {
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
@@ -191,40 +191,15 @@ int ACE_TMAIN (int argc, char * argv[])
 
    3. HOW DO I START DISSEMINATING KNOWLEDGE OVER A NETWORK
 
-     We include two DDS transports currently--PrismTech's Open Splice and
-     RTI's NDDS. While Open Splice does have an open source version available,
-     RTI does not. For this reason, our Windows installer only installs
-     Open Splice into the directory with MADARA. You'll need a version of
-     MADARA that is linked against NDDS to use RTI's product (as well as a
-     site license that covers the number of users or machines that you are
-     using NDDS on).
+     We include several different transports including IP multicast, IP
+     broadcast, Prism Tech Open Splice DDS, and RTI DDS. Tests for IP-based
+     protocols can be found inside of tests/transports. To get started, try
+     looking at test_primitive_types.cpp, which shows how to modify strings,
+     integers, and doubles and read them across the network using IP multicast.
 
-     Anyway, with Open Splice, you first need to start the transport daemon.
-     You can do this with the following:
-
-     kats_batch -f $MADARA_ROOT/configs/kats/ospl_start.xml (on Linux)
-     
-     or
-
-     kats_batch -f %MADARA_ROOT%/configs/kats/ospl_start.xml
-
-     This will use the real-time scheduling class in kats_batch to elevate
-     the ospl daemon to a high priority (will help decrease jitter and improve
-     dissemination performance. After the daemon is up, you should be able
-     to create and use a Madara::Knowledge_Engine::Knowledge_Base with an
-     OSPL transport. Any variables that do not start with a period will be
-     disseminated to interested parties. Don't forget to set an appropriate
-     unique name for each entity. This doesn't mean it has to map to a host
-     name. It can actually be something specific about the machine's role in
-     your distributed application.
-
-     For instance...
-
-     If you have one controller and four clients, set their host names to
-     "controller", "client1", "client2", etc. and this should work just fine.
-     The host name in the transport settings is simply for KaRL to determine
-     when network duplicates are being processed in the anonymous publish/
-     subscribe transport. It doesn't actually use the host name to connect to
-     other processes.
+     Other tests that may be interesting are test_synchronization, which forms
+     a self-healing network of processes using Dijkstra's N-state self-
+     stabilizing algorithm, and test_synchronization_three_state, which uses
+     Dijkstra's three-state self-stabilizing algorithm.
 
 

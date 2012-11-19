@@ -120,7 +120,7 @@ private:
 };
 
 void
-print (uint64_t time, int64_t value,
+  print (uint64_t time, Madara::Knowledge_Record value,
        uint32_t iterations, const std::string & type)
 {
   std::stringstream buffer;
@@ -134,7 +134,7 @@ print (uint64_t time, int64_t value,
   buffer << ", time=";
   buffer << time;
   buffer << " ns, value=";
-  buffer << value;
+  buffer << value.to_integer ();
   buffer << "\n";
 
   ACE_DEBUG ((LM_INFO, 
@@ -494,8 +494,8 @@ uint64_t test_looped_sr (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (int64_t) iterations);
-  knowledge.set (".actual_iterations", (int64_t) actual_iterations);
+  knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
+  knowledge.set (".actual_iterations", (Madara::Knowledge_Record::Integer) actual_iterations);
 
   buffer = ".var2[.iterations) (++.var1)";
 
@@ -534,8 +534,8 @@ uint64_t test_large_reinforcement (
   // build a large chain of simple reinforcements
    std::stringstream buffer;
 
-  unsigned max_size = iterations > 10000 ? 10000 : iterations;
-  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+  unsigned max_size = iterations > 1000 ? 1000 : iterations;
+  unsigned actual_iterations = iterations > 1000 ? iterations / 1000 : 1;
   
   for (uint32_t i = 0; i < max_size; ++i)
   {
@@ -573,8 +573,8 @@ uint64_t test_compiled_lr (
   // build a large chain of simple reinforcements
    std::stringstream buffer;
 
-  unsigned max_size = iterations > 10000 ? 10000 : iterations;
-  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+  unsigned max_size = iterations > 1000 ? 1000 : iterations;
+  unsigned actual_iterations = iterations > 1000 ? iterations / 1000 : 1;
   
   for (uint32_t i = 0; i < max_size; ++i)
   {
@@ -620,8 +620,8 @@ uint64_t test_optimal_loop (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (int64_t) iterations);
-  knowledge.set (".actual_iterations", (int64_t) actual_iterations);
+  knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
+  knowledge.set (".actual_iterations", (Madara::Knowledge_Record::Integer) actual_iterations);
 
   buffer = ".var2[.iterations)";
 
@@ -726,7 +726,7 @@ uint64_t test_looped_si (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (int64_t) iterations);
+  knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
   
   buffer = ".var2[.iterations) (1 => ++.var1)";
 
@@ -764,8 +764,8 @@ uint64_t test_large_inference (
   // build a large chain of simple reinforcements
    std::stringstream buffer;
 
-  unsigned max_size = iterations > 10000 ? 10000 : iterations;
-  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+  unsigned max_size = iterations > 1000 ? 1000 : iterations;
+  unsigned actual_iterations = iterations > 1000 ? iterations / 1000 : 1;
   
   for (uint32_t i = 0; i < max_size; ++i)
   {
@@ -802,8 +802,8 @@ uint64_t test_compiled_li (
   // build a large chain of simple reinforcements
    std::stringstream buffer;
 
-  unsigned max_size = iterations > 10000 ? 10000 : iterations;
-  unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
+  unsigned max_size = iterations > 1000 ? 1000 : iterations;
+  unsigned actual_iterations = iterations > 1000 ? iterations / 1000 : 1;
   
   for (uint32_t i = 0; i < max_size; ++i)
   {
@@ -849,8 +849,8 @@ uint64_t test_looped_li (
   unsigned max_size = iterations > 10000 ? 10000 : iterations;
   unsigned actual_iterations = iterations > 10000 ? iterations / 10000 : 1;
 
-  knowledge.set (".iterations", (int64_t) iterations);
-  knowledge.set (".actual_iterations", (int64_t) actual_iterations);
+  knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
+  knowledge.set (".actual_iterations", (Madara::Knowledge_Record::Integer) actual_iterations);
 
   buffer = ".var2[.iterations) (1 => ++.var1)";
 
@@ -886,7 +886,7 @@ uint64_t test_optimal_inference (
   ACE_hrtime_t measured;
   ACE_High_Res_Timer timer;
 
-  long var1 = 0;
+  Madara::Knowledge_Record::Integer var1 = 0;
 
   timer.start ();
 
@@ -902,7 +902,7 @@ uint64_t test_optimal_inference (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  print (measured, var1, iterations,
+  print (measured, Madara::Knowledge_Record (var1), iterations,
     "Optimal Inference: ");
 
   return measured;
@@ -921,7 +921,7 @@ uint64_t test_optimal_reinforcement (
   ACE_hrtime_t measured = 0;
   ACE_High_Res_Timer timer;
 
-  long var1 = 0;
+  Madara::Knowledge_Record::Integer var1 = 0;
 
   timer.start ();
 
@@ -956,7 +956,7 @@ uint64_t test_optimal_reinforcement (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  print (measured, var1, iterations,
+  print (measured, Madara::Knowledge_Record (var1), iterations,
     "Optimal Reinforcement: ");
 
   return measured;
@@ -975,7 +975,7 @@ uint64_t test_volatile_inference (
   ACE_hrtime_t measured;
   ACE_High_Res_Timer timer;
 
-  volatile long var1 = 0;
+  volatile Madara::Knowledge_Record::Integer var1 = 0;
 
   timer.start ();
 
@@ -989,7 +989,7 @@ uint64_t test_volatile_inference (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  print (measured, var1, iterations,
+  print (measured, Madara::Knowledge_Record (var1), iterations,
     "Volatile Inference: ");
 
   return measured;
@@ -1009,7 +1009,7 @@ uint64_t test_volatile_reinforcement (
   ACE_hrtime_t measured;
   ACE_High_Res_Timer timer;
 
-  volatile long var1 = 0;
+  volatile Madara::Knowledge_Record::Integer var1 = 0;
 
   timer.start ();
 
@@ -1022,7 +1022,7 @@ uint64_t test_volatile_reinforcement (
   timer.stop ();
   timer.elapsed_time (measured);
 
-  print (measured, var1, iterations,
+  print (measured, Madara::Knowledge_Record (var1), iterations,
     "Volatile Reinforcement: ");
 
   return measured;
@@ -1092,7 +1092,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
            cmd_opts.opt_opt ()), -2); 
     case 'h':
     default:
-      ACE_DEBUG ((LM_DEBUG, "Program Options:      \n\
+      ACE_DEBUG ((LM_DEBUG, "Program Summary for %s:\n\n\
+      This stand-alone application runs a variety of tests to determine\n\
+      performance on a host system. For a more comprehensive and\n\
+      customizeable tests, see profile_architecture\n\n\
       -n (--iterations)  number of iterations      \n\
       -r (--runs)        number of runs            \n\
       -s (--step)        number of iterations      \n\
@@ -1100,10 +1103,10 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       -- author's note. The last two are only necessary \n\
       -- because C++ compilers are trying to opimize \n\
       -- away the loops we are trying to test \n\
-      -h (--help)        print this menu           \n"
+      -h (--help)        print this menu           \n\n", argv[0]
       ));
       ACE_ERROR_RETURN ((LM_ERROR, 
-        ACE_TEXT ("Returning from Help Menu")), -1); 
+        ACE_TEXT ("Returning from Help Menu\n")), -1); 
       break;
     }
   }

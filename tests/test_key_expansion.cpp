@@ -47,7 +47,7 @@ void test_expansion (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   ACE_TRACE (ACE_TEXT ("test_expansion"));
 
-  int64_t result = 0;
+  Madara::Knowledge_Record result;
   knowledge.clear ();
 
   knowledge.evaluate (
@@ -58,17 +58,17 @@ void test_expansion (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
     .var22 = 2;");
 
   result = knowledge.evaluate ("v{.var2}{.var2} = 47");
-  assert (knowledge.get ("v22") == 47);
+  assert (knowledge.get ("v22") == (Madara::Knowledge_Record::Integer)47);
 
   result = knowledge.evaluate (".var{.var2}{.var2}");
-  assert (result == 2);
+  assert (result == (Madara::Knowledge_Record::Integer)2);
 
   result = knowledge.evaluate (".var{.var2}is{.var2}");
-  assert (result == 1);
+  assert (result == (Madara::Knowledge_Record::Integer)1);
 
   // test variables in conditionals
   knowledge.evaluate ("var{.var3} = .var{.var2}");
-  assert (knowledge.get ("var3") == 2);
+  assert (knowledge.get ("var3") == (Madara::Knowledge_Record::Integer)2);
 
 
 }

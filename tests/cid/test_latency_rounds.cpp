@@ -13,6 +13,7 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/transport/Transport.h"
 #include "madara/utility/Utility.h"
+#include "madara/cid/CID_Settings.h"
 
 int left = 0;
 int stop = 10;

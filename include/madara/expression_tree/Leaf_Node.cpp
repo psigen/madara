@@ -11,25 +11,31 @@
 #include "madara/utility/Log_Macros.h"
 
 // Ctor
+Madara::Expression_Tree::Leaf_Node::Leaf_Node (const Knowledge_Record & item)
+  : Component_Node (), item_ (item)
+{
+}
+
+// Ctor
 Madara::Expression_Tree::Leaf_Node::Leaf_Node (
-  Madara::Knowledge_Record::VALUE_TYPE item)
-  : Component_Node (),
-    item_ (item)
-{    
+  Madara::Knowledge_Record::Integer item)
+  : Component_Node ()
+{
+  item_.set_value (item);
 }
 
 // Ctor
-Madara::Expression_Tree::Leaf_Node::Leaf_Node (const ::std::string &item)
+Madara::Expression_Tree::Leaf_Node::Leaf_Node (const std::string &item)
   : Component_Node ()
-{    
-  item_ = atoi (item.c_str ());
+{
+  item_.set_value (item);
 }
 
 // Ctor
-Madara::Expression_Tree::Leaf_Node::Leaf_Node (const char *item)
+Madara::Expression_Tree::Leaf_Node::Leaf_Node (double item)
   : Component_Node ()
-{    
-  item_ = atoi (item);
+{
+  item_.set_value (item);
 }
 
 // Dtor
@@ -38,7 +44,7 @@ Madara::Expression_Tree::Leaf_Node::~Leaf_Node (void)
 }
 
 // return the item
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Leaf_Node::item (void) const
 {
   return item_;
@@ -48,7 +54,7 @@ Madara::Expression_Tree::Leaf_Node::item (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Leaf_Node::prune (bool & can_change)
 {
   can_change = false;
@@ -60,7 +66,7 @@ Madara::Expression_Tree::Leaf_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Leaf_Node::evaluate (void)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary

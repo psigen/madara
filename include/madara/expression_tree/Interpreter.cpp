@@ -32,6 +32,7 @@
 #include "madara/expression_tree/Composite_Multiply_Node.h"
 #include "madara/expression_tree/Composite_Modulus_Node.h"
 #include "madara/expression_tree/Composite_Both_Node.h"
+#include "madara/expression_tree/Composite_Return_Right_Node.h"
 #include "madara/expression_tree/Composite_Function_Node.h"
 #include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
@@ -135,8 +136,9 @@ namespace Madara
     {
     public:
       /// constructors
-      Number (::std::string input);
-      Number (Madara::Knowledge_Record::VALUE_TYPE input);
+      Number (std::string input);
+      Number (Madara::Knowledge_Record::Integer input);
+      Number (double input);
 
       /// destructor
       virtual ~Number (void);
@@ -149,7 +151,7 @@ namespace Madara
       virtual Component_Node *build (void);
  //   private:
       /// contains the value of the leaf node
-      Madara::Knowledge_Record::VALUE_TYPE item_;
+      Madara::Knowledge_Record item_;
     };
 
     /**
@@ -161,7 +163,7 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable (const ::std::string & key, 
+      Variable (const std::string & key, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
       /// destructor
@@ -175,7 +177,7 @@ namespace Madara
       virtual Component_Node *build (void);
     //private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -190,8 +192,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Decrement (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value,
+      Variable_Decrement (const std::string & key,
+        Madara::Knowledge_Record value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -206,10 +208,10 @@ namespace Madara
       virtual Component_Node *build (void);
     //private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      Madara::Knowledge_Record::VALUE_TYPE value_;
+      Madara::Knowledge_Record value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -224,8 +226,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Divide (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value,
+      Variable_Divide (const std::string & key,
+        Madara::Knowledge_Record value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -240,10 +242,10 @@ namespace Madara
       virtual Component_Node *build (void);
     //private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      Madara::Knowledge_Record::VALUE_TYPE value_;
+      Madara::Knowledge_Record value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -258,8 +260,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Increment (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value,
+      Variable_Increment (const std::string & key,
+        Madara::Knowledge_Record value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -274,10 +276,10 @@ namespace Madara
       virtual Component_Node *build (void);
     //private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      Madara::Knowledge_Record::VALUE_TYPE value_;
+      Madara::Knowledge_Record value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -292,8 +294,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Multiply (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value,
+      Variable_Multiply (const std::string & key,
+        Madara::Knowledge_Record value,
         Symbol * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -308,10 +310,10 @@ namespace Madara
       virtual Component_Node *build (void);
     //private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
 
       /// value can be faster than rhs_, so use it if possible
-      Madara::Knowledge_Record::VALUE_TYPE value_;
+      Madara::Knowledge_Record value_;
 
       /// Context for variables
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -326,8 +328,8 @@ namespace Madara
     {
     public:
       /// constructors
-      Variable_Compare (const ::std::string & key,
-        Madara::Knowledge_Record::VALUE_TYPE value,
+      Variable_Compare (const std::string & key,
+        Madara::Knowledge_Record value,
         Symbol * rhs, int compare_type,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
@@ -342,10 +344,10 @@ namespace Madara
       virtual Component_Node *build (void);
     //private:
       /// Key for retrieving value of this variable.
-      const ::std::string key_;
+      const std::string key_;
       
       /// value can be faster than rhs_, so use it if possible
-      Madara::Knowledge_Record::VALUE_TYPE value_;
+      Madara::Knowledge_Record value_;
 
       /// rhs is used for complex rhs types (not a simple number)
       Symbol * rhs_;
@@ -486,6 +488,28 @@ namespace Madara
 
       /// destructor
       virtual ~Both (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node *build (void);
+    };
+    
+    /**
+    * @class Return_Right
+    * @brief Evaluates both left and right children and returns right value
+    */
+
+    class Return_Right : public Operator
+    {
+    public:
+      /// constructor
+      Return_Right (void);
+
+      /// destructor
+      virtual ~Return_Right (void);
 
       /// returns the precedence level
       //virtual int precedence (void);
@@ -945,19 +969,24 @@ Madara::Expression_Tree::Unary_Operator::~Unary_Operator (void)
 }
 
 // constructor
-Madara::Expression_Tree::Number::Number (::std::string input)
+Madara::Expression_Tree::Number::Number (Madara::Knowledge_Record::Integer input)
 : Symbol (0, 0, NUMBER_PRECEDENCE)
 {
-  std::stringstream buffer (input);
-  buffer >> item_;
-  //item_ = atoi (input.c_str ());
+  item_.set_value (input);
 }
 
 // constructor
-Madara::Expression_Tree::Number::Number (int64_t input)
-: Symbol (0, 0, NUMBER_PRECEDENCE), 
-item_ (input)
+Madara::Expression_Tree::Number::Number (double input)
+: Symbol (0, 0, NUMBER_PRECEDENCE)
 {
+  item_.set_value (input);
+}
+
+// constructor
+Madara::Expression_Tree::Number::Number (std::string input)
+: Symbol (0, 0, NUMBER_PRECEDENCE)
+{
+  item_.set_value (input);
 }
 
 // destructor
@@ -1154,7 +1183,7 @@ Madara::Expression_Tree::Not::build ()
 }
 
 // constructor
-Madara::Expression_Tree::Variable::Variable (const ::std::string & key, 
+Madara::Expression_Tree::Variable::Variable (const std::string & key, 
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Symbol (0, 0, VARIABLE_PRECEDENCE), key_(key), context_ (context)
 {
@@ -1181,8 +1210,8 @@ Madara::Expression_Tree::Variable::build (void)
 
 
 // constructor
-Madara::Expression_Tree::Variable_Decrement::Variable_Decrement (const ::std::string & key, 
-  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs,
+Madara::Expression_Tree::Variable_Decrement::Variable_Decrement (const std::string & key, 
+  Madara::Knowledge_Record value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1213,10 +1242,10 @@ Madara::Expression_Tree::Variable_Decrement::build (void)
 
 
 // constructor
-Madara::Expression_Tree::Variable_Divide::Variable_Divide (const ::std::string & key, 
-  int64_t value, Symbol * rhs,
+Madara::Expression_Tree::Variable_Divide::Variable_Divide (const std::string & key, 
+  Knowledge_Record value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
-: Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
+: Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_ (value),
   context_ (context)
 {
 }
@@ -1244,8 +1273,8 @@ Madara::Expression_Tree::Variable_Divide::build (void)
 }
 
 // constructor
-Madara::Expression_Tree::Variable_Increment::Variable_Increment (const ::std::string & key, 
-  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs,
+Madara::Expression_Tree::Variable_Increment::Variable_Increment (const std::string & key, 
+  Madara::Knowledge_Record value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1275,8 +1304,8 @@ Madara::Expression_Tree::Variable_Increment::build (void)
 }
 
 // constructor
-Madara::Expression_Tree::Variable_Multiply::Variable_Multiply (const ::std::string & key, 
-  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs,
+Madara::Expression_Tree::Variable_Multiply::Variable_Multiply (const std::string & key, 
+  Madara::Knowledge_Record value, Symbol * rhs,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Operator (0, rhs, ASSIGNMENT_PRECEDENCE), key_ (key), value_(value),
   context_ (context)
@@ -1307,8 +1336,8 @@ Madara::Expression_Tree::Variable_Multiply::build (void)
 
 
 // constructor
-Madara::Expression_Tree::Variable_Compare::Variable_Compare (const ::std::string & key, 
-  Madara::Knowledge_Record::VALUE_TYPE value, Symbol * rhs, int compare_type,
+Madara::Expression_Tree::Variable_Compare::Variable_Compare (const std::string & key, 
+  Madara::Knowledge_Record value, Symbol * rhs, int compare_type,
                     Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : Symbol (0, 0, VARIABLE_PRECEDENCE), key_ (key), value_(value), rhs_ (rhs),
   compare_type_ (compare_type), context_ (context)
@@ -1481,7 +1510,49 @@ Madara::Expression_Tree::Both::build (void)
   else
     // we've got nothing. This node should eventually be pruned out of the
     // picture if at all possible.
-    return new Leaf_Node ((int64_t)0);
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
+}
+
+
+// constructor
+Madara::Expression_Tree::Return_Right::Return_Right (void)
+: Operator (0, 0, BOTH_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Return_Right::~Return_Right (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Return_Right::add_precedence (int precedence)
+{
+  return this->precedence_ = BOTH_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Return_Right::build (void)
+{
+  // Since users can say something like ";;;;;;;;", it is very possible
+  // that a both operation contains no valid children. So, we need
+  // to check whether or not we have a valid child.
+  if (left_ && right_)
+    return new Composite_Return_Right_Node (left_->build (), right_->build ());
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
 }
 
 // constructor
@@ -1510,7 +1581,7 @@ Madara::Expression_Tree::Sequence::build (void)
   // that a both operation contains no valid children. So, we need
   // to check whether or not we have a valid child.
   if (left_ && right_)
-    return new Composite_Both_Node (left_->build (), right_->build ());
+    return new Composite_Sequential_Node (left_->build (), right_->build ());
   else if (left_)
     // all we have is a valid left child, so there is no reason to build
     // a Both operator
@@ -1522,7 +1593,7 @@ Madara::Expression_Tree::Sequence::build (void)
   else
     // we've got nothing. This node should eventually be pruned out of the
     // picture if at all possible.
-    return new Leaf_Node ((int64_t)0);
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
 }
 
 // constructor
@@ -1860,6 +1931,13 @@ Madara::Expression_Tree::Interpreter::is_number (char input)
   return input >= '0' && input <= '9';
 }
 
+// method for checking if a character is a number
+bool
+Madara::Expression_Tree::Interpreter::is_string_literal (char input)
+{
+  return input == '"' || input == '\'';
+}
+
 // method for checking if a character is a candidate
 // for a part of a variable name
 bool
@@ -1883,9 +1961,9 @@ Madara::Expression_Tree::Interpreter::is_whitespace (char input)
 void
   Madara::Expression_Tree::Interpreter::handle_for_loop (
                 Madara::Knowledge_Engine::Thread_Safe_Context &context,
-                                         ::std::string &variable,
-                                            const ::std::string &input,
-                                           ::std::string::size_type &i,
+                                         std::string &variable,
+                                            const std::string &input,
+                                           std::string::size_type &i,
                                           int & accumulated_precedence,
                                            ::std::list<Symbol *>& list //,
                                                // Symbol *& precondition,
@@ -1896,20 +1974,20 @@ void
 {
   ::std::list <Symbol *> substr_list;
   Symbol * lastValidInput (0);
-  ::std::string::size_type begin = i;
+  std::string::size_type begin = i;
   Operator * precondition (0); //, * condition (0), * postcondition (0);
   Symbol * body (0), * user_pre (0), * user_cond (0), * user_post (0);
 
   // for extracting and using substrings of input
-  ::std::string::size_type count (0);
+  std::string::size_type count (0);
   std::string substr;
 
   if (variable == "")
     variable = ".MADARA_I";
 
   bool delimiter_found = false, handled = false, equal_to = false;
-  ::std::string::size_type delimiter_begin = 0;
-  ::std::string::size_type delimiter_end = 0;
+  std::string::size_type delimiter_begin = 0;
+  std::string::size_type delimiter_end = 0;
 
   // search for end of for_loop conditions. Be on lookout for delimiter.
   for (; i < input.length () && input[i] != ']' && input[i] != ')'; ++i)
@@ -1935,7 +2013,7 @@ void
   }
     
   // if at all possible, don't touch i
-  ::std::string::size_type end = i;
+  std::string::size_type end = i;
 
   // get the precondition, postcondition and condition ready
   precondition = new Assignment ();
@@ -2071,16 +2149,16 @@ void
   
   // if precondition not set, set to default
   if (!user_pre)
-    user_pre = new Number (0);
+    user_pre = new Number ((Madara::Knowledge_Record::Integer)0);
 
   // set condition to default if not yet set
   if (!user_cond)
-    user_cond = new Number (-1);
+    user_cond = new Number ((Madara::Knowledge_Record::Integer)-1);
     
   // set postcondition to default if not yet set
   if (!user_post)
   {
-    user_post = new Number (1);
+    user_post = new Number ((Madara::Knowledge_Record::Integer)1);
     MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
       "Postcondition is set to 1 (def)\n"));
   }
@@ -2135,8 +2213,8 @@ void
     }
 
     precondition->right_ = user_pre;
-    Madara::Knowledge_Record::VALUE_TYPE post_val = 0;
-    Madara::Knowledge_Record::VALUE_TYPE cond_val = 0;
+    Madara::Knowledge_Record post_val;
+    Madara::Knowledge_Record cond_val;
 
     // optimize postcondition
     Number * number = dynamic_cast <Number *> (user_post);
@@ -2195,7 +2273,7 @@ void
         // if it wasn't already a number, then it must be something more complex. We'll
         // just add one to it and see if the prune () method can optimize it a bit.
         Add * add = new Add ();
-        add->left_ = new Number (1);
+        add->left_ = new Number ((Madara::Knowledge_Record::Integer)1);
         add->right_ = user_cond;
         user_cond = add;
       }
@@ -2215,14 +2293,14 @@ void
 void
 Madara::Expression_Tree::Interpreter::variable_insert (
                            Madara::Knowledge_Engine::Thread_Safe_Context &context,
-                                                       const ::std::string &input,
-                                                       ::std::string::size_type &i,
+                                                       const std::string &input,
+                                                       std::string::size_type &i,
                                                        int & accumulated_precedence,
                                                        ::std::list<Symbol *>& list,
                                                        Symbol *& lastValidInput)
 {
   // build a potential variable name (this could also be a function)
-  ::std::string::size_type j = 1;
+  std::string::size_type j = 1;
 
   for (; i + j < input.length () && is_alphanumeric (input[i + j]); ++j)
     continue;
@@ -2288,8 +2366,34 @@ Madara::Expression_Tree::Interpreter::variable_insert (
 
 // inserts a leaf node / number into the parse tree
 void
-Madara::Expression_Tree::Interpreter::number_insert (const ::std::string &input,
-        ::std::string::size_type &i, int & accumulated_precedence,
+Madara::Expression_Tree::Interpreter::string_insert (const std::string &input,
+        std::string::size_type &i, int & accumulated_precedence,
+        ::std::list<Madara::Expression_Tree::Symbol *>& list,
+        Madara::Expression_Tree::Symbol *& lastValidInput)
+{
+  std::string::size_type j = 0;
+  Number * number = 0;
+
+  for (; i + j <= input.length () && !is_string_literal (input[i + j]); ++j)
+    continue;
+
+  number = new Number (input.substr (i, j));
+
+  number->add_precedence (accumulated_precedence);
+
+  lastValidInput = number;
+
+  // update i to next char for main loop or handle parenthesis.
+
+  i += j + 1;
+
+  precedence_insert (number, list);
+}
+
+// inserts a leaf node / number into the parse tree
+void
+Madara::Expression_Tree::Interpreter::number_insert (const std::string &input,
+        std::string::size_type &i, int & accumulated_precedence,
         ::std::list<Madara::Expression_Tree::Symbol *>& list,
         Madara::Expression_Tree::Symbol *& lastValidInput)
 {
@@ -2297,12 +2401,41 @@ Madara::Expression_Tree::Interpreter::number_insert (const ::std::string &input,
   // eg '123' = int (123). Scope of j needs to be outside of the for
   // loop.
 
-  ::std::string::size_type j = 1;
+  std::string::size_type j = 1;
+  bool is_float = false;
+  Number * number = 0;
 
   for (; i + j <= input.length () && is_number (input[i + j]); ++j)
     continue;
 
-  Number *number = new Number (input.substr (i,j));
+  // do we have a float?
+  if (i + j <= input.length () && input[i + j] == '.')
+  {
+    ++j;
+    for (; i + j <= input.length () && is_number (input[i + j]); ++j)
+      continue;
+
+    double new_number;
+
+    std::stringstream buffer;
+    buffer << input.substr (i, j);
+    buffer >> new_number;
+
+    number = new Number (new_number);
+  }
+  else
+  {
+    // we have an integer
+    
+    Madara::Knowledge_Record::Integer new_number;
+
+    std::stringstream buffer;
+    buffer << input.substr (i, j);
+    buffer >> new_number;
+
+    number = new Number (new_number);
+  }
+
   number->add_precedence (accumulated_precedence);
 
   lastValidInput = number;
@@ -2404,7 +2537,7 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
           MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
             DLINFO "KARL COMPILE WARNING: " \
             "Binary operation has no left child. Inserting a zero.\n"));
-          parent->left_ = new Number (0);
+          parent->left_ = new Number ((Madara::Knowledge_Record::Integer)0);
         }
       }
 
@@ -2459,7 +2592,7 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
 void
 Madara::Expression_Tree::Interpreter::main_loop (
        Madara::Knowledge_Engine::Thread_Safe_Context & context,
-       const ::std::string &input, ::std::string::size_type &i,
+       const std::string &input, std::string::size_type &i,
        Madara::Expression_Tree::Symbol *& lastValidInput,
        bool & handled, int & accumulated_precedence,
        ::std::list<Madara::Expression_Tree::Symbol *>& list)
@@ -2479,6 +2612,14 @@ Madara::Expression_Tree::Interpreter::main_loop (
     variable_insert (context, input, i, accumulated_precedence,
       list, lastValidInput);
   }
+  else if (is_string_literal (input[i]))
+  {
+    ++i;
+    handled = true;
+    // variable leaf node
+    string_insert (input, i, accumulated_precedence, 
+      list, lastValidInput);
+  }
   else if (input[i] == '+')
   {
     handled = true;
@@ -2495,11 +2636,11 @@ Madara::Expression_Tree::Interpreter::main_loop (
     {
       Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
       if (lhs)
-        op = new Variable_Increment (lhs->key_, 0, 0, context);
+        op = new Variable_Increment (lhs->key_, Madara::Knowledge_Record (), 0, context);
       else
       {
         // major error here. The left hand side must be a variable
-        op = new Variable_Increment (".MADARA_I", 0, 0, context);
+        op = new Variable_Increment (".MADARA_I", Madara::Knowledge_Record (), 0, context);
         
         MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
           DLINFO "KARL COMPILE WARNING (+=): " \
@@ -2533,11 +2674,13 @@ Madara::Expression_Tree::Interpreter::main_loop (
     {
       Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
       if (lhs)
-        op = new Variable_Decrement (lhs->key_, 0, 0, context);
+        op = new Variable_Decrement (lhs->key_, Madara::Knowledge_Record (),
+                   0, context);
       else
       {
         // major error here. The left hand side must be a variable
-        op = new Variable_Decrement (".MADARA_I", 0, 0, context);
+        op = new Variable_Decrement (".MADARA_I", Madara::Knowledge_Record (),
+                   0, context);
         
         MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
           DLINFO "KARL COMPILE WARNING (-=): " \
@@ -2569,17 +2712,20 @@ Madara::Expression_Tree::Interpreter::main_loop (
     {
       Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
       if (lhs)
-        op = new Variable_Multiply (lhs->key_, 0, 0, context);
+        op = new Variable_Multiply (lhs->key_, Madara::Knowledge_Record (),
+                   0, context);
       else
       {
         // major error here. The left hand side must be a variable
-        op = new Variable_Multiply (".MADARA_I", 0, 0, context);
+        op = new Variable_Multiply (".MADARA_I", Madara::Knowledge_Record (),
+                   0, context);
         
         MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
           DLINFO "KARL COMPILE WARNING (*=): " \
           "Assignments must have a variable left hand side. Using .MADARA_I by " \
           "default, but this is likely a major error in the expression.\n"));
       }
+      ++i;
     }
     // multiplication operation
     else
@@ -2639,11 +2785,11 @@ Madara::Expression_Tree::Interpreter::main_loop (
       {
         Variable * lhs = dynamic_cast <Variable *> (lastValidInput);
         if (lhs)
-          op = new Variable_Divide (lhs->key_, 0, 0, context);
+          op = new Variable_Divide (lhs->key_, Madara::Knowledge_Record (), 0, context);
         else
         {
           // major error here. The left hand side must be a variable
-          op = new Variable_Divide (".MADARA_I", 0, 0, context);
+          op = new Variable_Divide (".MADARA_I", Madara::Knowledge_Record (), 0, context);
         
           MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
             DLINFO "KARL COMPILE WARNING (-=): " \
@@ -2778,7 +2924,18 @@ Madara::Expression_Tree::Interpreter::main_loop (
   else if (input[i] == ';')
   {
     handled = true;
-    Symbol * op = new Both ();
+    Symbol * op = 0;
+
+    // is this a logical and?
+    if (i+1 < input.size () && input[i+1] == '>')
+    {
+      op = new Return_Right ();
+      ++i;
+    }
+    else
+    {
+      op = new Both ();
+    }
 
     // insert the op according to precedence relationships
     op->add_precedence (accumulated_precedence);
@@ -2858,7 +3015,7 @@ Madara::Expression_Tree::Interpreter::main_loop (
 void 
 Madara::Expression_Tree::Interpreter::handle_parenthesis (
   Madara::Knowledge_Engine::Thread_Safe_Context & context,
-  const ::std::string &input, ::std::string::size_type &i,
+  const std::string &input, std::string::size_type &i,
   Madara::Expression_Tree::Symbol *& lastValidInput,
   bool & handled, int & accumulated_precedence,
   ::std::list<Madara::Expression_Tree::Symbol *>& master_list)
@@ -2925,7 +3082,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
 // expression tree out of the parse tree
 Madara::Expression_Tree::Expression_Tree 
 Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Thread_Safe_Context &context, 
-                                                 const ::std::string &input)
+                                                 const std::string &input)
 {
   // return the cached expression tree if it exists
   ExpressionTreeMap::const_iterator found = cache_.find (input);
@@ -2938,7 +3095,7 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
   bool handled = false;
   int accumulated_precedence = 0;
 
-  for (::std::string::size_type i = 0;
+  for (std::string::size_type i = 0;
     i < input.length (); )
   {
     // we took out the loop update from the for loop

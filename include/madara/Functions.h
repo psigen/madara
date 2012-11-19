@@ -25,7 +25,7 @@ namespace Madara
   {
     class Thread_Safe_Context;
     
-    typedef Madara::Knowledge_Record::VALUE_TYPE VALUE_TYPE;
+    typedef Madara::Knowledge_Record VALUE_TYPE;
    
     /**
      * @class Variables
@@ -50,7 +50,7 @@ namespace Madara
        * @param   key       unique identifier of the variable
        * @return   the value of the keyed variable
        **/
-      VALUE_TYPE get (const std::string & key) const;
+      Knowledge_Record get (const std::string & key) const;
       
       /**
        * Sets the value of a variable.
@@ -58,21 +58,37 @@ namespace Madara
        * @param   value     new value of the variable
        * @return   the new value of the keyed variable
        **/
-      VALUE_TYPE set (const std::string & key, VALUE_TYPE value);
+      int set (const std::string & key,Madara::Knowledge_Record::Integer value);
+      
+      /**
+       * Sets the value of a variable.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @return   the new value of the keyed variable
+       **/
+      int set (const std::string & key, double value);
+      
+      /**
+       * Sets the value of a variable.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @return   the new value of the keyed variable
+       **/
+      int set (const std::string & key, const std::string & value);
       
       /**
        * Atomically increments the value of the variable
        * @param   key            unique identifier of the variable
        * @return                 new value of variable
        **/
-      VALUE_TYPE inc (const ::std::string & key);
+      Knowledge_Record inc (const std::string & key);
 
       /**
        * Decrements the value of the variable
        * @param   key            unique identifier of the variable
        * @return                 new value of variable
        **/
-      VALUE_TYPE dec (const ::std::string & key);
+      Knowledge_Record dec (const std::string & key);
 
       /**
        * Prints all variables and values in the context

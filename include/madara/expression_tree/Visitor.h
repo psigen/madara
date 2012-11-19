@@ -37,6 +37,7 @@ namespace Madara
     class Composite_Divide_Node;
     class Composite_Multiply_Node;
     class Composite_Modulus_Node;
+    class Composite_Return_Right_Node;
 
     /**
      * @class Visitor
@@ -129,6 +130,9 @@ namespace Madara
 
       /// Visit a Composite_Both_Node.
       virtual void visit (const Composite_Both_Node &node) = 0;
+
+      /// Visit a Composite_Return_Right_Node.
+      virtual void visit (const Composite_Return_Right_Node &node) = 0;
       
       /// Visit a Composite_Sequential_Node.
       virtual void visit (const Composite_Sequential_Node &node) = 0;

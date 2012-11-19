@@ -62,7 +62,10 @@ void handle_arguments (int argc, char ** argv)
     else
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        "\nProgram arguments for %s:\n" \
+        "\nProgram summary for %s:\n\n" \
+        "  Test the multicast transport. Requires 2+ processes. The result of\n" \
+        "  running these processes should be that each process reports\n" \
+        "  var2 and var3 being set to 1.\n\n" \
         " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
         " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
         " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
@@ -89,7 +92,7 @@ int main (int argc, char ** argv)
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 
-  knowledge.set (".id", (int64_t) settings.id);
+  knowledge.set (".id", (Madara::Knowledge_Record::Integer) settings.id);
 
   if (settings.id == 0)
   {
@@ -102,7 +105,7 @@ int main (int argc, char ** argv)
   {
     Madara::Knowledge_Engine::Compiled_Expression compiled = 
       knowledge.compile ("!var1 && var2 => var3 = 1");
-    
+
     knowledge.wait (compiled, wait_settings);
   }
 

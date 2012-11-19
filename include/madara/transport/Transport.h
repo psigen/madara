@@ -1,5 +1,5 @@
-#ifndef TRANSPORT_H
-#define TRANSPORT_H
+#ifndef _MADARA_TRANSPORT_H_
+#define _MADARA_TRANSPORT_H_
 
 /**
  * @file Transport.h
@@ -23,11 +23,17 @@
 #include "ace/Guard_T.h"
 #include "madara/utility/Log_Macros.h"
 #include "ace/High_Res_Timer.h"
-#include "madara/cid/Settings.h"
-#include "madara/cid/Convenience.h"
-#include "madara/cid/Heuristic.h"
-#include "madara/cid/Genetic.h"
+
+#ifdef _USE_CID_
+
+#include "madara/cid/CID_Settings.h"
+#include "madara/cid/CID_Convenience.h"
+#include "madara/cid/CID_Heuristic.h"
+#include "madara/cid/CID_Genetic.h"
 #include "madara/utility/Utility.h"
+
+#endif // _USE_CID_
+
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
@@ -36,7 +42,10 @@ namespace Madara
   {
     typedef   ACE_High_Res_Timer                   Timer;
     typedef   std::vector<Timer>                   Timers;
+
+#ifdef _USE_CID_
     typedef   Madara::Cid::Settings                Latency_Settings;
+#endif
 
     enum Types {
       NO_TRANSPORT = 0,
@@ -101,6 +110,8 @@ namespace Madara
        **/
       #define DEFAULT_PROCESSES         1
 
+#ifdef _USE_CID_
+
       /**
        * Latency collection is disabled by default
        **/
@@ -121,6 +132,8 @@ namespace Madara
        **/
       #define DEFAULT_REDEPLOYMENT_PERCENTAGE     0.10
 
+#endif // _USE_CID_
+
       /// Constructor for this class
       Settings () : 
         domains (DEFAULT_DOMAIN), 
@@ -130,6 +143,8 @@ namespace Madara
         reliability (DEFAULT_RELIABILITY),
         id (DEFAULT_ID),
         processes (DEFAULT_PROCESSES),
+
+#ifdef _USE_CID_
         latency_enabled (DEFAULT_LATENCY_ENABLED),
         latency_timeout (DEFAULT_LATENCY_TIMEOUT),
         latency_default (DEFAULT_LATENCY),
@@ -138,6 +153,8 @@ namespace Madara
         num_voters (0),
         num_votes_received (0),
         redeployment_percentage_allowed (DEFAULT_REDEPLOYMENT_PERCENTAGE),
+#endif // _USE_CID_
+
         hosts_ ()
       {
       }
@@ -151,6 +168,9 @@ namespace Madara
         reliability (settings.reliability),
         id (settings.id),
         processes (settings.processes),
+
+#ifdef _USE_CID_
+
         latency_enabled (settings.latency_enabled),
         latency_timeout (settings.latency_timeout),
         latency_default (settings.latency_default),
@@ -161,6 +181,7 @@ namespace Madara
         num_votes_received (0),
         redeployment_percentage_allowed (
          settings.redeployment_percentage_allowed),
+#endif // _USE_CID_
          hosts_ ()
       {
         hosts_.resize (settings.hosts_.size ());
@@ -177,6 +198,8 @@ namespace Madara
         reliability = settings.reliability;
         id = settings.id;
         processes = settings.processes;
+
+#ifdef _USE_CID_
         latency_enabled = settings.latency_enabled;
         latency_timeout = settings.latency_timeout;
         latency_default = settings.latency_default;
@@ -187,11 +210,14 @@ namespace Madara
         num_votes_received = 0;
         redeployment_percentage_allowed = 
           settings.redeployment_percentage_allowed;
+#endif // _USE_CID_
+
         hosts_.resize (settings.hosts_.size ());
         for (unsigned int i = 0; i < settings.hosts_.size (); ++i)
           hosts_[i] = settings.hosts_[i];
       }
 
+#ifdef _USE_CID_
       /**
        * Resets timers and latencies
        **/
@@ -201,7 +227,6 @@ namespace Madara
 
         for (uint32_t i = 0; i < processes; ++i)
           timers[i].reset ();
-
         Madara::Cid::reset_latencies (latencies, latency_default);
       }
 
@@ -716,6 +741,8 @@ namespace Madara
           Madara::Cid::Increasing_Algorithm_Latency);
       }
 
+#endif //  _USE_CID_
+
       /// All class members are accessible to users for easy setup
 
       /// Domains should be separated by commas
@@ -741,7 +768,8 @@ namespace Madara
       /// number of processes expected in the network (best to overestimate
       /// if building latency tables
       uint32_t processes;
-
+      
+#ifdef _USE_CID_
       /// should we try to gather latencies?
       bool latency_enabled;
 
@@ -778,6 +806,7 @@ namespace Madara
 
       /// a list of voters
       Voters voters;
+#endif  // _USE_CID_
 
       /**
        * Host information for transports that require it. The format of these
@@ -813,7 +842,13 @@ namespace Madara
         : is_valid_ (false), shutting_down_ (false),
         valid_setup_ (mutex_), settings_ (new_settings)
       {
+
+#ifdef _USE_CID_
+
         settings_.setup ();
+
+#endif // _USE_CID_
+
       }
 
       /**
@@ -887,6 +922,8 @@ namespace Madara
         return settings_;
       }
 
+#ifdef _USE_CID_
+
       /**
        * Start latency
        * @return  result of operation or -1 if we are shutting down
@@ -924,6 +961,8 @@ namespace Madara
         }
         return check_transport ();
       }
+
+#endif //_USE_CID_
 
       /**
        * Sends a list of updates to the domain. This function must be
@@ -964,4 +1003,4 @@ namespace Madara
   }
 }
 
-#endif
+#endif  // _MADARA_TRANSPORT_H_

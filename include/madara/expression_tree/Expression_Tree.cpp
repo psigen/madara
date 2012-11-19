@@ -53,7 +53,7 @@ namespace Madara
       /// Dynamically allocate a new @a Expression_Tree_Iterator_Impl
       /// object based on the designated @a traversal_order and @a end_iter.
       Expression_Tree_Iterator_Impl * make_tree_iterator (Expression_Tree &tree, 
-                                                         const ::std::string &traversal_order,
+                                                         const std::string &traversal_order,
                                                          bool end_iter);
 
     private:
@@ -79,7 +79,7 @@ namespace Madara
 
       typedef Expression_Tree_Iterator_Impl *(Expression_Tree_Iterator_Factory::*TRAVERSAL_PTMF)
         (Expression_Tree &tree, bool end_iter);
-      typedef ::std::map < ::std::string, TRAVERSAL_PTMF> TRAVERSAL_MAP;
+      typedef ::std::map < std::string, TRAVERSAL_PTMF> TRAVERSAL_MAP;
 
       TRAVERSAL_MAP traversal_map_;
     };
@@ -128,7 +128,7 @@ Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_post_order_tree_
 
 Madara::Expression_Tree::Expression_Tree_Iterator_Impl *
 Madara::Expression_Tree::Expression_Tree_Iterator_Factory::make_tree_iterator (
-  Madara::Expression_Tree::Expression_Tree &tree, const ::std::string &traversal_order,
+  Madara::Expression_Tree::Expression_Tree &tree, const std::string &traversal_order,
   bool end_iter)
 {  
   TRAVERSAL_MAP::iterator iter = traversal_map_.find (traversal_order);
@@ -200,11 +200,11 @@ Madara::Expression_Tree::Expression_Tree::is_null (void) const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Expression_Tree::prune (void)
 {
   bool root_can_change = false;
-  Madara::Knowledge_Record::VALUE_TYPE root_value = 0;
+  Madara::Knowledge_Record root_value;
 
   if (this->root_.get_ptr ())
   {
@@ -222,7 +222,7 @@ Madara::Expression_Tree::Expression_Tree::prune (void)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Expression_Tree::evaluate (void)
 {
   return root_->evaluate ();
@@ -238,7 +238,7 @@ Madara::Expression_Tree::Expression_Tree::get_root (void)
 
 // Return the stored item.
 
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Expression_Tree::item (void) const
 {
   return root_->item ();
@@ -263,7 +263,7 @@ Madara::Expression_Tree::Expression_Tree::right (void)
 // Return a begin iterator of a specified type.
 
 Madara::Expression_Tree::Expression_Tree::iterator
-Madara::Expression_Tree::Expression_Tree::begin (const ::std::string &traversal_order)
+Madara::Expression_Tree::Expression_Tree::begin (const std::string &traversal_order)
 {
   return Expression_Tree::iterator 
     (tree_iterator_factory.make_tree_iterator (*this, 
@@ -274,7 +274,7 @@ Madara::Expression_Tree::Expression_Tree::begin (const ::std::string &traversal_
 // Return an end iterator of a specified type.
 
 Madara::Expression_Tree::Expression_Tree::iterator
-Madara::Expression_Tree::Expression_Tree::end (const ::std::string &traversal_order)
+Madara::Expression_Tree::Expression_Tree::end (const std::string &traversal_order)
 {
   return Expression_Tree::iterator 
 	(tree_iterator_factory.make_tree_iterator (*this, 
@@ -285,7 +285,7 @@ Madara::Expression_Tree::Expression_Tree::end (const ::std::string &traversal_or
 // Return a begin iterator of a specified type.
 
 Madara::Expression_Tree::Expression_Tree_Const_Iterator
-Madara::Expression_Tree::Expression_Tree::begin (const ::std::string &traversal_order) const
+Madara::Expression_Tree::Expression_Tree::begin (const std::string &traversal_order) const
 {
   Expression_Tree *non_const_this = const_cast <Expression_Tree *> (this);
   return Expression_Tree::const_iterator (tree_iterator_factory.make_tree_iterator (*non_const_this, 
@@ -296,7 +296,7 @@ Madara::Expression_Tree::Expression_Tree::begin (const ::std::string &traversal_
 // Return an end iterator of a specified type.
 
 Madara::Expression_Tree::Expression_Tree_Const_Iterator
-Madara::Expression_Tree::Expression_Tree::end (const ::std::string &traversal_order) const
+Madara::Expression_Tree::Expression_Tree::end (const std::string &traversal_order) const
 {
   Expression_Tree *non_const_this = const_cast <Expression_Tree *> (this);
   return Expression_Tree::const_iterator (tree_iterator_factory.make_tree_iterator (*non_const_this,

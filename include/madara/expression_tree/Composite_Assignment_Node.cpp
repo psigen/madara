@@ -20,19 +20,21 @@ Madara::Expression_Tree::Composite_Assignment_Node::Composite_Assignment_Node (
 {    
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Assignment_Node::item (void) const
 {
-  return '=';
+  Madara::Knowledge_Record record;
+  record.set_value ("=");
+  return record;
 }
 
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
+  Madara::Knowledge_Record right_value;
 
   if (this->left_ && dynamic_cast <Variable_Node *> (left_) != 0)
     left_child_can_change = true;
@@ -66,11 +68,11 @@ Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_Assignment_Node::evaluate (void)
 {
   // get the value from the right side and set the variable's value with it
-  Madara::Knowledge_Record::VALUE_TYPE value = right_->evaluate ();
+  Madara::Knowledge_Record value = right_->evaluate ();
   dynamic_cast <Variable_Node *> (left_)->set (value);
 
   // return the value

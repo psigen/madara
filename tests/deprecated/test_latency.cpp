@@ -23,12 +23,12 @@
 #include "madara/transport/Transport.h"
 #include "madara/utility/Utility.h"
 
-int id = 0;
-int left = 0;
-int processes = 2;
-int stop = 10;
-long value = 0;
-uint32_t iterations = 100000;
+Madara::Knowledge_Record::Integer id = 0;
+Madara::Knowledge_Record::Integer left = 0;
+Madara::Knowledge_Record::Integer processes = 2;
+Madara::Knowledge_Record::Integer stop = 10;
+Madara::Knowledge_Record::Integer value = 0;
+Madara::Knowledge_Record::Integer iterations = 100000;
 
 std::string host = "";
 
@@ -71,7 +71,9 @@ ull_to_string (uint64_t source)
  * @param    count         number of processes, can be a subset of group
  */
 std::string
-build_wait_string (int id, const std::string & attribute, int count)
+  build_wait_string (Madara::Knowledge_Record::Integer id,
+  const std::string & attribute,
+  Madara::Knowledge_Record::Integer count)
 {
   std::stringstream buffer;
 
@@ -111,7 +113,7 @@ build_wait_string (int id, const std::string & attribute, int count)
  */
 uint64_t test_latency (
                      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-                     uint32_t iterations, 
+                     Madara::Knowledge_Record::Integer iterations, 
                      ACE_hrtime_t & compile_latency,
                      ACE_hrtime_t & eval_latency
                      )
@@ -172,8 +174,8 @@ uint64_t test_latency (
   // expression to be evaluated requires this count to start at 0 for it
   // to make sense. .old on the other hand is a local variable, so there is
   // no need to be cautious.
-  knowledge.set ("P0", 0, false);
-  knowledge.set ("P1", 0, false);
+  knowledge.set ("P0", Madara::Knowledge_Record::Integer (0), false);
+  knowledge.set ("P1", Madara::Knowledge_Record::Integer (0), false);
 
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) KaRL logic will be %s\n",
@@ -229,7 +231,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     return 0;
 
   Madara::Transport::Settings settings;
-  settings.type = Madara::Transport::SPLICE;
+  settings.type = Madara::Transport::MULTICAST;
+  settings.hosts_.resize (1);
+  settings.hosts_[0] = "239.255.0.1:4150";
   settings.domains = "KaRL_Latency";
   settings.reliability = Madara::Transport::RELIABLE;
 
@@ -237,7 +241,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // set my id
   knowledge.set (".self", id);
-  knowledge.set (".processes", 2);
+  knowledge.set (".processes", Madara::Knowledge_Record::Integer (2));
   knowledge.set (".iterations", iterations);
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) waiting for other processes to join\n",
@@ -246,7 +250,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // build a logic based on the started attribute and then wait
   // for all processes to start
   knowledge.wait (build_wait_string (id, "started", processes));
-  knowledge.set ("started",1);
+  knowledge.set ("started");
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) starting latency tests for %d events\n",
                         id, processes, iterations));
@@ -321,7 +325,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // wait for everyone to stop
   knowledge.wait (build_wait_string (id, "stopped", processes));
-  knowledge.set ("stopped",1);
+  knowledge.set ("stopped");
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();

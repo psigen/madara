@@ -7,10 +7,10 @@
 #include <sstream>
 
 Madara::Expression_Tree::Variable_Compare_Node::Variable_Compare_Node (
-  const ::std::string &key, Madara::Knowledge_Record::VALUE_TYPE value, int compare_type,
+  const std::string &key, Madara::Knowledge_Record value, int compare_type,
   Component_Node * rhs, Madara::Knowledge_Engine::Thread_Safe_Context &context)
-: key_ (key), value_ (value), rhs_ (rhs), compare_ (0), record_ (0),
-  context_ (context), key_expansion_necessary_ (false)
+: key_ (key), value_ (value), rhs_ (rhs), compare_type_ (compare_type),
+  record_ (0), context_ (context), key_expansion_necessary_ (false)
 {
   // this key requires expansion. We do the compilation and error checking here
   // as the key shouldn't change, and this allows us to only have to do this
@@ -54,17 +54,6 @@ Madara::Expression_Tree::Variable_Compare_Node::Variable_Compare_Node (
   {
     record_ = context_.get_record (key);
   }
-
-  if      (compare_type == LESS_THAN_EQUAL)
-    compare_ = Madara::Knowledge_Record::lte;
-  else if (compare_type == EQUAL)
-    compare_ = Madara::Knowledge_Record::eq;
-  else if (compare_type == GREATER_THAN)
-    compare_ = Madara::Knowledge_Record::gt;
-  else if (compare_type == GREATER_THAN_EQUAL)
-    compare_ = Madara::Knowledge_Record::gte;
-  else
-    compare_ = Madara::Knowledge_Record::lt;
 }
 
 Madara::Expression_Tree::Variable_Compare_Node::~Variable_Compare_Node ()
@@ -117,11 +106,11 @@ Madara::Expression_Tree::Variable_Compare_Node::accept (Visitor &visitor) const
   visitor.visit (*this);
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Compare_Node::item () const
 {
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
@@ -129,7 +118,7 @@ Madara::Expression_Tree::Variable_Compare_Node::item () const
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Compare_Node::prune (bool & can_change)
 {
   // a variable is one of very few nodes that can change over time and
@@ -139,26 +128,48 @@ Madara::Expression_Tree::Variable_Compare_Node::prune (bool & can_change)
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
   if (record_)
-    return record_->value;
+    return *record_;
   else
     return context_.get (expand_key ());
 }
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Variable_Compare_Node::evaluate (void)
 {
-  Madara::Knowledge_Record * record = record_;
+  Madara::Knowledge_Record * lhs = record_;
 
   // if we don't have a static record, get the dynamic one
-  if (!record)
-    record = context_.get_record (expand_key ());
+  if (!lhs)
+    lhs = context_.get_record (expand_key ());
 
   if (rhs_)
-    return compare_(record->value, rhs_->item ());
+  {
+    if      (compare_type_ == LESS_THAN)
+      return *lhs < rhs_->evaluate ();
+    else if (compare_type_ == LESS_THAN_EQUAL)
+      return *lhs <= rhs_->evaluate ();
+    else if (compare_type_ == EQUAL)
+      return *lhs == rhs_->evaluate ();
+    else if (compare_type_ == GREATER_THAN_EQUAL)
+      return *lhs >= rhs_->evaluate ();
+    else
+      return *lhs > rhs_->evaluate ();
+  }
   else
-    return compare_(record->value, value_);
+  {
+    if      (compare_type_ == LESS_THAN)
+      return *lhs < value_;
+    else if (compare_type_ == LESS_THAN_EQUAL)
+      return *lhs <= value_;
+    else if (compare_type_ == EQUAL)
+      return *lhs == value_;
+    else if (compare_type_ == GREATER_THAN_EQUAL)
+      return *lhs >= value_;
+    else
+      return *lhs > value_;
+  }
 }
 
 const std::string &

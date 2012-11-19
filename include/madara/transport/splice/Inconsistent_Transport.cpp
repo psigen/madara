@@ -414,7 +414,7 @@ Madara::Transport::Inconsistent_Transport::send_data (
   for (Knowledge_Records::const_iterator i = updates.begin ();
     i != updates.end (); ++i)
   {
-    long ret_value = this->send_data (i->first, i->second->value);
+    long ret_value = this->send_data (i->first, i->second->to_integer ());
 
     if (ret_value < 0)
       return ret_value;

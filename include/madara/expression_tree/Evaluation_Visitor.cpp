@@ -2,6 +2,8 @@
 #ifndef _EVALUATION_VISITOR_CPP_
 #define _EVALUATION_VISITOR_CPP_
 
+#ifdef _USE_VISITORS_
+
 #include <iostream>
 #include <typeinfo>
 #include <algorithm>
@@ -126,12 +128,12 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 1)
   {
-    Madara::Knowledge_Record::VALUE_TYPE old_value = stack_.pop ();
+    Madara::Knowledge_Record old_value = stack_.pop ();
     try
     {
       Variable_Node * right = dynamic_cast <Variable_Node *> (node.right ());
 
-      Madara::Knowledge_Record::VALUE_TYPE new_value = --old_value;
+      Madara::Knowledge_Record new_value = --old_value;
       if (right)
       {
         new_value = right->dec ();
@@ -159,12 +161,12 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 1)
   {
-    Madara::Knowledge_Record::VALUE_TYPE old_value = stack_.pop ();
+    Madara::Knowledge_Record old_value = stack_.pop ();
     try
     {
       Variable_Node * right = dynamic_cast <Variable_Node *> (node.right ());
 
-      Madara::Knowledge_Record::VALUE_TYPE new_value = ++old_value;
+      Madara::Knowledge_Record new_value = ++old_value;
       if (right)
       {
         new_value = right->inc ();
@@ -230,10 +232,10 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
     {
       // this is really backwards logic, but it was the only way I could think of
       // to allow for a = b = c with this type of tree and post-order flow
-      Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
+      Madara::Knowledge_Record right = stack_.pop ();
       stack_.pop ();
       Variable_Node * left = dynamic_cast <Variable_Node *> (node.left ());
-      left->set (right);
+      left->set (right.to_integer ());
       stack_.push (right);
     }
     catch (::std::bad_cast &)
@@ -254,8 +256,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left && right);
   }
@@ -275,8 +277,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left || right);
   }
@@ -296,8 +298,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right_v = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left_v = stack_.pop ();
+    Madara::Knowledge_Record right_v = stack_.pop ();
+    Madara::Knowledge_Record left_v = stack_.pop ();
 
     // I was trying to use std::max, but it was giving me
     // some grief, so I just implemented it as is
@@ -319,8 +321,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right_v = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left_v = stack_.pop ();
+    Madara::Knowledge_Record right_v = stack_.pop ();
+    Madara::Knowledge_Record left_v = stack_.pop ();
 
     // I was trying to use std::max, but it was giving me
     // some grief, so I just implemented it as is
@@ -356,8 +358,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left == right);
   }
@@ -377,8 +379,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left != right);
   }
@@ -398,8 +400,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left >= right);
   }
@@ -419,8 +421,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left > right);
   }
@@ -440,8 +442,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left <= right);
   }
@@ -461,8 +463,8 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE right = stack_.pop ();
-    Madara::Knowledge_Record::VALUE_TYPE left = stack_.pop ();
+    Madara::Knowledge_Record right = stack_.pop ();
+    Madara::Knowledge_Record left = stack_.pop ();
 
     stack_.push (left < right);
   }
@@ -482,7 +484,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2)
   {
-    Madara::Knowledge_Record::VALUE_TYPE rhs = stack_.pop ();
+    Madara::Knowledge_Record rhs = stack_.pop ();
     stack_.push (stack_.pop () - rhs);
   }
   else
@@ -501,7 +503,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2 && stack_.top ())
   {
-    Madara::Knowledge_Record::VALUE_TYPE rhs = stack_.pop ();
+    Madara::Knowledge_Record rhs = stack_.pop ();
     stack_.push (stack_.pop () / rhs );
   }
   else
@@ -537,7 +539,7 @@ Madara::Expression_Tree::Evaluation_Visitor::visit (
 {
   if (stack_.size () >= 2 && stack_.top ())
   {
-    Madara::Knowledge_Record::VALUE_TYPE rhs = stack_.pop ();
+    Madara::Knowledge_Record rhs = stack_.pop ();
     stack_.push (stack_.pop () / rhs );
   }
   else
@@ -582,5 +584,7 @@ Madara::Expression_Tree::Evaluation_Visitor::reset (void)
 {
   stack_.erase ();
 }
+
+#endif // _USE_VISITORS_
 
 #endif /* _EVALUATION_VISITOR_CPP_ */

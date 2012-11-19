@@ -5,25 +5,7 @@
 #include <string>
 #include <stdexcept>
 #include "madara/knowledge_engine/Knowledge_Record.h"
-
-// Because Microsoft decided to not support stdint.h
-// from VS 2003 until VS 2010, we simply typedef the
-// symbols that are supported in all MS products when
-// we know we have a MS compiler
-
-#ifdef _MSC_VER
-
-typedef __int32             int32_t;
-typedef unsigned __int32    uint32_t;
-typedef __int64             int64_t;
-typedef unsigned __int64    uint64_t;
-
-#else   // !_MSC_VER
-
-// otherwise, we do something more logical
-#include <stdint.h>
-
-#endif  // _MSC_VER
+#include "madara/utility/stdint.h"
 
 
 namespace Madara
@@ -53,20 +35,20 @@ namespace Madara
        * Returns the value of the node
        * @return    value of the node
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
+      virtual Madara::Knowledge_Record item (void) const;
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
        * @param     can_change   set to true if variable nodes are contained
        * @return    value of current contained expression tree
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change) = 0;
+      virtual Madara::Knowledge_Record prune (bool & can_change) = 0;
 
       /** 
        * Evaluates the expression tree. 
        * @return    value of current contained expression tree
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void) = 0;
+      virtual Madara::Knowledge_Record evaluate (void) = 0;
 
       /** 
        * Returns the left expression. 

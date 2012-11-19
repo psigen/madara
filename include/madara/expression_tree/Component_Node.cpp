@@ -13,10 +13,10 @@ Madara::Expression_Tree::Component_Node::~Component_Node (void)
 {
 }
 
-int64_t
+Madara::Knowledge_Record
 Madara::Expression_Tree::Component_Node::item (void) const
 {
-  return 0;
+  return Knowledge_Record ();
 }
 
 // default left is to return a null pointer

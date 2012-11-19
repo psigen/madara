@@ -23,17 +23,18 @@
 #include "madara/transport/Transport.h"
 #include "madara/utility/Utility.h"
 
-int id = 0;
-int left = 0;
-int processes = 1;
-int stop = 10;
-long value = 0;
-uint32_t iterations = 100000;
+Madara::Knowledge_Record::Integer id = 0;
+Madara::Knowledge_Record::Integer left = 0;
+Madara::Knowledge_Record::Integer processes = 1;
+Madara::Knowledge_Record::Integer stop = 10;
+Madara::Knowledge_Record::Integer value = 0;
+Madara::Knowledge_Record::Integer iterations = 100000;
 // 1Mhz rate
-uint32_t rate = 1000000;
+Madara::Knowledge_Record::Integer rate = 1000000;
 
 // test is 3 minutes long
-uint64_t time_limit = 3 * 60 * (uint64_t) 1000000000;
+Madara::Knowledge_Record::Integer time_limit = 3 * 60 * 
+  Madara::Knowledge_Record::Integer (1000000000);
 
 std::string host = "";
 
@@ -49,7 +50,7 @@ extern "C" void terminate (int)
 }
 
 std::string 
-to_legible_hertz (uint64_t hertz)
+to_legible_hertz (Madara::Knowledge_Record::Integer hertz)
 {
   std::stringstream buffer;
 
@@ -100,7 +101,7 @@ to_legible_hertz (uint64_t hertz)
 }
 
 ACE_Time_Value
-rate_to_sleep_time (uint64_t rate)
+rate_to_sleep_time (Madara::Knowledge_Record::Integer rate)
 {
   ACE_Time_Value sleep_time (0, 0);
   
@@ -138,7 +139,9 @@ rate_to_sleep_time (uint64_t rate)
  * @param    count         number of processes, can be a subset of group
  */
 std::string
-build_wait_string (int id, const std::string & attribute, int count)
+  build_wait_string (Madara::Knowledge_Record::Integer id,
+  const std::string & attribute,
+  Madara::Knowledge_Record::Integer count)
 {
   std::stringstream buffer;
 
@@ -171,7 +174,7 @@ build_wait_string (int id, const std::string & attribute, int count)
 
 void
 broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
-           uint32_t iterations)
+           Madara::Knowledge_Record::Integer iterations)
 {
   ACE_Time_Value sleep_time = rate_to_sleep_time (rate);
 
@@ -201,7 +204,7 @@ broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
       "(%P|%t) Windows detected. Running in bursty mode\n"));
   #endif
 
-  for (uint32_t i = 1; i <= iterations && !terminated; ++i)
+  for (Madara::Knowledge_Record::Integer i = 1; i <= iterations && !terminated; ++i)
   {
     knowledge.set ("info", i);
 
@@ -231,7 +234,7 @@ broadcast (Madara::Knowledge_Engine::Knowledge_Base & knowledge,
 
   //if (terminated)
   // set terminated just in case, so everyone cleans up cleanly
-  knowledge.set ("terminated",1);
+  knowledge.set ("terminated");
 }
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
@@ -277,7 +280,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // build a logic based on the started attribute and then wait
   // for all processes to start
   knowledge.wait (build_wait_string (id, "started", processes));
-  knowledge.set ("started",1);
+  knowledge.set ("started");
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) (%d of %d) starting dissemination of %d events\n",
                         id, processes, iterations));
@@ -345,7 +348,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // wait for everyone to stop
   knowledge.wait (build_wait_string (id, "stopped", processes));
-  knowledge.set ("stopped",1);
+  knowledge.set ("stopped");
 
   ACE_DEBUG ((LM_INFO, "(%P|%t) Final Knowledge\n"));
   knowledge.print_knowledge ();

@@ -398,7 +398,12 @@ Madara::Transport::Splice_DDS_Transport::send_data (
   {
     buffer << i->first;
     buffer << "=";
-    buffer << i->second->value;
+    if      (i->second->type () == Madara::Knowledge_Record::INTEGER)
+      buffer << i->second->to_integer ();
+    else if (i->second->type () == Madara::Knowledge_Record::DOUBLE)
+      buffer << i->second->to_double ();
+    else if (i->second->type () == Madara::Knowledge_Record::STRING)
+      buffer << i->second->to_string ();
     buffer << ";";
   }
 

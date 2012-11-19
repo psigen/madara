@@ -3,9 +3,11 @@
 
 #include "madara/utility/Utility.h"
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
+#include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/utility/Log_Macros.h"
+
 /**
  * @file Knowledge_Base_Impl.inl
  * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
@@ -13,9 +15,9 @@
  * This file contains the inline functions for Knowledge_Base_Impl class
  */
 
-inline int64_t
+inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
-  const ::std::string & t_key)
+  const std::string & t_key)
 {
   std::string key = map_.expand_statement (t_key);
 
@@ -24,7 +26,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
 
 inline std::string
 Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
-  const ::std::string & statement)
+  const std::string & statement)
 {
   return map_.expand_statement (statement);
 }
@@ -53,6 +55,39 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
   return files_.write_file (knowledge_key, file_name);
 }
 
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
+                                    Madara::Knowledge_Record::Integer value)
+{
+  return set (key, value, true);
+}
+
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
+                                               double value)
+{
+  return set (key, value, true);
+}
+
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
+                                               const std::string & value)
+{
+  return set (key, value, true);
+}
+
+/// Set quality of writing to a variable
+inline void 
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
+  const std::string & t_key, uint32_t quality)
+{
+  std::string key = map_.expand_statement (t_key);
+
+  map_.set_write_quality (key, quality);
+}
+
+#ifdef _USE_CID_
+
 inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::print_all_redeployment_results (
   std::ostream & output)
@@ -64,23 +99,6 @@ inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::run_all (void)
 {
   settings_.run_all ();
-}
-
-inline int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const ::std::string & key,
-                                               int64_t value)
-{
-  return set (key, value, true);
-}
-
-/// Set quality of writing to a variable
-inline void 
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
-  const ::std::string & t_key, uint32_t quality)
-{
-  std::string key = map_.expand_statement (t_key);
-
-  map_.set_write_quality (key, quality);
 }
 
 inline void
@@ -113,12 +131,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::start_latency (void)
     return -1;
 }
 
-inline Madara::Transport::Settings &
-Madara::Knowledge_Engine::Knowledge_Base_Impl::transport_settings (void)
-{
-  return settings_;
-}
-
 inline long
 Madara::Knowledge_Engine::Knowledge_Base_Impl::vote (void)
 {
@@ -128,16 +140,24 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::vote (void)
     return -1;
 }
 
-inline int64_t
+#endif // _USE_CID_
+
+inline Madara::Transport::Settings &
+Madara::Knowledge_Engine::Knowledge_Base_Impl::transport_settings (void)
+{
+  return settings_;
+}
+
+inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
-  const ::std::string & expression)
+  const std::string & expression)
 {
   return wait (expression, true);
 }
 
-inline int64_t
+inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const ::std::string & expression)
+  const std::string & expression)
 {
   return evaluate (expression, true);
 }

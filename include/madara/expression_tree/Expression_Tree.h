@@ -27,7 +27,7 @@ namespace Madara
     public:
 
       // Define a "trait"
-      typedef Madara::Knowledge_Record::VALUE_TYPE value_type;
+      typedef Madara::Knowledge_Record value_type;
       typedef Expression_Tree_Iterator iterator;
       typedef Expression_Tree_Const_Iterator const_iterator;
 
@@ -76,7 +76,7 @@ namespace Madara
        * Returns value of tree
        * @return    value of the expression tree
        **/
-      Madara::Knowledge_Record::VALUE_TYPE item (void) const;
+      Madara::Knowledge_Record item (void) const;
 
 
       /** 
@@ -84,13 +84,13 @@ namespace Madara
        * @param     can_change   set to true if variable nodes are contained
        * @return    value of expression tree
        **/
-      Madara::Knowledge_Record::VALUE_TYPE prune (void);
+      Madara::Knowledge_Record prune (void);
 
       /** 
        * Evaluates the expression tree. 
        * @return    value of expression tree
        **/
-      Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
+      Madara::Knowledge_Record evaluate (void);
 
       /** 
        * Returns the left expression of this tree
@@ -110,7 +110,7 @@ namespace Madara
        *                              level-order
        * @return    iterator for the specified order
        **/
-      iterator begin (const ::std::string & traversal_order);
+      iterator begin (const std::string & traversal_order);
 
       /** 
        * Returns an iterator to the end of the expression tree
@@ -118,7 +118,7 @@ namespace Madara
        *                              level-order
        * @return    iterator for the specified order
        **/
-      iterator end (const ::std::string & traversal_order);
+      iterator end (const std::string & traversal_order);
 
       /** 
        * Returns a const iterator to the beginning of the expression tree
@@ -126,7 +126,7 @@ namespace Madara
        *                              level-order
        * @return    iterator for the specified order
        **/
-      const_iterator begin (const ::std::string & traversal_order) const;
+      const_iterator begin (const std::string & traversal_order) const;
 
       /** 
        * Returns a const iterator to the end of the expression tree
@@ -134,7 +134,7 @@ namespace Madara
        *                              level-order
        * @return    iterator for the specified order
        **/
-      const_iterator end (const ::std::string & traversal_order) const;
+      const_iterator end (const std::string & traversal_order) const;
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

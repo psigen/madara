@@ -18,8 +18,9 @@ void handle_arguments (int argc, char ** argv)
     if (argc > 1)
     {
       std::cout <<
-        "\nProgram arguments for " << argv[0] << ":\n" \
-        " N/A\n"
+        "\nProgram Summary for " << argv[0] << ":\n\n" \
+        "  This stand-alone application tests functions from the utility\n"
+        "  functions included in the MADARA distribution.\n"
         "\n";
       exit (0);
     }

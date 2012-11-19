@@ -21,10 +21,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::~Thread_Safe_Context (void)
 }
 
 // return the value of a variable
-Madara::Knowledge_Record::VALUE_TYPE
-Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) const
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Thread_Safe_Context::get (const std::string & key) const
 {
   Context_Guard guard (mutex_);
+
+  Madara::Knowledge_Record record;
 
   // if key is not null
   if (key != "")
@@ -34,11 +36,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) c
 
     // if it's found, then return the value
     if (found != map_.end ())
-      return found->second.value;
+      return found->second;
   }
 
   // if no match, return empty (0)
-  return Madara::Knowledge_Record::UNCREATED;
+  return record;
 }
 
 /**
@@ -48,7 +50,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const ::std::string & key) c
  **/
 Madara::Knowledge_Record *
 Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
-  const ::std::string & key)
+  const std::string & key)
 {
   if (key == "")
     return 0;
@@ -64,8 +66,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const ::std::string & key,
-  Madara::Knowledge_Record::VALUE_TYPE value,
+  const std::string & key,
+  Madara::Knowledge_Record::Integer value,
   bool modified)
 {
   // check for null key
@@ -91,7 +93,101 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   if (record.write_quality < record.quality)
     return -2;
 
-  record.value = value;
+  record.set_value (value);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (modified)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set (
+  const std::string & key,
+  double value,
+  bool modified)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  map_[key];
+
+  // find the key in the knowledge base. It will be
+  // much faster to use the iterator for modifications
+  // than it will be to look up the key in the map for
+  // everything we want to modify (e.g. map_[key].quality = 1)
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // use a reference so this is easier to read
+  Knowledge_Record & record = found->second;
+
+  // check if we have the appropriate write quality
+  if (record.write_quality < record.quality)
+    return -2;
+
+  record.set_value (value);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (modified)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set (
+  const std::string & key,
+  const std::string & value,
+  bool modified)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  map_[key];
+
+  // find the key in the knowledge base. It will be
+  // much faster to use the iterator for modifications
+  // than it will be to look up the key in the map for
+  // everything we want to modify (e.g. map_[key].quality = 1)
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // use a reference so this is easier to read
+  Knowledge_Record & record = found->second;
+
+  // check if we have the appropriate write quality
+  if (record.write_quality < record.quality)
+    return -2;
+
+  record.set_value (value);
   record.quality = record.write_quality;
   
   // otherwise set the value
@@ -112,7 +208,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 /// @return    quality of the variable 
 uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (
-  const ::std::string & key)
+  const std::string & key)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -134,7 +230,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (
 /// @return    quality of the variable 
 uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (
-  const ::std::string & key)
+  const std::string & key)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -156,7 +252,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (
 /// @return    quality of the variable after this call
 uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_quality (
-  const ::std::string & key, uint32_t quality,
+  const std::string & key, uint32_t quality,
                            bool force_update)
 {
   // enter the mutex
@@ -178,7 +274,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_quality (
 /// Set quality of this process writing to a variable
 void 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
-  const ::std::string & key, uint32_t quality)
+  const std::string & key, uint32_t quality)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -194,7 +290,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
 ///           -1 if null key, -2 if quality not high enough
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
-  const ::std::string & key, Madara::Knowledge_Record::VALUE_TYPE value,
+  const std::string & key, Madara::Knowledge_Record::Integer value,
   uint32_t quality, uint64_t clock,
   bool modified)
 {
@@ -213,6 +309,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   // if it's found, then compare the value
   if (found != map_.end ())
   {
+    // setup a rhs
+    Madara::Knowledge_Record rhs (value);
+
     // if we do not have enough quality to update the variable
     // return -2
     if (quality < found->second.quality)
@@ -225,7 +324,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = -3;
 
     // check for value already set
-    else if (found->second.value == value)
+    else if ((found->second == rhs).is_true ())
       result = 0;
   }
 
@@ -246,7 +345,167 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   if (result == 1)
   {
     // we have a situation where the value needs to be changed
-    record.value = value;
+    record.set_value (value);
+  
+    // otherwise set the value
+    if (key[0] != '.')
+    {
+      if (modified)
+      {
+        mark_modified (key, record);
+      }
+    }
+
+    changed_.signal ();
+  }
+
+  // value was changed
+  return result;
+}
+
+/// Set if the variable value will be different. Always updates clock to
+/// highest value
+/// @return   1 if the value was changed. 0 if not changed. 
+///           -1 if null key, -2 if quality not high enough
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
+  const std::string & key, double value,
+  uint32_t quality, uint64_t clock,
+  bool modified)
+{
+  int result = 1;
+
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // if it's found, then compare the value
+  if (found != map_.end ())
+  {
+    // setup a rhs
+    Madara::Knowledge_Record rhs;
+    rhs.set_value (value);
+
+    // if we do not have enough quality to update the variable
+    // return -2
+    if (quality < found->second.quality)
+      result = -2;
+
+    // if we have the same quality, but our clock value
+    // is less than what we've already seen, then return -3
+    else if (quality == found->second.quality && 
+             clock < found->second.clock)
+      result = -3;
+
+    // check for value already set
+    else if ((found->second == rhs).is_true ())
+      result = 0;
+  }
+
+  Madara::Knowledge_Record & record = map_[key];
+
+  // if we need to update quality, then update it
+  if (result != -2 && record.quality != quality)
+    record.quality = quality;
+
+  // if we need to update the variable clock, then update it
+  if (clock > record.clock)
+    record.clock = clock;
+
+  // if we need to update the global clock, then update it
+  if (clock > this->clock_)
+    this->clock_ = clock;
+
+  if (result == 1)
+  {
+    // we have a situation where the value needs to be changed
+    record.set_value (value);
+  
+    // otherwise set the value
+    if (key[0] != '.')
+    {
+      if (modified)
+      {
+        mark_modified (key, record);
+      }
+    }
+
+    changed_.signal ();
+  }
+
+  // value was changed
+  return result;
+}
+
+/// Set if the variable value will be different. Always updates clock to
+/// highest value
+/// @return   1 if the value was changed. 0 if not changed. 
+///           -1 if null key, -2 if quality not high enough
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
+  const std::string & key, const std::string & value,
+  uint32_t quality, uint64_t clock,
+  bool modified)
+{
+  int result = 1;
+
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // if it's found, then compare the value
+  if (found != map_.end ())
+  {
+    // setup a rhs
+    Madara::Knowledge_Record rhs;
+    rhs.set_value (value);
+
+    // if we do not have enough quality to update the variable
+    // return -2
+    if (quality < found->second.quality)
+      result = -2;
+
+    // if we have the same quality, but our clock value
+    // is less than what we've already seen, then return -3
+    else if (quality == found->second.quality && 
+             clock < found->second.clock)
+      result = -3;
+
+    // check for value already set
+    else if ((found->second == rhs).is_true ())
+      result = 0;
+  }
+
+  Madara::Knowledge_Record & record = map_[key];
+
+  // if we need to update quality, then update it
+  if (result != -2 && record.quality != quality)
+    record.quality = quality;
+
+  // if we need to update the variable clock, then update it
+  if (clock > record.clock)
+    record.clock = clock;
+
+  // if we need to update the global clock, then update it
+  if (clock > this->clock_)
+    this->clock_ = clock;
+
+  if (result == 1)
+  {
+    // we have a situation where the value needs to be changed
+    record.set_value (value);
   
     // otherwise set the value
     if (key[0] != '.')
@@ -283,7 +542,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (
        i != map_.end (); 
        ++i)
     MADARA_DEBUG (level, (LM_INFO, 
-      "%s=%q\n", i->first.c_str (), i->second.value));
+      "%s=%s\n", i->first.c_str (), i->second.to_string ().c_str ()));
 }
 
 /// Expand a string with variable expansions. This is a generic form of

@@ -22,22 +22,25 @@ Madara::Expression_Tree::Composite_Divide_Node::~Composite_Divide_Node (void)
 {
 }
 
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Divide_Node::item (void) const
 {
-  return '/';
+  Madara::Knowledge_Record record;
+  record.set_value ("/");
+  return record;
 }
 
 /// Prune the tree of unnecessary nodes. 
 /// Returns evaluation of the node and sets can_change appropriately.
 /// if this node can be changed, that means it shouldn't be pruned.
-Madara::Knowledge_Record::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
 {
   bool left_child_can_change = false;
   bool right_child_can_change = false;
-  Madara::Knowledge_Record::VALUE_TYPE left_value = 0;
-  Madara::Knowledge_Record::VALUE_TYPE right_value = 0;
+  Madara::Knowledge_Record left_value;
+  Madara::Knowledge_Record right_value;
+  Madara::Knowledge_Record zero;
 
   if (this->left_)
   {
@@ -62,7 +65,7 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
     if (!right_child_can_change && dynamic_cast <Leaf_Node *> (right_) == 0)
     {
       // leave this check which is important
-      if (right_value == 0)
+      if (right_value.is_false ())
       {
         MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
           "\nKARL COMPILE ERROR: Division" \
@@ -70,7 +73,8 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
         exit (-1);
       }
       // the only time we should delete right is if we have a clean division
-      if (!left_child_can_change && left_value % right_value == 0)
+      if (!left_child_can_change && 
+          (left_value % right_value == zero).is_true ())
       {
         // don't worry about allocating anything. This is about to be
         // reclaimed anyway since !right_can_change and !left_can_change
@@ -99,12 +103,13 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
 
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
-Madara::Knowledge_Record::VALUE_TYPE 
+Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_Divide_Node::evaluate (void)
 {
   // only evaluate right if left evaluates to non-zero (0/{any_number} = 0)
-  Madara::Knowledge_Record::VALUE_TYPE lvalue = left_->evaluate ();
-  if (lvalue)
+  Madara::Knowledge_Record lvalue (left_->evaluate ());
+  Madara::Knowledge_Record zero;
+  if (lvalue.is_true ())
     return lvalue / right_->evaluate ();
 
   // note that we are not handling divide by zero. Still unsure whether I
@@ -112,7 +117,7 @@ Madara::Expression_Tree::Composite_Divide_Node::evaluate (void)
   // quick as possible. We should probably only try to catch exception like
   // things in prune
 
-  return 0;
+  return zero;
 }
 
 // accept a visitor

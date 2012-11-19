@@ -14,7 +14,7 @@ namespace Madara
 
     /**
      * @class Leaf_Node
-     * @brief Defines a node that contains a int64_t value
+     * @brief Defines a node that contains a Madara::Knowledge_Record::Integer value
      */
 
     class Leaf_Node : public Component_Node
@@ -24,19 +24,25 @@ namespace Madara
        * Constructor
        * @param   item    value of the node
        **/
-      Leaf_Node (int64_t item);
+      Leaf_Node (const Knowledge_Record & item);
+      
+      /**
+       * Constructor
+       * @param   item    value of the node
+       **/
+      Leaf_Node (Madara::Knowledge_Record::Integer item);
+      
+      /**
+       * Constructor
+       * @param   item    value of the node
+       **/
+      Leaf_Node (double item);
 
       /**
        * Constructor
        * @param   item    value of the node
        **/
-      Leaf_Node (const ::std::string &item);
-
-      /**
-       * Constructor
-       * @param   item    value of the node
-       **/
-      Leaf_Node (const char *item);
+      Leaf_Node (const std::string &item);
 
       /**
        * Destructor
@@ -47,20 +53,20 @@ namespace Madara
        * Returns the printable value of the node
        * @return    value of the node
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE item (void) const;
+      virtual Madara::Knowledge_Record item (void) const;
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
        * @param     can_change   set to true if variable nodes are contained
        * @return    value of this node
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE prune (bool & can_change);
+      virtual Madara::Knowledge_Record prune (bool & can_change);
 
       /** 
        * Evaluates the expression tree. 
        * @return    value of this node
        **/
-      virtual Madara::Knowledge_Record::VALUE_TYPE evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (void);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class
@@ -70,7 +76,7 @@ namespace Madara
 
     private:
       /// Integer value associated with the operand.
-      int64_t item_;
+      Madara::Knowledge_Record item_;
     };
 
   }

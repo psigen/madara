@@ -18,8 +18,10 @@ Madara::KATS::Test_Framework::Test_Framework (
   const Madara::KATS::Settings & settings)
 : knowledge_ (settings.host, settings)
 {
-  knowledge_.set (".madara.id", settings.id);
-  knowledge_.set (".madara.processes", settings.processes);
+  knowledge_.set (".madara.id",
+    Madara::Knowledge_Record::Integer (settings.id));
+  knowledge_.set (".madara.processes",
+    Madara::Knowledge_Record::Integer (settings.processes));
 }
 
 /// Copy constructor
@@ -35,15 +37,16 @@ Madara::KATS::Test_Framework::~Test_Framework ()
 }
 
 /// Retrieves a knowledge value
-long long
+Madara::Knowledge_Record::Integer
 Madara::KATS::Test_Framework::get (const ::std::string & key)
 {
-  return knowledge_.get (key);
+  return knowledge_.get (key).to_integer ();
 }
 
 /// Sets a knowledge value to a specified value
 int
-Madara::KATS::Test_Framework::set (const ::std::string & key, long long value)
+Madara::KATS::Test_Framework::set (const ::std::string & key,
+  Madara::Knowledge_Record::Integer value)
 {
   return knowledge_.set (key, value);
 }
@@ -60,8 +63,10 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   std::stringstream postcondition;
   std::stringstream log_message;
 
-  long long id = knowledge_.get (".madara.id");
-  long long processes = knowledge_.get (".madara.processes");
+  Madara::Knowledge_Record::Integer id =
+    knowledge_.get (".madara.id").to_integer ();
+  Madara::Knowledge_Record::Integer processes =
+    knowledge_.get (".madara.processes").to_integer ();
 
   if (processes <= 1)
   {
@@ -85,7 +90,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
 
   // add logic to wait for all processes in the ring to set their
   // attribute to not-zero
-  for (long long i = 0; i < processes; ++i)
+  for (Madara::Knowledge_Record::Integer i = 0; i < processes; ++i)
   {
     buffer << " && MADARA.BARRIER.";
     buffer << event_name;
@@ -107,7 +112,7 @@ Madara::KATS::Test_Framework::barrier (const std::string & event_name)
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "%s", knowledge_.expand_statement (log_message.str ()).c_str ()));
 
-  long long result = knowledge_.wait (buffer.str ());
+  long long result = knowledge_.wait (buffer.str ()).to_integer ();
 
   // there are times when one of the barriered processes will return
   // before others have realized they are out of the barrier, so we
@@ -196,7 +201,7 @@ Madara::KATS::Test_Framework::event (const std::string & name,
 
   // default result is 
   int result = 0;
-  long long eval_result = 0;
+  Madara::Knowledge_Record::Integer eval_result = 0;
 
   // first, make sure the transport is activated or else
   // we will be here for a long time. Only necessary
@@ -205,11 +210,11 @@ Madara::KATS::Test_Framework::event (const std::string & name,
     knowledge_.activate_transport ();
 
   // check if we should be aborting
-  eval_result = knowledge_.evaluate (fail_condition);
+  eval_result = knowledge_.evaluate (fail_condition).to_integer ();
   if (fail_condition == "" || eval_result == 0)
   {
     // check if we should be skipping over a pre and post condition
-    eval_result = knowledge_.evaluate (continue_condition);
+    eval_result = knowledge_.evaluate (continue_condition).to_integer ();
 
     if (continue_condition == "" || eval_result == 0)
     {
@@ -229,7 +234,7 @@ Madara::KATS::Test_Framework::event (const std::string & name,
       buffer << ".event.";
       buffer << name;
       buffer << ".success";
-      knowledge_.set (buffer.str (), 1);
+      knowledge_.set (buffer.str ());
     }
     else
     {
@@ -238,7 +243,7 @@ Madara::KATS::Test_Framework::event (const std::string & name,
       buffer << ".event.";
       buffer << name;
       buffer << ".continued";
-      knowledge_.set (buffer.str (), 1);
+      knowledge_.set (buffer.str ());
     }
   }
   // we have to abort
@@ -249,7 +254,7 @@ Madara::KATS::Test_Framework::event (const std::string & name,
     buffer << ".event.";
     buffer << name;
     buffer << ".failed";
-    knowledge_.set (buffer.str (), 1);
+    knowledge_.set (buffer.str ());
 
     result = -1;
   }
@@ -259,7 +264,7 @@ Madara::KATS::Test_Framework::event (const std::string & name,
   buffer << ".event.";
   buffer << name;
   buffer << ".done";
-  knowledge_.set (buffer.str (), 1);
+  knowledge_.set (buffer.str ());
 
   // if we have a failed condition or if the user has
   // asked us to close the transport

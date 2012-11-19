@@ -20,11 +20,11 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/utility/Utility.h"
 
-int id = 0;
-int left = 0;
-int cars = 1;
-int stop = 10;
-long value = 0;
+Madara::Knowledge_Record::Integer id = 0;
+Madara::Knowledge_Record::Integer left = 0;
+Madara::Knowledge_Record::Integer cars = 1;
+Madara::Knowledge_Record::Integer stop = 10;
+Madara::Knowledge_Record::Integer value = 0;
 std::string mapfile = "/configs/maps/default.map";
 std::string looppost_logicfile = "/configs/logics/simulator_looppost.klf";
 std::string loopmain_logicfile = "/configs/logics/simulator_loopmain.klf";
@@ -36,7 +36,7 @@ std::string host = "localhost";
 typedef std::set < std::string >                 Vertices;
 
 
-typedef std::map < std::string, long >              Distance_Map;
+typedef std::map < std::string, Madara::Knowledge_Record::Integer > Distance_Map;
 typedef std::map < std::string, Distance_Map >      Connectivity_Map; 
 
 typedef std::vector <std::vector <char> >           Logical_Map;
@@ -353,7 +353,10 @@ void update_connectivity (Connectivity_Map & connectivity_map,
 
 void build_connectivity (Logical_Map & logical_map, Connectivity_Map & connectivity_map,
                          Route_Map & route_map,
-                         long cur_x, long cur_y, long max_x, long max_y)
+                         Madara::Knowledge_Record::Integer cur_x,
+                         Madara::Knowledge_Record::Integer cur_y,
+                         Madara::Knowledge_Record::Integer max_x,
+                         Madara::Knowledge_Record::Integer max_y)
 {
   // look around the current location for connectivity (roads/light)
   // 1 2 3         C 1    1 2     1 2      1 2
@@ -361,10 +364,10 @@ void build_connectivity (Logical_Map & logical_map, Connectivity_Map & connectiv
   // 6 7 8                        4 5      4 5
              
   // compute starting x and y, see ascii outline above
-  long x;
-  long y;
+  Madara::Knowledge_Record::Integer x;
+  Madara::Knowledge_Record::Integer y;
 
-  char printable = logical_map[cur_x][cur_y];
+  char printable = (char)logical_map[cur_x][cur_y];
 
   ACE_DEBUG ((LM_INFO, "Looking for connections from [%d:%d], val=%c\n", 
     cur_x, cur_y, printable));
@@ -431,14 +434,14 @@ void build_connectivity (Logical_Map & logical_map, Connectivity_Map & connectiv
 }
 
 void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Base & knowledge,
-                std::vector <std::pair <long, long> > & spawn_points,
-                std::vector <std::pair <long, long> > & hospitals,
-                std::vector <std::pair <long, long> > & traffic_lights,
+                std::vector <std::pair <Madara::Knowledge_Record::Integer, Madara::Knowledge_Record::Integer> > & spawn_points,
+                std::vector <std::pair <Madara::Knowledge_Record::Integer, Madara::Knowledge_Record::Integer> > & hospitals,
+                std::vector <std::pair <Madara::Knowledge_Record::Integer, Madara::Knowledge_Record::Integer> > & traffic_lights,
                 Logical_Map & logical_map, Connectivity_Map & connectivity_map,
                 Route_Map & route_map)
 {
-  long x = 0, y = 0;
-  long max_x = 0, max_y = 0;
+  Madara::Knowledge_Record::Integer x = 0, y = 0;
+  Madara::Knowledge_Record::Integer max_x = 0, max_y = 0;
 
   logical_map.clear ();
 
@@ -568,10 +571,10 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
       // us to use KaRL to look up light info (even reinforcement values)
       if (logical_map[x][y] == 'r' || logical_map[x][y] == 't')
       {
-        long i = y-1;
+        Madara::Knowledge_Record::Integer i = y-1;
         // try to find next light to the north
         for (knowledge.set (".i", i); 
-           knowledge.get (".i") >= 0; 
+          knowledge.get (".i").to_integer () >= 0; 
            --i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.x}.{.i}.type == .light_type => \
@@ -583,7 +586,7 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
         i = y + 1;
         // try to find next light to the south
         for (knowledge.set (".i", i); 
-           knowledge.get (".i") < max_y + 1; 
+          knowledge.get (".i").to_integer () < max_y + 1; 
            ++i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.x}.{.i}.type == .light_type => \
@@ -595,7 +598,7 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
         i = x + 1;
         // try to find next light to the east
         for (knowledge.set (".i", i); 
-          knowledge.get (".i") < max_x + 1; 
+          knowledge.get (".i").to_integer () < max_x + 1; 
           ++i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.i}.{.y}.type == .light_type => \
@@ -607,7 +610,7 @@ void parse_map (const std::string & map, Madara::Knowledge_Engine::Knowledge_Bas
         i = x - 1;
         // try to find next light to the west
         for (knowledge.set (".i", i); 
-             knowledge.get (".i") >= 0; 
+          knowledge.get (".i").to_integer () >= 0; 
              --i, knowledge.set (".i", i))
         {
           knowledge.evaluate (".map.{.i}.{.y}.type == .light_type => \
@@ -660,11 +663,11 @@ inline void process_car (
 .dest_y = .car{.i}.dest.y;\
 .velocity = .car{.i}.velocity;");
 
-  int64_t cur_x = knowledge.get (".cur_x");
-  int64_t cur_y = knowledge.get (".cur_y");
+  Madara::Knowledge_Record cur_x = knowledge.get (".cur_x");
+  Madara::Knowledge_Record cur_y = knowledge.get (".cur_y");
 
-  int64_t dest_x = knowledge.get (".dest_x");
-  int64_t dest_y = knowledge.get (".dest_y");
+  Madara::Knowledge_Record dest_x = knowledge.get (".dest_x");
+  Madara::Knowledge_Record dest_y = knowledge.get (".dest_y");
 
 
   std::stringstream source_stream;
@@ -684,15 +687,15 @@ inline void process_car (
   Route route = route_map [source][dest];
   Path path = route.path;
 
-  uint64_t max_speed = knowledge.get ("max_speed");
-  unsigned int j;
+  Madara::Knowledge_Record max_speed = knowledge.get ("max_speed");
+  Madara::Knowledge_Record::Integer j;
 
-  for (j = 0; j < path.size () && j <= max_speed; ++j)
+  for (j = 0; j < path.size () && j <= max_speed.to_integer (); ++j)
   {
     // j is the path point on the way to destination
     knowledge.set (".j", j);
-    long x;
-    long y;
+    Madara::Knowledge_Record::Integer x;
+    Madara::Knowledge_Record::Integer y;
     char separator;
 
     // buffer splits from a coord in the form of x.y
@@ -711,7 +714,7 @@ inline void process_car (
 
   // fill up the path entries up to max_speed, to simplify the
   // job of the KaRL logic
-  for (; j <= max_speed; ++j)
+  for (; j <= max_speed.to_integer (); ++j)
   {
     // j is the path point on the way to destination
     knowledge.set (".j", j);
@@ -736,11 +739,11 @@ void process_cars (
   Madara::Knowledge_Engine::Knowledge_Base & knowledge, Route_Map & route_map,
   const std::string & logic)
 {
-  knowledge.set (".i", 0);
+  knowledge.set (".i", Madara::Knowledge_Record::Integer (0));
   // run the main logic on the cars that currently exist
-  for (knowledge.set (".i", 0); 
-         knowledge.get (".i") < knowledge.get (".num_cars"); 
-         knowledge.evaluate ("++.i"))
+  for (knowledge.set (".i", Madara::Knowledge_Record::Integer (0)); 
+       (knowledge.get (".i") < knowledge.get (".num_cars")).is_true (); 
+       knowledge.evaluate ("++.i"))
   {
     process_car (knowledge, route_map, logic);
   }
@@ -769,15 +772,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // set my id
   knowledge.set (".id", id);
-  knowledge.set (".hospital_type", 20);
-  knowledge.set (".light_type", 10);
-  knowledge.set (".northsouth_road_type", 1);
-  knowledge.set (".eastwest_road_type", 2);
+  knowledge.set (".hospital_type", Madara::Knowledge_Record::Integer (20));
+  knowledge.set (".light_type", Madara::Knowledge_Record::Integer (10));
+  knowledge.set (".northsouth_road_type");
+  knowledge.set (".eastwest_road_type", Madara::Knowledge_Record::Integer (2));
 
   // time related knowledge values
   // simulation_time = current time step in the simulation
 
-  knowledge.set ("simulation_time", 0);   // 3 minutes (180 seconds)
+  knowledge.set ("simulation_time", Madara::Knowledge_Record::Integer (0));   // 3 minutes (180 seconds)
 
   std::stringstream main_logic;
 
@@ -839,13 +842,13 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.print_knowledge ();
 
   // this doesn't change from settings
-  int64_t spawn_rate = knowledge.get ("spawn_rate");
-  long max_speed = (long) knowledge.get ("max_speed");
+  Madara::Knowledge_Record spawn_rate = knowledge.get ("spawn_rate");
+  Madara::Knowledge_Record max_speed = knowledge.get ("max_speed");
 
   // can't have a max_speed that is zero or we'll have
   // floating point exceptions
-  if (max_speed == 0)
-    max_speed = 1;
+  if (max_speed.to_integer () == 0)
+    max_speed.set_value (Madara::Knowledge_Record::Integer (1));
 
   long num_cars = 0;
 
@@ -853,11 +856,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   Connectivity_Map connectivity_map;
   Route_Map route_map;
 
-  std::vector <std::pair <long, long> > spawn_points;
-  std::vector <std::pair <long, long> > hospitals;
-  std::vector <std::pair <long, long> > traffic_lights;
+  std::vector <std::pair <Madara::Knowledge_Record::Integer, Madara::Knowledge_Record::Integer> > spawn_points;
+  std::vector <std::pair <Madara::Knowledge_Record::Integer, Madara::Knowledge_Record::Integer> > hospitals;
+  std::vector <std::pair <Madara::Knowledge_Record::Integer, Madara::Knowledge_Record::Integer> > traffic_lights;
   
-  std::vector <std::vector <long> >     map_lookup;
+  std::vector <std::vector <Madara::Knowledge_Record::Integer> >     map_lookup;
 
   parse_map (map, knowledge, spawn_points, hospitals, 
     traffic_lights, logical_map, connectivity_map, route_map);
@@ -867,8 +870,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // setup traffic light defaults (like braking time)
   // note that these setup statements should be setup so that
   // users may override these setup values in the default_simulation.klf file
-  for (knowledge.set (".id", 1); 
-       knowledge.get (".id") <= knowledge.get (".light_num"); 
+  for (knowledge.set (".id"); 
+    (knowledge.get (".id") <= knowledge.get (".light_num")).is_true (); 
        knowledge.evaluate ("++.id"))
   {
     knowledge.evaluate (light_setup);
@@ -879,8 +882,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     // run the traffic light logic next
 
-    for (knowledge.set (".id", 1); 
-         knowledge.get (".id") <= knowledge.get (".light_num"); 
+    for (knowledge.set (".id"); 
+         (knowledge.get (".id") <= knowledge.get (".light_num")).is_true (); 
          knowledge.evaluate ("++.id"))
     {
       knowledge.evaluate (light_logic);
@@ -890,11 +893,12 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     process_cars (knowledge, route_map, loopmain_logic);
 
     // spawn new cars
-    for (long i = 0; i < spawn_rate; ++i, ++num_cars)
+    for (Madara::Knowledge_Record::Integer i = 0;
+         i < spawn_rate.to_integer (); ++i, ++num_cars)
     {
-      long destination = rand () % spawn_points.size ();
-      long start = rand () % spawn_points.size ();
-      long estimated_time = 0;
+      Madara::Knowledge_Record::Integer destination = rand () % spawn_points.size ();
+      Madara::Knowledge_Record::Integer start = rand () % spawn_points.size ();
+      Madara::Knowledge_Record::Integer estimated_time = 0;
 
       // try to handle case where map has just one spawn point gracefully
       // generate a start location until we find a start location that
@@ -911,9 +915,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
       estimated_time += abs (spawn_points[start].first - spawn_points[destination].first);
       estimated_time += abs (spawn_points[start].second - spawn_points[destination].second);
 
-      estimated_time /= max_speed;
+      estimated_time /= max_speed.to_integer ();
 
-      if (estimated_time % max_speed > 0)
+      if (estimated_time % max_speed.to_integer () > 0)
         ++estimated_time;
 
       knowledge.set (".estimated_time", estimated_time);
@@ -939,7 +943,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     knowledge.print("time: {simulation_time} of {simulation_cutoff}\n");
 
     // cutoff the simulation if we have passed the cutoff
-    if (knowledge.get ("simulation_time") >= knowledge.get ("simulation_cutoff"))
+    if ((knowledge.get ("simulation_time") >= knowledge.get ("simulation_cutoff")).is_true ())
     {
       terminated = true;
       knowledge.set ("simulation_finished");
