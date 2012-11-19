@@ -2201,8 +2201,8 @@ void
         if (variable_node && number)
         {
           MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
-            "For_Loop: Body is a simple assignment of variable %s to %q\n",
-            variable_node->key_.c_str (), number->item_));
+            "For_Loop: Body is a simple assignment of variable %s to %s\n",
+            variable_node->key_.c_str (), number->item_.to_string ().c_str ()));
         }
         else
         {
