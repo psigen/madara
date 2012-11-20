@@ -20,19 +20,19 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 Madara::Knowledge_Record
   return_1 (Madara::Knowledge_Engine::Variables * variables)
 {
-  return Madara::Knowledge_Record ((Madara::Knowledge_Record::Integer)1);
+  return Madara::Knowledge_Record::Integer (1);
 }
 
 Madara::Knowledge_Record
   return_2 (Madara::Knowledge_Engine::Variables * variables)
 {
-  return Madara::Knowledge_Record ((Madara::Knowledge_Record::Integer)2);
+  return Madara::Knowledge_Record::Integer (2);
 }
 
 Madara::Knowledge_Record
   return_3 (Madara::Knowledge_Engine::Variables * variables)
 {
-  return Madara::Knowledge_Record ((Madara::Knowledge_Record::Integer)3);
+  return Madara::Knowledge_Record::Integer (3);
 }
 
 Madara::Knowledge_Record
