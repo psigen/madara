@@ -15,6 +15,7 @@
 #include <map>
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
+#include "madara/utility/Scoped_Array.h"
 
 namespace Madara
 {
@@ -52,7 +53,8 @@ namespace Madara
       DOUBLE = 2,
       FLOAT = 2,
       FILE = 3,
-      IMAGE = 4
+      IMAGE = 4,
+      XML = 5
     };
     
     typedef  int64_t     Integer;
@@ -95,13 +97,22 @@ namespace Madara
     int32_t type_;
     
     /**
-     * value of the knowledge record
+     * potential integer or double value of the knowledge record
      **/
     union {
       Integer int_value_;
-      char * str_value_;
       double double_value_;
     };
+
+    /**
+     * potential string value of the node (size int)
+     **/
+    Madara::Utility::Scoped_Array <char> str_value_;
+
+    /**
+     * potential file value of the node
+     **/
+    Madara::Utility::Scoped_Array <unsigned char> file_value_;
 
   public:
 

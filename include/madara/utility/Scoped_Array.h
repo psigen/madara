@@ -1,6 +1,6 @@
 /* -*- C++ -*- */
-#ifndef _MADARA_UTILITY_REFCOUNTER_H_
-#define _MADARA_UTILITY_REFCOUNTER_H_
+#ifndef _MADARA_UTILITY_SCOPED_ARRAY_H_
+#define _MADARA_UTILITY_SCOPED_ARRAY_H_
 
 
 namespace Madara
@@ -8,50 +8,39 @@ namespace Madara
   namespace Utility
   {
     /**
-     * @class Refcounter
+     * @class Scoped_Array
      * @brief This template class provides transparent reference counting
-     *        of its template parameter @a T. This differs from Scoped_Array
-     *        in the type of memory it is meant to manage. Refcounter manages
-     *        single object instances. Scoped_Array manages an array of
-     *        instances,
+     *        of its template parameter @a T. This differs from Refcounter
+     *        in the members available and the deletion of memory.
+     *        Refcounter deletes a single T memory location when the last
+     *        instance of the pointer goes out of scope. Scoped_Array deletes
+     *        an array of T objects when the pointer goes out of scope.
      *
      *        This class can be used to automate the implementation of the
      *        Bridge pattern in C++.  
      */
     template <typename T>
-    class Refcounter
+    class Scoped_Array
     {
     public:
       /// default Ctor
-      Refcounter (void);
+      Scoped_Array (void);
 
       /// Ctor with refcounting functionality
-      Refcounter (T * ptr, bool increase_count = false);
+      Scoped_Array (T * ptr, bool increase_count = false);
 
       /// copy Ctor
-      Refcounter (const Refcounter & rhs);
+      Scoped_Array (const Scoped_Array & rhs);
 
       /// Dtor will delete pointer if refcount becomes 0
-      virtual ~Refcounter (void);
+      virtual ~Scoped_Array (void);
 
       /// assignment operator for times when you don't want
       /// the reference increased for incoming ptr
       void operator= (T * ptr);
 
       /// assignment operator
-      void operator= (const Refcounter & rhs);
-
-      /// dereference operator
-      inline T & operator* (void);
-
-      /// dereference operator
-      inline const T & operator* (void) const;
-
-      /// mimic pointer dereferencing
-      inline T * operator-> (void);
-
-      /// mimic pointer dereferencing
-      inline const T * operator-> (void) const;
+      void operator= (const Scoped_Array & rhs);
 
       /// get the underlying pointer
       T * get_ptr (void);
@@ -88,6 +77,6 @@ namespace Madara
     };
   }
 }
-#include "madara/utility/Refcounter.cpp"
+#include "madara/utility/Scoped_Array.cpp"
 
-#endif /* _MADARA_UTILITY_REFCOUNTER_H_ */
+#endif /* _MADARA_UTILITY_SCOPED_ARRAY_H_ */
