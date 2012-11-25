@@ -111,89 +111,89 @@ void test_comparisons (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.evaluate (".var1 = 'bob' < 'cat'; .var2 = 'dear' > 'abby';" \
     ".var3 = 'bob' <= 'cat'; .var4= 'dear' >= 'abby'; .var5 = 'bob' == 'bob'");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1);
   
   ACE_DEBUG ((LM_INFO, "  Testing int to int comparisons\n"));
 
   knowledge.evaluate (".var1 = 1 < 10; .var2 = 5 > 3;" \
     ".var3 = 2 <= 4; .var4= 5 >= 3; .var5 = 5 == 5");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1);
   
   ACE_DEBUG ((LM_INFO, "  Testing double to double comparisons\n"));
 
   knowledge.evaluate (".var1 = 1.0 < 10.0; .var2 = 5.0 > 3.0;" \
     ".var3 = 2.0 <= 4.0; .var4= 5.0 >= 3.0; .var5 = 5.0 == 5.0");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1);
   
   ACE_DEBUG ((LM_INFO, "  Testing double to double comparisons\n"));
 
   knowledge.evaluate (".var1 = 1.0 < 10.0; .var2 = 5.0 > 3.0;" \
     ".var3 = 2.0 <= 4.0; .var4= 5.0 >= 3.0; .var5 = 5.0 == 5.0");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1);
   
   ACE_DEBUG ((LM_INFO, "  Testing double to int comparisons\n"));
 
   knowledge.evaluate (".var1 = 9.0 < 10; .var2 = 5.0 > 3.0;" \
     ".var3 = 2.0 <= 4; .var4= 5.0 >= 3; .var5 = 5.0 == 5; .var6 = 9 < 9.5;" \
     ".var7 = 3 > 2.9; .var8 = 4 <= 4.1; .var9 = 4 >= 4.0; .var10 = 5 == 5.0");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1 &&
-    knowledge.get (".var6") == 1 && 
-    knowledge.get (".var7") == 1 &&
-    knowledge.get (".var8") == 1 &&
-    knowledge.get (".var9") == 1 &&
-    knowledge.get (".var10") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1 &&
+    knowledge.get (".var6").to_integer () == 1 && 
+    knowledge.get (".var7").to_integer () == 1 &&
+    knowledge.get (".var8").to_integer () == 1 &&
+    knowledge.get (".var9").to_integer () == 1 &&
+    knowledge.get (".var10").to_integer () == 1);
   
   ACE_DEBUG ((LM_INFO, "  Testing string to int/double comparisons\n"));
 
   knowledge.evaluate (".var1 = '9.0' < 10; .var2 = '5.0' > 3.0;" \
     ".var3 = '2.0' <= 4; .var4= '5.0' >= 3; .var5 = '5.0' == 5; .var6 = '9' < 9.5;" \
     ".var7 = '3' > 2.9; .var8 = '4' <= 4.1; .var9 = '4' >= 4.0; .var10 = '5' == 5.0");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1 &&
-    knowledge.get (".var6") == 1 && 
-    knowledge.get (".var7") == 1 &&
-    knowledge.get (".var8") == 1 &&
-    knowledge.get (".var9") == 1 &&
-    knowledge.get (".var10") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1 &&
+    knowledge.get (".var6").to_integer () == 1 && 
+    knowledge.get (".var7").to_integer () == 1 &&
+    knowledge.get (".var8").to_integer () == 1 &&
+    knowledge.get (".var9").to_integer () == 1 &&
+    knowledge.get (".var10").to_integer () == 1);
   
   ACE_DEBUG ((LM_INFO, "  Testing int/double to string comparisons\n"));
 
   knowledge.evaluate (".var1 = 10 < '10.5'; .var2 = 5.5 > '5.4';" \
     ".var3 = 2 <= '2.2'; .var4= 5 >= '4.9'; .var5 = 5 == '5.0'; .var6 = 9 < '9.5';" \
     ".var7 = 3 > '2.9'; .var8 = 4 <= '4.1'; .var9 = 4 >= '4.0'; .var10 = 5 == '5'");
-  assert (knowledge.get (".var1") == 1 && 
-    knowledge.get (".var2") == 1 &&
-    knowledge.get (".var3") == 1 &&
-    knowledge.get (".var4") == 1 &&
-    knowledge.get (".var5") == 1 &&
-    knowledge.get (".var6") == 1 && 
-    knowledge.get (".var7") == 1 &&
-    knowledge.get (".var8") == 1 &&
-    knowledge.get (".var9") == 1 &&
-    knowledge.get (".var10") == 1);
+  assert (knowledge.get (".var1").to_integer () == 1 && 
+    knowledge.get (".var2").to_integer () == 1 &&
+    knowledge.get (".var3").to_integer () == 1 &&
+    knowledge.get (".var4").to_integer () == 1 &&
+    knowledge.get (".var5").to_integer () == 1 &&
+    knowledge.get (".var6").to_integer () == 1 && 
+    knowledge.get (".var7").to_integer () == 1 &&
+    knowledge.get (".var8").to_integer () == 1 &&
+    knowledge.get (".var9").to_integer () == 1 &&
+    knowledge.get (".var10").to_integer () == 1);
 
 
 }

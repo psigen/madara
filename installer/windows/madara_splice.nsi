@@ -257,7 +257,6 @@ SectionEnd
 
 Section "-include" SEC07
   SetOutPath "$INSTDIR\include\madara"
-  File "..\..\include\madara\Globals.h"
   File "..\..\include\madara\MADARA_export.h"
   File "..\..\include\madara\Thread_Pool.h"
   File "..\..\include\madara\Thread_Pool.cpp"
