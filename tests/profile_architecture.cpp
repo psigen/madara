@@ -134,6 +134,9 @@ void compile_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
     timer.elapsed_time (measured);
 
     compile_times[i] = (uint64_t) (measured);
+
+    if (tests[i].size () > 18)
+      tests[i].resize (18);
   }
 }
 

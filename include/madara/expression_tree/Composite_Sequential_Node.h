@@ -2,7 +2,7 @@
 #define COMPOSITE_SEQUENTIAL_NODE_H
 
 
-#include "madara/expression_tree/Composite_Binary_Node.h"
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
@@ -18,16 +18,14 @@ namespace Madara
      * @brief A composite node that evaluates both left and right
      *        expressions regardless of their evaluations
      */
-    class Composite_Sequential_Node : public Composite_Binary_Node
+    class Composite_Sequential_Node : public Composite_Ternary_Node
     {
     public:
       /**
        * Constructor
-       * @param   left   left expression
-       * @param   right  right expression
+       * @param   nodes  2+ nodes to be executed in sequence
        **/
-      Composite_Sequential_Node (Component_Node *left, 
-                          Component_Node *right);
+      Composite_Sequential_Node (const Component_Nodes & nodes);
 
       /**
        * Returns the printable character of the node

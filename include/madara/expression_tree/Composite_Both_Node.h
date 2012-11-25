@@ -2,7 +2,7 @@
 #define COMPOSITE_BOTH_NODE_H
 
 
-#include "madara/expression_tree/Composite_Binary_Node.h"
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
@@ -18,7 +18,7 @@ namespace Madara
      * @brief A composite node that evaluates both left and right
      *        expressions regardless of their evaluations
      */
-    class Composite_Both_Node : public Composite_Binary_Node
+    class Composite_Both_Node : public Composite_Ternary_Node
     {
     public:
       /**
@@ -26,8 +26,7 @@ namespace Madara
        * @param   left   left expression
        * @param   right  right expression
        **/
-      Composite_Both_Node (Component_Node *left, 
-                          Component_Node *right);
+      Composite_Both_Node (const Component_Nodes & nodes);
 
       /**
        * Returns the printable character of the node

@@ -16,17 +16,15 @@
 // Ctor
 
 Madara::Expression_Tree::Composite_Sequential_Node::Composite_Sequential_Node (
-  Component_Node *left, Component_Node *right)
-: Madara::Expression_Tree::Composite_Binary_Node (left, right)
-{    
+  const Component_Nodes & nodes)
+: Madara::Expression_Tree::Composite_Ternary_Node (nodes)
+{
 }
 
 Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Sequential_Node::item (void) const
 {
-  Madara::Knowledge_Record record;
-  record.set_value (",");
-  return record;
+  return ",";
 }
 
 /// Prune the tree of unnecessary nodes. 
@@ -35,46 +33,28 @@ Madara::Expression_Tree::Composite_Sequential_Node::item (void) const
 Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Sequential_Node::prune (bool & can_change)
 {
-  bool left_child_can_change = false;
-  bool right_child_can_change = false;
-  Madara::Knowledge_Record left_value;
-  Madara::Knowledge_Record right_value;
+  Madara::Knowledge_Record return_value;
 
-  if (this->left_)
+  int j = 0;
+  for (Component_Nodes::iterator i = nodes_.begin ();
+       i != nodes_.end (); ++i, +j)
   {
-    left_value = this->left_->prune (left_child_can_change);
-    if (!left_child_can_change && dynamic_cast <Leaf_Node *> (left_) == 0)
+    bool value_changes = false;
+    Madara::Knowledge_Record value;
+    value = (*i)->prune (value_changes);
+    if (!value_changes && dynamic_cast <Leaf_Node *> (*i) == 0)
     {
-      delete this->left_;
-      this->left_ = new Leaf_Node (left_value);
+      delete *i;
+      *i = new Leaf_Node (value);
     }
-  }
-  else
-  {
-    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nKARL COMPILE ERROR: Sequence has no left expression\n"));
-    exit (-1);
+
+    if (j == 0 || (value < return_value).is_true ())
+      return_value = value;
+
+    can_change = can_change || value_changes;
   }
 
-  if (this->right_)
-  {
-    right_value = this->right_->prune (right_child_can_change);
-    if (!right_child_can_change && dynamic_cast <Leaf_Node *> (right_) == 0)
-    {
-      delete this->right_;
-      this->right_ = new Leaf_Node (right_value);
-    }
-  }
-  else
-  {
-    ACE_DEBUG ((LM_DEBUG, 
-      "\nEXPRESSION COMPILE ERROR: ',' has an empty right expression\n"));
-    return Madara::Knowledge_Record ();
-  }
-
-  can_change = left_child_can_change || right_child_can_change;
-
-  return (left_value > right_value).is_true () ? right_value : left_value;
+  return return_value;
 }
 
 /// Evaluates the node and its children. This does not prune any of
@@ -83,10 +63,19 @@ Madara::Expression_Tree::Composite_Sequential_Node::prune (bool & can_change)
 Madara::Knowledge_Record 
 Madara::Expression_Tree::Composite_Sequential_Node::evaluate (void)
 {
-  Madara::Knowledge_Record left_value = left_->evaluate ();
-  Madara::Knowledge_Record right_value = right_->evaluate ();
-  
-  return (left_value > right_value).is_true () ? right_value : left_value;
+  Madara::Knowledge_Record return_value;
+
+  int j = 0;
+  for (Component_Nodes::iterator i = nodes_.begin ();
+       i != nodes_.end (); ++i, +j)
+  {
+    Madara::Knowledge_Record value = (*i)->evaluate ();
+
+    if (j == 0 || (value < return_value).is_true ())
+      return_value = value;
+  }
+
+  return return_value;
 }
 
 // accept a visitor

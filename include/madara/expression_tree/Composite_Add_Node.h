@@ -2,7 +2,7 @@
 #ifndef _COMPOSITE_ADD_NODE_H_
 #define _COMPOSITE_ADD_NODE_H_
 
-#include "madara/expression_tree/Composite_Binary_Node.h"
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 
 namespace Madara
 {
@@ -16,16 +16,14 @@ namespace Madara
      * @class Composite_Add_Node
      * @brief A composite node that encompasses addition of two expressions
      */
-    class Composite_Add_Node : public Composite_Binary_Node
+    class Composite_Add_Node : public Composite_Ternary_Node
     {
     public:
       /**
        * Constructor
-       * @param   left   left expression
-       * @param   right  right expression
+       * @param   nodes  2+ nodes to be executed in sequence
        **/
-      Composite_Add_Node (Component_Node *left, 
-                          Component_Node *right);
+      Composite_Add_Node (const Component_Nodes & nodes);
 
       /**
        * Returns the printable character of the node

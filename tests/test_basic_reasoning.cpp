@@ -312,6 +312,18 @@ void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate (".var1 = 1; .var2 = -1; .var3 = (++.var1) && (++.var2)");
   assert (knowledge.get (".var3").to_integer () == 0);
 
+  knowledge.evaluate (".var1 = 5; .var2 = !var1");
+  assert (knowledge.get (".var2").to_integer () == 0);
+
+  knowledge.evaluate (".var1 = 5; .var2 = !!var1");
+  assert (knowledge.get (".var2").to_integer () == 1);
+  
+  knowledge.evaluate (".var1 = 5; .var2 = !!!var1");
+  assert (knowledge.get (".var2").to_integer () == 0);
+
+  knowledge.evaluate (".var1 = 5; .var2 = !!!!!!var1");
+  assert (knowledge.get (".var2").to_integer () == 1);
+
 }
 
 /// Tests Dijkstra Synchronization algorithms 
@@ -794,6 +806,19 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.evaluate (".var2 = 8; .var3 = .var2 * 3 / 3");
   assert (knowledge.get (".var3").to_integer () == 8);
+
+  knowledge.evaluate (".var1 = 5; .var2 = -.var1");
+  assert (knowledge.get (".var3").to_integer () == -5);
+
+  knowledge.evaluate (".var1 = 5; .var2 = -(-.var1)");
+  assert (knowledge.get (".var3").to_integer () == 5);
+
+  knowledge.evaluate (".var1 = 5; .var2 = -(-(-.var1))");
+  assert (knowledge.get (".var3").to_integer () == -5);
+  
+  knowledge.evaluate (".var1 = 5; .var2 = -(-(-(-.var1)))");
+  assert (knowledge.get (".var3").to_integer () == 5);
+
 }
 
 /// Tests the both operator (;)

@@ -1,12 +1,12 @@
 /* -*- C++ -*- */
-#ifndef _COMPONENT_NODE_H_
-#define _COMPONENT_NODE_H_
+#ifndef _TERNARY_NODE_H_
+#define _TERNARY_NODE_H_
 
 #include <string>
-#include <vector>
 #include <stdexcept>
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/utility/stdint.h"
+#include "madara/expression_tree/Component_Node.h"
 
 
 namespace Madara
@@ -17,20 +17,30 @@ namespace Madara
     class Visitor;
 
     /**
-     * @class Component_Node
+     * @class Ternary_Node
      * @brief An abstract base class defines a simple abstract
      *        implementation of an expression tree node.
      *        
      * @see   See Composite_Unary_Node, Composite_Binary_Node, and Leaf Node
      *        for immediate subclasses of this class.
      */
-    class Component_Node
+    class Composite_Ternary_Node : public Component_Node
     {
     public:
       /**
+       * Constructor
+       **/
+      Composite_Ternary_Node ();
+
+      /**
+       * Constructor
+       **/
+      Composite_Ternary_Node (const Component_Nodes & nodes);
+      
+      /**
        * Destructor
        **/
-      virtual ~Component_Node (void) = 0;
+      virtual ~Composite_Ternary_Node (void);
 
       /**
        * Returns the value of the node
@@ -52,27 +62,15 @@ namespace Madara
       virtual Madara::Knowledge_Record evaluate (void) = 0;
 
       /** 
-       * Returns the left expression. 
-       * @return    a pointer to the left expression
-       **/
-      virtual Component_Node *left (void) const;
-
-      /** 
-       * Returns the right expression. 
-       * @return    a pointer to the right expression
-       **/
-      virtual Component_Node *right (void) const;
-
-      /** 
        * Accepts a visitor subclassed from the Visitor class
        * @param    visitor   visitor instance to use
        **/
       virtual void accept (Visitor &visitor) const;
-    };
 
-    // a vector of Component Nodes
-    typedef   std::vector <Component_Node *>   Component_Nodes;  
+    protected:
+      Component_Nodes nodes_;
+    };
   }
 }
 
-#endif /* _COMPONENT_NODE_H_ */
+#endif /* _TERNARY_NODE_H_ */

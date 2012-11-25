@@ -2,7 +2,7 @@
 #define COMPOSITE_OR_NODE_H
 
 
-#include "madara/expression_tree/Composite_Binary_Node.h"
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
@@ -17,16 +17,14 @@ namespace Madara
      * @class Composite_Or_Node
      * @brief A composite node that performs a logical or
      */
-    class Composite_Or_Node : public Composite_Binary_Node
+    class Composite_Or_Node : public Composite_Ternary_Node
     {
     public:
       /**
        * Constructor
-       * @param   left   left expression
-       * @param   right  right expression
+       * @param   nodes  2+ nodes to be executed in sequence
        **/
-      Composite_Or_Node (Component_Node *left, 
-                          Component_Node *right);
+      Composite_Or_Node (const Component_Nodes & nodes);
 
       /**
        * Returns the printable character of the node

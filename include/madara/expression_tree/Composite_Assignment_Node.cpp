@@ -9,23 +9,21 @@
 #include "madara/expression_tree/Visitor.h"
 #include "madara/expression_tree/Composite_Assignment_Node.h"
 #include "madara/expression_tree/Leaf_Node.h"
-#include "madara/expression_tree/Variable_Node.h"
 
 #include "madara/utility/Log_Macros.h"
 // Ctor
 
 Madara::Expression_Tree::Composite_Assignment_Node::Composite_Assignment_Node (
   Component_Node *left, Component_Node *right)
-  : Composite_Binary_Node (left, right)
-{    
+  : Composite_Unary_Node (right)
+{
+  left_ = dynamic_cast <Variable_Node *> (left);
 }
 
 Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Assignment_Node::item (void) const
 {
-  Madara::Knowledge_Record record;
-  record.set_value ("=");
-  return record;
+  return "=";
 }
 
 
@@ -36,7 +34,7 @@ Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
   bool right_child_can_change = false;
   Madara::Knowledge_Record right_value;
 
-  if (this->left_ && dynamic_cast <Variable_Node *> (left_) != 0)
+  if (this->left_ != 0)
     left_child_can_change = true;
   else
   {
@@ -72,11 +70,11 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Assignment_Node::evaluate (void)
 {
   // get the value from the right side and set the variable's value with it
-  Madara::Knowledge_Record value = right_->evaluate ();
-  dynamic_cast <Variable_Node *> (left_)->set (value);
+  //Madara::Knowledge_Record value = right_->evaluate ();
+  left_->set (right_->evaluate ());
 
   // return the value
-  return value;
+  return left_->evaluate ();
 }
 
 

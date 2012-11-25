@@ -72,7 +72,7 @@ namespace Madara
     {
     public:
       /// constructor
-      Symbol (Symbol *left, Symbol *right, int precedence_ = 0);
+      Symbol (Symbol * left, Symbol * right, int precedence_ = 0);
 
       /// destructor
       virtual ~Symbol (void);
@@ -88,14 +88,16 @@ namespace Madara
 
       /// abstract method for building an Expression Expression_Tree Node
 
-      virtual Component_Node *build (void) = 0;
+      virtual Component_Node * build (void) = 0;
 
       /// left and right pointers
 
-      Symbol *left_;
-      Symbol *right_;
+      Symbol * left_;
+      Symbol * right_;
       int precedence_;
     };
+
+    typedef  std::vector <Symbol *>   Symbols;
 
     /**
     * @class Operator
@@ -106,10 +108,27 @@ namespace Madara
     {
     public:
       /// constructor
-      Operator (Symbol *left, Symbol *right, int precedence_ = 1);
+      Operator (Symbol * left, Symbol * right, int precedence_ = 1);
 
       /// destructor
       ~Operator (void);
+    };
+    
+    /**
+    * @class Ternary_Operator
+    * @brief Abstract base class for operators with 3+ potential subnodes
+    * @see   Both
+    */
+    class Ternary_Operator : public Operator
+    {
+    public:
+      /// constructor
+      Ternary_Operator (Symbol * left, Symbol * right, int precedence_ = 1);
+
+      /// destructor
+      ~Ternary_Operator (void);
+
+      Component_Nodes nodes_;
     };
 
     /**
@@ -121,7 +140,7 @@ namespace Madara
     {
     public:
       /// constructor
-      Unary_Operator (Symbol *right, int precedence_ = 1);
+      Unary_Operator (Symbol * right, int precedence_ = 1);
 
       /// destructor
       ~Unary_Operator (void);
@@ -174,7 +193,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     //private:
       /// Key for retrieving value of this variable.
       const std::string key_;
@@ -307,7 +326,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     //private:
       /// Key for retrieving value of this variable.
       const std::string key_;
@@ -380,7 +399,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     private:
 
       /// Context for variables
@@ -406,7 +425,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -414,7 +433,7 @@ namespace Madara
     * @brief Addition node of the parse tree
     */
 
-    class Add : public Operator
+    class Add : public Ternary_Operator
     {
     public:
       /// constructor
@@ -424,11 +443,10 @@ namespace Madara
       virtual ~Add (void);
 
       /// returns the precedence level
-      //virtual int precedence (void);
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -436,7 +454,7 @@ namespace Madara
     * @brief Logically and node of the parse tree
     */
 
-    class And : public Operator
+    class And : public Ternary_Operator
     {
     public:
       /// constructor
@@ -450,7 +468,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -458,7 +476,7 @@ namespace Madara
     * @brief Logically or node of the parse tree
     */
 
-    class Or : public Operator
+    class Or : public Ternary_Operator
     {
     public:
       /// constructor
@@ -472,7 +490,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -480,7 +498,7 @@ namespace Madara
     * @brief Evaluates both left and right children, regardless of values
     */
 
-    class Both : public Operator
+    class Both : public Ternary_Operator
     {
     public:
       /// constructor
@@ -494,7 +512,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
     
     /**
@@ -502,7 +520,7 @@ namespace Madara
     * @brief Evaluates both left and right children and returns right value
     */
 
-    class Return_Right : public Operator
+    class Return_Right : public Ternary_Operator
     {
     public:
       /// constructor
@@ -516,7 +534,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
     
     /**
@@ -524,7 +542,7 @@ namespace Madara
     * @brief Evaluates both left and right children, regardless of values
     */
 
-    class Sequence : public Operator
+    class Sequence : public Ternary_Operator
     {
     public:
       /// constructor
@@ -538,7 +556,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -560,7 +578,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -582,7 +600,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -604,7 +622,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -626,7 +644,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -648,7 +666,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -670,7 +688,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -692,7 +710,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -714,7 +732,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
     
     /**
@@ -737,7 +755,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
 
       std::string name_;
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
@@ -792,7 +810,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -814,7 +832,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -836,7 +854,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -858,7 +876,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -866,7 +884,7 @@ namespace Madara
     * @brief Multiplication node of the parse tree
     */
 
-    class Multiply : public Operator
+    class Multiply : public Ternary_Operator
     {
     public:
       /// constructor
@@ -880,7 +898,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -902,7 +920,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
     /**
@@ -924,7 +942,7 @@ namespace Madara
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
-      virtual Component_Node *build (void);
+      virtual Component_Node * build (void);
     };
 
   }
@@ -932,8 +950,8 @@ namespace Madara
 
 // constructor
 Madara::Expression_Tree::Symbol::Symbol (
-  Madara::Expression_Tree::Symbol *left, 
-  Madara::Expression_Tree::Symbol *right, int precedence)
+  Madara::Expression_Tree::Symbol * left, 
+  Madara::Expression_Tree::Symbol * right, int precedence)
 : left_ (left), right_ (right), precedence_ (precedence)
 {
 }
@@ -946,7 +964,7 @@ Madara::Expression_Tree::Symbol::~Symbol (void)
 }
 
 // constructor
-Madara::Expression_Tree::Operator::Operator (Symbol *left, Symbol *right, int precedence)
+Madara::Expression_Tree::Operator::Operator (Symbol * left, Symbol * right, int precedence)
 : Symbol (left, right, precedence)
 {
 }
@@ -957,8 +975,19 @@ Madara::Expression_Tree::Operator::~Operator (void)
 }
 
 // constructor
+Madara::Expression_Tree::Ternary_Operator::Ternary_Operator (Symbol * left, Symbol * right, int precedence)
+: Operator (left, right, precedence)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Ternary_Operator::~Ternary_Operator (void)
+{
+}
+
+// constructor
 Madara::Expression_Tree::Unary_Operator::Unary_Operator (
-  Madara::Expression_Tree::Symbol *right, int precedence)
+  Madara::Expression_Tree::Symbol * right, int precedence)
 : Madara::Expression_Tree::Symbol (0, right, precedence)
 {
 }
@@ -1030,7 +1059,18 @@ Madara::Expression_Tree::Negate::add_precedence (int precedence)
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Negate::build ()
 {
-  return new Composite_Negate_Node (right_->build ());
+  // check for cascading nots
+  Negate * next = dynamic_cast <Negate *> (right_);
+  Symbol * right = right_;
+  unsigned int i;
+
+  for (i = 1; next; 
+       ++i, right = next->right_, next = dynamic_cast <Negate *> (next->right_));
+
+  if (i % 2 == 1)
+    return new Composite_Negate_Node (right->build ());
+  else
+    return new Composite_Negate_Node (new Composite_Not_Node (right->build ()));
 }
 
 // constructor
@@ -1179,7 +1219,18 @@ Madara::Expression_Tree::Not::add_precedence (int precedence)
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Not::build ()
 {
-  return new Composite_Not_Node (right_->build ());
+  // check for cascading nots
+  Not * next = dynamic_cast <Not *> (right_);
+  Symbol * right = right_;
+  unsigned int i;
+
+  for (i = 1; next; 
+       ++i, right = next->right_, next = dynamic_cast <Not *> (next->right_));
+
+  if (i % 2 == 1)
+    return new Composite_Not_Node (right->build ());
+  else
+    return new Composite_Not_Node (new Composite_Not_Node (right->build ()));
 }
 
 // constructor
@@ -1398,7 +1449,7 @@ Madara::Expression_Tree::List::build (void)
 
 // constructor
 Madara::Expression_Tree::Add::Add (void)
-: Operator (0, 0, ADD_PRECEDENCE)
+: Ternary_Operator (0, 0, ADD_PRECEDENCE)
 {
 }
 
@@ -1418,13 +1469,40 @@ Madara::Expression_Tree::Add::add_precedence (int precedence)
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Add::build (void)
 {
-  return new Composite_Add_Node (left_->build (), right_->build ());
+  if (left_ && right_)
+  {
+    Add * rhs = dynamic_cast <Add *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_Add_Node (nodes_);
+  }
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
 }
 
 
 // constructor
 Madara::Expression_Tree::And::And (void)
-: Operator (0, 0, LOGICAL_PRECEDENCE)
+: Ternary_Operator (0, 0, LOGICAL_PRECEDENCE)
 {
 }
 
@@ -1444,12 +1522,39 @@ Madara::Expression_Tree::And::add_precedence (int precedence)
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::And::build (void)
 {
-  return new Composite_And_Node (left_->build (), right_->build ());
+  if (left_ && right_)
+  {
+    And * rhs = dynamic_cast <And *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_And_Node (nodes_);
+  }
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
 }
 
 // constructor
 Madara::Expression_Tree::Or::Or (void)
-: Operator (0, 0, LOGICAL_PRECEDENCE)
+: Ternary_Operator (0, 0, LOGICAL_PRECEDENCE)
 {
 }
 
@@ -1465,16 +1570,46 @@ Madara::Expression_Tree::Or::add_precedence (int precedence)
   return this->precedence_ = LOGICAL_PRECEDENCE + precedence;
 }
 
+
+
 // builds an equivalent Expression_Tree node
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Or::build (void)
 {
-  return new Composite_Or_Node (left_->build (), right_->build ());
+  if (left_ && right_)
+  {
+    Or * rhs = dynamic_cast <Or *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_Or_Node (nodes_);
+  }
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
 }
+
 
 // constructor
 Madara::Expression_Tree::Both::Both (void)
-: Operator (0, 0, BOTH_PRECEDENCE)
+: Ternary_Operator (0, 0, BOTH_PRECEDENCE)
 {
 }
 
@@ -1498,7 +1633,21 @@ Madara::Expression_Tree::Both::build (void)
   // that a both operation contains no valid children. So, we need
   // to check whether or not we have a valid child.
   if (left_ && right_)
-    return new Composite_Both_Node (left_->build (), right_->build ());
+  {
+    Both * rhs = dynamic_cast <Both *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_Both_Node (nodes_);
+  }
   else if (left_)
     // all we have is a valid left child, so there is no reason to build
     // a Both operator
@@ -1516,7 +1665,7 @@ Madara::Expression_Tree::Both::build (void)
 
 // constructor
 Madara::Expression_Tree::Return_Right::Return_Right (void)
-: Operator (0, 0, BOTH_PRECEDENCE)
+: Ternary_Operator (0, 0, BOTH_PRECEDENCE)
 {
 }
 
@@ -1540,7 +1689,21 @@ Madara::Expression_Tree::Return_Right::build (void)
   // that a both operation contains no valid children. So, we need
   // to check whether or not we have a valid child.
   if (left_ && right_)
-    return new Composite_Return_Right_Node (left_->build (), right_->build ());
+  {
+    Return_Right * rhs = dynamic_cast <Return_Right *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_Return_Right_Node (nodes_);
+  }
   else if (left_)
     // all we have is a valid left child, so there is no reason to build
     // a Both operator
@@ -1557,7 +1720,7 @@ Madara::Expression_Tree::Return_Right::build (void)
 
 // constructor
 Madara::Expression_Tree::Sequence::Sequence (void)
-: Operator (0, 0, BOTH_PRECEDENCE)
+: Ternary_Operator (0, 0, BOTH_PRECEDENCE)
 {
 }
 
@@ -1581,7 +1744,21 @@ Madara::Expression_Tree::Sequence::build (void)
   // that a both operation contains no valid children. So, we need
   // to check whether or not we have a valid child.
   if (left_ && right_)
-    return new Composite_Sequential_Node (left_->build (), right_->build ());
+  {
+    Sequence * rhs = dynamic_cast <Sequence *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_Sequential_Node (nodes_);
+  }
   else if (left_)
     // all we have is a valid left child, so there is no reason to build
     // a Both operator
@@ -1831,7 +2008,7 @@ Madara::Expression_Tree::Subtract::build (void)
 
 // constructor
 Madara::Expression_Tree::Multiply::Multiply (void)
-: Operator (0, 0, MULTIPLY_PRECEDENCE)
+: Ternary_Operator (0, 0, MULTIPLY_PRECEDENCE)
 {
 }
 
@@ -1851,7 +2028,34 @@ Madara::Expression_Tree::Multiply::add_precedence (int precedence)
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Multiply::build (void)
 {
-  return new Composite_Multiply_Node (left_->build (), right_->build ());
+  if (left_ && right_)
+  {
+    Multiply * rhs = dynamic_cast <Multiply *> (right_);
+    
+    nodes_.push_back (left_->build ());
+
+    if (rhs)
+    {
+      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+    }
+    else
+    {
+      nodes_.push_back (right_->build ());
+    }
+    return new Composite_Multiply_Node (nodes_);
+  }
+  else if (left_)
+    // all we have is a valid left child, so there is no reason to build
+    // a Both operator
+    return left_->build ();
+  else if (right_)
+    // all we have is a valid right child, so there is no reason to build
+    // a Both operator
+    return right_->build ();
+  else
+    // we've got nothing. This node should eventually be pruned out of the
+    // picture if at all possible.
+    return new Leaf_Node ((Madara::Knowledge_Record::Integer)0);
 }
 
 // constructor
@@ -1965,12 +2169,7 @@ void
                                             const std::string &input,
                                            std::string::size_type &i,
                                           int & accumulated_precedence,
-                                           ::std::list<Symbol *>& list //,
-                                               // Symbol *& precondition,
-                                               //    Symbol *& condition,
-                                               //Symbol *& postcondition,
-                                               //        Symbol *& body
-                                                       )
+                                           ::std::list<Symbol *>& list)
 {
   ::std::list <Symbol *> substr_list;
   Symbol * lastValidInput (0);
@@ -2019,21 +2218,6 @@ void
   precondition = new Assignment ();
   precondition->left_ = new Variable (variable, context);
   
-  //// setup postcondition
-  //postcondition = new Assignment ();
-  //postcondition->left_ = new Variable (variable, context);
-
-  //postcondition->right_ = new Add ();
-  //postcondition->right_->left_ = new Variable (variable, context);
-  //    
-  //// setup loop condition
-  //if (equal_to)
-  //  condition = new Less_Than_Equal ();
-  //else
-  //  condition = new Less_Than ();
-
-  //condition->left_ = new Variable (variable, context);
-  //
 
   // this is the non-short-hand way of specifying, e.g., var[0,30] {}
   if (delimiter_found)

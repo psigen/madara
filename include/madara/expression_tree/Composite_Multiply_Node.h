@@ -2,6 +2,7 @@
 #ifndef _COMPOSITE_MULTIPLY_NODE_H
 #define _COMPOSITE_MULTIPLY_NODE_H
 
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
@@ -17,16 +18,14 @@ namespace Madara
      * @brief A composite node that multiplies a left expression by a right
      *        expression
      */
-    class Composite_Multiply_Node : public Composite_Binary_Node
+    class Composite_Multiply_Node : public Composite_Ternary_Node
     {
     public:
       /**
        * Constructor
-       * @param   left   left expression
-       * @param   right  right expression
+       * @param   nodes  2+ nodes to be executed in sequence
        **/
-      Composite_Multiply_Node (Component_Node *left,
-                               Component_Node *right);
+      Composite_Multiply_Node (const Component_Nodes & nodes);
 
       /**
        * Destructor

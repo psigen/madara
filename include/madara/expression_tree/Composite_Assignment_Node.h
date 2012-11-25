@@ -4,6 +4,7 @@
 
 #include "madara/expression_tree/Composite_Binary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/expression_tree/Variable_Node.h"
 
 namespace Madara
 {
@@ -19,7 +20,7 @@ namespace Madara
      *        Left child should be a variable and right child should
      *        be an expression to evaluate
      */
-    class Composite_Assignment_Node : public Composite_Binary_Node
+    class Composite_Assignment_Node : public Composite_Unary_Node
     {
     public:
       /**
@@ -54,6 +55,15 @@ namespace Madara
        * @param    visitor   visitor instance to use
        **/
       virtual void accept (Visitor &visitor) const;
+
+    private:
+
+      /**
+       * Left should always be a variable node. Using Variable_Node
+       * instead of having to dynamic cast a Symbol * should be much
+       * fater.
+       **/
+      Variable_Node * left_;
     };
   }
 }
