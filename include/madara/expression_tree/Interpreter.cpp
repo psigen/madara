@@ -111,7 +111,7 @@ namespace Madara
       Operator (Symbol * left, Symbol * right, int precedence_ = 1);
 
       /// destructor
-      ~Operator (void);
+      virtual ~Operator (void);
     };
     
     /**
@@ -126,7 +126,7 @@ namespace Madara
       Ternary_Operator (Symbol * left, Symbol * right, int precedence_ = 1);
 
       /// destructor
-      ~Ternary_Operator (void);
+      virtual ~Ternary_Operator (void);
 
       Component_Nodes nodes_;
     };
@@ -143,7 +143,7 @@ namespace Madara
       Unary_Operator (Symbol * right, int precedence_ = 1);
 
       /// destructor
-      ~Unary_Operator (void);
+      virtual ~Unary_Operator (void);
     };
 
     /**
@@ -1478,6 +1478,7 @@ Madara::Expression_Tree::Add::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
@@ -1531,6 +1532,7 @@ Madara::Expression_Tree::And::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
@@ -1585,6 +1587,7 @@ Madara::Expression_Tree::Or::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
@@ -1641,11 +1644,13 @@ Madara::Expression_Tree::Both::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
       nodes_.push_back (right_->build ());
     }
+
     return new Composite_Both_Node (nodes_);
   }
   else if (left_)
@@ -1697,6 +1702,7 @@ Madara::Expression_Tree::Return_Right::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
@@ -1752,6 +1758,7 @@ Madara::Expression_Tree::Sequence::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
@@ -2037,6 +2044,7 @@ Madara::Expression_Tree::Multiply::build (void)
     if (rhs)
     {
       nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
+      rhs->nodes_.clear ();
     }
     else
     {
