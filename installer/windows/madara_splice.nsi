@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "MADARA"
-!define PRODUCT_VERSION "0.7.10"
+!define PRODUCT_VERSION "0.9.2"
 !define PRODUCT_PUBLISHER "James Edmondson"
 !define PRODUCT_WEB_SITE "http://madara.googlecode.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kats_batch.exe"
