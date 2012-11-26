@@ -37,7 +37,7 @@ Madara::Expression_Tree::Composite_Return_Right_Node::prune (bool & can_change)
 
   unsigned int j = 0;
   for (Component_Nodes::iterator i = nodes_.begin ();
-       i != nodes_.end (); ++i, +j)
+       i != nodes_.end (); ++i, ++j)
   {
     bool value_changes = false;
     Madara::Knowledge_Record value;
@@ -68,7 +68,7 @@ Madara::Expression_Tree::Composite_Return_Right_Node::evaluate (void)
 
   int j = 0;
   for (Component_Nodes::iterator i = nodes_.begin ();
-       i != nodes_.end (); ++i, +j)
+       i != nodes_.end (); ++i, ++j)
   {
     if (j + 1 == nodes_.size ())
       return_value = (*i)->evaluate ();

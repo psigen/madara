@@ -3,7 +3,7 @@
 #define _COMPONENT_NODE_H_
 
 #include <string>
-#include <vector>
+#include <deque>
 #include <stdexcept>
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/utility/stdint.h"
@@ -71,7 +71,7 @@ namespace Madara
     };
 
     // a vector of Component Nodes
-    typedef   std::vector <Component_Node *>   Component_Nodes;  
+    typedef   std::deque <Component_Node *>   Component_Nodes;  
   }
 }
 

@@ -26,6 +26,8 @@ Madara::Expression_Tree::Composite_Ternary_Node::Composite_Ternary_Node (
 // Dtor
 Madara::Expression_Tree::Composite_Ternary_Node::~Composite_Ternary_Node (void)
 {
+  for (Component_Nodes::iterator i = nodes_.begin (); i != nodes_.end (); ++i)
+    delete *i;
 }
 
 Madara::Knowledge_Record

@@ -36,7 +36,7 @@ Madara::Expression_Tree::Composite_Or_Node::prune (bool & can_change)
 
   int j = 0;
   for (Component_Nodes::iterator i = nodes_.begin ();
-       i != nodes_.end (); ++i, +j)
+       i != nodes_.end (); ++i, ++j)
   {
     bool value_changes = false;
     Madara::Knowledge_Record value;
@@ -65,7 +65,7 @@ Madara::Expression_Tree::Composite_Or_Node::evaluate (void)
 {
   int j = 0;
   for (Component_Nodes::iterator i = nodes_.begin ();
-       i != nodes_.end (); ++i, +j)
+       i != nodes_.end (); ++i, ++j)
   {
     // if we have a non-zero eval, return 1 immediately
     if ((*i)->evaluate ().is_true ())

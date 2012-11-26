@@ -25,9 +25,7 @@ Madara::Expression_Tree::Composite_Subtract_Node::~Composite_Subtract_Node (void
 Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Subtract_Node::item (void) const
 {
-  Madara::Knowledge_Record record;
-  record.set_value ("-");
-  return record;
+  return "-";
 }
 
 /// Prune the tree of unnecessary nodes. 

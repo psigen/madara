@@ -1070,7 +1070,7 @@ Madara::Expression_Tree::Negate::build ()
   if (i % 2 == 1)
     return new Composite_Negate_Node (right->build ());
   else
-    return new Composite_Negate_Node (new Composite_Not_Node (right->build ()));
+    return new Composite_Negate_Node (new Composite_Negate_Node (right->build ()));
 }
 
 // constructor
@@ -1471,19 +1471,40 @@ Madara::Expression_Tree::Add::build (void)
 {
   if (left_ && right_)
   {
-    Add * rhs = dynamic_cast <Add *> (right_);
-    
-    nodes_.push_back (left_->build ());
+    // check for cascading max
+    Add * next = dynamic_cast <Add *> (left_);
+    Symbol * left = left_;
 
-    if (rhs)
-    {
-      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
-      rhs->nodes_.clear ();
+    // push the right onto the deque
+    nodes_.push_back (right_->build ());
+    delete right_;
+    right_ = 0;
+
+    for (; next; next = dynamic_cast <Add *> (left))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->right_)
+      {
+        nodes_.push_front (next->right_->build ());
+        delete next->right_;
+        next->right_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      left = next->left_;
+      next->left_ = 0;
+      delete next;
     }
-    else
+
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (left)
     {
-      nodes_.push_back (right_->build ());
+      nodes_.push_front (left->build ());
+      delete left;
     }
+    left_ = 0;
+
     return new Composite_Add_Node (nodes_);
   }
   else if (left_)
@@ -1637,19 +1658,68 @@ Madara::Expression_Tree::Both::build (void)
   // to check whether or not we have a valid child.
   if (left_ && right_)
   {
-    Both * rhs = dynamic_cast <Both *> (right_);
-    
-    nodes_.push_back (left_->build ());
+    // check for cascading max
+    Both * next = dynamic_cast <Both *> (left_);
+    Symbol * left = left_;
 
-    if (rhs)
-    {
-      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
-      rhs->nodes_.clear ();
+    // push the right onto the deque
+    //nodes_.push_back (right_->build ());
+    //delete right_;
+    //right_ = 0;
+
+    for (; next; next = dynamic_cast <Both *> (left))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->right_)
+      {
+        nodes_.push_front (next->right_->build ());
+        delete next->right_;
+        next->right_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      left = next->left_;
+      next->left_ = 0;
+      delete next;
     }
-    else
+
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (left)
     {
-      nodes_.push_back (right_->build ());
+      nodes_.push_front (left->build ());
+      delete left;
     }
+    left_ = 0;
+
+
+    next = dynamic_cast <Both *> (right_);
+    Symbol * right = right_;
+
+    for (; next; next = dynamic_cast <Both *> (right))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->left_)
+      {
+        nodes_.push_back (next->left_->build ());
+        delete next->left_;
+        next->left_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      right = next->right_;
+      next->right_ = 0;
+      delete next;
+    }
+    
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (right)
+    {
+      nodes_.push_back (right->build ());
+      delete right;
+    }
+    right_ = 0;
 
     return new Composite_Both_Node (nodes_);
   }
@@ -1695,19 +1765,69 @@ Madara::Expression_Tree::Return_Right::build (void)
   // to check whether or not we have a valid child.
   if (left_ && right_)
   {
-    Return_Right * rhs = dynamic_cast <Return_Right *> (right_);
-    
-    nodes_.push_back (left_->build ());
+    // check for cascading max
+    Return_Right * next = dynamic_cast <Return_Right *> (left_);
+    Symbol * left = left_;
 
-    if (rhs)
-    {
-      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
-      rhs->nodes_.clear ();
+    // push the right onto the deque
+    //nodes_.push_back (right_->build ());
+    //delete right_;
+    //right_ = 0;
+
+    for (; next; next = dynamic_cast <Return_Right *> (left))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->right_)
+      {
+        nodes_.push_front (next->right_->build ());
+        delete next->right_;
+        next->right_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      left = next->left_;
+      next->left_ = 0;
+      delete next;
     }
-    else
+
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (left)
     {
-      nodes_.push_back (right_->build ());
+      nodes_.push_front (left->build ());
+      delete left;
     }
+    left_ = 0;
+
+
+    next = dynamic_cast <Return_Right *> (right_);
+    Symbol * right = right_;
+
+    for (; next; next = dynamic_cast <Return_Right *> (right))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->left_)
+      {
+        nodes_.push_back (next->left_->build ());
+        delete next->left_;
+        next->left_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      right = next->right_;
+      next->right_ = 0;
+      delete next;
+    }
+    
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (right)
+    {
+      nodes_.push_back (right->build ());
+      delete right;
+    }
+    right_ = 0;
+
     return new Composite_Return_Right_Node (nodes_);
   }
   else if (left_)
@@ -1751,19 +1871,69 @@ Madara::Expression_Tree::Sequence::build (void)
   // to check whether or not we have a valid child.
   if (left_ && right_)
   {
-    Sequence * rhs = dynamic_cast <Sequence *> (right_);
-    
-    nodes_.push_back (left_->build ());
+    // check for cascading max
+    Sequence * next = dynamic_cast <Sequence *> (left_);
+    Symbol * left = left_;
 
-    if (rhs)
-    {
-      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
-      rhs->nodes_.clear ();
+    // push the right onto the deque
+    //nodes_.push_back (right_->build ());
+    //delete right_;
+    //right_ = 0;
+
+    for (; next; next = dynamic_cast <Sequence *> (left))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->right_)
+      {
+        nodes_.push_front (next->right_->build ());
+        delete next->right_;
+        next->right_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      left = next->left_;
+      next->left_ = 0;
+      delete next;
     }
-    else
+
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (left)
     {
-      nodes_.push_back (right_->build ());
+      nodes_.push_front (left->build ());
+      delete left;
     }
+    left_ = 0;
+
+
+    next = dynamic_cast <Sequence *> (right_);
+    Symbol * right = right_;
+
+    for (; next; next = dynamic_cast <Sequence *> (right))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->left_)
+      {
+        nodes_.push_back (next->left_->build ());
+        delete next->left_;
+        next->left_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      right = next->right_;
+      next->right_ = 0;
+      delete next;
+    }
+    
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (right)
+    {
+      nodes_.push_back (right->build ());
+      delete right;
+    }
+    right_ = 0;
+
     return new Composite_Sequential_Node (nodes_);
   }
   else if (left_)
