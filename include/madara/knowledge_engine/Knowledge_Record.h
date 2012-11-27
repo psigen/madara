@@ -128,6 +128,9 @@ namespace Madara
     /* String constructor */
     Knowledge_Record (const std::string & value);
     
+    /* Char pointer constructor for g++ */
+    Knowledge_Record (const char * value);
+    
     /* copy constructor */
     Knowledge_Record (const Knowledge_Record & rhs);
     

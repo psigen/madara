@@ -37,6 +37,14 @@ Madara::Knowledge_Record::Knowledge_Record (const std::string & value)
   set_value (value);
 }
 
+Madara::Knowledge_Record::Knowledge_Record (const char * value)
+      : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0), type_ (INTEGER),
+        size_ (sizeof (Integer))
+{
+  set_value (std::string (value));
+}
+
 Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
       : status (rhs.status), clock (rhs.clock),
       scope (rhs.scope), quality (rhs.quality),
