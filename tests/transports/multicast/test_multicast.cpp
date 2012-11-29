@@ -97,7 +97,7 @@ int main (int argc, char ** argv)
   if (settings.id == 0)
   {
     Madara::Knowledge_Engine::Compiled_Expression compiled = 
-      knowledge.compile ("(var2 = 1) && (var1 = 0) && var3");
+      knowledge.compile ("(var2 = 1) ;> (var1 = 0) ;> var3");
 
     knowledge.wait (compiled, wait_settings);
   }

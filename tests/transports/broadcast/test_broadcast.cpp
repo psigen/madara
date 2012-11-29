@@ -93,11 +93,11 @@ int main (int argc, char ** argv)
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 
   knowledge.set (".id", (Madara::Knowledge_Record::Integer) settings.id);
-
+  
   if (settings.id == 0)
   {
     Madara::Knowledge_Engine::Compiled_Expression compiled = 
-      knowledge.compile ("(var2 = 1) && (var1 = 0) && var3");
+      knowledge.compile ("(var2 = 1) ;> (var1 = 0) ;> var3");
 
     knowledge.wait (compiled, wait_settings);
   }
@@ -105,7 +105,7 @@ int main (int argc, char ** argv)
   {
     Madara::Knowledge_Engine::Compiled_Expression compiled = 
       knowledge.compile ("!var1 && var2 => var3 = 1");
-    
+
     knowledge.wait (compiled, wait_settings);
   }
 
