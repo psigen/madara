@@ -227,6 +227,11 @@ namespace Madara
      * Equal to
      **/
     bool operator== (const std::string & value) const;
+     
+    /**
+     * Equal to
+     **/
+    bool operator== (const char * value) const;
     
     /**
      * Unequal to

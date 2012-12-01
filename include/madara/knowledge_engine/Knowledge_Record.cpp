@@ -529,6 +529,12 @@ Madara::Knowledge_Record::operator== (const std::string & value) const
     return false;
 }
 
+bool
+Madara::Knowledge_Record::operator== (const char * value) const
+{
+  return *this == std::string (value);
+}
+
 Madara::Knowledge_Record  
 Madara::Knowledge_Record::operator!= (const Knowledge_Record & rhs) const
 {
