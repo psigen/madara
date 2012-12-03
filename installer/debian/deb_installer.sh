@@ -1,12 +1,6 @@
 #!/bin/sh
 
-sudo apt-get install dpkg-dev dh-make debhelper devscripts pbuilder fakeroot dos2unix
-
 DIST_DIR=.
-
-rm -rf $DIST_DIR
-
-mkdir $DIST_DIR
 
 VERSION="$(cat $MADARA_ROOT/VERSION.txt)"
 
@@ -18,6 +12,56 @@ ACE_VERSION=6.1.5
 LIB_VERSION=6.1.6
 ARCHITECTURE=i386
 ROOT_DIR=usr/local
+REVISION=1
+
+until [ -z "$1" ] ;
+do
+  if [ "$1" = "--help" -o "$1" = "-h" ] ;
+  then
+    echo "Packager options:"
+    echo "  --ace-version VER    indicates the ace version (e.g. 6.1.5)"
+    echo "  --lib-version VER    MADARA so version (usually +1 of ace version)"
+    echo "                       This is not the contents of VERSION.txt"
+    echo "                       See $MADARA_ROOT/lib/libMADARA.so.(VER)"
+    echo "  --arch        ARCH   architecture type (e.g. i386, x64, all, etc.)"
+    echo "  --root        DIR    root directory to install to (e.g. usr/local)"
+    echo "  --revision    REV    revision number (1 by default)"
+    exit 1
+  elif [ "$1" = "--ace-version" ] ;
+  then
+    shift
+    echo "Setting ACE_VERSION to $1"
+    ACE_VERSION=$1
+    shift
+  elif [ "$1" = "--lib-version" ] ;
+  then
+    shift
+    echo "Setting LIB_VERSION to $1"
+    LIB_VERSION=$1
+    shift
+  elif [ "$1" = "--arch" ] ;
+  then
+    shift
+    echo "Setting ARCHITECTURE to $1"
+    ARCHITECTURE=$1
+    shift
+  elif [ "$1" = "--root" ] ;
+  then
+    shift
+    echo "Setting ROOT_DIR to $1"
+    ROOT_DIR=$1
+    shift
+  elif [ "$1" = "--revision" ] ;
+  then
+    shift
+    echo "Setting REVISION to $1"
+    REVISION=$1
+    shift
+  fi
+
+done
+
+sudo apt-get install dpkg-dev dh-make debhelper devscripts pbuilder fakeroot dos2unix
 
 echo "VERSION is $VERSION"
 echo "ARCHITECTURE is $ARCHITECTURE"
@@ -26,11 +70,13 @@ echo "Generating debian packaging into $DIST_DIR"
 # copy source to local directories
 cd $DIST_DIR
 
+PACKAGE_DIR="madara_${VERSION}-${REVISION}_${ARCHITECTURE}"
 
 # create a source tarball for ACE and MADARA source
 echo "Creating madara-$VERSION directory"
-mkdir madara-$VERSION
-cd madara-$VERSION
+rm -rf $PACKAGE_DIR
+mkdir $PACKAGE_DIR
+cd $PACKAGE_DIR
 
 # we'll use the dpkg-deb script to read our debian directory, and
 # dpkg-deb requires a DEBIAN folder and not the debian that dh does
@@ -87,5 +133,5 @@ echo "Description: Libraries for the MADARA middleware, version $VERSION" >> DEB
 
 # create the debian package
 cd ..
-dpkg-deb -b madara-$VERSION
+dpkg-deb -b $PACKAGE_DIR
 
