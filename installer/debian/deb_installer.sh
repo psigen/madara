@@ -100,7 +100,7 @@ find $ROOT_DIR/include -type l -exec rm -f {} \;
 echo "Removing all shared objects from source tree"
 find $ROOT_DIR/include -name "*.so*" -type f -exec rm -f {} \;
 echo "Removing all SVN directories from source tree"
-find $ROOT_DIR/include -name .svn -type d -exec rm -rf {} \;
+find $ROOT_DIR/include -name .svn -type d -exec rm -rf {} 2> /dev/null \;
 
 # update changelog with the last 10 entries from the repository
 echo "Saving last 10 svn changelog entries into debian changelog"
@@ -113,10 +113,16 @@ dos2unix $ROOT_DIR/doc/madara/copyright
 
 cp $ACE_ROOT/ace/libACE.so.$ACE_VERSION $ROOT_DIR/lib
 cp $MADARA_ROOT/libMADARA.so.$LIB_VERSION $ROOT_DIR/lib
-ln -s $ROOT_DIR/lib/libACE.so.$ACE_VERSION $ROOT_DIR/lib/libACE.so
-ln -s $ROOT_DIR/lib/libMADARA.so.$LIB_VERSION $ROOT_DIR/lib/libMADARA.so 
+
+OLD_DIR=$(pwd)
+
+cd $ROOT_DIR/lib
 
 
+ln -s libACE.so.$ACE_VERSION libACE.so
+ln -s libMADARA.so.$LIB_VERSION libMADARA.so 
+
+cd $OLD_DIR
 
 # modify the control file to be specific to MADARA
 echo "Package: madara" >> DEBIAN/control
@@ -125,7 +131,8 @@ echo "Section: libs" >> DEBIAN/control
 echo "Architecture: $ARCHITECTURE" >> DEBIAN/control
 echo "Maintainer: James Edmondson <jedmondson@gmail.com>" >> DEBIAN/control 
 echo "Version: $VERSION" >> DEBIAN/control
-echo "Depends: debhelper (>= 8.0.0), libdl (>=2), librt (>=1), libstdc++ (>=6), libgcc (>=1), libpthread (>=0), libc (>=6), ld-linux (>=2)" >> DEBIAN/control
+echo "Depends: " >> DEBIAN/control
+#echo "Depends: debhelper (>= 8.0.0), libdl (>=2), librt (>=1), libstdc++ (>=6), libgcc (>=1), libpthread (>=0), libc (>=6), ld-linux (>=2)" >> DEBIAN/control
 echo "Homepage: http:\/\/madara.googlecode.com" >> DEBIAN/control
 echo "Description: Libraries for the MADARA middleware, version $VERSION" >> DEBIAN/control 
 
