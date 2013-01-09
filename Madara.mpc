@@ -49,6 +49,9 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/utility/Utility.cpp
     include/madara/utility/Refcounter.cpp
     include/madara/utility/Log_Macros.cpp
+    include/madara/utility/tinyxml.cpp
+    include/madara/utility/tinyxmlerror.cpp
+    include/madara/utility/tinyxmlparser.cpp
     include/madara/Thread_Pool.cpp
   }
 

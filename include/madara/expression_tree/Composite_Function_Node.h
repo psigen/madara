@@ -2,10 +2,9 @@
 #ifndef _COMPOSITE_FUNCTION_NODE_H_
 #define _COMPOSITE_FUNCTION_NODE_H_
 
-#include "madara/expression_tree/Composite_Unary_Node.h"
-#include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 #include "madara/Functions.h"
-#include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 
 namespace Madara
 {
@@ -18,7 +17,7 @@ namespace Madara
      * @class Composite_Function_Node
      * @brief A composite node that calls a function
      */
-    class Composite_Function_Node : public Composite_Unary_Node
+    class Composite_Function_Node : public Composite_Ternary_Node
     {
     public:
       /**
@@ -28,7 +27,7 @@ namespace Madara
        **/
       Composite_Function_Node (const std::string & name, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
-        Component_Node *right);
+        const Component_Nodes & nodes);
 
       /**
        * Destructor

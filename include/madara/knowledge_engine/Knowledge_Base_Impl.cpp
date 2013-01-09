@@ -798,7 +798,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (
 
 // Defines a function
 void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
-  const std::string & name, VALUE_TYPE (*func) (Variables *))
+  const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
 {
   map_.define_function (name, func);
 }

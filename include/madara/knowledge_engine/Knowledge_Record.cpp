@@ -66,6 +66,12 @@ Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
     size_ = rhs.size_;
     str_value_ = rhs.str_value_;
   }
+  else if (rhs.type_ == XML)
+  {
+    // copy over the rhs scoped_array
+    size_ = rhs.size_;
+    xml_value_ = rhs.xml_value_;
+  }
 }
 
 Madara::Knowledge_Record::~Knowledge_Record ()
@@ -132,6 +138,25 @@ Madara::Knowledge_Record::set_value (const double & new_value_)
   double_value_ = new_value_;
 }
 
+/**
+  * reads an XML file from a string
+  **/
+void
+Madara::Knowledge_Record::read_xml (const char * xml_contents)
+{
+  xml_value_ = new TiXmlDocument ();
+  xml_value_->Parse (xml_contents);
+}
+
+/**
+  * copies an XML from a TinyXML Document object
+  **/
+void Madara::Knowledge_Record::copy_xml (const TiXmlDocument & xml_doc)
+{
+  xml_value_ = new TiXmlDocument (xml_doc);
+}
+
+
 double
 Madara::Knowledge_Record::to_double (void) const
 {
@@ -186,7 +211,9 @@ Madara::Knowledge_Record::to_string (void) const
       buffer << int_value_;
     else if (type_ == DOUBLE)
       buffer << double_value_;
-
+    else if (type_ == XML)
+      // this is incorrect. Currently will stringify the doc name
+      return xml_value_->ValueStr ();
     return buffer.str ();
   }
   else
@@ -231,6 +258,15 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
       record.int_value_ = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
         size () >= rhs.size () ? size () : rhs.size ()) < 0;
+    }
+    
+    // string to XML comparison
+    else if (rhs.type_ == XML)
+    {
+      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
+      record.int_value_ = 
+        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
+        size () >= rhs_value.size () ? size () : rhs_value.size ()) < 0;
     }
 
     // string to double comparison
@@ -333,6 +369,15 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
         size () >= rhs.size () ? size () : rhs.size ()) <= 0;
     }
+    
+    // string to XML comparison
+    else if (rhs.type_ == XML)
+    {
+      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
+      record.int_value_ = 
+        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
+        size () >= rhs_value.size () ? size () : rhs_value.size ()) <= 0;
+    }
 
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
@@ -433,6 +478,15 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
       record.int_value_ = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
         size () >= rhs.size () ? size () : rhs.size ()) == 0;
+    }
+    
+    // string to XML comparison
+    else if (rhs.type_ == XML)
+    {
+      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
+      record.int_value_ = 
+        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
+        size () >= rhs_value.size () ? size () : rhs_value.size ()) == 0;
     }
 
     // string to double comparison
@@ -639,6 +693,15 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (),
           size () >= rhs.size () ? size () : rhs.size ()) > 0;
     }
+    
+    // string to XML comparison
+    else if (rhs.type_ == XML)
+    {
+      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
+      record.int_value_ = 
+        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
+        size () >= rhs_value.size () ? size () : rhs_value.size ()) > 0;
+    }
 
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
@@ -741,6 +804,15 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
           size () >= rhs.size () ? size () : rhs.size ()) >= 0;
     }
     
+    // string to XML comparison
+    else if (rhs.type_ == XML)
+    {
+      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
+      record.int_value_ = 
+        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
+        size () >= rhs_value.size () ? size () : rhs_value.size ()) >= 0;
+    }
+
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
     {
@@ -826,6 +898,8 @@ Madara::Knowledge_Record::operator= (const Knowledge_Record & rhs)
     this->int_value_ = rhs.int_value_;
   else if (type_ == DOUBLE)
     this->double_value_ = rhs.double_value_;
+  else if (type_ == XML)
+    this->xml_value_ = rhs.xml_value_;
 
   return *this;
 }
@@ -1433,6 +1507,9 @@ std::ostream & operator<< (std::ostream & stream,
     stream << rhs.to_double ();
   else if (rhs.type () == Madara::Knowledge_Record::STRING)
     stream << rhs.to_string ();
+  else if (rhs.type () == Madara::Knowledge_Record::XML)
+    stream << rhs.to_string ();
+
 
   return stream;
 }

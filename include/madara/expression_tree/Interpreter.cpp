@@ -740,7 +740,7 @@ namespace Madara
     * @brief Function node of the parse tree
     */
 
-    class Function : public Unary_Operator
+    class Function : public Ternary_Operator
     {
     public:
       /// constructor
@@ -1076,7 +1076,7 @@ Madara::Expression_Tree::Negate::build ()
 // constructor
 Madara::Expression_Tree::Function::Function (const std::string & name,
         Madara::Knowledge_Engine::Thread_Safe_Context & context)
-: name_ (name), context_ (context), Unary_Operator (0, VARIABLE_PRECEDENCE)
+: Ternary_Operator (0, 0, VARIABLE_PRECEDENCE), name_ (name), context_ (context)
 {
 }
 
@@ -1096,15 +1096,7 @@ Madara::Expression_Tree::Function::add_precedence (int precedence)
 Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Function::build ()
 {
-  if (right_)
-    return new Composite_Function_Node (name_, context_, right_->build ());
-  else
-  {
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-        "KARL COMPILE: Function %s contains no arguments.\n",
-        name_.c_str ()));
-    return new Composite_Function_Node (name_, context_, 0);
-  }
+  return new Composite_Function_Node (name_, context_, nodes_);
 }
 
 // constructor
@@ -2699,12 +2691,21 @@ Madara::Expression_Tree::Interpreter::variable_insert (
 
     // we have a function instead of a variable
     handle_parenthesis (context, input, i, lastValidInput, handled,
-      accumulated_precedence, param_list);
+      accumulated_precedence, param_list, true);
 
     //if (param_list.size () > 0)
     //  function->right_ = param_list.back ();
 
-    function->right_ = new List (context);
+    function->nodes_.resize (param_list.size ());
+    int cur = 0;
+
+    for (::std::list<Symbol *>::iterator arg = param_list.begin ();
+        arg != param_list.end (); ++arg, ++cur)
+    {
+      function->nodes_[cur] = (*arg)->build ();
+    }
+
+    //function->right_ = new List (context);
 
     precedence_insert (function, list);
     lastValidInput = 0;
@@ -2957,7 +2958,8 @@ Madara::Expression_Tree::Interpreter::main_loop (
        const std::string &input, std::string::size_type &i,
        Madara::Expression_Tree::Symbol *& lastValidInput,
        bool & handled, int & accumulated_precedence,
-       ::std::list<Madara::Expression_Tree::Symbol *>& list)
+       ::std::list<Madara::Expression_Tree::Symbol *>& list,
+       bool build_argument_list)
 {
   handled = false;
   if (is_number (input[i]))
@@ -3307,6 +3309,9 @@ Madara::Expression_Tree::Interpreter::main_loop (
   }
   else if (input[i] == ',')
   {
+    if (build_argument_list)
+      return;
+
     handled = true;
     Symbol * op = new Sequence ();
 
@@ -3380,7 +3385,8 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
   const std::string &input, std::string::size_type &i,
   Madara::Expression_Tree::Symbol *& lastValidInput,
   bool & handled, int & accumulated_precedence,
-  ::std::list<Madara::Expression_Tree::Symbol *>& master_list)
+  ::std::list<Madara::Expression_Tree::Symbol *>& master_list,
+  bool build_argument_list)
 {
   /* handle parenthesis is a lot like handling a new interpret.
   the difference is that we have to worry about how the calling
@@ -3395,7 +3401,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
   while (i < input.length ())
   {
     main_loop (context, input, i, lastValidInput, 
-      handled, accumulated_precedence, list);
+      handled, accumulated_precedence, list, build_argument_list);
 
     if (input[i] == ')')
     {
@@ -3405,9 +3411,18 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
       accumulated_precedence -= PARENTHESIS_PRECEDENCE;
       break;
     }
+    else if (build_argument_list && input[i] == ',')
+    {
+      ++i;
+      while (list.size ())
+      {
+        master_list.push_back (list.back ());
+        list.pop_back ();
+      }
+    }
   }
 
-  if (!closed)
+  if (!build_argument_list && !closed)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nKARL COMPILE ERROR: " \
@@ -3415,7 +3430,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
     exit (-1);
   }
 
-  if (master_list.size () > 0 && list.size () > 0)
+  if (!build_argument_list && master_list.size () > 0 && list.size () > 0)
   {
     Symbol * lastSymbol = master_list.back ();
     Operator * op = dynamic_cast <Operator *> (lastSymbol);
@@ -3435,7 +3450,21 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
     }
   }
   else if (list.size () > 0)
-    master_list = list;
+  {
+    if (list.size () > 1)
+    {
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        "A parenthesis was closed, leaving multiple list items (there should "
+        "be a max of 1) in %s.\n", input.c_str ()));
+    }
+
+    while (list.size ())
+    {
+      master_list.push_back (list.back ());
+      list.pop_back ();
+    }
+  }
 
   list.clear ();
 }

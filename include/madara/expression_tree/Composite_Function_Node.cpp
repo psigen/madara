@@ -11,15 +11,17 @@
 #include "madara/expression_tree/Leaf_Node.h"
 
 #include "madara/utility/Log_Macros.h"
+#include "madara/Functions.h"
 
 // Ctor
 
 Madara::Expression_Tree::Composite_Function_Node::Composite_Function_Node (
-        const std::string & name,
+        const std::string & name, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
-        Component_Node *right)
-  : Composite_Unary_Node (right), context_(context), name_ (name), 
-    function_(context_.retrieve_function (name))
+        const Component_Nodes & nodes)
+  : Madara::Expression_Tree::Composite_Ternary_Node (nodes),
+    context_ (context), name_ (name), 
+    function_ (context.retrieve_function (name))
 {
   
 }
@@ -48,18 +50,22 @@ Madara::Expression_Tree::Composite_Function_Node::prune (bool & can_change)
   // under any situation
   can_change = true;
   
-  Madara::Knowledge_Engine::Variables variables;
-  variables.context_ = &context_;
+  Madara::Knowledge_Record result;
 
-  if (function_->extern_func_)
-    return function_->extern_func_ (&variables);
-  else
+  for (Component_Nodes::iterator i = nodes_.begin (); i != nodes_.end ();
+       ++i)
   {
-    Madara::Knowledge_Record zero;
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
-      "Function %s has not been defined.\n", name_.c_str ()));
-    return zero;
+    bool arg_can_change = false;
+    result = (*i)->prune (arg_can_change);
+    
+    if (!arg_can_change && dynamic_cast <Leaf_Node *> (*i) == 0)
+    {
+      delete *i;
+      *i = new Leaf_Node (result);
+    }
   }
+
+  return result;
 }
 
 /// Evaluates the node and its children. This does not prune any of
@@ -79,11 +85,24 @@ Madara::Expression_Tree::Composite_Function_Node::evaluate (void)
   //    "Function %s has no parameters\n", name_.c_str ()));
   //}
   
+  //
+  Madara::Knowledge_Engine::Function_Arguments args;
+  args.resize (nodes_.size ());
+
+  int j = 0;
+
+  for (Component_Nodes::iterator i = nodes_.begin (); i != nodes_.end ();
+       ++i, ++j)
+  {
+    args[j] = (*i)->evaluate ();
+  }
+
+
   Madara::Knowledge_Engine::Variables variables;
   variables.context_ = &context_;
 
   if (function_->extern_func_)
-    return function_->extern_func_ (&variables);
+    return function_->extern_func_ (args, variables);
   else
   {
     Madara::Knowledge_Record zero;

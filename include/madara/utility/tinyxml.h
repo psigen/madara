@@ -20,6 +20,13 @@ must not be misrepresented as being the original software.
 
 3. This notice may not be removed or altered from any source
 distribution.
+
+********* MODIFICATIONS **********
+Author: James Edmondson
+Changes:
+
+* classes are available through dllexports on Windows
+* we use STL instead of the provided string class
 */
 
 
@@ -37,10 +44,16 @@ distribution.
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "madara/MADARA_export.h"
 
 // Help out windows:
 #if defined( _DEBUG ) && !defined( DEBUG )
 #define DEBUG
+#endif
+
+// always use STL because MADARA uses STL
+#ifndef TIXML_USE_STL
+  #define TIXML_USE_STL
 #endif
 
 #ifdef TIXML_USE_STL
@@ -48,9 +61,6 @@ distribution.
  	#include <iostream>
 	#include <sstream>
 	#define TIXML_STRING		std::string
-#else
-	#include "tinystr.h"
-	#define TIXML_STRING		TiXmlString
 #endif
 
 // Deprecated library function hell. Compilers want to use the
@@ -88,6 +98,7 @@ class TiXmlAttribute;
 class TiXmlText;
 class TiXmlDeclaration;
 class TiXmlParsingData;
+class TiXmlVisitor;
 
 const int TIXML_MAJOR_VERSION = 2;
 const int TIXML_MINOR_VERSION = 6;
@@ -125,7 +136,7 @@ struct TiXmlCursor
 
 	@sa TiXmlNode::Accept()
 */
-class TiXmlVisitor
+class MADARA_Export TiXmlVisitor
 {
 public:
 	virtual ~TiXmlVisitor() {}
@@ -191,7 +202,7 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 	A Decleration contains: Attributes (not on tree)
 	@endverbatim
 */
-class TiXmlBase
+class MADARA_Export TiXmlBase
 {
 	friend class TiXmlNode;
 	friend class TiXmlElement;
@@ -420,7 +431,7 @@ private:
 	in a document, or stand on its own. The type of a TiXmlNode
 	can be queried, and it can be cast to its more defined type.
 */
-class TiXmlNode : public TiXmlBase
+class MADARA_Export TiXmlNode : public TiXmlBase
 {
 	friend class TiXmlDocument;
 	friend class TiXmlElement;
@@ -776,7 +787,7 @@ private:
 		  part of the tinyXML document object model. There are other
 		  suggested ways to look at this problem.
 */
-class TiXmlAttribute : public TiXmlBase
+class MADARA_Export TiXmlAttribute : public TiXmlBase
 {
 	friend class TiXmlAttributeSet;
 
@@ -900,7 +911,7 @@ private:
 		- I like circular lists
 		- it demonstrates some independence from the (typical) doubly linked list.
 */
-class TiXmlAttributeSet
+class MADARA_Export TiXmlAttributeSet
 {
 public:
 	TiXmlAttributeSet();
@@ -937,7 +948,7 @@ private:
 	and can contain other elements, text, comments, and unknowns.
 	Elements also contain an arbitrary number of attributes.
 */
-class TiXmlElement : public TiXmlNode
+class MADARA_Export TiXmlElement : public TiXmlNode
 {
 public:
 	/// Construct an element.
@@ -1152,7 +1163,7 @@ private:
 
 /**	An XML comment.
 */
-class TiXmlComment : public TiXmlNode
+class MADARA_Export TiXmlComment : public TiXmlNode
 {
 public:
 	/// Constructs an empty comment.
@@ -1202,7 +1213,7 @@ private:
 	you generally want to leave it alone, but you can change the output mode with 
 	SetCDATA() and query it with CDATA().
 */
-class TiXmlText : public TiXmlNode
+class MADARA_Export TiXmlText : public TiXmlNode
 {
 	friend class TiXmlElement;
 public:
@@ -1275,7 +1286,7 @@ private:
 	handled as special cases, not generic attributes, simply
 	because there can only be at most 3 and they are always the same.
 */
-class TiXmlDeclaration : public TiXmlNode
+class MADARA_Export TiXmlDeclaration : public TiXmlNode
 {
 public:
 	/// Construct an empty declaration.
@@ -1344,7 +1355,7 @@ private:
 
 	DTD tags get thrown into TiXmlUnknowns.
 */
-class TiXmlUnknown : public TiXmlNode
+class MADARA_Export TiXmlUnknown : public TiXmlNode
 {
 public:
 	TiXmlUnknown() : TiXmlNode( TiXmlNode::TINYXML_UNKNOWN )	{}
@@ -1383,7 +1394,7 @@ private:
 	XML pieces. It can be saved, loaded, and printed to the screen.
 	The 'value' of a document node is the xml file name.
 */
-class TiXmlDocument : public TiXmlNode
+class MADARA_Export TiXmlDocument : public TiXmlNode
 {
 public:
 	/// Create an empty document, that has no name.
@@ -1628,7 +1639,7 @@ private:
 	}
 	@endverbatim
 */
-class TiXmlHandle
+class MADARA_Export TiXmlHandle
 {
 public:
 	/// Create a handle from any node (at any depth of the tree.) This can be a null pointer.
@@ -1727,7 +1738,7 @@ private:
 	fprintf( stdout, "%s", printer.CStr() );
 	@endverbatim
 */
-class TiXmlPrinter : public TiXmlVisitor
+class MADARA_Export TiXmlPrinter : public TiXmlVisitor
 {
 public:
 	TiXmlPrinter() : depth( 0 ), simpleTextPrint( false ),

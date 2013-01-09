@@ -180,6 +180,8 @@ namespace Madara
        * @param    list       list of symbols in tree that are free
        * @param    lastValidInput          last valid symbol that was read
        * @param    handled    whether or not the pos should be incremented
+       * @param    build_argument_list  if true, focuses on building a
+       *                                list instead of an expression tree
        **/
       void main_loop (Madara::Knowledge_Engine::Thread_Safe_Context & context,
                            const std::string &input,
@@ -187,7 +189,8 @@ namespace Madara
                            Symbol *& lastValidInput,
                            bool & handled,
                            int & accumulated_precedence,
-                           ::std::list<Symbol *>& list);
+                           ::std::list<Symbol *>& list,
+                           bool build_argument_list = false);
       /**
        * Handles a parenthesis
        * @param    context    interpreter context
@@ -197,6 +200,8 @@ namespace Madara
        * @param    list       list of symbols in tree that are free
        * @param    lastValidInput          last valid symbol that was read
        * @param    handled    whether or not the pos should be incremented
+       * @param    build_argument_list  if true, focuses on building a
+       *                                list instead of an expression tree
        **/
       void handle_parenthesis (
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
@@ -205,7 +210,8 @@ namespace Madara
                            Symbol *& lastValidInput,
                            bool & handled,
                            int & accumulated_precedence,
-                           ::std::list<Symbol *>& list);
+                           ::std::list<Symbol *>& list,
+                           bool build_argument_list = false);
       /**
        * Cache of expressions that have been previously compiled
        **/

@@ -39,16 +39,10 @@ project (Kats_Process) : using_kats, using_madara, using_ace {
   }
 
   Header_Files {
-    include/madara/kats/tinyxml.h
-    include/madara/kats/tinystr.h
     include/madara/utility/Log_Macros.h
   }
 
   Source_Files {
-    include/madara/kats/tinyxml.cpp
-    include/madara/kats/tinyxmlparser.cpp
-    include/madara/kats/tinyxmlerror.cpp
-    include/madara/kats/tinystr.cpp
     include/madara/kats/Process.cpp
   }
 }
@@ -65,17 +59,11 @@ project (Kats_Batch) : using_kats, using_madara, using_ace {
   }
 
   Header_Files {
-    include/madara/kats/tinyxml.h
-    include/madara/kats/tinystr.h
     include/madara/utility/Log_Macros.h
     include/madara/kats/Redeployment.h
   }
 
   Source_Files {
-    include/madara/kats/tinyxml.cpp
-    include/madara/kats/tinyxmlparser.cpp
-    include/madara/kats/tinyxmlerror.cpp
-    include/madara/kats/tinystr.cpp
     include/madara/kats/Batch.cpp
     include/madara/kats/Redeployment.cpp
   }
@@ -93,16 +81,10 @@ project (Kats_Sleep) : using_kats, using_madara, using_ace {
   }
 
   Header_Files {
-    include/madara/kats/tinyxml.h
-    include/madara/kats/tinystr.h
     include/madara/utility/Log_Macros.h
   }
 
   Source_Files {
-    include/madara/kats/tinyxml.cpp
-    include/madara/kats/tinyxmlparser.cpp
-    include/madara/kats/tinyxmlerror.cpp
-    include/madara/kats/tinystr.cpp
     include/madara/kats/Sleep.cpp
   }
 }
@@ -120,16 +102,10 @@ project (Kats_Observer) : using_kats, using_madara, using_ace {
   }
 
   Header_Files {
-    include/madara/kats/tinyxml.h
-    include/madara/kats/tinystr.h
     include/madara/utility/Log_Macros.h
   }
 
   Source_Files {
-    include/madara/kats/tinyxml.cpp
-    include/madara/kats/tinyxmlparser.cpp
-    include/madara/kats/tinyxmlerror.cpp
-    include/madara/kats/tinystr.cpp
     include/madara/kats/Observer.cpp
   }
 }

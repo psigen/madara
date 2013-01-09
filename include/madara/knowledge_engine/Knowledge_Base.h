@@ -400,7 +400,7 @@ namespace Madara
        * @param  func       external function to call with this name
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (Variables *));
+        VALUE_TYPE (*func) (Function_Arguments &, Variables &));
 
     private:
 

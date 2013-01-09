@@ -16,6 +16,8 @@
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
 #include "madara/utility/Scoped_Array.h"
+#include "madara/utility/Refcounter.h"
+#include "madara/utility/tinyxml.h"
 
 namespace Madara
 {
@@ -113,6 +115,11 @@ namespace Madara
      * potential file value of the node
      **/
     Madara::Utility::Scoped_Array <unsigned char> file_value_;
+    
+    /**
+     * potential xml (tinyxml)
+     **/
+    Madara::Utility::Refcounter <TiXmlDocument> xml_value_;
 
   public:
 
@@ -169,6 +176,18 @@ namespace Madara
      * @param    new_value   new value of the Knowledge Record
      **/
     void set_value (const double & new_value);
+
+    /**
+     * reads an XML file from a string
+     * @param    xml_contents xml contents to parse from
+     **/
+    void read_xml (const char * xml_contents);
+
+    /**
+     * copies an XML from a TinyXML Document object
+     * @param    xml_doc      xml document to copy from
+     **/
+    void copy_xml (const TiXmlDocument & xml_doc);
 
     /**
      * resets the variable to an integer

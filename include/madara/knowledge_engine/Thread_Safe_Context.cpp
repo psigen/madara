@@ -608,7 +608,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
 // defines a function by name
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
-  const std::string & name, VALUE_TYPE (*func) (Variables *))
+  const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
 {
   functions_[name] = func;
 }

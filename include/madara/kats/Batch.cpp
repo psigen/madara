@@ -15,7 +15,7 @@
 #include "ace/Process.h"
 
 #include "madara/kats/Test_Framework.h"
-#include "madara/kats/tinyxml.h"
+#include "madara/utility/tinyxml.h"
 #include "madara/utility/Utility.h"
 
 Madara::KATS::Settings settings;

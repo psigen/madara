@@ -58,7 +58,8 @@ namespace Madara
        * @param   value     new value of the variable
        * @return   the new value of the keyed variable
        **/
-      int set (const std::string & key,Madara::Knowledge_Record::Integer value);
+      int set (const std::string & key,
+        Madara::Knowledge_Record::Integer value);
       
       /**
        * Sets the value of a variable.
@@ -75,6 +76,15 @@ namespace Madara
        * @return   the new value of the keyed variable
        **/
       int set (const std::string & key, const std::string & value);
+      
+      /**
+       * Sets the value of a variable.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @return   the new value of the keyed variable
+       **/
+      int set (const std::string & key,
+        const Madara::Knowledge_Record & value);
       
       /**
        * Atomically increments the value of the variable
@@ -119,7 +129,8 @@ namespace Madara
        **/
       Thread_Safe_Context * context_;
     };
-
+    
+    typedef  std::vector <Knowledge_Record>   Function_Arguments;
      
     class Function
     {
@@ -139,13 +150,13 @@ namespace Madara
       /**
        * Constructor for function pointer
        **/
-      Function (VALUE_TYPE (*extern_func) (Variables *))
+      Function (VALUE_TYPE (*extern_func) (Function_Arguments &, Variables &))
         : extern_func_ (extern_func)
       {
       }
 
       // internal function pointer
-      VALUE_TYPE (*extern_func_) (Variables *);
+      VALUE_TYPE (*extern_func_) (Function_Arguments &, Variables &);
     };
     
   }

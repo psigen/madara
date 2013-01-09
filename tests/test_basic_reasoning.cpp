@@ -18,27 +18,51 @@
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 Madara::Knowledge_Record
-  return_1 (Madara::Knowledge_Engine::Variables * variables)
+  return_1 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
 {
   return Madara::Knowledge_Record::Integer (1);
 }
 
 Madara::Knowledge_Record
-  return_2 (Madara::Knowledge_Engine::Variables * variables)
+  return_2 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
 {
   return Madara::Knowledge_Record::Integer (2);
 }
 
 Madara::Knowledge_Record
-  return_3 (Madara::Knowledge_Engine::Variables * variables)
+  return_3 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
 {
   return Madara::Knowledge_Record::Integer (3);
 }
 
 Madara::Knowledge_Record
-  return_var1 (Madara::Knowledge_Engine::Variables * variables)
+  return_var1 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
 {
-  return variables->get (".var1");
+  return variables.get (".var1");
+}
+
+Madara::Knowledge_Record
+  set_var1_to_arg1 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  variables.set (".var1", args[0]);
+  return variables.get (".var1");
+}
+
+
+Madara::Knowledge_Record
+  set_var1_to_arg2 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  if (args.size () > 1)
+  {
+    variables.set (".var1", args[1]);
+  }
+  return variables.get (".var1");
 }
 
 
@@ -78,6 +102,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_functions (knowledge);
   test_comparisons (knowledge);
   test_strings (knowledge);
   test_doubles (knowledge);
@@ -92,7 +117,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_implies (knowledge);
   test_both_operator (knowledge);
   test_dijkstra_sync (knowledge);
-  test_functions (knowledge);
 
   knowledge.print_knowledge ();
 
@@ -966,6 +990,28 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   result = knowledge.evaluate (".var5 = function1 (8)");
   assert (result.to_integer () == 5);
   
+  knowledge.define_function ("function1", set_var1_to_arg1);
+  result = knowledge.evaluate (".var5 = function1 (8)");
+  assert (result.to_integer () == 8 &&
+          knowledge.get (".var1").to_integer () == 8);
+  
+  knowledge.define_function ("function1", set_var1_to_arg2);
+  result = knowledge.evaluate (".var5 = function1 (8,7)");
+  assert (result.to_integer () == 7 && 
+          knowledge.get (".var1").to_integer () == 7);
+  
+  knowledge.define_function ("function1", set_var1_to_arg2);
+  knowledge.define_function ("function2", return_2);
+  result = knowledge.evaluate (".var5 = function1 ((5 + 3),(3 * 8, 14));"
+    ".var2 = function2 (); .var4 = function1 (17 / 3, 105 / 5 * 3");
+  assert (result.to_integer () == 63 && 
+          knowledge.get (".var1").to_integer () == 63 &&
+          knowledge.get (".var2").to_integer () == 2 &&
+          knowledge.get (".var4").to_integer () == 63 &&
+          knowledge.get (".var5").to_integer () == 14);
+  
+
+
   knowledge.print ("function results: .var2={.var2}, .var3={.var3}," \
     ".var4={.var4}, .var5={.var5}, .var6={.var6}, .var7={.var7}\n");
 }

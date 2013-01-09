@@ -49,7 +49,32 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
     return 0;
   }
 }
-   
+  
+/**
+  * Sets the value of a variable.
+  * @param   key       unique identifier of the variable
+  * @param   value     new value of the variable
+  * @return   the new value of the keyed variable
+  **/
+int
+Madara::Knowledge_Engine::Variables::set (const std::string & key,
+                          const Madara::Knowledge_Record & value)
+{
+  if (context_)
+  {
+    *(context_->get_record (key)) = value;
+
+    return 1;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+      "Variables context not set. Please don't create your own Madara::" \
+      "Knowledge_Engine::Variables instances.\n"));
+    return 0;
+  }
+}
+  
 /**
   * Sets the value of a variable.
   * @param   key       unique identifier of the variable

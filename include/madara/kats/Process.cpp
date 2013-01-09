@@ -16,7 +16,7 @@
 
 #include "madara/utility/Log_Macros.h"
 #include "madara/kats/Test_Framework.h"
-#include "madara/kats/tinyxml.h"
+#include "madara/utility/tinyxml.h"
 
 Madara::KATS::Settings settings;
 ACE_Process_Options process_options;
