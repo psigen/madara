@@ -351,37 +351,29 @@ namespace Madara
      * Predecrement operator
      **/
     Knowledge_Record operator-- (void);
-
-    /**
-     * Reads a knowledge record from a buffer encoded via the write method
-     * @param  buffer   buffer to read from
-     **/
-    unsigned int read (const char * buffer);
-
-    /**
-     * Reads a key and knowledge record from a buffer encoded via the write
-     * method.
-     * @param  buffer   buffer to read
-     * @param  key      the key that needs to be mapped to the record
-     **/
-    unsigned int read (const char * buffer, std::string & key);
-
-    /**
-     * Writes type, size, and value to a character buffer in network byte order
-     * @param  buffer   buffer to write to
-     * @return  the number of bytes written
-     **/
-    unsigned int write (char * buffer);
     
     /**
-     * Writes a key as well as type, size, and value to a character buffer 
-     * in network byte order
-     * @param  buffer   buffer to write to
-     * @param  key      a user-provided key that maps to this record
-     * @return  the number of bytes written
-     **/
-    unsigned int write (char * buffer, const std::string & key);
-
+      * Reads a Knowledge_Record instance from a buffer and updates
+      * the amount of buffer room remaining.
+      * @param     buffer     the readable buffer where data is stored
+      * @param     key        the name of the variable
+      * @param     buffer_remaining  the count of bytes remaining in the
+      *                              buffer to read
+      * @return    current buffer position for next read
+      **/
+    char * read (char * buffer, std::string & key, int64_t & buffer_remaining);
+      
+    /**
+      * Writes a Knowledge_Record instance to a buffer and updates
+      * the amount of buffer room remaining.
+      * @param     buffer     the readable buffer where data is stored
+      * @param     key        the name of the variable
+      * @param     buffer_remaining  the count of bytes remaining in the
+      *                              buffer to read
+      * @return    current buffer position for next write
+      **/
+    char * write (char * buffer, const std::string & key, int64_t & buffer_remaining);
+     
     /**
      * Apply the knowledge record to a context, given some quality and clock
      **/

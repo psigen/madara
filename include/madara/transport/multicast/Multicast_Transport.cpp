@@ -114,51 +114,50 @@ Madara::Transport::Multicast_Transport::send_data (
   // get the maximum quality from the updates
   uint32_t quality = Madara::max_quality (updates);
 
+
   // allocate a buffer to send
   char buffer [512000];
+  int64_t buffer_remaining = 512000;
 
   // set the header to the beginning of the buffer
-  Message_Header * header = (Message_Header *) buffer;
+  Message_Header header;
+  
+  // get the clock
+  header.clock = Madara::Utility::endian_swap (context_.get_clock ());
+
+  // copy the Madara transport version identification
+  strncpy (header.madara_id, MADARA_IDENTIFIER, 7);
+
+  // copy the domain from settings
+  strncpy (header.domain, this->settings_.domains.c_str (),
+    sizeof (header.domain) - 1);
+
+  // get the quality of the key
+  header.quality = Madara::Utility::endian_swap (quality);
+
+  // copy the message originator (our id)
+  strncpy (header.originator, id_.c_str (), sizeof (header.originator) - 1);
+
+  // only 1 update in a send_data message
+  header.updates = updates.size ();
+
+  // send data is generally an assign type. However, Message_Header is
+  // flexible enough to support both, and this will simply our read thread
+  // handling
+  header.type = Madara::Transport::MULTIASSIGN;
+  
+  // compute size of this header
+  header.size = header.encoded_size ();
 
   // set the update to the end of the header
-  char * update = buffer + sizeof (Message_Header);
+  char * update = header.write (buffer, buffer_remaining);
+  uint64_t * message_size = (uint64_t *)buffer;
   
   // Message header format
   // [size|id|domain|originator|type|updates|quality|clock|list of updates]
 
   // zero out the memory
   //memset(buffer, 0, Madara::Transport::MAX_PACKET_SIZE);
-
-  // get the clock
-  header->clock = Madara::Utility::endian_swap (context_.get_clock ());
-
-  // copy the Madara transport version identification
-  strncpy (header->madara_id, MADARA_IDENTIFIER, 7);
-
-  // copy the domain from settings
-  strncpy (header->domain, this->settings_.domains.c_str (),
-    sizeof (header->domain) - 1);
-
-  // get the quality of the key
-  header->quality = Madara::Utility::endian_swap (quality);
-
-  // copy the message originator (our id)
-  strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
-
-  // only 1 update in a send_data message
-  header->updates = updates.size ();
-
-  // send data is generally an assign type. However, Message_Header is
-  // flexible enough to support both, and this will simply our read thread
-  // handling
-  header->type = Madara::Transport::MULTIASSIGN;
-  header->type = Madara::Utility::endian_swap (header->type);
-  
-  // compute size of this message
-  header->size = sizeof (Message_Header);
-  
-  // little endianize the updates after we've used it for the last time
-  header->updates = Madara::Utility::endian_swap (header->updates);
 
   // Message update format
   // [key|value]
@@ -167,30 +166,41 @@ Madara::Transport::Multicast_Transport::send_data (
   for (Knowledge_Records::const_iterator i = updates.begin ();
     i != updates.end (); ++i, ++j)
   {
-    header->size += (uint64_t)i->second->write (update, i->first);
-
-    update = buffer + header->size;
+    update = i->second->write (update, i->first, buffer_remaining);
     
-    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    if (buffer_remaining > 0)
+    {
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport::send_data:" \
+        " update[%d] => %s=%s\n",
+        j, i->first.c_str (), i->second->to_string ().c_str ()));
+    }
+    else
+    {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       DLINFO "Multicast_Transport::send_data:" \
-      " update[%d] => %s=%s\n",
+      " unable to send due to overflow in buffer for update[%d] => %s=%s\n",
       j, i->first.c_str (), i->second->to_string ().c_str ()));
+    }
   }
   
-  size_t size = (size_t) header->size;
-
-  header->size = Madara::Utility::endian_swap (header->size);
-  // send the buffer contents to the multicast address
-  
-  if (addresses_.size () > 0)
+  if (buffer_remaining > 0)
   {
-    int bytes_sent = socket_.send(
-      buffer, size, addresses_[0]);
+    int size = (int)(Madara::Transport::MAX_PACKET_SIZE - buffer_remaining);
+    *message_size = Madara::Utility::endian_swap ((uint64_t)size);
 
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_data:" \
-      " Sent packet with size %d\n",
-      bytes_sent));
+    // send the buffer contents to the multicast address
+  
+    if (addresses_.size () > 0)
+    {
+      int bytes_sent = socket_.send(
+        buffer, size, addresses_[0]);
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport::send_data:" \
+        " Sent packet with size %d\n",
+        bytes_sent));
+    }
   }
 
   return 0;

@@ -45,6 +45,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/transport/udp
     include/madara/transport/multicast
     include/madara/transport/broadcast
+    include/madara/transport/Message_Header.cpp
     include/madara/Functions.cpp
     include/madara/utility/Utility.cpp
     include/madara/utility/Refcounter.cpp

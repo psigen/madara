@@ -89,12 +89,10 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
 
   while (false == terminated_.value ())
   {
-    // read the message header
-    Message_Header * header;
+    // read the message
     int bytes_read = socket_.recv ((void *)buffer, 
       sizeof (buffer), remote, 0, &wait_time);
-    
-    header = (Message_Header *) buffer;
+ 
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Broadcast_Transport_Read_Thread::svc:" \
@@ -104,8 +102,12 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
     
     if (bytes_read > 0)
     {
+      int64_t buffer_remaining = (int64_t)bytes_read;
+      Message_Header header;
+      char * update = header.read (buffer, buffer_remaining);
+
       // reject the message if it is not KaRL
-      if (strncmp (header->madara_id, "KaRL", 4) != 0)
+      if (strncmp (header.madara_id, "KaRL", 4) != 0)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Broadcast_Transport_Read_Thread::svc:" \
@@ -122,8 +124,8 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
       }
     
       // reject the message if it is us as the originator (no update necessary)
-      if (strncmp (header->originator, id_.c_str (),
-           std::min (sizeof (header->originator), id_.size ())) == 0)
+      if (strncmp (header.originator, id_.c_str (),
+           std::min (sizeof (header.originator), id_.size ())) == 0)
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Broadcast_Transport_Read_Thread::svc:" \
@@ -139,21 +141,10 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
           remote.get_host_addr (), remote.get_port_number ()));
       }
       
-      // Convert message header to host endian style
-
-      header->clock = Madara::Utility::endian_swap (header->clock);
-      header->quality = Madara::Utility::endian_swap (header->quality);
-      header->size = Madara::Utility::endian_swap (header->size);
-      header->type = Madara::Utility::endian_swap (header->type);
-      header->updates = Madara::Utility::endian_swap (header->updates);
-
-      // start of updates is right after message header
-      char * update = buffer + sizeof (Message_Header);
-      
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
         " iterating over the %d updates\n",
-        header->updates));
+        header.updates));
       
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
@@ -171,18 +162,27 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
         " past the lock\n"));
 
       // iterate over the updates
-      for (uint32_t i = 0; i < header->updates; ++i)
+      for (uint32_t i = 0; i < header.updates; ++i)
       {
         // read converts everything into host format from the update stream
-        update += record.read (update, key);
+        update = record.read (update, key, buffer_remaining);
         
+        if (buffer_remaining < 0)
+        {
+          MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+            DLINFO "Broadcast_Transport_Read_Thread::svc:" \
+            " unable to process message. Buffer remaining is negative." \
+            " Server is likely being targeted by custom KaRL tools.\n"));
+          break;
+        }
+
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Broadcast_Transport_Read_Thread::svc:" \
           " attempting to apply %s=%s\n",
           key.c_str (), record.to_string ().c_str ()));
         
-        int result = record.apply (context_, key, header->quality,
-          header->clock, false);
+        int result = record.apply (context_, key, header.quality,
+          header.clock, false);
 
         if (result != 1)
         {

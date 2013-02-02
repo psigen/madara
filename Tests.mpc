@@ -1,4 +1,23 @@
 
+project (Test_Encoding) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_encoding
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_encoding.cpp
+  }
+}
+
 project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_basic_reasoning

@@ -1256,33 +1256,76 @@ Madara::Knowledge_Record::operator- (const Knowledge_Record & rhs) const
 }
     
 
-unsigned int
-Madara::Knowledge_Record::write (char * buffer)
+char *
+Madara::Knowledge_Record::write (char * buffer, const std::string & key,
+   int64_t & buffer_remaining)
+     
 {
-  // format is [type | size | value]
+  // format is [key_size | key | type | value_size | value]
 
-  unsigned int total_written (sizeof (type_) + sizeof (size_));
+  uint32_t key_size = key.size () + 1;
+  uint32_t * size = 0;
 
-  uint32_t * type = (uint32_t *)buffer;
-  buffer += sizeof (uint32_t);
-  *type = Madara::Utility::endian_swap (type_);
+  // Remove the key size from the buffer
+  if (buffer_remaining >= sizeof (key_size))
+  {
+    *(uint32_t *) buffer = Madara::Utility::endian_swap (key_size);
+    buffer += sizeof (key_size);
+  }
+  buffer_remaining -= sizeof (key_size);
 
-  uint32_t * size = (uint32_t *)buffer;
-  buffer += sizeof (uint32_t);
-  *size = Madara::Utility::endian_swap (size_);
+  // Remove the key from the buffer
+  if (buffer_remaining >= sizeof (char) * key_size)
+  {
+    // copy the string and set null terminator in buffer
+    strncpy (buffer, key.c_str (), key_size - 1);
+    buffer[key_size - 1] = 0;
 
+    buffer += sizeof (char) * key_size;
+  }
+  buffer_remaining -= sizeof (char) * key_size;
+  
+  // Remove the type of value from the buffer
+  if (buffer_remaining >= sizeof (type_))
+  {
+    *(uint32_t *) buffer = Madara::Utility::endian_swap (type_);
+    buffer += sizeof (type_);
+  }
+  buffer_remaining -= sizeof (type_);
+
+  // Remove the size of value from the buffer
+  if (buffer_remaining >= sizeof (size_))
+  {
+    // set a pointer to size, in case we need to modify it during
+    // value copy (e.g. during double conversion)
+    size = (uint32_t *)buffer;
+
+    // this assignment is fixed in the case of type == DOUBLE later
+    *size = size_;
+
+    // note that we do not encode the size yet because it may change
+    // and we need the architectural-specific version for other checks
+
+    buffer += sizeof (size_);
+  }
+  buffer_remaining -= sizeof (size_);
+  
+  // Remove the value from the buffer
   if      (type_ == STRING)
   {
     // strings do not have to be converted
-    strncpy (buffer, str_value_.get_ptr (), size_);
-    total_written += size_;
+    if (buffer_remaining >= size_)
+      strncpy (buffer, str_value_.get_ptr (), size_);
   }
   else if (type_ == INTEGER)
   {
-    // convert integers to network byte order
-    Integer * value = (Integer *)buffer;
-    *value = Madara::Utility::endian_swap (int_value_);
-    total_written += size_;
+    // strings do not have to be converted
+    if (buffer_remaining >= size_)
+    {
+      // convert integers to network byte order
+      Integer * value = (Integer *)buffer;
+      *value = Madara::Utility::endian_swap (int_value_);
+    }
   }
   else if (type_ == DOUBLE)
   {
@@ -1293,105 +1336,109 @@ Madara::Knowledge_Record::write (char * buffer)
 
     // update size to be the size of the string instead of the double
     *size = (uint32_t) (converted.length () + 1);
+      
+    // strings do not have to be converted
+    if (buffer_remaining >= *size)
+    {
+      // copy the string to buffer and make sure it is ended in null.
+      strncpy (buffer, converted.c_str (), *size - 1);
+      buffer[*size - 1] = 0;
 
-    // copy the string to buffer and make sure it is ended in null.
-    strncpy (buffer, converted.c_str (), *size - 1);
-    buffer[*size - 1] = 0;
+    }
+  }
 
-    // update total written and convert size to network byte order
-    total_written += *size;
+  if (size)
+  {
+    buffer_remaining -= *size;
+    buffer += *size;
     *size = (uint32_t) Madara::Utility::endian_swap (*size);
   }
 
-  return total_written;
+  return buffer;
 }
 
-unsigned int
-Madara::Knowledge_Record::write (char * buffer, const std::string & key)
+char *
+Madara::Knowledge_Record::read (char * buffer, std::string & key,
+                                int64_t & buffer_remaining)
 {
-  unsigned int total_written (sizeof (uint32_t));
-  
-  // set the size of the key in the buffer
-  uint32_t * size = (uint32_t *)buffer;
-  buffer += sizeof (uint32_t);
-  *size = (uint32_t) (key.length () + 1);
-  
-  // copy the key to the buffer
-  strncpy (buffer, key.c_str (), *size - 1);
-  buffer[*size - 1] = 0;
-  total_written += *size;
-  buffer += *size;
+  // format is [key_size | key | type | value_size | value]
 
-  // update total written and convert size to network byte order
-  *size = Madara::Utility::endian_swap (*size);
+  uint32_t key_size;
+  uint32_t buff_value_size;
 
-  total_written += write (buffer);
-
-  return total_written;
-}
-
-unsigned int
-Madara::Knowledge_Record::read (const char * buffer)
-{
-  unsigned int total_read (sizeof (uint32_t) + sizeof (uint32_t));
-  
-  char * current = (char *)buffer;
-
-  // read the type of the record
-  uint32_t * type = (uint32_t *)current;
-  current += sizeof (uint32_t);
-  type_ = Madara::Utility::endian_swap (*type);
-
-  // read the size of the record
-  uint32_t * size = (uint32_t *)current;
-  current += sizeof (uint32_t);
-  size_ = Madara::Utility::endian_swap (*size);
-  
-  total_read += (unsigned int)size_;
-
-  if      (type_ == STRING)
+  // Remove the key size from the buffer
+  if (buffer_remaining >= sizeof (key_size))
   {
-    str_value_ = new char [size_];
-    strncpy (str_value_.get_ptr (), current, size_);
+    key_size = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    buffer += sizeof (key_size);
   }
-  
-  else if (type_ == INTEGER)
-    int_value_ = Madara::Utility::endian_swap (*((Integer *) current));
+  buffer_remaining -= sizeof (key_size);
 
-  else if (type_ == DOUBLE)
+  // Remove the key from the buffer
+  if (buffer_remaining >= sizeof (char) * key_size)
   {
-    std::stringstream temp;
-    temp << current;
-    temp >> double_value_;
-    size_ = sizeof (double);
+    // don't worry about null terminator
+    key.assign (buffer, key_size - 1);
+
+    buffer += sizeof (char) * key_size;
+  }
+  buffer_remaining -= sizeof (char) * key_size;
+  
+  // Remove the type of value from the buffer
+  if (buffer_remaining >= sizeof (type_))
+  {
+    type_ = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    buffer += sizeof (type_);
+  }
+  buffer_remaining -= sizeof (type_);
+  
+  // Remove the size of value from the buffer
+  if (buffer_remaining >= sizeof (size_))
+  {
+    size_ = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    buff_value_size = size_;
+    buffer += sizeof (size_);
+  }
+  buffer_remaining -= sizeof (size_);
+  
+  // Remove the value from the buffer
+  if (size_ > 0 && buffer_remaining >= sizeof (size_))
+  {
+    if      (type_ == STRING)
+    {
+      str_value_ = new char [size_];
+      strncpy (str_value_.get_ptr (), buffer, size_);
+    }
+  
+    else if (type_ == INTEGER)
+    {
+      int_value_ = Madara::Utility::endian_swap (*((Integer *) buffer));
+    }
+
+    else if (type_ == DOUBLE)
+    {
+      // to prevent malicious update packet possibilities, only use the
+      // size provided and move this into a string
+      std::string double_holder;
+      double_holder.assign (buffer, size_);
+
+      // now, do the conversion from string to double
+      std::stringstream temp;
+      temp << buffer;
+      temp >> double_value_;
+
+      // doubles are encoded as strings, so we have to change the size to
+      // the appropriate double representation
+      size_ = sizeof (double);
+    }
+
+    buffer += buff_value_size;
+    buffer_remaining -= sizeof (char) * buff_value_size;
   }
 
-  return total_read;
+  return buffer;
 }
 
-unsigned int
-Madara::Knowledge_Record::read (const char * buffer, std::string & key)
-{
-  unsigned int total_read (sizeof (uint32_t));
-  
-  char * current = (char *)buffer;
-
-  // read the size of the record
-  uint32_t * size = (uint32_t *)current;
-  current += sizeof (uint32_t);
-  *size = Madara::Utility::endian_swap (*size);
-
-  // to prevent assignment of arbitarily-long non-null terminated strings,
-  // instead assign with a limit
-  key.assign (current, *size - 1);
-
-  // update the buffer
-  current += *size;
-
-  total_read += (unsigned int)(*size) + read (current);
-
-  return total_read;
-}
 
 int
   Madara::Knowledge_Record::apply (
