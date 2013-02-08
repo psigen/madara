@@ -52,13 +52,13 @@ Madara::Transport::Message_Header::read (char * buffer,
     updates = Madara::Utility::endian_swap (*(uint32_t *)buffer);
     buffer += sizeof (updates);
   }
-  buffer_remaining -= sizeof (quality);
+  buffer_remaining -= sizeof (updates);
   
   // Remove quality field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (quality))
   {
     quality = Madara::Utility::endian_swap (*(uint32_t *)buffer);
-    buffer += sizeof (updates);
+    buffer += sizeof (quality);
   }
   buffer_remaining -= sizeof (quality);
   
@@ -66,7 +66,7 @@ Madara::Transport::Message_Header::read (char * buffer,
   if (buffer_remaining >= sizeof (clock))
   {
     clock = Madara::Utility::endian_swap (*(uint64_t *)buffer);
-    buffer += sizeof (updates);
+    buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
 
@@ -123,13 +123,13 @@ Madara::Transport::Message_Header::write (char * buffer,
     *(uint32_t *) buffer = Madara::Utility::endian_swap (updates);
     buffer += sizeof (updates);
   }
-  buffer_remaining -= sizeof (quality);
+  buffer_remaining -= sizeof (updates);
   
   // Write quality field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (quality))
   {
     *(uint32_t *) buffer = Madara::Utility::endian_swap (quality);
-    buffer += sizeof (updates);
+    buffer += sizeof (quality);
   }
   buffer_remaining -= sizeof (quality);
   
@@ -137,7 +137,7 @@ Madara::Transport::Message_Header::write (char * buffer,
   if (buffer_remaining >= sizeof (clock))
   {
     *(uint64_t *) buffer = Madara::Utility::endian_swap (clock);
-    buffer += sizeof (updates);
+    buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
 
