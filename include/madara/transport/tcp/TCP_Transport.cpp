@@ -7,8 +7,8 @@
 Madara::Transport::TCP_Transport::TCP_Transport (const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Settings & config, bool launch_transport)
-: Base (config),
-  id_ (id), context_ (context), thread_ (0), valid_setup_ (false)
+: Base (config, context),
+  id_ (id), thread_ (0), valid_setup_ (false)
 {
   this->validate_transport ();
 }

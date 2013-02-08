@@ -4,7 +4,6 @@
 #include <string>
 
 #include "madara/transport/udp/UDP_Transport_Read_Thread.h"
-#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 
 namespace Madara
@@ -71,8 +70,6 @@ namespace Madara
     protected:
     private:
       const std::string                               id_;
-      // context for knowledge base
-      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
 
       UDP_Transport_Read_Thread *               thread_;
 

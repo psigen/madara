@@ -334,6 +334,19 @@ namespace Madara
        **/
       Function * retrieve_function (const std::string & name);
 
+      /**
+       * Sets on data received logic. This function must be called by
+       * the transport after data updates are applied to the knowledge base.
+       * @param   logic     logic to execute after every data update
+       **/
+      void on_data_received (const std::string & logic);
+
+      /**
+       * Executes the on_data_received logic and returns the result
+       * @return           the result of the logic execution
+       */
+      Knowledge_Record on_data_received (void);
+
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
 
@@ -347,6 +360,7 @@ namespace Madara
 
       /// map of function names to functions
       Function_Map functions_;
+
     };
   }
 }

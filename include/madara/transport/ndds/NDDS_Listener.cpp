@@ -6,10 +6,17 @@
 #include <sstream>
 
 Madara::Transport::NDDS_Listener::NDDS_Listener(
-  const std::string & id,
+  const Settings & settings, const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
-: id_ (id), context_ (context)
+: settings_ (settings), id_ (id), context_ (context)
 {
+  // check for an on_data_received ruleset
+  if (settings_.on_data_received_logic.length () != 0)
+  {
+    Madara::Expression_Tree::Interpreter interpreter;
+    on_data_received_ = interpreter.interpret (context_,
+      settings_.on_data_received_logic);
+  }
 }
 
 Madara::Transport::NDDS_Listener::NDDS_Listener(const NDDS_Listener &ref)
@@ -244,6 +251,14 @@ Madara::Transport::NDDS_Listener::on_data_available(DDSDataReader * reader)
         handle_multiassignment (update_data_list[i]);
       }        
     }
+  }
+
+  // before we send to others, we first execute rules
+  if (settings_.on_data_received_logic.length () != 0)
+  {
+    context_.lock ();
+    on_data_received_.evaluate ();
+    context_.unlock ();
   }
 
   rc = update_reader->return_loan(update_data_list, info_seq);

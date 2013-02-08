@@ -7,18 +7,27 @@
 #include <sstream>
 
 Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
-  const std::string & id,
+  const Settings & settings, const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Knowledge::UpdateDataReader_ptr & update_reader,
   Knowledge::UpdateDataWriter_ptr & update_writer,
   Madara::Transport::Settings & settings)
-  : id_ (id), context_ (context), update_reader_ (update_reader),
+  : id_ (id), context_ (context),
+    update_reader_ (update_reader),
     update_writer_ (update_writer),
     barrier_ (2), terminated_ (false), 
     mutex_ (), is_not_ready_ (mutex_), settings_ (settings), is_ready_ (false)
 {
   assignment_symbols_.push_back ("=");
   assignment_symbols_.push_back (";");
+  
+  // check for an on_data_received ruleset
+  if (settings_.on_data_received_logic.length () != 0)
+  {
+    Madara::Expression_Tree::Interpreter interpreter;
+    on_data_received_ = interpreter.interpret (context_,
+      settings_.on_data_received_logic);
+  }
 
   this->activate (THR_NEW_LWP | THR_DETACHED, 1);
   
@@ -58,6 +67,7 @@ int Madara::Transport::Splice_Read_Thread::enter_barrier (void)
   return 0;
 }
 
+#ifdef _USE_CID_
 /**
  * originator == person who started the latency rounds
  * key == the person replying to the round
@@ -390,6 +400,8 @@ Madara::Transport::Splice_Read_Thread::handle_latency (
   }
 }
 
+#endif   // USE_CID
+
 void Madara::Transport::Splice_Read_Thread::handle_assignment (
   Knowledge::Update & data)
 {
@@ -699,7 +711,17 @@ Madara::Transport::Splice_Read_Thread::svc (void)
 
         // otherwise the key was null, which is unusable
       }
+      
     }
+    
+    // before we send to others, we first execute rules
+    if (settings_.on_data_received_logic.length () != 0)
+    {
+      context_.lock ();
+      on_data_received_.evaluate ();
+      context_.unlock ();
+    }
+
     dds_result = update_reader_->return_loan (update_data_list_, infoList);
   }
 

@@ -25,10 +25,12 @@ namespace Madara
     public:
       /**
        * Constructor
+       * @param    settings   Transport settings
        * @param id  unique identifier of this entity (e.g., host:port)
        * @param context the knowledge context to access and mutate
        **/
-      NDDS_Listener(const std::string & id,
+      NDDS_Listener(
+        const Settings & settings, const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
       /**
@@ -67,11 +69,16 @@ namespace Madara
        **/
       void on_data_available(DDSDataReader* reader);
     private:
+      
+      /// Transport settings
+      const Settings & settings_;
 
       // NDDS variables
       const std::string id_;
       ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-
+      
+      /// data received rules, defined in Transport settings
+      Madara::Expression_Tree::Expression_Tree  on_data_received_;
     };  // End of class NDDS_Listener
   }
 }

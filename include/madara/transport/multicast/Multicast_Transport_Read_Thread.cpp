@@ -8,10 +8,10 @@
 #include <algorithm>
 
 Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread (
-  const std::string & id,
+  const Settings & settings, const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context,
   const ACE_INET_Addr & address)
-  : id_ (id), context_ (context),
+  : settings_ (settings), id_ (id), context_ (context),
     barrier_ (2), terminated_ (false), 
     mutex_ (), is_not_ready_ (mutex_), is_ready_ (false), address_ (address)
 {
@@ -30,6 +30,25 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
       " Success subscribing to multicast address %s:%d\n", host, port));
+  }
+
+  // check for an on_data_received ruleset
+  if (settings_.on_data_received_logic.length () != 0)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
+      " setting rules to %s\n", 
+      settings_.on_data_received_logic.c_str ()));
+
+    Madara::Expression_Tree::Interpreter interpreter;
+    on_data_received_ = interpreter.interpret (context_,
+      settings_.on_data_received_logic);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
+      " no permanent rules were set\n"));
   }
 
   this->activate (THR_NEW_LWP | THR_DETACHED, 1);
@@ -200,6 +219,23 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
             " update %s=%s was accepted\n",
             key.c_str (), record.to_string ().c_str ()));
         }
+      }
+      
+      // before we send to others, we first execute rules
+      if (settings_.on_data_received_logic.length () != 0)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Multicast_Transport_Read_Thread::svc:" \
+          " evaluating rules in %s\n", 
+          settings_.on_data_received_logic.c_str ()));
+
+        on_data_received_.evaluate ();
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Multicast_Transport_Read_Thread::svc:" \
+          " no permanent rules were set\n"));
       }
 
       // unlock the context

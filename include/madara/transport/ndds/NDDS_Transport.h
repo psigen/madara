@@ -74,9 +74,6 @@ namespace Madara
       // identifier of this knowledge base
       const std::string                               id_;
 
-      // context for knowledge base
-      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-
       const static char *                             topic_names_[];
       const static char *                             partition_;
 

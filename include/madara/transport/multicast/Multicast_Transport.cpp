@@ -3,14 +3,16 @@
 #include "madara/utility/Log_Macros.h"
 #include "madara/transport/Message_Header.h"
 #include "madara/utility/Utility.h"
+#include "madara/expression_tree/Expression_Tree.h"
+#include "madara/expression_tree/Interpreter.h"
 
 #include <iostream>
 
 Madara::Transport::Multicast_Transport::Multicast_Transport (const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Settings & config, bool launch_transport)
-: Base (config),
-  id_ (id), context_ (context), thread_ (0), valid_setup_ (false),
+: Base (config, context),
+  id_ (id), thread_ (0), valid_setup_ (false),
   socket_ (ACE_sap_any_cast (ACE_INET_Addr &), PF_INET, 0, 1)
 {
   if (launch_transport)
@@ -59,6 +61,25 @@ Madara::Transport::Multicast_Transport::setup (void)
   splitters_[0] = "=";
   splitters_[1] = ";";
 
+  // check for an on_data_received ruleset
+  if (settings_.on_data_received_logic.length () != 0)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::Multicast_Transport:" \
+      " setting rules to %s\n", 
+      settings_.on_data_received_logic.c_str ()));
+
+    Madara::Expression_Tree::Interpreter interpreter;
+    on_data_received_ = interpreter.interpret (context_,
+      settings_.on_data_received_logic);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::Multicast_Transport:" \
+      " no permanent rules were set\n"));
+  }
+
   // resize addresses to be the size of the list of hosts
   addresses_.resize (this->settings_.hosts_.size ());
 
@@ -87,7 +108,7 @@ Madara::Transport::Multicast_Transport::setup (void)
 
     // start thread with the addresses (only looks at the first one for now)
     thread_ = new Madara::Transport::Multicast_Transport_Read_Thread (
-                    id_, context_, addresses_[0]);
+                    settings_, id_, context_, addresses_[0]);
   }
   return this->validate_transport ();
 }
@@ -188,6 +209,27 @@ Madara::Transport::Multicast_Transport::send_data (
   {
     int size = (int)(Madara::Transport::MAX_PACKET_SIZE - buffer_remaining);
     *message_size = Madara::Utility::endian_swap ((uint64_t)size);
+    
+    // before we send to others, we first execute rules
+    if (settings_.on_data_received_logic.length () != 0)
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport::send_data:" \
+        " evaluating rules in %s\n", 
+        settings_.on_data_received_logic.c_str ()));
+
+      on_data_received_.evaluate ();
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport::send_data:" \
+        " rules have been successfully evaluated\n"));
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport::send_data:" \
+        " no permanent rules were set\n"));
+    }
 
     // send the buffer contents to the multicast address
   

@@ -13,6 +13,7 @@
 
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
+#include "madara/expression_tree/Expression_Tree.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"
@@ -37,12 +38,14 @@ namespace Madara
     public:
       /**
        * Constructor
+       * @param    settings   Transport settings
        * @param    id      host:port identifier of this process, to allow for 
        *                   rejection of duplicates
        * @param    context    the knowledge variables to update
        * @param    addresses  the ACE socket addresses to read from 
        **/
       Broadcast_Transport_Read_Thread (
+        const Settings & settings,
         const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
         const ACE_INET_Addr & address);
@@ -72,6 +75,8 @@ namespace Madara
       **/
       void wait_for_ready (void);
     private:
+      /// Transport settings
+      const Settings & settings_;
 
       /// host:port identifier of this process
       const std::string                                 id_;
@@ -99,6 +104,9 @@ namespace Madara
       
       /// The broadcast socket we are reading from
       ACE_SOCK_Dgram                     socket_;
+
+      /// data received rules, defined in Transport settings
+      Madara::Expression_Tree::Expression_Tree  on_data_received_;
     };
   }
 }

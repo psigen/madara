@@ -621,7 +621,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   * @return            the mapped external function
   **/
 Madara::Knowledge_Engine::Function *
-  Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_function (
+Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_function (
        const std::string & name)
 {
   return &functions_[name];

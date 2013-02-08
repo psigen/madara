@@ -71,8 +71,6 @@ namespace Madara
     protected:
     private:
       const std::string                               id_;
-      // context for knowledge base
-      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
 
       TCP_Transport_Read_Thread *               thread_;
 

@@ -15,6 +15,7 @@
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "ace/SOCK_Dgram_Bcast.h"
 #include "madara/utility/stdint.h"
+#include "madara/expression_tree/Expression_Tree.h"
 
 
 namespace Madara
@@ -79,9 +80,6 @@ namespace Madara
       /// host:port identifier of this process
       const std::string                               id_;
 
-      /// knowledge context
-      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-
       /// thread for reading knowledge updates
       Broadcast_Transport_Read_Thread *         thread_;
 
@@ -97,6 +95,8 @@ namespace Madara
       /// underlying socket for sending
       ACE_SOCK_Dgram_Bcast                      socket_;
 
+      /// data received rules, defined in Transport settings
+      Madara::Expression_Tree::Expression_Tree  on_data_received_;
     };
   }
 }

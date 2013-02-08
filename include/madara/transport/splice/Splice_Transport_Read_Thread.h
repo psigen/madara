@@ -41,9 +41,10 @@ namespace Madara
        * @param id unique identifier of this participant (e.g., host:port)
        * @param context where to store and access knowledge
        * @param update_reader reader created in @see Splice_DDS_Transport
+       * @param update_writer writer created in @see Splice_DDS_Transport
+       * @param    settings   Transport settings
        **/
-      Splice_Read_Thread (
-        const std::string & id,
+      Splice_Read_Thread (const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Knowledge::UpdateDataReader_ptr & update_reader,
         Knowledge::UpdateDataWriter_ptr & update_writer,
@@ -109,7 +110,7 @@ namespace Madara
        * @param  data  the vote that was made
        **/
       void handle_vote (Knowledge::Update & data);
-
+      
       /**
        * We currently allow multiassignments completely through the key. This
        * is probably the least efficient way to handle this and should be
@@ -166,6 +167,9 @@ namespace Madara
        * If true, the transport is ready
        **/
       bool                               is_ready_;
+
+      /// data received rules, defined in Transport settings
+      Madara::Expression_Tree::Expression_Tree  on_data_received_;
     };
   }
 }

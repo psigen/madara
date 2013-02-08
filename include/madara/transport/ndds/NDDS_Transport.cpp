@@ -18,8 +18,8 @@ Madara::Transport::NDDS_Transport::NDDS_Transport (
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Settings & config, bool launch_transport)
-  : Madara::Transport::Base (config), 
-  id_ (id), context_ (context),
+  : Madara::Transport::Base (config, context), 
+  id_ (id),
   domain_participant_ (0), update_topic_ (0), update_writer_ (0),
   listener_ (id, context)
 {

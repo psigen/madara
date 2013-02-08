@@ -18,6 +18,45 @@ project (Test_Encoding) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Multicast_Rules) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_multicast_rules
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/multicast/test_multicast_rules.cpp
+  }
+}
+
+project (Test_Broadcast_Rules) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_broadcast_rules
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/broadcast/test_broadcast_rules.cpp
+  }
+}
+
+
 project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_basic_reasoning

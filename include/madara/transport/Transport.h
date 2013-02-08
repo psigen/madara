@@ -35,6 +35,9 @@
 #endif // _USE_CID_
 
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/expression_tree/Expression_Tree.h"
+#include "madara/expression_tree/Interpreter.h"
 
 namespace Madara
 {
@@ -143,6 +146,7 @@ namespace Madara
         reliability (DEFAULT_RELIABILITY),
         id (DEFAULT_ID),
         processes (DEFAULT_PROCESSES),
+        on_data_received_logic (),
 
 #ifdef _USE_CID_
         latency_enabled (DEFAULT_LATENCY_ENABLED),
@@ -168,6 +172,7 @@ namespace Madara
         reliability (settings.reliability),
         id (settings.id),
         processes (settings.processes),
+         on_data_received_logic (settings.on_data_received_logic),
 
 #ifdef _USE_CID_
 
@@ -198,6 +203,8 @@ namespace Madara
         reliability = settings.reliability;
         id = settings.id;
         processes = settings.processes;
+        
+        on_data_received_logic = settings.on_data_received_logic;
 
 #ifdef _USE_CID_
         latency_enabled = settings.latency_enabled;
@@ -216,7 +223,7 @@ namespace Madara
         for (unsigned int i = 0; i < settings.hosts_.size (); ++i)
           hosts_[i] = settings.hosts_[i];
       }
-
+      
 #ifdef _USE_CID_
       /**
        * Resets timers and latencies
@@ -768,6 +775,9 @@ namespace Madara
       /// number of processes expected in the network (best to overestimate
       /// if building latency tables
       uint32_t processes;
+
+      /// logic to be evaluated after every successful update
+      std::string on_data_received_logic;
       
 #ifdef _USE_CID_
       /// should we try to gather latencies?
@@ -837,10 +847,12 @@ namespace Madara
       /**
        * Constructor for settings
        * @param   new_settings      settings to apply to the transport
+       * @param   context           the knowledge record context
        **/
-      Base (Settings & new_settings) 
+      Base (Settings & new_settings,
+        Madara::Knowledge_Engine::Thread_Safe_Context & context) 
         : is_valid_ (false), shutting_down_ (false),
-        valid_setup_ (mutex_), settings_ (new_settings)
+        valid_setup_ (mutex_), settings_ (new_settings), context_ (context)
       {
 
 #ifdef _USE_CID_
@@ -991,14 +1003,16 @@ namespace Madara
       {
         invalidate_transport ();
       }
-
+      
     protected:
       volatile bool is_valid_;
       volatile bool shutting_down_;
       Hosts_Vector hosts_;
       ACE_Thread_Mutex mutex_;
       Condition valid_setup_;
-      Settings & settings_;
+      Settings settings_;
+      // context for knowledge base
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
   }
 }
