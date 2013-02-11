@@ -51,7 +51,8 @@ namespace Madara
        * @return    one subtracted from the value returned by 
        *            the right expression
        **/
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

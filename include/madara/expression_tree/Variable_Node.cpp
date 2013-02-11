@@ -135,7 +135,8 @@ Madara::Expression_Tree::Variable_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Variable_Node::evaluate (void)
+Madara::Expression_Tree::Variable_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.
@@ -153,13 +154,14 @@ Madara::Expression_Tree::Variable_Node::key () const
 
 int
 Madara::Expression_Tree::Variable_Node::set (
-  const Madara::Knowledge_Record & value)
+  const Madara::Knowledge_Record & value,
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   if (record_)
   {
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
-    if (record_->write_quality < record_->quality)
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
       return -2;
 
     // cheaper to read than write, so check to see if
@@ -168,8 +170,8 @@ Madara::Expression_Tree::Variable_Node::set (
       record_->quality = record_->write_quality;
 
     *record_ = value;
-
-    if (key_[0] != '.')
+    
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_);
     }
@@ -191,13 +193,14 @@ Madara::Expression_Tree::Variable_Node::set (
 }
 
 int
-Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Integer & value)
+Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Integer & value,
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   if (record_)
   {
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
-    if (record_->write_quality < record_->quality)
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
       return -2;
 
     // cheaper to read than write, so check to see if
@@ -207,7 +210,7 @@ Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Int
 
     record_->set_value (value);
 
-    if (key_[0] != '.')
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_);
     }
@@ -216,17 +219,18 @@ Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Int
     return 0;
   }
   else
-    return context_.set (expand_key (), value);
+    return context_.set (expand_key (), value, settings);
 }
 
 int
-Madara::Expression_Tree::Variable_Node::set (double value)
+Madara::Expression_Tree::Variable_Node::set (double value,
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   if (record_)
   {
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
-    if (record_->write_quality < record_->quality)
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
       return -2;
 
     // cheaper to read than write, so check to see if
@@ -236,7 +240,7 @@ Madara::Expression_Tree::Variable_Node::set (double value)
 
     record_->set_value (value);
 
-    if (key_[0] != '.')
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_);
     }
@@ -245,17 +249,18 @@ Madara::Expression_Tree::Variable_Node::set (double value)
     return 0;
   }
   else
-    return context_.set (expand_key (), value);
+    return context_.set (expand_key (), value, settings);
 }
 
 int
-Madara::Expression_Tree::Variable_Node::set (const std::string & value)
+Madara::Expression_Tree::Variable_Node::set (const std::string & value,
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   if (record_)
   {
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
-    if (record_->write_quality < record_->quality)
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
       return -2;
 
     // cheaper to read than write, so check to see if
@@ -265,7 +270,7 @@ Madara::Expression_Tree::Variable_Node::set (const std::string & value)
 
     record_->set_value (value);
 
-    if (key_[0] != '.')
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_);
     }
@@ -274,17 +279,18 @@ Madara::Expression_Tree::Variable_Node::set (const std::string & value)
     return 0;
   }
   else
-    return context_.set (expand_key (), value);
+    return context_.set (expand_key (), value, settings);
 }
 
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Variable_Node::dec (void)
+Madara::Expression_Tree::Variable_Node::dec (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   if (record_)
   {
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
-    if (record_->write_quality < record_->quality)
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
       return *record_;
 
     // cheaper to read than write, so check to see if
@@ -294,7 +300,7 @@ Madara::Expression_Tree::Variable_Node::dec (void)
 
     --(*record_);
 
-    if (key_[0] != '.')
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_);
     }
@@ -303,17 +309,18 @@ Madara::Expression_Tree::Variable_Node::dec (void)
     return *record_;
   }
   else
-    return context_.dec (expand_key ());
+    return context_.inc (expand_key (), settings);
 }
 
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Variable_Node::inc (void)
+Madara::Expression_Tree::Variable_Node::inc (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   if (record_)
   {
     // notice that we assume the context is locked
     // check if we have the appropriate write quality
-    if (record_->write_quality < record_->quality)
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
       return *record_;
 
     // cheaper to read than write, so check to see if
@@ -323,7 +330,7 @@ Madara::Expression_Tree::Variable_Node::inc (void)
 
     ++(*record_);
 
-    if (key_[0] != '.')
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_);
     }
@@ -332,6 +339,6 @@ Madara::Expression_Tree::Variable_Node::inc (void)
     return *record_;
   }
   else
-    return context_.inc (expand_key ());
+    return context_.inc (expand_key (), settings);
 }
 

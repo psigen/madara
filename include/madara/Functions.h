@@ -5,6 +5,7 @@
 #include <string>
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 /**
  * @file Functions.h
@@ -56,49 +57,67 @@ namespace Madara
        * Sets the value of a variable.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
        * @return   the new value of the keyed variable
        **/
       int set (const std::string & key,
-        Madara::Knowledge_Record::Integer value);
+        Madara::Knowledge_Record::Integer value,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Sets the value of a variable.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
        * @return   the new value of the keyed variable
        **/
-      int set (const std::string & key, double value);
+      int set (const std::string & key, double value,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Sets the value of a variable.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
        * @return   the new value of the keyed variable
        **/
-      int set (const std::string & key, const std::string & value);
+      int set (const std::string & key, const std::string & value,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Sets the value of a variable.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
        * @return   the new value of the keyed variable
        **/
       int set (const std::string & key,
-        const Madara::Knowledge_Record & value);
+        const Madara::Knowledge_Record & value,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Atomically increments the value of the variable
        * @param   key            unique identifier of the variable
+       * @param   settings  Settings for updating knowledge
        * @return                 new value of variable
        **/
-      Knowledge_Record inc (const std::string & key);
+      Knowledge_Record inc (const std::string & key,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Decrements the value of the variable
        * @param   key            unique identifier of the variable
+       * @param   settings  Settings for updating knowledge
        * @return                 new value of variable
        **/
-      Knowledge_Record dec (const std::string & key);
+      Knowledge_Record dec (const std::string & key,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Prints all variables and values in the context

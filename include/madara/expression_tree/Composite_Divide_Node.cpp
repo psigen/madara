@@ -104,13 +104,14 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Divide_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Divide_Node::evaluate (
+const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   // only evaluate right if left evaluates to non-zero (0/{any_number} = 0)
-  Madara::Knowledge_Record lvalue (left_->evaluate ());
+  Madara::Knowledge_Record lvalue (left_->evaluate (settings));
   Madara::Knowledge_Record zero;
   if (lvalue.is_true ())
-    return lvalue / right_->evaluate ();
+    return lvalue / right_->evaluate (settings);
 
   // note that we are not handling divide by zero. Still unsure whether I
   // want to use exceptions throughout evaluation or not. This should be as

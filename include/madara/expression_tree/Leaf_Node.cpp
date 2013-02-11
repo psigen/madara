@@ -67,7 +67,8 @@ Madara::Expression_Tree::Leaf_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Leaf_Node::evaluate (void)
+Madara::Expression_Tree::Leaf_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   // we could call item(), but since it is virtual, it incurs unnecessary
   // overhead.

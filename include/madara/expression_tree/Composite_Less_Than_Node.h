@@ -48,7 +48,8 @@ namespace Madara
        * @return    0 if left expression greater than or equalt to 
        *            right expression and 1 otherwise
        **/
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

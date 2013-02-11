@@ -21,43 +21,33 @@
 // Atomically increment a stored value. This function is only used in one place
 // so we will expand it into that Preincrement_Node
 inline  Madara::Knowledge_Record
-Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key)
+Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
+  const Knowledge_Update_Settings & settings)
 {
-   Madara::Knowledge_Record blank;
-
   // check for null key
   if (key == "")
-    return blank;
-
+    return Knowledge_Record ();
+  
   // enter the mutex
   Context_Guard guard (mutex_);
-
+  
   // create the key if it didn't exist
-  map_[key];
+  Knowledge_Record & record = map_[key];
 
-  // find the key in the knowledge base. It will be
-  // much faster to use the iterator for modifications
-  // than it will be to look up the key in the map for
-  // everything we want to modify (e.g. map_[key].quality = 1)
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // use a reference so this is easier to read
-  Knowledge_Record & record = found->second;
-
-  // check if we have the appropriate write quality
-  if (record.write_quality < record.quality)
-    return blank;
-
-  // otherwise go ahead and update
-  ++record;
-
+  if (settings.always_overwrite || record.write_quality > record.quality)
+  {
+    ++record;
+    record.quality = record.write_quality;
+  }
+  
+  // otherwise set the value
   if (key[0] != '.')
   {
-    mark_modified (key, record);
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
   }
-  //  record.status = Madara::Knowledge_Record::MODIFIED;
-  //else
-  //  record.scope = Madara::Knowledge_Record::LOCAL_SCOPE;
 
   changed_.signal ();
 
@@ -89,39 +79,32 @@ Madara::Knowledge_Engine::Thread_Safe_Context::exists (const std::string & key) 
 // is because it is called by only one function, and we can save a bit of
 // execution time via expansion into that function call.
 inline Madara::Knowledge_Record
-Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key)
+Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key,
+  const Knowledge_Update_Settings & settings)
 {
-   Madara::Knowledge_Record blank;
-
   // check for null key
   if (key == "")
-    return blank;
-
+    return Knowledge_Record ();
+  
   // enter the mutex
   Context_Guard guard (mutex_);
+  
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
 
-  // creat the key if it didn't exist
-  map_[key];
-
-  // find the key in the knowledge base. It will be
-  // much faster to use the iterator for modifications
-  // than it will be to look up the key in the map for
-  // everything we want to modify (e.g. map_[key].quality = 1)
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // use a reference so this is easier to read
-  Knowledge_Record & record = found->second;
-
-  // check if we have the appropriate write quality
-  if (record.write_quality < record.quality)
-    return blank;
-
-  // otherwise go ahead and update
-  --record;
-
+  if (settings.always_overwrite || record.write_quality > record.quality)
+  {
+    --record;
+    record.quality = record.write_quality;
+  }
+  
+  // otherwise set the value
   if (key[0] != '.')
   {
-    mark_modified (key, record);
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
   }
 
   changed_.signal ();
@@ -152,56 +135,44 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
   const std::string & key, uint64_t clock)
 {
   Context_Guard guard (mutex_);
+  
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
 
-  // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // if it's found, then compare the value
-  if (found != map_.end ())
+  // check for value already set
+  if (record.clock < clock)
   {
-    // check for value already set
-    if (found->second.clock < clock)
-    {
-      found->second.clock = clock;
+    record.clock = clock;
 
-      // try to update the global clock as well
-      this->set_clock (clock);
-    }
-
-    return found->second.clock;
+    // try to update the global clock as well
+    this->set_clock (clock);
   }
-  else
-    // key does not exist
-    return 0;
+
+  return record.clock;
 }
 
 /// set the lamport clock for a particular variable (updates with 
 /// lamport clocks lower than our current clock get discarded)
 inline uint64_t
 Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
-  const std::string & key)
+  const std::string & key,
+  const Knowledge_Update_Settings & settings)
 {
   Context_Guard guard (mutex_);
+  
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
 
-  // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // if it's found, then compare the value
-  if (found != map_.end ())
-  {
-    return ++found->second.clock;
-  }
-  else
-    // key does not exist
-    return 0;
+  return record.clock += settings.clock_increment;
 }
 
 /// increment the process lamport clock
 inline uint64_t
-Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (void)
+Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
+  const Knowledge_Update_Settings & settings)
 {
   Context_Guard guard (mutex_);
-  return ++clock_;
+  return clock_ += settings.clock_increment;
 }
 
 /// get the lamport clock (updates with lamport clocks lower

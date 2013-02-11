@@ -155,6 +155,8 @@ void evaluate_expressions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
     Madara::Knowledge_Engine::Eval_Settings defaults;
     uint64_t evaluate_time;
 
+    std::cout << "  [" << i << "] Evaluating " << tests[i] << std::endl;
+
     // try to establish min/max times with 10 runs
     for (unsigned int j = 0; j < 100; ++j)
     {

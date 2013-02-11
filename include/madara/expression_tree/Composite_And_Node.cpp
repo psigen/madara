@@ -61,14 +61,15 @@ Madara::Expression_Tree::Composite_And_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_And_Node::evaluate (void)
+Madara::Expression_Tree::Composite_And_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   int j = 0;
   for (Component_Nodes::iterator i = nodes_.begin ();
        i != nodes_.end (); ++i, ++j)
   {
     // if we have a zero eval, return 0 immediately
-    if ((*i)->evaluate ().is_false ())
+    if ((*i)->evaluate (settings).is_false ())
       return Madara::Knowledge_Record::Integer ();
   }
 

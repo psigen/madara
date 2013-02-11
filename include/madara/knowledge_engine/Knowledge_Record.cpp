@@ -1447,6 +1447,8 @@ int
   bool perform_lock)
 {
   int result = -1;
+  Madara::Knowledge_Engine::Knowledge_Update_Settings settings;
+  settings.treat_globals_as_locals = true;
 
   if (key.length () > 0)
   {
@@ -1468,14 +1470,14 @@ int
     // without FIFO channel transports
     if (type_ == INTEGER)
       result = context.set_if_unequal (key, int_value_, 
-                                      quality, clock, false);
+                                      quality, clock, settings);
     else if (type_ == DOUBLE)
       result = context.set_if_unequal (key, double_value_, 
-                                      quality, clock, false);
+                                      quality, clock, settings);
     else if (type_ == STRING)
       result = context.set_if_unequal (key, 
                          std::string (str_value_.get_ptr ()), 
-                                      quality, clock, false);
+                                      quality, clock, settings);
           
     if (perform_lock)
     {

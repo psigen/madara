@@ -59,21 +59,24 @@ inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
                                     Madara::Knowledge_Record::Integer value)
 {
-  return set (key, value, true);
+  Eval_Settings settings;
+  return set (key, value, settings);
 }
 
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
                                                double value)
 {
-  return set (key, value, true);
+  Eval_Settings settings;
+  return set (key, value, settings);
 }
 
 inline int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
                                                const std::string & value)
 {
-  return set (key, value, true);
+  Eval_Settings settings;
+  return set (key, value, settings);
 }
 
 /// Set quality of writing to a variable
@@ -152,14 +155,18 @@ inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   const std::string & expression)
 {
-  return wait (expression, true);
+  Compiled_Expression compiled = compile (expression);
+  Wait_Settings settings;
+  return wait (compiled, settings);
 }
 
 inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const std::string & expression)
 {
-  return evaluate (expression, true);
+  Compiled_Expression compiled = compile (expression);
+  Wait_Settings settings;
+  return evaluate (compiled, settings);
 }
 
 inline void

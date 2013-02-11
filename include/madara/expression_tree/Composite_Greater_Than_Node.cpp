@@ -81,9 +81,10 @@ Madara::Expression_Tree::Composite_Greater_Than_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Greater_Than_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Greater_Than_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
-  return left_->evaluate () > right_->evaluate ();
+  return left_->evaluate (settings) > right_->evaluate (settings);
 }
 
 

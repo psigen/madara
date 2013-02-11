@@ -45,7 +45,8 @@ namespace Madara
        * @return    logical or of the left and right expression. Will not
        *            evaluate right expression if left is true.
        **/
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

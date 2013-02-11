@@ -33,11 +33,12 @@ Madara::Knowledge_Engine::Variables::get (const std::string & key) const
   **/
 int
 Madara::Knowledge_Engine::Variables::set (const std::string & key,
-                          Madara::Knowledge_Record::Integer value)
+                          Madara::Knowledge_Record::Integer value,
+        const Knowledge_Update_Settings & settings)
 {
   if (context_)
   {
-    context_->set (key, value, true);
+    context_->set (key, value, settings);
 
     return 1;
   }
@@ -58,11 +59,17 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   **/
 int
 Madara::Knowledge_Engine::Variables::set (const std::string & key,
-                          const Madara::Knowledge_Record & value)
+                          const Madara::Knowledge_Record & value,
+        const Knowledge_Update_Settings & settings)
 {
   if (context_)
   {
-    *(context_->get_record (key)) = value;
+    if (value.type () == Madara::Knowledge_Record::INTEGER)
+      context_->set (key, value.to_integer (), settings);
+    else if (value.type () == Madara::Knowledge_Record::DOUBLE)
+      context_->set (key, value.to_double (), settings);
+    else if (value.type () == Madara::Knowledge_Record::STRING)
+      context_->set (key, value.to_string (), settings);
 
     return 1;
   }
@@ -83,11 +90,12 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   **/
 int
 Madara::Knowledge_Engine::Variables::set (const std::string & key,
-                                          double value)
+                                          double value,
+        const Knowledge_Update_Settings & settings)
 {
   if (context_)
   {
-    context_->set (key, value, true);
+    context_->set (key, value, settings);
 
     return 1;
   }
@@ -108,11 +116,12 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   **/
 int
 Madara::Knowledge_Engine::Variables::set (const std::string & key,
-                                          const std::string & value)
+                                          const std::string & value,
+        const Knowledge_Update_Settings & settings)
 {
   if (context_)
   {
-    context_->set (key, value, true);
+    context_->set (key, value, settings);
 
     return 1;
   }
@@ -131,11 +140,12 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   * @return                 new value of variable
   **/
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Variables::inc (const std::string & key)
+Madara::Knowledge_Engine::Variables::inc (const std::string & key,
+        const Knowledge_Update_Settings & settings)
 {
   if (context_)
   {
-    return context_->inc (key);
+    return context_->inc (key, settings);
   }
   else
   {
@@ -152,11 +162,12 @@ Madara::Knowledge_Engine::Variables::inc (const std::string & key)
   * @return                 new value of variable
   **/
 Madara::Knowledge_Engine::VALUE_TYPE
-  Madara::Knowledge_Engine::Variables::dec (const std::string & key)
+  Madara::Knowledge_Engine::Variables::dec (const std::string & key,
+        const Knowledge_Update_Settings & settings)
 {
   if (context_)
   {
-    return context_->dec (key);
+    return context_->dec (key, settings);
   }
   else
   {

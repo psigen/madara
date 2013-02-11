@@ -71,21 +71,9 @@ Madara::Expression_Tree::Composite_Function_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Function_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Function_Node::evaluate (
+const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
-
-  //if (right_)
-  //{
-  //  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-  //    "Function %s parameter is %q\n", name_.c_str (), right_value));
-  //}
-  //else
-  //{
-  //  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
-  //    "Function %s has no parameters\n", name_.c_str ()));
-  //}
-  
-  //
   Madara::Knowledge_Engine::Function_Arguments args;
   args.resize (nodes_.size ());
 
@@ -94,7 +82,7 @@ Madara::Expression_Tree::Composite_Function_Node::evaluate (void)
   for (Component_Nodes::iterator i = nodes_.begin (); i != nodes_.end ();
        ++i, ++j)
   {
-    args[j] = (*i)->evaluate ();
+    args[j] = (*i)->evaluate (settings);
   }
 
 

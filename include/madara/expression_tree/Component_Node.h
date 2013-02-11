@@ -6,6 +6,7 @@
 #include <deque>
 #include <stdexcept>
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/utility/stdint.h"
 
 
@@ -49,7 +50,9 @@ namespace Madara
        * Evaluates the expression tree. 
        * @return    value of current contained expression tree
        **/
-      virtual Madara::Knowledge_Record evaluate (void) = 0;
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
+          = 0;
 
       /** 
        * Returns the left expression. 

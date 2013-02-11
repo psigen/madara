@@ -281,7 +281,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   const std::string & t_key, 
-  Madara::Knowledge_Record::Integer value, bool send_modifieds)
+  Madara::Knowledge_Record::Integer value,
+  const Eval_Settings & settings)
 {
   // everything after this point is done on a string with at least 1 char
   std::string key = map_.expand_statement (t_key);
@@ -289,12 +290,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   if (key == "")
     return -1;
 
-  int result = map_.set (key, value);
+  int result = map_.set (key, value, settings);
 
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
 
-  if (transport_ && send_modifieds)
+  if (transport_ && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -324,7 +325,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   const std::string & t_key, 
-  double value, bool send_modifieds)
+  double value, 
+  const Eval_Settings & settings)
 {
   // everything after this point is done on a string with at least 1 char
   std::string key = map_.expand_statement (t_key);
@@ -332,12 +334,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   if (key == "")
     return -1;
 
-  int result = map_.set (key, value);
+  int result = map_.set (key, value, settings);
 
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
-
-  if (transport_ && send_modifieds)
+  
+  if (transport_ && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -366,7 +368,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   const std::string & t_key, 
-  const std::string & value, bool send_modifieds)
+  const std::string & value, 
+  const Eval_Settings & settings)
 {
   // everything after this point is done on a string with at least 1 char
   std::string key = map_.expand_statement (t_key);
@@ -374,12 +377,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   if (key == "")
     return -1;
 
-  int result = map_.set (key, value);
+  int result = map_.set (key, value, settings);
 
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
-
-  if (transport_ && send_modifieds)
+  
+  if (transport_ && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -422,102 +425,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::compile (
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const std::string & expression, 
-                                                bool send_modifieds)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (const std::string & expression,
+        const Wait_Settings & settings)
 {
-  // return an error message
-  if (expression == "")
-    return Madara::Knowledge_Record ();
-
-  // lock the context
-  map_.lock ();
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Knowledge_Base_Impl::wait:" \
-      " waiting on %s\n", expression.c_str ()));
-
-  // resulting tree of the expression
-  Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
-    map_, expression);
-
-  Madara::Knowledge_Record last_value = tree.evaluate ();
-
-  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-      DLINFO "Knowledge_Base_Impl::wait:" \
-      " completed first eval to get %s\n",
-    last_value.to_string ().c_str ()));
-
-  if (transport_ && send_modifieds)
-  {
-    const Madara::Knowledge_Records & modified = map_.get_modified ();
-
-    if (modified.size () > 0)
-    {
-      transport_->send_data (modified);
-      map_.reset_modified ();
-    }
-    else
-    {
-      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-          DLINFO "Knowledge_Base_Impl::wait:" \
-          " no modifications to send during this wait\n"));
-    }
-  }
-  else
-  {
-    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::wait:" \
-        " not sending knowledge mutations \n"));
-  }
-
-  // wait for expression to be true
-  while (last_value.is_false ())
-  {
-    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::wait:" \
-        " last value didn't result in success\n"));
-
-    // we need the context to do an additional release. If release
-    // the context lock, we may have an update event happen
-    // that we cannot be signalled on - which could lead to
-    // permanent, unnecessary deadlock
-    //map_.unlock ();
-    map_.wait_for_change (true);
-
-    // relock - basically we need to evaluate the tree again, and
-    // we can't have a bunch of people changing the variables as 
-    // while we're evaluating the tree.
-    map_.lock ();
-    last_value = tree.evaluate ();
-
-    if (transport_ && send_modifieds)
-    {
-      const Madara::Knowledge_Records & modified = map_.get_modified ();
-
-      if (modified.size () > 0)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
-          DLINFO "Knowledge_Base_Impl::wait:" \
-          " sending %d updates\n", 
-          modified.size ()));
-
-        transport_->send_data (modified);
-        map_.reset_modified ();
-      }
-      else
-      {
-        MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-            DLINFO "Knowledge_Base_Impl::wait:" \
-            " no modifications to send during this wait\n"));
-      }
-    }
-
-    map_.signal ();
-  }
-
-  // release the context lock
-  map_.unlock ();
-  return last_value;
+  Compiled_Expression compiled = compile (expression);
+  return wait (compiled, settings);
 }
 
 Madara::Knowledge_Record
@@ -545,14 +457,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   //Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
   //  map_, expression);
 
-  Madara::Knowledge_Record last_value = ce.expression.evaluate ();
+  Madara::Knowledge_Record last_value = ce.expression.evaluate (settings);
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::wait:" \
       " completed first eval to get %s\n",
     last_value.to_string ().c_str ()));
 
-  if (transport_ && settings.send_modifieds)
+  if (transport_ && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -584,17 +496,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
   ACE_Time_Value poll_frequency;
 
-  if (last_value.is_false ())
+  if (settings.max_wait_time > 0 && last_value.is_false ())
   {
     ACE_Time_Value max_tv;
     poll_frequency.set (settings.poll_frequency);
 
-    if (settings.max_wait_time > 0)
-    {
-      max_tv.set (settings.max_wait_time);
-      maximum = max_tv.sec () * 1000000000;
-      maximum += max_tv.usec () * 1000;
-    }
+    max_tv.set (settings.max_wait_time);
+    maximum = max_tv.sec () * 1000000000;
+    maximum += max_tv.usec () * 1000;
 
     timer.stop ();
     timer.elapsed_time (elapsed);
@@ -625,9 +534,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     // we can't have a bunch of people changing the variables as 
     // while we're evaluating the tree.
     map_.lock ();
-    last_value = ce.expression.evaluate ();
+    last_value = ce.expression.evaluate (settings);
 
-    if (transport_ && settings.send_modifieds)
+    if (transport_ && !settings.delay_sending_modifieds)
     {
       const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -683,48 +592,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const std::string & exp
 
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
-  const std::string & expression, bool send_modifieds)
+  const std::string & expression,
+  const Eval_Settings & settings)
 {
-  Madara::Knowledge_Record last_value;
-
-  if (expression == "")
-    return last_value;
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::evaluate:" \
-        " evaluting %s\n", expression.c_str ()));
-
-  // iterators and tree for evaluation of interpreter results
-  Madara::Expression_Tree::Expression_Tree tree;
-
-  // lock the context from being updated by any ongoing threads
-  map_.lock ();
-
-  // interpret the current expression and then evaluate it
-  tree = interpreter_.interpret (map_, expression);
-  last_value = tree.evaluate ();
-
-  // if we have a transport and we've been asked to send modified knowledge
-  // to any interested parties...
-  if (transport_ && send_modifieds)
-  {
-    const Madara::Knowledge_Records & modified = map_.get_modified ();
-
-    if (modified.size () > 0)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG,
-        DLINFO "Knowledge_Base_Impl::evaluates:" \
-        " sending %d updates\n", 
-        modified.size ()));
-
-      transport_->send_data (modified);
-      map_.reset_modified ();
-    }
-  }
-
-  map_.unlock ();
-
-  return last_value;
+  Compiled_Expression compiled = compile (expression);
+  return evaluate (compiled, settings);
 }
 
 Madara::Knowledge_Record
@@ -750,11 +622,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 
   // interpret the current expression and then evaluate it
   //tree = interpreter_.interpret (map_, expression);
-  last_value = ce.expression.evaluate ();
+  last_value = ce.expression.evaluate (settings);
 
   // if we have a transport and we've been asked to send modified knowledge
   // to any interested parties...
-  if (transport_ && settings.send_modifieds)
+  if (transport_ && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 

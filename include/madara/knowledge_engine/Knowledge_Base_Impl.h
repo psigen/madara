@@ -8,6 +8,7 @@
  * This file contains the Knowledge_Base class
  */
 
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
@@ -32,13 +33,13 @@ namespace Madara
      * @class Eval_Settings
      * @brief Encapsulates settings for an evaluation statement
      **/
-    struct Eval_Settings
+    struct Eval_Settings : public Knowledge_Update_Settings
      {
        /**
         * Constructor
         **/
        Eval_Settings ()
-         : send_modifieds (true),
+         : Knowledge_Update_Settings (), delay_sending_modifieds (false),
            pre_print_statement (""), post_print_statement ("")
        {
        }
@@ -46,12 +47,24 @@ namespace Madara
        /**
         * Constructor
         **/
-       Eval_Settings (bool t_send_modifieds,
+       Eval_Settings (bool t_delay_sending_modifieds,
          std::string t_pre_print_statement,
          std::string t_post_print_statement)
-         : send_modifieds (t_send_modifieds),
+         : Knowledge_Update_Settings (), 
+           delay_sending_modifieds (t_delay_sending_modifieds),
            pre_print_statement (t_pre_print_statement),
            post_print_statement (t_post_print_statement)
+       {
+       }
+       
+       /**
+        * Constructor
+        **/
+       Eval_Settings (const Eval_Settings & rhs)
+         : Knowledge_Update_Settings (rhs), 
+           delay_sending_modifieds (rhs.delay_sending_modifieds),
+           pre_print_statement (rhs.pre_print_statement),
+           post_print_statement (rhs.post_print_statement)
        {
        }
 
@@ -59,7 +72,7 @@ namespace Madara
         * Toggle for sending modifieds in a single update event
         * after each evaluation.
         **/
-       bool send_modifieds;
+       bool delay_sending_modifieds;
 
        /**
         * Statement to print before evaluations
@@ -89,13 +102,22 @@ namespace Madara
        /**
         * Constructor
         **/
-       Wait_Settings (bool t_send_modifieds,
+       Wait_Settings (bool t_delay_sending_modifieds,
          std::string t_pre_print_statement,
          std::string t_post_print_statement,
          double t_poll_frequency, double t_max_wait_time)
-         : Eval_Settings (t_send_modifieds, 
+         : Eval_Settings (t_delay_sending_modifieds, 
               t_pre_print_statement, t_post_print_statement),
            poll_frequency (t_poll_frequency), max_wait_time (t_max_wait_time)
+       {
+       }
+       
+       /**
+        * Copy constructor
+        **/
+       Wait_Settings (const Wait_Settings & rhs)
+         : Eval_Settings (rhs),
+         poll_frequency (rhs.poll_frequency), max_wait_time (rhs.max_wait_time)
        {
        }
 
@@ -293,36 +315,36 @@ namespace Madara
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        settings for applying the update
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, Madara::Knowledge_Record::Integer value, 
-        bool send_modifieds);
+        const Eval_Settings & settings);
       
       /**
        * Sets a knowledge value to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        settings for applying the update
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, double value, 
-        bool send_modifieds);
+        const Eval_Settings & settings);
       
       /**
        * Sets a knowledge value to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        settings for applying the update
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, const std::string & value, 
-        bool send_modifieds);
+        const Eval_Settings & settings);
 
       /**
        * Returns a non-const reference to the Transport Settings
@@ -365,16 +387,17 @@ namespace Madara
        * @return                value of expression
        **/
       Madara::Knowledge_Record evaluate (const std::string & expression);
-
+      
       /**
        * Evaluates an expression
        *
        * @param expression      KaRL expression to evaluate
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        Settings for evaluating and printing
        * @return                value of expression
        **/
-      Madara::Knowledge_Record evaluate (const std::string & expression,
-        bool send_modifieds);
+      Madara::Knowledge_Record evaluate (
+        const std::string & expression,
+        const Eval_Settings & settings);
 
       /**
        * Evaluates an expression
@@ -395,15 +418,18 @@ namespace Madara
        * @return                value of expression
        **/
       Madara::Knowledge_Record wait (const std::string & expression);
-
+      
       /**
-       * Waits for an expression to be non-zero.
+       * Waits for an expression to be non-zero. Provides additional settings
+       * for fine-tuning the time to wait and atomic print statements.
        *
        * @param expression      KaRL expression to wait on
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        Settings for the underlying expression
+       *                        evaluation and printing
        * @return                value of expression
        **/
-      Madara::Knowledge_Record wait (const std::string & expression, bool send_modifieds);
+      Madara::Knowledge_Record wait (const std::string & expression,
+        const Wait_Settings & settings);
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings

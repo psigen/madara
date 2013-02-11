@@ -67,14 +67,15 @@ Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Assignment_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Assignment_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   // get the value from the right side and set the variable's value with it
   //Madara::Knowledge_Record value = right_->evaluate ();
-  left_->set (right_->evaluate ());
+  left_->set (right_->evaluate (settings));
 
   // return the value
-  return left_->evaluate ();
+  return left_->evaluate (settings);
 }
 
 

@@ -62,7 +62,8 @@ Madara::Expression_Tree::Composite_Return_Right_Node::prune (bool & can_change)
 /// the expression tree, and is much faster than the prune function
 /// @ returns    maximum value of the left and right evaluations
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Return_Right_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Return_Right_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   Madara::Knowledge_Record return_value;
 
@@ -71,9 +72,9 @@ Madara::Expression_Tree::Composite_Return_Right_Node::evaluate (void)
        i != nodes_.end (); ++i, ++j)
   {
     if (j + 1 == nodes_.size ())
-      return_value = (*i)->evaluate ();
+      return_value = (*i)->evaluate (settings);
     else
-      (*i)->evaluate ();
+      (*i)->evaluate (settings);
   }
 
   return return_value;

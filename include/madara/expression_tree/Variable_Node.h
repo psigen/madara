@@ -8,6 +8,7 @@
 #include "madara/expression_tree/Component_Node.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 namespace Madara
 {
@@ -36,22 +37,34 @@ namespace Madara
       virtual Madara::Knowledge_Record item (void) const;
 
       /// Sets the value stored in the node.
-      int set (const Madara::Knowledge_Record::Integer & value);
+      int set (const Madara::Knowledge_Record::Integer & value,
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /// Sets the value stored in the node.
-      int set (double value);
+      int set (double value,
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /// Sets the value stored in the node.
-      int set (const std::string & value);
+      int set (const std::string & value,
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /// Sets the value stored in the node.
-      int set (const Madara::Knowledge_Record & value);
+      int set (const Madara::Knowledge_Record & value,
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /// Atomically increment the variable.
-      Madara::Knowledge_Record inc (void);
+      Madara::Knowledge_Record inc (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /// Atomically decrement the variable.
-      Madara::Knowledge_Record dec (void);
+      Madara::Knowledge_Record dec (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
@@ -60,7 +73,8 @@ namespace Madara
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
 
       /// Expands the key (if necessary). This allow for keys to be defined
       /// with other variables inserted (e.g. var{.id} with .id = 2 expands

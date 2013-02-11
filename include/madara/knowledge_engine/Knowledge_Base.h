@@ -9,6 +9,7 @@
  */
 
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/Functions.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
@@ -183,37 +184,37 @@ namespace Madara
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        settings for applying the update
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key,
-        Madara::Knowledge_Record::Integer value,
-        bool send_modifieds);
+        Madara::Knowledge_Record::Integer value, 
+        const Eval_Settings & settings);
        
       /**
        * Sets a knowledge value to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        settings for applying the update
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, double value, 
-        bool send_modifieds);
+        const Eval_Settings & settings);
       
       /**
        * Sets a knowledge value to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        settings for applying the update
        * @return                0 if successful, -1 if key is null, and
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, const std::string & value, 
-        bool send_modifieds);
+        const Eval_Settings & settings);
 
       /**
        * Sets the quality of writing to a certain variable from this entity
@@ -292,22 +293,22 @@ namespace Madara
        **/
       Madara::Knowledge_Record evaluate (
         const std::string & expression);
-
+      
       /**
        * Evaluates an expression
        *
        * @param expression      KaRL expression to evaluate
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        Settings for evaluating and printing
        * @return                value of expression
        **/
       Madara::Knowledge_Record evaluate (
         const std::string & expression,
-        bool send_modifieds);
+        const Eval_Settings & settings);
 
       /**
        * Evaluates an expression
        *
-       * @param expression      KaRL expression to wait on (result of compile)
+       * @param expression      KaRL expression to evaluate (result of compile)
        * @param settings        Settings for evaluating and printing
        * @return                value of expression
        **/
@@ -324,16 +325,18 @@ namespace Madara
        **/
       Madara::Knowledge_Record wait (
         const std::string & expression);
-
+      
       /**
        * Waits for an expression to be non-zero.
+       * Always disseminates modifications.
        *
        * @param expression      KaRL expression to wait on
-       * @param send_modifieds  whether or not to dissemination modifications
+       * @param settings        Settings for the underlying expression
+       *                        evaluation and printing
        * @return                value of expression
        **/
       Madara::Knowledge_Record wait (
-        const std::string & expression, bool send_modifieds);
+        const std::string & expression, const Wait_Settings & settings);
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings

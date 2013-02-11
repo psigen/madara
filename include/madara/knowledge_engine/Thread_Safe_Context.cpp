@@ -68,7 +68,7 @@ int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
   const std::string & key,
   Madara::Knowledge_Record::Integer value,
-  bool modified)
+  const Knowledge_Update_Settings & settings)
 {
   // check for null key
   if (key == "")
@@ -78,19 +78,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   Context_Guard guard (mutex_);
 
   // create the key if it didn't exist
-  map_[key];
-
-  // find the key in the knowledge base. It will be
-  // much faster to use the iterator for modifications
-  // than it will be to look up the key in the map for
-  // everything we want to modify (e.g. map_[key].quality = 1)
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // use a reference so this is easier to read
-  Knowledge_Record & record = found->second;
+  Knowledge_Record & record = map_[key];
 
   // check if we have the appropriate write quality
-  if (record.write_quality < record.quality)
+  if (!settings.always_overwrite && record.write_quality < record.quality)
     return -2;
 
   record.set_value (value);
@@ -99,7 +90,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   // otherwise set the value
   if (key[0] != '.')
   {
-    if (modified)
+    if (!settings.treat_globals_as_locals)
     {
       mark_modified (key, record);
     }
@@ -115,7 +106,7 @@ int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
   const std::string & key,
   double value,
-  bool modified)
+  const Knowledge_Update_Settings & settings)
 {
   // check for null key
   if (key == "")
@@ -125,19 +116,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   Context_Guard guard (mutex_);
 
   // create the key if it didn't exist
-  map_[key];
-
-  // find the key in the knowledge base. It will be
-  // much faster to use the iterator for modifications
-  // than it will be to look up the key in the map for
-  // everything we want to modify (e.g. map_[key].quality = 1)
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // use a reference so this is easier to read
-  Knowledge_Record & record = found->second;
+  Knowledge_Record & record = map_[key];
 
   // check if we have the appropriate write quality
-  if (record.write_quality < record.quality)
+  if (!settings.always_overwrite && record.write_quality < record.quality)
     return -2;
 
   record.set_value (value);
@@ -146,7 +128,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   // otherwise set the value
   if (key[0] != '.')
   {
-    if (modified)
+    if (!settings.treat_globals_as_locals)
     {
       mark_modified (key, record);
     }
@@ -162,7 +144,7 @@ int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
   const std::string & key,
   const std::string & value,
-  bool modified)
+  const Knowledge_Update_Settings & settings)
 {
   // check for null key
   if (key == "")
@@ -172,19 +154,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   Context_Guard guard (mutex_);
 
   // create the key if it didn't exist
-  map_[key];
-
-  // find the key in the knowledge base. It will be
-  // much faster to use the iterator for modifications
-  // than it will be to look up the key in the map for
-  // everything we want to modify (e.g. map_[key].quality = 1)
-  Knowledge_Map::iterator found = map_.find (key);
-
-  // use a reference so this is easier to read
-  Knowledge_Record & record = found->second;
+  Knowledge_Record & record = map_[key];
 
   // check if we have the appropriate write quality
-  if (record.write_quality < record.quality)
+  if (!settings.always_overwrite && record.write_quality < record.quality)
     return -2;
 
   record.set_value (value);
@@ -193,7 +166,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   // otherwise set the value
   if (key[0] != '.')
   {
-    if (modified)
+    if (!settings.treat_globals_as_locals)
     {
       mark_modified (key, record);
     }
@@ -292,7 +265,7 @@ int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   const std::string & key, Madara::Knowledge_Record::Integer value,
   uint32_t quality, uint64_t clock,
-  bool modified)
+  const Knowledge_Update_Settings & settings)
 {
   int result = 1;
 
@@ -307,10 +280,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   Knowledge_Map::iterator found = map_.find (key);
 
   // if it's found, then compare the value
-  if (found != map_.end ())
+  if (!settings.always_overwrite && found != map_.end ())
   {
     // setup a rhs
-    Madara::Knowledge_Record rhs (value);
+    Madara::Knowledge_Record rhs;
+    rhs.set_value (value);
 
     // if we do not have enough quality to update the variable
     // return -2
@@ -350,7 +324,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     // otherwise set the value
     if (key[0] != '.')
     {
-      if (modified)
+      if (!settings.treat_globals_as_locals)
       {
         mark_modified (key, record);
       }
@@ -371,7 +345,7 @@ int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   const std::string & key, double value,
   uint32_t quality, uint64_t clock,
-  bool modified)
+  const Knowledge_Update_Settings & settings)
 {
   int result = 1;
 
@@ -386,7 +360,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   Knowledge_Map::iterator found = map_.find (key);
 
   // if it's found, then compare the value
-  if (found != map_.end ())
+  if (!settings.always_overwrite && found != map_.end ())
   {
     // setup a rhs
     Madara::Knowledge_Record rhs;
@@ -430,7 +404,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     // otherwise set the value
     if (key[0] != '.')
     {
-      if (modified)
+      if (!settings.treat_globals_as_locals)
       {
         mark_modified (key, record);
       }
@@ -451,7 +425,7 @@ int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   const std::string & key, const std::string & value,
   uint32_t quality, uint64_t clock,
-  bool modified)
+  const Knowledge_Update_Settings & settings)
 {
   int result = 1;
 
@@ -466,7 +440,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
   Knowledge_Map::iterator found = map_.find (key);
 
   // if it's found, then compare the value
-  if (found != map_.end ())
+  if (!settings.always_overwrite && found != map_.end ())
   {
     // setup a rhs
     Madara::Knowledge_Record rhs;
@@ -510,7 +484,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     // otherwise set the value
     if (key[0] != '.')
     {
-      if (modified)
+      if (!settings.treat_globals_as_locals)
       {
         mark_modified (key, record);
       }

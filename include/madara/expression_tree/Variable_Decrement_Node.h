@@ -37,7 +37,8 @@ namespace Madara
       virtual Madara::Knowledge_Record item (void) const;
 
       /// Atomically increment the variable.
-      inline Madara::Knowledge_Record compute (void)
+      inline Madara::Knowledge_Record compute (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
       {
         Madara::Knowledge_Record * record = record_;
 
@@ -47,7 +48,8 @@ namespace Madara
 
         // notice that we assume the context is locked
         // check if we have the appropriate write quality
-        if (record->write_quality < record->quality)
+        if (!settings.always_overwrite &&
+            record->write_quality < record->quality)
           return *record;
 
         // cheaper to read than write, so check to see if
@@ -58,9 +60,9 @@ namespace Madara
         if (!rhs_)
           *record -= this->value_;
         else
-          *record -= rhs_->evaluate ();
-
-        if (key_[0] != '.')
+          *record -= rhs_->evaluate (settings);
+        
+        if (key_[0] != '.' && !settings.treat_globals_as_locals)
         {
           context_.mark_modified (key_, *record);
         }
@@ -76,7 +78,8 @@ namespace Madara
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
 
       /// Expands the key (if necessary). This allow for keys to be defined
       /// with other variables inserted (e.g. var{.id} with .id = 2 expands

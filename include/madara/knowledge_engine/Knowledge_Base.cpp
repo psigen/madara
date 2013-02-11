@@ -119,7 +119,8 @@ Madara::Knowledge_Engine::Knowledge_Base::set (
   const std::string & key, 
   Madara::Knowledge_Record::Integer value)
 {
-  return impl_->set (key, value, true);
+  Eval_Settings settings;
+  return impl_->set (key, value, settings);
 }
 
 int
@@ -127,7 +128,8 @@ Madara::Knowledge_Engine::Knowledge_Base::set (
   const std::string & key, 
   double value)
 {
-  return impl_->set (key, value, true);
+  Eval_Settings settings;
+  return impl_->set (key, value, settings);
 }
 
 int
@@ -135,28 +137,32 @@ Madara::Knowledge_Engine::Knowledge_Base::set (
   const std::string & key, 
   const std::string & value)
 {
-  return impl_->set (key, value, true);
+  Eval_Settings settings;
+  return impl_->set (key, value, settings);
 }
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
-  Madara::Knowledge_Record::Integer value, bool send_modifieds)
+  Madara::Knowledge_Record::Integer value,
+  const Eval_Settings & settings)
 {
-  return impl_->set (key, value, send_modifieds);
+  return impl_->set (key, value, settings);
 }
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
-  double value, bool send_modifieds)
+  double value,
+  const Eval_Settings & settings)
 {
-  return impl_->set (key, value, send_modifieds);
+  return impl_->set (key, value, settings);
 }
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
-  const std::string & value, bool send_modifieds)
+  const std::string & value,
+  const Eval_Settings & settings)
 {
-  return impl_->set (key, value, send_modifieds);
+  return impl_->set (key, value, settings);
 }
 
 
@@ -227,14 +233,8 @@ Madara::Knowledge_Engine::Knowledge_Base::transport_settings (void)
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::wait (const std::string & expression)
 {
-  return impl_->wait (expression, true);
-}
-
-Madara::Knowledge_Record
-Madara::Knowledge_Engine::Knowledge_Base::wait (const std::string & expression, 
-                                                bool send_modifieds)
-{
-  return impl_->wait (expression, send_modifieds);
+  Wait_Settings settings;
+  return impl_->wait (expression, settings);
 }
 
 Madara::Knowledge_Record
@@ -288,15 +288,17 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   const std::string & expression)
 {
-  return impl_->evaluate (expression, true);
+  Eval_Settings settings;
+  return impl_->evaluate (expression, settings);
 }
 
 // evaluate a knowledge expression and choose to send any modifications
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
-  const std::string & expression, bool send_modifieds)
+  const std::string & expression,
+  const Eval_Settings & settings)
 {
-  return impl_->evaluate (expression, send_modifieds);
+  return impl_->evaluate (expression, settings);
 }
 
 // evaluate a knowledge expression and choose to send any modifications

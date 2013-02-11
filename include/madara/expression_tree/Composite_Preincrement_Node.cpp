@@ -68,17 +68,18 @@ Madara::Expression_Tree::Composite_Preincrement_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Preincrement_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Preincrement_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   Variable_Node * right = dynamic_cast <Variable_Node *> (this->right_);
   if (right)
   {
-    return right->inc ();
+    return right->inc (settings);
   }
   
   // if we get to this point, we've somehow got a predecrement of a non-var.
   // We go along with this with a temporary record, but this is highly unusual.
-  Madara::Knowledge_Record record (this->right_->evaluate ());
+  Madara::Knowledge_Record record (this->right_->evaluate (settings));
   ++record;
   
   return record;

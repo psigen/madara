@@ -59,7 +59,8 @@ namespace Madara
        * Evaluates the expression tree. 
        * @return    value of current contained expression tree
        **/
-      virtual Madara::Knowledge_Record evaluate (void) = 0;
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings) = 0;
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

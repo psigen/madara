@@ -81,11 +81,12 @@ Madara::Expression_Tree::Composite_Subtract_Node::prune (bool & can_change)
 /// Evaluates the node and its children. This does not prune any of
 /// the expression tree, and is much faster than the prune function
 Madara::Knowledge_Record 
-Madara::Expression_Tree::Composite_Subtract_Node::evaluate (void)
+Madara::Expression_Tree::Composite_Subtract_Node::evaluate (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   // note we do not check if left or right are null. This should be checked
   // during prune or an earlier phase. Evaluate is all about speed.
-  return left_->evaluate () - right_->evaluate ();
+  return left_->evaluate (settings) - right_->evaluate (settings);
 }
 
 // accept a visitor

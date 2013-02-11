@@ -47,7 +47,8 @@ namespace Madara
        *            evaluate to non-zero. Right is not evaluated
        *            if left expression returns zero.
        **/
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
 
       /** 
        * Accepts a visitor subclassed from the Visitor class

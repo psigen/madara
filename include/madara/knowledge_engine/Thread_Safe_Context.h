@@ -19,6 +19,7 @@
 
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Function_Map.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 namespace Madara
 {
@@ -66,72 +67,78 @@ namespace Madara
        * Atomically sets the value of a variable to an integer.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
-       * @param   modified  send modifications after applying the update
+       * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
       int set (const std::string & key,
         Madara::Knowledge_Record::Integer value, 
-        bool modified = true);
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Atomically sets the value of a variable to a double.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
-       * @param   modified  send modifications after applying the update
+       * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
       int set (const std::string & key,
         double value, 
-        bool modified = true);
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Atomically sets the value of a variable to a string
        * @param   value     new value of the variable
-       * @param   modified  send modifications after applying the update
+       * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
       int set (const std::string & key,
         const std::string & value, 
-        bool modified = true);
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Atomically sets if the variable value will be different
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
-       * @param   modified  send modifications after applying the update
+       * @param   settings  settings for applying the update
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
        **/
       int set_if_unequal (const std::string & key,
         Madara::Knowledge_Record::Integer value, 
         uint32_t quality, uint64_t clock, 
-        bool modified = true);
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Atomically sets if the variable value will be different
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
-       * @param   modified  send modifications after applying the update
+       * @param   settings  settings for applying the update
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
        **/
       int set_if_unequal (const std::string & key,
         double value, 
         uint32_t quality, uint64_t clock, 
-        bool modified = true);
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
       
       /**
        * Atomically sets if the variable value will be different
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
-       * @param   modified  send modifications after applying the update
+       * @param   settings  settings for applying the update
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
        **/
       int set_if_unequal (const std::string & key,
         const std::string & value, 
         uint32_t quality, uint64_t clock, 
-        bool modified = true);
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Atomically gets quality of a variable
@@ -203,9 +210,12 @@ namespace Madara
       /**
        * Atomically increments the value of the variable
        * @param   key            unique identifier of the variable
+       * @param   settings  settings for applying the update
        * @return                 new value of variable
        **/
-      Madara::Knowledge_Record inc (const std::string & key);
+      Madara::Knowledge_Record inc (const std::string & key, 
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Wait for a change to happen to the context.
@@ -216,9 +226,12 @@ namespace Madara
       /**
        * Atomically decrements the value of the variable
        * @param   key            unique identifier of the variable
+       * @param   settings  settings for applying the update
        * @return                 new value of variable
        **/
-      Madara::Knowledge_Record dec (const std::string & key);
+      Madara::Knowledge_Record dec (const std::string & key, 
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Atomically checks to see if a variable already exists
@@ -260,17 +273,22 @@ namespace Madara
       /**
        * Atomically increments the Lamport clock and returns the new
        * clock time (intended for sending knowledge updates).
+       * @param   settings  settings for applying the update
        * @return        new clock time
        **/
-      uint64_t inc_clock (void);
+      uint64_t inc_clock (const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Atomically increments the Lamport clock of a variable and returns the
        * new clock time (intended for sending knowledge updates).
        * @param   key   unique identifier of the variable
+       * @param   settings  settings for applying the update
        * @return        new clock time for variable
        **/
-      uint64_t inc_clock (const std::string & key);
+      uint64_t inc_clock (const std::string & key,
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
 
       /**
        * Atomically sets the lamport clock.
@@ -333,19 +351,6 @@ namespace Madara
        * @return            the mapped external function
        **/
       Function * retrieve_function (const std::string & name);
-
-      /**
-       * Sets on data received logic. This function must be called by
-       * the transport after data updates are applied to the knowledge base.
-       * @param   logic     logic to execute after every data update
-       **/
-      void on_data_received (const std::string & logic);
-
-      /**
-       * Executes the on_data_received logic and returns the result
-       * @return           the result of the logic execution
-       */
-      Knowledge_Record on_data_received (void);
 
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;

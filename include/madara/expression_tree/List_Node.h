@@ -41,7 +41,8 @@ namespace Madara
 
       /// Evaluates the node and its children. This does not prune any of
       /// the expression tree, and is much faster than the prune function
-      virtual Madara::Knowledge_Record evaluate (void);
+      virtual Madara::Knowledge_Record evaluate (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings);
       
       /// Define the @a accept() operation used for the Visitor pattern.
       virtual void accept (Visitor &visitor) const; 
