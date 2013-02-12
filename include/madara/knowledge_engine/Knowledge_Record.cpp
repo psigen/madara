@@ -7,6 +7,7 @@
 #include "madara/utility/Utility.h"
 #include <sstream>
 #include <algorithm>
+#include <stdlib.h>
 
 Madara::Knowledge_Record::Knowledge_Record ()
       : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
@@ -1264,12 +1265,17 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   // format is [key_size | key | type | value_size | value]
 
   uint32_t key_size = key.size () + 1;
-  uint32_t * size = 0;
+  char * size_location = 0;
+  uint32_t size_intermediate = 0;
+  uint32_t uint32_temp;
+  Integer integer_temp;
+
 
   // Remove the key size from the buffer
   if (buffer_remaining >= sizeof (key_size))
   {
-    *(uint32_t *) buffer = Madara::Utility::endian_swap (key_size);
+    uint32_temp = Madara::Utility::endian_swap (key_size);
+    memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
     buffer += sizeof (key_size);
   }
   buffer_remaining -= sizeof (key_size);
@@ -1288,7 +1294,8 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   // Remove the type of value from the buffer
   if (buffer_remaining >= sizeof (type_))
   {
-    *(uint32_t *) buffer = Madara::Utility::endian_swap (type_);
+    uint32_temp = Madara::Utility::endian_swap (type_);
+    memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
     buffer += sizeof (type_);
   }
   buffer_remaining -= sizeof (type_);
@@ -1298,10 +1305,11 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   {
     // set a pointer to size, in case we need to modify it during
     // value copy (e.g. during double conversion)
-    size = (uint32_t *)buffer;
-
-    // this assignment is fixed in the case of type == DOUBLE later
-    *size = size_;
+    size_location = buffer;
+    size_intermediate = size_;
+    
+    uint32_temp = Madara::Utility::endian_swap (size_);
+    memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
 
     // note that we do not encode the size yet because it may change
     // and we need the architectural-specific version for other checks
@@ -1323,8 +1331,8 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
     if (buffer_remaining >= size_)
     {
       // convert integers to network byte order
-      Integer * value = (Integer *)buffer;
-      *value = Madara::Utility::endian_swap (int_value_);
+      integer_temp = Madara::Utility::endian_swap (int_value_);
+      memcpy (buffer, &integer_temp, sizeof (integer_temp));
     }
   }
   else if (type_ == DOUBLE)
@@ -1335,23 +1343,23 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
     std::string converted (to_string ());
 
     // update size to be the size of the string instead of the double
-    *size = (uint32_t) (converted.length () + 1);
+    size_intermediate = (uint32_t) (converted.length () + 1);
       
     // strings do not have to be converted
-    if (buffer_remaining >= *size)
+    if (buffer_remaining >= size_intermediate)
     {
       // copy the string to buffer and make sure it is ended in null.
-      strncpy (buffer, converted.c_str (), *size - 1);
-      buffer[*size - 1] = 0;
-
+      strncpy (buffer, converted.c_str (), size_intermediate - 1);
+      buffer[size_intermediate - 1] = 0;
     }
   }
 
-  if (size)
+  if (size_location)
   {
-    buffer_remaining -= *size;
-    buffer += *size;
-    *size = (uint32_t) Madara::Utility::endian_swap (*size);
+    buffer_remaining -= size_intermediate;
+    buffer += size_intermediate;
+    size_intermediate = (uint32_t) Madara::Utility::endian_swap (size_intermediate);
+    memcpy (size_location, &size_intermediate, sizeof (size_intermediate));
   }
 
   return buffer;
@@ -1369,7 +1377,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   // Remove the key size from the buffer
   if (buffer_remaining >= sizeof (key_size))
   {
-    key_size = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&key_size, buffer, sizeof (key_size)); 
+    key_size = Madara::Utility::endian_swap (key_size);
     buffer += sizeof (key_size);
   }
   buffer_remaining -= sizeof (key_size);
@@ -1387,7 +1396,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   // Remove the type of value from the buffer
   if (buffer_remaining >= sizeof (type_))
   {
-    type_ = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&type_, buffer, sizeof (type_)); 
+    type_ = Madara::Utility::endian_swap (type_);
     buffer += sizeof (type_);
   }
   buffer_remaining -= sizeof (type_);
@@ -1395,7 +1405,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   // Remove the size of value from the buffer
   if (buffer_remaining >= sizeof (size_))
   {
-    size_ = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&size_, buffer, sizeof (size_)); 
+    size_ = Madara::Utility::endian_swap (size_);
     buff_value_size = size_;
     buffer += sizeof (size_);
   }
@@ -1412,7 +1423,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   
     else if (type_ == INTEGER)
     {
-      int_value_ = Madara::Utility::endian_swap (*((Integer *) buffer));
+      memcpy (&int_value_, buffer, sizeof (int_value_)); 
+      int_value_ = Madara::Utility::endian_swap (int_value_);
     }
 
     else if (type_ == DOUBLE)
