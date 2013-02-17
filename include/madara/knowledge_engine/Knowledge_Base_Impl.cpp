@@ -417,11 +417,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::compile (
       DLINFO "Knowledge_Base_Impl::compile:" \
       " compiling %s\n", expression.c_str ()));
 
-  Compiled_Expression ce;
-  ce.logic = expression;
-  ce.expression = interpreter_.interpret (map_, expression);
-
-  return ce;
+  return map_.compile (expression);
 }
 
 Madara::Knowledge_Record
@@ -579,17 +575,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   return last_value;
 }
 
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::add_rule (const std::string & expression_copy)
-{
-  std::string expression (expression_copy);
-  Madara::Utility::strip_white_space (expression);
-
-  evaluate (expression);
-
-  rules_.push_back (expression);
-}
-
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const std::string & expression,
@@ -649,28 +634,4 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   map_.unlock ();
 
   return last_value;
-}
-
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_rules (
-  unsigned int level) const
-{
-  MADARA_TRACE (ACE_TEXT ("Knowledge_Base_Impl::print_rules"));
-  
-  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_INFO,
-        "Rules in Knowledge Base:\n"));
-
-  for (Knowledge_Rules::const_iterator i = rules_.begin ();
-       i != rules_.end (); ++i)
-  {
-    MADARA_DEBUG (level, (LM_INFO,
-        "%s\n", (*i).c_str ()));
-  }
-}
-
-// Defines a function
-void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
-  const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
-{
-  map_.define_function (name, func);
 }

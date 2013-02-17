@@ -5,11 +5,13 @@
 
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/expression_tree/Interpreter.h"
 
 
 // constructor
 Madara::Knowledge_Engine::Thread_Safe_Context::Thread_Safe_Context ()
-: changed_ (mutex_), clock_ (0)
+  : changed_ (mutex_), clock_ (0),
+  interpreter_ (new Madara::Expression_Tree::Interpreter ())
 {
   expansion_splitters_.push_back ("{");
   expansion_splitters_.push_back ("}");
@@ -18,6 +20,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::Thread_Safe_Context ()
 // destructor
 Madara::Knowledge_Engine::Thread_Safe_Context::~Thread_Safe_Context (void)
 {
+  delete interpreter_;
 }
 
 // return the value of a variable
@@ -584,7 +587,39 @@ void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
 {
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
   functions_[name] = func;
+}
+
+
+/**
+  * Defines a MADARA KaRL function
+  * @param  name       name of the function
+  * @param  expression KaRL function body       
+  **/
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
+  const std::string & expression)
+{
+  Compiled_Expression compiled = compile (expression);
+  define_function (name, compiled);
+}
+      
+/**
+  * Defines a MADARA KaRL function
+  * @param  name       name of the function
+  * @param  expression KaRL function body       
+  **/
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
+  const Compiled_Expression & expression)
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  functions_[name].function_contents_ = expression.expression;
 }
 
 
@@ -598,5 +633,24 @@ Madara::Knowledge_Engine::Function *
 Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_function (
        const std::string & name)
 {
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
   return &functions_[name];
+}
+
+
+Madara::Knowledge_Engine::Compiled_Expression
+Madara::Knowledge_Engine::Thread_Safe_Context::compile (
+  const std::string & expression)
+{
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Thread_Safe_Context::compile:" \
+      " compiling %s\n", expression.c_str ()));
+
+  Compiled_Expression ce;
+  ce.logic = expression;
+  ce.expression = interpreter_->interpret (*this, expression);
+
+  return ce;
 }

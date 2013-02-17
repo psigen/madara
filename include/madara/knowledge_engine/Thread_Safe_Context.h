@@ -20,9 +20,15 @@
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Function_Map.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
+#include "madara/knowledge_engine/Compiled_Expression.h"
 
 namespace Madara
 {
+  namespace Expression_Tree
+  {
+    class Interpreter;
+  }
+
   namespace Knowledge_Engine
   { 
     /**
@@ -338,7 +344,7 @@ namespace Madara
 
 
       /**
-       * Defines a function
+       * Defines an external function
        * @param  name       name of the function
        * @param  func       external function to call with this name
        **/
@@ -346,11 +352,36 @@ namespace Madara
         VALUE_TYPE (*func) (Function_Arguments &, Variables &));
 
       /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const std::string & expression);
+      
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const Compiled_Expression & expression);
+
+      /**
        * Retrieves an external function
        * @param  name       name of the function to retrieve
        * @return            the mapped external function
        **/
       Function * retrieve_function (const std::string & name);
+      
+      /**
+       * Compiles a KaRL expression into an expression tree
+       *
+       * @param expression         expression to compile
+       * @return                   compiled, optimized expression tree
+       **/
+      Compiled_Expression
+        compile (const std::string & expression);
 
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
@@ -365,7 +396,9 @@ namespace Madara
 
       /// map of function names to functions
       Function_Map functions_;
-
+      
+      /// KaRL interpreter
+      Madara::Expression_Tree::Interpreter  *   interpreter_;
     };
   }
 }

@@ -93,10 +93,11 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
     return function_->extern_func_ (args, variables);
   else
   {
-    Madara::Knowledge_Record zero;
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
-      "Function %s has not been defined.\n", name_.c_str ()));
-    return zero;
+    return function_->function_contents_.evaluate ();
+    //Madara::Knowledge_Record zero;
+    //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
+    //  "Function %s has not been defined.\n", name_.c_str ()));
+    //return zero;
   }
 }
 

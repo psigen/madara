@@ -150,38 +150,6 @@ namespace Madara
       /**
        * Sets a knowledge value to a specified value
        *
-       * @param key          knowledge variable location
-       * @param value        value to set at location
-       * @return             0 if successful, -1 if key is null, and
-       *                     -2 if quality isn't high enough
-       **/
-      int set (const std::string & key,
-        Madara::Knowledge_Record::Integer value =
-        Madara::Knowledge_Record::MODIFIED);
-      
-      /**
-       * Sets a knowledge value to a specified value
-       *
-       * @param key          knowledge variable location
-       * @param value        value to set at location
-       * @return             0 if successful, -1 if key is null, and
-       *                     -2 if quality isn't high enough
-       **/
-      int set (const std::string & key, double value);
-      
-      /**
-       * Sets a knowledge value to a specified value
-       *
-       * @param key          knowledge variable location
-       * @param value        value to set at location
-       * @return             0 if successful, -1 if key is null, and
-       *                     -2 if quality isn't high enough
-       **/
-      int set (const std::string & key, const std::string & value);
-
-      /**
-       * Sets a knowledge value to a specified value
-       *
        * @param key             knowledge variable location
        * @param value           value to set at location
        * @param settings        settings for applying the update
@@ -189,8 +157,9 @@ namespace Madara
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key,
-        Madara::Knowledge_Record::Integer value, 
-        const Eval_Settings & settings);
+        Madara::Knowledge_Record::Integer value = 
+          Madara::Knowledge_Record::MODIFIED, 
+        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
        
       /**
        * Sets a knowledge value to a specified value
@@ -202,7 +171,7 @@ namespace Madara
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, double value, 
-        const Eval_Settings & settings);
+        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
       
       /**
        * Sets a knowledge value to a specified value
@@ -214,7 +183,7 @@ namespace Madara
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, const std::string & value, 
-        const Eval_Settings & settings);
+        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
 
       /**
        * Sets the quality of writing to a certain variable from this entity
@@ -286,15 +255,6 @@ namespace Madara
       bool exists (const std::string & key) const;
 
       /**
-       * Evaluates an expression. Always disseminates modifications.
-       *
-       * @param expression      KaRL expression to evaluate
-       * @return                value of expression
-       **/
-      Madara::Knowledge_Record evaluate (
-        const std::string & expression);
-      
-      /**
        * Evaluates an expression
        *
        * @param expression      KaRL expression to evaluate
@@ -303,7 +263,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record evaluate (
         const std::string & expression,
-        const Eval_Settings & settings);
+        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
 
       /**
        * Evaluates an expression
@@ -314,18 +274,8 @@ namespace Madara
        **/
       Madara::Knowledge_Record evaluate (
         Compiled_Expression & expression,
-        const Eval_Settings & settings);
+        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
 
-      /**
-       * Waits for an expression to be non-zero.
-       * Always disseminates modifications.
-       *
-       * @param expression      KaRL expression to wait on
-       * @return                value of expression
-       **/
-      Madara::Knowledge_Record wait (
-        const std::string & expression);
-      
       /**
        * Waits for an expression to be non-zero.
        * Always disseminates modifications.
@@ -336,7 +286,8 @@ namespace Madara
        * @return                value of expression
        **/
       Madara::Knowledge_Record wait (
-        const std::string & expression, const Wait_Settings & settings);
+        const std::string & expression,
+        const Wait_Settings & settings = DEFAULT_WAIT_SETTINGS);
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings
@@ -348,7 +299,8 @@ namespace Madara
        * @return                value of expression
        **/
       Madara::Knowledge_Record wait (
-        Compiled_Expression & expression, const Wait_Settings & settings);
+        Compiled_Expression & expression,
+        const Wait_Settings & settings = DEFAULT_WAIT_SETTINGS);
 
       /**
        * Applies current time and modified to all global variables and tries
@@ -404,6 +356,22 @@ namespace Madara
        **/
       void define_function (const std::string & name,
         VALUE_TYPE (*func) (Function_Arguments &, Variables &));
+      
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const std::string & expression);
+      
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const Compiled_Expression & expression);
 
     private:
 

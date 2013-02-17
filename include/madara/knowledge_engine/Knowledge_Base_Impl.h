@@ -8,6 +8,8 @@
  * This file contains the Knowledge_Base class
  */
 
+#include "madara/knowledge_engine/Compiled_Expression.h"
+#include "madara/knowledge_engine/Wait_Settings.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/MADARA_export.h"
@@ -15,7 +17,6 @@
 #include "madara/knowledge_engine/Files.h"
 #include "madara/transport/Transport.h"
 #include "madara/expression_tree/Interpreter.h"
-#include "madara/knowledge_engine/Compiled_Expression.h"
 #include "ace/SOCK_Acceptor.h"
 
 #include <ostream>
@@ -28,109 +29,6 @@ namespace Madara
 
   namespace Knowledge_Engine
   {
-
-    /**
-     * @class Eval_Settings
-     * @brief Encapsulates settings for an evaluation statement
-     **/
-    struct Eval_Settings : public Knowledge_Update_Settings
-     {
-       /**
-        * Constructor
-        **/
-       Eval_Settings ()
-         : Knowledge_Update_Settings (), delay_sending_modifieds (false),
-           pre_print_statement (""), post_print_statement ("")
-       {
-       }
-
-       /**
-        * Constructor
-        **/
-       Eval_Settings (bool t_delay_sending_modifieds,
-         std::string t_pre_print_statement,
-         std::string t_post_print_statement)
-         : Knowledge_Update_Settings (), 
-           delay_sending_modifieds (t_delay_sending_modifieds),
-           pre_print_statement (t_pre_print_statement),
-           post_print_statement (t_post_print_statement)
-       {
-       }
-       
-       /**
-        * Constructor
-        **/
-       Eval_Settings (const Eval_Settings & rhs)
-         : Knowledge_Update_Settings (rhs), 
-           delay_sending_modifieds (rhs.delay_sending_modifieds),
-           pre_print_statement (rhs.pre_print_statement),
-           post_print_statement (rhs.post_print_statement)
-       {
-       }
-
-       /**
-        * Toggle for sending modifieds in a single update event
-        * after each evaluation.
-        **/
-       bool delay_sending_modifieds;
-
-       /**
-        * Statement to print before evaluations
-        **/
-       std::string pre_print_statement;
-
-       /**
-        * Statement to print after evaluations
-        **/
-       std::string post_print_statement;
-     };
-
-    /**
-     * @class Wait_Settings
-     * @brief Encapsulates settings for a wait statement
-     **/
-    struct Wait_Settings : public Eval_Settings
-     {
-       /**
-        * Constructor
-        **/
-       Wait_Settings ()
-         : Eval_Settings (), poll_frequency (0.010), max_wait_time (-1.0)
-       {
-       }
-
-       /**
-        * Constructor
-        **/
-       Wait_Settings (bool t_delay_sending_modifieds,
-         std::string t_pre_print_statement,
-         std::string t_post_print_statement,
-         double t_poll_frequency, double t_max_wait_time)
-         : Eval_Settings (t_delay_sending_modifieds, 
-              t_pre_print_statement, t_post_print_statement),
-           poll_frequency (t_poll_frequency), max_wait_time (t_max_wait_time)
-       {
-       }
-       
-       /**
-        * Copy constructor
-        **/
-       Wait_Settings (const Wait_Settings & rhs)
-         : Eval_Settings (rhs),
-         poll_frequency (rhs.poll_frequency), max_wait_time (rhs.max_wait_time)
-       {
-       }
-
-       /**
-        * Frequency to poll an expression for truth
-        **/
-       double poll_frequency;
-
-       /**
-        * Maximum time to wait for an expression to become true
-        **/
-       double max_wait_time;
-     };
 
     /**
      * @class Knowledge_Base_Impl
@@ -369,9 +267,6 @@ namespace Madara
        **/
       bool exists (const std::string & key) const;
 
-      /// Add rule to the knowledge base (preferred method for data entry)
-      void add_rule (const std::string & expression);
-
       /**
        * Sets the quality of writing to a certain variable from this entity
        *
@@ -444,12 +339,6 @@ namespace Madara
         const Wait_Settings & settings);
 
       /**
-       * Prints the permanent knowledge rules (unimplemented)
-       * @param   level    level to log the knowledge at
-       **/
-      void print_rules (unsigned int level) const;
-
-      /**
        * Prints knowledge variables and values at a logging level
        * @param   level    level to log the knowledge at
        **/
@@ -501,6 +390,22 @@ namespace Madara
        **/
       void define_function (const std::string & name,
         VALUE_TYPE (*func) (Function_Arguments &, Variables &));
+      
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const std::string & expression);
+      
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const Compiled_Expression & expression);
 
     private:
       /**
@@ -508,23 +413,12 @@ namespace Madara
        **/
       void setup_uniquehostport (const std::string & host);
 
-      ::std::vector< std::string> statement_splitters_;
-      ::std::vector< std::string> assignment_splitters_;
-      ::std::vector< std::string> implies_splitters_;
-      ::std::vector< std::string> conditional_splitters_;
-      ::std::vector< std::string> comparison_splitters_;
-
-
       Thread_Safe_Context           map_;
-      Knowledge_Rules               rules_;
       ACE_SOCK_Acceptor             unique_bind_;
       std::string                   id_;
-      //std::string                   domain_name_;
-      //int                           transport_type_;
       Madara::Transport::Settings   settings_;
       Files                         files_;
 
-      Madara::Expression_Tree::Interpreter     interpreter_;
       Madara::Transport::Base *     transport_;
     };
   }

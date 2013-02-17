@@ -105,10 +105,6 @@ namespace Madara
        * @param    i             current position in expression
        * @param    accumulated_precedence  current precedence
        * @param    list          list of symbols to insert for loop into
-       * @param    precondition  (x ; _ ; _) {_} before loop
-       * @param    condition     (_ ; x ; _) {_} condition of loop
-       * @param    postcondition (_ ; _ ; x) {_} after body
-       * @param    body          (_ ; _ ; _) {x} iterated body of loop
        **/
       void handle_for_loop (
         Madara::Knowledge_Engine::Thread_Safe_Context &context,

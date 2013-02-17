@@ -115,33 +115,6 @@ Madara::Knowledge_Engine::Knowledge_Base::compile (
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (
-  const std::string & key, 
-  Madara::Knowledge_Record::Integer value)
-{
-  Eval_Settings settings;
-  return impl_->set (key, value, settings);
-}
-
-int
-Madara::Knowledge_Engine::Knowledge_Base::set (
-  const std::string & key, 
-  double value)
-{
-  Eval_Settings settings;
-  return impl_->set (key, value, settings);
-}
-
-int
-Madara::Knowledge_Engine::Knowledge_Base::set (
-  const std::string & key, 
-  const std::string & value)
-{
-  Eval_Settings settings;
-  return impl_->set (key, value, settings);
-}
-
-int
 Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
   Madara::Knowledge_Record::Integer value,
   const Eval_Settings & settings)
@@ -231,13 +204,6 @@ Madara::Knowledge_Engine::Knowledge_Base::transport_settings (void)
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Knowledge_Base::wait (const std::string & expression)
-{
-  Wait_Settings settings;
-  return impl_->wait (expression, settings);
-}
-
-Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::wait (
   Compiled_Expression & expression, 
   const Wait_Settings & settings)
@@ -283,15 +249,6 @@ Madara::Knowledge_Engine::Knowledge_Base::release (void)
   impl_->release ();
 }
 
-// evaluate a knowledge expression and send any modifications
-Madara::Knowledge_Record
-Madara::Knowledge_Engine::Knowledge_Base::evaluate (
-  const std::string & expression)
-{
-  Eval_Settings settings;
-  return impl_->evaluate (expression, settings);
-}
-
 // evaluate a knowledge expression and choose to send any modifications
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::evaluate (
@@ -316,4 +273,29 @@ void Madara::Knowledge_Engine::Knowledge_Base::define_function (
   const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
 {
   impl_->define_function (name, func);
+}
+
+
+/**
+  * Defines a MADARA KaRL function
+  * @param  name       name of the function
+  * @param  expression KaRL function body       
+  **/
+void
+Madara::Knowledge_Engine::Knowledge_Base::define_function (const std::string & name,
+  const std::string & expression)
+{
+  impl_->define_function (name, expression);
+}
+      
+/**
+  * Defines a MADARA KaRL function
+  * @param  name       name of the function
+  * @param  expression KaRL function body       
+  **/
+void
+Madara::Knowledge_Engine::Knowledge_Base::define_function (const std::string & name,
+  const Compiled_Expression & expression)
+{
+  impl_->define_function (name, expression);
 }

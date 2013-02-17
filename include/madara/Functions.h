@@ -6,6 +6,7 @@
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
+#include "madara/expression_tree/Expression_Tree.h"
 
 /**
  * @file Functions.h
@@ -173,9 +174,20 @@ namespace Madara
         : extern_func_ (extern_func)
       {
       }
+      
+      /**
+       * Constructor for function pointer
+       **/
+      Function (const Madara::Expression_Tree::Expression_Tree & function_contents)
+        : function_contents_ (function_contents)
+      {
+      }
 
       // internal function pointer
       VALUE_TYPE (*extern_func_) (Function_Arguments &, Variables &);
+
+      // expression tree
+      Madara::Expression_Tree::Expression_Tree function_contents_;
     };
     
   }

@@ -17,6 +17,9 @@ namespace Madara
 {
   namespace Knowledge_Engine
   {
+    class Thread_Safe_Context;
+    class Knolwedge_Base_Impl;
+
     /**
      * @class Compiled_Expression
      * @brief Compiled, optimized KaRL logic
@@ -25,7 +28,9 @@ namespace Madara
     {
     public:
       //class Knowledge_Base_Impl;
+      friend class Thread_Safe_Context;
       friend class Knowledge_Base_Impl;
+
       /**
        * Constructor
        **/

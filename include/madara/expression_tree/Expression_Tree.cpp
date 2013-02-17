@@ -226,7 +226,10 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Expression_Tree::evaluate (
   const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
-  return root_->evaluate (settings);
+  if (root_.get_ptr () != 0)
+    return root_->evaluate (settings);
+  else
+    return Madara::Knowledge_Record::Integer (0);
 }
 
 

@@ -189,13 +189,6 @@ inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::clear (void)
 {
   map_.clear ();
-  rules_.clear ();
-}
-
-inline void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::clear_rules (void)
-{
-  rules_.clear ();
 }
 
 inline void
@@ -215,6 +208,36 @@ inline void Madara::Knowledge_Engine::Knowledge_Base_Impl::acquire (void)
 inline void Madara::Knowledge_Engine::Knowledge_Base_Impl::release (void)
 {
   map_.unlock ();
+}
+
+// Defines a function
+inline
+void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
+  const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
+{
+  map_.define_function (name, func);
+}
+
+/**
+  * Defines a MADARA KaRL function      
+  **/
+inline
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (const std::string & name,
+  const std::string & expression)
+{
+  map_.define_function (name, expression);
+}
+      
+/**
+  * Defines a MADARA KaRL function    
+  **/
+inline
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (const std::string & name,
+  const Compiled_Expression & expression)
+{
+  map_.define_function (name, expression);
 }
 
 

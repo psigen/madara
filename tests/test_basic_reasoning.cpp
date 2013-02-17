@@ -966,6 +966,7 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.clear ();
   Madara::Knowledge_Record result;
 
+  // test the external C functions
   ACE_DEBUG ((LM_INFO, "Testing embedded external functions\n"));
 
   knowledge.set (".var1", (Madara::Knowledge_Record::Integer)5);
@@ -1010,10 +1011,16 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
           knowledge.get (".var4").to_integer () == 63 &&
           knowledge.get (".var5").to_integer () == 14);
   
-
-
   knowledge.print ("function results: .var2={.var2}, .var3={.var3}," \
     ".var4={.var4}, .var5={.var5}, .var6={.var6}, .var7={.var7}\n");
+
+  // test the KaRL expression functions
+  knowledge.print ("Testing embedded KaRL expression functions...\n");
+  knowledge.define_function ("hello", "message='hello'");
+  knowledge.define_function ("world", "message+=' world'");
+  result = knowledge.evaluate ("hello_world = hello () + world ()");
+  assert (result == "hello world" &&
+    knowledge.get ("hello_world").to_string == "hello world");
 }
 
 /// Test the ability to use for loops
