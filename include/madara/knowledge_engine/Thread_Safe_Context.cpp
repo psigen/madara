@@ -590,7 +590,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   // enter the mutex
   Context_Guard guard (mutex_);
 
-  functions_[name] = func;
+  functions_[name].extern_func_ = func;
 }
 
 
@@ -619,6 +619,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   // enter the mutex
   Context_Guard guard (mutex_);
 
+  functions_[name].extern_func_ = 0;
   functions_[name].function_contents_ = expression.expression;
 }
 
