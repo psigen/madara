@@ -307,7 +307,7 @@ Madara::Knowledge_Record
 
 
 /**
- * Madara function to use the thermal sensor
+ * Madara function to get the current position of the drone
  **/
 Madara::Knowledge_Record
   get_current_position (Madara::Knowledge_Engine::Function_Arguments & args,
@@ -321,7 +321,7 @@ Madara::Knowledge_Record
 }
 
 /**
- * Madara function to use the thermal sensor
+ * Madara function to check and reset the controller heartbeat
  **/
 Madara::Knowledge_Record
   check_controller_heartbeat (Madara::Knowledge_Engine::Function_Arguments & args,
@@ -332,7 +332,7 @@ Madara::Knowledge_Record
 }
 
 /**
- * Madara function to use the thermal sensor
+ * Madara function to compute the bounding box for drone search operation
  **/
 Madara::Knowledge_Record
   compute_bounding_box (Madara::Knowledge_Engine::Function_Arguments & args,
@@ -343,7 +343,7 @@ Madara::Knowledge_Record
 }
 
 /**
- * Madara function to use the thermal sensor
+ * Madara function to compute the number of mobile drones still available
  **/
 Madara::Knowledge_Record
   compute_mobile_drones (Madara::Knowledge_Engine::Function_Arguments & args,
@@ -354,7 +354,7 @@ Madara::Knowledge_Record
 }
 
 /**
- * Madara function to use the thermal sensor
+ * Madara function to reset the controller heartbeat timer
  **/
 Madara::Knowledge_Record
   controller_timer_reset (Madara::Knowledge_Engine::Function_Arguments & args,
@@ -365,17 +365,19 @@ Madara::Knowledge_Record
 }
   
 /**
- * Madara function to use the thermal sensor
+ * Madara function to check if the controller timer is expired
  **/
 Madara::Knowledge_Record
   controller_timer_is_expired (Madara::Knowledge_Engine::Function_Arguments & args,
              Madara::Knowledge_Engine::Variables & variables)
 {
-  ACE_Time_Value elapsed;
-  ACE_Time_Value max_time;
+  ACE_hrtime_t elapsed;
+  ACE_hrtime_t max_time;
 
   // set the max time to the seconds contained in controller.max_heartbeat
-  max_time.set (variables.get ("controller.max_heartbeat").to_double ());
+  max_time = 1000000000;
+  max_time *= (ACE_hrtime_t)
+    variables.get ("controller.max_heartbeat").to_integer ();
 
   // stop the timer and take the elapsed time
   timers[CONTROLLER_HEARTBEAT].stop ();
@@ -446,6 +448,8 @@ int main (int argc, char ** argv)
   timers[CONTROLLER_HEARTBEAT].start ();
 
   knowledge->set (".id", (Madara::Knowledge_Record::Integer) settings.id);
+
+  // the controller can overwrite these values later if desired
   knowledge->set ("controller.max_heartbeat",
     15.0, NO_UPDATES);
   knowledge->set ("controller.max_drones",
@@ -453,10 +457,11 @@ int main (int argc, char ** argv)
   
   srand ((unsigned int)settings.id);
 
-  // set our position to a random x,y
+  // set our position to a random x,y,z
   knowledge->evaluate (
     "drone{.id}.pos.x = rand (8);"
     "drone{.id}.pos.y = rand (8);"
+    "drone{.id}.pos.z = rand (40);"
     "drone{.id}.mobile = 1"
     );
 
@@ -481,7 +486,7 @@ int main (int argc, char ** argv)
     // set mobile drones to 0 and disregard its return (choose right) 
     ".mobile_drones = 0 ;>"
     // for loop of .i = 0 until max_drones
-    ".i[max_drones]"
+    ".i[controller.max_drones]"
     "("
       // if drone{.i} is mobile, increment .mobile_drones
       "drone{.i}.mobile => ++.mobile_drones"
