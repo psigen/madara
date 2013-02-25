@@ -1,0 +1,541 @@
+
+#include <string>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <assert.h>
+#include <stdlib.h>
+
+#include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/utility/Log_Macros.h"
+#include "ace/Signal.h"
+#include "ace/High_Res_Timer.h"
+
+// Ideally set with compiler flags according to drone platform
+//#define  USING_PARROT_ARDRONE_2
+
+
+/**
+ * Note that this is not an ordering of tasks but a list of
+ * Compiled_Expressions
+ **/
+#define  NUM_TASKS                     15
+#define  GET_CURRENT_POSITION          0
+#define  CHECK_CONTROLLER_HEARTBEAT    1
+#define  COMPUTE_MOBILE_DRONES         2
+#define  COMPUTE_BOUNDING_BOX          3
+#define  MOVE_TO_ALTITUDE              4
+#define  MOVE_TO_POSITION              5
+#define  COMPUTE_VIRTUAL_ID            6
+#define  USER_MOVEMENT_DEMANDS         7
+#define  COMPUTE_NEW_POSITION_GOAL     8
+#define  LAND                          9
+#define  TAKEOFF                      10
+#define  SHUTDOWN                     11
+#define  MAIN_LOGIC                   12
+
+/**
+ * Timer defines for keeping high precision clocks of heartbeats
+ **/
+#define  NUM_TIMERS                    2
+#define  CONTROLLER_HEARTBEAT          0
+
+// By default we identify ourselves by the hostname set in our OS
+std::string host ("");
+
+// By default, we use the multicast port 239.255.0.1.:4150
+const std::string default_multicast ("239.255.0.1:4150");
+
+// Used for updating various transport settings
+Madara::Transport::Settings settings;
+
+// Used for shutting down the process (Control+C modifies)
+volatile bool terminated = 0;
+
+// Pointer to the knowledge instance, for use in functions called from MADARA
+Madara::Knowledge_Engine::Knowledge_Base * knowledge = 0;
+
+// Compiled expressions that we expect to be called frequently
+Madara::Knowledge_Engine::Compiled_Expression expressions [NUM_TASKS];
+
+// Eval settings that always treat global updates as local updates
+Madara::Knowledge_Engine::Eval_Settings NO_UPDATES;
+Madara::Knowledge_Engine::Eval_Settings DELAY_SENDING_UPDATES;
+
+// Timers for heartbeats
+ACE_High_Res_Timer timers[NUM_TIMERS];
+
+// signal handler for someone hitting control+c
+extern "C" void terminate (int)
+{
+  terminated = true;
+}
+
+// Parses command line arguments
+void handle_arguments (int argc, char ** argv)
+{
+  for (int i = 1; i < argc; ++i)
+  {
+    std::string arg1 (argv[i]);
+
+    if (arg1 == "-m" || arg1 == "--multicast")
+    {
+      if (i + 1 < argc)
+        settings.hosts_[0] = argv[i + 1];
+
+      ++i;
+    }
+    else if (arg1 == "-o" || arg1 == "--host")
+    {
+      if (i + 1 < argc)
+        host = argv[i + 1];
+
+      ++i;
+    }
+    else if (arg1 == "-d" || arg1 == "--domain")
+    {
+      if (i + 1 < argc)
+        settings.domains = argv[i + 1];
+
+      ++i;
+    }
+    else if (arg1 == "-i" || arg1 == "--id")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> settings.id;
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-l" || arg1 == "--level")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> MADARA_debug_level;
+      }
+
+      ++i;
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        "\nProgram summary for %s:\n\n" \
+        "  Run a drone client that responds to a terminal. If running more\n" \
+        "  than one drone, make sure to set their ids to different values.\n\n" \
+        " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
+        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
+        " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
+        " [-i|--id id]             the id of this agent (should be non-negative)\n" \
+        " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        "\n",
+        argv[0]));
+      exit (0);
+    }
+  }
+}
+
+/**
+ * Madara function that returns a random number. No argument means to generate a
+ * random number up to the limits of the stdlib.h implementation's limits. An
+ * integer argument means to generate a random up to the specified arg limit.
+ **/
+Madara::Knowledge_Record
+  rand_int (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  if (args.size () > 0 && args[0].type () == Madara::Knowledge_Record::INTEGER &&
+                          args[0].to_integer () != 0)
+    return Madara::Knowledge_Record::Integer (rand () % args[0].to_integer ());
+  else
+    return Madara::Knowledge_Record::Integer (rand ());
+}
+
+/**
+ * Madara function to move the drone north
+ **/
+Madara::Knowledge_Record
+  move_north (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate ("drone{.id}.pos.y = drone{.id}.pos.y + 1",
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to move the drone south
+ **/
+Madara::Knowledge_Record
+  move_south (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate ("drone{.id}.pos.y = drone{.id}.pos.y - 1",
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to move the drone east
+ **/
+Madara::Knowledge_Record
+  move_east (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate ("drone{.id}.pos.x = drone{.id}.pos.x + 1",
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to move the drone west
+ **/
+Madara::Knowledge_Record
+  move_west (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate ("drone{.id}.pos.y = drone{.id}.pos.y - 1",
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to move the drone to the origin (phone.pos.x,phone.pos.y)
+ **/
+Madara::Knowledge_Record
+  move_to_origin (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate (
+    "drone{.id}.pos.y = controller.pos.y;"
+    "drone{.id}.pos.x = controller.pos.x",
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  sense_thermal (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to use thermal sensing from Drone-RK
+#endif
+  return Madara::Knowledge_Record::Integer (1);
+}
+
+/**
+ * Madara function to shutdown the agent
+ **/
+Madara::Knowledge_Record
+  shutdown (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  terminated = true;
+
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to land a drone
+#endif
+
+  return knowledge->evaluate (expressions[SHUTDOWN], DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to do absolutely nothing
+ **/
+Madara::Knowledge_Record
+  no_op (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return Madara::Knowledge_Record::Integer (0);
+}
+
+/**
+ * Madara function to move to a altitude
+ **/
+Madara::Knowledge_Record
+  move_to_altitude (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to move to an altitude
+#endif
+  return knowledge->evaluate (expressions[MOVE_TO_ALTITUDE],
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to move to a position
+ **/
+Madara::Knowledge_Record
+  move_to_position (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to move to a position
+#endif
+  return knowledge->evaluate (expressions[MOVE_TO_POSITION],
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to take off the ground
+ **/
+Madara::Knowledge_Record
+  takeoff (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to land a drone
+#endif
+  return knowledge->evaluate (expressions[TAKEOFF], DELAY_SENDING_UPDATES);
+}
+
+
+/**
+ * Madara function to land the agent
+ **/
+Madara::Knowledge_Record
+  land (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to land a drone
+#endif
+  return knowledge->evaluate (expressions[LAND], DELAY_SENDING_UPDATES);
+}
+
+
+
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  get_current_position (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+#ifdef  USING_PARROT_ARDRONE_2
+  // insert code to return a GPS location from Drone-RK
+#else
+  return "{drone{.id}.pos.x},{drone{.id}.pos.y},{drone{.id}.pos.z}";
+#endif
+}
+
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  check_controller_heartbeat (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate (expressions[CHECK_CONTROLLER_HEARTBEAT],
+    NO_UPDATES);
+}
+
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  compute_bounding_box (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate (expressions[COMPUTE_BOUNDING_BOX],
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  compute_mobile_drones (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return knowledge->evaluate (expressions[COMPUTE_MOBILE_DRONES],
+    DELAY_SENDING_UPDATES);
+}
+
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  controller_timer_reset (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  timers[CONTROLLER_HEARTBEAT].start ();
+  return Madara::Knowledge_Record::Integer (1);
+}
+  
+/**
+ * Madara function to use the thermal sensor
+ **/
+Madara::Knowledge_Record
+  controller_timer_is_expired (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  ACE_Time_Value elapsed;
+  ACE_Time_Value max_time;
+
+  // set the max time to the seconds contained in controller.max_heartbeat
+  max_time.set (variables.get ("controller.max_heartbeat").to_double ());
+
+  // stop the timer and take the elapsed time
+  timers[CONTROLLER_HEARTBEAT].stop ();
+  timers[CONTROLLER_HEARTBEAT].elapsed_time (elapsed);
+
+  if (elapsed > max_time)
+    return Madara::Knowledge_Record::Integer (1);
+  else
+    return Madara::Knowledge_Record::Integer (0);
+}
+ 
+
+int main (int argc, char ** argv)
+{
+  // signal handler for clean exit
+  ACE_Sig_Action sa ((ACE_SignalHandler) terminate, SIGINT);
+
+  settings.hosts_.resize (1);
+  settings.hosts_[0] = default_multicast;
+  handle_arguments (argc, argv);
+
+  Madara::Knowledge_Engine::Knowledge_Base knowledge_instance (host, settings);
+
+  // set a global settings class we can use to keep global updates local
+  NO_UPDATES.treat_globals_as_locals = true;
+  NO_UPDATES.delay_sending_modifieds = true;
+
+  DELAY_SENDING_UPDATES.delay_sending_modifieds = true;
+
+  // we use a global pointer to the instance in order to evaluate expressions
+  // within external functions executed in MADARA
+  knowledge = &knowledge_instance;
+
+  // define control functions
+  knowledge->define_function ("shutdown", shutdown);
+  knowledge->define_function ("takeoff", takeoff);
+  knowledge->define_function ("land", land);
+  
+  // define movement functions
+  knowledge->define_function ("move_east", move_east);
+  knowledge->define_function ("move_west", move_west);
+  knowledge->define_function ("move_north", move_north);
+  knowledge->define_function ("move_south", move_south);
+  knowledge->define_function ("move_to_origin", move_to_origin);
+  
+  // define sensor functions
+  knowledge->define_function ("sense_thermal", sense_thermal);
+
+  // define tasks functions
+  knowledge->define_function ("get_current_position",
+    get_current_position);
+  knowledge->define_function ("check_controller_heartbeat",
+    check_controller_heartbeat);
+  knowledge->define_function ("compute_mobile_drones",
+    compute_mobile_drones);
+  knowledge->define_function ("compute_bounding_box",
+    compute_bounding_box);
+  knowledge->define_function ("move_to_altitude",
+    move_to_altitude);
+  knowledge->define_function ("move_to_position",
+    move_to_position);
+  knowledge->define_function ("controller.timer_reset",
+    controller_timer_reset);
+  knowledge->define_function ("controller.timer_is_expired",
+    controller_timer_is_expired);
+  
+  // start the controller heartbeat
+  timers[CONTROLLER_HEARTBEAT].start ();
+
+  knowledge->set (".id", (Madara::Knowledge_Record::Integer) settings.id);
+  knowledge->set ("controller.max_heartbeat",
+    15.0, NO_UPDATES);
+  knowledge->set ("controller.max_drones",
+    Madara::Knowledge_Record::Integer (20), NO_UPDATES);
+  
+  srand ((unsigned int)settings.id);
+
+  // set our position to a random x,y
+  knowledge->evaluate (
+    "drone{.id}.pos.x = rand (8);"
+    "drone{.id}.pos.y = rand (8);"
+    "drone{.id}.mobile = 1"
+    );
+
+  expressions[CHECK_CONTROLLER_HEARTBEAT] = knowledge->compile (
+    // if we've received a controller heartbeat
+    "controller.heartbeat =>"
+    "("
+      // reset the heartbeat
+      "controller.heartbeat = 0;"
+      "controller.timer_reset ()"
+    ")"
+    "||"
+    "controller.timer_is_expired () => land ()"
+  );
+  
+  expressions[COMPUTE_BOUNDING_BOX] = knowledge->compile (
+    // to be filled in
+    ""
+  );
+  
+  expressions[COMPUTE_MOBILE_DRONES] = knowledge->compile (
+    // set mobile drones to 0 and disregard its return (choose right) 
+    ".mobile_drones = 0 ;>"
+    // for loop of .i = 0 until max_drones
+    ".i[max_drones]"
+    "("
+      // if drone{.i} is mobile, increment .mobile_drones
+      "drone{.i}.mobile => ++.mobile_drones"
+    ")"
+  );
+  
+  
+  expressions[LAND] = knowledge->compile (
+    // if we've received a controller heartbeat
+    "drone{.id}.landed = 1; drone{.id}.mobile = 0"
+  );
+  
+  expressions[TAKEOFF] = knowledge->compile (
+    // if we've received a controller heartbeat
+    "drone{.id}.landed = 0; drone{.id}.mobile = 1"
+  );
+  
+  expressions[SHUTDOWN] = knowledge->compile (
+    // if we've received a controller heartbeat
+    "drone{.id}.landed = 0; drone{.id}.mobile = 0; drone{.id}.shutdown = 1"
+  );
+  
+  expressions[MAIN_LOGIC] = knowledge->compile (
+    "sense_thermals ();"
+    "get_current_position ();"
+    "check_controller_heartbeat ();"
+    "compute_mobile_drones ();"
+    "compute_bounding_box ();"
+    "move_to_altitude ();"
+    "move_to_position ();"
+  );
+
+
+  Madara::Knowledge_Engine::Eval_Settings eval_settings;
+  eval_settings.pre_print_statement = knowledge->expand_statement (
+    "Processing movement instructions:\n"
+    "  move_east:  {move_east}  drone{.id}.move_east:  {drone{.id}.move_east}\n"
+    "  move_west:  {move_west}  drone{.id}.move_west:  {drone{.id}.move_west}\n"
+    "  move_north: {move_north} drone{.id}.move_north: {drone{.id}.move_north}\n"
+    "  move_south: {move_south} drone{.id}.move_south: {drone{.id}.move_south}\n"
+    "  move_to_origin: {move_to_origin} drone{.id}.move_to_origin: {drone{.id}.move_to_origin}\n"
+    );
+  
+  eval_settings.post_print_statement = knowledge->expand_statement (
+    "Current drone{.id} position: {drone{.id}.pos.x},{drone{.id}.pos.y}\n"
+    );
+
+  // until the user presses ctrl+c in this terminal, check for input
+  while (!terminated)
+  {
+    knowledge->evaluate (expressions[MAIN_LOGIC], eval_settings);
+  }
+
+  knowledge->print_knowledge ();
+
+  return 0;
+}

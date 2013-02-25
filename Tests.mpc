@@ -56,6 +56,25 @@ project (Test_Swarm_Drone) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Swarm_Area_Coverage) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_swarm_area_coverage
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/swarm/test_swarm_area_coverage.cpp
+  }
+}
+
 project (Test_Swarm_Terminal) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_swarm_terminal
