@@ -1,7 +1,7 @@
-#ifndef _MADARA_EXTERNAL_FUNCTIONS_CPP_
-#define _MADARA_EXTERNAL_FUNCTIONS_CPP_
+#ifndef _MADARA_EXTERNAL_FUNCTION_VARIABLES_CPP_
+#define _MADARA_EXTERNAL_FUNCTION_VARIABLES_CPP_
 
-#include "madara/Functions.h"
+#include "madara/knowledge_engine/Extern_Function_Variables.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 
 #include "madara/utility/Log_Macros.h"
@@ -231,6 +231,66 @@ std::string
       "Knowledge_Engine::Variables instances.\n"));
 
     return "";
+  }
+}
+
+
+/**
+  * Compiles a KaRL expression into an expression tree. Always do this
+  * before calling evaluate because it puts the expression into an
+  * optimized format. Best practice is to save the Compiled_Expression
+  * in a global variable or in some kind of persistent store. Pair with
+  * expand_statement if you know that variable expansion is used but
+  * the variable values that are expanded never change (e.g. an id that
+  * is set through the command line and thus stays the same after it is
+  * initially set).
+  *
+  * @param expression         expression to compile
+  * @return                   compiled, optimized expression tree
+  **/
+Madara::Knowledge_Engine::Compiled_Expression
+  Madara::Knowledge_Engine::Variables::compile (const std::string & expression)
+{
+  if (context_)
+    return context_->compile (expression);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+      "Variables context not set. Please don't create your own Madara::" \
+      "Knowledge_Engine::Variables instances.\n"));
+
+    return Compiled_Expression ();
+  }
+}
+      
+/**
+  * Evaluates an expression. Recommended best practices are to compile the
+  * expression into a global variable or persistent store outside of the
+  * function call and use a reference to this Compiled_Expression from
+  * within the external function that you create. In other words, avoid
+  * compiling the expression within your external function call as this
+  * adds compile overhead that tends to be microseconds in time.
+  *
+  * @param expression      KaRL expression to wait on (result of compile)
+  * @param settings        Settings for updating knowledge
+  * @return                value of expression
+  **/
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Variables::evaluate (
+  Compiled_Expression & expression,
+  const Knowledge_Update_Settings & settings)
+{
+  if (context_)
+  {
+    return expression.expression.evaluate (settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+      "Variables context not set. Please don't create your own Madara::" \
+      "Knowledge_Engine::Variables instances.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
   }
 }
 

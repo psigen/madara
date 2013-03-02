@@ -33,13 +33,15 @@ namespace Madara
        {
        }
 
+       
        /**
         * Constructor
         **/
        Eval_Settings (bool t_delay_sending_modifieds,
-         std::string t_pre_print_statement,
-         std::string t_post_print_statement)
-         : Knowledge_Update_Settings (), 
+         bool t_treat_globals_as_locals = false,
+         std::string t_pre_print_statement = "",
+         std::string t_post_print_statement = "")
+         : Knowledge_Update_Settings (t_treat_globals_as_locals),
            delay_sending_modifieds (t_delay_sending_modifieds),
            pre_print_statement (t_pre_print_statement),
            post_print_statement (t_post_print_statement)
@@ -75,6 +77,9 @@ namespace Madara
      };
 
     extern MADARA_Export const Eval_Settings DEFAULT_EVAL_SETTINGS;
+    extern MADARA_Export const Eval_Settings TREAT_AS_LOCAL_EVAL_SETTINGS;
+    extern MADARA_Export const Eval_Settings DELAY_AND_TREAT_AS_LOCAL_EVAL_SETTINGS;
+    extern MADARA_Export const Eval_Settings DELAY_ONLY_EVAL_SETTINGS;
   }
 }
 #endif

@@ -165,7 +165,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
   const std::string & expression)
 {
   Compiled_Expression compiled = compile (expression);
-  Wait_Settings settings;
+  Eval_Settings settings;
   return evaluate (compiled, settings);
 }
 

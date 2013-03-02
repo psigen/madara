@@ -11,7 +11,7 @@
 #include "madara/expression_tree/Leaf_Node.h"
 
 #include "madara/utility/Log_Macros.h"
-#include "madara/Functions.h"
+#include "madara/knowledge_engine/Functions.h"
 
 // Ctor
 

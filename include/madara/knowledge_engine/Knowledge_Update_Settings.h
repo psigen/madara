@@ -34,6 +34,18 @@ namespace Madara
       /**
        * Constructor
        **/
+      Knowledge_Update_Settings (bool t_treat_globals_as_locals,
+        bool t_always_overwrite = false,
+        uint64_t t_clock_increment = 1)
+        : always_overwrite (t_always_overwrite),
+          treat_globals_as_locals (t_treat_globals_as_locals),
+          clock_increment (t_clock_increment)
+      {
+      }
+  
+      /**
+       * Constructor
+       **/
       Knowledge_Update_Settings (const Knowledge_Update_Settings & rhs)
         : always_overwrite (rhs.always_overwrite),
           treat_globals_as_locals (rhs.treat_globals_as_locals),
@@ -68,6 +80,7 @@ namespace Madara
     };
 
     extern MADARA_Export const Knowledge_Update_Settings DEFAULT_KNOWLEDGE_UPDATE_SETTINGS;
+    extern MADARA_Export const Knowledge_Update_Settings TREAT_AS_LOCAL_UPDATE_SETTINGS;
   }
 }
 #endif

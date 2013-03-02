@@ -19,6 +19,7 @@ namespace Madara
   {
     class Thread_Safe_Context;
     class Knolwedge_Base_Impl;
+    class Variables;
 
     /**
      * @class Compiled_Expression
@@ -30,6 +31,7 @@ namespace Madara
       //class Knowledge_Base_Impl;
       friend class Thread_Safe_Context;
       friend class Knowledge_Base_Impl;
+      friend class Variables;
 
       /**
        * Constructor

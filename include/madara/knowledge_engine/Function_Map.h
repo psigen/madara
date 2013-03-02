@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "madara/Functions.h"
+#include "madara/knowledge_engine/Functions.h"
 
 namespace Madara
 {

@@ -1,12 +1,13 @@
 
-#ifndef _MADARA_EXTERNAL_FUNCTIONS_H_
-#define _MADARA_EXTERNAL_FUNCTIONS_H_
+#ifndef _MADARA_EXTERNAL_FUNCTION_VARIABLES_H_
+#define _MADARA_EXTERNAL_FUNCTION_VARIABLES_H_
 
 #include <string>
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/knowledge_engine/Compiled_Expression.h"
 
 /**
  * @file Functions.h
@@ -142,54 +143,43 @@ namespace Madara
        * @return            variable expanded statement
        **/
       std::string expand_statement (const std::string & statement) const;
-
+      
+      /**
+       * Compiles a KaRL expression into an expression tree. Always do this
+       * before calling evaluate because it puts the expression into an
+       * optimized format. Best practice is to save the Compiled_Expression
+       * in a global variable or in some kind of persistent store. Pair with
+       * expand_statement if you know that variable expansion is used but
+       * the variable values that are expanded never change (e.g. an id that
+       * is set through the command line and thus stays the same after it is
+       * initially set).
+       *
+       * @param expression         expression to compile
+       * @return                   compiled, optimized expression tree
+       **/
+      Compiled_Expression
+        compile (const std::string & expression);
+      
+      /**
+       * Evaluates an expression. Recommended best practices are to compile the
+       * expression into a global variable or persistent store outside of the
+       * function call and use a reference to this Compiled_Expression from
+       * within the external function that you create.
+       *
+       * @param expression      KaRL expression to wait on (result of compile)
+       * @param settings        Settings for updating knowledge
+       * @return                value of expression
+       **/
+      Madara::Knowledge_Record evaluate (
+        Compiled_Expression & expression,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
     private:
       /**
        * Variables context that is directly used by the KaRL engine
        **/
       Thread_Safe_Context * context_;
     };
-    
-    typedef  std::vector <Knowledge_Record>   Function_Arguments;
-     
-    class Function
-    {
-    /**
-     * @class Function
-     * @brief This class stores a function definition
-     */
-    public:
-      /**
-       * Default constructor
-       **/
-      Function ()
-        : extern_func_ (0)
-      {
-      }
-
-      /**
-       * Constructor for function pointer
-       **/
-      Function (VALUE_TYPE (*extern_func) (Function_Arguments &, Variables &))
-        : extern_func_ (extern_func)
-      {
-      }
-      
-      /**
-       * Constructor for function pointer
-       **/
-      Function (const Madara::Expression_Tree::Expression_Tree & function_contents)
-        : function_contents_ (function_contents)
-      {
-      }
-
-      // internal function pointer
-      VALUE_TYPE (*extern_func_) (Function_Arguments &, Variables &);
-
-      // expression tree
-      Madara::Expression_Tree::Expression_Tree function_contents_;
-    };
-    
   }
 }
 

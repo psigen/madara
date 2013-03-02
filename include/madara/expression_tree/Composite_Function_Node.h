@@ -3,7 +3,7 @@
 #define _COMPOSITE_FUNCTION_NODE_H_
 
 #include "madara/expression_tree/Composite_Ternary_Node.h"
-#include "madara/Functions.h"
+#include "madara/knowledge_engine/Functions.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 
 namespace Madara
