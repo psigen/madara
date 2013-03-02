@@ -10,6 +10,7 @@
 #include "madara/utility/Log_Macros.h"
 #include "ace/Signal.h"
 #include "ace/High_Res_Timer.h"
+#include "ace/OS_NS_Thread.h"
 
 // Ideally set with compiler flags according to drone platform
 //#define  USING_PARROT_ARDRONE_2
@@ -19,7 +20,7 @@
  * Note that this is not an ordering of tasks but a list of
  * Compiled_Expressions
  **/
-#define  NUM_TASKS                     18
+#define  NUM_TASKS                     19
 #define  GET_CURRENT_POSITION          0
 #define  CHECK_CONTROLLER_HEARTBEAT    1
 #define  COMPUTE_MOBILE_DRONES         2
@@ -38,6 +39,7 @@
 #define  MOVE_EAST                    15
 #define  MOVE_WEST                    16
 #define  MOVE_TO_ORIGIN               17
+#define  UPDATE_STATUS                18
 
 /**
  * Timer defines for keeping high precision clocks of heartbeats
@@ -146,7 +148,7 @@ Madara::Knowledge_Record
 {
   if (args.size () > 0 && args[0].type () == Madara::Knowledge_Record::INTEGER &&
                           args[0].to_integer () != 0)
-    return Madara::Knowledge_Record::Integer (rand () % args[0].to_integer ());
+    return Madara::Knowledge_Record::Integer (rand () % (int)args[0].to_integer ());
   else
     return Madara::Knowledge_Record::Integer (rand ());
 }
@@ -316,7 +318,8 @@ Madara::Knowledge_Record
   check_controller_heartbeat (Madara::Knowledge_Engine::Function_Arguments & args,
              Madara::Knowledge_Engine::Variables & variables)
 {
-  return variables.evaluate (expressions[CHECK_CONTROLLER_HEARTBEAT]);
+  return variables.evaluate (expressions[CHECK_CONTROLLER_HEARTBEAT],
+    Madara::Knowledge_Engine::TREAT_AS_LOCAL_UPDATE_SETTINGS);
 }
 
 /**
@@ -327,6 +330,16 @@ Madara::Knowledge_Record
              Madara::Knowledge_Engine::Variables & variables)
 {
   return variables.evaluate (expressions[COMPUTE_BOUNDING_BOX]);
+}
+
+/**
+ * Madara function to update position and mobility status
+ **/
+Madara::Knowledge_Record
+  update_status (Madara::Knowledge_Engine::Function_Arguments & args,
+             Madara::Knowledge_Engine::Variables & variables)
+{
+  return variables.evaluate (expressions[UPDATE_STATUS]);
 }
 
 /**
@@ -346,6 +359,7 @@ Madara::Knowledge_Record
   controller_timer_reset (Madara::Knowledge_Engine::Function_Arguments & args,
              Madara::Knowledge_Engine::Variables & variables)
 {
+  variables.print ("Controller heartbeat has been reset.\n", 0);
   timers[CONTROLLER_HEARTBEAT].start ();
   return Madara::Knowledge_Record::Integer (1);
 }
@@ -357,6 +371,8 @@ Madara::Knowledge_Record
   controller_timer_is_expired (Madara::Knowledge_Engine::Function_Arguments & args,
              Madara::Knowledge_Engine::Variables & variables)
 {
+  variables.print (
+    "Controller heartbeat timer is expired is being checked.\n", 0);
   ACE_hrtime_t elapsed;
   ACE_hrtime_t max_time;
 
@@ -368,6 +384,9 @@ Madara::Knowledge_Record
   // stop the timer and take the elapsed time
   timers[CONTROLLER_HEARTBEAT].stop ();
   timers[CONTROLLER_HEARTBEAT].elapsed_time (elapsed);
+
+  variables.set (".heartbeat_latency",
+    (Madara::Knowledge_Record::Integer)elapsed);
 
   if (elapsed > max_time)
     return Madara::Knowledge_Record::Integer (1);
@@ -383,6 +402,7 @@ void define_external_functions (
   Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
   // define control functions
+  knowledge.define_function ("rand", rand_int);
   knowledge.define_function ("shutdown", shutdown);
   knowledge.define_function ("takeoff", takeoff);
   knowledge.define_function ("land", land);
@@ -414,6 +434,8 @@ void define_external_functions (
     controller_timer_reset);
   knowledge.define_function ("controller.timer_is_expired",
     controller_timer_is_expired);
+  knowledge.define_function ("update_status",
+    update_status);
   
 }
 
@@ -429,12 +451,12 @@ void compile_expressions (
 {
   expressions[CHECK_CONTROLLER_HEARTBEAT] = knowledge.compile (
     // if we've received a controller heartbeat
-    "controller.heartbeat =>"
+    "(controller.heartbeat => "
     "("
       // reset the heartbeat
       "controller.heartbeat = 0;"
       "controller.timer_reset ()"
-    ")"
+    "))"
     "||"
     "controller.timer_is_expired () => land ()"
   );
@@ -500,6 +522,7 @@ void compile_expressions (
   );
   
   expressions[MAIN_LOGIC] = knowledge.compile (
+    "update_status ();"
     "sense_thermals ();"
     "get_current_position ();"
     "check_controller_heartbeat ();"
@@ -507,6 +530,13 @@ void compile_expressions (
     "compute_bounding_box ();"
     "move_to_altitude ();"
     "move_to_position ();"
+  );
+  
+  expressions[UPDATE_STATUS] = knowledge.compile (
+    "drone{.id}.mobile=drone{.id}.mobile;"
+    "drone{.id}.pos.x=drone{.id}.pos.x;"
+    "drone{.id}.pos.y=drone{.id}.pos.y;"
+    "drone{.id}.pos.z=drone{.id}.pos.z;"
   );
 
 }
@@ -519,6 +549,7 @@ int main (int argc, char ** argv)
 
   settings.hosts_.resize (1);
   settings.hosts_[0] = default_multicast;
+  settings.type = Madara::Transport::MULTICAST;
   handle_arguments (argc, argv);
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
@@ -549,28 +580,25 @@ int main (int argc, char ** argv)
     "drone{.id}.pos.x = rand (8);"
     "drone{.id}.pos.y = rand (8);"
     "drone{.id}.pos.z = rand (40);"
-    "drone{.id}.mobile = 1"
+    "drone{.id}.mobile = 1;"
+    "controller.timer_reset ()"
     );
 
 
   Madara::Knowledge_Engine::Eval_Settings eval_settings;
-  eval_settings.pre_print_statement = knowledge.expand_statement (
-    "Processing movement instructions:\n"
-    "  move_east:  {move_east}  drone{.id}.move_east:  {drone{.id}.move_east}\n"
-    "  move_west:  {move_west}  drone{.id}.move_west:  {drone{.id}.move_west}\n"
-    "  move_north: {move_north} drone{.id}.move_north: {drone{.id}.move_north}\n"
-    "  move_south: {move_south} drone{.id}.move_south: {drone{.id}.move_south}\n"
-    "  move_to_origin: {move_to_origin} drone{.id}.move_to_origin: {drone{.id}.move_to_origin}\n"
-    );
+  eval_settings.pre_print_statement = 
+    "Mobile drones: {.mobile_drones}, Heartbeat latency: {.heartbeat_latency}\n"
+  ;
   
-  eval_settings.post_print_statement = knowledge.expand_statement (
+  eval_settings.post_print_statement = 
     "Current drone{.id} position: {drone{.id}.pos.x},{drone{.id}.pos.y}\n"
-    );
+   ;
 
   // until the user presses ctrl+c in this terminal, check for input
   while (!terminated)
   {
     knowledge.evaluate (expressions[MAIN_LOGIC], eval_settings);
+    ACE_OS::sleep (1);
   }
 
   knowledge.print_knowledge ();
