@@ -172,6 +172,8 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
       
       // temporary record for reading from the updates buffer
       Knowledge_Record record;
+      record.clock = header.clock;
+      record.quality = header.quality;
       std::string key;
 
       // lock the context

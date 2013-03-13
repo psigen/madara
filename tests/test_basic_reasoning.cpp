@@ -1020,7 +1020,7 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.define_function ("world", "message+=' world'");
   result = knowledge.evaluate ("hello_world = hello () + world ()");
   assert (result == "hello world" &&
-    knowledge.get ("hello_world").to_string == "hello world");
+    knowledge.get ("hello_world").to_string () == "hello world");
 }
 
 /// Test the ability to use for loops

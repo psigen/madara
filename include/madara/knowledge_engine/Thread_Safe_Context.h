@@ -68,7 +68,55 @@ namespace Madara
        * @return         the knowledge record for the variable
        **/
       Madara::Knowledge_Record * get_record (const std::string & key);
-
+      
+      /**
+       * Atomically sets the value of a variable to an XML string.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_xml (const std::string & key,
+        const char * value, size_t size, 
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+      
+      /**
+       * Atomically sets the value of a variable to a JPEG image
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_jpeg (const std::string & key,
+        const unsigned char * value, size_t size,
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+      
+      /**
+       * Atomically sets the value of a variable to an arbitrary string.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_file (const std::string & key,
+        const unsigned char * value, size_t size, 
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+      
+      /**
+       * Atomically sets the value of a variable to an XML string.
+       * @param   key       unique identifier of the variable
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_text (const std::string & key,
+        const char * value, size_t size, 
+        const Knowledge_Update_Settings & settings = 
+              DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+      
       /**
        * Atomically sets the value of a variable to an integer.
        * @param   key       unique identifier of the variable
@@ -95,6 +143,7 @@ namespace Madara
       
       /**
        * Atomically sets the value of a variable to a string
+       * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
        * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
@@ -103,6 +152,19 @@ namespace Madara
         const std::string & value, 
         const Knowledge_Update_Settings & settings = 
               DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+      
+      /**
+       * Atomically reads a file into a variable
+       * @param   key       unique identifier of the variable
+       * @param   filename  file to read
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if unsuccessful
+       **/
+      int
+      Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
+        const std::string & key,
+        const std::string & filename,
+        const Knowledge_Update_Settings & settings);
 
       /**
        * Atomically sets if the variable value will be different
@@ -145,7 +207,21 @@ namespace Madara
         uint32_t quality, uint64_t clock, 
         const Knowledge_Update_Settings & settings = 
               DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
-
+      
+      /**
+       * Atomically sets if the variable value meets update conditions.
+       * Appropriate conditions include clock being >= old clock, quality
+       * >= old quality, etc.
+       * @param   key       unique identifier of the variable
+       * @param   rhs     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   1 if the value was changed. 0 if not changed.
+       *          -1 if null key
+       **/
+      int update_record_from_external (
+        const std::string & key, const Knowledge_Record & rhs,
+        const Knowledge_Update_Settings & settings);
+      
       /**
        * Atomically gets quality of a variable
        * @param   key       unique identifier of the variable

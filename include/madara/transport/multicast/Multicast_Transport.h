@@ -97,6 +97,7 @@ namespace Madara
       /// data received rules, defined in Transport settings
       Madara::Expression_Tree::Expression_Tree  on_data_received_;
 
+
     };
   }
 }

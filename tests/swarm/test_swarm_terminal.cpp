@@ -95,7 +95,7 @@ Madara::Knowledge_Record
   build_view (Madara::Knowledge_Engine::Function_Arguments & args,
              Madara::Knowledge_Engine::Variables & variables)
 {
-  
+  return Madara::Knowledge_Record::Integer (0);
 }
 
 

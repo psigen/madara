@@ -5,6 +5,7 @@
 #include "madara/transport/Transport.h"
 #include "madara/utility/Log_Macros.h"
 #include <stdio.h>
+#include <iostream>
 
 #define BUFFER_SIZE    1000
 

@@ -80,23 +80,24 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const std::string & key)
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::read_file (const std::string & knowledge_key, 
-                     const std::string & file_name)
+                     const std::string & filename, 
+                     const Eval_Settings & settings)
 {
-  return impl_->read_file (knowledge_key, file_name);
+  return impl_->read_file (knowledge_key, filename, settings);
 }
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::read_policy (const std::string & knowledge_key, 
-                     const std::string & file_name)
+                     const std::string & filename)
 {
-  return impl_->read_policy (knowledge_key, file_name);
+  return impl_->read_policy (knowledge_key, filename);
 }
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::write_file (const std::string & knowledge_key, 
-                     const std::string & file_name)
+                     const std::string & filename)
 {
-  return impl_->write_file (knowledge_key, file_name);
+  return impl_->write_file (knowledge_key, filename);
 }
 
 
@@ -206,6 +207,14 @@ Madara::Knowledge_Engine::Knowledge_Base::transport_settings (void)
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::wait (
   Compiled_Expression & expression, 
+  const Wait_Settings & settings)
+{
+  return impl_->wait (expression, settings);
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base::wait (
+  const std::string & expression, 
   const Wait_Settings & settings)
 {
   return impl_->wait (expression, settings);

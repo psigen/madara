@@ -7,6 +7,9 @@
 #include "ace/INET_Addr.h"
 #include "madara/utility/Log_Macros.h"
 #include "ace/Default_Constants.h"
+#include "ace/Mem_Map.h"
+#include "ace/OS_NS_fcntl.h"
+#include "ace/OS_NS_unistd.h"
 
 /// Convert string to uppercase
 std::string &
@@ -538,4 +541,62 @@ Madara::Utility::endian_swap (int32_t value)
   }
 
   return value;
+}
+
+int
+  Madara::Utility::read_file (const std::string & filename,
+  void *& buffer, size_t & size, bool add_zero_char)
+{
+  int ret_value = 0;
+  if (filename != "")
+  {
+    // load the source file into a mapped file of the OS's 
+    // virtual memory system
+    ACE_Mem_Map mapped_file;
+    void * temp_buffer;
+    ret_value = mapped_file.map (filename.c_str ());
+    temp_buffer = mapped_file.addr ();
+    size = mapped_file.size ();
+
+    if (add_zero_char)
+      ++size;
+
+    buffer = new unsigned char [size];
+    memcpy (buffer, temp_buffer, size);
+
+    if (add_zero_char)
+    {
+      unsigned char * zeroed = (unsigned char *)buffer;
+      zeroed[size - 1] = 0;
+    }
+  }
+  else ret_value = -1;
+
+  return ret_value;
+}
+
+ssize_t
+  Madara::Utility::write_file (const std::string & filename,
+  void * buffer, size_t size)
+{
+  // error is -1
+  ssize_t actual = -1;
+
+  // using ACE for writing to the destination file
+  ACE_HANDLE file_handle = ACE_OS::open (filename.c_str (),
+    O_RDWR | O_CREAT | O_TRUNC,
+    ACE_DEFAULT_FILE_PERMS);
+
+  MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
+    DLINFO "Files::write_file : beginning write of %d bytes\n", size));
+
+  if (file_handle  != ACE_INVALID_HANDLE)
+  {
+    // write to the file, save actual bytes read, and close the file handle
+    actual = ACE_OS::write (file_handle, buffer, size);
+    ACE_OS::close (file_handle);
+  }
+
+  // return the actual bytes written. -1 if error
+  return actual;
 }

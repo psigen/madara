@@ -18,7 +18,7 @@ namespace Madara
     #define MAX_ORIGINATOR_LENGTH       64
     #define KNOWLEDGE_VALUE_TYPE        Madara::Knowledge_Record
 
-    static const int64_t  MAX_PACKET_SIZE = 512000;  // 512kb
+    static const int  MAX_PACKET_SIZE = 512000;  // 512kb
 
     class MADARA_Export Message_Header
     {

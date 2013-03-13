@@ -106,12 +106,12 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
   ACE_INET_Addr  remote;
   
   // specify a 131k packet size limit. This is unlikely to ever be used
-  char buffer[MAX_PACKET_SIZE];
+  char buffer [Madara::Transport::MAX_PACKET_SIZE];
 
   while (false == terminated_.value ())
   {
     // read the message
-    int bytes_read = socket_.recv ((void *)buffer, 
+    ssize_t bytes_read = socket_.recv ((void *)buffer, 
       sizeof (buffer), remote, 0, &wait_time);
  
 
@@ -173,6 +173,8 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
       
       // temporary record for reading from the updates buffer
       Knowledge_Record record;
+      record.quality = header.quality;
+      record.clock = header.clock;
       std::string key;
 
       // lock the context

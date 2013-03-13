@@ -11,37 +11,37 @@
 
 Madara::Knowledge_Record::Knowledge_Record ()
       : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0), type_ (INTEGER),
-        size_ (sizeof (Integer)), int_value_ (0)
+        quality (0), write_quality (0),
+        size_ (sizeof (Integer)), type_ (INTEGER), int_value_ (0)
 {
 }
 
 Madara::Knowledge_Record::Knowledge_Record (Integer value)
       : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0), type_ (INTEGER),
-        size_ (sizeof (Integer)), int_value_ (value)
+        quality (0), write_quality (0),
+        size_ (sizeof (Integer)), type_ (INTEGER), int_value_ (value)
 {
 }
 
 Madara::Knowledge_Record::Knowledge_Record (double value)
       : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0), type_ (DOUBLE),
-        size_ (sizeof (Integer)), double_value_ (value)
+        quality (0), write_quality (0),
+        size_ (sizeof (Integer)), type_ (DOUBLE), double_value_ (value)
 {
 }
 
 Madara::Knowledge_Record::Knowledge_Record (const std::string & value)
       : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0), type_ (INTEGER),
-        size_ (sizeof (Integer))
+        quality (0), write_quality (0),
+        size_ (sizeof (Integer)), type_ (INTEGER)
 {
   set_value (value);
 }
 
 Madara::Knowledge_Record::Knowledge_Record (const char * value)
       : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0), type_ (INTEGER),
-        size_ (sizeof (Integer))
+        quality (0), write_quality (0),
+        size_ (sizeof (Integer)), type_ (INTEGER)
 {
   set_value (std::string (value));
 }
@@ -49,30 +49,17 @@ Madara::Knowledge_Record::Knowledge_Record (const char * value)
 Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
       : status (rhs.status), clock (rhs.clock),
       scope (rhs.scope), quality (rhs.quality),
-      write_quality (rhs.write_quality), type_ (rhs.type_)
+      write_quality (rhs.write_quality),
+      size_ (rhs.size_), type_ (rhs.type_)
 {
   if      (rhs.type_ == INTEGER)
-  {
     int_value_ = rhs.int_value_;
-    size_ = sizeof (int_value_);
-  }
   else if (rhs.type_ == DOUBLE)
-  {
     double_value_ = rhs.double_value_;
-    size_ = sizeof (double_value_);
-  }
-  else if (rhs.type_ == STRING)
-  {
-    // copy over the rhs scoped_array
-    size_ = rhs.size_;
+  else if (rhs.is_string_type ())
     str_value_ = rhs.str_value_;
-  }
-  else if (rhs.type_ == XML)
-  {
-    // copy over the rhs scoped_array
-    size_ = rhs.size_;
-    xml_value_ = rhs.xml_value_;
-  }
+  else if (rhs.is_file_type ())
+    file_value_ = rhs.file_value_;
 }
 
 Madara::Knowledge_Record::~Knowledge_Record ()
@@ -83,9 +70,9 @@ Madara::Knowledge_Record::~Knowledge_Record ()
 void
 Madara::Knowledge_Record::clear_value (void)
 {
-  if (type_ == STRING)
+  if (is_string_type ())
     str_value_ = 0;
-  else if (type_ == FILE || type_ == IMAGE || type_ == XML)
+  else if (is_file_type ())
     file_value_ = 0;
 }
 
@@ -119,6 +106,66 @@ Madara::Knowledge_Record::set_value (const std::string & new_value)
   str_value_ = temp;
 }
 
+// set the value_ to a string
+void
+Madara::Knowledge_Record::set_xml (const char * new_value, size_t size)
+{
+  clear_value ();
+  type_ = XML;
+
+  // create a new char array and copy over the string
+  size_ = size + 1;
+  char * temp = new char [size_];
+  strncpy (temp, new_value, size_ - 1);
+  temp[size_ - 1] = 0;
+  str_value_ = temp;
+}
+
+// set the value_ to a string
+void
+Madara::Knowledge_Record::set_text (const char * new_value, size_t size)
+{
+  clear_value ();
+  type_ = TEXT_FILE;
+
+  // create a new char array and copy over the string
+  size_ = size + 1;
+  char * temp = new char [size_];
+  strncpy (temp, new_value, size_ - 1);
+  temp[size_ - 1] = 0;
+  str_value_ = temp;
+}
+
+// set the value_ to a string
+void
+Madara::Knowledge_Record::set_jpeg (const unsigned char * new_value,
+                                    size_t size)
+{
+  clear_value ();
+  type_ = IMAGE_JPEG;
+
+  // create a new char array and copy over the string
+  size_ = size;
+  unsigned char * temp = new unsigned char [size_];
+  memcpy (temp, new_value, size_);
+  file_value_ = temp;
+}
+
+// set the value_ to a string
+void
+Madara::Knowledge_Record::set_file (const unsigned char * new_value,
+                                    size_t size)
+{
+  clear_value ();
+  type_ = UNKNOWN_FILE_TYPE;
+
+  // create a new char array and copy over the string
+  size_ = size;
+  unsigned char * temp = new unsigned char [size_];
+  memcpy (temp, new_value, size_);
+  file_value_ = temp;
+}
+
 // set the value_ to an integer
 void
 Madara::Knowledge_Record::set_value (const Integer & new_value_)
@@ -142,19 +189,81 @@ Madara::Knowledge_Record::set_value (const double & new_value_)
 /**
   * reads an XML file from a string
   **/
-void
-Madara::Knowledge_Record::read_xml (const char * xml_contents)
+int
+Madara::Knowledge_Record::read_file (const std::string & filename)
 {
-  xml_value_ = new TiXmlDocument ();
-  xml_value_->Parse (xml_contents);
+  void * buffer;
+  size_t size;
+  bool add_zero_char = false;
+  
+  // clear the old value
+  clear_value ();
+  
+  std::string::size_type position = filename.rfind ('.');
+  std::string extension = filename.substr (position,
+    filename.size () - position);
+  Madara::Utility::lower (extension);
+  
+  // do we have a text-based file
+  if (extension == ".txt" || extension == ".xml")
+  {
+    add_zero_char = true;
+  }
+
+  // read the file into the temporary buffer
+  if (Madara::Utility::read_file (filename, buffer, size, add_zero_char) == 0)
+  {
+    // do we have a text-based file
+    if (extension == ".txt" || extension == ".xml")
+    {
+      // change the string value and size to appropriate values
+      str_value_ = (char *)buffer;
+      size_ = (uint32_t)size;
+      
+      if (extension == ".xml")
+        type_ = XML;
+      else
+        type_ = TEXT_FILE;
+    }
+    else
+    {
+      file_value_ = (unsigned char *)buffer;
+      size_ = (uint32_t)size;
+      if (extension == ".jpg")
+        type_ = IMAGE_JPEG;
+      else
+        type_ = UNKNOWN_FILE_TYPE;
+    }
+
+    return 0;
+  }
+  else
+    return -1;
 }
 
 /**
-  * copies an XML from a TinyXML Document object
+  * writes the value to a file
   **/
-void Madara::Knowledge_Record::copy_xml (const TiXmlDocument & xml_doc)
+ssize_t
+Madara::Knowledge_Record::to_file (const std::string & filename) const
 {
-  xml_value_ = new TiXmlDocument (xml_doc);
+  if (is_string_type ())
+  {
+    return Madara::Utility::write_file (filename,
+      (void *)str_value_.get_ptr (), size_);
+  }
+  else if (is_file_type ())
+  {
+    return Madara::Utility::write_file (filename,
+      (void *)file_value_.get_ptr (), size_);
+  }
+  else
+  {
+    std::string buffer (to_string ());
+    
+    return Madara::Utility::write_file (filename,
+      (void *)buffer.c_str (), buffer.size ());
+  }
 }
 
 
@@ -169,7 +278,7 @@ Madara::Knowledge_Record::to_double (void) const
     // read the value_ into a stringstream and then convert it to double
     if (     type_ == INTEGER)
       buffer << int_value_;
-    else if (type_ == STRING)
+    else if (is_string_type ())
       buffer << str_value_.get_ptr ();
     buffer >> value;
 
@@ -190,7 +299,7 @@ Madara::Knowledge_Record::to_integer (void) const
     // read the value_ into a stringstream and then convert it to double
     if (     type_ == DOUBLE)
       buffer << double_value_;
-    else if (type_ == STRING)
+    else if (is_string_type ())
       buffer << str_value_.get_ptr ();
     buffer >> value;
     
@@ -204,7 +313,7 @@ Madara::Knowledge_Record::to_integer (void) const
 std::string
 Madara::Knowledge_Record::to_string (void) const
 {
-  if (type_ != STRING)
+  if (!is_string_type ())
   {
     std::stringstream buffer;
     
@@ -212,9 +321,6 @@ Madara::Knowledge_Record::to_string (void) const
       buffer << int_value_;
     else if (type_ == DOUBLE)
       buffer << double_value_;
-    else if (type_ == XML)
-      // this is incorrect. Currently will stringify the doc name
-      return xml_value_->ValueStr ();
     return buffer.str ();
   }
   else
@@ -229,7 +335,7 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
   // if the left hand side is an integer
   if (type_ == INTEGER)
   {
-    if (rhs.type_ == STRING)
+    if (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -251,25 +357,16 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
   }
 
   // if the left hand side is a string
-  else if (type_ == STRING)
+  else if (is_string_type ())
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       record.int_value_ = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
         size () >= rhs.size () ? size () : rhs.size ()) < 0;
     }
     
-    // string to XML comparison
-    else if (rhs.type_ == XML)
-    {
-      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
-      record.int_value_ = 
-        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
-        size () >= rhs_value.size () ? size () : rhs_value.size ()) < 0;
-    }
-
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
     {
@@ -301,7 +398,7 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
   else if (type_ == DOUBLE)
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -339,7 +436,7 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
   {
     // for string comparisons against integers, assume the user
     // means the length of the string
-    if (rhs.type_ == STRING)
+    if (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -361,25 +458,16 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
   }
 
   // if the left hand side is a string
-  else if (type_ == STRING)
+  else if (is_string_type ())
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       record.int_value_ = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
         size () >= rhs.size () ? size () : rhs.size ()) <= 0;
     }
     
-    // string to XML comparison
-    else if (rhs.type_ == XML)
-    {
-      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
-      record.int_value_ = 
-        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
-        size () >= rhs_value.size () ? size () : rhs_value.size ()) <= 0;
-    }
-
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
     {
@@ -411,7 +499,7 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
   else if (type_ == DOUBLE)
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -449,7 +537,7 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
   {
     // for string comparisons against integers, assume the user
     // means the length of the string
-    if (rhs.type_ == STRING)
+    if (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -471,25 +559,16 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
   }
 
   // if the left hand side is a string
-  else if (type_ == STRING)
+  else if (is_string_type ())
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       record.int_value_ = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
         size () >= rhs.size () ? size () : rhs.size ()) == 0;
     }
     
-    // string to XML comparison
-    else if (rhs.type_ == XML)
-    {
-      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
-      record.int_value_ = 
-        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
-        size () >= rhs_value.size () ? size () : rhs_value.size ()) == 0;
-    }
-
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
     {
@@ -521,7 +600,7 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
   else if (type_ == DOUBLE)
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -576,7 +655,7 @@ Madara::Knowledge_Record::operator== (const std::string & value) const
 {
   // for this type of comparison, we can only be equal if we are the same
   // base type
-  if (type_ == STRING)
+  if (is_string_type ())
     return strncmp (
       str_value_.get_ptr (), value.c_str (),
       size () >= value.size () ? size () : value.size ()) == 0;
@@ -663,7 +742,7 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
   {
     // for string comparisons against integers, assume the user
     // means the length of the string
-    if (rhs.type_ == STRING)
+    if (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -685,25 +764,16 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
   }
 
   // if the left hand side is a string
-  else if (type_ == STRING)
+  else if (is_string_type ())
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       record.int_value_ = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (),
           size () >= rhs.size () ? size () : rhs.size ()) > 0;
     }
     
-    // string to XML comparison
-    else if (rhs.type_ == XML)
-    {
-      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
-      record.int_value_ = 
-        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
-        size () >= rhs_value.size () ? size () : rhs_value.size ()) > 0;
-    }
-
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
     {
@@ -735,7 +805,7 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
   else if (type_ == DOUBLE)
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -773,7 +843,7 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
   {
     // for string comparisons against integers, assume the user
     // means the length of the string
-    if (rhs.type_ == STRING)
+    if (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -795,25 +865,16 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
   }
 
   // if the left hand side is a string
-  else if (type_ == STRING)
+  else if (is_string_type ())
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       record.int_value_ =  
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (),
           size () >= rhs.size () ? size () : rhs.size ()) >= 0;
     }
     
-    // string to XML comparison
-    else if (rhs.type_ == XML)
-    {
-      const std::string & rhs_value = rhs.xml_value_->ValueStr ();
-      record.int_value_ = 
-        strncmp (str_value_.get_ptr (), rhs_value.c_str (), 
-        size () >= rhs_value.size () ? size () : rhs_value.size ()) >= 0;
-    }
-
     // string to double comparison
     else if (rhs.type_ == DOUBLE)
     {
@@ -845,7 +906,7 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
   else if (type_ == DOUBLE)
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
@@ -888,19 +949,16 @@ Madara::Knowledge_Record::operator= (const Knowledge_Record & rhs)
   scope = rhs.scope;
   status = rhs.status;
   type_ = rhs.type_;
+  size_ = rhs.size_;
 
-  if (type_ == STRING)
-  {
-    // copy over the rhs.str_value_ into a new memory location
-    size_ = rhs.size ();
+  if (is_string_type ())
     str_value_ = rhs.str_value_;
-  }
   else if (type_ == INTEGER)
     this->int_value_ = rhs.int_value_;
   else if (type_ == DOUBLE)
     this->double_value_ = rhs.double_value_;
-  else if (type_ == XML)
-    this->xml_value_ = rhs.xml_value_;
+  else if (is_file_type ())
+    file_value_ = rhs.file_value_;
 
   return *this;
 }
@@ -914,7 +972,7 @@ Madara::Knowledge_Record::operator+= (const Knowledge_Record & rhs)
   // if the left hand side is an integer
   if (type_ == INTEGER)
   {
-    if (rhs.type_ == STRING)
+    if (rhs.is_string_type ())
     {
       std::stringstream buffer;
       type_ = STRING;
@@ -942,10 +1000,10 @@ Madara::Knowledge_Record::operator+= (const Knowledge_Record & rhs)
   }
 
   // if the left hand side is a string
-  else if (type_ == STRING)
+  else if (is_string_type ())
   {
     // string to string comparison
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       std::stringstream buffer;
 
@@ -988,7 +1046,7 @@ Madara::Knowledge_Record::operator+= (const Knowledge_Record & rhs)
   else if (type_ == DOUBLE)
   {
     // string subtracted from a double
-    if      (rhs.type_ == STRING)
+    if      (rhs.is_string_type ())
     {
       std::stringstream buffer;
       double   rhs_value;
@@ -1319,11 +1377,11 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   buffer_remaining -= sizeof (size_);
   
   // Remove the value from the buffer
-  if      (type_ == STRING)
+  if      (is_string_type ())
   {
     // strings do not have to be converted
     if (buffer_remaining >= size_)
-      strncpy (buffer, str_value_.get_ptr (), size_);
+      memcpy (buffer, str_value_.get_ptr (), size_);
   }
   else if (type_ == INTEGER)
   {
@@ -1352,6 +1410,12 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
       strncpy (buffer, converted.c_str (), size_intermediate - 1);
       buffer[size_intermediate - 1] = 0;
     }
+  }
+  else if (is_file_type ())
+  {
+    // strings do not have to be converted
+    if (buffer_remaining >= size_)
+      memcpy (buffer, file_value_.get_ptr (), size_);
   }
 
   if (size_location)
@@ -1413,9 +1477,9 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   buffer_remaining -= sizeof (size_);
   
   // Remove the value from the buffer
-  if (size_ > 0 && buffer_remaining >= sizeof (size_))
+  if (size_ > 0 && buffer_remaining >= size_)
   {
-    if      (type_ == STRING)
+    if      (is_string_type ())
     {
       str_value_ = new char [size_];
       strncpy (str_value_.get_ptr (), buffer, size_);
@@ -1444,6 +1508,12 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
       size_ = sizeof (double);
     }
 
+    else if (is_file_type ())
+    {
+      file_value_ = new unsigned char [size_];
+      memcpy (file_value_.get_ptr (), buffer, size_);
+    }
+
     buffer += buff_value_size;
     buffer_remaining -= sizeof (char) * buff_value_size;
   }
@@ -1459,8 +1529,6 @@ int
   bool perform_lock)
 {
   int result = -1;
-  Madara::Knowledge_Engine::Knowledge_Update_Settings settings;
-  settings.treat_globals_as_locals = true;
 
   if (key.length () > 0)
   {
@@ -1480,16 +1548,9 @@ int
     // then that means this update is the latest value. Among
     // other things, this means our solution will work even
     // without FIFO channel transports
-    if (type_ == INTEGER)
-      result = context.set_if_unequal (key, int_value_, 
-                                      quality, clock, settings);
-    else if (type_ == DOUBLE)
-      result = context.set_if_unequal (key, double_value_, 
-                                      quality, clock, settings);
-    else if (type_ == STRING)
-      result = context.set_if_unequal (key, 
-                         std::string (str_value_.get_ptr ()), 
-                                      quality, clock, settings);
+    result = context.update_record_from_external (key, *this, 
+      Knowledge_Engine::TREAT_AS_LOCAL_UPDATE_SETTINGS);
+          
           
     if (perform_lock)
     {

@@ -32,15 +32,15 @@ namespace Madara
 
       /**
        * Read a file into the knowledge base
-       * @param file_name           file to read
+       * @param filename           file to read
        * @param knowledge_key       key to store the file into
        **/
       MADARA_Export int read_file (const std::string & knowledge_key,
-                     const std::string & file_name);
+                     const std::string & filename);
       
       /**
        * Read a file into an ACE_Mem_Map
-       * @param file_name           file to read
+       * @param filename           file to read
        * @param mem_map             memory map of file
        * @return                    
        **/
@@ -48,15 +48,15 @@ namespace Madara
       
       /**
        * Write a file from the knowledge base to a specified location
-       * @param file_name           file to write to
+       * @param filename           file to write to
        * @param knowledge_key       key to read the file from
        **/
       MADARA_Export int write_file (const std::string & knowledge_key,
-                      const std::string & file_name);
+                      const std::string & filename);
 
       /**
        * Write a memory buffer to file
-       * @param file_name           file to write to
+       * @param filename           file to write to
        * @param buffer              pointer to buffer
        * @param size                size of the buffer
        * @return                    amount written to file (-1 if error)

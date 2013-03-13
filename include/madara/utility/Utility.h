@@ -203,6 +203,28 @@ namespace Madara
      * @return    the converted value
      **/
     MADARA_Export int32_t endian_swap (int32_t value);
+
+    /**
+     * Reads a file into a provided void pointer. The void pointer will point
+     * to an allocated buffer that the user will need to delete.
+     * @param    filename   the name of the file
+     * @param    buffer     a buffer that contains the contents of the file
+     * @param    size       the size of the allocated buffer (will change)
+     * @param    add_zero_char  add a zero char to the end of the buffer
+     * @return              zero if successful
+     **/
+    MADARA_Export int  read_file (const std::string & filename,
+      void *& buffer, size_t & size, bool add_zero_char = false);
+    
+    /**
+     * Writes a file with provided contents.
+     * @param    filename   the name of the file
+     * @param    buffer     a buffer that contains the contents of the file
+     * @param    size       the size of the allocated buffer
+     * @return              amount of bytes written (-1 if unsuccessful)
+     **/
+    ssize_t write_file (const std::string & filename,
+      void * buffer, size_t size);
   }
 }
 #endif

@@ -106,19 +106,20 @@ namespace Madara
 
       /**
        * Read a file into the knowledge base
-       * @param file_name           file to read
+       * @param filename           file to read
        * @param knowledge_key       key to store the file into
        */
       int read_file (const std::string & knowledge_key, 
-                     const std::string & file_name);
+                     const std::string & filename, 
+        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
 
       /**
        * Write a file from the knowledge base to a specified location
-       * @param file_name           file to write to
+       * @param filename           file to write to
        * @param knowledge_key       key to read the file from
        */
       int write_file (const std::string & knowledge_key, 
-                      const std::string & file_name);
+                      const std::string & filename);
 
       /**
        * Read a policy into the knowledge base

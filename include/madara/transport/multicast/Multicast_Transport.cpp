@@ -137,8 +137,8 @@ Madara::Transport::Multicast_Transport::send_data (
 
 
   // allocate a buffer to send
-  char buffer [512000];
-  int64_t buffer_remaining = 512000;
+  char buffer [Madara::Transport::MAX_PACKET_SIZE];
+  int64_t buffer_remaining = Madara::Transport::MAX_PACKET_SIZE;
 
   // set the header to the beginning of the buffer
   Message_Header header;
@@ -176,6 +176,18 @@ Madara::Transport::Multicast_Transport::send_data (
   
   // Message header format
   // [size|id|domain|originator|type|updates|quality|clock|list of updates]
+  
+  /**
+   * size = buffer[0] (unsigned 64 bit)
+   * transport id = buffer[8] (8 byte)
+   * domain = buffer[16] (32 byte domain name)
+   * originator = buffer[48] (64 byte originator host:port)
+   * type = buffer[112] (unsigned 32 bit type of message--usually MULTIASSIGN)
+   * updates = buffer[116] (unsigned 32 bit number of updates)
+   * quality = buffer[120] (unsigned 32 bit quality of message)
+   * clock = buffer[124] (unsigned 64 bit clock for this message)
+   * knowledge = buffer[132] (the new knowledge starts here)
+  **/
 
   // zero out the memory
   //memset(buffer, 0, Madara::Transport::MAX_PACKET_SIZE);
@@ -193,15 +205,15 @@ Madara::Transport::Multicast_Transport::send_data (
     {
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "Multicast_Transport::send_data:" \
-        " update[%d] => %s=%s\n",
-        j, i->first.c_str (), i->second->to_string ().c_str ()));
+        " update[%d] => encoding %s of type %d and size %d\n",
+        j, i->first.c_str (), i->second->type (), i->second->size ()));
     }
     else
     {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       DLINFO "Multicast_Transport::send_data:" \
-      " unable to send due to overflow in buffer for update[%d] => %s=%s\n",
-      j, i->first.c_str (), i->second->to_string ().c_str ()));
+      " unable to encode update[%d] => %s of type %d and size %d\n",
+      j, i->first.c_str (), i->second->type (), i->second->size ()));
     }
   }
   
@@ -240,7 +252,7 @@ Madara::Transport::Multicast_Transport::send_data (
 
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Multicast_Transport::send_data:" \
-        " Sent packet with size %d\n",
+        " Sent packet of size %d\n",
         bytes_sent));
     }
   }

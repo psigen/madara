@@ -17,7 +17,7 @@
 #include "madara/utility/stdint.h"
 #include "madara/utility/Scoped_Array.h"
 #include "madara/utility/Refcounter.h"
-#include "madara/utility/tinyxml.h"
+#include "ace/os_include/sys/os_types.h"
 
 namespace Madara
 {
@@ -54,9 +54,10 @@ namespace Madara
       STRING = 1,
       DOUBLE = 2,
       FLOAT = 2,
-      FILE = 3,
-      IMAGE = 4,
-      XML = 5
+      UNKNOWN_FILE_TYPE = 3,
+      XML = 4,
+      TEXT_FILE = 5,
+      IMAGE_JPEG = 50
     };
     
     typedef  int64_t     Integer;
@@ -116,11 +117,6 @@ namespace Madara
      **/
     Madara::Utility::Scoped_Array <unsigned char> file_value_;
     
-    /**
-     * potential xml (tinyxml)
-     **/
-    Madara::Utility::Refcounter <TiXmlDocument> xml_value_;
-
   public:
 
     /* default constructor */
@@ -148,6 +144,12 @@ namespace Madara
      * converts the value to a string
      **/
     std::string to_string (void) const;
+    
+    /**
+     * writes the value to a file
+     * @param   filename     file location to write to
+     **/
+    ssize_t to_file (const std::string & filename) const;
 
     /**
      * converts the value to an integer
@@ -176,19 +178,38 @@ namespace Madara
      * @param    new_value   new value of the Knowledge Record
      **/
     void set_value (const double & new_value);
+    
+    /**
+     * sets the value to an xml string
+     * @param    new_value   new value of the Knowledge Record
+     **/
+    void set_xml (const char * new_value, size_t size);
+    
+    /**
+     * sets the value to an xml string
+     * @param    new_value   new value of the Knowledge Record
+     **/
+    void set_text (const char * new_value, size_t size);
+    
+    /**
+     * sets the value to an xml string
+     * @param    new_value   new value of the Knowledge Record
+     **/
+    void set_jpeg (const unsigned char * new_value, size_t size);
+    
+    /**
+     * sets the value to an xml string
+     * @param    new_value   new value of the Knowledge Record
+     **/
+    void set_file (const unsigned char * new_value, size_t size);
 
     /**
-     * reads an XML file from a string
-     * @param    xml_contents xml contents to parse from
+     * reads a file and sets the type appropriately according to
+     * the extension
+     * @param   filename   location of the file to read from
      **/
-    void read_xml (const char * xml_contents);
-
-    /**
-     * copies an XML from a TinyXML Document object
-     * @param    xml_doc      xml document to copy from
-     **/
-    void copy_xml (const TiXmlDocument & xml_doc);
-
+    int read_file (const std::string & filename);
+    
     /**
      * resets the variable to an integer
      **/
@@ -217,6 +238,21 @@ namespace Madara
       return type_;
     }
     
+    inline bool is_string_type (void) const
+    {
+      return type_ == STRING || type_ == XML || type_ == TEXT_FILE;
+    }
+
+    inline bool is_image_type (void) const
+    {
+      return type_ == IMAGE_JPEG;
+    }
+    
+    inline bool is_file_type (void) const
+    {
+      return type_ == XML || type_ == IMAGE_JPEG || type_ == UNKNOWN_FILE_TYPE;
+    }
+
     /**
      * Less than
      **/

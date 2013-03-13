@@ -180,6 +180,196 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   return 0;
 }
 
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
+  const std::string & key,
+  const char * value, size_t size,
+  const Knowledge_Update_Settings & settings)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  record.set_xml (value, size);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
+  const std::string & key,
+  const char * value, size_t size,
+  const Knowledge_Update_Settings & settings)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  record.set_text (value, size);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
+  const std::string & key,
+  const unsigned char * value, size_t size,
+  const Knowledge_Update_Settings & settings)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  record.set_jpeg (value, size);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
+  const std::string & key,
+  const unsigned char * value, size_t size,
+  const Knowledge_Update_Settings & settings)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  record.set_file (value, size);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
+  const std::string & key,
+  const std::string & filename,
+  const Knowledge_Update_Settings & settings)
+{
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[key];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  int ret_value = record.read_file (filename);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if (key[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (key, record);
+    }
+  }
+
+  changed_.signal ();
+
+  return ret_value;
+}
+
 /// get quality of last update to a variable.
 /// @return    quality of the variable 
 uint32_t 
@@ -495,6 +685,80 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
 
     changed_.signal ();
   }
+
+  // value was changed
+  return result;
+}
+
+
+/// Set if the variable value will be different. Always updates clock to
+/// highest value
+/// @return   1 if the value was changed. 0 if not changed. 
+///           -1 if null key, -2 if quality not high enough
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
+  const std::string & key, const Knowledge_Record & rhs,
+  const Knowledge_Update_Settings & settings)
+{
+  int result = 1;
+
+  // check for null key
+  if (key == "")
+    return -1;
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // find the key in the knowledge base
+  Knowledge_Map::iterator found = map_.find (key);
+
+  // if it's found, then compare the value
+  if (!settings.always_overwrite && found != map_.end ())
+  {
+    // if we do not have enough quality to update the variable
+    // return -2
+    if (rhs.quality < found->second.quality)
+      result = -2;
+
+    // if we have the same quality, but our clock value
+    // is less than what we've already seen, then return -3
+    else if (rhs.quality == found->second.quality && 
+             rhs.clock < found->second.clock)
+      result = -3;
+
+    // if we reach this point, then the record is safe to copy
+    found->second = rhs;
+    
+    // otherwise set the value
+    if (key[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (key, found->second);
+      }
+    }
+  }
+  else
+  {
+    // if we reach this point, then we have to create the record
+    Knowledge_Record & current_value = map_[key];
+    current_value = rhs;
+
+    // otherwise set the value
+    if (key[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (key, current_value);
+      }
+    }
+  }
+  
+  // if we need to update the global clock, then update it
+  if (rhs.clock > this->clock_)
+    this->clock_ = rhs.clock;
+
+  changed_.signal ();
 
   // value was changed
   return result;

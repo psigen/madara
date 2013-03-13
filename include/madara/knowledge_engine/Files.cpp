@@ -29,44 +29,44 @@ Madara::Knowledge_Engine::Files::shape_file (
 
 /// Read a file and update a buffer and size
 int 
-Madara::Knowledge_Engine::Files::read_file (const char * file_name, 
+Madara::Knowledge_Engine::Files::read_file (const char * filename, 
                      ACE_Mem_Map & mem_map)
 {
   // load the source file into a mapped file of the OS's 
   // virtual memory system
-  ACE_Mem_Map mapped_file (file_name);
-  return mem_map.map (file_name);
+  ACE_Mem_Map mapped_file (filename);
+  return mem_map.map (filename);
 }
 
 /// Read a file into the knowledge base
 int 
 Madara::Knowledge_Engine::Files::read_file (
-  const std::string & knowledge_key, const std::string & file_name)
+  const std::string & knowledge_key, const std::string & filename)
 {
   // return value for function
   int ret = 0;
 
   // Stringstreams for building the name of the files
-  std::stringstream source_file_name;
-  std::stringstream dest_file_name;
+  std::stringstream source_filename;
+  std::stringstream dest_filename;
 
   // build source file name
-  source_file_name << file_name;
+  source_filename << filename;
 
   // build dest file name
-  dest_file_name << files_folder_;
-  dest_file_name << "/";
-  dest_file_name << knowledge_key;
+  dest_filename << files_folder_;
+  dest_filename << "/";
+  dest_filename << knowledge_key;
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE,
     (LM_TRACE, 
       DLINFO "Files::read_file : %s->%s\n",
-    source_file_name.str ().c_str (), dest_file_name.str ().c_str ()));
+    source_filename.str ().c_str (), dest_filename.str ().c_str ()));
 
   // load the source file into a mapped file of the OS's 
   // virtual memory system
   ACE_Mem_Map mapped_file;
-  read_file (source_file_name.str ().c_str (), mapped_file);
+  read_file (source_filename.str ().c_str (), mapped_file);
   void * file_contents = mapped_file.addr ();
   size_t size = mapped_file.size ();
 
@@ -78,7 +78,7 @@ Madara::Knowledge_Engine::Files::read_file (
   {
     // obtain the address of the mapped file and write the mapped file
     // to the destination
-    size_t actual = write_file (dest_file_name.str ().c_str (), 
+    size_t actual = write_file (dest_filename.str ().c_str (), 
                                 file_contents, size);
 
     // if we actually wrote something to the file, update the specified
@@ -110,32 +110,32 @@ Madara::Knowledge_Engine::Files::read_file (
 /// Write a file from the knowledge base to a specified location
 int 
 Madara::Knowledge_Engine::Files::write_file (
-  const std::string & knowledge_key, const std::string & file_name)
+  const std::string & knowledge_key, const std::string & filename)
 {
   // return value for function
   int ret = 0;
 
   // Stringstreams for building the name of the files
-  std::stringstream source_file_name;
-  std::stringstream dest_file_name;
+  std::stringstream source_filename;
+  std::stringstream dest_filename;
 
   // build source file name
-  source_file_name << files_folder_;
-  source_file_name << "/";
-  source_file_name << knowledge_key;
+  source_filename << files_folder_;
+  source_filename << "/";
+  source_filename << knowledge_key;
 
   // build dest file name
-  dest_file_name << file_name;
+  dest_filename << filename;
 
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
     DLINFO "Files::write_file : %s->%s\n", 
-    source_file_name.str ().c_str (), dest_file_name.str ().c_str ()));
+    source_filename.str ().c_str (), dest_filename.str ().c_str ()));
 
   // load the source file into a mapped file of the OS's 
   // virtual memory system
   ACE_Mem_Map mapped_file;
-  read_file (source_file_name.str ().c_str (), mapped_file);
+  read_file (source_filename.str ().c_str (), mapped_file);
   void * file_contents = mapped_file.addr ();
   size_t size = mapped_file.size ();
 
@@ -147,7 +147,7 @@ Madara::Knowledge_Engine::Files::write_file (
   {
     // obtain the address of the mapped file and write the mapped file
     // to the destination
-    size_t actual = write_file (dest_file_name.str ().c_str (), 
+    size_t actual = write_file (dest_filename.str ().c_str (), 
                                 file_contents, size);
 
     // if we actually wrote something to the file, update the specified
@@ -214,25 +214,25 @@ Madara::Knowledge_Engine::Files::read_policy (
   int ret = 0;
 
   // Stringstreams for building the name of the files
-  std::stringstream source_file_name;
-  std::stringstream dest_file_name;
+  std::stringstream source_filename;
+  std::stringstream dest_filename;
 
   // build source file name
-  source_file_name << policy_file;
+  source_filename << policy_file;
 
   // build dest file name
-  dest_file_name << policies_folder_;
-  dest_file_name << "/";
-  dest_file_name << policy_key;
+  dest_filename << policies_folder_;
+  dest_filename << "/";
+  dest_filename << policy_key;
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_TRACE, 
     DLINFO "Files::read_policy : %s->%s\n", 
-    source_file_name.str ().c_str (), dest_file_name.str ().c_str ()));
+    source_filename.str ().c_str (), dest_filename.str ().c_str ()));
 
   // load the source file into a mapped file of the OS's 
   // virtual memory system
   ACE_Mem_Map mapped_file;
-  read_file (source_file_name.str ().c_str (), mapped_file);
+  read_file (source_filename.str ().c_str (), mapped_file);
   void * file_contents = mapped_file.addr ();
   size_t size = mapped_file.size ();
 
@@ -244,7 +244,7 @@ Madara::Knowledge_Engine::Files::read_policy (
   {
     // obtain the address of the mapped file and write the mapped file
     // to the destination
-    size_t actual = write_file (dest_file_name.str ().c_str (), 
+    size_t actual = write_file (dest_filename.str ().c_str (), 
                                 file_contents, size);
 
     // if we actually wrote something to the file, update the specified
