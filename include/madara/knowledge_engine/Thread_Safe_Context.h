@@ -161,7 +161,7 @@ namespace Madara
        * @return   0 if the value was set. -1 if unsuccessful
        **/
       int
-      Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
+      read_file (
         const std::string & key,
         const std::string & filename,
         const Knowledge_Update_Settings & settings);
