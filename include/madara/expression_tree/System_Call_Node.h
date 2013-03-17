@@ -1,12 +1,12 @@
 /* -*- C++ -*- */
-#ifndef _TERNARY_NODE_H_
-#define _TERNARY_NODE_H_
+#ifndef _SYSTEM_CALL_H_
+#define _SYSTEM_CALL_H_
 
 #include <string>
 #include <stdexcept>
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/utility/stdint.h"
-#include "madara/expression_tree/Component_Node.h"
+#include "madara/expression_tree/Composite_Ternary_Node.h"
 
 
 namespace Madara
@@ -17,27 +17,29 @@ namespace Madara
     class Visitor;
 
     /**
-     * @class Ternary_Node
-     * @brief An abstract base class defines a simple abstract
-     *        implementation of an expression tree node.
+     * @class System_Call_Node
+     * @brief Interface for a MADARA system call
      */
-    class Composite_Ternary_Node : public Component_Node
+    class System_Call_Node : public Composite_Ternary_Node
     {
     public:
       /**
        * Constructor
        **/
-      Composite_Ternary_Node ();
+      System_Call_Node (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context);
 
       /**
        * Constructor
        **/
-      Composite_Ternary_Node (const Component_Nodes & nodes);
+      System_Call_Node (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context,
+        const Component_Nodes & nodes);
       
       /**
        * Destructor
        **/
-      virtual ~Composite_Ternary_Node (void);
+      virtual ~System_Call_Node (void);
 
       /**
        * Returns the value of the node
@@ -50,14 +52,16 @@ namespace Madara
        * @param     can_change   set to true if variable nodes are contained
        * @return    value of current contained expression tree
        **/
-      virtual Madara::Knowledge_Record prune (bool & can_change) = 0;
+      virtual Madara::Knowledge_Record prune (bool & can_change)
+        = 0;
 
       /** 
        * Evaluates the expression tree. 
        * @return    value of current contained expression tree
        **/
       virtual Madara::Knowledge_Record evaluate (
-        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings) = 0;
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
+        = 0;
 
       /** 
        * Accepts a visitor subclassed from the Visitor class
@@ -66,9 +70,10 @@ namespace Madara
       virtual void accept (Visitor &visitor) const;
 
     protected:
-      Component_Nodes nodes_;
+      
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
   }
 }
 
-#endif /* _TERNARY_NODE_H_ */
+#endif /* _SYSTEM_CALL_H_ */

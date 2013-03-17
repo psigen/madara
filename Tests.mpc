@@ -94,6 +94,25 @@ project (Test_Swarm_Terminal) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_System_Calls) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_system_calls
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_system_calls.cpp
+  }
+}
+
 project (Test_Broadcast_Rules) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_broadcast_rules

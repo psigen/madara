@@ -130,7 +130,8 @@ namespace Madara
                           int & accumulated_precedence,
                           ::std::list<Symbol *>& list,
                            Symbol *& lastValidInput);
-            /**
+
+       /**
        * Inserts a variable into the tree
        * @param    context    interpreter context
        * @param    input      expression to compile
@@ -141,6 +142,23 @@ namespace Madara
        **/
       void string_insert (const std::string &input, 
                           std::string::size_type &i,
+                          int & accumulated_precedence,
+                          ::std::list<Symbol *>& list,
+                           Symbol *& lastValidInput);
+      
+      /**
+       * Inserts a system call into the tree
+       * @param    context    interpreter context
+       * @param    input      expression to compile
+       * @param    i          current position in expression
+       * @param    accumulated_precedence  current precedence
+       * @param    list       list of symbols in tree that are free
+       * @param    lastValidInput          last valid symbol that was read
+       **/
+      void system_call_insert (
+        Madara::Knowledge_Engine::Thread_Safe_Context &context,
+                            const std::string &input,
+                            std::string::size_type &i,
                           int & accumulated_precedence,
                           ::std::list<Symbol *>& list,
                            Symbol *& lastValidInput);

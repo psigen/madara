@@ -37,6 +37,13 @@
 #include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
+#include "madara/expression_tree/System_Call_Get_Clock.h"
+#include "madara/expression_tree/System_Call_Log_Level.h"
+#include "madara/expression_tree/System_Call_Read_File.h"
+#include "madara/expression_tree/System_Call_Set_Clock.h"
+#include "madara/expression_tree/System_Call_Size.h"
+#include "madara/expression_tree/System_Call_Type.h"
+#include "madara/expression_tree/System_Call_Write_File.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/utility/Log_Macros.h"
 
@@ -130,6 +137,166 @@ namespace Madara
 
       Component_Nodes nodes_;
     };
+    
+    /**
+    * @class System_Call
+    * @brief Abstract base class for operators with 3+ potential subnodes
+    * @see   Both
+    */
+    class System_Call : public Ternary_Operator
+    {
+    public:
+      /// constructor
+      System_Call (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+
+      /// destructor
+      virtual ~System_Call (void);
+
+      /// Context for variables
+      Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+    };
+
+    
+    /**
+    * @class Read_File
+    * @brief Reads a file
+    */
+    class Read_File : public System_Call
+    {
+    public:
+      /// constructor
+      Read_File (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Read_File (void);
+    };
+    
+    /**
+    * @class Write_File
+    * @brief Writes a file
+    */
+    class Write_File : public System_Call
+    {
+    public:
+      /// constructor
+      Write_File (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Write_File (void);
+    };
+    
+    /**
+    * @class Size
+    * @brief Returns the size of a record
+    */
+    class Size : public System_Call
+    {
+    public:
+      /// constructor
+      Size (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Size (void);
+    };
+
+    /**
+    * @class Type
+    * @brief Returns the type of a record
+    */
+    class Type : public System_Call
+    {
+    public:
+      /// constructor
+      Type (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Type (void);
+    };
+    
+    /**
+    * @class Log_Level
+    * @brief Reads or sets the MADARA log level
+    */
+    class Log_Level : public System_Call
+    {
+    public:
+      /// constructor
+      Log_Level (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Log_Level (void);
+    };
+
+    /**
+    * @class Get_Clock
+    * @brief Returns the system or a variable clock
+    */
+    class Get_Clock : public System_Call
+    {
+    public:
+      /// constructor
+      Get_Clock (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Get_Clock (void);
+    };
+    
+    /**
+    * @class Set_Clock
+    * @brief Sets the system or a variable clock
+    */
+    class Set_Clock : public System_Call
+    {
+    public:
+      /// constructor
+      Set_Clock (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Set_Clock (void);
+    };
+
 
     /**
     * @class Unary_Operator
@@ -530,7 +697,6 @@ namespace Madara
       virtual ~Return_Right (void);
 
       /// returns the precedence level
-      //virtual int precedence (void);
       virtual int add_precedence (int accumulated_precedence);
 
       /// builds an equivalent Expression_Tree node
@@ -1098,6 +1264,218 @@ Madara::Expression_Tree::Function::build ()
 {
   return new Composite_Function_Node (name_, context_, nodes_);
 }
+
+
+
+
+// constructor
+Madara::Expression_Tree::System_Call::System_Call (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: Ternary_Operator (0, 0, VARIABLE_PRECEDENCE), context_ (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::System_Call::~System_Call (void)
+{
+}
+
+
+
+
+// constructor
+Madara::Expression_Tree::Log_Level::Log_Level (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Log_Level::~Log_Level (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Log_Level::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Log_Level::build ()
+{
+  return new System_Call_Log_Level (context_, nodes_);
+}
+
+
+
+
+// constructor
+Madara::Expression_Tree::Get_Clock::Get_Clock (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Get_Clock::~Get_Clock (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Get_Clock::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Get_Clock::build ()
+{
+  return new System_Call_Get_Clock (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::Set_Clock::Set_Clock (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Set_Clock::~Set_Clock (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Set_Clock::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Set_Clock::build ()
+{
+  return new System_Call_Set_Clock (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::Read_File::Read_File (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Read_File::~Read_File (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Read_File::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Read_File::build ()
+{
+  return new System_Call_Read_File (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::Write_File::Write_File (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Write_File::~Write_File (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Write_File::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Write_File::build ()
+{
+  return new System_Call_Write_File (context_, nodes_);
+}
+
+
+
+// constructor
+Madara::Expression_Tree::Size::Size (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Size::~Size (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Size::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Size::build ()
+{
+  return new System_Call_Size (context_, nodes_);
+}
+
+
+
+// constructor
+Madara::Expression_Tree::Type::Type (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Type::~Type (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Type::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Type::build ()
+{
+  return new System_Call_Type (context_, nodes_);
+}
+
+
 
 // constructor
 Madara::Expression_Tree::For_Loop::For_Loop (Symbol * precondition,
@@ -2405,7 +2783,7 @@ void
                   handled, accumulated_precedence, substr_list);
       }
       
-      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
         "Precondition is set to %s\n",
         substr.c_str ()));
 
@@ -2431,7 +2809,7 @@ void
                   handled, accumulated_precedence, substr_list);
       }
       
-      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
         "Postcondition is set to %s\n",
         substr.c_str ()));
 
@@ -2460,7 +2838,7 @@ void
       // we have a condition
       if (!substr_list.empty ())
       {
-        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
           "Condition is set to %s\n",
           substr.c_str ()));
 
@@ -2469,7 +2847,7 @@ void
       }
       else
       {
-        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+        MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
           "Condition was not set to %s\n",
           substr.c_str ()));
 
@@ -2489,7 +2867,7 @@ void
                 handled, accumulated_precedence, substr_list);
     }
       
-    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
       "Condition only is set to %s\n",
       substr.c_str ()));
 
@@ -2513,7 +2891,7 @@ void
   if (!user_post)
   {
     user_post = new Number ((Madara::Knowledge_Record::Integer)1);
-    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
       "Postcondition is set to 1 (def)\n"));
   }
 
@@ -2526,7 +2904,7 @@ void
     ++i;
     lastValidInput = 0;
     
-      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
         "Body is reading from %s\n",
         input.substr (i, input.size () - i).c_str ()));
 
@@ -2554,13 +2932,13 @@ void
 
         if (variable_node && number)
         {
-          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
             "For_Loop: Body is a simple assignment of variable %s to %s\n",
             variable_node->key_.c_str (), number->item_.to_string ().c_str ()));
         }
         else
         {
-          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_ERROR, DLINFO
+          MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
             "For loop has a complex body\n"));
         }
       }
@@ -2753,6 +3131,117 @@ Madara::Expression_Tree::Interpreter::string_insert (const std::string &input,
   precedence_insert (number, list);
 }
 
+// inserts a variable (leaf node / number) into the parse tree
+void
+Madara::Expression_Tree::Interpreter::system_call_insert (
+                           Madara::Knowledge_Engine::Thread_Safe_Context &context,
+                                                       const std::string &input,
+                                                       std::string::size_type &i,
+                                                       int & accumulated_precedence,
+                                                       ::std::list<Symbol *>& list,
+                                                       Symbol *& lastValidInput)
+{
+  // build a potential variable name (this could also be a function)
+  std::string::size_type j = 1;
+
+  for (; i + j < input.length () && is_alphanumeric (input[i + j]); ++j)
+    continue;
+
+  // the variable or function name is stored in input.substr (i,j)
+  // is the next char a parenthesis?
+
+  std::string name = input.substr (i, j);
+  
+  i += j;
+  
+  //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, DLINFO
+  //    "Checking %s, before is_whitespace. i=%d, j=%Q\n",
+  //    name.c_str (), i, j));
+
+  // eat up whitespace so we can check for a parenthesis (function)
+  for (; i < input.length () && is_whitespace (input[i]); ++i);
+  
+  //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, DLINFO
+  //    "Checking %s, after is_whitespace. i=%d, j=%Q\n",
+  //    name.c_str (), i, j));
+
+  if (i < input.length () && input[i] == '(')
+  {
+    // save the function name and update i
+    System_Call * call = 0;
+    
+    if (name == "#get_clock")
+    {
+      call = new Get_Clock (context);
+    }
+    else if (name == "#log_level")
+    {
+      call = new Log_Level (context);
+    }
+    else if (name == "#read_file")
+    {
+      call = new Read_File (context);
+    }
+    else if (name == "#set_clock")
+    {
+      call = new Set_Clock (context);
+    }
+    else if (name == "#size")
+    {
+      call = new Size (context);
+    }
+    else if (name == "#type")
+    {
+      call = new Type (context);
+    }
+    else if (name == "#write_file")
+    {
+      call = new Write_File (context);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        DLINFO "KARL COMPILE ERROR: " \
+        "System call %s is unsupported in this version of MADARA.\n",
+        name.c_str ()));
+
+      return;
+    }
+
+    call->add_precedence (accumulated_precedence);
+
+    bool handled = false;
+
+    ::std::list<Symbol *> param_list;
+    
+    ++i;
+
+    // we have a function instead of a variable
+    handle_parenthesis (context, input, i, lastValidInput, handled,
+      accumulated_precedence, param_list, true);
+
+    call->nodes_.resize (param_list.size ());
+    int cur = 0;
+
+    for (::std::list<Symbol *>::iterator arg = param_list.begin ();
+        arg != param_list.end (); ++arg, ++cur)
+    {
+      call->nodes_[cur] = (*arg)->build ();
+    }
+
+    precedence_insert (call, list);
+    lastValidInput = 0;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+      DLINFO "KARL COMPILE ERROR: " \
+      "System call %s does not have appropriate parentheses.\n",
+      name.c_str ()));
+  }
+
+}
+
 // inserts a leaf node / number into the parse tree
 void
 Madara::Expression_Tree::Interpreter::number_insert (const std::string &input,
@@ -2890,14 +3379,14 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
         Both * parent_both = dynamic_cast <Both *> (parent);
         if (parent_both)
         {
-          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
             DLINFO "KARL COMPILE WARNING: " \
             "Empty statements between ';' may cause slower execution.\n" \
             "  Attempting to prune away the extra statement.\n"));
         }
         else
         {
-          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
             DLINFO "KARL COMPILE WARNING: " \
             "Binary operation has no left child. Inserting a zero.\n"));
           parent->left_ = new Number ((Madara::Knowledge_Record::Integer)0);
@@ -2909,7 +3398,7 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
       // something like 5 ! 3, which has no meaning. This is a compile error.
       if (parent_unary && parent->left_)
       {
-        MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+        MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, DLINFO
           "\nKARL COMPILE ERROR: " \
             "Unary operation shouldn't have a left child.\n"));
         exit (-1);
@@ -2924,7 +3413,7 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
           // This is a compile error. Unary cannot have a left
           // child, and that is the only way that being at this
           // point would make sense.
-          MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+          MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, DLINFO
             "\nKARL COMPILE ERROR: " \
             " unary operation shouldn't have a left child.\n"));
           exit (-1);
@@ -2980,8 +3469,15 @@ Madara::Expression_Tree::Interpreter::main_loop (
   {
     ++i;
     handled = true;
-    // variable leaf node
+    // string
     string_insert (input, i, accumulated_precedence, 
+      list, lastValidInput);
+  }
+  else if (input[i] == '#')
+  {
+    handled = true;
+    // variable leaf node
+    system_call_insert (context, input, i, accumulated_precedence,
       list, lastValidInput);
   }
   else if (input[i] == '+')
@@ -3006,7 +3502,7 @@ Madara::Expression_Tree::Interpreter::main_loop (
         // major error here. The left hand side must be a variable
         op = new Variable_Increment (".MADARA_I", Madara::Knowledge_Record (), 0, context);
         
-        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
           DLINFO "KARL COMPILE WARNING (+=): " \
           "Assignments must have a variable left hand side. Using .MADARA_I by " \
           "default, but this is likely a major error in the expression.\n"));
@@ -3046,7 +3542,7 @@ Madara::Expression_Tree::Interpreter::main_loop (
         op = new Variable_Decrement (".MADARA_I", Madara::Knowledge_Record (),
                    0, context);
         
-        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
           DLINFO "KARL COMPILE WARNING (-=): " \
           "Assignments must have a variable left hand side. Using .MADARA_I by " \
           "default, but this is likely a major error in the expression.\n"));
@@ -3084,7 +3580,7 @@ Madara::Expression_Tree::Interpreter::main_loop (
         op = new Variable_Multiply (".MADARA_I", Madara::Knowledge_Record (),
                    0, context);
         
-        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+        MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
           DLINFO "KARL COMPILE WARNING (*=): " \
           "Assignments must have a variable left hand side. Using .MADARA_I by " \
           "default, but this is likely a major error in the expression.\n"));
@@ -3155,7 +3651,7 @@ Madara::Expression_Tree::Interpreter::main_loop (
           // major error here. The left hand side must be a variable
           op = new Variable_Divide (".MADARA_I", Madara::Knowledge_Record (), 0, context);
         
-          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_TRACE, 
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
             DLINFO "KARL COMPILE WARNING (-=): " \
             "Assignments must have a variable left hand side. Using .MADARA_I by " \
             "default, but this is likely a major error in the expression.\n"));
@@ -3278,7 +3774,7 @@ Madara::Expression_Tree::Interpreter::main_loop (
     else
     {
       // error. We don't currently support logical or
-      MADARA_DEBUG (MADARA_LOG_NONFATAL_ERROR, (LM_ERROR, DLINFO
+      MADARA_DEBUG (MADARA_LOG_NONFATAL_ERROR, (LM_DEBUG, DLINFO
         "\nKARL COMPILE ERROR: " \
         " Logical And (|) not available\n." \
         " You may want to use || instead in %s.\n", input.c_str ()));
@@ -3424,7 +3920,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
 
   if (!build_argument_list && !closed)
   {
-    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+    MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, DLINFO
       "\nKARL COMPILE ERROR: " \
       "Forgot to close parenthesis in %s.\n", input.c_str ()));
     exit (-1);
@@ -3453,7 +3949,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
   {
     if (list.size () > 1)
     {
-      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, DLINFO
         "\nKARL COMPILE ERROR: " \
         "A parenthesis was closed, leaving multiple list items (there should "
         "be a max of 1) in %s.\n", input.c_str ()));

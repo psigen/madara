@@ -341,4 +341,3 @@ Madara::Expression_Tree::Variable_Node::inc (
   else
     return context_.inc (expand_key (), settings);
 }
-

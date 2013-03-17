@@ -87,6 +87,20 @@ namespace Madara
       /// Define the @a accept() operation used for the Visitor pattern.
       virtual void accept (Visitor &visitor) const; 
 
+      /**
+       * Retrieves the underlying Knowledge_Record in the context (useful for
+       * system calls).
+       * @return      the Knowledge_Record inside of the context
+       **/
+      inline
+      Madara::Knowledge_Record * get_record (void)
+      {
+        if (record_)
+          return record_;
+        else
+          return context_.get_record (expand_key ());
+      }
+
     private:
       /// Key for retrieving value of this variable.
       const std::string key_;

@@ -207,6 +207,7 @@ namespace Madara
      * reads a file and sets the type appropriately according to
      * the extension
      * @param   filename   location of the file to read from
+     * @return  
      **/
     int read_file (const std::string & filename);
     

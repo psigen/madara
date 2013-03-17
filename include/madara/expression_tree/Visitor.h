@@ -38,6 +38,13 @@ namespace Madara
     class Composite_Multiply_Node;
     class Composite_Modulus_Node;
     class Composite_Return_Right_Node;
+    class System_Call_Log_Level;
+    class System_Call_Get_Clock;
+    class System_Call_Read_File;
+    class System_Call_Set_Clock;
+    class System_Call_Size;
+    class System_Call_Type;
+    class System_Call_Write_File;
 
     /**
      * @class Visitor
@@ -145,6 +152,27 @@ namespace Madara
 
       /// Visit a Composite_Implies_Node.
       virtual void visit (const Composite_Implies_Node &node) = 0;
+      
+      /// Visit a System_Call_Set_Clock.
+      virtual void visit (const System_Call_Get_Clock &node) = 0;
+      
+      /// Visit a System_Call_Log_Level.
+      virtual void visit (const System_Call_Log_Level &node) = 0;
+      
+      /// Visit a System_Call_Read_File.
+      virtual void visit (const System_Call_Read_File &node) = 0;
+      
+      /// Visit a System_Call_Set_Clock.
+      virtual void visit (const System_Call_Set_Clock &node) = 0;
+      
+      /// Visit a System_Call_Size.
+      virtual void visit (const System_Call_Size &node) = 0;
+      
+      /// Visit a System_Call_Type.
+      virtual void visit (const System_Call_Type &node) = 0;
+      
+      /// Visit a System_Call_Write_File.
+      virtual void visit (const System_Call_Write_File &node) = 0;
 
       /// No-op destructor to hold things together.
       virtual ~Visitor (void) = 0;
