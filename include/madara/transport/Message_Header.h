@@ -1,6 +1,14 @@
 #ifndef  _MESSAGE_HEADER_H_
 #define  _MESSAGE_HEADER_H_
 
+/**
+ * @file Message_Header.h
+ * @author James Edmondson <jedmondson@gmail.com>
+ *
+ * This file contains the message header used by default in some KaRL
+ * network transports (e.g. IP multicast and broadcast)
+ **/
+
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
 

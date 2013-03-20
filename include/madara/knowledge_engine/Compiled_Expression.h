@@ -15,11 +15,16 @@
 
 namespace Madara
 {
+  namespace Expression_Tree
+  {
+    class System_Call_Eval;
+  }
   namespace Knowledge_Engine
   {
     class Thread_Safe_Context;
     class Knolwedge_Base_Impl;
     class Variables;
+    class System_Call_Eval;
 
     /**
      * @class Compiled_Expression
@@ -32,6 +37,7 @@ namespace Madara
       friend class Thread_Safe_Context;
       friend class Knowledge_Base_Impl;
       friend class Variables;
+      friend class Expression_Tree::System_Call_Eval;
 
       /**
        * Constructor

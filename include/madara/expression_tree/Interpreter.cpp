@@ -37,8 +37,10 @@
 #include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
+#include "madara/expression_tree/System_Call_Eval.h"
 #include "madara/expression_tree/System_Call_Get_Clock.h"
 #include "madara/expression_tree/System_Call_Log_Level.h"
+#include "madara/expression_tree/System_Call_Print.h"
 #include "madara/expression_tree/System_Call_Read_File.h"
 #include "madara/expression_tree/System_Call_Set_Clock.h"
 #include "madara/expression_tree/System_Call_Size.h"
@@ -156,6 +158,46 @@ namespace Madara
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
 
+    
+    /**
+    * @class Eval
+    * @brief Evaluates a Knowledge Record and returns result
+    */
+    class Eval : public System_Call
+    {
+    public:
+      /// constructor
+      Eval (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Eval (void);
+    };
+    
+    /**
+    * @class Print
+    * @brief Prints a Knowledge Record to the stderr
+    */
+    class Print : public System_Call
+    {
+    public:
+      /// constructor
+      Print (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Print (void);
+    };
     
     /**
     * @class Read_File
@@ -1282,6 +1324,34 @@ Madara::Expression_Tree::System_Call::~System_Call (void)
 
 
 
+// constructor
+Madara::Expression_Tree::Eval::Eval (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Eval::~Eval (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Eval::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Eval::build ()
+{
+  return new System_Call_Eval (context_, nodes_);
+}
+
+
+
 
 // constructor
 Madara::Expression_Tree::Log_Level::Log_Level (
@@ -1364,6 +1434,34 @@ Madara::Expression_Tree::Set_Clock::build ()
 {
   return new System_Call_Set_Clock (context_, nodes_);
 }
+
+
+// constructor
+Madara::Expression_Tree::Print::Print (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Print::~Print (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Print::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Print::build ()
+{
+  return new System_Call_Print (context_, nodes_);
+}
+
 
 
 // constructor
@@ -3170,13 +3268,21 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     // save the function name and update i
     System_Call * call = 0;
     
-    if (name == "#get_clock")
+    if (name == "#eval" || name == "#evaluate")
+    {
+      call = new Eval (context);
+    }
+    else if (name == "#get_clock")
     {
       call = new Get_Clock (context);
     }
     else if (name == "#log_level")
     {
       call = new Log_Level (context);
+    }
+    else if (name == "#print")
+    {
+      call = new Print (context);
     }
     else if (name == "#read_file")
     {

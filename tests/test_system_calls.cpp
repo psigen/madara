@@ -44,7 +44,10 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     knowledge.get ("sample.clock").to_string () == "20" &&
     knowledge.get ("sample.size.clock").to_string () == "22" &&
     knowledge.get ("sample.type.clock").to_string () == "37" &&
-    MADARA_debug_level == 10)
+    knowledge.get ("var1").to_string () == "10" &&
+    knowledge.get ("var2").to_string () == "200" &&
+    knowledge.get ("var3").to_string () == "300" &&
+    MADARA_debug_level == 5)
   {
     knowledge.print ("TEST SUCCESS\n");
   }
@@ -65,7 +68,7 @@ void test_system_calls (
     "sample.size = #size (sample);"
     "sample.type = #type (sample);"
     "#write_file ('/files/sample_from_system_call.jpg', sample);"
-    "logging_level = #log_level (10);"
+    "logging_level = #log_level (5);"
     "#set_clock (37);"
     "#set_clock (sample, 20);"
     "#set_clock (sample.size, 22);"
@@ -74,6 +77,22 @@ void test_system_calls (
     "sample.size.clock = #get_clock (sample.size);"
     "sample.type.clock = #get_clock (sample.type);"
     "system_clock = #get_clock ();"
+    "statement = 'var1=10; var2=200; var3=300';"
+    "#print ('Printing to log level 0\n');"
+    "#print ('Printing to log level 1\n', 1);"
+    "#print ('Printing to log level 2\n', 2);"
+    "#print ('Printing to log level 3\n', 3);"
+    "#print ('Printing to log level 4\n', 4);"
+    "#print ('Printing to log level 5\n', 5);"
+    "#print ('Printing to log level 6\n', 6);"
+    "#print ('Printing to log level 7\n', 7);"
+    "#print ('Printing to log level 8\n', 8);"
+    "#print ('Printing to log level 9\n', 9);"
+    "#print ('Printing to log level 10\n', 10);"
+    "#print ('Tried printing 11 statements. 6-10 should not work.\n');"
+    "#print ('evaluating ' + statement + '\n');"
+    "#eval (statement);"
+    "#print ('var1 = {var1}, var2 = {var2}, var3 = {var3}\n')"
     );
 }
 

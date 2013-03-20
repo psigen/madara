@@ -909,7 +909,7 @@ Madara::Knowledge_Engine::Compiled_Expression
 Madara::Knowledge_Engine::Thread_Safe_Context::compile (
   const std::string & expression)
 {
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "Thread_Safe_Context::compile:" \
       " compiling %s\n", expression.c_str ()));
 
