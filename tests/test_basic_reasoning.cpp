@@ -102,6 +102,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_logicals (knowledge);
   test_functions (knowledge);
   test_comparisons (knowledge);
   test_strings (knowledge);
@@ -112,7 +113,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_assignments (knowledge);
   test_unaries (knowledge);
   test_conditionals (knowledge);
-  test_logicals (knowledge);
   test_mathops (knowledge);
   test_implies (knowledge);
   test_both_operator (knowledge);
@@ -296,6 +296,13 @@ void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   ACE_DEBUG ((LM_INFO, "Testing logical operations\n"));
 
   knowledge.clear ();
+
+  knowledge.evaluate (".var1 = .var2 = 0; .var3 = 1; .var4 = 0");
+  knowledge.evaluate (
+    "(.var1 => (.var2 || .var2)) ||"
+    "(.var2 => (.var1 || .var1)) ||"
+    "(.var3 => (.var4 = 1))");
+  assert (knowledge.get (".var4").to_integer () == 1);
 
   // test variables in conditionals
   knowledge.evaluate (".var1 = 1; .var2 = 0; .var3 = .var1 && .var2");

@@ -1,0 +1,114 @@
+
+project (Tutorial_Hello_World) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_hello_world
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/hello_world/hello_world.cpp
+  }
+}
+
+project (Tutorial_Bad_Career_Counsellor) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_bad_career_counsellor
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/local_reasoning/bad_career_counsellor.cpp
+  }
+}
+
+project (Tutorial_System_Calls) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = system_calls
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/system_calls/system_calls.cpp
+  }
+}
+
+project (Tutorial_Counting_Agents) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_counting_agents
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/distributed_knowledge/counting_agents.cpp
+  }
+}
+
+project (Tutorial_Files) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_files
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/working_with_types/files.cpp
+  }
+}
+
+project (Tutorial_Simple_Types) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_simple_types
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/working_with_types/simple_types.cpp
+  }
+}

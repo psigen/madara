@@ -18,6 +18,10 @@ opensplice              = 0
 /// Enable this feature if you want to generate test applications
 tests                   = 1
 
+/// @feature tutorials
+/// Enable this feature if you want to generate tutorial applications
+tutorials               = 0
+
 /// @feature deprecated
 /// Enable this feature if you want to generate deprecated test applications
 deprecated              = 0

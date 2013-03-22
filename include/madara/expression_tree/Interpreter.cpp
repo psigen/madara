@@ -41,6 +41,7 @@
 #include "madara/expression_tree/System_Call_Get_Clock.h"
 #include "madara/expression_tree/System_Call_Log_Level.h"
 #include "madara/expression_tree/System_Call_Print.h"
+#include "madara/expression_tree/System_Call_Print_System_Calls.h"
 #include "madara/expression_tree/System_Call_Read_File.h"
 #include "madara/expression_tree/System_Call_Set_Clock.h"
 #include "madara/expression_tree/System_Call_Size.h"
@@ -197,6 +198,27 @@ namespace Madara
 
       /// destructor
       virtual ~Print (void);
+    };
+    
+    /**
+    * @class Print_System_Calls
+    * @brief Prints a help menu for all system calls
+    */
+    class Print_System_Calls : public System_Call
+    {
+    public:
+      /// constructor
+      Print_System_Calls (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Print_System_Calls (void);
     };
     
     /**
@@ -1465,6 +1487,34 @@ Madara::Expression_Tree::Print::build ()
 
 
 // constructor
+Madara::Expression_Tree::Print_System_Calls::Print_System_Calls (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Print_System_Calls::~Print_System_Calls (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Print_System_Calls::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Print_System_Calls::build ()
+{
+  return new System_Call_Print_System_Calls (context_, nodes_);
+}
+
+
+
+// constructor
 Madara::Expression_Tree::Read_File::Read_File (
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : System_Call (context)
@@ -2014,19 +2064,40 @@ Madara::Expression_Tree::And::build (void)
 {
   if (left_ && right_)
   {
-    And * rhs = dynamic_cast <And *> (right_);
-    
-    nodes_.push_back (left_->build ());
+    // check for cascading max
+    And * next = dynamic_cast <And *> (left_);
+    Symbol * left = left_;
 
-    if (rhs)
-    {
-      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
-      rhs->nodes_.clear ();
+    // push the right onto the deque
+    nodes_.push_back (right_->build ());
+    delete right_;
+    right_ = 0;
+
+    for (; next; next = dynamic_cast <And *> (left))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->right_)
+      {
+        nodes_.push_front (next->right_->build ());
+        delete next->right_;
+        next->right_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      left = next->left_;
+      next->left_ = 0;
+      delete next;
     }
-    else
+
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (left)
     {
-      nodes_.push_back (right_->build ());
+      nodes_.push_front (left->build ());
+      delete left;
     }
+    left_ = 0;
+
     return new Composite_And_Node (nodes_);
   }
   else if (left_)
@@ -2069,19 +2140,40 @@ Madara::Expression_Tree::Or::build (void)
 {
   if (left_ && right_)
   {
-    Or * rhs = dynamic_cast <Or *> (right_);
-    
-    nodes_.push_back (left_->build ());
+    // check for cascading max
+    Or * next = dynamic_cast <Or *> (left_);
+    Symbol * left = left_;
 
-    if (rhs)
-    {
-      nodes_.insert (nodes_.end (), rhs->nodes_.begin (), rhs->nodes_.end ());
-      rhs->nodes_.clear ();
+    // push the right onto the deque
+    nodes_.push_back (right_->build ());
+    delete right_;
+    right_ = 0;
+
+    for (; next; next = dynamic_cast <Or *> (left))
+    {      
+      // we have a chained max node. Move the left into our nodes list
+      if (next->right_)
+      {
+        nodes_.push_front (next->right_->build ());
+        delete next->right_;
+        next->right_ = 0;
+      }
+
+      // set right to next->right_ and then clear next->right_ before deletion
+      left = next->left_;
+      next->left_ = 0;
+      delete next;
     }
-    else
+
+    // push the rightmost build from the compressed node and delete it.
+    // then reset our right_, since we've already taken care of deletion
+    if (left)
     {
-      nodes_.push_back (right_->build ());
+      nodes_.push_front (left->build ());
+      delete left;
     }
+    left_ = 0;
+
     return new Composite_Or_Node (nodes_);
   }
   else if (left_)
@@ -3284,6 +3376,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     {
       call = new Print (context);
     }
+    else if (name == "#print_system_calls" || name == "#print_system_call")
+    {
+      call = new Print_System_Calls (context);
+    }
     else if (name == "#read_file")
     {
       call = new Read_File (context);
@@ -3309,9 +3405,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
         DLINFO "KARL COMPILE ERROR: " \
         "System call %s is unsupported in this version of MADARA.\n",
+        " Defaulting to print_system_calls help menu.\n",
         name.c_str ()));
-
-      return;
+      
+      call = new Print_System_Calls (context);
     }
 
     call->add_precedence (accumulated_precedence);

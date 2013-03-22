@@ -42,6 +42,7 @@ namespace Madara
     class System_Call_Get_Clock;
     class System_Call_Log_Level;
     class System_Call_Print;
+    class System_Call_Print_System_Calls;
     class System_Call_Read_File;
     class System_Call_Set_Clock;
     class System_Call_Size;
@@ -166,6 +167,9 @@ namespace Madara
       
       /// Visit a System_Call_Read_File.
       virtual void visit (const System_Call_Print &node) = 0;
+      
+      /// Visit a System_Call_Read_File.
+      virtual void visit (const System_Call_Print_System_Calls &node) = 0;
       
       /// Visit a System_Call_Read_File.
       virtual void visit (const System_Call_Read_File &node) = 0;

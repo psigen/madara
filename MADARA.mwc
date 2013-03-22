@@ -7,5 +7,6 @@ workspace {
   Splice_DDS_Transport.mpc
   NDDS_Transport.mpc
   Tests.mpc
+  Tutorials.mpc
   Traffic_Lights_Ambulance.mpc
 }

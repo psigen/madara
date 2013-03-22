@@ -60,7 +60,7 @@ namespace Madara
         if (!rhs_)
           *record *= this->value_;
         else
-          *record *= rhs_->item ();
+          *record *= rhs_->evaluate (settings);
         
         if (key_[0] != '.' && !settings.treat_globals_as_locals)
         {
