@@ -90,13 +90,13 @@ project (Tutorial_Files) : using_madara, using_ace {
   }
 
   Source_Files {
-    tutorials/working_with_types/files.cpp
+    tutorials/system_primitives/files.cpp
   }
 }
 
-project (Tutorial_Simple_Types) : using_madara, using_ace {
+project (Tutorial_Integer_Types) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
-  exename = tutorial_simple_types
+  exename = tutorial_integer_types
   
   
   requires += tutorials
@@ -109,6 +109,44 @@ project (Tutorial_Simple_Types) : using_madara, using_ace {
   }
 
   Source_Files {
-    tutorials/working_with_types/simple_types.cpp
+    tutorials/system_primitives/integer_types.cpp
+  }
+}
+
+project (Tutorial_Fractions) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_fractions
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/system_primitives/fractions.cpp
+  }
+}
+
+project (Tutorial_Functions) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_functions
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/system_primitives/functions.cpp
   }
 }

@@ -1,6 +1,6 @@
 
 /**
- * @file simple_types.cpp
+ * @file integer_types.cpp
  * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains a simple application that demonstrates
@@ -188,6 +188,38 @@ int main (int argc, char * argv[])
   knowledge.print ("Money: ${.money}\n");
   
   knowledge.print_knowledge ();
+
+  /**
+   * This tutorial has showcased a rather silly example, but it is enough
+   * information to implement your own reinforcement learning. Reinforcement
+   * learning is a continuous process involving multi-valued logic which
+   * attempts to satisfy internals rules according to rewards and penalties.
+   * To make your own reinforcement learning agent, think of formulating a
+   * problem like this:
+   *
+   * 1) Do I have sensors? What are they returning? What is the utility of
+   *    a sensor returning something good? What happens if the sensor is
+   *    wrong? Does it decrease overall good (i.e., should I give myself
+   *    a penalty to indicate that I'm not contributing as much as I should
+   *    toward being a part of the agent community?)
+   * 2) What is the goal of the agent community? Are they collaborative or
+   *    competitive? This will help establish rewards and penalties.
+   * 3) Generally, the more positive the variable, the higher the utility.
+   *    However, as we can see in the above example, too much hoarding of
+   *    utility could be a bad thing. Consider an agent community that
+   *    governs roads. One road agent collects 90% of the tolls and keeps
+   *    all of the money to himself for maintenance. This means the other
+   *    roads all become neglected and potentially impassible, resulting
+   *    in overall city throughput of vehicles to go down. The reinforcement
+   *    learning should be tweaked to have either a maximum cash-on-hand
+   *    before dumping it into the public coffers for road maintenance or
+   *    use KaRL to announce each agent's cash-on-hand and when some
+   *    threshold or percentage of overall wealth is met, dump excess
+   *    into the road agent who needs the cash the most. In this way,
+   *    you can create a harmonious agent system based on reinforcement
+   *    learning. See the tutorials in distributed_knowledge for more
+   *    information on how you can update each agent using variable mutations.
+   **/
 
   return 0;
 }
