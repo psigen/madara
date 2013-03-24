@@ -70,7 +70,7 @@ Madara::Expression_Tree::Composite_Negate_Node::evaluate (
   Madara::Knowledge_Record value = right_->evaluate (settings);
 
   MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
-    "Negating %s.\n", value.to_string ()));
+    "Negating %s.\n", value.to_string ().c_str ()));
 
   return -value;
 }
