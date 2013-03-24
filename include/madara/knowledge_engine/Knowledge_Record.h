@@ -162,6 +162,20 @@ namespace Madara
     double to_double (void) const;
     
     /**
+     * returns an unmanaged buffer that the user will have
+     * to take care of (this is a copy of the internal value).
+     * If you use this function, you must explicitly delete the
+     * value returned. For instance:
+     *
+     * unsigned char * my_value = record.to_unmanaged_buffer ();
+     * ... do some work on the buffer
+     * delete [] my_value;
+     *
+     * Failure to do the above WILL result in a memory leak
+     **/
+    unsigned char * to_unmanaged_buffer (void);
+    
+    /**
      * sets the value to a double
      * @param    new_value   new value of the Knowledge Record
      **/
@@ -206,10 +220,12 @@ namespace Madara
     /**
      * reads a file and sets the type appropriately according to
      * the extension
-     * @param   filename   location of the file to read from
+     * @param   filename         location of the file to read from
+     * @param   read_as_type     force a type (XML, TEXT, IMAGE_JPEG, or
+     *                           UNKNOWN_FILE_TYPE)
      * @return  
      **/
-    int read_file (const std::string & filename);
+    int read_file (const std::string & filename, uint32_t read_as_type = 0);
     
     /**
      * resets the variable to an integer
@@ -239,19 +255,51 @@ namespace Madara
       return type_;
     }
     
+    /**
+     * returns if the record is a string type (STRING, XML, TEXT_FILE)
+     **/
     inline bool is_string_type (void) const
     {
       return type_ == STRING || type_ == XML || type_ == TEXT_FILE;
     }
+    
+    /**
+     * returns if the record is a string type (STRING, XML, TEXT_FILE)
+     **/
+    inline bool is_string_type (uint32_t type) const
+    {
+      return type == STRING || type == XML || type == TEXT_FILE;
+    }
+    
+    /**
+     * returns a record containing a fragment of the character buffer.
+     * For strings, this is equivalent to substring. For files, this is
+     * like an unsigned char * equivalent to substring. For other types,
+     * this will return host-specific byte values up to the size of the
+     * value.
+     * @param    first          first index (inclusive, >= 0)
+     * @param    last           last index (inclusive, < size)
+     **/
+    Knowledge_Record fragment (unsigned int first, unsigned int last);
 
     inline bool is_image_type (void) const
     {
       return type_ == IMAGE_JPEG;
     }
     
+    inline bool is_image_type (uint32_t type) const
+    {
+      return type == IMAGE_JPEG;
+    }
+    
     inline bool is_file_type (void) const
     {
       return type_ == XML || type_ == IMAGE_JPEG || type_ == UNKNOWN_FILE_TYPE;
+    }
+    
+    inline bool is_file_type (uint32_t type) const
+    {
+      return type == XML || type == IMAGE_JPEG || type == UNKNOWN_FILE_TYPE;
     }
 
     /**

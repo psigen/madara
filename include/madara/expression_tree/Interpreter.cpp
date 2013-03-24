@@ -40,6 +40,7 @@
 #include "madara/expression_tree/System_Call_Delete_Variable.h"
 #include "madara/expression_tree/System_Call_Eval.h"
 #include "madara/expression_tree/System_Call_Expand_Statement.h"
+#include "madara/expression_tree/System_Call_Fragment.h"
 #include "madara/expression_tree/System_Call_Get_Clock.h"
 #include "madara/expression_tree/System_Call_Log_Level.h"
 #include "madara/expression_tree/System_Call_Print.h"
@@ -222,6 +223,26 @@ namespace Madara
 
       /// destructor
       virtual ~Expand_Statement (void);
+    };
+    
+    /**
+    * @class Fragment
+    * @brief Fragment the Knowledge Record
+    */
+    class Fragment : public System_Call
+    {
+    public:
+      /// constructor
+      Fragment (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Fragment (void);
     };
     
     /**
@@ -1472,6 +1493,34 @@ Madara::Expression_Tree::Expand_Statement::build ()
   return new System_Call_Expand_Statement (context_, nodes_);
 }
 
+
+
+
+// constructor
+Madara::Expression_Tree::Fragment::Fragment (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Fragment::~Fragment (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Fragment::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Fragment::build ()
+{
+  return new System_Call_Fragment (context_, nodes_);
+}
 
 
 
@@ -3471,6 +3520,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     else if (name == "#expand" || name == "#expand_statement")
     {
       call = new Expand_Statement (context);
+    }
+    else if (name == "#fragment")
+    {
+      call = new Fragment (context);
     }
     else if (name == "#get_clock")
     {

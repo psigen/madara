@@ -47,6 +47,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     knowledge.get ("var1").to_string () == "10" &&
     knowledge.get ("var2").to_string () == "200" &&
     knowledge.get ("var3").to_string () == "300" &&
+    knowledge.get ("small").to_string () == "ello" &&
     MADARA_debug_level == 5)
   {
     knowledge.print ("TEST SUCCESS\n");
@@ -77,10 +78,11 @@ void test_system_calls (
     "sample.size.clock = #get_clock (sample.size);"
     "sample.type.clock = #get_clock (sample.type);"
     "system_clock = #get_clock ();"
-    "#log_level (10);"
     "message = #expand ('Sample size is {sample.size}');"
-    "#log_level (5);"
     "statement = 'var1=10; var2=200; var3=300';"
+    "logging_level = #log_level (10);"
+    "small = #fragment ('hello world', 1, 4);"
+    "logging_level = #log_level (5);"
     "#print ('Printing to log level 0\n');"
     "#print ('Printing to log level 1\n', 1);"
     "#print ('Printing to log level 2\n', 2);"

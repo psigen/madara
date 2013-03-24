@@ -41,6 +41,7 @@ namespace Madara
     class System_Call_Delete_Variable;
     class System_Call_Eval;
     class System_Call_Expand_Statement;
+    class System_Call_Fragment;
     class System_Call_Get_Clock;
     class System_Call_Log_Level;
     class System_Call_Print;
@@ -166,6 +167,9 @@ namespace Madara
       
       /// Visit a System_Call_Expand_Statement.
       virtual void visit (const System_Call_Expand_Statement &node) = 0;
+      
+      /// Visit a System_Call_Expand_Statement.
+      virtual void visit (const System_Call_Fragment &node) = 0;
       
       /// Visit a System_Call_Get_Clock.
       virtual void visit (const System_Call_Get_Clock &node) = 0;

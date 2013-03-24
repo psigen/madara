@@ -190,7 +190,8 @@ Madara::Knowledge_Record::set_value (const double & new_value_)
   * reads an XML file from a string
   **/
 int
-Madara::Knowledge_Record::read_file (const std::string & filename)
+Madara::Knowledge_Record::read_file (
+  const std::string & filename, uint32_t read_as_type)
 {
   void * buffer;
   size_t size;
@@ -205,7 +206,8 @@ Madara::Knowledge_Record::read_file (const std::string & filename)
   Madara::Utility::lower (extension);
   
   // do we have a text-based file
-  if (extension == ".txt" || extension == ".xml")
+  if (is_string_type (read_as_type) || 
+    extension == ".txt" || extension == ".xml")
   {
     add_zero_char = true;
   }
@@ -214,13 +216,16 @@ Madara::Knowledge_Record::read_file (const std::string & filename)
   if (Madara::Utility::read_file (filename, buffer, size, add_zero_char) == 0)
   {
     // do we have a text-based file
-    if (extension == ".txt" || extension == ".xml")
+    if (is_string_type (read_as_type)
+           || extension == ".txt" || extension == ".xml")
     {
       // change the string value and size to appropriate values
       str_value_ = (char *)buffer;
       size_ = (uint32_t)size;
       
-      if (extension == ".xml")
+      if (is_string_type (read_as_type))
+        type_ = read_as_type;
+      else if (extension == ".xml")
         type_ = XML;
       else
         type_ = TEXT_FILE;
@@ -229,7 +234,8 @@ Madara::Knowledge_Record::read_file (const std::string & filename)
     {
       file_value_ = (unsigned char *)buffer;
       size_ = (uint32_t)size;
-      if (extension == ".jpg")
+
+      if (extension == ".jpg" || read_as_type == IMAGE_JPEG)
         type_ = IMAGE_JPEG;
       else
         type_ = UNKNOWN_FILE_TYPE;
@@ -325,6 +331,83 @@ Madara::Knowledge_Record::to_string (void) const
   }
   else
     return std::string (str_value_.get_ptr ());
+}
+
+// read the value_ in a string format
+unsigned char *
+Madara::Knowledge_Record::to_unmanaged_buffer (void)
+{
+  unsigned char * buffer = new unsigned char [size_];
+
+  if (is_string_type ())
+  {
+    memcpy (buffer, str_value_.get_ptr (), size_);
+  }
+  else if (is_file_type ())
+  {
+    memcpy (buffer, file_value_.get_ptr (), size_);
+  }
+  else
+  {
+    /**
+     * because we use a union of the int and double representations,
+     * this actually works
+     **/
+    memcpy (buffer, &int_value_, size_);
+  }
+
+  return buffer;
+}
+
+
+Madara::Knowledge_Record
+Madara::Knowledge_Record::fragment (unsigned int first, unsigned int last)
+{
+  if (first <= last)
+  {
+    if (is_string_type ())
+    {
+      // make sure last is accessible in the data type
+      last = std::min <unsigned int> (last, size_ - 1);
+
+       // Create a new buffer, copy over the elements, and add a null delimiter
+      char * new_buffer = new char [last - first + 2];
+
+      memcpy (new_buffer, str_value_.get_ptr () + first, last - first + 1);
+      new_buffer[last-first + 1] = 0;
+
+      return new_buffer;
+    }
+    else if (is_file_type ())
+    {
+      // make sure last is accessible in the data type
+      last = std::min <unsigned int> (last, size_ - 1);
+
+      // Unlike string types, file buffers are not ended with a null delimiter
+      uint32_t size = last - first + 1;
+      unsigned char * new_buffer = new unsigned char [size];
+
+      memcpy (new_buffer, file_value_.get_ptr () + first, last - first + 1);
+
+      // create a new record with the unsigned char buffer as contents
+      Knowledge_Record ret_value;
+      ret_value.set_file (new_buffer, size);
+      return ret_value;
+    }
+    else if (type_ == INTEGER)
+    {
+      // make sure last is accessible in the data type
+      last = std::min <unsigned int> (last, size_ - 1);
+      uint32_t size = last - first + 1;
+
+      Integer new_value;
+      memcpy (&new_value, &int_value_ + first, size);
+
+      return new_value;
+    }
+  }
+
+  return Integer (0);
 }
 
 Madara::Knowledge_Record

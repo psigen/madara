@@ -89,6 +89,11 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
     calls_["#expand_statement"] =
       "\n#expand (statement) or #expand_statement (statement):\n"
       "  Expands a statement such as 'var{.i}' into 'var0', assuming .i=0\n";
+    
+    calls_["#fragment"] =
+      "\n#fragment (arg, first, last):\n"
+      "  Returns a fragment of the arg, startin at first byte and extending\n"
+      "  to last byte.\n";
 
     calls_["#get_clock"] =
       "\n#get_clock () or #get_clock (variable):\n"
@@ -127,8 +132,13 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "  Prints help for all system calls or a specific system call.\n";
 
     calls_["#read_file"] =
-      "\n#read_file (filename):\n"
-      "  Reads a file and returns its contents.\n";
+      "\n#read_file (filename) or #read_file (filename, type):\n"
+      "  Reads a file and returns its contents. Default is to determine\n"
+      "  file type by filname extension. Explicit type can be a string\n"
+      "  or an integer of the following values:\n"
+      "    'xml' = 4\n"
+      "    'text' = 5\n"
+      "    'jpeg' = 50\n";
       
     calls_["#set_clock"] =
       "\n#set_clock (value) or #set_clock (variable, value):\n"

@@ -37,22 +37,28 @@ Madara::Expression_Tree::System_Call_Read_File::prune (bool & can_change)
   
   Madara::Knowledge_Record result;
 
-  if (nodes_.size () > 0)
+  for (Component_Nodes::iterator i = nodes_.begin (); i != nodes_.end ();
+       ++i)
   {
     bool arg_can_change = false;
-    result = nodes_[0]->prune (arg_can_change);
+    result = (*i)->prune (arg_can_change);
     
-    if (!arg_can_change && dynamic_cast <Leaf_Node *> (nodes_[0]) == 0)
+    if (!arg_can_change && dynamic_cast <Leaf_Node *> (*i) == 0)
     {
-      delete nodes_[0];
-      nodes_[0] = new Leaf_Node (result);
+      delete *i;
+      *i = new Leaf_Node (result);
     }
   }
-  else
+
+  if (nodes_.size () == 0 || nodes_.size () > 2)
   {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
       "KARL COMPILE ERROR: System call read_file"
-      " requires a filename to read.\n"));
+      " requires at least a filename to read, e.g."
+      " #read_file (filename), #read_file (filename, 'text')."
+      " Second argument is to force a file type when the filename"
+      " does not end with .txt, .xml, .jpg, etc. Can be 'text',"
+      " 'jpeg', 'xml'.\n"));
   }
 
   return result;
@@ -71,23 +77,53 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
     // copying strings wastes execution time, so we hold the Knowledge_Record
     // instead of the resulting string filename.
     Knowledge_Record filename_eval = nodes_[0]->evaluate (settings);
-
+    uint32_t read_as_type_uint (0);
+    
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       "System call read_file is attempting to open %s.\n",
       filename_eval.to_string ().c_str ()));
 
+    if (nodes_.size () == 2)
+    {
+      Knowledge_Record read_as_type = nodes_[1]->evaluate (settings);
+      if (read_as_type.type () == Knowledge_Record::INTEGER)
+      {
+        read_as_type_uint = (uint32_t) read_as_type.to_integer ();
+      }
+      else if (read_as_type.is_string_type ())
+      {
+        std::string type = read_as_type.to_string ();
+        if (type == "text")
+        {
+          read_as_type_uint = Knowledge_Record::TEXT_FILE;
+        }
+        else if (type == "jpeg")
+        {
+          read_as_type_uint = Knowledge_Record::IMAGE_JPEG;
+        }
+        else if (type == "xml")
+        {
+          read_as_type_uint = Knowledge_Record::XML;
+        }
+      }
+    }
+
     if (0 != return_value.read_file (filename_eval.to_string ()))
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        "KARL ERROR: System call read_file could not open %s.\n",
+        "KARL RUNTIME ERROR: System call read_file could not open %s.\n",
         filename_eval.to_string ().c_str ()));
     }
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-      "KARL RUNTIME ERROR: System call read_file requires"
-      " a filename to read.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
+      "KARL RUNTIME ERROR: System call read_file"
+      " requires at least a filename to read, e.g."
+      " #read_file (filename), #read_file (filename, 'text')."
+      " Second argument is to force a file type when the filename"
+      " does not end with .txt, .xml, .jpg, etc. Can be 'text',"
+      " 'jpeg', 'xml'.\n"));
   }
 
   return return_value;
