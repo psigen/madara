@@ -75,6 +75,26 @@ project (Tutorial_Counting_Agents) : using_madara, using_ace {
   }
 }
 
+project (Tutorial_Packet_Aggregation) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_packet_aggregation
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/distributed_knowledge/packet_aggregation.cpp
+  }
+}
+
+
 project (Tutorial_Files) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = tutorial_files

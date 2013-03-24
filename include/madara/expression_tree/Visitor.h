@@ -38,7 +38,9 @@ namespace Madara
     class Composite_Multiply_Node;
     class Composite_Modulus_Node;
     class Composite_Return_Right_Node;
+    class System_Call_Delete_Variable;
     class System_Call_Eval;
+    class System_Call_Expand_Statement;
     class System_Call_Get_Clock;
     class System_Call_Log_Level;
     class System_Call_Print;
@@ -156,10 +158,16 @@ namespace Madara
       /// Visit a Composite_Implies_Node.
       virtual void visit (const Composite_Implies_Node &node) = 0;
       
-      /// Visit a System_Call_Set_Clock.
+      /// Visit a System_Call_Delete_Variable.
+      virtual void visit (const System_Call_Delete_Variable &node) = 0;
+      
+      /// Visit a System_Call_Eval.
       virtual void visit (const System_Call_Eval &node) = 0;
       
-      /// Visit a System_Call_Set_Clock.
+      /// Visit a System_Call_Expand_Statement.
+      virtual void visit (const System_Call_Expand_Statement &node) = 0;
+      
+      /// Visit a System_Call_Get_Clock.
       virtual void visit (const System_Call_Get_Clock &node) = 0;
       
       /// Visit a System_Call_Log_Level.
@@ -168,7 +176,7 @@ namespace Madara
       /// Visit a System_Call_Read_File.
       virtual void visit (const System_Call_Print &node) = 0;
       
-      /// Visit a System_Call_Read_File.
+      /// Visit a System_Call_Print_System_Calls.
       virtual void visit (const System_Call_Print_System_Calls &node) = 0;
       
       /// Visit a System_Call_Read_File.

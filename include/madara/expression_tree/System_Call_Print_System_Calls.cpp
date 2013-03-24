@@ -62,6 +62,14 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
   // if calls hasn't been initialized yet, fill the list of system calls
   if (calls_.size () == 0)
   {
+    calls_["#delete_var"] =
+      "\n#delete_var (var) or #delete_variable (var):\n"
+      "  Deletes a variable named var from the knowledge base\n";
+    
+    calls_["#delete_variable"] =
+      "\n#delete_var (var) or #delete_variable (var):\n"
+      "  Deletes a variable named var from the knowledge base\n";
+
     calls_["#eval"] =
       "\n#eval (expression) or #evaluate (expression):\n"
       "  Evaluates the KaRL expression and returns a result. Works similarly\n"
@@ -73,6 +81,14 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "  Evaluates the KaRL expression and returns a result. Works similarly\n"
       "  to the Knowledge_Base::evaluate function except this function\n"
       "  inherits the Knowledge_Update_Settings from the eval call.\n";
+    
+    calls_["#expand"] =
+      "\n#expand (statement) or #expand_statement (statement):\n"
+      "  Expands a statement such as 'var{.i}' into 'var0', assuming .i=0\n";
+    
+    calls_["#expand_statement"] =
+      "\n#expand (statement) or #expand_statement (statement):\n"
+      "  Expands a statement such as 'var{.i}' into 'var0', assuming .i=0\n";
 
     calls_["#get_clock"] =
       "\n#get_clock () or #get_clock (variable):\n"
@@ -173,7 +189,9 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
     for (System_Calls_Help::const_iterator i = calls_.begin ();
          i != calls_.end (); ++i)
     {
-      context_.print (i->second, 0);
+      if (i->first != "#delete_var" && i->first != "#eval" && 
+          i->first != "#expand")
+        context_.print (i->second, 0);
     }
   }
   else

@@ -13,6 +13,7 @@
 #include "ace/Condition_Recursive_Thread_Mutex.h"
 #include "ace/Synch.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/expression_tree/Interpreter.h"
 
 #include <sstream>
 
@@ -52,6 +53,26 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
   changed_.signal ();
 
   return record;
+}
+
+// return whether or not the key exists
+inline bool
+Madara::Knowledge_Engine::Thread_Safe_Context::delete_expression (
+  const std::string & expression)
+{
+  Context_Guard guard (mutex_);
+
+  return interpreter_->delete_expression (expression);
+}
+
+// return whether or not the key exists
+inline bool
+Madara::Knowledge_Engine::Thread_Safe_Context::delete_variable (
+  const std::string & key)
+{
+  Context_Guard guard (mutex_);
+
+  return map_.erase (key) == 1;
 }
 
 // return whether or not the key exists

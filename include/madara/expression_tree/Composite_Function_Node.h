@@ -2,6 +2,8 @@
 #ifndef _COMPOSITE_FUNCTION_NODE_H_
 #define _COMPOSITE_FUNCTION_NODE_H_
 
+#include <vector>
+#include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/expression_tree/Composite_Ternary_Node.h"
 #include "madara/knowledge_engine/Functions.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
@@ -70,6 +72,9 @@ namespace Madara
 
       // function pointer
       Madara::Knowledge_Engine::Function * function_;
+      
+      // pointers to .1, .2, .3, etc.
+      std::vector <Knowledge_Record *> compiled_args_;
     };
   }
 }

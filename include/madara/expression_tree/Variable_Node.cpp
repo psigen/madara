@@ -16,6 +16,10 @@ Madara::Expression_Tree::Variable_Node::Variable_Node (
   // once
   if (key.find ("{") != key.npos)
   {
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+      "Variable %s requires variable expansion.\n",
+      key.c_str ()));
+
     unsigned int count = 1;
     key_expansion_necessary_ = true;
     splitters_.push_back ("{");
@@ -65,6 +69,10 @@ Madara::Expression_Tree::Variable_Node::expand_key (void) const
 {
   if (key_expansion_necessary_)
   {
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+      "Variable %s requires variable expansion.\n",
+      key_.c_str ()));
+
     unsigned int count = 0;
 
     // add the first token into a string builder
@@ -81,7 +89,7 @@ Madara::Expression_Tree::Variable_Node::expand_key (void) const
         if (count < pivot_list_.size () 
           && pivot_list_[count] == "}")
         {
-          builder << *context_.get_record (*token);
+          builder << context_.get_record (*token)->to_string ();
         }
         else
         {

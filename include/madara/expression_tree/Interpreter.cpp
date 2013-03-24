@@ -37,7 +37,9 @@
 #include "madara/expression_tree/Composite_For_Loop.h"
 #include "madara/expression_tree/Composite_Sequential_Node.h"
 #include "madara/expression_tree/Composite_Implies_Node.h"
+#include "madara/expression_tree/System_Call_Delete_Variable.h"
 #include "madara/expression_tree/System_Call_Eval.h"
+#include "madara/expression_tree/System_Call_Expand_Statement.h"
 #include "madara/expression_tree/System_Call_Get_Clock.h"
 #include "madara/expression_tree/System_Call_Log_Level.h"
 #include "madara/expression_tree/System_Call_Print.h"
@@ -161,6 +163,27 @@ namespace Madara
 
     
     /**
+    * @class Delete_Variable
+    * @brief Deletes a variable from the knowledge base
+    */
+    class Delete_Variable : public System_Call
+    {
+    public:
+      /// constructor
+      Delete_Variable (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Delete_Variable (void);
+    };
+    
+    /**
     * @class Eval
     * @brief Evaluates a Knowledge Record and returns result
     */
@@ -178,6 +201,27 @@ namespace Madara
 
       /// destructor
       virtual ~Eval (void);
+    };
+    
+    /**
+    * @class Expand_Statement
+    * @brief Expands a statement, e.g. var{.i} into var0 if .i == 0
+    */
+    class Expand_Statement : public System_Call
+    {
+    public:
+      /// constructor
+      Expand_Statement (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Expand_Statement (void);
     };
     
     /**
@@ -1347,6 +1391,34 @@ Madara::Expression_Tree::System_Call::~System_Call (void)
 
 
 // constructor
+Madara::Expression_Tree::Delete_Variable::Delete_Variable (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Delete_Variable::~Delete_Variable (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Delete_Variable::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Delete_Variable::build ()
+{
+  return new System_Call_Delete_Variable (context_, nodes_);
+}
+
+
+
+// constructor
 Madara::Expression_Tree::Eval::Eval (
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : System_Call (context)
@@ -1370,6 +1442,34 @@ Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Eval::build ()
 {
   return new System_Call_Eval (context_, nodes_);
+}
+
+
+
+// constructor
+Madara::Expression_Tree::Expand_Statement::Expand_Statement (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Expand_Statement::~Expand_Statement (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Expand_Statement::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Expand_Statement::build ()
+{
+  return new System_Call_Expand_Statement (context_, nodes_);
 }
 
 
@@ -3360,9 +3460,17 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     // save the function name and update i
     System_Call * call = 0;
     
-    if (name == "#eval" || name == "#evaluate")
+    if (name == "#delete_var" || name == "#delete_variable")
+    {
+      call = new Delete_Variable (context);
+    }
+    else if (name == "#eval" || name == "#evaluate")
     {
       call = new Eval (context);
+    }
+    else if (name == "#expand" || name == "#expand_statement")
+    {
+      call = new Expand_Statement (context);
     }
     else if (name == "#get_clock")
     {

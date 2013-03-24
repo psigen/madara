@@ -67,7 +67,12 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Negate_Node::evaluate (
   const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
-  return -right_->evaluate (settings);
+  Madara::Knowledge_Record value = right_->evaluate (settings);
+
+  MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
+    "Negating %s.\n", value.to_string ()));
+
+  return -value;
 }
 
 // accept a visitor

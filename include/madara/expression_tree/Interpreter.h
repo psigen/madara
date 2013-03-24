@@ -95,6 +95,16 @@ namespace Madara
        * @return   true if the input is whitespace
        **/
       static bool is_whitespace (char input);
+      
+      /**
+       * Checks a character to see if it is whitespace
+       * @param    input      char to check
+       * @return   true if the input is whitespace
+       **/
+      inline bool delete_expression (const std::string & expression)
+      {
+        return cache_.erase (expression) == 1;
+      }
 
     private:
       /**

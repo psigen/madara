@@ -314,6 +314,20 @@ namespace Madara
       Madara::Knowledge_Record dec (const std::string & key, 
         const Knowledge_Update_Settings & settings = 
               DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+      
+      /**
+       * Deletes the key
+       * @param   key            unique identifier of the variable
+       * @return                 true if variable exists
+       **/
+      bool delete_variable (const std::string & key);
+      
+      /**
+       * Deletes the expression from the interpreter cache
+       * @param   expression     the KaRL logic in the interpreter context
+       * @return                 true if variable exists
+       **/
+      bool delete_expression (const std::string & expression);
 
       /**
        * Atomically checks to see if a variable already exists

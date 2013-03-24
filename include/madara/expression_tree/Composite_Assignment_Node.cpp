@@ -70,13 +70,16 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Assignment_Node::evaluate (
   const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
+  Madara::Knowledge_Record rhs = right_->evaluate (settings);
+
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-    "Attempting to set variable %s.\n",
-    left_->expand_key ().c_str ()));
+    "Attempting to set variable %s to %s.\n",
+    left_->expand_key ().c_str (),
+    rhs.to_string ().c_str ()));
 
   // get the value from the right side and set the variable's value with it
   //Madara::Knowledge_Record value = right_->evaluate ();
-  left_->set (right_->evaluate (settings));
+  left_->set (rhs);
 
   // return the value
   return left_->evaluate (settings);

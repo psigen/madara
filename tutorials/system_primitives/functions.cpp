@@ -113,16 +113,17 @@ int main (int argc, char * argv[])
    * knowledge.define_function ("is_false",
    *                            ".state > 0 && .state < 0.5");
    *
-   * As a first part of this function tutorial, let's create a C++ external
-   * function that can be referenced from within a KaRL logic. This external
-   * function will work off the function arguments, rather than a specific
-   * KaRL variable.
+   * As a first part of this function tutorial, let's create a MADARA function
+   * that accomplishes the same thing but is extensible for any argument passed
+   * to the function. The secret sauce here is the usage of the .0 variable,
+   * which maps to the first argument to a function call and is set for us
+   * by the MADARA KaRL engine.
    **/
 
 
-  // Define the two functions is_true and is_false to be external C++ functions
-  knowledge.define_function ("is_true", is_true); 
-  knowledge.define_function ("is_false", is_false);
+  // Define the two functions is_true and is_false to be MADARA logic functions
+  knowledge.define_function ("is_true",  ".0 >= 0.5 && .0 <= 1"); 
+  knowledge.define_function ("is_false", ".0 > 0 && .0 < 0.5");
 
   /**
    * Define a random integer generating function based on C's rand ().
