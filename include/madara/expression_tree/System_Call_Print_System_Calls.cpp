@@ -86,6 +86,16 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "\n#expand (statement) or #expand_statement (statement):\n"
       "  Expands a statement such as 'var{.i}' into 'var0', assuming .i=0\n";
     
+    calls_["#expand_env"] =
+      "\n#expand_env (statement) or #expand_envs (statement):\n"
+      "  Expands a statement such as 'env_var=$(VAR)' into\n"
+      "  env_var=VAR CONTENTS, assuming VAR has been set in the OS.\n";
+    
+    calls_["#expand_envs"] =
+      "\n#expand_env (statement) or #expand_envs (statement):\n"
+      "  Expands a statement such as 'env_var=$(VAR)' into\n"
+      "  env_var=VAR CONTENTS, assuming VAR has been set in the OS.\n";
+    
     calls_["#expand_statement"] =
       "\n#expand (statement) or #expand_statement (statement):\n"
       "  Expands a statement such as 'var{.i}' into 'var0', assuming .i=0\n";
@@ -151,6 +161,11 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "\n#size (value):\n"
       "  Returns the size of the variable or value.\n";
       
+    calls_["#to_host_dirs"] =
+      "\n#to_host_dirs (directory):\n"
+      "  Returns the host appropriate directory structure, e.g.,.\n"
+      "  files/file.txt to files\file.txt on Windows.\n";
+      
     calls_["#type"] =
       "\n#type (value):\n"
       "  Returns the integer type of the variable or value.\n"
@@ -200,7 +215,7 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
          i != calls_.end (); ++i)
     {
       if (i->first != "#delete_var" && i->first != "#eval" && 
-          i->first != "#expand")
+        i->first != "#expand" && i->first != "#expand_env")
         context_.print (i->second, 0);
     }
   }

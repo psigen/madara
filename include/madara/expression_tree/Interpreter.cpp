@@ -39,6 +39,7 @@
 #include "madara/expression_tree/Composite_Implies_Node.h"
 #include "madara/expression_tree/System_Call_Delete_Variable.h"
 #include "madara/expression_tree/System_Call_Eval.h"
+#include "madara/expression_tree/System_Call_Expand_Env.h"
 #include "madara/expression_tree/System_Call_Expand_Statement.h"
 #include "madara/expression_tree/System_Call_Fragment.h"
 #include "madara/expression_tree/System_Call_Get_Clock.h"
@@ -48,6 +49,7 @@
 #include "madara/expression_tree/System_Call_Read_File.h"
 #include "madara/expression_tree/System_Call_Set_Clock.h"
 #include "madara/expression_tree/System_Call_Size.h"
+#include "madara/expression_tree/System_Call_To_Host_Dirs.h"
 #include "madara/expression_tree/System_Call_Type.h"
 #include "madara/expression_tree/System_Call_Write_File.h"
 #include "madara/expression_tree/Interpreter.h"
@@ -205,6 +207,27 @@ namespace Madara
     };
     
     /**
+    * @class Expand_Envs
+    * @brief Expands a statement, e.g. var${.i} into var0 if .i == 0
+    */
+    class Expand_Env : public System_Call
+    {
+    public:
+      /// constructor
+      Expand_Env (
+        Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Expand_Env (void);
+    };
+    
+    /**
     * @class Expand_Statement
     * @brief Expands a statement, e.g. var{.i} into var0 if .i == 0
     */
@@ -346,6 +369,27 @@ namespace Madara
       virtual ~Size (void);
     };
 
+    /**
+    * @class To_Host_Dirs
+    * @brief Returns a version that has a directory structure appropriate to
+    *        the OS.
+    */
+    class To_Host_Dirs : public System_Call
+    {
+    public:
+      /// constructor
+      To_Host_Dirs (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_Host_Dirs (void);
+    };
+    
     /**
     * @class Type
     * @brief Returns the type of a record
@@ -1468,6 +1512,34 @@ Madara::Expression_Tree::Eval::build ()
 
 
 // constructor
+Madara::Expression_Tree::Expand_Env::Expand_Env (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Expand_Env::~Expand_Env (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Expand_Env::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Expand_Env::build ()
+{
+  return new System_Call_Expand_Env (context_, nodes_);
+}
+
+
+
+// constructor
 Madara::Expression_Tree::Expand_Statement::Expand_Statement (
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : System_Call (context)
@@ -1742,6 +1814,34 @@ Madara::Expression_Tree::Component_Node *
 Madara::Expression_Tree::Size::build ()
 {
   return new System_Call_Size (context_, nodes_);
+}
+
+
+
+// constructor
+Madara::Expression_Tree::To_Host_Dirs::To_Host_Dirs (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_Host_Dirs::~To_Host_Dirs (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_Host_Dirs::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_Host_Dirs::build ()
+{
+  return new System_Call_To_Host_Dirs (context_, nodes_);
 }
 
 
@@ -3521,6 +3621,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     {
       call = new Expand_Statement (context);
     }
+    else if (name == "#expand_env" || name == "#expand_envs")
+    {
+      call = new Expand_Env (context);
+    }
     else if (name == "#fragment")
     {
       call = new Fragment (context);
@@ -3552,6 +3656,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     else if (name == "#size")
     {
       call = new Size (context);
+    }
+    else if (name == "#to_host_dirs")
+    {
+      call = new To_Host_Dirs (context);
     }
     else if (name == "#type")
     {

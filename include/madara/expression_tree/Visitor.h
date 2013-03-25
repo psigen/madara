@@ -40,6 +40,7 @@ namespace Madara
     class Composite_Return_Right_Node;
     class System_Call_Delete_Variable;
     class System_Call_Eval;
+    class System_Call_Expand_Env;
     class System_Call_Expand_Statement;
     class System_Call_Fragment;
     class System_Call_Get_Clock;
@@ -49,6 +50,7 @@ namespace Madara
     class System_Call_Read_File;
     class System_Call_Set_Clock;
     class System_Call_Size;
+    class System_Call_To_Host_Dirs;
     class System_Call_Type;
     class System_Call_Write_File;
 
@@ -165,6 +167,9 @@ namespace Madara
       /// Visit a System_Call_Eval.
       virtual void visit (const System_Call_Eval &node) = 0;
       
+      /// Visit a System_Call_Expand_Env.
+      virtual void visit (const System_Call_Expand_Env &node) = 0;
+      
       /// Visit a System_Call_Expand_Statement.
       virtual void visit (const System_Call_Expand_Statement &node) = 0;
       
@@ -191,6 +196,9 @@ namespace Madara
       
       /// Visit a System_Call_Size.
       virtual void visit (const System_Call_Size &node) = 0;
+      
+      /// Visit a System_Call_To_Host_Dirs.
+      virtual void visit (const System_Call_To_Host_Dirs &node) = 0;
       
       /// Visit a System_Call_Type.
       virtual void visit (const System_Call_Type &node) = 0;

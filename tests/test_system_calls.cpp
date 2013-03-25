@@ -83,6 +83,7 @@ void test_system_calls (
     "logging_level = #log_level (10);"
     "small = #fragment ('hello world', 1, 4);"
     "logging_level = #log_level (5);"
+    "madara_root = #expand_env ('$(MADARA_ROOT)');"
     "#print ('Printing to log level 0\n');"
     "#print ('Printing to log level 1\n', 1);"
     "#print ('Printing to log level 2\n', 2);"

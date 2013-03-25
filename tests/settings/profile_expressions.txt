@@ -43,3 +43,20 @@ y = 0.3
 z = 0.2
 x * y * z
 q = x * y * z
+#fragment (my.name, 2, 7)
+filename = #expand_envs ('$(MADARA_ROOT)/tests/images/manaus_hotel_')
+filename = #to_host_dirs (filename)
+#print (filename, 2)
+file = #read_file (filename + '100x100.jpg')
+#write_file (filename + 'copy_100x100.jpg', file)
+file = #read_file (filename + '100x167.jpg')
+#write_file (filename + 'copy_100x167.jpg', file)
+file = #read_file (filename + '225x375.jpg')
+#write_file (filename + 'copy_225x375.jpg', file)
+file = #read_file (filename + '450x750.jpg')
+#write_file (filename + 'copy_450x750.jpg', file)
+file = #read_file (filename + '900x1500.jpg')
+#write_file (filename + 'copy_900x1500.jpg', file)
+#size (file)
+#type (file)
+#eval ('var1=200')
