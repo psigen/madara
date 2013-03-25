@@ -87,6 +87,7 @@ mkdir DEBIAN
 echo "Creating directories for source code and libraries"
 mkdir -p $ROOT_DIR/include
 mkdir -p $ROOT_DIR/lib
+mkdir -p $ROOT_DIR/bin
 mkdir -p $ROOT_DIR/doc/madara
 
 # copy the MADARA and ACE source includes into the appropriate directory
@@ -113,6 +114,9 @@ dos2unix $ROOT_DIR/doc/madara/copyright
 
 cp $ACE_ROOT/ace/libACE.so.$ACE_VERSION $ROOT_DIR/lib
 cp $MADARA_ROOT/libMADARA.so.$LIB_VERSION $ROOT_DIR/lib
+
+cp $MADARA_ROOT/bin/system_calls $ROOT_DIR/bin/madara_system_calls
+
 
 OLD_DIR=$(pwd)
 
