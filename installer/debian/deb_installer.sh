@@ -122,6 +122,8 @@ cd $ROOT_DIR/lib
 ln -s libACE.so.$ACE_VERSION libACE.so
 ln -s libMADARA.so.$LIB_VERSION libMADARA.so 
 
+chown -R root.root $ROOT_DIR
+
 cd $OLD_DIR
 
 # modify the control file to be specific to MADARA
