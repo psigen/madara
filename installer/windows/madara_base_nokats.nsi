@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "MADARA"
-!define PRODUCT_VERSION "0.9.4"
+!define PRODUCT_VERSION "0.9.23"
 !define PRODUCT_PUBLISHER "James Edmondson"
 !define PRODUCT_WEB_SITE "http://madara.googlecode.com"
 ;!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\kats_batch.exe"
@@ -99,27 +99,9 @@ SectionEnd
 
 Section "tests" SEC04
   SetOutPath "$INSTDIR\bin"
-  File "..\..\bin\test_basic_reasoning.exe"
-  File "..\..\bin\test_cid.exe"
-  File "..\..\bin\test_cid_disjoint.exe"
-  File "..\..\bin\test_cid_linked.exe"
-  File "..\..\bin\test_cid_read_deployment.exe"
-  File "..\..\bin\test_dissemination.exe"
-  File "..\..\bin\test_distributed_finisher.exe"
-  File "..\..\bin\test_distributed_finisher_with_set.exe"
-  File "..\..\bin\test_files.exe"
-;  File "..\..\bin\test_kats_barriers.exe"
-;  File "..\..\bin\test_kats_syncs.exe"
-  File "..\..\bin\test_key_expansion.exe"
-  File "..\..\bin\test_knowledge_domains.exe"
-  File "..\..\bin\test_latency.exe"
-  File "..\..\bin\test_print_statement.exe"
-  File "..\..\bin\test_quality.exe"
-  File "..\..\bin\test_reasoning_throughput.exe"
-  File "..\..\bin\test_synchronization.exe"
-  File "..\..\bin\test_synchronization_three_state.exe"
-  File "..\..\bin\test_timed_wait.exe"
-  File "..\..\bin\test_wait_with_ace.exe"
+  File /r "..\..\bin\test*.exe"
+  File /r "..\..\bin\tutorial*.exe"
+  File "..\..\bin\system_calls.exe"
 SectionEnd
 
 ;Section "-exes" SEC09
@@ -191,11 +173,7 @@ SectionEnd
 
 Section "-include" SEC07
   SetOutPath "$INSTDIR\include\madara"
-  File "..\..\include\madara\Functions.h"
-  File "..\..\include\madara\Functions.cpp"
   File "..\..\include\madara\MADARA_export.h"
-  File "..\..\include\madara\Thread_Pool.h"
-  File "..\..\include\madara\Thread_Pool.cpp"
   
   ; copy the madara directories
   File /r "..\..\include\madara\utility"
@@ -212,6 +190,11 @@ SectionEnd
 Section "-tests"
   SetOutPath "$INSTDIR"
   File /r "..\..\tests"
+SectionEnd
+
+Section "-tutorials"
+  SetOutPath "$INSTDIR"
+  File /r "..\..\tutorials"
 SectionEnd
 
 Section "-basic" SEC08
