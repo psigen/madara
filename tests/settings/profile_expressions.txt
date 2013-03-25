@@ -46,6 +46,7 @@ q = x * y * z
 #fragment (my.name, 2, 7)
 filename = #expand_envs ('$(MADARA_ROOT)/tests/images/manaus_hotel_')
 filename = #to_host_dirs (filename)
+#print (filename)
 #print (filename, 2)
 file = #read_file (filename + '100x100.jpg')
 #write_file (filename + 'copy_100x100.jpg', file)
