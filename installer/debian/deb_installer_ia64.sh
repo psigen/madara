@@ -10,7 +10,7 @@ VERSION="$(cat $MADARA_ROOT/VERSION.txt)"
 # The following variables MUST BE CHANGED with each new ACE version used
 ACE_VERSION=6.1.5
 LIB_VERSION=6.1.5
-ARCHITECTURE=i386
+ARCHITECTURE=amd64
 ROOT_DIR=usr/local
 REVISION=1
 
