@@ -23,9 +23,22 @@
  *   tutorial_counting_agents 0 (in one terminal)
  *   tutorial_counting_agents 1 (in a second terminal)
  *   tutorial_counting_agents 2 (in a third terminal)
- * 
+ *
  * If you have done this correctly, you should see the number of current
  * agents and max agents change in your terminal window.
+ * 
+ * This tutorial also allows for setting a domain. A domain is a partition
+ * of the network that allows for privacy amongst a clique of agents. To
+ * set the domain for one of the agents, simply pass in a 2nd argument
+ * that differentiates the partition. For instance,
+ *
+ * tutorial_counting_agents 0
+ * tutorial_counting_agents 0 secret
+ *
+ * Creates 2 agents, both with id 0, but communicating separately. The
+ * first is communicating in the default domain. The second is communicating
+ * in a separate domain called "secret". Neither of these will receive
+ * updates from the other agents.
  **/
 
 #include <iostream>
@@ -63,12 +76,19 @@ int main (int argc, char * argv[])
   settings.type = Madara::Transport::MULTICAST;
   settings.hosts_.resize (1);
   settings.hosts_[0] = multicast_address;
+  
+  // Check for command line argument that changes the domain
+  if (argc == 3)
+  {
+    // change the domain from its default to the one provided by the user
+    settings.domains = argv[2];
+  }
 
   // Create the knowledge base with the transport settings set for multicast
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
   
   // Check command line arguments for a non-zero id
-  if (argc == 2)
+  if (argc >= 2)
   {
     // save the first argument into an integer
     Madara::Knowledge_Record::Integer new_id;
@@ -81,7 +101,7 @@ int main (int argc, char * argv[])
      **/
     knowledge.set (".id", new_id);
   }
-
+  
   
   while (!terminated)
   {

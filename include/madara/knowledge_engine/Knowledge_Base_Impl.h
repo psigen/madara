@@ -20,6 +20,7 @@
 #include "ace/SOCK_Acceptor.h"
 
 #include <ostream>
+#include <vector>
 
 // declare ACE class so MADARA user will not have to directly link to ACE
 class ACE_SOCK_Acceptor;
@@ -410,6 +411,29 @@ namespace Madara
       void define_function (const std::string & name,
         const Compiled_Expression & expression);
 
+      /**
+       * Attaches a transport to the Knowledge Engine. Note that the
+       * transport should use the same Thread_Safe_Context as the
+       * Knowledge Engine.
+       * @param  transport   a new transport to attach tot he Knowledge Base
+       * @return             the number of transports now attached
+       **/
+      ssize_t attach_transport (Madara::Transport::Base * transport);
+      
+      /**
+       * Returns the Thread_Safe_Context associated with this Knowledge
+       * Base. This is necessary for creating custom transports.
+       *
+       * @return             the context used by the knowledge base
+       **/
+      Thread_Safe_Context & get_context (void);
+
+      /**
+       * Returns the unique host and ephemeral binding for this Knowlede Base
+       * @return             host:port identifier for this knowledge base
+       **/
+      std::string get_id (void);
+
     private:
       /**
        * Binds to an ephemeral port for unique tie breakers in global ordering
@@ -422,7 +446,7 @@ namespace Madara
       Madara::Transport::Settings   settings_;
       Files                         files_;
 
-      Madara::Transport::Base *     transport_;
+      Madara::Transport::Transports transports_;
     };
   }
 }

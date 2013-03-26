@@ -895,7 +895,7 @@ namespace Madara
         valid_setup_.broadcast ();
 
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
-          DLINFO "Transport::validate_transport: transport is ready"));
+          DLINFO "Transport::validate_transport: transport is ready\n"));
 
         return 0;
       }
@@ -914,7 +914,7 @@ namespace Madara
       inline int check_transport (void) 
       {
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
-          DLINFO "Transport::check_transport: checking for valid transport"));
+          DLINFO "Transport::check_transport: checking for valid transport\n"));
 
         if (!is_valid_)
           return -2;
@@ -993,7 +993,7 @@ namespace Madara
         valid_setup_.broadcast ();
 
         MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
-          DLINFO "Transport::invalidate_transport: invalidating transport"));
+          DLINFO "Transport::invalidate_transport: invalidating transport\n"));
       }
 
       /**
@@ -1014,6 +1014,8 @@ namespace Madara
       // context for knowledge base
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
     };
+
+    typedef   std::vector <Base *>    Transports;
   }
 }
 

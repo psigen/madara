@@ -17,6 +17,7 @@
 # pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
+#include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Function_Map.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
@@ -36,7 +37,7 @@ namespace Madara
      * @brief This class stores variables and their values for use by any entity
      *        needing state information in a thread safe way
      */
-    class Thread_Safe_Context
+    class MADARA_Export Thread_Safe_Context
     {
     public:
       typedef ACE_Condition <ACE_Recursive_Thread_Mutex> Condition;

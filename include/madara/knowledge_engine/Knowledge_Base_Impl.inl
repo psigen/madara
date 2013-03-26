@@ -226,11 +226,48 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (const std::strin
   **/
 inline
 void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (const std::string & name,
+Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
+  const std::string & name,
   const Compiled_Expression & expression)
 {
   map_.define_function (name, expression);
 }
+     
+/**
+  * Attaches a transport to the Knowledge Engine.   
+  **/
+inline
+ssize_t
+Madara::Knowledge_Engine::Knowledge_Base_Impl::attach_transport (
+  Madara::Transport::Base * transport)
+{
+  transports_.push_back (transport);
+  return transports_.size ();
+}
 
+/**
+  * Returns the Thread_Safe_Context associated with this Knowledge
+  * Base. This is necessary for creating custom transports.
+  *
+  * @return             the context used by the knowledge base
+  **/
+inline 
+Madara::Knowledge_Engine::Thread_Safe_Context & 
+Madara::Knowledge_Engine::Knowledge_Base_Impl::get_context (void)
+{
+  return map_;
+}
+
+
+/**
+  * Returns the unique host and ephemeral binding for this Knowlede Base
+  * @return             host:port identifier for this knowledge base
+  **/
+inline
+std::string 
+Madara::Knowledge_Engine::Knowledge_Base_Impl::get_id (void)
+{
+  return id_;
+}
 
 #endif  // _MADARA_KNOWLEDGE_BASE_IMPL_INL_

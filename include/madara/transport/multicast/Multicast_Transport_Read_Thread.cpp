@@ -162,6 +162,25 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
           remote.get_host_addr (), remote.get_port_number ()));
       }
       
+      // reject the message if it is from a different domain
+      if (strncmp (header.domain, settings_.domains.c_str (),
+           std::min (sizeof (header.domain), settings_.domains.size ())) != 0)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Multicast_Transport_Read_Thread::svc:" \
+          " remote id (%s:%d) in a different domain (%s). Dropping message.\n",
+          remote.get_host_addr (), remote.get_port_number (),
+          header.domain));
+        continue;
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Multicast_Transport_Read_Thread::svc:" \
+          " remote id (%s:%d) message is in our domain\n",
+          remote.get_host_addr (), remote.get_port_number ()));
+      }
+      
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "Multicast_Transport_Read_Thread::svc:" \
         " iterating over the %d updates\n",

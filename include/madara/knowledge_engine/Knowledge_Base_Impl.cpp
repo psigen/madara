@@ -25,7 +25,7 @@
 #include <iostream>
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
-: settings_ (), files_ (map_), transport_ (0)
+: settings_ (), files_ (map_)
 {
   activate_transport ();
   // no hope of transporting, so don't setup uniquehostport
@@ -33,7 +33,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport)
-: settings_ (), files_ (map_), transport_ (0)
+: settings_ (), files_ (map_)
 {
   // override default settings for the arguments
   settings_.type = transport;
@@ -45,7 +45,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, int transport,
   const std::string & knowledge_domain)
-: settings_ (), files_ (map_), transport_ (0)
+: settings_ (), files_ (map_)
 {
   // override default settings for the arguments
   settings_.type = transport;
@@ -57,7 +57,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, const Madara::Transport::Settings & config)
-: settings_ (config), files_ (map_), transport_ (0)
+: settings_ (config), files_ (map_)
 {
   setup_uniquehostport (host);
   activate_transport ();
@@ -109,19 +109,20 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 {
-  if (!transport_)
+  Madara::Transport::Base * transport (0);
+  if (transports_.size () == 0)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::activate_transport:" \
       " activating transport type %d\n", settings_.type));
     if (settings_.type == Madara::Transport::BROADCAST)
     {
-      transport_ = new Madara::Transport::Broadcast_Transport (id_, map_,
+      transport = new Madara::Transport::Broadcast_Transport (id_, map_,
         settings_, true);
     }
     else if (settings_.type == Madara::Transport::MULTICAST)
     {
-      transport_ = new Madara::Transport::Multicast_Transport (id_, map_,
+      transport = new Madara::Transport::Multicast_Transport (id_, map_,
         settings_, true);
     }
     else if (settings_.type == Madara::Transport::SPLICE)
@@ -132,7 +133,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         " creating Open Splice DDS transport.\n",
         settings_.type));
 
-      transport_ = new Madara::Transport::Splice_DDS_Transport (id_, map_,
+      transport = new Madara::Transport::Splice_DDS_Transport (id_, map_,
                          settings_, true);
     #else
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -151,7 +152,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         " creating NDDS transport.\n",
         settings_.type));
 
-      transport_ = new Madara::Transport::NDDS_Transport (id_, map_,
+      transport = new Madara::Transport::NDDS_Transport (id_, map_,
                          settings_, true);
     #else
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -169,7 +170,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         " creating UDP transport.\n",
         settings_.type));
 
-      transport_ = new Madara::Transport::UDP_Transport (id_, map_,
+      transport = new Madara::Transport::UDP_Transport (id_, map_,
         settings_, true);
     }
     else if (settings_.type == Madara::Transport::TCP)
@@ -179,7 +180,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         " creating TCP transport.\n",
         settings_.type));
 
-      transport_ = new Madara::Transport::TCP_Transport (id_, map_,
+      transport = new Madara::Transport::TCP_Transport (id_, map_,
         settings_, true);
     }
     else if (settings_.type == Madara::Transport::INCONSISTENT)
@@ -190,7 +191,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         " creating Inconsistent transport.\n",
         settings_.type));
 
-      transport_ = new Madara::Transport::Inconsistent_Transport (id_, map_,
+      transport = new Madara::Transport::Inconsistent_Transport (id_, map_,
                          settings_, true);
     #else
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -207,9 +208,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
         DLINFO "Knowledge_Base_Impl::activate_transport:" \
         " no transport was specified. Setting transport to null.\n",
         settings_.type));
-
-      transport_ = 0;
     }
+
+    // if we have a valid transport, add it to the transports vector
+    if (transport != 0)
+      transports_.push_back (transport);
   }
   else
   {
@@ -223,14 +226,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
 {
-  if (transport_)
+  if (transports_.size () > 0)
   {
-    transport_->close ();
-    delete transport_;
-    transport_ = 0;
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Knowledge_Base_Impl::close_transport:" \
-      " transport has been closed.\n"));
+    for (unsigned int i = 0; i < transports_.size (); ++i)
+    {
+      transports_[i]->close ();
+      delete transports_[i];
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::close_transport:" \
+        " transport has been closed.\n"));
+    }
+    transports_.clear ();
   }
 }
 
@@ -250,7 +256,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
   int ret = 0;
 
-  if (transport_)
+  if (transports_.size () > 0)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -261,7 +267,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
         " sending %d updates\n", 
         modified.size ()));
 
-      transport_->send_data (modified);
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
       map_.reset_modified ();
     }
   }
@@ -295,13 +303,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
 
-  if (transport_ && !settings.delay_sending_modifieds)
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
     if (modified.size () > 0)
     {
-      transport_->send_data (modified);
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
       map_.reset_modified ();
     }
     else
@@ -339,13 +349,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
   
-  if (transport_ && !settings.delay_sending_modifieds)
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
     if (modified.size () > 0)
     {
-      transport_->send_data (modified);
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
       map_.reset_modified ();
     }
     else
@@ -382,13 +394,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
   
-  if (transport_ && !settings.delay_sending_modifieds)
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
     if (modified.size () > 0)
     {
-      transport_->send_data (modified);
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
       map_.reset_modified ();
     }
     else
@@ -426,13 +440,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::read_file (
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
   
-  if (transport_ && !settings.delay_sending_modifieds)
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
     if (modified.size () > 0)
     {
-      transport_->send_data (modified);
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
       map_.reset_modified ();
     }
     else
@@ -504,7 +520,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
       " completed first eval to get %s\n",
     last_value.to_string ().c_str ()));
 
-  if (transport_ && !settings.delay_sending_modifieds)
+  if (transports_.size () && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -514,8 +530,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
         DLINFO "Knowledge_Base_Impl::wait:" \
         " sending %d updates\n", 
         modified.size ()));
+      
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
 
-      transport_->send_data (modified);
       map_.reset_modified ();
     }
     else
@@ -576,7 +594,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     map_.lock ();
     last_value = ce.expression.evaluate (settings);
 
-    if (transport_ && !settings.delay_sending_modifieds)
+    if (transports_.size () > 0 && !settings.delay_sending_modifieds)
     {
       const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -586,8 +604,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
           DLINFO "Knowledge_Base_Impl::wait:" \
           " sending %d updates\n", 
           modified.size ()));
+        
+        for (unsigned int i = 0; i < transports_.size (); ++i)
+          transports_[i]->send_data (modified);
 
-        transport_->send_data (modified);
         map_.reset_modified ();
       }
       else
@@ -655,7 +675,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 
   // if we have a transport and we've been asked to send modified knowledge
   // to any interested parties...
-  if (transport_ && !settings.delay_sending_modifieds)
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();
 
@@ -665,8 +685,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
         DLINFO "Knowledge_Base_Impl::evaluate:" \
         " sending %d updates\n", 
         modified.size ()));
+      
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
 
-      transport_->send_data (modified);
       map_.reset_modified ();
     }
   }
