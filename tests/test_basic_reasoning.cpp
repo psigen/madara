@@ -25,6 +25,18 @@ Madara::Knowledge_Record
 }
 
 Madara::Knowledge_Record
+  return_named_1 (const char * name, 
+            Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  variables.set ("function_name", std::string (name));
+
+  variables.print ("External named function call of {function_name} a SUCCESS\n", 0);
+
+  return Madara::Knowledge_Record::Integer (1);
+}
+
+Madara::Knowledge_Record
   return_2 (Madara::Knowledge_Engine::Function_Arguments & args,
             Madara::Knowledge_Engine::Variables & variables)
 {
@@ -1028,6 +1040,13 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   result = knowledge.evaluate ("hello_world = hello () + world ()");
   assert (result == "hello world" &&
     knowledge.get ("hello_world").to_string () == "hello world");
+
+
+  
+  knowledge.define_function ("function1", return_named_1);
+  result = knowledge.evaluate (".var2 = function1()");
+  assert (result.to_integer () == 1);
+
 }
 
 /// Test the ability to use for loops

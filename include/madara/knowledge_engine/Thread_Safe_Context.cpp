@@ -849,12 +849,27 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
 // defines a function by name
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
-  const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
+  const std::string & name,
+    VALUE_TYPE (*func) (Function_Arguments &, Variables &))
+{
+  // enter the mutex
+  Context_Guard guard (mutex_);
+  
+  functions_[name].extern_named_ = 0;
+  functions_[name].extern_unnamed_ = func;
+}
+
+// defines a function by name
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
+  const std::string & name,
+    VALUE_TYPE (*func) (const char * name, Function_Arguments &, Variables &))
 {
   // enter the mutex
   Context_Guard guard (mutex_);
 
-  functions_[name].extern_func_ = func;
+  functions_[name].extern_named_ = func;
+  functions_[name].extern_unnamed_ = 0;
 }
 
 
@@ -883,7 +898,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   // enter the mutex
   Context_Guard guard (mutex_);
 
-  functions_[name].extern_func_ = 0;
+  functions_[name].extern_unnamed_ = 0;
+  functions_[name].extern_named_ = 0;
   functions_[name].function_contents_ = expression.expression;
 }
 

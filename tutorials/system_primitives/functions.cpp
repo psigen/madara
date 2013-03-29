@@ -123,7 +123,7 @@ int main (int argc, char * argv[])
 
   // Define the two functions is_true and is_false to be MADARA logic functions
   knowledge.define_function ("is_true",  ".0 >= 0.5 && .0 <= 1"); 
-  knowledge.define_function ("is_false", ".0 > 0 && .0 < 0.5");
+  knowledge.define_function ("is_false", ".0 >= 0 && .0 < 0.5");
 
   /**
    * Define a random integer generating function based on C's rand ().

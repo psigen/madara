@@ -441,7 +441,17 @@ namespace Madara
        **/
       void define_function (const std::string & name,
         VALUE_TYPE (*func) (Function_Arguments &, Variables &));
-
+      
+      /**
+       * Defines a named function that can distinguish the name it was called
+       * with in MADARA
+       * @param  name       name of the function
+       * @param  func       external function to call with this name
+       **/
+      void define_function (const std::string & name,
+        VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &));
+      
+      /**
       /**
        * Defines a MADARA KaRL function
        * @param  name       name of the function

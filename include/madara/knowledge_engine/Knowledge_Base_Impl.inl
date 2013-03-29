@@ -210,6 +210,15 @@ void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
   map_.define_function (name, func);
 }
 
+// Defines a function
+inline
+void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
+  const std::string & name,
+    VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &))
+{
+  map_.define_function (name, func);
+}
+
 /**
   * Defines a MADARA KaRL function      
   **/

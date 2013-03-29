@@ -106,9 +106,16 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
   MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, 
     "Function %s is being called with %d args.\n",
     this->name_.c_str (), args.size ()));
+  
+  // if the user has defined a named function, return that
+  if (function_->extern_named_)
+    return function_->extern_named_ (name_.c_str (), args, variables);
 
-  if (function_->extern_func_)
-    return function_->extern_func_ (args, variables);
+  // if the user has defined an unnamed function, return that
+  else if (function_->extern_unnamed_)
+    return function_->extern_unnamed_ (args, variables);
+
+  // otherwise, assume it is a MADARA function
   else
   {
     return function_->function_contents_.evaluate ();

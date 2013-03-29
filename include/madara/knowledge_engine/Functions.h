@@ -38,7 +38,7 @@ namespace Madara
        * Default constructor
        **/
       Function ()
-        : extern_func_ (0)
+        : extern_named_ (0), extern_unnamed_ (0)
       {
       }
 
@@ -46,7 +46,16 @@ namespace Madara
        * Constructor for function pointer
        **/
       Function (VALUE_TYPE (*extern_func) (Function_Arguments &, Variables &))
-        : extern_func_ (extern_func)
+        : extern_named_ (0), extern_unnamed_ (extern_func)
+      {
+      }
+      
+      /**
+       * Constructor for function pointer
+       **/
+      Function (VALUE_TYPE (*extern_func) (const char *, 
+        Function_Arguments &, Variables &))
+        : extern_named_ (extern_func), extern_unnamed_ (0)
       {
       }
       
@@ -57,9 +66,13 @@ namespace Madara
         : function_contents_ (function_contents)
       {
       }
+      
+      // internal function pointer
+      VALUE_TYPE (*extern_named_) (
+        const char *, Function_Arguments &, Variables &);
 
       // internal function pointer
-      VALUE_TYPE (*extern_func_) (Function_Arguments &, Variables &);
+      VALUE_TYPE (*extern_unnamed_) (Function_Arguments &, Variables &);
 
       // expression tree
       Madara::Expression_Tree::Expression_Tree function_contents_;
