@@ -740,3 +740,23 @@ project (Test_Primitive_Types) : using_ace, using_madara {
     tests/transports/test_primitive_types.cpp
   }
 }
+
+project (Test_Logging) : using_ace, using_madara {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_logging
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_logging.cpp
+  }
+}

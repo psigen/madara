@@ -405,6 +405,31 @@ namespace Madara
        * @return             host:port identifier for this knowledge base
        **/
       std::string get_id (void);
+      
+      /**
+       * Sets logging to STDERR (terminal). This is the default.
+       * @param   clear_flags if true, clears all other logging options. If
+       *                      false, retains previous logging options.
+       **/
+      void log_to_stderr (bool clear_flags = true);
+
+      /**
+       * Sets logging to a file
+       *
+       * @param   filename    path to the file that should contain log messages
+       * @param   clear_flags if true, clears all other logging options. If
+       *                      false, retains previous logging options.
+       **/
+      void log_to_file (const char * filename, bool clear_flags = true);
+
+      /**
+       * Sets logging to the system log
+       * @param   prog_name   system logs require a program name. Use argv[0]
+       *                      if unsure what to do with this.
+       * @param   clear_flags if true, clears all other logging options. If
+       *                      false, retains previous logging options
+       **/
+      void log_to_system_log (const char * prog_name, bool clear_flags = true);
 
     private:
 
