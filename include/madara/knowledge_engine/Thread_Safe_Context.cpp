@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <string.h>
+
 #include "madara/utility/Utility.h"
 
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
@@ -934,4 +936,84 @@ Madara::Knowledge_Engine::Thread_Safe_Context::compile (
   ce.expression = interpreter_->interpret (*this, expression);
 
   return ce;
+}
+
+unsigned int
+  Madara::Knowledge_Engine::Thread_Safe_Context::to_vector (
+  const std::string & subject,
+  unsigned int start,
+  unsigned int end,
+  std::vector <Knowledge_Record> & target)
+{
+  target.clear ();
+  
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  if (end >= start)
+  {
+    target.resize (end - start + 1);
+
+    for (unsigned int i = 0; start <= end; ++start, ++i)
+    {
+      std::stringstream buffer;
+      buffer << subject;
+      buffer << start;
+      target[i] = get (buffer.str ());
+    }
+  }
+
+  return target.size ();
+}
+
+
+unsigned int
+  Madara::Knowledge_Engine::Thread_Safe_Context::to_map (
+  const std::string & expression,
+  std::map <std::string, Knowledge_Record> & target)
+{
+  target.clear ();
+  
+  std::string subject (expression);
+  bool matches_found (false);
+
+  // remove the wildcard and make this into a subject
+  if (subject[subject.size () - 1] == '*')
+    subject.pop_back ();
+
+  // just in case a string implementation does not inline
+  std::string::size_type subject_size = subject.size ();
+  const char * subject_ptr = subject.c_str ();
+
+  // enter the mutex
+  Context_Guard guard (mutex_);
+
+  // if expression is blank, assume the user wants all variables
+  if (expression.size () == 0)
+    target = map_;
+  else
+  {
+    for (Knowledge_Map::iterator i = map_.begin ();
+      i != map_.end (); ++i)
+    {
+      if (i->first.size () >= subject_size)
+      {
+        int result = strncmp (i->first.c_str (), subject_ptr, subject_size);
+        if (result == 0)
+        {
+          // we have a match, add this to the map
+          target[i->first] = i->second;
+          matches_found = true;
+        }
+        else if (matches_found)
+        {
+          // we have already found matches, and now we're not seeing matches
+          break;
+        }
+      }
+    }
+  }
+
+
+  return target.size ();
 }

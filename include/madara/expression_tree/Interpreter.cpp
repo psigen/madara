@@ -4388,6 +4388,10 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
         list.pop_back ();
       }
     }
+    else if (i == input.length () - 1)
+    {
+      break;
+    }
   }
 
   if (!build_argument_list && !closed)
@@ -4395,7 +4399,6 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, DLINFO
       "\nKARL COMPILE ERROR: " \
       "Forgot to close parenthesis in %s.\n", input.c_str ()));
-    exit (-1);
   }
 
   if (!build_argument_list && master_list.size () > 0 && list.size () > 0)
@@ -4453,6 +4456,7 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
   Symbol * lastValidInput = 0;
   bool handled = false;
   int accumulated_precedence = 0;
+  std::string::size_type last_i = 0;
 
   for (std::string::size_type i = 0;
     i < input.length (); )
@@ -4463,6 +4467,24 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
     main_loop (context, input, i, lastValidInput, 
       handled, accumulated_precedence, list);
 
+    if (i == last_i)
+    {
+      if (input[i] == ')')
+      {
+        MADARA_ERROR (MADARA_LOG_EMERGENCY, (LM_DEBUG, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        "You have included too many closing parentheses in %s \n", input.c_str ()));
+      }
+      else
+      {
+        MADARA_ERROR (MADARA_LOG_EMERGENCY, (LM_DEBUG, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        "Compilation is spinning at %d in %s\n", i, input.c_str ()));
+      }
+      break;
+    }
+    else
+      last_i = i;
 
     // store last valid input symbol. this is useful to the '-' operator
     // and will help us determine if '-' is a subtraction or a negation

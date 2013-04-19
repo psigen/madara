@@ -294,4 +294,46 @@ Madara::Knowledge_Engine::Variables::evaluate (
   }
 }
 
+/**
+  * Fills a vector with Knowledge Records that begin with a common subject
+  * and have a finite range of integer values.
+  * @param   subject     The common subject of the variable names. For
+  *                      instance, if we are looking for a range of vars
+  *                      like "var0", "var1", "var2", then the common
+  *                      subject would be "var".
+  * @param   start       An inclusive start index
+  * @param   end         An inclusive end index
+  * @param   target      The vector that will be filled with
+  *                      Knowledge Record instances within the subject
+  *                      range.
+  * @return              entries in the resulting vector
+  **/
+unsigned int
+Madara::Knowledge_Engine::Variables::to_vector (
+                              const std::string & subject,
+                              unsigned int start,
+                              unsigned int end,
+                              std::vector <Knowledge_Record> & target)
+{
+  return context_->to_vector (subject, start, end, target);
+}
+
+/**
+  * Fills a variable map with Knowledge Records that match an expression.
+  * At the moment, this expression must be of the form "subject*"
+  * @param   expression  An expression that matches the variable names
+  *                      that are of interest. Wildcards may only be
+  *                      at the end.
+  * @param   target      The map that will be filled with variable names
+  *                      and the Knowledge Records they correspond to
+  * @return              entries in the resulting map
+  **/
+unsigned int
+Madara::Knowledge_Engine::Variables::to_map (
+  const std::string & expression,
+  std::map <std::string, Knowledge_Record> & target)
+{
+  return context_->to_map (expression, target);
+}
+
 #endif

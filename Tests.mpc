@@ -18,6 +18,25 @@ project (Test_Encoding) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Evaluate) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_evaluate
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_evaluate.cpp
+  }
+}
+
 project (Test_Multicast_Rules) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_multicast_rules

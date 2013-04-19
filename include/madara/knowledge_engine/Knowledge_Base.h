@@ -8,6 +8,10 @@
  * This file contains the Knowledge_Base class
  */
 
+#include <ostream>
+#include <string>
+#include <map>
+
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/knowledge_engine/Functions.h"
@@ -19,7 +23,6 @@
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 
-#include <ostream>
 
 namespace Madara
 {
@@ -430,6 +433,38 @@ namespace Madara
        *                      false, retains previous logging options
        **/
       void log_to_system_log (const char * prog_name, bool clear_flags = true);
+
+      /**
+       * Fills a vector with Knowledge Records that begin with a common subject
+       * and have a finite range of integer values.
+       * @param   subject     The common subject of the variable names. For
+       *                      instance, if we are looking for a range of vars
+       *                      like "var0", "var1", "var2", then the common
+       *                      subject would be "var".
+       * @param   start       An inclusive start index
+       * @param   end         An inclusive end index
+       * @param   target      The vector that will be filled with
+       *                      Knowledge Record instances within the subject
+       *                      range.
+       * @return              entries in the resulting vector
+       **/
+      unsigned int to_vector (const std::string & subject,
+                              unsigned int start,
+                              unsigned int end,
+                              std::vector <Knowledge_Record> & target);
+      
+      /**
+       * Fills a variable map with Knowledge Records that match an expression.
+       * At the moment, this expression must be of the form "subject*"
+       * @param   expression  An expression that matches the variable names
+       *                      that are of interest. Wildcards may only be
+       *                      at the end.
+       * @param   target      The map that will be filled with variable names
+       *                      and the Knowledge Records they correspond to
+       * @return              entries in the resulting map
+       **/
+      unsigned int to_map    (const std::string & subject,
+                       std::map <std::string, Knowledge_Record> & target);
 
     private:
 

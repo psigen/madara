@@ -77,9 +77,48 @@ Madara::Knowledge_Record
   return variables.get (".var1");
 }
 
+Madara::Knowledge_Record
+  check_vector (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  std::vector <Madara::Knowledge_Record> records;
+
+  assert (variables.to_vector ("vector", 1, 8, records) == 8 &&
+    records[0].to_string () == "10" &&
+    records[1].to_string () == "9" &&
+    records[2].to_string () == "8" &&
+    records[3].to_string () == "7" &&
+    records[4].to_string () == "6" &&
+    records[5].to_string () == "5" &&
+    records[6].to_string () == "4" &&
+    records[7].to_string () == "3" &&);
+
+  return Madara::Knowledge_Record::Integer (records.size ());
+}
+
+Madara::Knowledge_Record
+  check_map (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  std::map <std::string, Madara::Knowledge_Record> records;
+
+  assert (knowledge.to_map ("map*", records) == 8 &&
+    records["map1"].to_string () == "10" &&
+    records["map2"].to_string () == "9" &&
+    records["map3"].to_string () == "8" &&
+    records["map4"].to_string () == "7" &&
+    records["map5"].to_string () == "6" &&
+    records["map6"].to_string () == "5" &&
+    records["map7"].to_string () == "4" &&
+    records["map8"].to_string () == "3" &&);
+
+  return Madara::Knowledge_Record::Integer (records.size ());
+}
 
 
 // test functions
+void test_to_vector (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
+void test_to_map (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
 void test_strings (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
 void test_doubles (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
 void test_logicals (Madara::Knowledge_Engine::Knowledge_Base & knowledge);
@@ -114,6 +153,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_to_vector (knowledge);
+  test_to_map (knowledge);
   test_logicals (knowledge);
   test_functions (knowledge);
   test_comparisons (knowledge);
@@ -133,6 +174,60 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.print_knowledge ();
 
   return 0;
+}
+
+void test_to_vector (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_to_vector"));
+  ACE_DEBUG ((LM_INFO, "Testing to_vector function\n"));
+  
+  std::vector <Madara::Knowledge_Record> records;
+
+  knowledge.clear ();
+  
+  knowledge.evaluate ("vector1=10; vector2=9; vector3=8; vector4=7");
+  knowledge.evaluate ("vector5=6; vector6=5; vector7=4; vector8=3");
+
+  assert (knowledge.to_vector ("vector", 1, 8, records) == 8 &&
+    records[0].to_string () == "10" &&
+    records[1].to_string () == "9" &&
+    records[2].to_string () == "8" &&
+    records[3].to_string () == "7" &&
+    records[4].to_string () == "6" &&
+    records[5].to_string () == "5" &&
+    records[6].to_string () == "4" &&
+    records[7].to_string () == "3" &&);
+
+  knowledge.define_function ("check_vector", check_vector);
+
+  knowledge.evaluate ("check_vector ()");
+}
+
+void test_to_map (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_to_map"));
+  ACE_DEBUG ((LM_INFO, "Testing to_map function\n"));
+  
+  std::map <std::string, Madara::Knowledge_Record> records;
+
+  knowledge.clear ();
+  
+  knowledge.evaluate ("map1=10; map2=9; map3=8; map4=7");
+  knowledge.evaluate ("map5=6; map6=5; map7=4; map8=3");
+  
+  assert (knowledge.to_map ("map*", records) == 8 &&
+    records["map1"].to_string () == "10" &&
+    records["map2"].to_string () == "9" &&
+    records["map3"].to_string () == "8" &&
+    records["map4"].to_string () == "7" &&
+    records["map5"].to_string () == "6" &&
+    records["map6"].to_string () == "5" &&
+    records["map7"].to_string () == "4" &&
+    records["map8"].to_string () == "3" &&);
+  
+  knowledge.define_function ("check_map", check_map);
+
+  knowledge.evaluate ("check_map ()");
 }
 
 void test_comparisons (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
