@@ -11,6 +11,7 @@
 
 #include <string>
 
+#include "madara/utility/Scoped_Array.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include "madara/expression_tree/Expression_Tree.h"
@@ -107,6 +108,9 @@ namespace Madara
 
       /// data received rules, defined in Transport settings
       Madara::Expression_Tree::Expression_Tree  on_data_received_;
+
+      /// buffer for receiving
+      Madara::Utility::Scoped_Array <char>      buffer_;
     };
   }
 }

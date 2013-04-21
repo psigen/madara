@@ -91,7 +91,7 @@ Madara::Knowledge_Record
     records[4].to_string () == "6" &&
     records[5].to_string () == "5" &&
     records[6].to_string () == "4" &&
-    records[7].to_string () == "3" &&);
+    records[7].to_string () == "3");
 
   return Madara::Knowledge_Record::Integer (records.size ());
 }
@@ -102,7 +102,7 @@ Madara::Knowledge_Record
 {
   std::map <std::string, Madara::Knowledge_Record> records;
 
-  assert (knowledge.to_map ("map*", records) == 8 &&
+  assert (variables.to_map ("map*", records) == 8 &&
     records["map1"].to_string () == "10" &&
     records["map2"].to_string () == "9" &&
     records["map3"].to_string () == "8" &&
@@ -110,7 +110,7 @@ Madara::Knowledge_Record
     records["map5"].to_string () == "6" &&
     records["map6"].to_string () == "5" &&
     records["map7"].to_string () == "4" &&
-    records["map8"].to_string () == "3" &&);
+    records["map8"].to_string () == "3");
 
   return Madara::Knowledge_Record::Integer (records.size ());
 }
@@ -196,7 +196,7 @@ void test_to_vector (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
     records[4].to_string () == "6" &&
     records[5].to_string () == "5" &&
     records[6].to_string () == "4" &&
-    records[7].to_string () == "3" &&);
+    records[7].to_string () == "3");
 
   knowledge.define_function ("check_vector", check_vector);
 
@@ -223,7 +223,7 @@ void test_to_map (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
     records["map5"].to_string () == "6" &&
     records["map6"].to_string () == "5" &&
     records["map7"].to_string () == "4" &&
-    records["map8"].to_string () == "3" &&);
+    records["map8"].to_string () == "3");
   
   knowledge.define_function ("check_map", check_map);
 

@@ -31,7 +31,9 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   settings.hosts_[0] = default_multicast;
   int retcode = parse_args (argc, argv);
 
+  // set type to multicast and change queue length to 512K
   settings.type = Madara::Transport::MULTICAST;
+  settings.queue_length = 512000;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
   wait_settings.max_wait_time = 10;
   wait_settings.poll_frequency = 1.0;

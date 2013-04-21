@@ -50,6 +50,10 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
       DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
       " no permanent rules were set\n"));
   }
+  
+  // setup the receive buffer
+  if (settings_.queue_length > 0)
+    buffer_ = new char [settings_.queue_length];
 
   this->activate (THR_NEW_LWP | THR_DETACHED, 1);
 
@@ -105,14 +109,25 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
   ACE_Time_Value wait_time (1);
   ACE_INET_Addr  remote;
   
-  // specify a 131k packet size limit. This is unlikely to ever be used
-  char buffer [Madara::Transport::MAX_PACKET_SIZE];
+  // allocate a buffer to send
+  char * buffer = buffer_.get_ptr ();
+  int64_t buffer_remaining = settings_.queue_length;
 
   while (false == terminated_.value ())
   {
+    if (buffer == 0)
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        DLINFO "Multicast_Transport_Read_Thread::svc:" \
+        " Unable to allocate buffer of size %d. Exiting thread.\n",
+        settings_.queue_length));
+    
+      break;
+    }
+
     // read the message
     ssize_t bytes_read = socket_.recv ((void *)buffer, 
-      sizeof (buffer), remote, 0, &wait_time);
+      settings_.queue_length, remote, 0, &wait_time);
  
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -123,7 +138,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
     
     if (bytes_read > 0)
     {
-      int64_t buffer_remaining = (int64_t)bytes_read;
+      buffer_remaining = (int64_t)bytes_read;
       Message_Header header;
       char * update = header.read (buffer, buffer_remaining);
 

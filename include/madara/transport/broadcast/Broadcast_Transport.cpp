@@ -76,6 +76,10 @@ Madara::Transport::Broadcast_Transport::setup (void)
       DLINFO "Multicast_Transport::Broadcast_Transport:" \
       " no permanent rules were set\n"));
   }
+  
+  // setup the send buffer
+  if (settings_.queue_length > 0)
+    buffer_ = new char [settings_.queue_length];
 
   // resize addresses to be the size of the list of hosts
   addresses_.resize (this->settings_.hosts_.size ());
@@ -127,10 +131,21 @@ Madara::Transport::Broadcast_Transport::send_data (
   // get the maximum quality from the updates
   uint32_t quality = Madara::max_quality (updates);
 
-
+  
   // allocate a buffer to send
-  char buffer [512000];
-  int64_t buffer_remaining = 512000;
+  char * buffer = buffer_.get_ptr ();
+  int64_t buffer_remaining = settings_.queue_length;
+  
+  if (buffer == 0)
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::send_data:" \
+      " Unable to allocate buffer of size %d. Exiting thread.\n",
+      settings_.queue_length));
+    
+    return -3;
+  }
+
 
   // set the header to the beginning of the buffer
   Message_Header header;
