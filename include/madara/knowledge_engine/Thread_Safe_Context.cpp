@@ -979,7 +979,7 @@ unsigned int
 
   // remove the wildcard and make this into a subject
   if (subject[subject.size () - 1] == '*')
-    subject.pop_back ();
+    subject.resize (subject.size () - 1);
 
   // just in case a string implementation does not inline
   std::string::size_type subject_size = subject.size ();
