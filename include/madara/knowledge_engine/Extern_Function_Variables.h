@@ -161,6 +161,25 @@ namespace Madara
         compile (const std::string & expression);
       
       /**
+       * Evaluates an expression (USE ONLY FOR PROTOTYPING; DO NOT USE IN
+       * PRODUCTION SYSTEMS). Consider compiling the expression first with
+       * a one-time compile call during an initialization phase for your
+       * program, and then using the evaluate Compiled_Expression call
+       * in any function that must be called frequently or periodically.
+       * The difference in overhead between this function and the compiled
+       * version is orders of magnitude (generally nanoseconds versus
+       * microseconds every call).
+       *
+       * @param expression      KaRL expression to evaluate
+       * @param settings        Settings for evaluating and printing
+       * @return                value of expression
+       **/
+      Madara::Knowledge_Record evaluate (
+        const std::string & expression,
+        const Knowledge_Update_Settings & settings =
+          DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+
+      /**
        * Evaluates an expression. Recommended best practices are to compile the
        * expression into a global variable or persistent store outside of the
        * function call and use a reference to this Compiled_Expression from

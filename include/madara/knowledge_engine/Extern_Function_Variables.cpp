@@ -262,7 +262,41 @@ Madara::Knowledge_Engine::Compiled_Expression
     return Compiled_Expression ();
   }
 }
-      
+  
+/**
+  * Evaluates an expression (USE ONLY FOR PROTOTYPING; DO NOT USE IN
+  * PRODUCTION SYSTEMS). Consider compiling the expression first with
+  * a one-time compile call during an initialization phase for your
+  * program, and then using the evaluate Compiled_Expression call
+  * in any function that must be called frequently or periodically.
+  * The difference in overhead between this function and the compiled
+  * version is orders of magnitude (generally nanoseconds versus
+  * microseconds every call).
+  *
+  * @param expression      KaRL expression to evaluate
+  * @param settings        Settings for evaluating and printing
+  * @return                value of expression
+  **/
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Variables::evaluate (
+  const std::string & expression,
+  const Knowledge_Update_Settings & settings)
+{
+  if (context_)
+  {
+    Compiled_Expression compiled = context_->compile (expression);
+    return compiled.expression.evaluate (settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
+      "Variables context not set. Please don't create your own Madara::" \
+      "Knowledge_Engine::Variables instances.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
+  }
+}
+    
 /**
   * Evaluates an expression. Recommended best practices are to compile the
   * expression into a global variable or persistent store outside of the
