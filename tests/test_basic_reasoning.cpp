@@ -153,6 +153,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_mathops (knowledge);
   test_to_vector (knowledge);
   test_to_map (knowledge);
   test_logicals (knowledge);
@@ -166,7 +167,6 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_assignments (knowledge);
   test_unaries (knowledge);
   test_conditionals (knowledge);
-  test_mathops (knowledge);
   test_implies (knowledge);
   test_both_operator (knowledge);
   test_dijkstra_sync (knowledge);
@@ -941,6 +941,9 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.evaluate (".var2 = 8; .var3 = .var2 * 3 / 8");
   assert (knowledge.get (".var3").to_integer () == 3);
+  
+  knowledge.evaluate (".var2 = 8; .var3 = .var2 / 8 * 3");
+  assert (knowledge.get (".var3").to_integer () == 3);
 
   knowledge.evaluate (".var2 = 8; .var3 = .var2 * 3 / 3");
   assert (knowledge.get (".var3").to_integer () == 8);
@@ -956,6 +959,9 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   
   knowledge.evaluate (".var1 = 5; .var2 = -(-(-(-.var1)))");
   assert (knowledge.get (".var2").to_integer () == 5);
+
+  knowledge.evaluate (".var1 = 0; ++.var{.var1}");
+  assert (knowledge.get (".var0").to_integer () == 1);
 
 }
 
@@ -1118,7 +1124,7 @@ void test_functions (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.define_function ("function1", set_var1_to_arg2);
   knowledge.define_function ("function2", return_2);
   result = knowledge.evaluate (".var5 = function1 ((5 + 3),(3 * 8, 14));"
-    ".var2 = function2 (); .var4 = function1 (17 / 3, 105 / 5 * 3");
+    ".var2 = function2 (); .var4 = function1 (17 / 3, 105 / 5 * 3)");
   assert (result.to_integer () == 63 && 
           knowledge.get (".var1").to_integer () == 63 &&
           knowledge.get (".var2").to_integer () == 2 &&

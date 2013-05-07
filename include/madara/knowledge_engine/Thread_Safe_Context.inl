@@ -35,7 +35,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
   // create the key if it didn't exist
   Knowledge_Record & record = map_[key];
 
-  if (settings.always_overwrite || record.write_quality > record.quality)
+  if (settings.always_overwrite || record.write_quality >= record.quality)
   {
     ++record;
     record.quality = record.write_quality;
@@ -113,7 +113,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key,
   // create the key if it didn't exist
   Knowledge_Record & record = map_[key];
 
-  if (settings.always_overwrite || record.write_quality > record.quality)
+  if (settings.always_overwrite || record.write_quality >= record.quality)
   {
     --record;
     record.quality = record.write_quality;
