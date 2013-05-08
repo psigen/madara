@@ -61,22 +61,22 @@ namespace Madara
   {
     enum
     {
-      BOTH_PRECEDENCE = 0,
-      IMPLIES_PRECEDENCE = 1,
-      ASSIGNMENT_PRECEDENCE = 2,
-      LOGICAL_PRECEDENCE = 3,
-      CONDITIONAL_PRECEDENCE = 4,
-      ADD_PRECEDENCE = 5,
-      SUBTRACT_PRECEDENCE = 5,
-      MULTIPLY_PRECEDENCE = 6,
-      MODULUS_PRECEDENCE = 6,
-      DIVIDE_PRECEDENCE = 6,
-      NEGATE_PRECEDENCE = 7,
-      PARENTHESIS_PRECEDENCE = 8,
-      NUMBER_PRECEDENCE = 8,
-      VARIABLE_PRECEDENCE = 8,
-      FUNCTION_PRECEDENCE = 8,
-      FOR_LOOP_PRECEDENCE = 8
+      BOTH_PRECEDENCE = 1,
+      IMPLIES_PRECEDENCE = 2,
+      ASSIGNMENT_PRECEDENCE = 3,
+      LOGICAL_PRECEDENCE = 4,
+      CONDITIONAL_PRECEDENCE = 5,
+      ADD_PRECEDENCE = 6,
+      SUBTRACT_PRECEDENCE = 6,
+      MULTIPLY_PRECEDENCE = 7,
+      MODULUS_PRECEDENCE = 7,
+      DIVIDE_PRECEDENCE = 7,
+      NEGATE_PRECEDENCE = 8,
+      NUMBER_PRECEDENCE = 9,
+      VARIABLE_PRECEDENCE = 9,
+      FUNCTION_PRECEDENCE = 9,
+      FOR_LOOP_PRECEDENCE = 9,
+      PARENTHESIS_PRECEDENCE = 10
     };
 
     /**
@@ -3503,12 +3503,15 @@ Madara::Expression_Tree::Interpreter::variable_insert (
     bool handled = false;
 
     ::std::list<Symbol *> param_list;
+
+    int local_precedence = 0;
+    Symbol * local_last_valid = 0;
     
     ++i;
 
     // we have a function instead of a variable
-    handle_parenthesis (context, input, i, lastValidInput, handled,
-      accumulated_precedence, param_list, true);
+    handle_parenthesis (context, input, i, local_last_valid, handled,
+      local_precedence, param_list, true);
 
     //if (param_list.size () > 0)
     //  function->right_ = param_list.back ();
@@ -3783,21 +3786,25 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
 
     Symbol *parent = list.back ();
     Symbol *child = 0;
+    Symbol *grandparent = 0;
 
     // check to see if op is an assignment or implication, which are treated
     // uniquely
     Assignment * op_assignment = dynamic_cast <Assignment *> (op);
     Implies * op_implies = dynamic_cast <Implies *> (op);
     Unary_Operator * op_unary = dynamic_cast <Unary_Operator *> (op);
-    
+
     // move down the right side of the tree until we find either a null or
     // a precedence that is >= this operation's precedence. This puts us
     // in the situation that we know our op should be performed after child
     // or child should be null (assignment or implication not withstanding)
-    for ( child = parent->right_; 
-        child && child->precedence () < op->precedence ();
-        child = child->right_)
-        parent = child;
+    for ( child = parent->right_;
+      child && child->precedence () < op->precedence ();
+      child = child->right_)
+    {
+      grandparent = parent;
+      parent = child;
+    }
 
     // parent->precedence is < op->precedence at this point
 
@@ -3809,32 +3816,24 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
       // var1 = var2 = var3 = 1. In the list, will be var1 = var2 = var3, so parent will be
       // and assignment, and parent left will be var1, right and child will be assignment
       // and it will have a left of var2
-      // We need to push our current assignment a bit further down, to make our pointers look
-      // like this:
-      //                  =                <== current parent
-      //               /      \
-      //             var1        =               <== current child
-      //                      /      \
-      //                    var2     null
-      // What we want
-      //                  =               
-      //               /      \
-      //             var1        =               <== parent
-      //                      /      \
-      //                    var2     null          <== child
-      //
 
-      for ( child = parent->right_; 
+
+      for ( child = parent->right_;
         child && child->precedence () <= op->precedence ();
         child = child->right_)
+      {
+        grandparent = parent;
         parent = child;
+      }
     }
 
     // Now that we have our parent and child setup appropriately according
     // to precedence relationships, we should be able to modify or replace
     // the tree in the list
 
-    if (parent->precedence() <= op->precedence ())
+    if (parent->precedence () < op->precedence () ||
+        (parent->precedence () == op->precedence () &&
+        (op_assignment || op_implies || op_unary)))
     {
       // this op needs to be evaluated before the parent
 
@@ -3851,14 +3850,14 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
         Both * parent_both = dynamic_cast <Both *> (parent);
         if (parent_both)
         {
-          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG,
             DLINFO "KARL COMPILE WARNING: " \
             "Empty statements between ';' may cause slower execution.\n" \
-            "  Attempting to prune away the extra statement.\n"));
+            " Attempting to prune away the extra statement.\n"));
         }
         else
         {
-          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG, 
+          MADARA_DEBUG (MADARA_LOG_WARNING, (LM_DEBUG,
             DLINFO "KARL COMPILE WARNING: " \
             "Binary operation has no left child. Inserting a zero.\n"));
           parent->left_ = new Number ((Madara::Knowledge_Record::Integer)0);
@@ -3866,17 +3865,17 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
       }
 
       // if the parent is a unary operator (like negate or not), then it should
-      // NOT have a left child. This would only happen if someone input 
+      // NOT have a left child. This would only happen if someone input
       // something like 5 ! 3, which has no meaning. This is a compile error.
       if (parent_unary && parent->left_)
       {
         MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_DEBUG, DLINFO
           "\nKARL COMPILE ERROR: " \
-            "Unary operation shouldn't have a left child.\n"));
+          "Unary operation shouldn't have a left child.\n"));
         exit (-1);
       }
 
-      // if we've gotten to this point, then we need to 
+      // if we've gotten to this point, then we need to
       // replace the child with ourself in the tree
       if (child)
       {
@@ -3903,8 +3902,14 @@ Madara::Expression_Tree::Interpreter::precedence_insert (
       // logical operations (&&, ||) and equality checks
 
       op->left_ = parent;
-      list.pop_back ();
-      list.push_back (op);      
+
+      if (grandparent)
+        grandparent->right_ = op;
+      else
+      {
+        list.pop_back ();
+        list.push_back (op);
+      }
     }
   }
   else
@@ -4361,6 +4366,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
   function has its list setup */
 
   accumulated_precedence += PARENTHESIS_PRECEDENCE;
+  int initial_precedence = accumulated_precedence;
 
   ::std::list<Symbol *> list;
 
@@ -4387,6 +4393,7 @@ Madara::Expression_Tree::Interpreter::handle_parenthesis (
         master_list.push_back (list.back ());
         list.pop_back ();
       }
+      accumulated_precedence = initial_precedence;
     }
     else if (i == input.length () - 1)
     {
