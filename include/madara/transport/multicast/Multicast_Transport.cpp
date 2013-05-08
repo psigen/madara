@@ -234,7 +234,7 @@ Madara::Transport::Multicast_Transport::send_data (
   
   if (buffer_remaining > 0)
   {
-    int size = (int)(Madara::Transport::MAX_PACKET_SIZE - buffer_remaining);
+    int size = (int)(settings_.queue_length - buffer_remaining);
     *message_size = Madara::Utility::endian_swap ((uint64_t)size);
     
     // before we send to others, we first execute rules
