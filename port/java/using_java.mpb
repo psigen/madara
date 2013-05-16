@@ -1,0 +1,20 @@
+feature (java) {
+
+  requires += java
+
+  includes += $(MADARA_ROOT)/port/java/jni
+
+  includes += $(JAVA_HOME)/include
+  includes += $(JAVA_HOME)/include/linux
+  includes += $(JAVA_HOME)/include/win32
+  includes += $(JAVA_HOME)/include/mac
+
+  Source_Files {
+    port/java/jni/
+  }
+  
+  Header_Files {
+    port/java/jni
+  }
+
+}
