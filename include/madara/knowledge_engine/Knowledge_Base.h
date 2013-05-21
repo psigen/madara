@@ -102,15 +102,19 @@ namespace Madara
 
       /**
        * Retrieves a knowledge value
-       * @param key                knowledge location
-       * @return                   value at knowledge location
+       * @param key              knowledge location
+       * @param settings         settings for referring to knowledge variables
+       * @return                 value at knowledge location
        **/
-      Madara::Knowledge_Record get (const std::string & key);
+      Madara::Knowledge_Record get (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
 
       /**
        * Read a file into the knowledge base
        * @param filename           file to read
-       * @param knowledge_key       key to store the file into
+       * @param knowledge_key      key to store the file into
+       * @param settings           settings to use when evaluating/updating
        */
       int read_file (const std::string & knowledge_key, 
                      const std::string & filename, 
@@ -194,8 +198,11 @@ namespace Madara
        *
        * @param key             knowledge variable location
        * @param quality         quality of writing to this location
+       * @param settings        settings for referring to knowledge variables
        **/
-      void set_quality (const std::string & key, uint32_t quality);
+      void set_quality (const std::string & key, uint32_t quality,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
 
 #ifdef _USE_CID_
       
@@ -254,9 +261,12 @@ namespace Madara
        * Checks if a knowledge location exists in the context
        *
        * @param key             knowledge variable location
+       * @param settings        settings for referring to knowledge variables
        * @return                true if location has been set
        **/
-      bool exists (const std::string & key) const;
+      bool exists (const std::string & key,
+        const Knowledge_Reference_Settings & settings =
+          DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS) const;
 
       /**
        * Evaluates an expression

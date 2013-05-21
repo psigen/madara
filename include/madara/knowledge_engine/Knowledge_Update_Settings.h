@@ -11,6 +11,7 @@
 
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
+#include "Knowledge_Reference_Settings.h"
 
 namespace Madara
 {
@@ -20,13 +21,15 @@ namespace Madara
      * Settings for applying knowledge updates
      **/
     class MADARA_Export Knowledge_Update_Settings
+          : public Knowledge_Reference_Settings
     {
     public:
       /**
        * Constructor
        **/
       Knowledge_Update_Settings ()
-        : always_overwrite (false), treat_globals_as_locals (false),
+        : Knowledge_Reference_Settings (), 
+          always_overwrite (false), treat_globals_as_locals (false),
           clock_increment (1)
       {
       }
@@ -37,7 +40,8 @@ namespace Madara
       Knowledge_Update_Settings (bool t_treat_globals_as_locals,
         bool t_always_overwrite = false,
         uint64_t t_clock_increment = 1)
-        : always_overwrite (t_always_overwrite),
+        : Knowledge_Reference_Settings (),
+          always_overwrite (t_always_overwrite),
           treat_globals_as_locals (t_treat_globals_as_locals),
           clock_increment (t_clock_increment)
       {
@@ -47,7 +51,8 @@ namespace Madara
        * Constructor
        **/
       Knowledge_Update_Settings (const Knowledge_Update_Settings & rhs)
-        : always_overwrite (rhs.always_overwrite),
+        : Knowledge_Reference_Settings (rhs),
+          always_overwrite (rhs.always_overwrite),
           treat_globals_as_locals (rhs.treat_globals_as_locals),
           clock_increment (rhs.clock_increment)
       {

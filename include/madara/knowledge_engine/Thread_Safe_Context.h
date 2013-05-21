@@ -57,11 +57,14 @@ namespace Madara
 
       /**
        * Atomically returns the value of a variable.
-       * @param   key    unique identifier of the variable
+       * @param   key       unique identifier of the variable
+       * @param   settings  the settings for referring to variables
        * @return         the Madara::Knowledge_Record::Integer value for the variable
        **/
       Madara::Knowledge_Record
-        get (const std::string & key) const;
+        get (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS) const;
 
       /**
        * Retrieves a knowledge record from the key. This function is useful
@@ -69,9 +72,12 @@ namespace Madara
        * can be one of multiple types
        * @param   key    unique identifier of the variable. Allows variable 
        *                 expansion.
+       * @param  settings  the settings for referring to variables
        * @return         the knowledge record for the variable
        **/
-      Madara::Knowledge_Record * get_record (const std::string & key);
+      Madara::Knowledge_Record * get_record (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Atomically sets the value of a variable to an XML string.
@@ -231,14 +237,18 @@ namespace Madara
        * @param   key       unique identifier of the variable
        * @return   quality associated with the variable
        **/
-      uint32_t get_quality (const std::string & key);
+      uint32_t get_quality (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Atomically gets write quality of this process for a variable
        * @param   key       unique identifier of the variable
        * @return   write quality associated with the variable
        **/
-      uint32_t get_write_quality (const std::string & key);
+      uint32_t get_write_quality (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Atomically sets quality of this process for a variable
@@ -248,7 +258,8 @@ namespace Madara
        * @return   write quality associated with the variable
        **/
       uint32_t set_quality (const std::string & key, 
-        uint32_t quality, bool force_update);
+        uint32_t quality, bool force_update,
+        const Knowledge_Reference_Settings & settings);
 
        /**
        * Force a change to be registered, waking up anyone waiting on entry
@@ -260,7 +271,8 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @param   quality        write quality of this process
        **/
-      void set_write_quality (const std::string & key, uint32_t quality);
+      void set_write_quality (const std::string & key, uint32_t quality,
+        const Knowledge_Reference_Settings & settings);
 
       /**
        * Retrieves a list of modified variables. Useful for building a
@@ -283,9 +295,13 @@ namespace Madara
 
       /**
        * Changes all global variables to modified at current clock.
+       * @param  key     the key of the record you are changing
+       * @param  record  record of the key in the context (should exist)
+       * @param  settings  the settings for referring to variables
        **/
       void mark_modified (const std::string & key,
-        Madara::Knowledge_Record & record);
+        Madara::Knowledge_Record & record,
+        const Knowledge_Reference_Settings & settings);
 
       /**
        * Resets a variable to unmodified
@@ -324,7 +340,9 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @return                 true if variable exists
        **/
-      bool delete_variable (const std::string & key);
+      bool delete_variable (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Deletes the expression from the interpreter cache
@@ -338,7 +356,9 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @return                 true if variable exists
        **/
-      bool exists (const std::string & key) const;
+      bool exists (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS) const;
 
       /**
        * Atomically prints all variables and values in the context
@@ -405,7 +425,9 @@ namespace Madara
        * @return           new clock time for variable
        **/
       uint64_t set_clock (const std::string & key, 
-        uint64_t clock);
+        uint64_t clock,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
 
       /**
        * Atomically gets the Lamport clock
@@ -419,7 +441,9 @@ namespace Madara
        * @return           current variable clock
        **/
       uint64_t get_clock (
-        const std::string & key);
+        const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
 
       /**
        * Signals that this thread is done with the context. Anyone
@@ -443,40 +467,54 @@ namespace Madara
        * @param  func       external function to call with this name
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (Function_Arguments &, Variables &));
+        VALUE_TYPE (*func) (Function_Arguments &, Variables &),
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Defines a named function that can distinguish the name it was called
        * with in MADARA
        * @param  name       name of the function
        * @param  func       external function to call with this name
+       * @param  settings   settings for referring to variables
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &));
+        VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &),
+        const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
       /**
        * Defines a MADARA KaRL function
        * @param  name       name of the function
-       * @param  expression KaRL function body       
+       * @param  expression KaRL function body      
+       * @param  settings   settings for referring to variables 
        **/
       void define_function (const std::string & name,
-        const std::string & expression);
+        const std::string & expression,
+        const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Defines a MADARA KaRL function
        * @param  name       name of the function
-       * @param  expression KaRL function body       
+       * @param  expression KaRL function body     
+       * @param  settings   settings for referring to variables  
        **/
       void define_function (const std::string & name,
-        const Compiled_Expression & expression);
+        const Compiled_Expression & expression,
+        const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
 
       /**
        * Retrieves an external function
        * @param  name       name of the function to retrieve
+       * @param  settings   settings for referring to variables
        * @return            the mapped external function
        **/
-      Function * retrieve_function (const std::string & name);
+      Function * retrieve_function (const std::string & name,
+             const Knowledge_Reference_Settings & settings =
+                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
       
       /**
        * Compiles a KaRL expression into an expression tree

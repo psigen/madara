@@ -51,9 +51,12 @@ namespace Madara
       /**
        * Retrieves the value of a variable.
        * @param   key       unique identifier of the variable
+       * @param   settings  settings when referring to variables
        * @return   the value of the keyed variable
        **/
-      Knowledge_Record get (const std::string & key) const;
+      Knowledge_Record get (const std::string & key,
+        const Knowledge_Reference_Settings & settings =
+          DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS) const;
       
       /**
        * Sets the value of a variable.

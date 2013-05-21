@@ -9,10 +9,12 @@
 /**
   * Retrieves the value of a variable.
   * @param   key       unique identifier of the variable
+  * @param   settings  settings when referring to variables
   * @return   the value of the keyed variable
   **/
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Variables::get (const std::string & key) const
+Madara::Knowledge_Engine::Variables::get (const std::string & key,
+             const Knowledge_Reference_Settings & settings) const
 {
   if (context_)
     return *context_->get_record (key);

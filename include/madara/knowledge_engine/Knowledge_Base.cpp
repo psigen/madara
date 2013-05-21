@@ -72,9 +72,10 @@ Madara::Knowledge_Engine::Knowledge_Base::close_transport (void)
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Knowledge_Base::get (const std::string & key)
+Madara::Knowledge_Engine::Knowledge_Base::get (const std::string & key,
+             const Knowledge_Reference_Settings & settings)
 {
-  return impl_->get (key);
+  return impl_->get (key, settings);
 }
 
 
@@ -143,9 +144,20 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 /// Set quality of writing to a variable
 void 
 Madara::Knowledge_Engine::Knowledge_Base::set_quality (
-  const std::string & key, uint32_t quality)
+  const std::string & key, uint32_t quality,
+  const Knowledge_Reference_Settings & settings)
 {
-  impl_->set_quality (key, quality);
+  impl_->set_quality (key, quality, settings);
+}
+
+
+bool
+Madara::Knowledge_Engine::Knowledge_Base::exists (
+  const std::string & key,
+  const Knowledge_Reference_Settings & settings) const
+
+{
+  return impl_->exists (key, settings);
 }
 
 #ifdef _USE_CID_

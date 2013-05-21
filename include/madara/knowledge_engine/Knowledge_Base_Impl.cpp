@@ -288,13 +288,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
-  const std::string & t_key, 
+  const std::string & key, 
   Madara::Knowledge_Record::Integer value,
   const Eval_Settings & settings)
 {
-  // everything after this point is done on a string with at least 1 char
-  std::string key = map_.expand_statement (t_key);
-
   if (key == "")
     return -1;
 
@@ -334,13 +331,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
-  const std::string & t_key, 
+  const std::string & key, 
   double value, 
   const Eval_Settings & settings)
 {
-  // everything after this point is done on a string with at least 1 char
-  std::string key = map_.expand_statement (t_key);
-
   if (key == "")
     return -1;
 
@@ -379,13 +373,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
-  const std::string & t_key, 
+  const std::string & key, 
   const std::string & value, 
   const Eval_Settings & settings)
 {
-  // everything after this point is done on a string with at least 1 char
-  std::string key = map_.expand_statement (t_key);
-
   if (key == "")
     return -1;
 
@@ -426,16 +417,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 /// Read a file into the knowledge base
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::read_file (
-  const std::string & knowledge_key, const std::string & filename, 
+  const std::string & key, const std::string & filename, 
         const Eval_Settings & settings)
 {
-  // everything after this point is done on a string with at least 1 char
-  std::string key = map_.expand_statement (knowledge_key);
-
   if (key == "")
     return -1;
 
-  int result = map_.read_file (knowledge_key, filename, settings);
+  int result = map_.read_file (key, filename, settings);
 
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key

@@ -27,14 +27,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::~Thread_Safe_Context (void)
 
 // return the value of a variable
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Thread_Safe_Context::get (const std::string & key) const
+Madara::Knowledge_Engine::Thread_Safe_Context::get (const std::string & key,
+             const Knowledge_Reference_Settings & settings) const
 {
+  std::string key_actual;
   Context_Guard guard (mutex_);
 
   Madara::Knowledge_Record record;
 
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+
   // if key is not null
-  if (key != "")
+  if (key_actual != "")
   {
     // find the key in the knowledge base
     Knowledge_Map::const_iterator found = map_.find (key);
@@ -55,17 +62,25 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const std::string & key) con
  **/
 Madara::Knowledge_Record *
 Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
-  const std::string & key)
+  const std::string & key,
+  const Knowledge_Reference_Settings & settings)
 {
-  if (key == "")
-    return 0;
-
-  // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
+
+  Madara::Knowledge_Record record;
+
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+
+  if (key_actual == "")
+    return 0;
 
   // if the variable doesn't exist, hash maps create a record automatically
   // when used in this manner
-  return &map_[expand_statement(key)];
+  return &map_[key_actual];
 }
 
 // set the value of a variable
@@ -75,15 +90,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   Madara::Knowledge_Record::Integer value,
   const Knowledge_Update_Settings & settings)
 {
+  // enter the mutex
+  std::string key_actual;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
   // check for null key
-  if (key == "")
+  if (key_actual == "")
     return -1;
 
-  // enter the mutex
-  Context_Guard guard (mutex_);
-
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -93,11 +114,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -113,15 +134,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   double value,
   const Knowledge_Update_Settings & settings)
 {
+  // enter the mutex
+  std::string key_actual;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
   // check for null key
-  if (key == "")
+  if (key_actual == "")
     return -1;
 
-  // enter the mutex
-  Context_Guard guard (mutex_);
-
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -131,11 +158,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -151,15 +178,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   const std::string & value,
   const Knowledge_Update_Settings & settings)
 {
+  // enter the mutex
+  std::string key_actual;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
   // check for null key
-  if (key == "")
+  if (key_actual == "")
     return -1;
 
-  // enter the mutex
-  Context_Guard guard (mutex_);
-
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -169,11 +202,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -189,15 +222,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
   const char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -207,11 +246,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -227,15 +266,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
   const char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -245,11 +290,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -265,15 +310,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
   const unsigned char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -283,11 +334,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -303,15 +354,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
   const unsigned char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -321,11 +378,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -341,15 +398,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
   const std::string & filename,
   const Knowledge_Update_Settings & settings)
 {
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key];
+  Knowledge_Record & record = map_[key_actual];
 
   // check if we have the appropriate write quality
   if (!settings.always_overwrite && record.write_quality < record.quality)
@@ -359,11 +422,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
   record.quality = record.write_quality;
   
   // otherwise set the value
-  if (key[0] != '.')
+  if (key_actual[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key, record);
+      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -376,19 +439,26 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
 /// @return    quality of the variable 
 uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (
-  const std::string & key)
+  const std::string & key,
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // create the variable if it has never been written to before
   // and update its current value quality to the quality parameter
 
   if (found != map_.end ())
-    return map_[key].quality;
+    return map_[key_actual].quality;
 
   // default quality is 0
   return 0;
@@ -398,19 +468,26 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_quality (
 /// @return    quality of the variable 
 uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (
-  const std::string & key)
+  const std::string & key,
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
 
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // create the variable if it has never been written to before
   // and update its current value quality to the quality parameter
 
   if (found != map_.end ())
-    return map_[key].write_quality;
+    return map_[key_actual].write_quality;
 
   // default quality is 0
   return 0;
@@ -421,35 +498,53 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_write_quality (
 uint32_t 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_quality (
   const std::string & key, uint32_t quality,
-                           bool force_update)
+                           bool force_update,
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return 0;
+  
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // create the variable if it has never been written to before
   // and update its current value quality to the quality parameter
 
   if (found == map_.end () || force_update || quality > found->second.quality)
-    map_[key].quality = quality;
+    map_[key_actual].quality = quality;
 
   // return current quality
-  return map_[key].quality;
+  return map_[key_actual].quality;
 }
       
 /// Set quality of this process writing to a variable
 void 
 Madara::Knowledge_Engine::Thread_Safe_Context::set_write_quality (
-  const std::string & key, uint32_t quality)
+  const std::string & key, uint32_t quality,
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
 
   // create the variable if it has never been written to before
   // and update its local process write quality to the quality parameter
-  map_[key].write_quality = quality;
+  map_[key_actual].write_quality = quality;
 }
 
 /// Set if the variable value will be different. Always updates clock to
@@ -464,15 +559,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
 {
   int result = 1;
 
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // if it's found, then compare the value
   if (!settings.always_overwrite && found != map_.end ())
@@ -497,7 +598,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = 0;
   }
 
-  Madara::Knowledge_Record & record = map_[key];
+  Madara::Knowledge_Record & record = map_[key_actual];
 
   // if we need to update quality, then update it
   if (result != -2 && record.quality != quality)
@@ -517,11 +618,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     record.set_value (value);
   
     // otherwise set the value
-    if (key[0] != '.')
+    if (key_actual[0] != '.')
     {
       if (!settings.treat_globals_as_locals)
       {
-        mark_modified (key, record);
+        mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
       }
     }
 
@@ -544,15 +645,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
 {
   int result = 1;
 
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // if it's found, then compare the value
   if (!settings.always_overwrite && found != map_.end ())
@@ -577,7 +684,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = 0;
   }
 
-  Madara::Knowledge_Record & record = map_[key];
+  Madara::Knowledge_Record & record = map_[key_actual];
 
   // if we need to update quality, then update it
   if (result != -2 && record.quality != quality)
@@ -597,11 +704,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     record.set_value (value);
   
     // otherwise set the value
-    if (key[0] != '.')
+    if (key_actual[0] != '.')
     {
       if (!settings.treat_globals_as_locals)
       {
-        mark_modified (key, record);
+        mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
       }
     }
 
@@ -624,15 +731,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
 {
   int result = 1;
 
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // if it's found, then compare the value
   if (!settings.always_overwrite && found != map_.end ())
@@ -657,7 +770,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = 0;
   }
 
-  Madara::Knowledge_Record & record = map_[key];
+  Madara::Knowledge_Record & record = map_[key_actual];
 
   // if we need to update quality, then update it
   if (result != -2 && record.quality != quality)
@@ -677,11 +790,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     record.set_value (value);
   
     // otherwise set the value
-    if (key[0] != '.')
+    if (key_actual[0] != '.')
     {
       if (!settings.treat_globals_as_locals)
       {
-        mark_modified (key, record);
+        mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
       }
     }
 
@@ -704,15 +817,21 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
 {
   int result = 1;
 
-  // check for null key
-  if (key == "")
-    return -1;
-
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (key);
+  else
+    key_actual = key;
+  
+  // check for null key
+  if (key_actual == "")
+    return -1;
+  
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key);
+  Knowledge_Map::iterator found = map_.find (key_actual);
 
   // if it's found, then compare the value
   if (!settings.always_overwrite && found != map_.end ())
@@ -732,26 +851,26 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
     found->second = rhs;
     
     // otherwise set the value
-    if (key[0] != '.')
+    if (key_actual[0] != '.')
     {
       if (!settings.treat_globals_as_locals)
       {
-        mark_modified (key, found->second);
+        mark_modified (key_actual, found->second, DO_NOT_EXPAND_VARIABLES);
       }
     }
   }
   else
   {
     // if we reach this point, then we have to create the record
-    Knowledge_Record & current_value = map_[key];
+    Knowledge_Record & current_value = map_[key_actual];
     current_value = rhs;
 
     // otherwise set the value
-    if (key[0] != '.')
+    if (key_actual[0] != '.')
     {
       if (!settings.treat_globals_as_locals)
       {
-        mark_modified (key, current_value);
+        mark_modified (key_actual, current_value, DO_NOT_EXPAND_VARIABLES);
       }
     }
   }
@@ -852,26 +971,48 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (Function_Arguments &, Variables &))
+    VALUE_TYPE (*func) (Function_Arguments &, Variables &),
+        const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
   
-  functions_[name].extern_named_ = 0;
-  functions_[name].extern_unnamed_ = func;
+  if (settings.expand_variables)
+    key_actual = expand_statement (name);
+  else
+    key_actual = name;
+  
+  // check for null key
+  if (key_actual == "")
+    return;
+  
+  functions_[key_actual].extern_named_ = 0;
+  functions_[key_actual].extern_unnamed_ = func;
 }
 
 // defines a function by name
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (const char * name, Function_Arguments &, Variables &))
+    VALUE_TYPE (*func) (const char * name, Function_Arguments &, Variables &),
+        const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
-  functions_[name].extern_named_ = func;
-  functions_[name].extern_unnamed_ = 0;
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (name);
+  else
+    key_actual = name;
+  
+  // check for null key
+  if (key_actual == "")
+    return;
+  
+  functions_[key_actual].extern_named_ = func;
+  functions_[key_actual].extern_unnamed_ = 0;
 }
 
 
@@ -882,10 +1023,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   **/
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
-  const std::string & expression)
+  const std::string & expression,
+  const Knowledge_Reference_Settings & settings)
 {
   Compiled_Expression compiled = compile (expression);
-  define_function (name, compiled);
+  define_function (name, compiled, settings);
 }
       
 /**
@@ -895,14 +1037,25 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   **/
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
-  const Compiled_Expression & expression)
+  const Compiled_Expression & expression,
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
-  functions_[name].extern_unnamed_ = 0;
-  functions_[name].extern_named_ = 0;
-  functions_[name].function_contents_ = expression.expression;
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (name);
+  else
+    key_actual = name;
+  
+  // check for null key
+  if (key_actual == "")
+    return;
+  
+  functions_[key_actual].extern_unnamed_ = 0;
+  functions_[key_actual].extern_named_ = 0;
+  functions_[key_actual].function_contents_ = expression.expression;
 }
 
 
@@ -914,12 +1067,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   **/
 Madara::Knowledge_Engine::Function *
 Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_function (
-       const std::string & name)
+  const std::string & name,
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
+  std::string key_actual;
   Context_Guard guard (mutex_);
-
-  return &functions_[name];
+  
+  if (settings.expand_variables)
+    key_actual = expand_statement (name);
+  else
+    key_actual = name;
+  
+  // check for null key
+  if (key_actual == "")
+    return 0;
+  
+  return &functions_[key_actual];
 }
 
 

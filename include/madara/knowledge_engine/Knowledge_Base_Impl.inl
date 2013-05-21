@@ -17,11 +17,18 @@
 
 inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
-  const std::string & t_key)
+  const std::string & t_key,
+  const Knowledge_Reference_Settings & settings)
 {
-  std::string key = map_.expand_statement (t_key);
+  return map_.get (t_key, settings);
+}
 
-  return map_.get (key);
+inline bool
+Madara::Knowledge_Engine::Knowledge_Base_Impl::exists (
+  const std::string & key,
+  const Knowledge_Reference_Settings & settings) const
+{
+  return map_.exists (key, settings);
 }
 
 inline std::string
@@ -74,11 +81,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
 /// Set quality of writing to a variable
 inline void 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (
-  const std::string & t_key, uint32_t quality)
+  const std::string & t_key, uint32_t quality,
+  const Knowledge_Reference_Settings & settings)
 {
-  std::string key = map_.expand_statement (t_key);
-
-  map_.set_write_quality (key, quality);
+  map_.set_write_quality (t_key, quality, settings);
 }
 
 #ifdef _USE_CID_

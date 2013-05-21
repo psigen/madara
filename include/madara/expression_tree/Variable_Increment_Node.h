@@ -42,10 +42,16 @@ namespace Madara
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
       {
         Madara::Knowledge_Record * record = record_;
+        std::string key;
 
         // if we don't have a static record, get the dynamic one
         if (!record)
-          record = context_.get_record (expand_key ());
+        {
+          key = expand_key ();
+          record = context_.get_record (key);
+        }
+        else
+          key = key_;
 
         // notice that we assume the context is locked
         // check if we have the appropriate write quality
@@ -63,9 +69,10 @@ namespace Madara
         else
           *record += rhs_->evaluate (settings);
         
-        if (key_[0] != '.' && !settings.treat_globals_as_locals)
+        if (key[0] != '.' && !settings.treat_globals_as_locals)
         {
-          context_.mark_modified (key_, *record);
+          context_.mark_modified (key, *record,
+            Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
         }
 
         context_.signal ();
