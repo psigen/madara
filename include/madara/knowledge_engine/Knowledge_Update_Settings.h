@@ -11,7 +11,7 @@
 
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
-#include "Knowledge_Reference_Settings.h"
+#include "madara/knowledge_engine/Knowledge_Reference_Settings.h"
 
 namespace Madara
 {
