@@ -147,6 +147,8 @@ namespace Madara
         id (DEFAULT_ID),
         processes (DEFAULT_PROCESSES),
         on_data_received_logic (),
+        delay_launch (false),
+        never_exit (false),
 
 #ifdef _USE_CID_
         latency_enabled (DEFAULT_LATENCY_ENABLED),
@@ -172,7 +174,9 @@ namespace Madara
         reliability (settings.reliability),
         id (settings.id),
         processes (settings.processes),
-         on_data_received_logic (settings.on_data_received_logic),
+        on_data_received_logic (settings.on_data_received_logic),
+        delay_launch (settings.delay_launch),
+        never_exit (settings.never_exit),
 
 #ifdef _USE_CID_
 
@@ -205,6 +209,8 @@ namespace Madara
         processes = settings.processes;
         
         on_data_received_logic = settings.on_data_received_logic;
+        delay_launch = settings.delay_launch;
+        never_exit = settings.never_exit;
 
 #ifdef _USE_CID_
         latency_enabled = settings.latency_enabled;
@@ -779,6 +785,12 @@ namespace Madara
       /// logic to be evaluated after every successful update
       std::string on_data_received_logic;
       
+      /// delay launching transports
+      bool delay_launch;
+
+      /// prevent MADARA from exiting on fatal errors and invalid state
+      bool never_exit;
+
 #ifdef _USE_CID_
       /// should we try to gather latencies?
       bool latency_enabled;

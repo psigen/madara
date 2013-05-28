@@ -60,7 +60,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
 : settings_ (config), files_ (map_)
 {
   setup_uniquehostport (host);
-  activate_transport ();
+  if (!settings_.delay_launch)
+    activate_transport ();
 }
 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::~Knowledge_Base_Impl ()
@@ -89,7 +90,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
         DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
         " unable to bind to any ephemeral port." \
         " Check firewall.\n"));
-      exit (-1);
+
+      if (!settings_.never_exit)
+        exit (-1);
     }
    
     // if the user doesn't want us using the actual host, trust them with the

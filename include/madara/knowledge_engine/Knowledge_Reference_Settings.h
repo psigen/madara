@@ -26,7 +26,7 @@ namespace Madara
        * Constructor
        **/
       Knowledge_Reference_Settings ()
-        : expand_variables (true)
+        : expand_variables (true), never_exit (false)
       {
       }
   
@@ -34,7 +34,7 @@ namespace Madara
        * Constructor
        **/
       Knowledge_Reference_Settings (bool t_expand_variables)
-        : expand_variables (t_expand_variables)
+        : expand_variables (t_expand_variables), never_exit (false)
       {
       }
       
@@ -42,7 +42,7 @@ namespace Madara
        * Copy constructor
        **/
       Knowledge_Reference_Settings (const Knowledge_Reference_Settings & rhs)
-        : expand_variables (rhs.expand_variables)
+        : expand_variables (rhs.expand_variables), never_exit (rhs.never_exit)
       {
       }
 
@@ -60,6 +60,10 @@ namespace Madara
       **/
       bool expand_variables;
 
+      /**
+       * Never allow MADARA to exit, even with fatal errors or invalid state
+       **/
+      bool never_exit;
     };
 
     /**
