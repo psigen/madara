@@ -1180,7 +1180,12 @@ void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   Madara::Knowledge_Record result;
 
   ACE_DEBUG ((LM_INFO, "Testing embedded for loops\n"));
-
+  
+  result = knowledge.evaluate ("max = 1 ;> .i[ 0 -> 4 ) (agent{.i}.state=.i ; max = (agent{.i}.state ; max))");
+  assert (result.to_integer () == 4 &&
+    knowledge.get ("agent3.state").to_integer () == 3 &&
+    knowledge.get ("max").to_integer () == 3);
+  
   result = knowledge.evaluate (".i[ 0 -> 10 ) (agent{.i}.state=1)");
   assert (result.to_integer () == 10 && knowledge.get ("agent3.state").to_integer () == 1);
   

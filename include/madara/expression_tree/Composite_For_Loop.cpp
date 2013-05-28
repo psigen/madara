@@ -61,12 +61,25 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_For_Loop::evaluate (
 const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Composite_For_Loop::evaluate:" \
+    " Executing precondition.\n"));
+  precondition_->evaluate (settings);
+
   Madara::Knowledge_Record::Integer count = 0;
-  for (precondition_->evaluate (settings);
-       condition_->evaluate (settings).is_true ();
-       postcondition_->evaluate (settings))
+  while (condition_->evaluate (settings).is_true ())
   {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Composite_For_Loop::evaluate:" \
+      " Executing loop body.\n"));
+
     body_->evaluate (settings);
+
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Composite_For_Loop::evaluate:" \
+      " Executing postcondition.\n"));
+
+    postcondition_->evaluate (settings);
     ++count;
   }
 

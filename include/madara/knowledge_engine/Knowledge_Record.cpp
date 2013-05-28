@@ -1616,7 +1616,7 @@ int
   if (key.length () > 0)
   {
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-        DLINFO "Message_Update::apply:" \
+        DLINFO "Knowledge_Record::apply:" \
         " attempting to set %s=%s\n", key.c_str (), to_string ().c_str ()));
 
     if (perform_lock)
@@ -1645,7 +1645,7 @@ int
     if (result == 1)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Message_Update::apply:" \
+        DLINFO "Knowledge_Record::apply:" \
         " received data[%s]=%s.\n", 
         key.c_str (), to_string ().c_str ()));
     }
@@ -1653,27 +1653,27 @@ int
     else if (result == 0)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Message_Update::apply:" \
+          DLINFO "Knowledge_Record::apply:" \
           " discarded data[%s]=%s as the value was already set.\n",
           key.c_str (), to_string ().c_str ()));
     }
     else if (result == -1)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Message_Update::apply:" \
+        DLINFO "Knowledge_Record::apply:" \
         " discarded data due to null key.\n"));
     }
     else if (result == -2)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Message_Update::apply:" \
+        DLINFO "Knowledge_Record::apply:" \
         " discarded data[%s]=%q due to lower quality.\n",
         key.c_str (), to_string ().c_str ()));
     }
     else if (result == -3)
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Message_Update::apply:" \
+        DLINFO "Knowledge_Record::apply:" \
         " discarded data[%s]=%q due to older timestamp.\n",
         key.c_str (), to_string ().c_str ()));
     }
@@ -1684,6 +1684,10 @@ int
 bool
 Madara::Knowledge_Record::is_true (void) const
 {
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Knowledge_Record::apply:" \
+    " checking if record is non-zero.\n"));
+
   if (type_ == INTEGER)
     return int_value_ != 0;
   else if (type_ == DOUBLE)

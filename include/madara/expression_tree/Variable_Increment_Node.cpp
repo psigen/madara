@@ -140,8 +140,11 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Variable_Increment_Node::evaluate (
   const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
-  // we could call item(), but since it is virtual, it incurs unnecessary
-  // overhead.
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Variable_Increment_Node::evaluate:" \
+    " Incrementing variable %s\n",
+    key_.c_str ()));
+
   return inc (settings);
 }
 

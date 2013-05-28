@@ -63,6 +63,11 @@ namespace Madara
         // we actually need to update quality and status
         if (record->write_quality != record->quality)
           record->quality = record->write_quality;
+        
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Variable_Increment_Node::inc:" \
+          " Performing actual addition.\n",
+          key_.c_str ()));
 
         if (!rhs_)
           *record += this->value_;
