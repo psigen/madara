@@ -3178,7 +3178,7 @@ void
   // search for end of for_loop conditions. Be on lookout for delimiter.
   for (; i < input.length () && input[i] != ']' && input[i] != ')'; ++i)
   {
-    if (input[i] == '-')
+    if (input[i] == '-' && !delimiter_found)
     {
       delimiter_found = true;
       delimiter_begin = i;
@@ -3188,6 +3188,20 @@ void
       delimiter_end = i;
     }
   }
+  
+  if (MADARA_debug_level >= MADARA_LOG_DETAILED_TRACE)
+  {
+    std::stringstream buffer;
+    buffer << "Within input string, the for loop delimiter begins at ";
+    buffer << delimiter_begin;
+    buffer << " and ends at ";
+    buffer << delimiter_end;
+    buffer << " (should be at least 1). Loop construct begins at ";
+    buffer << begin;
+    MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
+      "%s\n",
+      buffer.str ().c_str ()));
+  }
 
   // What did we end with? Less than? Greater than?
   if (input[i] == ']')
@@ -3196,6 +3210,9 @@ void
   {
     // this is an error. Essentially, it means the user did not close the
     // for loop.
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, DLINFO
+      "KARL COMPILE ERROR:: No closing delimiter (']' or ')')"
+      " has been specified on the for loop.\n"));
   }
     
   // if at all possible, don't touch i
@@ -3233,6 +3250,11 @@ void
         substr_list.clear ();
       }
     }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
+        "For loop:: No loop precondition was specified.\n"));
+    }
     
     // check for special increment
     if (delimiter_end - delimiter_begin > 1)
@@ -3259,6 +3281,11 @@ void
 
         substr_list.clear ();
       }
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
+        "For loop:: No loop special increment was specified.\n"));
     }
     
     // set condition
@@ -3291,6 +3318,11 @@ void
           substr.c_str ()));
 
       }
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
+        "For loop:: No loop condition was specified.\n"));
     }
   }
   // if no delimiter found, this is the shorthand
