@@ -3198,6 +3198,8 @@ void
     buffer << delimiter_end;
     buffer << " (should be at least 1). Loop construct begins at ";
     buffer << begin;
+    buffer << " and ends at ";
+    buffer << i;
     MADARA_DEBUG (MADARA_LOG_DETAILED_TRACE, (LM_DEBUG, DLINFO
       "%s\n",
       buffer.str ().c_str ()));
@@ -3274,7 +3276,7 @@ void
         "Postcondition is set to %s\n",
         substr.c_str ()));
 
-      // we have a precondition
+      // we have a postcondition
       if (!substr_list.empty ())
       {
         user_post = substr_list.back ();
@@ -3289,7 +3291,7 @@ void
     }
     
     // set condition
-    if (i - (delimiter_end + 1) > 1)
+    if (i - delimiter_end >= 2)
     {
       lastValidInput = 0;
       substr = input.substr (delimiter_end+1, i - (delimiter_end + 1));

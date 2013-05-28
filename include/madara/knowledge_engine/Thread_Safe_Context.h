@@ -24,6 +24,7 @@
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Function_Map.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
+#include "madara/knowledge_engine/Knowledge_Reference_Settings.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 
 namespace Madara
