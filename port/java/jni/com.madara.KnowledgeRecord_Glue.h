@@ -76,6 +76,22 @@ JNIEXPORT jint JNICALL Java_com_madara_KnowledgeRecord_jni_1getType
  */
 JNIEXPORT void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord
   (JNIEnv *, jobject, jlong);
+  
+/*
+ * Class:     com_madara_KnowledgeList
+ * Method:    jni_freeKnowledgeList
+ * Signature: ([JI)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_KnowledgeList_jni_1freeKnowledgeList
+  (JNIEnv *, jobject, jlongArray, jint);
+  
+/*
+ * Class:     com_madara_KnowledgeMap
+ * Method:    jni_freeKnowledgeMap
+ * Signature: ([JI)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_KnowledgeMap_jni_1freeKnowledgeMap
+  (JNIEnv *, jobject, jlongArray, jint);
 
 #ifdef __cplusplus
 }

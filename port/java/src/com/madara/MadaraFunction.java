@@ -6,7 +6,6 @@
  *********************************************************************/
 package com.madara;
 
-import java.util.List;
 
 /**
  * Interface for defining a Java method to be executed by MADARA
@@ -21,6 +20,6 @@ public interface MadaraFunction
 	 * @param variables Local access to evaluate and compile methods
 	 * @return A {@link com.madara.KnowledgeRecord KnowledgeRecord} containing the result of the function
 	 */
-	public KnowledgeRecord execute(List<KnowledgeRecord> args, MadaraVariables variables);
+	public KnowledgeRecord execute(KnowledgeList args, MadaraVariables variables);
 	
 }

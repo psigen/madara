@@ -66,7 +66,6 @@ public class KnowledgeRecord extends MadaraJNI
 		setCPtr(jni_KnowledgeRecord(dbl));
 	}
 	
-	
 	/**
 	 * Converts the value to a long
 	 * @return current long value

@@ -294,6 +294,70 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1freeKnowledgeBase (JNI
 {
 	jni_KnowledgeBase_free_knowledge_base_P(cptr);
 }
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_toKnowledgeList
+ * Signature: (JLjava/lang/String;II)[J
+ */
+JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeList (JNIEnv * env, jobject obj, jlong cptr, jstring subject, jint start, jint end)
+{
+	const char *nativeSubject = (*env)->GetStringUTFChars(env, subject, 0);
+	
+	void* records;
+	int size;
+
+	jni_KnowledgeBase_to_knowledge_list_RRPSII(&records, &size, cptr, nativeSubject, start, end);
+	
+	(*env)->ReleaseStringUTFChars(env, subject, nativeSubject);
+	
+	jlongArray ret = (*env)->NewLongArray(env, size);
+	(*env)->SetLongArrayRegion(env, ret, 0, size, records);
+	
+	free (records);
+	
+	return ret;
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_toKnowledgeMap
+ * Signature: (JLjava/lang/String;Lcom/madara/KnowledgeBase/MapReturn;)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeMap (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jobject jniRet)
+{
+	jclass jniRetClass = (*env)->GetObjectClass(env, jniRet);
+	
+	jfieldID valsID = (*env)->GetFieldID(env, jniRetClass, "vals", "[J");
+	jfieldID keysID = (*env)->GetFieldID(env, jniRetClass, "keys", "[Ljava/lang/String;");
+	
+	
+	
+	const char **keys;
+	void* records;
+	int length;
+	
+	const char *nativeExpression = (*env)->GetStringUTFChars(env, expression, 0);
+	jni_KnowledgeBase_to_knowledge_map_RRRPS(&keys, &records, &length, cptr, nativeExpression);
+	(*env)->ReleaseStringUTFChars(env, expression, nativeExpression);
+	
+	//Put the pointers in an array
+	jlongArray valsArray = (*env)->NewLongArray(env, length);
+	(*env)->SetLongArrayRegion(env, valsArray, 0, length, records);
+	(*env)->SetObjectField(env, jniRet, valsID, valsArray);
+	free (records);
+	
+	jclass classStrArray = (*env)->FindClass(env, "Ljava/lang/String;");
+	jobjectArray keysArray = (*env)->NewObjectArray(env, length, classStrArray, NULL);
+	int x;
+	for (x = 0; x < length; ++x)
+	{
+		(*env)->SetObjectArrayElement(env, keysArray, x, (*env)->NewStringUTF(env, keys[x]));
+	}
+	(*env)->SetObjectField(env, jniRet, keysID, keysArray);
+	free (keys);
+}
+
 //===================================================================================
 
 //===================================================================================

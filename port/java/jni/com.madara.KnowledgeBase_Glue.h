@@ -177,6 +177,23 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JJJ
  */
 JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1freeKnowledgeBase
   (JNIEnv *, jobject, jlong);
+  
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_toKnowledgeList
+ * Signature: (JLjava/lang/String;II)[J
+ */
+JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeList
+  (JNIEnv *, jobject, jlong, jstring, jint, jint);
+  
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_toKnowledgeMap
+ * Signature: (JLjava/lang/String;Lcom/madara/KnowledgeBase/MapReturn;)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeMap
+  (JNIEnv *, jobject, jlong, jstring, jobject);
+  
 //===================================================================================
   
 //===================================================================================

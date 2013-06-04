@@ -42,6 +42,9 @@ void jni_KnowledgeBase_wait_no_return_PSP(void*, const char*, void*);
 void jni_KnowledgeBase_wait_no_return_PPP(void*, void*, void*);
 
 void jni_KnowledgeBase_free_knowledge_base_P(void*);
+
+void jni_KnowledgeBase_to_knowledge_list_RRPSII(void**, int*, void*, const char*, int, int);
+void jni_KnowledgeBase_to_knowledge_map_RRRPS(const char***, void**, int*, void*, const char*);
 //===================================================================================
 
 //===================================================================================

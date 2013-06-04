@@ -6,9 +6,7 @@
  *********************************************************************/
 package com.madara;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.madara.transport.Settings;
 import com.madara.transport.TransportType;
@@ -40,19 +38,22 @@ public class KnowledgeBase extends MadaraJNI
 	private native long jni_get(long cptr, String name);
 	private native void jni_set(long cptr, String name, long record);
 	
+	private native void jni_freeKnowledgeBase(long cptr);
+	
 	private native long jni_wait(long cptr, String expression, long waitSettings);
 	private native long jni_wait(long cptr, long expression, long waitSettings);
 	private native void jni_waitNoReturn(long cptr, String expression, long waitSettings);
 	private native void jni_waitNoReturn(long cptr, long expression, long waitSettings);
 	
-	private native void jni_freeKnowledgeBase(long cptr);
+	private native long[] jni_toKnowledgeList(long cptr, String subject, int start, int end);
+	private native void jni_toKnowledgeMap(long cptr, String expression, MapReturn ret);
 	
 	private static HashMap<Long, KnowledgeBase> knowledgeBases = new HashMap<Long, KnowledgeBase>();
 	private HashMap<String, MadaraFunction> callbacks = new HashMap<String, MadaraFunction>();
 	
 	
 	/**
-	 * Used to determine if we are inside the context of a DefinedFunction
+	 * Used to determine if we are inside the context of a MadaraFunction
 	 */
 	private final Object CONTEXT_LOCK = new Object();
 	
@@ -109,9 +110,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * at some point. If it is to be ignored, consider using {@link #evaluateNoReturn(String)}
 	 * @param expression KaRL expression to evaluate
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord evaluate(String expression) throws KnowledgeBaseLockedException
+	public KnowledgeRecord evaluate(String expression)
 	{
 		checkContextLock();
 		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
@@ -121,9 +122,9 @@ public class KnowledgeBase extends MadaraJNI
 	/**
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void evaluateNoReturn(String expression) throws KnowledgeBaseLockedException
+	public void evaluateNoReturn(String expression)
 	{
 		checkContextLock();
 		evaluateNoReturn(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
@@ -137,9 +138,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate
 	 * @param evalSettings Settings for evaluating and printing
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord evaluate(String expression, EvalSettings evalSettings) throws KnowledgeBaseLockedException
+	public KnowledgeRecord evaluate(String expression, EvalSettings evalSettings)
 	{
 		checkContextLock();
 		return KnowledgeRecord.fromPointer(jni_evaluate(getCPtr(), expression, evalSettings.getCPtr()));
@@ -150,9 +151,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate
 	 * @param evalSettings evalSettings Settings for evaluating and printing
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void evaluateNoReturn(String expression, EvalSettings evalSettings) throws KnowledgeBaseLockedException
+	public void evaluateNoReturn(String expression, EvalSettings evalSettings)
 	{
 		checkContextLock();
 		jni_evaluateNoReturn(getCPtr(), expression, evalSettings.getCPtr());
@@ -165,9 +166,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * it is to be ignored, consider using {@link #evaluateNoReturn(CompiledExpression)}
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord evaluate(CompiledExpression expression) throws KnowledgeBaseLockedException
+	public KnowledgeRecord evaluate(CompiledExpression expression)
 	{
 		checkContextLock();
 		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
@@ -177,9 +178,9 @@ public class KnowledgeBase extends MadaraJNI
 	/**
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void evaluateNoReturn(CompiledExpression expression) throws KnowledgeBaseLockedException
+	public void evaluateNoReturn(CompiledExpression expression)
 	{
 		checkContextLock();
 		evaluateNoReturn(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
@@ -193,9 +194,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @param evalSettings Settings for evaluating and printing
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord evaluate(CompiledExpression expression, EvalSettings evalSettings) throws KnowledgeBaseLockedException
+	public KnowledgeRecord evaluate(CompiledExpression expression, EvalSettings evalSettings)
 	{
 		checkContextLock();
 		return KnowledgeRecord.fromPointer(jni_evaluate(getCPtr(), expression.getCPtr(), evalSettings.getCPtr()));
@@ -206,9 +207,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @param evalSettings Settings for evaluating and printing
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void evaluateNoReturn(CompiledExpression expression, EvalSettings evalSettings) throws KnowledgeBaseLockedException
+	public void evaluateNoReturn(CompiledExpression expression, EvalSettings evalSettings)
 	{
 		checkContextLock();
 		jni_evaluateNoReturn(getCPtr(), expression.getCPtr(), evalSettings.getCPtr());
@@ -219,9 +220,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Compiles a KaRL expression into an expression tree.
 	 * @param expression expression to compile
 	 * @return {@link com.madara.KnowledgeBase.CompiledExpression CompiledExpression}: compiled, optimized expression tree
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public CompiledExpression compile(String expression) throws KnowledgeBaseLockedException
+	public CompiledExpression compile(String expression)
 	{
 		checkContextLock();
 		return new CompiledExpression(jni_compile(getCPtr(), expression));
@@ -232,9 +233,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Defines a function.
 	 * @param name name of the function
 	 * @param function Implementation of MadaraFunction
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void defineFunction(String name, MadaraFunction function) throws KnowledgeBaseLockedException
+	public void defineFunction(String name, MadaraFunction function)
 	{
 		checkContextLock();
 		callbacks.put(name, function);
@@ -246,9 +247,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Defines a MADARA KaRL function.
 	 * @param name name of the function
 	 * @param expression KaRL function body
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void defineFunction(String name, String expression) throws KnowledgeBaseLockedException
+	public void defineFunction(String name, String expression)
 	{
 		checkContextLock();
 		jni_defineFunction(getCPtr(), name, expression);
@@ -259,9 +260,9 @@ public class KnowledgeBase extends MadaraJNI
 	 *  Defines a MADARA KaRL function.
 	 * @param name name of the function
 	 * @param expression KaRL function body
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void defineFunction(String name, CompiledExpression expression) throws KnowledgeBaseLockedException
+	public void defineFunction(String name, CompiledExpression expression)
 	{
 		checkContextLock();
 		jni_defineFunction(getCPtr(), name, expression.getCPtr());
@@ -270,9 +271,9 @@ public class KnowledgeBase extends MadaraJNI
 	
 	/**
 	 * Clears the knowledge base.
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void clear() throws KnowledgeBaseLockedException
+	public void clear()
 	{
 		checkContextLock();
 		jni_clear(getCPtr());
@@ -283,9 +284,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Retrieves a knowledge value.
 	 * @param name knowledge name
 	 * @return value of knowledge
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord get(String name) throws KnowledgeBaseLockedException
+	public KnowledgeRecord get(String name)
 	{
 		checkContextLock();
 		return KnowledgeRecord.fromPointer(jni_get(getCPtr(), name));
@@ -296,9 +297,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Sets a knowledge value to a specified value.
 	 * @param name knowledge name
 	 * @param record value to set
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void set(String name, KnowledgeRecord record) throws KnowledgeBaseLockedException
+	public void set(String name, KnowledgeRecord record)
 	{
 		checkContextLock();
 		jni_set(getCPtr(), name, record.getCPtr());
@@ -309,9 +310,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Sets a knowledge value to a specified value.
 	 * @param name knowledge name
 	 * @param value value to set
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void set(String name, long value) throws KnowledgeBaseLockedException
+	public void set(String name, long value)
 	{
 		checkContextLock();
 		KnowledgeRecord kr = new KnowledgeRecord(value);
@@ -323,9 +324,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Sets a knowledge value to a specified value.
 	 * @param name knowledge name
 	 * @param value value to set
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void set(String name, double value) throws KnowledgeBaseLockedException
+	public void set(String name, double value)
 	{
 		checkContextLock();
 		KnowledgeRecord kr = new KnowledgeRecord(value);
@@ -337,9 +338,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * Sets a knowledge value to a specified value.
 	 * @param name knowledge name
 	 * @param value value to set
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void set(String name, String value) throws KnowledgeBaseLockedException
+	public void set(String name, String value)
 	{
 		checkContextLock();
 		KnowledgeRecord kr = new KnowledgeRecord(value);
@@ -350,9 +351,9 @@ public class KnowledgeBase extends MadaraJNI
 	/**
 	 * Deletes the C++ instantiation. To prevent memory leaks, this <b>must</b> be called
 	 * before an instance of KnowledgeBase gets garbage collected
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void free() throws KnowledgeBaseLockedException
+	public void free()
 	{
 		checkContextLock();
 		jni_freeKnowledgeBase(getCPtr());
@@ -365,9 +366,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * at some point. If it is to be ignored, consider using {@link #waitNoReturn(String)}
 	 * @param expression KaRL expression to evaluate
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord wait(String expression) throws KnowledgeBaseLockedException
+	public KnowledgeRecord wait(String expression)
 	{
 		checkContextLock();
 		return wait(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
@@ -380,9 +381,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * at some point. If it is to be ignored, consider using {@link #waitNoReturn(CompiledExpression)}
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord wait(CompiledExpression expression) throws KnowledgeBaseLockedException
+	public KnowledgeRecord wait(CompiledExpression expression)
 	{
 		checkContextLock();
 		return wait(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
@@ -397,9 +398,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate
 	 * @param settings Settings for waiting
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord wait(String expression, WaitSettings settings) throws KnowledgeBaseLockedException
+	public KnowledgeRecord wait(String expression, WaitSettings settings)
 	{
 		checkContextLock();
 		return KnowledgeRecord.fromPointer(jni_wait(getCPtr(), expression, settings.getCPtr()));
@@ -413,9 +414,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @param settings Settings for waiting
 	 * @return value of expression
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public KnowledgeRecord wait(CompiledExpression expression, WaitSettings settings) throws KnowledgeBaseLockedException
+	public KnowledgeRecord wait(CompiledExpression expression, WaitSettings settings)
 	{
 		checkContextLock();
 		return new KnowledgeRecord(jni_wait(getCPtr(), expression.getCPtr(), settings.getCPtr()));
@@ -425,9 +426,9 @@ public class KnowledgeBase extends MadaraJNI
 	/**
 	 * Waits for an expression to be non-zero. 
 	 * @param expression KaRL expression to evaluate
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void waitNoReturn(String expression) throws KnowledgeBaseLockedException
+	public void waitNoReturn(String expression)
 	{
 		checkContextLock();
 		waitNoReturn(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
@@ -437,9 +438,9 @@ public class KnowledgeBase extends MadaraJNI
 	/**
 	 * Waits for an expression to be non-zero. 
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void waitNoReturn(CompiledExpression expression) throws KnowledgeBaseLockedException
+	public void waitNoReturn(CompiledExpression expression)
 	{
 		checkContextLock();
 		waitNoReturn(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
@@ -450,25 +451,68 @@ public class KnowledgeBase extends MadaraJNI
 	 * Waits for an expression to be non-zero. 
 	 * @param expression KaRL expression to evaluate
 	 * @param settings Settings for waiting
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void waitNoReturn(String expression, WaitSettings settings) throws KnowledgeBaseLockedException
+	public void waitNoReturn(String expression, WaitSettings settings)
 	{
 		checkContextLock();
 		jni_waitNoReturn(getCPtr(), expression, settings.getCPtr());
 	}
 	
-	
 	/**
 	 * Waits for an expression to be non-zero. 
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @param settings Settings for waiting
-	 * @throws KnowledgeBaseLockedException If called from a DefinedFunction
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	public void waitNoReturn(CompiledExpression expression, WaitSettings settings) throws KnowledgeBaseLockedException
+	public void waitNoReturn(CompiledExpression expression, WaitSettings settings)
 	{
 		checkContextLock();
 		jni_waitNoReturn(getCPtr(), expression.getCPtr(), settings.getCPtr());
+	}
+	
+	/**
+	 * Fills a {@link com.madara.KnowledgeList KnowledgeList} with
+	 * {@link com.madara.KnowledgeRecord KnowledgeRecords} that begin with
+	 * a common subject and have a finite range of integer values.
+	 * <br/><br/>The returned {@link com.madara.KnowledgeList KnowledgeList}
+	 * <b>must</b> be freed using {@link com.madara.KnowledgeList#free KnowledgeList.free()} 
+	 * before the object goes out of scope.
+	 * @param subject The common subject of the variable names. For instance,
+	 * 				  if we are looking for a range of vars like "var0", "var1",
+	 * 				  "var2", then the common subject would be "var".
+	 * @param start An inclusive start index
+	 * @param end An inclusive end index
+	 * @return {@link com.madara.KnowledgeList KnowledgeList} containing the
+	 *         requested {@link com.madara.KnowledgeRecord KnowledgeRecords}
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+	 */
+	public KnowledgeList toKnowledgeList(String subject, int start, int end)
+	{
+		checkContextLock();
+		return new KnowledgeList(jni_toKnowledgeList(getCPtr(), subject, start, end));
+	}
+	
+	
+	/**
+	 * Fills a {@link com.madara.KnowledgeMap KnowledgeMap} with
+	 * {@link com.madara.KnowledgeRecord KnowledgeRecords} that match an expression.
+	 * <br/><br/>The returned {@link com.madara.KnowledgeMap KnowledgeMap}
+	 * <b>must</b> be freed using {@link com.madara.KnowledgeMap#free KnowledgeMap.free()} 
+	 * before the object goes out of scope.
+	 * @param expression An expression that matches the variable names that
+	 * 					 are of interest. Wildcards may only be at the end
+	 * @return {@link com.madara.KnowledgeMap KnowledgeMap} containing the
+	 * 		   requested {@link com.madara.KnowledgeRecord KnowledgeRecords}
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+	 */
+	public KnowledgeMap toKnowledgeMap(String expression)
+	{
+		checkContextLock();
+		MapReturn jniRet = new MapReturn();
+		jni_toKnowledgeMap(getCPtr(), expression, jniRet);
+		
+		return new KnowledgeMap(jniRet.keys, jniRet.vals);
 	}
 	
 	/**
@@ -476,9 +520,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * to invoke member methods. Access will be denied if the a MadaraFunction
 	 * is in in stack trace.
 	 * @see {@link com.madara.MadaraFunction MadaraFunction}
-	 * @throws AccessNotAllowedException
+	 * @throws KnowledgeBaseLockedException
 	 */
-	private void checkContextLock() throws KnowledgeBaseLockedException
+	private void checkContextLock()
 	{
 		if (Thread.holdsLock(CONTEXT_LOCK))
 		{
@@ -486,21 +530,28 @@ public class KnowledgeBase extends MadaraJNI
 		}
 	}
 	
+	
+	/**
+	 * callBack is called directly from JNI to allow execution of Java code inside a MADARA defined function
+	 * @param name The name of the defined function
+	 * @param ptr Pointer to the KnowledgeBase this function was defined in
+	 * @param args Pointers to the KnowledgeRecords passed in to the function
+	 * @param vars Pointer to the MadaraVariables object to allow execution of evaluate statements
+	 * @return Pointer to a KnowledgeRecord
+	 */
 	private static long callBack(String name, long ptr, long[] args, long vars)
 	{	
 		KnowledgeBase knowledge = knowledgeBases.get(ptr);
-		MadaraFunction mf = knowledge.callbacks.get(name);
+		MadaraFunction callback = knowledge.callbacks.get(name);
 		
 		MadaraVariables _vars = MadaraVariables.fromPointer(vars);
-		List<KnowledgeRecord> _args = new ArrayList<KnowledgeRecord>();
-		for (long arg : args)
-			_args.add(KnowledgeRecord.fromPointer(arg));
+		KnowledgeList _args = new KnowledgeList(args);
 		
 		KnowledgeRecord ret = null;
 
 		synchronized (knowledge.CONTEXT_LOCK)
 		{
-			 ret = mf.execute(_args, _vars);
+			 ret = callback.execute(_args, _vars);
 		}
 		
 		return ret == null ? 0 : ret.getCPtr();	
@@ -534,14 +585,23 @@ public class KnowledgeBase extends MadaraJNI
 		}
 	}
 	
-	public class KnowledgeBaseLockedException extends Exception
+	/**
+	 * KnowledgeBaseLockedException will be thrown if methods are called from inside a MadaraFunction
+	 */
+	public class KnowledgeBaseLockedException extends RuntimeException
 	{
 		private static final long serialVersionUID = 2818595961365992639L;
 
-		public KnowledgeBaseLockedException()
+		private KnowledgeBaseLockedException()
 		{
-			super(KnowledgeBase.this + " is currently locked. Are you invoking it from inside a DefinedFunction?");
+			super(KnowledgeBase.this + " is currently locked. Are you invoking it from inside a MadaraFunction?");
 		}
+	}
+	
+	public static class MapReturn
+	{
+		public String[] keys;
+		public long[] vals;
 	}
 	
 }

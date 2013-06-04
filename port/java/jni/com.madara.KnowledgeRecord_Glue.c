@@ -98,3 +98,32 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord 
 {
 	jni_KnowledgeRecord_free_P(cptr);
 }
+
+/*
+ * Class:     com_madara_KnowledgeList
+ * Method:    jni_freeKnowledgeList
+ * Signature: ([JI)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_KnowledgeList_jni_1freeKnowledgeList (JNIEnv *env, jobject obj, jlongArray records, jint length)
+{
+	jboolean jniNoCopy = JNI_FALSE;
+	jlong* nativeRecords = (*env)->GetLongArrayElements(env, records, &jniNoCopy);
+	int x;
+	for (x = 0; x < length; x++)
+	{
+		jni_KnowledgeRecord_free_P(nativeRecords[x]);
+	}
+}
+
+/*
+ * Class:     com_madara_KnowledgeMap
+ * Method:    jni_freeKnowledgeMap
+ * Signature: ([JI)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_KnowledgeMap_jni_1freeKnowledgeMap (JNIEnv * env, jobject obj, jlongArray records, jint length)
+{
+	//KnowledgeMap#free is exactly the same as KnowledgeList#free, no reason to re-implement
+	Java_com_madara_KnowledgeList_jni_1freeKnowledgeList(env, obj, records, length);
+}
+
+

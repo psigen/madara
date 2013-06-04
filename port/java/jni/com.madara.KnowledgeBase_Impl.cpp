@@ -187,6 +187,49 @@ void jni_KnowledgeBase_free_knowledge_base_P(void* cptr)
 		delete knowledge;
 }
 
+void jni_KnowledgeBase_to_knowledge_list_RRPSII(void** ret, int* size, void* cptr, const char* subject, int start, int end)
+{
+	std::vector<Madara::Knowledge_Record> returnVector;
+	Madara::Knowledge_Engine::Knowledge_Base knowledge = *(Madara::Knowledge_Engine::Knowledge_Base*)cptr;
+	knowledge.to_vector(std::string(subject), start, end, returnVector);
+	*size = returnVector.size();
+	
+	void** retVal = (void**)malloc(sizeof(void*) * *size);
+	
+	for (int x = 0; x < *size; x++)
+	{
+		retVal[x] = new Madara::Knowledge_Record(returnVector[x]);
+	}
+	*ret = &retVal[0];
+}
+
+void jni_KnowledgeBase_to_knowledge_map_RRRPS(const char*** keysRet, void** valsRet, int* size, void* cptr, const char* expression)
+{
+	std::map<std::string, Madara::Knowledge_Record> recordsMap;
+	Madara::Knowledge_Engine::Knowledge_Base knowledge = *(Madara::Knowledge_Engine::Knowledge_Base*)cptr;
+	
+	knowledge.to_map(std::string(expression), recordsMap);
+	
+	std::map<std::string, Madara::Knowledge_Record>::iterator iter;
+	
+	*size = recordsMap.size();
+	
+	const char** keys = (const char**)malloc(sizeof(const char*) * *size);
+	void** vals = (void**)malloc(sizeof(void*) * *size);
+	
+	
+	int counter = 0;
+	for (iter = recordsMap.begin(); iter != recordsMap.end(); ++iter)
+	{
+		keys[counter] = iter->first.c_str();
+		vals[counter++] = new Madara::Knowledge_Record(iter->second);
+	}
+	
+	*keysRet = &keys[0];
+	*valsRet = &vals[0];
+	
+}
+
 //===================================================================================
 
 //===================================================================================

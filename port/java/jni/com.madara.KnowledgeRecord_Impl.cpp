@@ -8,6 +8,8 @@
 #include "com.madara.KnowledgeRecord_Impl.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
+#include <stdio.h>
+
 void jni_KnowledgeRecord_impl_RS(void** ret, const char * data)
 {
 	*ret = new Madara::Knowledge_Record(data);
