@@ -22,7 +22,7 @@ void jni_KnowledgeRecord_impl_RD(void** ret, double data)
 
 void jni_KnowledgeRecord_impl_RJ(void** ret, long data)
 {
-	*ret = new Madara::Knowledge_Record(data);
+	*ret = new Madara::Knowledge_Record(Madara::Knowledge_Record::Integer(data));
 }
 
 long jni_KnowledgeRecord_to_long_value_impl_P(void* cptr)
