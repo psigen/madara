@@ -79,7 +79,7 @@ Madara::Expression_Tree::Composite_Assignment_Node::evaluate (
 
   // get the value from the right side and set the variable's value with it
   //Madara::Knowledge_Record value = right_->evaluate ();
-  left_->set (rhs);
+  left_->set (rhs, settings);
 
   // return the value
   return left_->evaluate (settings);
