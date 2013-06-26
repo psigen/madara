@@ -45,6 +45,9 @@
 ; MUI end ------
 
 
+
+
+; Get the MADARA version
 !system "get_version.exe"
 !include "VERSION.txt"
 
@@ -72,6 +75,8 @@ Section "-release-libs" SEC02
   File "..\..\lib\maal.py"
   File "..\..\lib\maml.py"
 SectionEnd
+
+
 
 Section "docs" SEC03
   SetOutPath "$INSTDIR\docs"
@@ -191,6 +196,58 @@ Section "-include" SEC07
   
 SectionEnd
 
+Section "-vcredist" SEC11
+
+  SetOutPath "$INSTDIR\vcredist"
+  File "redist\vcredist_x64.exe"
+  File "redist\vcredist_x86.exe"
+
+  # 64-bit Installs
+
+  # Make sure the variable is clear
+  StrCpy $1 ""
+  SetRegview 64
+
+  # Detect if it is installed already
+  ReadRegStr $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{1D8E6291-B0D5-35EC-8441-6616F567A0F7}" DisplayName
+  
+  
+  StrCmp $1 "" sp164_not_exists sp164_exists
+
+  sp164_not_exists:
+    # From http://blogs.msdn.com/astebner/archive/2007/02/07/update-regarding-silent-install-of-the-vc-8-0-runtime-vcredist-packages.aspx
+    # “qb!” for progress with no cancel, “qb” for progress and cancel, “qn” for no interaction
+
+    DetailPrint "Installing VC 10 64-bit Redistributable."  
+
+    ExecWait '$INSTDIR\vcredist\vcredist_x64.exe /q' $0 # Only progress bar
+    DetailPrint "vcredist_x64 SP1 Update returned $0"
+    
+
+  sp164_exists:
+  # Nothing to do
+
+  # 32-bit Installs
+  # Make sure the variable is clear
+  StrCpy $1 ""
+  SetRegview 32
+
+  # Detect if it is installed already
+  ReadRegStr $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{F0C3E5D1-1ADE-321E-8167-68EF0DE699A5}" DisplayName
+  StrCmp $1 "" sp1_not_exists sp1_exists
+
+  sp1_not_exists:
+    # From http://blogs.msdn.com/astebner/archive/2007/02/07/update-regarding-silent-install-of-the-vc-8-0-runtime-vcredist-packages.aspx
+    # “qb!” for progress with no cancel, “qb” for progress and cancel, “qn” for no interaction
+    DetailPrint "Installing VC 10 32-bit Redistributable."  
+    ExecWait '$INSTDIR\vcredist\vcredist_x86.exe /q' $0 # Only progress bar
+    DetailPrint "vcredist_x86 SP1 Update returned $0"
+
+  sp1_exists:
+  # Nothing to do
+
+SectionEnd
+
 Section "-tests"
   SetOutPath "$INSTDIR"
   File /r "..\..\tests"
@@ -215,6 +272,18 @@ Section -AdditionalIcons
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   CreateShortCut "$SMPROGRAMS\MADARA\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
   CreateShortCut "$SMPROGRAMS\MADARA\Uninstall.lnk" "$INSTDIR\uninst.exe"
+SectionEnd
+
+Section -Pre
+  
+  ; Ensure that only one installer is running for MADARA
+  System::Call 'kernel32::CreateMutexA(i 0, i 0, t "MadaraIntallMutex") i .r1 ?e'
+  Pop $R0
+ 
+  StrCmp $R0 0 +3
+  MessageBox MB_OK|MB_ICONEXCLAMATION "The MADARA installer is already running."
+  Abort
+
 SectionEnd
 
 Section -Post
