@@ -27,19 +27,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
   
   // check for null key
-  if (key_actual == "")
+  if (*key_ptr == "")
     return Knowledge_Record::Integer (0);
 
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key_actual];
+  Knowledge_Record & record = map_[*key_ptr];
 
   if (settings.always_overwrite || record.write_quality >= record.quality)
   {
@@ -48,11 +52,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
   }
   
   // otherwise set the value
-  if (key_actual[0] != '.')
+  if ((*key_ptr)[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
+      mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -79,14 +83,18 @@ Madara::Knowledge_Engine::Thread_Safe_Context::delete_variable (
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
 
-  return map_.erase (key_actual) == 1;
+  return map_.erase (*key_ptr) == 1;
 }
 
 // return whether or not the key exists
@@ -97,18 +105,22 @@ Madara::Knowledge_Engine::Thread_Safe_Context::exists (
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
 
   // if key is not null
-  if (key_actual != "")
+  if (*key_ptr != "")
   {
     // find the key in the knowledge base
-    Knowledge_Map::const_iterator found = map_.find (key_actual);
+    Knowledge_Map::const_iterator found = map_.find (*key_ptr);
 
     // if it's found, then return the value
     if (found != map_.end ())
@@ -128,19 +140,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key,
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
   
   // check for null key
-  if (key_actual == "")
+  if (*key_ptr == "")
     return Knowledge_Record::Integer (0);
 
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key_actual];
+  Knowledge_Record & record = map_[*key_ptr];
 
   if (settings.always_overwrite || record.write_quality >= record.quality)
   {
@@ -149,11 +165,11 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key,
   }
   
   // otherwise set the value
-  if (key_actual[0] != '.')
+  if ((*key_ptr)[0] != '.')
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (key_actual, record, DO_NOT_EXPAND_VARIABLES);
+      mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
 
@@ -187,19 +203,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_clock (
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
   
   // check for null key
-  if (key_actual == "")
+  if (*key_ptr == "")
     return 0;
 
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key_actual];
+  Knowledge_Record & record = map_[*key_ptr];
 
   // check for value already set
   if (record.clock < clock)
@@ -222,19 +242,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc_clock (
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
   
   // check for null key
-  if (key_actual == "")
+  if (*key_ptr == "")
     return 0;
 
   // create the key if it didn't exist
-  Knowledge_Record & record = map_[key_actual];
+  Knowledge_Record & record = map_[*key_ptr];
 
   return record.clock += settings.clock_increment;
 }
@@ -265,19 +289,23 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_clock (
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
+  {
     key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
   else
-    key_actual = key;
+    key_ptr = &key;
   
   // check for null key
-  if (key_actual == "")
+  if (*key_ptr == "")
     return 0;
 
   // find the key in the knowledge base
-  Knowledge_Map::iterator found = map_.find (key_actual);
+  Knowledge_Map::iterator found = map_.find (*key_ptr);
 
   // if it's found, then compare the value
   if (found != map_.end ())
@@ -366,16 +394,20 @@ Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
 {
   // enter the mutex
   std::string key_actual;
+  const std::string * key_ptr;
   Context_Guard guard (mutex_);
   
   if (settings.expand_variables)
-    key_actual = expand_statement (key);
-  else
-    key_actual = key;
-
-  if (key_actual != "")
   {
-    changed_map_[key_actual] = &record;
+    key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &key;
+
+  if (*key_ptr != "")
+  {
+    changed_map_[*key_ptr] = &record;
 
     if (record.status != Madara::Knowledge_Record::MODIFIED)
       record.status = Madara::Knowledge_Record::MODIFIED;
@@ -439,10 +471,15 @@ Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (
 
 /// Signal the condition that it can wake up someone else on changed data.
 inline void
-Madara::Knowledge_Engine::Thread_Safe_Context::signal (void) const
+Madara::Knowledge_Engine::Thread_Safe_Context::signal (bool lock) const
 {
-  Context_Guard guard (mutex_);
-  changed_.signal ();
+  if (lock)
+  {
+    Context_Guard guard (mutex_);
+    changed_.signal ();
+  }
+  else
+    changed_.signal ();
 }
 
 #endif // _MADARA_THREADSAFECONTEXT_INL_

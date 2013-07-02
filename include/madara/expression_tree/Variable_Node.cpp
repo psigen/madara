@@ -185,7 +185,7 @@ Madara::Expression_Tree::Variable_Node::set (
         Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
     }
   
-    context_.signal ();
+    context_.signal (false);
     return 0;
   }
   else
@@ -225,7 +225,7 @@ Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Int
         Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
     }
   
-    context_.signal ();
+    context_.signal (false);
     return 0;
   }
   else
@@ -256,7 +256,7 @@ Madara::Expression_Tree::Variable_Node::set (double value,
         Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
     }
   
-    context_.signal ();
+    context_.signal (false);
     return 0;
   }
   else
@@ -287,7 +287,7 @@ Madara::Expression_Tree::Variable_Node::set (const std::string & value,
         Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
     }
   
-    context_.signal ();
+    context_.signal (false);
     return 0;
   }
   else
@@ -318,11 +318,11 @@ Madara::Expression_Tree::Variable_Node::dec (
         Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
     }
   
-    context_.signal ();
+    context_.signal (false);
     return *record_;
   }
   else
-    return context_.inc (expand_key (), settings);
+    return context_.dec (expand_key (), settings);
 }
 
 Madara::Knowledge_Record 
@@ -349,7 +349,7 @@ Madara::Expression_Tree::Variable_Node::inc (
         Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
     }
   
-    context_.signal ();
+    //context_.signal (false);
     return *record_;
   }
   else

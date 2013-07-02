@@ -2,7 +2,7 @@ MADARA HELP DOCUMENTATION INFORMATION
 
 0. INTRODUCTION
 
-  VERSION: 0.9.41
+  VERSION: 0.9.42
   CONTACT: James Edmondson <jedmondson@gmail.com>
   WEBSITE: http://madara.googlecode.com
 

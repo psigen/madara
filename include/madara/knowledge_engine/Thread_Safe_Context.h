@@ -450,7 +450,7 @@ namespace Madara
        * Signals that this thread is done with the context. Anyone
        * waiting on the underlying condition is awoken.
        **/
-      void signal (void) const;
+      void signal (bool lock = true) const;
 
       /**
        * Expands a string with variable expansion. For instance, if

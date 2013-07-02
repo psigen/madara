@@ -27,7 +27,13 @@ int parse_args (int argc, ACE_TCHAR * argv[]);
 uint64_t test_volatile_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
+uint64_t test_volatile_assignment (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
 uint64_t test_volatile_inference (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_optimal_assignment (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
 uint64_t test_optimal_reinforcement (
@@ -62,6 +68,20 @@ uint64_t test_compiled_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
 
+
+uint64_t test_compiled_sa (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_compiled_la (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+
+uint64_t test_compiled_sfi (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_compiled_lfi (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
 
 uint64_t test_looped_sr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
@@ -139,6 +159,14 @@ void
 
   ACE_DEBUG ((LM_INFO, 
     buffer.str ().c_str ()));
+}
+
+
+Madara::Knowledge_Record
+  increment_var1 (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  return variables.inc (".var1");
 }
 
 
@@ -221,7 +249,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
-  const int num_test_types = 16;
+  const int num_test_types = 22;
 
   // make everything all pretty and for-loopy
   uint64_t results[num_test_types];
@@ -237,12 +265,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "KaRL: Compiled LR             ",
     "KaRL: Compiled SI             ",
     "KaRL: Compiled LI             ",
+    "KaRL: Compiled SA             ",
+    "KaRL: Compiled LA             ",
+    "KaRL: Compiled SFI            ",
+    "KaRL: Compiled LFI            ",
     "KaRL: Looped SR               ",
     "KaRL: Optimal Loop            ",
     "KaRL: Looped SI               ",
     "KaRL: Looped LI               ",
+    "C++: Optimized Assignments ",
     "C++: Optimized Reinforcements ",
     "C++: Optimized Inferences     ",
+    "C++: Volatile Assignments  ",
     "C++: Volatile Reinforcements  ",
     "C++: Volatile Inferences      "
   };
@@ -257,12 +291,18 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     CompiledLR,
     CompiledSI,
     CompiledLI,
+    CompiledSA,
+    CompiledLA,
+    CompiledSFI,
+    CompiledLFI,
     LoopedSR,
     OptimalLoop,
     LoopedSI,
     LoopedLI,
+    OptimizedAssignment,
     OptimizedReinforcement,
     OptimizedInference,
+    VolatileAssignment,
     VolatileReinforcement,
     VolatileInference
   };
@@ -280,16 +320,26 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[CompiledLR] = test_compiled_lr;
   test_functions[CompiledSI] = test_compiled_si;
   test_functions[CompiledLI] = test_compiled_li;
+  test_functions[CompiledSA] = test_compiled_sa;
+  test_functions[CompiledLA] = test_compiled_la;
+  test_functions[CompiledSFI] = test_compiled_sfi;
+  test_functions[CompiledLFI] = test_compiled_lfi;
   
   test_functions[LoopedSR] = test_looped_sr;
   test_functions[OptimalLoop] = test_optimal_loop;
   test_functions[LoopedSI] = test_looped_si;
   test_functions[LoopedLI] = test_looped_li;
-
+  
+  test_functions[OptimizedAssignment] = test_optimal_assignment;
   test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
   test_functions[OptimizedInference] = test_optimal_inference;
+  test_functions[VolatileAssignment] = test_volatile_assignment;
   test_functions[VolatileReinforcement] = test_volatile_reinforcement;
   test_functions[VolatileInference] = test_volatile_inference;
+
+
+  knowledge.define_function ("inc", increment_var1);
+
 
   for (uint32_t i = 0; i < num_runs; ++i)
   {
@@ -412,6 +462,11 @@ long increment (long value)
   return ++value;
 }
 
+long assignment (long & var, long value)
+{
+  return var = value;
+}
+
 /// Tests logicals operators (&&, ||)
 uint64_t test_simple_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
@@ -474,6 +529,75 @@ uint64_t test_compiled_sr (
 
   return measured;
 }
+
+
+uint64_t test_compiled_sa (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_compiled_sa"));
+
+  knowledge.clear ();
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (".var1=1");
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    // test literals in conditionals
+    knowledge.evaluate (ce, es);
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled SA: ");
+
+  return measured;
+}
+
+
+uint64_t test_compiled_sfi (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_compiled_sfi"));
+
+  knowledge.clear ();
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("inc ()");
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    // test literals in conditionals
+    knowledge.evaluate (ce, es);
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled SFI: ");
+
+  return measured;
+}
+
 
 /// Tests looped long inferences (++.var1)
 uint64_t test_looped_sr (
@@ -600,6 +724,99 @@ uint64_t test_compiled_lr (
 
   return measured;
 }
+
+
+/// Tests assignment speed
+uint64_t test_compiled_la (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_compiled_la"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  // build a large chain of simple reinforcements
+   std::stringstream buffer;
+
+  unsigned max_size = iterations > 1000 ? 1000 : iterations;
+  unsigned actual_iterations = iterations > 1000 ? iterations / 1000 : 1;
+  
+  for (uint32_t i = 0; i < max_size; ++i)
+  {
+    buffer << "var1=";
+    buffer << i;
+    buffer << ";";
+  }
+
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (buffer.str ());
+
+  timer.start ();
+
+  // execute that chain of reinforcements
+  for (uint32_t i = 0; i < actual_iterations; ++i)
+    knowledge.evaluate (ce, es);
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled LA: ");
+
+  return measured;
+}
+
+
+/// Tests assignment speed
+uint64_t test_compiled_lfi (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_compiled_lfi"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  // build a large chain of simple reinforcements
+   std::stringstream buffer;
+
+  unsigned max_size = iterations > 1000 ? 1000 : iterations;
+  unsigned actual_iterations = iterations > 1000 ? iterations / 1000 : 1;
+  
+  for (uint32_t i = 0; i < max_size; ++i)
+  {
+    buffer << "inc ();";
+  }
+
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile (buffer.str ());
+
+  timer.start ();
+
+  // execute that chain of reinforcements
+  for (uint32_t i = 0; i < actual_iterations; ++i)
+    knowledge.evaluate (ce, es);
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Compiled LFI: ");
+
+  return measured;
+}
+
 
 /// Tests looped long inferences (1 => ++.var1)
 uint64_t test_optimal_loop (
@@ -909,6 +1126,61 @@ uint64_t test_optimal_inference (
 }
 
 /// Tests logicals operators (&&, ||)
+uint64_t test_optimal_assignment (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_optimal_reinforcement"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured = 0;
+  ACE_High_Res_Timer timer;
+
+  long var1 = 0;
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    // I'm going to have to admit defeat. I can't use __asm because
+    // it's non-portable. The compiler will compile this away
+    // with either a mov of the final value or imul (if I try using a step
+    // to confuse the compiler). If I add in a print statement or something
+    // else, the loop will of course be altered and time is wasted.
+
+    // 
+    // I understand that compilers don't care if we are trying to do 
+    // performance testing of loops without resorting to volatile which
+    // means drastic performance decrease (at least 1/3), but there should
+    // be some way to portably force a compiler to NOT optimize away this
+    // loop without causing speed decrease via printing, outputting to a file,
+    // synchronizing, library calls, or using volatile on the accumulator
+    //
+    // 
+      assignment (var1, (long)i);
+
+    // the following works but is non-portable to non-VS
+    // force compiler to do an operation here so it doesn't just
+    // add all the iterations up and set var1 to that count
+    //__asm 
+    //{
+    //  nop;
+    //}
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, Madara::Knowledge_Record (
+    Madara::Knowledge_Record::Integer (var1)), iterations,
+    "Optimal Reinforcement: ");
+
+  return measured;
+}
+
+/// Tests logicals operators (&&, ||)
 uint64_t test_optimal_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
      uint32_t iterations)
@@ -1024,6 +1296,39 @@ uint64_t test_volatile_reinforcement (
 
   print (measured, Madara::Knowledge_Record (var1), iterations,
     "Volatile Reinforcement: ");
+
+  return measured;
+}
+
+/// Tests C++ function inference
+uint64_t test_volatile_assignment (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_volatile_assignment"));
+
+  knowledge.clear ();
+  Incrementer accumulator;
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  volatile Madara::Knowledge_Record::Integer var1 = 0;
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    // increment the volatile variable
+    var1 = Madara::Knowledge_Record::Integer (i);
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, Madara::Knowledge_Record (var1), iterations,
+    "Volatile Assignment: ");
 
   return measured;
 }
