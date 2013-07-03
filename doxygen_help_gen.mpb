@@ -5,7 +5,6 @@ project {
   
   Define_Custom(DoxygenTypeSupport) {
     command               = doxygen
-    dependent             = doxygen
     inputext              = .dxy
 
     keyword doxyflags     = commandflags
