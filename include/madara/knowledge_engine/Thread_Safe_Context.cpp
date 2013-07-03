@@ -984,7 +984,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (
 /// keys.
 std::string 
 Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
-  const std::string & key) const
+  const std::string & statement) const
 {
   // enter the mutex
   Context_Guard guard (mutex_);
@@ -998,21 +998,22 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   std::stringstream builder;
 
   // iterate over the input string
-  for (std::string::size_type i = 0; i < key.size (); ++i)
+  for (std::string::size_type i = 0; i < statement.size (); ++i)
   {
     // if this is an open brace, increase the subcount
-    if (key[i] == '{')
+    if (statement[i] == '{')
     {
       ++subcount;
       if (subcount == 1)
         begin_exp = i;
     }
     // closed brace should decrease subcount
-    else if (key[i] == '}')
+    else if (statement[i] == '}')
     {
       if (subcount == 1)
       {
-        std::string expandable = key.substr (begin_exp + 1, i - begin_exp - 1);
+        std::string expandable = 
+          statement.substr (begin_exp + 1, i - begin_exp - 1);
         std::string results = this->expand_statement (expandable);
         builder << this->get (results);
       }
@@ -1023,7 +1024,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
     else
     {
       if (subcount == 0)
-        builder << key[i];
+        builder << statement[i];
     }
   }
 
@@ -1032,7 +1033,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
       "\nKARL COMPILE ERROR: Improperly matched braces in %s\n",
-      key.c_str ()));
+      statement.c_str ()));
     exit (-1);
   }
 
@@ -1146,7 +1147,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
 /**
   * Retrieves an external function
   * @param  name       name of the function to retrieve
-  * @param  func       pointer to the function pointer
+  * @param   settings  settings for applying the update
   * @return            the mapped external function
   **/
 Madara::Knowledge_Engine::Function *

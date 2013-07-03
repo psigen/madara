@@ -58,7 +58,7 @@ namespace Madara
       /**
        * Handles the case where a subscription has been matched
        * @param reader the DDS data reader to read from
-       * @status the status of the matched subscription
+       * @param status the status of the matched subscription
        **/
       void on_subscription_matched (DDSDataReader* reader,
                         const DDS_SubscriptionMatchedStatus& status);

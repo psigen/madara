@@ -57,10 +57,10 @@ namespace Madara
        * Constructor
        * @param   host      hostname/ip of this machine
        * @param   transport transport to use for knowledge dissemination
-       * @param   domain    knowledge domain we want to join
+       * @param   domain  knowledge realm we want to join
        **/
       Knowledge_Base_Impl (const std::string & host, int transport,
-        const std::string & knowledge_realm);
+        const std::string & domain);
 
       /**
        * Constructor

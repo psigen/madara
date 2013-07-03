@@ -36,6 +36,14 @@ namespace Madara
        
        /**
         * Constructor
+        * @param  t_delay_sending_modifieds true to send modifieds
+        * @param  t_treat_globals_as_locals true if global variables should
+        *                                   be marked as not to be sent to the
+        *                                   transport
+        * @param  t_pre_print_statement     statement to print out before
+        *                                   evaluations
+        * @param  t_post_print_statement    statement to print out after
+        *                                   evaluations
         **/
        Eval_Settings (bool t_delay_sending_modifieds,
          bool t_treat_globals_as_locals = false,
@@ -49,7 +57,8 @@ namespace Madara
        }
        
        /**
-        * Constructor
+        * Copy constructor
+        * @param   rhs   Eval settings instance to copy
         **/
        Eval_Settings (const Eval_Settings & rhs)
          : Knowledge_Update_Settings (rhs), 

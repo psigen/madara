@@ -27,7 +27,7 @@ namespace Madara
        * @param   condition     what must be true for the loop to continue
        * @param   postcondition executed after a successful loop body
        * @param   body          executed if loop condition is true
-       * @param   right  right expression
+       * @param   context       context for variable lookups
        **/
       Composite_For_Loop (Component_Node * precondition,
         Component_Node * condition, 
@@ -55,6 +55,7 @@ namespace Madara
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    negation of the right expression
        **/
       virtual Madara::Knowledge_Record evaluate (

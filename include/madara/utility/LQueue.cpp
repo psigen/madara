@@ -29,11 +29,11 @@ namespace Madara
       /// Constructor.
       LQueue_Node (LQueue_Node<T> *next);
 
-      /// Default constructor that doesn't initialize <item_>.
+      /// Default constructor that doesn't initialize item_.
       LQueue_Node (void);
 
-      /// Allocate a new <LQueue_Node>, trying first from the @a free_list_
-      /// and if that's empty try from the global @a ::operator new.
+      /// Allocate a new LQueue_Node, trying first from the @a free_list_
+      /// and if that's empty try from the global ::operator new.
       void *operator new (size_t bytes);
 
       /// Return @a ptr to the @a free_list_.

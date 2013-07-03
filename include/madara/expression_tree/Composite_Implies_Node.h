@@ -45,6 +45,7 @@ namespace Madara
        * Evaluates the expression tree. If the left expression is
        * true, then the right expression is evaluated. The right
        * expression's value does not percolate back up.
+       * @param     settings     settings for evaluating the node
        * @return    the value of the condition (left expression)
        **/
       virtual Madara::Knowledge_Record evaluate (

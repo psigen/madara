@@ -45,6 +45,7 @@ namespace Madara
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    0 if left expression is less than or equal to right 
        *            expression and 1 otherwise
        **/

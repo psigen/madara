@@ -97,9 +97,9 @@ namespace Madara
       static bool is_whitespace (char input);
       
       /**
-       * Checks a character to see if it is whitespace
-       * @param    input      char to check
-       * @return   true if the input is whitespace
+       * Attempts to delete an expression from cache
+       * @param    expression      expression to erase from cache
+       * @return   true if the expression was deleted
        **/
       inline bool delete_expression (const std::string & expression)
       {
@@ -143,7 +143,6 @@ namespace Madara
 
        /**
        * Inserts a variable into the tree
-       * @param    context    interpreter context
        * @param    input      expression to compile
        * @param    i          current position in expression
        * @param    accumulated_precedence  current precedence
@@ -175,7 +174,6 @@ namespace Madara
 
       /**
        * Inserts a number into the tree
-       * @param    context    interpreter context
        * @param    input      expression to compile
        * @param    i          current position in expression
        * @param    accumulated_precedence  current precedence

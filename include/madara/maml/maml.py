@@ -125,7 +125,6 @@ def long_click (device, x=0, y=0, seconds=2.0, sleep_time=0):
 # @param  start  the (x,y) coordinate to start the drag at
 # @param  end    the (x,y) coordinate to end the drag at
 # @param  seconds  number of seconds to execute the drag
-# @param  steps    number of steps to take to execute the drag over the seconds
 # @param  sleep_time   Time to sleep after performing all actions
 def drag (device, start=(0,0), end=(0,0), seconds=2.0, sleep_time=0):
   device.drag (start, end, seconds, steps)
@@ -354,7 +353,7 @@ def random_type (device, length=15, types='a', clear_input = False, sleep_time =
 
 
 ## prints CPU and memory usage information for the connected device
-# @param  device       the phone or emulator serial we are running a command to
+# @param  serial       the phone or emulator serial we are running a command to
 # @param  append_file  a file to write to (default is stdout)
 # @param  simplified   use a simplified print format (default is top output) 
 # @param  processes    if not-simplified, the number of cpu-intensive processes

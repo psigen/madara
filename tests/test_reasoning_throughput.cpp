@@ -161,12 +161,13 @@ void
     buffer.str ().c_str ()));
 }
 
+Madara::Knowledge_Engine::Compiled_Expression   increment_ce;
 
 Madara::Knowledge_Record
   increment_var1 (Madara::Knowledge_Engine::Function_Arguments & args,
             Madara::Knowledge_Engine::Variables & variables)
 {
-  return variables.inc (".var1");
+  return variables.evaluate (increment_ce);
 }
 
 
@@ -240,6 +241,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   ACE_OS::thr_setprio (prio);
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
+
+  increment_ce = knowledge.compile ("++var1");
 
   if (num_runs == 0 || num_iterations == 0)
   {

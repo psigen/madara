@@ -53,7 +53,8 @@ namespace Madara
       virtual Madara::Knowledge_Record prune (bool & can_change) = 0;
 
       /** 
-       * Evaluates the expression tree. 
+       * Evaluates the node.
+       * @param     settings     settings for evaluating the node 
        * @return    value of current contained expression tree
        **/
       virtual Madara::Knowledge_Record evaluate (

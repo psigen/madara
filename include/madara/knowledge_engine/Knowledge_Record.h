@@ -196,24 +196,28 @@ namespace Madara
     /**
      * sets the value to an xml string
      * @param    new_value   new value of the Knowledge Record
+     * @param    size        size of the new_value buffer
      **/
     void set_xml (const char * new_value, size_t size);
     
     /**
      * sets the value to an xml string
      * @param    new_value   new value of the Knowledge Record
+     * @param    size        size of the new_value buffer
      **/
     void set_text (const char * new_value, size_t size);
     
     /**
      * sets the value to an xml string
      * @param    new_value   new value of the Knowledge Record
+     * @param    size        size of the new_value buffer
      **/
     void set_jpeg (const unsigned char * new_value, size_t size);
     
     /**
      * sets the value to an xml string
      * @param    new_value   new value of the Knowledge Record
+     * @param    size        size of the new_value buffer
      **/
     void set_file (const unsigned char * new_value, size_t size);
 

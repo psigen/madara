@@ -41,13 +41,13 @@ namespace Madara
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
-       * @param     can_change   set to true if variable nodes are contained
        * @return    value of current contained expression tree
        **/
       virtual Madara::Knowledge_Record prune (bool & can_change) = 0;
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    value of current contained expression tree
        **/
       virtual Madara::Knowledge_Record evaluate (

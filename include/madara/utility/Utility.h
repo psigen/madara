@@ -97,7 +97,7 @@ namespace Madara
      * Merges a host and port into a host:port key
      * @param     key         a string containing a host:port
      * @param     host        the host in the key
-     * @param     port        the port in the key
+     * @param     u_port      the port in the key
      * @return    0 if successful (always successful right now)
      **/
     MADARA_Export int merge_hostport_identifier (std::string & key, 

@@ -40,6 +40,7 @@ namespace Madara
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    value of left expression plus the value of the right one
        **/
       virtual Madara::Knowledge_Record evaluate (

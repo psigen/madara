@@ -49,6 +49,7 @@ namespace Madara
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    left expression divided by right expression. If right
        *            expression is zero, then a compile error is logged and
        *            the process exits.

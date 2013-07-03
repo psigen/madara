@@ -23,8 +23,7 @@ namespace Madara
     public:
       /**
        * Constructor
-       * @param   left   left expression
-       * @param   right  right expression
+       * @param   nodes   listing of nodes to evaluate
        **/
       Composite_Both_Node (const Component_Nodes & nodes);
 
@@ -43,7 +42,8 @@ namespace Madara
       virtual Madara::Knowledge_Record prune (bool & can_change);
 
       /** 
-       * Evaluates the expression tree. 
+       * Evaluates the composite node. 
+       * @param     settings   settings for evaluating variables
        * @return    the maximum of the value returned by the
        *            left and right expressions
        **/

@@ -84,6 +84,7 @@ namespace Madara
        * Atomically sets the value of a variable to an XML string.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
        * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
@@ -96,6 +97,7 @@ namespace Madara
        * Atomically sets the value of a variable to a JPEG image
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
        * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
@@ -108,6 +110,7 @@ namespace Madara
        * Atomically sets the value of a variable to an arbitrary string.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
        * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
@@ -120,6 +123,7 @@ namespace Madara
        * Atomically sets the value of a variable to an XML string.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
        * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
@@ -181,6 +185,8 @@ namespace Madara
        * Atomically sets if the variable value will be different
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   quality   quality to set the variable at (type of priority)
+       * @param   clock     clock value of the update
        * @param   settings  settings for applying the update
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
@@ -195,6 +201,8 @@ namespace Madara
        * Atomically sets if the variable value will be different
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   quality   quality to set the variable at (type of priority)
+       * @param   clock     clock value of the update
        * @param   settings  settings for applying the update
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
@@ -209,6 +217,8 @@ namespace Madara
        * Atomically sets if the variable value will be different
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
+       * @param   quality   quality to set the variable at (type of priority)
+       * @param   clock     clock value of the update
        * @param   settings  settings for applying the update
        * @return   1 if the value was changed. 0 if not changed.
        *          -1 if null key
@@ -235,7 +245,8 @@ namespace Madara
       
       /**
        * Atomically gets quality of a variable
-       * @param   key       unique identifier of the variable
+       * @param   key       unique identifier of the 
+       * @param   settings       settings for referring to a knowledge variable
        * @return   quality associated with the variable
        **/
       uint32_t get_quality (const std::string & key,
@@ -245,6 +256,7 @@ namespace Madara
       /**
        * Atomically gets write quality of this process for a variable
        * @param   key       unique identifier of the variable
+       * @param   settings       settings for referring to a knowledge variable
        * @return   write quality associated with the variable
        **/
       uint32_t get_write_quality (const std::string & key,
@@ -256,6 +268,7 @@ namespace Madara
        * @param   key            unique identifier of the variable
        * @param   quality        quality of this process
        * @param   force_update   force an update to variable, even if lower
+       * @param   settings       settings for referring to a knowledge variable
        * @return   write quality associated with the variable
        **/
       uint32_t set_quality (const std::string & key, 
@@ -271,6 +284,7 @@ namespace Madara
        * Atomically sets write quality of this process for a variable
        * @param   key            unique identifier of the variable
        * @param   quality        write quality of this process
+       * @param   settings       settings for referring to a knowledge variable
        **/
       void set_write_quality (const std::string & key, uint32_t quality,
         const Knowledge_Reference_Settings & settings);
@@ -278,8 +292,7 @@ namespace Madara
       /**
        * Retrieves a list of modified variables. Useful for building a
        * disseminatable knowledge update.
-       * @param   modified       string of modified variables (key=value;)
-       * @param   quality        write quality of this process
+       * @return  the modified knowledge records
        **/
       const Knowledge_Records & get_modified (void) const;
 
@@ -322,7 +335,7 @@ namespace Madara
 
       /**
        * Wait for a change to happen to the context.
-       * @param   extra release  perform extra release of lock for nested locks
+       * @param   extra_release  perform extra release of lock for nested locks
        **/
       void wait_for_change (bool extra_release = false);
 
@@ -339,6 +352,7 @@ namespace Madara
       /**
        * Deletes the key
        * @param   key            unique identifier of the variable
+       * @param   settings       settings for referring to variables
        * @return                 true if variable exists
        **/
       bool delete_variable (const std::string & key,
@@ -355,6 +369,7 @@ namespace Madara
       /**
        * Atomically checks to see if a variable already exists
        * @param   key            unique identifier of the variable
+       * @param   settings       settings for referring to variables
        * @return                 true if variable exists
        **/
       bool exists (const std::string & key,
@@ -421,8 +436,9 @@ namespace Madara
       /**
        * Atomically sets the Lamport clock of a variable and returns the
        * new clock time (intended for sending knowledge updates).
-       * @param    key     unique identifier of the variable
-       * @param    clock   new variable clock
+       * @param   key       unique identifier of the variable
+       * @param   clock     new variable clock
+       * @param   settings  settings for applying the update
        * @return           new clock time for variable
        **/
       uint64_t set_clock (const std::string & key, 
@@ -438,7 +454,8 @@ namespace Madara
 
       /**
        * Atomically gets the Lamport clock of a variable
-       * @param    key     unique identifier of the variable
+       * @param   key       unique identifier of the variable
+       * @param   settings  settings for reading the variable
        * @return           current variable clock
        **/
       uint64_t get_clock (
@@ -466,6 +483,7 @@ namespace Madara
        * Defines an external function
        * @param  name       name of the function
        * @param  func       external function to call with this name
+       * @param  settings   settings for referring to variables
        **/
       void define_function (const std::string & name,
         VALUE_TYPE (*func) (Function_Arguments &, Variables &),
@@ -548,7 +566,7 @@ namespace Madara
       /**
        * Fills a variable map with Knowledge Records that match an expression.
        * At the moment, this expression must be of the form "subject*"
-       * @param   expression  An expression that matches the variable names
+       * @param   subject     An expression that matches the variable names
        *                      that are of interest. Wildcards may only be
        *                      at the end.
        * @param   target      The map that will be filled with variable names

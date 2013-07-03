@@ -114,7 +114,7 @@ namespace Madara
       /// Remove the front item on the stack.  does not throw exceptions.
       void pop_i (void);
 
-      /// Copy a linked list of nodes.  This can throw a @a ::std::bad_alloc
+      /// Copy a linked list of nodes.  This can throw a ::std::bad_alloc
       /// exception.
       void copy_list (const LStack<T> &rhs);
 

@@ -9,6 +9,27 @@
 ///============================================================================
 
 
+/// @feature old
+/// Enable this feature if you would like to generate the CID heuristic
+cid                     = 0
+
+/// @feature deprecated
+/// Enable this feature if you want to generate deprecated test applications
+deprecated              = 0
+
+/// @feature docs
+/// Enable this feature if you want to generate Doxygen library documentation
+docs                    = 0
+
+/// @feature kats
+/// Enable this feature if you would like to build the 
+/// KaRL Automated Testing System
+kats                    = 0
+
+/// @feature ndds
+/// Enable this feature if you would like to generate NDDS Transports
+ndds                    = 0
+
 /// @feature opensplice
 /// Enable this feature if you would like to generate OpenSplice Transports
 
@@ -22,20 +43,3 @@ tests                   = 1
 /// Enable this feature if you want to generate tutorial applications
 tutorials               = 0
 
-/// @feature deprecated
-/// Enable this feature if you want to generate deprecated test applications
-deprecated              = 0
-
-
-/// @feature kats
-/// Enable this feature if you would like to build the 
-/// KaRL Automated Testing System
-kats                    = 0
-
-/// @feature ndds
-/// Enable this feature if you would like to generate NDDS Transports
-ndds                    = 0
-
-/// @feature old
-/// Enable this feature if you would like to generate the CID heuristic
-cid                     = 0

@@ -25,10 +25,9 @@ def getstate (serial):
   return adb (cmd='get-state', serial=serial)
 
 ## checks to see if the serial is online
-# @param  serial   the phone or emulator we are instrumenting
-# @param  package  the package to uninstall (e.g. com.google.contacts)
+# @param  serial          the phone or emulator we are instrumenting
 # @return             True if device is online, False otherwise
-def isonline (serial, print_failures=True):
+def isonline (serial):
   if not serial:
     serial = get_first_device ()
     if not serial:
@@ -43,6 +42,8 @@ def isonline (serial, print_failures=True):
     print "Device " + serial + " is not connected..."
     return False;
 
+## Returns first serial number in the adb listing of connected devices
+# @return             the first serial number in the adb listing
 def get_first_device ():
   # start with no serial
   serial = None
@@ -195,6 +196,9 @@ def right (serial, num=1, sleep_time=0):
 
 ## Launches an activity
 # @param  serial   the phone or emulator we are instrumenting
+# @param  activity  the name of the activity to launch
+# @param  action    the action that should be targeted
+# @param  category  the category of the activity
 # @return              tuple of (stdout, stderr)
 def activity (serial, activity, 
               action='android.intent.action.MAIN',
@@ -364,6 +368,7 @@ def type (serial, text, clear_input=False, sleep_time=0):
 # to remove files or directories.
 # @param  serial   the phone or emulator serial we are running a command to
 # @param  target   target file or directory to remove
+# @param  recursive   specifies the remove is recursive on a target (dirs)
 # @return              tuple of (stdout, stderr)
 def remove (serial, target, recursive=False):
   if not isonline (serial):
@@ -509,7 +514,7 @@ def logcat (serial, flush=False, file=None, filters=[], format=None, sleep_time=
   
 
 ## prints CPU and memory usage information for the connected device
-# @param  device       the phone or emulator serial we are running a command to
+# @param  serial       the phone or emulator serial we are running a command to
 # @param  append_file  a file to write to (default is stdout)
 # @param  simplified   use a simplified print format (default is top output) 
 # @param  processes    if not-simplified, the number of cpu-intensive processes

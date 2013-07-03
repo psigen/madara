@@ -43,6 +43,7 @@ namespace Madara
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    zero unless both left and right expressions 
        *            evaluate to non-zero. Right is not evaluated
        *            if left expression returns zero.

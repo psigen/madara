@@ -81,7 +81,6 @@ namespace Madara
 
       /** 
        * Prunes the expression tree of unnecessary nodes. 
-       * @param     can_change   set to true if variable nodes are contained
        * @return    value of expression tree
        **/
       Madara::Knowledge_Record prune (void);

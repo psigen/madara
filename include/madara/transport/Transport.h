@@ -877,7 +877,7 @@ namespace Madara
 
       /**
        * Add a vector of hosts to the current host list
-       * @param   host        a vector of hosts to add to the list
+       * @param   hosts        a vector of hosts to add to the list
        * @return  0 if successful
        **/
       virtual long setHosts (const Hosts_Vector & hosts) 

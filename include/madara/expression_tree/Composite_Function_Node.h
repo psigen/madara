@@ -24,8 +24,9 @@ namespace Madara
     public:
       /**
        * Constructor
-       * @param   name   function name
-       * @param   right  right expression
+       * @param   name     function name
+       * @param   context  context for accessing variables and functions
+       * @param   nodes    arguments to the function
        **/
       Composite_Function_Node (const std::string & name, 
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
@@ -51,6 +52,7 @@ namespace Madara
 
       /** 
        * Evaluates the expression tree. 
+       * @param     settings     settings for evaluating the node
        * @return    negation of the right expression
        **/
       virtual Madara::Knowledge_Record evaluate (

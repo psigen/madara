@@ -43,7 +43,7 @@ namespace Madara
        * @param    id      host:port identifier of this process, to allow for 
        *                   rejection of duplicates
        * @param    context    the knowledge variables to update
-       * @param    addresses  the ACE socket addresses to read from 
+       * @param    address    the ACE socket address to read from 
        **/
       Broadcast_Transport_Read_Thread (
         const Settings & settings,
