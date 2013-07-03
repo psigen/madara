@@ -73,11 +73,11 @@ SectionEnd
 
 Section "docs" SEC03
   SetOutPath "$INSTDIR\docs"
-  File "..\..\docs\Doxyfile_KaRL"
-  File "..\..\docs\Doxyfile_KATS"
-  File "..\..\docs\Doxyfile_MAML"
-  File "..\..\docs\Doxyfile_MAAL"
-  File "..\..\docs\Doxyfile_CID"
+  File "..\..\docs\Doxyfile_KaRL.dxy"
+  File "..\..\docs\Doxyfile_KATS.dxy"
+  File "..\..\docs\Doxyfile_MAML.dxy"
+  File "..\..\docs\Doxyfile_MAAL.dxy"
+  File "..\..\docs\Doxyfile_CID.dxy"
   File "..\..\docs\README.txt"
 
   SetOutPath "$INSTDIR\docs\cid"
@@ -101,27 +101,10 @@ SectionEnd
 
 Section "tests" SEC04
   SetOutPath "$INSTDIR\bin"
-  File "..\..\bin\test_basic_reasoning.exe"
-  File "..\..\bin\test_cid.exe"
-  File "..\..\bin\test_cid_disjoint.exe"
-  File "..\..\bin\test_cid_linked.exe"
-  File "..\..\bin\test_cid_read_deployment.exe"
-  File "..\..\bin\test_dissemination.exe"
-  File "..\..\bin\test_distributed_finisher.exe"
-  File "..\..\bin\test_distributed_finisher_with_set.exe"
-  File "..\..\bin\test_files.exe"
-  File "..\..\bin\test_kats_barriers.exe"
-  File "..\..\bin\test_kats_syncs.exe"
-  File "..\..\bin\test_key_expansion.exe"
-  File "..\..\bin\test_knowledge_domains.exe"
-  File "..\..\bin\test_latency.exe"
-  File "..\..\bin\test_print_statement.exe"
-  File "..\..\bin\test_quality.exe"
-  File "..\..\bin\test_reasoning_throughput.exe"
-  File "..\..\bin\test_synchronization.exe"
-  File "..\..\bin\test_synchronization_three_state.exe"
-  File "..\..\bin\test_timed_wait.exe"
-  File "..\..\bin\test_wait_with_ace.exe"
+  File "..\..\bin\profile_architecture.exe"
+  File /r "..\..\bin\test*.exe"
+  File /r "..\..\bin\tutorial*.exe"
+  File "..\..\bin\system_calls.exe"
 SectionEnd
 
 Section "-exes" SEC09
@@ -191,7 +174,7 @@ Section "ace" SEC10
 
 SectionEnd
 
-Section "opensplice" SEC11
+Section "opensplice" SEC12
 
   SetOutPath "$INSTDIR"
 
@@ -255,6 +238,58 @@ Section "opensplice" SEC11
   SetOutPath "$INSTDIR\include"
   File /r $%OSPL_HOME%\include\*.*
   
+SectionEnd
+
+Section "-vcredist" SEC11
+
+  SetOutPath "$INSTDIR\vcredist"
+  File "redist\vcredist_x64.exe"
+  File "redist\vcredist_x86.exe"
+
+  # 64-bit Installs
+
+  # Make sure the variable is clear
+  StrCpy $1 ""
+  SetRegview 64
+
+  # Detect if it is installed already
+  ReadRegStr $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{1D8E6291-B0D5-35EC-8441-6616F567A0F7}" DisplayName
+  
+  
+  StrCmp $1 "" sp164_not_exists sp164_exists
+
+  sp164_not_exists:
+    # From http://blogs.msdn.com/astebner/archive/2007/02/07/update-regarding-silent-install-of-the-vc-8-0-runtime-vcredist-packages.aspx
+    # “qb!” for progress with no cancel, “qb” for progress and cancel, “qn” for no interaction
+
+    DetailPrint "Installing VC 10 64-bit Redistributable."  
+
+    ExecWait '$INSTDIR\vcredist\vcredist_x64.exe /q' $0 # Only progress bar
+    DetailPrint "vcredist_x64 SP1 Update returned $0"
+    
+
+  sp164_exists:
+  # Nothing to do
+
+  # 32-bit Installs
+  # Make sure the variable is clear
+  StrCpy $1 ""
+  SetRegview 32
+
+  # Detect if it is installed already
+  ReadRegStr $1 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{F0C3E5D1-1ADE-321E-8167-68EF0DE699A5}" DisplayName
+  StrCmp $1 "" sp1_not_exists sp1_exists
+
+  sp1_not_exists:
+    # From http://blogs.msdn.com/astebner/archive/2007/02/07/update-regarding-silent-install-of-the-vc-8-0-runtime-vcredist-packages.aspx
+    # “qb!” for progress with no cancel, “qb” for progress and cancel, “qn” for no interaction
+    DetailPrint "Installing VC 10 32-bit Redistributable."  
+    ExecWait '$INSTDIR\vcredist\vcredist_x86.exe /q' $0 # Only progress bar
+    DetailPrint "vcredist_x86 SP1 Update returned $0"
+
+  sp1_exists:
+  # Nothing to do
+
 SectionEnd
 
 Section "-include" SEC07

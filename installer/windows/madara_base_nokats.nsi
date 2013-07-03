@@ -80,11 +80,11 @@ SectionEnd
 
 Section "docs" SEC03
   SetOutPath "$INSTDIR\docs"
-  File "..\..\docs\Doxyfile_KaRL"
+  File "..\..\docs\Doxyfile_KaRL.dxy"
 ;  File "..\..\docs\Doxyfile_KATS"
-  File "..\..\docs\Doxyfile_MAML"
-  File "..\..\docs\Doxyfile_MAAL"
-  File "..\..\docs\Doxyfile_CID"
+  File "..\..\docs\Doxyfile_MAML.dxy"
+  File "..\..\docs\Doxyfile_MAAL.dxy"
+  File "..\..\docs\Doxyfile_CID.dxy"
   File "..\..\docs\README.txt"
 
   SetOutPath "$INSTDIR\docs\cid"
@@ -108,6 +108,7 @@ SectionEnd
 
 Section "tests" SEC04
   SetOutPath "$INSTDIR\bin"
+  File "..\..\bin\profile_architecture.exe"
   File /r "..\..\bin\test*.exe"
   File /r "..\..\bin\tutorial*.exe"
   File "..\..\bin\system_calls.exe"
