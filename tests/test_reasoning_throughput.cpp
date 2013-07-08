@@ -24,6 +24,9 @@
 int parse_args (int argc, ACE_TCHAR * argv[]);
 
 // test functions
+uint64_t test_virtual_reinforcement (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
 uint64_t test_volatile_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
@@ -141,6 +144,31 @@ public:
 
 private:
   volatile long value_;
+};
+
+class Base_Operation
+{
+public:
+  virtual Madara::Knowledge_Record::Integer evaluate (void)
+  {
+    return value_;
+  }
+
+  Madara::Knowledge_Record::Integer get_value (void)
+  {
+    return value_;
+  }
+
+protected:
+  Madara::Knowledge_Record::Integer value_;
+};
+
+class Increment_Operation : public Base_Operation
+{
+  virtual Madara::Knowledge_Record::Integer evaluate (void)
+  {
+    return ++value_;
+  }
 };
 
 void
@@ -262,7 +290,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
-  const int num_test_types = 23;
+  const int num_test_types = 24;
 
   // make everything all pretty and for-loopy
   uint64_t results[num_test_types];
@@ -280,16 +308,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "KaRL: Compiled LI             ",
     "KaRL: Compiled SA             ",
     "KaRL: Compiled LA             ",
+    "KaRL: Extern Function Call    ",
     "KaRL: Compiled SFI            ",
     "KaRL: Compiled LFI            ",
     "KaRL: Looped SR               ",
     "KaRL: Optimal Loop            ",
     "KaRL: Looped SI               ",
     "KaRL: Looped LI               ",
-    "KaRL: Extern Function Call    ",
     "C++: Optimized Assignments    ",
     "C++: Optimized Reinforcements ",
     "C++: Optimized Inferences     ",
+    "C++: Virtual Reinforcements   ",
     "C++: Volatile Assignments     ",
     "C++: Volatile Reinforcements  ",
     "C++: Volatile Inferences      "
@@ -307,16 +336,17 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     CompiledLI,
     CompiledSA,
     CompiledLA,
+    ExternCall,
     CompiledSFI,
     CompiledLFI,
     LoopedSR,
     OptimalLoop,
     LoopedSI,
     LoopedLI,
-    ExternCall,
     OptimizedAssignment,
     OptimizedReinforcement,
     OptimizedInference,
+    VirtualReinforcement,
     VolatileAssignment,
     VolatileReinforcement,
     VolatileInference
@@ -337,6 +367,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[CompiledLI] = test_compiled_li;
   test_functions[CompiledSA] = test_compiled_sa;
   test_functions[CompiledLA] = test_compiled_la;
+
+  test_functions[ExternCall] = test_extern_call;
   test_functions[CompiledSFI] = test_compiled_sfi;
   test_functions[CompiledLFI] = test_compiled_lfi;
   
@@ -344,11 +376,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[OptimalLoop] = test_optimal_loop;
   test_functions[LoopedSI] = test_looped_si;
   test_functions[LoopedLI] = test_looped_li;
-  test_functions[ExternCall] = test_extern_call;
   
   test_functions[OptimizedAssignment] = test_optimal_assignment;
   test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
   test_functions[OptimizedInference] = test_optimal_inference;
+  test_functions[VirtualReinforcement] = test_virtual_reinforcement;
   test_functions[VolatileAssignment] = test_volatile_assignment;
   test_functions[VolatileReinforcement] = test_volatile_reinforcement;
   test_functions[VolatileInference] = test_volatile_inference;
@@ -1346,6 +1378,41 @@ uint64_t test_volatile_reinforcement (
 
   print (measured, Madara::Knowledge_Record (var1), iterations,
     "Volatile Reinforcement: ");
+
+  return measured;
+}
+
+/// Tests C++ function inference
+uint64_t test_virtual_reinforcement (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_virtual_reinforcement"));
+
+  knowledge.clear ();
+  Incrementer accumulator;
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  Base_Operation * var1 = new Increment_Operation ();
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    // increment the volatile variable
+    var1->evaluate ();
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+  
+  print (measured, var1->get_value (), iterations,
+    "Virtual Reinforcement: ");
+
+  delete var1;
 
   return measured;
 }
