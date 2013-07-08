@@ -83,6 +83,10 @@ uint64_t test_compiled_lfi (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
 
+uint64_t test_extern_call (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+
 uint64_t test_looped_sr (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
@@ -170,6 +174,12 @@ Madara::Knowledge_Record
   return variables.evaluate (increment_ce);
 }
 
+Madara::Knowledge_Record
+  no_op (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  return Madara::Knowledge_Record::Integer (0);
+}
 
 std::string 
 to_legible_hertz (uint64_t hertz)
@@ -252,7 +262,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
-  const int num_test_types = 22;
+  const int num_test_types = 23;
 
   // make everything all pretty and for-loopy
   uint64_t results[num_test_types];
@@ -261,7 +271,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
      uint32_t iterations);
   const char * printouts [num_test_types] = {
     "KaRL: Simple Reinforcements   ",
-    "KaRL: Large Reinforcements   ",
+    "KaRL: Large Reinforcements    ",
     "KaRL: Simple Inference        ",
     "KaRL: Large Inference         ",
     "KaRL: Compiled SR             ",
@@ -276,10 +286,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "KaRL: Optimal Loop            ",
     "KaRL: Looped SI               ",
     "KaRL: Looped LI               ",
-    "C++: Optimized Assignments ",
+    "KaRL: Extern Function Call    ",
+    "C++: Optimized Assignments    ",
     "C++: Optimized Reinforcements ",
     "C++: Optimized Inferences     ",
-    "C++: Volatile Assignments  ",
+    "C++: Volatile Assignments     ",
     "C++: Volatile Reinforcements  ",
     "C++: Volatile Inferences      "
   };
@@ -302,6 +313,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     OptimalLoop,
     LoopedSI,
     LoopedLI,
+    ExternCall,
     OptimizedAssignment,
     OptimizedReinforcement,
     OptimizedInference,
@@ -332,6 +344,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[OptimalLoop] = test_optimal_loop;
   test_functions[LoopedSI] = test_looped_si;
   test_functions[LoopedLI] = test_looped_li;
+  test_functions[ExternCall] = test_extern_call;
   
   test_functions[OptimizedAssignment] = test_optimal_assignment;
   test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
@@ -342,6 +355,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
 
   knowledge.define_function ("inc", increment_var1);
+  knowledge.define_function ("no_op", no_op);
 
 
   for (uint32_t i = 0; i < num_runs; ++i)
@@ -597,6 +611,39 @@ uint64_t test_compiled_sfi (
 
   print (measured, knowledge.get (".var1"), iterations,
     "Compiled SFI: ");
+
+  return measured;
+}
+
+uint64_t test_extern_call (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_extern_call"));
+
+  knowledge.clear ();
+  Madara::Knowledge_Engine::Eval_Settings es;
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("no_op ()");
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    // test literals in conditionals
+    knowledge.evaluate (ce, es);
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Extern function call: ");
 
   return measured;
 }
