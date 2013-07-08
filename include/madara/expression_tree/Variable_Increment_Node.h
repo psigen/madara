@@ -82,7 +82,6 @@ namespace Madara
             Knowledge_Engine::DO_NOT_EXPAND_VARIABLES);
         }
 
-        context_.signal (false);
         return *record;
       }
 

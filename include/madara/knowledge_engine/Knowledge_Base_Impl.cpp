@@ -313,6 +313,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
         transports_[i]->send_data (modified);
 
       map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
     }
     else
     {
@@ -356,6 +358,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
         transports_[i]->send_data (modified);
 
       map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
     }
     else
     {
@@ -398,6 +402,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
         transports_[i]->send_data (modified);
 
       map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
     }
     else
     {
@@ -681,6 +687,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
         transports_[i]->send_data (modified);
 
       map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
     }
   }
 

@@ -134,7 +134,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     }
   }
 
-  changed_.signal ();
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -181,8 +182,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -229,8 +231,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -277,8 +280,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -325,8 +329,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -373,8 +378,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -421,8 +427,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return 0;
 }
@@ -469,8 +476,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
       mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
     }
   }
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   return ret_value;
 }
@@ -685,8 +693,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
       }
     }
-
-    changed_.signal ();
+    
+    if (settings.signal_changes)
+      changed_.signal ();
   }
 
   // value was changed
@@ -775,8 +784,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
       }
     }
-
-    changed_.signal ();
+    
+    if (settings.signal_changes)
+      changed_.signal ();
   }
 
   // value was changed
@@ -865,8 +875,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
       }
     }
-
-    changed_.signal ();
+    
+    if (settings.signal_changes)
+      changed_.signal ();
   }
 
   // value was changed
@@ -950,8 +961,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
   // if we need to update the global clock, then update it
   if (rhs.clock > this->clock_)
     this->clock_ = rhs.clock;
-
-  changed_.signal ();
+  
+  if (settings.signal_changes)
+    changed_.signal ();
 
   // value was changed
   return result;

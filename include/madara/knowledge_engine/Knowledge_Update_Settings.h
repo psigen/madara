@@ -30,6 +30,7 @@ namespace Madara
       Knowledge_Update_Settings ()
         : Knowledge_Reference_Settings (), 
           always_overwrite (false), treat_globals_as_locals (false),
+          signal_changes (true),
           clock_increment (1)
       {
       }
@@ -39,10 +40,12 @@ namespace Madara
        **/
       Knowledge_Update_Settings (bool t_treat_globals_as_locals,
         bool t_always_overwrite = false,
+        bool t_signal_changes = true,
         uint64_t t_clock_increment = 1)
         : Knowledge_Reference_Settings (),
           always_overwrite (t_always_overwrite),
           treat_globals_as_locals (t_treat_globals_as_locals),
+          signal_changes (t_signal_changes),
           clock_increment (t_clock_increment)
       {
       }
@@ -54,6 +57,7 @@ namespace Madara
         : Knowledge_Reference_Settings (rhs),
           always_overwrite (rhs.always_overwrite),
           treat_globals_as_locals (rhs.treat_globals_as_locals),
+          signal_changes (rhs.signal_changes),
           clock_increment (rhs.clock_increment)
       {
       }
@@ -77,6 +81,14 @@ namespace Madara
       * local variables and not marked as modified to the transport
       **/
       bool treat_globals_as_locals;
+
+      /**
+       * Toggle whether to signal changes have happened. Setting this
+       * to false will increase performance, but in general should be
+       * left to true. Setting this to false can result in problems
+       * with wait statements.
+       **/
+      bool signal_changes;
 
       /**
        * Default clock increment
