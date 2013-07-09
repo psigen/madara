@@ -19,6 +19,7 @@
 
 #include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
@@ -199,7 +200,8 @@ Madara::Knowledge_Record
   increment_var1 (Madara::Knowledge_Engine::Function_Arguments & args,
             Madara::Knowledge_Engine::Variables & variables)
 {
-  return variables.evaluate (increment_ce);
+  return variables.evaluate (increment_ce,
+    Madara::Knowledge_Engine::NO_SIGNALS_UPDATE_SETTINGS);
 }
 
 Madara::Knowledge_Record
@@ -534,7 +536,8 @@ uint64_t test_simple_reinforcement (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate ("++.var1");
+    knowledge.evaluate ("++.var1",
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -553,7 +556,6 @@ uint64_t test_compiled_sr (
   ACE_TRACE (ACE_TEXT ("test_compiled_sr"));
 
   knowledge.clear ();
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile ("++.var1");
@@ -567,7 +569,8 @@ uint64_t test_compiled_sr (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -587,7 +590,6 @@ uint64_t test_compiled_sa (
   ACE_TRACE (ACE_TEXT ("test_compiled_sa"));
 
   knowledge.clear ();
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (".var1=1");
@@ -601,7 +603,8 @@ uint64_t test_compiled_sa (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -621,7 +624,6 @@ uint64_t test_compiled_sfi (
   ACE_TRACE (ACE_TEXT ("test_compiled_sfi"));
 
   knowledge.clear ();
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile ("inc ()");
@@ -635,7 +637,8 @@ uint64_t test_compiled_sfi (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -654,7 +657,6 @@ uint64_t test_extern_call (
   ACE_TRACE (ACE_TEXT ("test_extern_call"));
 
   knowledge.clear ();
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile ("no_op ()");
@@ -668,7 +670,8 @@ uint64_t test_extern_call (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -705,7 +708,6 @@ uint64_t test_looped_sr (
 
   buffer = ".var2[.iterations) (++.var1)";
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer);
@@ -713,7 +715,8 @@ uint64_t test_looped_sr (
   timer.start ();
 
   // execute that chain of reinforcements
-  knowledge.evaluate (ce, es);
+  knowledge.evaluate (ce, 
+    Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -752,8 +755,9 @@ uint64_t test_large_reinforcement (
 
   // execute that chain of reinforcements
   for (uint32_t i = 0; i < actual_iterations; ++i)
-    knowledge.evaluate (buffer.str ());
-
+    knowledge.evaluate (buffer.str (), 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
+  
   timer.stop ();
   timer.elapsed_time (measured);
 
@@ -787,7 +791,6 @@ uint64_t test_compiled_lr (
     buffer << "++.var1;";
   }
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer.str ());
@@ -796,7 +799,8 @@ uint64_t test_compiled_lr (
 
   // execute that chain of reinforcements
   for (uint32_t i = 0; i < actual_iterations; ++i)
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -834,7 +838,6 @@ uint64_t test_compiled_la (
     buffer << ";";
   }
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer.str ());
@@ -843,7 +846,8 @@ uint64_t test_compiled_la (
 
   // execute that chain of reinforcements
   for (uint32_t i = 0; i < actual_iterations; ++i)
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -879,7 +883,6 @@ uint64_t test_compiled_lfi (
     buffer << "inc ();";
   }
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer.str ());
@@ -888,7 +891,8 @@ uint64_t test_compiled_lfi (
 
   // execute that chain of reinforcements
   for (uint32_t i = 0; i < actual_iterations; ++i)
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -924,7 +928,6 @@ uint64_t test_optimal_loop (
 
   buffer = ".var2[.iterations)";
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer);
@@ -932,7 +935,8 @@ uint64_t test_optimal_loop (
   timer.start ();
 
   // execute that chain of reinforcements
-  knowledge.evaluate (ce, es);
+  knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -960,7 +964,8 @@ uint64_t test_simple_inference (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate ("1 => ++.var1");
+    knowledge.evaluate ("1 => ++.var1", 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -984,7 +989,6 @@ uint64_t test_compiled_si (
   ACE_hrtime_t measured;
   ACE_High_Res_Timer timer;
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile ("1 => ++.var1");
@@ -994,7 +998,8 @@ uint64_t test_compiled_si (
   for (uint32_t i = 0; i < iterations; ++i)
   {
     // test literals in conditionals
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
   }
 
   timer.stop ();
@@ -1029,7 +1034,6 @@ uint64_t test_looped_si (
   
   buffer = ".var2[.iterations) (1 => ++.var1)";
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer);
@@ -1037,7 +1041,8 @@ uint64_t test_looped_si (
   timer.start ();
 
   // execute that chain of reinforcements
-  knowledge.evaluate (ce, es);
+  knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -1075,7 +1080,8 @@ uint64_t test_large_inference (
 
   // execute that chain of reinforcements
   for (uint32_t i = 0; i < actual_iterations; ++i)
-    knowledge.evaluate (buffer.str ());
+    knowledge.evaluate (buffer.str (), 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -1109,7 +1115,6 @@ uint64_t test_compiled_li (
     buffer << "1 => ++.var1;";
   }
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer.str ());
@@ -1118,7 +1123,8 @@ uint64_t test_compiled_li (
 
   // execute that chain of reinforcements
   for (uint32_t i = 0; i < actual_iterations; ++i)
-    knowledge.evaluate (ce, es);
+    knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);
@@ -1153,7 +1159,6 @@ uint64_t test_looped_li (
 
   buffer = ".var2[.iterations) (1 => ++.var1)";
 
-  Madara::Knowledge_Engine::Eval_Settings es;
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
   ce = knowledge.compile (buffer);
@@ -1161,7 +1166,8 @@ uint64_t test_looped_li (
   timer.start ();
 
   // execute that chain of reinforcements
-  knowledge.evaluate (ce, es);
+  knowledge.evaluate (ce, 
+      Madara::Knowledge_Engine::NO_SIGNALS_EVAL_SETTINGS);
 
   timer.stop ();
   timer.elapsed_time (measured);

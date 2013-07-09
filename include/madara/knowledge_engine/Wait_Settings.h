@@ -35,11 +35,12 @@ namespace Madara
         **/
        Wait_Settings (bool t_delay_sending_modifieds,
          bool t_treat_globals_as_locals,
+         bool signal_updates,
          std::string t_pre_print_statement,
          std::string t_post_print_statement,
          double t_poll_frequency, double t_max_wait_time)
          : Eval_Settings (t_delay_sending_modifieds,
-              t_treat_globals_as_locals,
+              t_treat_globals_as_locals, signal_updates,
               t_pre_print_statement, t_post_print_statement),
            poll_frequency (t_poll_frequency), max_wait_time (t_max_wait_time)
        {
