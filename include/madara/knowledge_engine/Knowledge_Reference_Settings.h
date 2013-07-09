@@ -64,19 +64,6 @@ namespace Madara
        * Never allow MADARA to exit, even with fatal errors or invalid state
        **/
       bool never_exit;
-      
-      static inline Knowledge_Reference_Settings
-        get_default_settings (void)
-      {
-        return Knowledge_Reference_Settings ();
-      }
-      
-      static inline Knowledge_Reference_Settings
-        get_do_not_expand_vars_settings (void)
-      {
-        return Knowledge_Reference_Settings (false);
-      }
-      
     };
   }
 }

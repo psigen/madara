@@ -56,7 +56,7 @@ namespace Madara
        **/
       Knowledge_Record get (const std::string & key,
         const Knowledge_Reference_Settings & settings =
-        Knowledge_Engine::Knowledge_Reference_Settings::get_default_settings ())
+        Knowledge_Engine::Knowledge_Reference_Settings ())
         const;
       
       /**
@@ -69,7 +69,7 @@ namespace Madara
       int set (const std::string & key,
         Madara::Knowledge_Record::Integer value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Engine::Knowledge_Update_Settings ());
       
       /**
        * Sets the value of a variable.
@@ -80,7 +80,7 @@ namespace Madara
        **/
       int set (const std::string & key, double value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Engine::Knowledge_Update_Settings ());
       
       /**
        * Sets the value of a variable.
@@ -91,7 +91,7 @@ namespace Madara
        **/
       int set (const std::string & key, const std::string & value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Engine::Knowledge_Update_Settings ());
       
       /**
        * Sets the value of a variable.
@@ -103,7 +103,7 @@ namespace Madara
       int set (const std::string & key,
         const Madara::Knowledge_Record & value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Engine::Knowledge_Update_Settings ());
       
       /**
        * Atomically increments the value of the variable
@@ -113,7 +113,7 @@ namespace Madara
        **/
       Knowledge_Record inc (const std::string & key,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Engine::Knowledge_Update_Settings ());
 
       /**
        * Decrements the value of the variable
@@ -123,7 +123,7 @@ namespace Madara
        **/
       Knowledge_Record dec (const std::string & key,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Engine::Knowledge_Update_Settings ());
 
       /**
        * Prints all variables and values in the context
@@ -181,7 +181,7 @@ namespace Madara
       Madara::Knowledge_Record evaluate (
         const std::string & expression,
         const Knowledge_Update_Settings & settings =
-          Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+          Knowledge_Engine::Knowledge_Update_Settings ());
 
       /**
        * Evaluates an expression. Recommended best practices are to compile the
@@ -196,7 +196,7 @@ namespace Madara
       Madara::Knowledge_Record evaluate (
         Compiled_Expression & expression,
         const Knowledge_Update_Settings & settings =
-          Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+          Knowledge_Engine::Knowledge_Update_Settings ());
 
       /**
        * Fills a vector with Knowledge Records that begin with a common subject

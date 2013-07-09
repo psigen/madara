@@ -182,7 +182,7 @@ Madara::Expression_Tree::Variable_Node::set (
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
-        Knowledge_Engine::Knowledge_Reference_Settings::get_do_not_expand_vars_settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
     return 0;
@@ -221,7 +221,7 @@ Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Int
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
-        Knowledge_Engine::Knowledge_Reference_Settings::get_do_not_expand_vars_settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
     return 0;
@@ -251,7 +251,7 @@ Madara::Expression_Tree::Variable_Node::set (double value,
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
-        Knowledge_Engine::Knowledge_Reference_Settings::get_do_not_expand_vars_settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
     return 0;
@@ -281,7 +281,7 @@ Madara::Expression_Tree::Variable_Node::set (const std::string & value,
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
-        Knowledge_Engine::Knowledge_Reference_Settings::get_do_not_expand_vars_settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
     return 0;
@@ -311,7 +311,7 @@ Madara::Expression_Tree::Variable_Node::dec (
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
-        Knowledge_Engine::Knowledge_Reference_Settings::get_do_not_expand_vars_settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
     return *record_;
@@ -341,7 +341,7 @@ Madara::Expression_Tree::Variable_Node::inc (
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
-        Knowledge_Engine::Knowledge_Reference_Settings::get_do_not_expand_vars_settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
     return *record_;

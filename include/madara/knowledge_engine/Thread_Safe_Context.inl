@@ -57,7 +57,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Update_Settings ());
     }
   }
 
@@ -171,7 +171,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key,
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Update_Settings ());
     }
   }
 
@@ -455,7 +455,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::apply_modified (void)
       //i->second.status = Madara::Knowledge_Record::MODIFIED;
 
       mark_modified (i->first, i->second,
-        Knowledge_Update_Settings::get_default_settings ());
+        Knowledge_Update_Settings ());
 
       //i->second.clock = this->clock_;
     }

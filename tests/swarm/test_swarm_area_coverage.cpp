@@ -319,7 +319,7 @@ Madara::Knowledge_Record
              Madara::Knowledge_Engine::Variables & variables)
 {
   return variables.evaluate (expressions[CHECK_CONTROLLER_HEARTBEAT],
-    Madara::Knowledge_Engine::Knowledge_Update_Settings::get_treat_as_local_settings ());
+    Madara::Knowledge_Engine::Knowledge_Update_Settings (true));
 }
 
 /**
@@ -568,10 +568,10 @@ int main (int argc, char ** argv)
 
   // the controller can overwrite these values later if desired
   knowledge.set ("controller.max_heartbeat",
-    15.0, Madara::Knowledge_Engine::Eval_Settings::get_delay_treat_as_local_settings ());
+    15.0, Madara::Knowledge_Engine::Eval_Settings (true, true));
   knowledge.set ("controller.max_drones",
     Madara::Knowledge_Record::Integer (20),
-    Madara::Knowledge_Engine::Eval_Settings::get_delay_treat_as_local_settings ());
+    Madara::Knowledge_Engine::Eval_Settings (true, true));
   
   srand ((unsigned int)settings.id);
 

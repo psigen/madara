@@ -108,7 +108,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
 
       /**
        * Read a file into the knowledge base
@@ -119,7 +119,7 @@ namespace Madara
       int read_file (const std::string & knowledge_key, 
                      const std::string & filename, 
         const Eval_Settings & settings =
-          Eval_Settings::get_default_settings ());
+          Eval_Settings ());
 
       /**
        * Write a file from the knowledge base to a specified location
@@ -169,7 +169,7 @@ namespace Madara
         Madara::Knowledge_Record::Integer value = 
           Madara::Knowledge_Record::MODIFIED, 
         const Eval_Settings & settings =
-          Eval_Settings::get_default_settings ());
+          Eval_Settings ());
        
       /**
        * Sets a knowledge value to a specified value
@@ -182,7 +182,7 @@ namespace Madara
        **/
       int set (const std::string & key, double value, 
         const Eval_Settings & settings =
-          Eval_Settings::get_default_settings ());
+          Eval_Settings ());
       
       /**
        * Sets a knowledge value to a specified value
@@ -195,7 +195,7 @@ namespace Madara
        **/
       int set (const std::string & key, const std::string & value, 
         const Eval_Settings & settings =
-          Eval_Settings::get_default_settings ());
+          Eval_Settings ());
 
       /**
        * Sets the quality of writing to a certain variable from this entity
@@ -206,7 +206,7 @@ namespace Madara
        **/
       void set_quality (const std::string & key, uint32_t quality,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
 
 #ifdef _USE_CID_
       
@@ -270,7 +270,7 @@ namespace Madara
        **/
       bool exists (const std::string & key,
         const Knowledge_Reference_Settings & settings =
-          Knowledge_Reference_Settings::get_default_settings ()) const;
+          Knowledge_Reference_Settings ()) const;
 
       /**
        * Evaluates an expression
@@ -282,7 +282,7 @@ namespace Madara
       Madara::Knowledge_Record evaluate (
         const std::string & expression,
         const Eval_Settings & settings =
-          Eval_Settings::get_default_settings ());
+          Eval_Settings ());
 
       /**
        * Evaluates an expression
@@ -294,7 +294,7 @@ namespace Madara
       Madara::Knowledge_Record evaluate (
         Compiled_Expression & expression,
         const Eval_Settings & settings =
-          Eval_Settings::get_default_settings ());
+          Eval_Settings ());
 
       /**
        * Waits for an expression to be non-zero.
@@ -308,7 +308,7 @@ namespace Madara
       Madara::Knowledge_Record wait (
         const std::string & expression,
         const Wait_Settings & settings =
-          Wait_Settings::get_default_settings ());
+          Wait_Settings ());
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings
@@ -322,7 +322,7 @@ namespace Madara
       Madara::Knowledge_Record wait (
         Compiled_Expression & expression,
         const Wait_Settings & settings =
-          Wait_Settings::get_default_settings ());
+          Wait_Settings ());
 
       /**
        * Applies current time and modified to all global variables and tries

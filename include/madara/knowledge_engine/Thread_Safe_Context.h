@@ -65,7 +65,7 @@ namespace Madara
       Madara::Knowledge_Record
         get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ()) const;
+                     Knowledge_Reference_Settings ()) const;
 
       /**
        * Retrieves a knowledge record from the key. This function is useful
@@ -78,7 +78,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record * get_record (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Atomically sets the value of a variable to an XML string.
@@ -91,7 +91,7 @@ namespace Madara
       int set_xml (const std::string & key,
         const char * value, size_t size, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets the value of a variable to a JPEG image
@@ -104,7 +104,7 @@ namespace Madara
       int set_jpeg (const std::string & key,
         const unsigned char * value, size_t size,
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets the value of a variable to an arbitrary string.
@@ -117,7 +117,7 @@ namespace Madara
       int set_file (const std::string & key,
         const unsigned char * value, size_t size, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets the value of a variable to an XML string.
@@ -130,7 +130,7 @@ namespace Madara
       int set_text (const std::string & key,
         const char * value, size_t size, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets the value of a variable to an integer.
@@ -142,7 +142,7 @@ namespace Madara
       int set (const std::string & key,
         Madara::Knowledge_Record::Integer value, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets the value of a variable to a double.
@@ -154,7 +154,7 @@ namespace Madara
       int set (const std::string & key,
         double value, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets the value of a variable to a string
@@ -166,7 +166,7 @@ namespace Madara
       int set (const std::string & key,
         const std::string & value, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically reads a file into a variable
@@ -195,7 +195,7 @@ namespace Madara
         Madara::Knowledge_Record::Integer value, 
         uint32_t quality, uint64_t clock, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets if the variable value will be different
@@ -211,7 +211,7 @@ namespace Madara
         double value, 
         uint32_t quality, uint64_t clock, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets if the variable value will be different
@@ -227,7 +227,7 @@ namespace Madara
         const std::string & value, 
         uint32_t quality, uint64_t clock, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically sets if the variable value meets update conditions.
@@ -251,7 +251,7 @@ namespace Madara
        **/
       uint32_t get_quality (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Atomically gets write quality of this process for a variable
@@ -261,7 +261,7 @@ namespace Madara
        **/
       uint32_t get_write_quality (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Atomically sets quality of this process for a variable
@@ -331,7 +331,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record inc (const std::string & key, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
 
       /**
        * Wait for a change to happen to the context.
@@ -347,7 +347,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record dec (const std::string & key, 
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
       
       /**
        * Deletes the key
@@ -357,7 +357,7 @@ namespace Madara
        **/
       bool delete_variable (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Deletes the expression from the interpreter cache
@@ -374,7 +374,7 @@ namespace Madara
        **/
       bool exists (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ()) const;
+                     Knowledge_Reference_Settings ()) const;
 
       /**
        * Atomically prints all variables and values in the context
@@ -413,7 +413,7 @@ namespace Madara
        * @return        new clock time
        **/
       uint64_t inc_clock (const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
 
       /**
        * Atomically increments the Lamport clock of a variable and returns the
@@ -424,7 +424,7 @@ namespace Madara
        **/
       uint64_t inc_clock (const std::string & key,
         const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings::get_default_settings ());
+              Knowledge_Update_Settings ());
 
       /**
        * Atomically sets the lamport clock.
@@ -444,7 +444,7 @@ namespace Madara
       uint64_t set_clock (const std::string & key, 
         uint64_t clock,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
 
       /**
        * Atomically gets the Lamport clock
@@ -461,7 +461,7 @@ namespace Madara
       uint64_t get_clock (
         const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
 
       /**
        * Signals that this thread is done with the context. Anyone
@@ -488,7 +488,7 @@ namespace Madara
       void define_function (const std::string & name,
         VALUE_TYPE (*func) (Function_Arguments &, Variables &),
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Defines a named function that can distinguish the name it was called
@@ -500,7 +500,7 @@ namespace Madara
       void define_function (const std::string & name,
         VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &),
         const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
       /**
@@ -512,7 +512,7 @@ namespace Madara
       void define_function (const std::string & name,
         const std::string & expression,
         const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Defines a MADARA KaRL function
@@ -523,7 +523,7 @@ namespace Madara
       void define_function (const std::string & name,
         const Compiled_Expression & expression,
         const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
 
       /**
        * Retrieves an external function
@@ -533,7 +533,7 @@ namespace Madara
        **/
       Function * retrieve_function (const std::string & name,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings::get_default_settings ());
+                     Knowledge_Reference_Settings ());
       
       /**
        * Compiles a KaRL expression into an expression tree

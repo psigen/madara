@@ -95,30 +95,6 @@ namespace Madara
        * Default clock increment
        **/
       uint64_t  clock_increment;
-
-      static inline Knowledge_Update_Settings
-        get_default_settings (void)
-      {
-        return Knowledge_Update_Settings ();
-      }
-      
-      static inline Knowledge_Update_Settings
-        get_treat_as_local_settings (void)
-      {
-        return Knowledge_Update_Settings (true);
-      }
-      
-      static inline Knowledge_Update_Settings
-        get_treat_as_local_no_signals_settings (void)
-      {
-        return Knowledge_Update_Settings (true, false);
-      }
-      
-      static inline Knowledge_Update_Settings
-        get_no_signals_settings (void)
-      {
-        return Knowledge_Update_Settings (false, true);
-      }
     };
   }
 }

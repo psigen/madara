@@ -73,7 +73,7 @@ namespace Madara
         if (key[0] != '.' && !settings.treat_globals_as_locals)
         {
           context_.mark_modified (key, *record,
-            Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
+            Knowledge_Engine::Knowledge_Update_Settings ());
         }
 
         return *record;
