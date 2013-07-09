@@ -1,8 +1,8 @@
-
-
 project (Documentation_KaRL) : doxygen_help_gen, build_files {
 
   requires += docs
+
+  prebuild = perl $(MADARA_ROOT)/docs/get_version.pl
 
   custom_only = 1
   
