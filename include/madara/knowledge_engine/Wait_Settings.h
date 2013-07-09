@@ -64,9 +64,13 @@ namespace Madara
         * Maximum time to wait for an expression to become true
         **/
        double max_wait_time;
+
+       static inline Wait_Settings get_default_settings (void)
+       {
+         return Wait_Settings ();
+       }
      };
 
-    extern MADARA_Export const Wait_Settings DEFAULT_WAIT_SETTINGS;
   }
 }
 #endif

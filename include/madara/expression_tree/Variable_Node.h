@@ -39,32 +39,32 @@ namespace Madara
       /// Sets the value stored in the node.
       int set (const Madara::Knowledge_Record::Integer & value,
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
       
       /// Sets the value stored in the node.
       int set (double value,
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
       
       /// Sets the value stored in the node.
       int set (const std::string & value,
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
       
       /// Sets the value stored in the node.
       int set (const Madara::Knowledge_Record & value,
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
       
       /// Atomically increment the variable.
       Madara::Knowledge_Record inc (
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
 
       /// Atomically decrement the variable.
       Madara::Knowledge_Record dec (
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-              Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.

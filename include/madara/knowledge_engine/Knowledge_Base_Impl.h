@@ -93,7 +93,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
+                     Knowledge_Reference_Settings::get_default_settings ());
 
       /**
        * Expands a statement using variable expansion. For example, if the
@@ -123,7 +123,8 @@ namespace Madara
        */
       int read_file (const std::string & knowledge_key, 
                      const std::string & filename, 
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
 
       /**
        * Write a file from the knowledge base to a specified location
@@ -197,7 +198,8 @@ namespace Madara
        *                     -2 if quality isn't high enough
        **/
       int set (const std::string & key, 
-        Madara::Knowledge_Record::Integer value = Madara::Knowledge_Record::MODIFIED);
+        Madara::Knowledge_Record::Integer value =
+          Madara::Knowledge_Record::MODIFIED);
       
       /**
        * Sets a knowledge value to a specified value
@@ -279,7 +281,7 @@ namespace Madara
        **/
       bool exists (const std::string & key,
         const Knowledge_Reference_Settings & settings =
-          DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS) const;
+          Knowledge_Reference_Settings::get_default_settings ()) const;
 
       /**
        * Sets the quality of writing to a certain variable from this entity
@@ -290,7 +292,7 @@ namespace Madara
        **/
       void set_quality (const std::string & key, uint32_t quality,
              const Knowledge_Reference_Settings & settings =
-                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
+               Knowledge_Reference_Settings::get_default_settings ());
 
       /**
        * Evaluates an expression. Always disseminates modifications.

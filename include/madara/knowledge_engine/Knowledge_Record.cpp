@@ -1632,7 +1632,7 @@ int
     // other things, this means our solution will work even
     // without FIFO channel transports
     result = context.update_record_from_external (key, *this, 
-      Knowledge_Engine::TREAT_AS_LOCAL_UPDATE_SETTINGS);
+      Knowledge_Engine::Knowledge_Update_Settings::get_treat_as_local_settings ());
           
           
     if (perform_lock)

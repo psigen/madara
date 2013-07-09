@@ -92,7 +92,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record evaluate (
         const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
-        Madara::Knowledge_Engine::DEFAULT_KNOWLEDGE_UPDATE_SETTINGS);
+        Knowledge_Engine::Knowledge_Update_Settings::get_default_settings ());
 
       /** 
        * Returns the left expression of this tree

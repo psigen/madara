@@ -84,16 +84,58 @@ namespace Madara
         * Statement to print after evaluations
         **/
        std::string post_print_statement;
+
+       static inline Eval_Settings
+         get_default_settings (void)
+       {
+         return Eval_Settings ();
+       }
+       
+       static inline Eval_Settings
+         get_treat_as_local_settings (void)
+       {
+         return Eval_Settings (false, true);
+       }
+       
+       static inline Eval_Settings
+         get_delay_treat_as_local_settings (void)
+       {
+         return Eval_Settings (true, true);
+       }
+       
+       static inline Eval_Settings
+         get_delay_settings (void)
+       {
+         return Eval_Settings (true);
+       }
+       
+       static inline Eval_Settings
+         get_treat_as_local_no_signals_settings (void)
+       {
+         return Eval_Settings (false, true, false);
+       }
+       
+       static inline Eval_Settings
+         get_no_signals_settings (void)
+       {
+         return Eval_Settings (false, false, false);
+       }
+       
+       static inline Eval_Settings
+         get_delay_treat_as_local_no_signals_settings (void)
+       {
+         return Eval_Settings (true, true, false);
+       }
+       
+       static inline Eval_Settings
+         get_delay_no_signals_settings (void)
+       {
+         return Eval_Settings (true, false, false);
+       }
+
+
      };
 
-    extern MADARA_Export const Eval_Settings DEFAULT_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings TREAT_AS_LOCAL_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings DELAY_AND_TREAT_AS_LOCAL_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings DELAY_ONLY_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings TREAT_AS_LOCAL_NO_SIGNALS_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings NO_SIGNALS_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings DELAY_TREAT_AS_LOCAL_NO_SIGNALS_EVAL_SETTINGS;
-    extern MADARA_Export const Eval_Settings DELAY_NO_SIGNALS_EVAL_SETTINGS;
   }
 }
 #endif

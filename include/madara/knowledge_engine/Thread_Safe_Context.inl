@@ -56,7 +56,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (const std::string & key,
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
+      mark_modified (*key_ptr, record,
+        Knowledge_Update_Settings::get_default_settings ());
     }
   }
 
@@ -169,7 +170,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (const std::string & key,
   {
     if (!settings.treat_globals_as_locals)
     {
-      mark_modified (*key_ptr, record, DO_NOT_EXPAND_VARIABLES);
+      mark_modified (*key_ptr, record,
+        Knowledge_Update_Settings::get_default_settings ());
     }
   }
 
@@ -452,7 +454,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::apply_modified (void)
       // aren't really a part of local variable checking anyway
       //i->second.status = Madara::Knowledge_Record::MODIFIED;
 
-      mark_modified (i->first, i->second, DO_NOT_EXPAND_VARIABLES);
+      mark_modified (i->first, i->second,
+        Knowledge_Update_Settings::get_default_settings ());
 
       //i->second.clock = this->clock_;
     }

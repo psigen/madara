@@ -108,7 +108,7 @@ namespace Madara
        **/
       Madara::Knowledge_Record get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
+                     Knowledge_Reference_Settings::get_default_settings ());
 
       /**
        * Read a file into the knowledge base
@@ -118,7 +118,8 @@ namespace Madara
        */
       int read_file (const std::string & knowledge_key, 
                      const std::string & filename, 
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
 
       /**
        * Write a file from the knowledge base to a specified location
@@ -167,7 +168,8 @@ namespace Madara
       int set (const std::string & key,
         Madara::Knowledge_Record::Integer value = 
           Madara::Knowledge_Record::MODIFIED, 
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
        
       /**
        * Sets a knowledge value to a specified value
@@ -179,7 +181,8 @@ namespace Madara
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, double value, 
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
       
       /**
        * Sets a knowledge value to a specified value
@@ -191,7 +194,8 @@ namespace Madara
        *                        -2 if quality isn't high enough
        **/
       int set (const std::string & key, const std::string & value, 
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
 
       /**
        * Sets the quality of writing to a certain variable from this entity
@@ -202,7 +206,7 @@ namespace Madara
        **/
       void set_quality (const std::string & key, uint32_t quality,
              const Knowledge_Reference_Settings & settings =
-                     DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS);
+                     Knowledge_Reference_Settings::get_default_settings ());
 
 #ifdef _USE_CID_
       
@@ -266,7 +270,7 @@ namespace Madara
        **/
       bool exists (const std::string & key,
         const Knowledge_Reference_Settings & settings =
-          DEFAULT_KNOWLEDGE_REFERENCE_SETTINGS) const;
+          Knowledge_Reference_Settings::get_default_settings ()) const;
 
       /**
        * Evaluates an expression
@@ -277,7 +281,8 @@ namespace Madara
        **/
       Madara::Knowledge_Record evaluate (
         const std::string & expression,
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
 
       /**
        * Evaluates an expression
@@ -288,7 +293,8 @@ namespace Madara
        **/
       Madara::Knowledge_Record evaluate (
         Compiled_Expression & expression,
-        const Eval_Settings & settings = DEFAULT_EVAL_SETTINGS);
+        const Eval_Settings & settings =
+          Eval_Settings::get_default_settings ());
 
       /**
        * Waits for an expression to be non-zero.
@@ -301,7 +307,8 @@ namespace Madara
        **/
       Madara::Knowledge_Record wait (
         const std::string & expression,
-        const Wait_Settings & settings = DEFAULT_WAIT_SETTINGS);
+        const Wait_Settings & settings =
+          Wait_Settings::get_default_settings ());
 
       /**
        * Waits for an expression to be non-zero. Provides additional settings
@@ -314,7 +321,8 @@ namespace Madara
        **/
       Madara::Knowledge_Record wait (
         Compiled_Expression & expression,
-        const Wait_Settings & settings = DEFAULT_WAIT_SETTINGS);
+        const Wait_Settings & settings =
+          Wait_Settings::get_default_settings ());
 
       /**
        * Applies current time and modified to all global variables and tries
