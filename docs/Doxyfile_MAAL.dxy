@@ -34,7 +34,8 @@ PROJECT_NAME           = MAAL
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = 0.9.42
+@INCLUDE_PATH = $(MADARA_ROOT)/docs
+@INCLUDE = VERSION.txt
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
