@@ -21,7 +21,7 @@ namespace Madara
     #define REDUCED_MADARA_ID    "karl1.0"
 
     /**
-    * @class Message_Header
+    * @class Reduced_Message_Header
     * @brief Defines a robust message header which is the default for
     *        KaRL messages. @see Reduced_Message_Header for a smaller
     *        header that supports less QoS and features but a more
