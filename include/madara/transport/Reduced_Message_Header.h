@@ -17,7 +17,25 @@ namespace Madara
 {
   namespace Transport
   {
-#define REDUCED_MADARA_ID    "karl1.0"
+
+    #define REDUCED_MADARA_ID    "karl1.0"
+
+    /**
+    * @class Message_Header
+    * @brief Defines a robust message header which is the default for
+    *        KaRL messages. @see Reduced_Message_Header for a smaller
+    *        header that supports less QoS and features but a more
+    *        compact size.
+    *        
+    *        Format:
+    *
+    *        size = buffer[0] (8 byte)
+    *        transport id = buffer[8] (8 byte)
+    *        updates = buffer[12] (unsigned 4 byte number of updates)
+    *        clock = buffer[16] (unsigned 8 byte clock for this message)
+    *        knowledge = buffer[24] (the new knowledge starts here)
+    */
+
     class MADARA_Export Reduced_Message_Header : public Message_Header
     {
     public:

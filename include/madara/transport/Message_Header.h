@@ -28,6 +28,28 @@ namespace Madara
 
     static const int  MAX_PACKET_SIZE = 512000;  // 512kb
 
+    
+    /**
+    * @class Message_Header
+    * @brief Defines a robust message header which is the default for
+    *        KaRL messages. @see Reduced_Message_Header for a smaller
+    *        header that supports less QoS and features but a more
+    *        compact size.
+    *        
+    *        Format:
+    *
+    *        size = buffer[0] (unsigned 64 bit)
+    *        transport id = buffer[8] (8 byte)
+    *        domain = buffer[16] (32 byte domain name)
+    *        originator = buffer[48] (64 byte originator host:port)
+    *        type = buffer[112] (unsigned 32 bit type of message)
+    *           2 = MULTIASSIGN (most common type)
+    *        updates = buffer[116] (unsigned 32 bit number of updates)
+    *        quality = buffer[120] (unsigned 32 bit quality of message)
+    *        clock = buffer[124] (unsigned 64 bit clock for this message)
+    *        knowledge = buffer[132] (the new knowledge starts here)
+    */
+
     class MADARA_Export Message_Header
     {
     public:
@@ -94,7 +116,7 @@ namespace Madara
       virtual bool equals (const Message_Header & other);
       
       /**
-       * Tests the buffer for a reduced message identifier
+       * Tests the buffer for a normal message identifier
        * @return   true if identifier indicates reduced message header
        **/
       static inline bool message_header_test (char * buffer)
