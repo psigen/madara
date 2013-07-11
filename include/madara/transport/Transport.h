@@ -149,6 +149,7 @@ namespace Madara
         on_data_received_logic (),
         delay_launch (false),
         never_exit (false),
+        send_reduced_message_header (false),
 
 #ifdef _USE_CID_
         latency_enabled (DEFAULT_LATENCY_ENABLED),
@@ -177,6 +178,7 @@ namespace Madara
         on_data_received_logic (settings.on_data_received_logic),
         delay_launch (settings.delay_launch),
         never_exit (settings.never_exit),
+        send_reduced_message_header (settings.send_reduced_message_header),
 
 #ifdef _USE_CID_
 
@@ -211,6 +213,8 @@ namespace Madara
         on_data_received_logic = settings.on_data_received_logic;
         delay_launch = settings.delay_launch;
         never_exit = settings.never_exit;
+
+        send_reduced_message_header = settings.send_reduced_message_header;
 
 #ifdef _USE_CID_
         latency_enabled = settings.latency_enabled;
@@ -790,6 +794,9 @@ namespace Madara
 
       /// prevent MADARA from exiting on fatal errors and invalid state
       bool never_exit;
+
+      /// send the reduced message header (clock, size, updates, KaRL id)
+      bool send_reduced_message_header;
 
 #ifdef _USE_CID_
       /// should we try to gather latencies?

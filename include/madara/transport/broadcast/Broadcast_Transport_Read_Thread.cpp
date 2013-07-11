@@ -1,7 +1,7 @@
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/utility/Utility.h"
-#include "madara/transport/Message_Header.h"
+#include "madara/transport/Reduced_Message_Header.h"
 #include "ace/Time_Value.h"
 
 #include <iostream>
@@ -138,67 +138,92 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
     if (bytes_read > 0)
     {
       buffer_remaining = (int64_t)bytes_read;
-      Message_Header header;
-      char * update = header.read (buffer, buffer_remaining);
-
-      // reject the message if it is not KaRL
-      if (strncmp (header.madara_id, "KaRL", 4) != 0)
+      bool is_reduced = false;
+      Message_Header * header;
+      
+      // check the buffer for a reduced message header
+      if (Reduced_Message_Header::reduced_message_header_test (buffer))
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-          " dropping non-KaRL message from %s:%d\n",
+          " processing reduced KaRL message from %s:%d\n",
           remote.get_host_addr (), remote.get_port_number ()));
-        continue;
+
+        header = new Reduced_Message_Header ();
+        is_reduced = true;
       }
-      else
+      else if (Message_Header::message_header_test (buffer))
       {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "Broadcast_Transport_Read_Thread::svc:" \
           " processing KaRL message from %s:%d\n",
           remote.get_host_addr (), remote.get_port_number ()));
-      }
-    
-      // reject the message if it is us as the originator (no update necessary)
-      if (strncmp (header.originator, id_.c_str (),
-           std::min (sizeof (header.originator), id_.size ())) == 0)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-          " dropping message from ourself\n",
-          remote.get_host_addr (), remote.get_port_number ()));
-        continue;
+        
+        header = new Message_Header ();
       }
       else
       {
-        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "Broadcast_Transport_Read_Thread::svc:" \
-          " remote id (%s:%d) is not our own\n",
-          remote.get_host_addr (), remote.get_port_number ()));
-      }
-      
-      // reject the message if it is from a different domain
-      if (strncmp (header.domain, settings_.domains.c_str (),
-           std::min (sizeof (header.domain), settings_.domains.size ())) != 0)
-      {
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " remote id (%s:%d) in a different domain (%s). Dropping message.\n",
-          remote.get_host_addr (), remote.get_port_number (),
-          header.domain));
+          DLINFO "Broadcast_Transport_Read_Thread::svc:" \
+          " dropping non-KaRL message from %s:%d\n",
+          remote.get_host_addr (), remote.get_port_number ()));
+
+        // we do not need to delete the header as it was never allocated
         continue;
       }
-      else
+       
+      char * update = header->read (buffer, buffer_remaining);
+
+      if (!is_reduced)
       {
-        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " remote id (%s:%d) message is in our domain\n",
-          remote.get_host_addr (), remote.get_port_number ()));
+        // reject the message if it is us as the originator (no update necessary)
+        if (strncmp (header->originator, id_.c_str (),
+          std::min (sizeof (header->originator), id_.size ())) == 0)
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "Broadcast_Transport_Read_Thread::svc:" \
+            " dropping message from ourself\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+
+          // delete the header and continue to the svc loop
+          delete header;
+          continue;
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "Broadcast_Transport_Read_Thread::svc:" \
+            " remote id (%s:%d) is not our own\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+        }
+
+        // reject the message if it is from a different domain
+        if (strncmp (header->domain, settings_.domains.c_str (),
+          std::min (sizeof (header->domain), settings_.domains.size ())) != 0)
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "Broadcast_Transport_Read_Thread::svc:" \
+            " remote id (%s:%d) in a different domain (%s). Dropping message.\n",
+            remote.get_host_addr (), remote.get_port_number (),
+            header->domain));
+
+          // delete the header and continue to the svc loop
+          delete header;
+          continue;
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "Broadcast_Transport_Read_Thread::svc:" \
+            " remote id (%s:%d) message is in our domain\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+        }
       }
-      
+
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
         " iterating over the %d updates\n",
-        header.updates));
+        header->updates));
       
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport_Read_Thread::svc:" \
@@ -206,8 +231,8 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
       
       // temporary record for reading from the updates buffer
       Knowledge_Record record;
-      record.clock = header.clock;
-      record.quality = header.quality;
+      record.clock = header->clock;
+      record.quality = header->quality;
       std::string key;
 
       // lock the context
@@ -218,7 +243,7 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
         " past the lock\n"));
 
       // iterate over the updates
-      for (uint32_t i = 0; i < header.updates; ++i)
+      for (uint32_t i = 0; i < header->updates; ++i)
       {
         // read converts everything into host format from the update stream
         update = record.read (update, key, buffer_remaining);
@@ -229,6 +254,8 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
             DLINFO "Broadcast_Transport_Read_Thread::svc:" \
             " unable to process message. Buffer remaining is negative." \
             " Server is likely being targeted by custom KaRL tools.\n"));
+
+          // cleaning up header is done after the for loop
           break;
         }
 
@@ -237,8 +264,8 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
           " attempting to apply %s=%s\n",
           key.c_str (), record.to_string ().c_str ()));
         
-        int result = record.apply (context_, key, header.quality,
-          header.clock, false);
+        int result = record.apply (context_, key, header->quality,
+          header->clock, false);
 
         if (result != 1)
         {
@@ -276,6 +303,9 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
       // unlock the context
       context_.unlock ();
       context_.set_changed ();
+
+      // delete header
+      delete header;
     }
     else
     {

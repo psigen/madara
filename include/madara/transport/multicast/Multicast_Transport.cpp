@@ -1,7 +1,7 @@
 #include "madara/transport/multicast/Multicast_Transport.h"
 #include "madara/transport/multicast/Multicast_Transport_Read_Thread.h"
 #include "madara/utility/Log_Macros.h"
-#include "madara/transport/Message_Header.h"
+#include "madara/transport/Reduced_Message_Header.h"
 #include "madara/utility/Utility.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/expression_tree/Interpreter.h"
@@ -138,6 +138,7 @@ Madara::Transport::Multicast_Transport::send_data (
  
   // get the maximum quality from the updates
   uint32_t quality = Madara::max_quality (updates);
+  bool reduced = false;
 
 
   // allocate a buffer to send
@@ -156,37 +157,52 @@ Madara::Transport::Multicast_Transport::send_data (
 
 
   // set the header to the beginning of the buffer
-  Message_Header header;
-  
+  Message_Header * header = 0;
+
+  if (settings_.send_reduced_message_header)
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::send_data:" \
+      " Preparing message with reduced message header.\n"));
+    header = new Reduced_Message_Header ();
+    reduced = true;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::send_data:" \
+      " Preparing message with normal message header.\n"));
+    header = new Message_Header ();
+  }
+
   // get the clock
-  header.clock = Madara::Utility::endian_swap (context_.get_clock ());
+  header->clock = Madara::Utility::endian_swap (context_.get_clock ());
 
-  // copy the Madara transport version identification
-  strncpy (header.madara_id, MADARA_IDENTIFIER, 7);
+  if (!reduced)
+  {
+    // copy the domain from settings
+    strncpy (header->domain, this->settings_.domains.c_str (),
+      sizeof (header->domain) - 1);
 
-  // copy the domain from settings
-  strncpy (header.domain, this->settings_.domains.c_str (),
-    sizeof (header.domain) - 1);
+    // get the quality of the key
+    header->quality = Madara::Utility::endian_swap (quality);
 
-  // get the quality of the key
-  header.quality = Madara::Utility::endian_swap (quality);
+    // copy the message originator (our id)
+    strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
 
-  // copy the message originator (our id)
-  strncpy (header.originator, id_.c_str (), sizeof (header.originator) - 1);
+    // send data is generally an assign type. However, Message_Header is
+    // flexible enough to support both, and this will simply our read thread
+    // handling
+    header->type = Madara::Transport::MULTIASSIGN;
+  }
 
-  // only 1 update in a send_data message
-  header.updates = updates.size ();
+  header->updates = updates.size ();
 
-  // send data is generally an assign type. However, Message_Header is
-  // flexible enough to support both, and this will simply our read thread
-  // handling
-  header.type = Madara::Transport::MULTIASSIGN;
-  
   // compute size of this header
-  header.size = header.encoded_size ();
+  header->size = header->encoded_size ();
 
   // set the update to the end of the header
-  char * update = header.write (buffer, buffer_remaining);
+  char * update = header->write (buffer, buffer_remaining);
   uint64_t * message_size = (uint64_t *)buffer;
   
   // Message header format
@@ -270,6 +286,8 @@ Madara::Transport::Multicast_Transport::send_data (
         " Sent packet of size %d\n",
         bytes_sent));
     }
+
+    delete header;
   }
 
   return 0;

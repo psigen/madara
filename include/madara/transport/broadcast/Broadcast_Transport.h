@@ -25,7 +25,14 @@ namespace Madara
   {
     /**
      * @class Broadcast_Transport
-     * @brief Multicast-based transport for knowledge
+     * @brief Multicast-based transport for knowledge. This transport currently
+     *        the following transport settings:
+     *        1) a single host:port pairing
+     *        2) the reduced message header
+     *        3) the normal message header
+     *        4) domain differentiation
+     *        5) on data received logic
+     *        6) multi-assignment of records
      **/
     class Broadcast_Transport : public Base
     {

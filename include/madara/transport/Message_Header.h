@@ -17,7 +17,7 @@ namespace Madara
   namespace Transport
   {
     #define MADARA_IDENTIFIER_LENGTH    8
-    #define MADARA_IDENTIFIER           "KaRL1.1\0"
+    #define MADARA_IDENTIFIER           "KaRL1.1"
     #define MADARA_DOMAIN_MAX_LENGTH    32
     #define PAIR_COUNT_TYPE             uint32_t
     #define KNOWLEDGE_QUALITY_TYPE      uint32_t
@@ -31,13 +31,34 @@ namespace Madara
     class MADARA_Export Message_Header
     {
     public:
+      
+      /**
+       * Constructor
+       **/
+      Message_Header ()
+        : size (0),
+          type (0), updates (0), quality (0), clock (0)
+      {
+        memcpy (madara_id, MADARA_IDENTIFIER, 7);
+        madara_id[7] = 0;
+
+        originator[0] = 0;
+        domain[0] = 0;
+      }
+
+      /**
+       * Destructor
+       **/
+      ~Message_Header ()
+      {
+      }
 
       /**
        * Returns the size of the encoded Message_Header class, which may be
        * different from sizeof (Message_Header) because of compiler
        * optimizations for word boundaries
        **/
-      inline int encoded_size (void)
+      virtual int encoded_size (void)
       {
         return sizeof (uint64_t) * 2
           + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH
@@ -53,7 +74,7 @@ namespace Madara
        *                              buffer to read
        * @return    current buffer position for next read
        **/
-      char * read (char * buffer, int64_t & buffer_remaining);
+      virtual char * read (char * buffer, int64_t & buffer_remaining);
       
       /**
        * Writes a Message_Header instance to a buffer and updates
@@ -63,14 +84,23 @@ namespace Madara
        *                              buffer to read
        * @return    current buffer position for next write
        **/
-      char * write (char * buffer, int64_t & buffer_remaining);
+      virtual char * write (char * buffer, int64_t & buffer_remaining);
  
       /**
        * Compares the fields of this instance to another instance
        * @param     other      the other instance to compare against
        * @return    true if equal, false otherwise
        **/
-      bool equals (const Message_Header & other);
+      virtual bool equals (const Message_Header & other);
+      
+      /**
+       * Tests the buffer for a reduced message identifier
+       * @return   true if identifier indicates reduced message header
+       **/
+      static inline bool message_header_test (char * buffer)
+      {
+        return strncmp (&(buffer[8]), MADARA_IDENTIFIER, 7) == 0; 
+      }
 
       /**
        * the size of this header plus the updates
