@@ -549,7 +549,7 @@ Madara::Utility::endian_swap (int32_t value)
 double
 Madara::Utility::endian_swap (double orig)
 {
-  int64_t * value = (int64_t *)&orig;
+  uint64_t * value = (uint64_t *)&orig;
   double result = orig;
   // if host is little endian, then we have work to do
   if (::endianness.is_little)
