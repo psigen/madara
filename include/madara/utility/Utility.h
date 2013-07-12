@@ -177,33 +177,45 @@ namespace Madara
     MADARA_Export std::string clean_dir_name (const std::string & target);
     
     /**
-     * Converts a host format uint64_t into big endian
+     * Converts a host format uint64_t into big endian. Can
+     * also be used to convert back into host form.
      * @param     value      the value to convert
      * @return    the converted value
      **/
     MADARA_Export uint64_t endian_swap (uint64_t value);
     
     /**
-     * Converts a host format signed Madara::Knowledge_Record::Integer into big endian
+     * Converts a host format signed Madara::Knowledge_Record::Integer
+     * into big endian.  Can also be used to convert back into host form.
      * @param     value      the value to convert
      * @return    the converted value
      **/
     MADARA_Export int64_t endian_swap (int64_t value);
     
     /**
-     * Converts a host format uint64_t into big endian
+     * Converts a host format uint64_t into big endian. Can
+     * also be used to convert back into host form.
      * @param     value      the value to convert
      * @return    the converted value
      **/
     MADARA_Export uint32_t endian_swap (uint32_t value);
     
     /**
-     * Converts a host format signed Madara::Knowledge_Record::Integer into big endian
+     * Converts a host format signed Madara::Knowledge_Record::Integer
+     * into big endian.  Can also be used to convert back into host form.
      * @param     value      the value to convert
      * @return    the converted value
      **/
     MADARA_Export int32_t endian_swap (int32_t value);
-
+    
+    /**
+     * Converts a host format double precision into big endian. Can
+     * also be used to convert back into host form.
+     * @param     value      the value to convert
+     * @return    the converted value
+     **/
+    MADARA_Export double endian_swap (double value);
+    
     /**
      * Reads a file into a provided void pointer. The void pointer will point
      * to an allocated buffer that the user will need to delete.

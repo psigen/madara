@@ -40,6 +40,10 @@ namespace Madara
         * @param  t_treat_globals_as_locals true if global variables should
         *                                   be marked as not to be sent to the
         *                                   transport
+        * @param  signal_updates            indicates whether to signal updates
+        *                                   to a separate thread that may be
+        *                                   waiting. This is only potentially
+        *                                   useful to multithreaded MADARA apps
         * @param  t_pre_print_statement     statement to print out before
         *                                   evaluations
         * @param  t_post_print_statement    statement to print out after

@@ -18,7 +18,7 @@ namespace Madara
   namespace Transport
   {
 
-    #define REDUCED_MADARA_ID    "karl1.0"
+    #define REDUCED_MADARA_ID    "karl1.2"
 
     /**
     * @class Reduced_Message_Header
@@ -46,7 +46,7 @@ namespace Madara
       Reduced_Message_Header ()
         : Message_Header ()
       {
-        memcpy (madara_id, "karl1.0", 7);
+        memcpy (madara_id, REDUCED_MADARA_ID, 7);
         madara_id[7] = 0;
       }
 

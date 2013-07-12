@@ -1410,6 +1410,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   uint32_t size_intermediate = 0;
   uint32_t uint32_temp;
   Integer integer_temp;
+  double double_temp;
 
 
   // Remove the key size from the buffer
@@ -1468,7 +1469,6 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   }
   else if (type_ == INTEGER)
   {
-    // strings do not have to be converted
     if (buffer_remaining >= size_)
     {
       // convert integers to network byte order
@@ -1478,20 +1478,22 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   }
   else if (type_ == DOUBLE)
   {
-    // convert doubles to strings, since it is much more practical to have
-    // hosts convert string to double than it is to assume they will be using
-    // the appropriate IEEE encoding by default
-    std::string converted (to_string ());
-
-    // update size to be the size of the string instead of the double
-    size_intermediate = (uint32_t) (converted.length () + 1);
-      
-    // strings do not have to be converted
-    if (buffer_remaining >= size_intermediate)
+    if (buffer_remaining >= size_)
     {
-      // copy the string to buffer and make sure it is ended in null.
-      strncpy (buffer, converted.c_str (), size_intermediate - 1);
-      buffer[size_intermediate - 1] = 0;
+      // convert doubles to network byte order
+      double_temp = Madara::Utility::endian_swap (double_value_);
+      memcpy (buffer, &double_temp, sizeof (double_temp));
+
+      /**
+       * note that we once converted doubles into strings to attempt
+       * portability, but we are now just assuming that the floating
+       * point units in the architecture are the same endianness as
+       * the integers. This is true of ARM, Intel/AMD, and most architectures.
+       * We are essentially no longer supporting an architecture that
+       * mixes and matches. Persons using such architectures should
+       * perform their own conversions on the knowledge records before
+       * using them.
+       **/
     }
   }
   else if (is_file_type ())
@@ -1576,19 +1578,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
 
     else if (type_ == DOUBLE)
     {
-      // to prevent malicious update packet possibilities, only use the
-      // size provided and move this into a string
-      std::string double_holder;
-      double_holder.assign (buffer, size_);
-
-      // now, do the conversion from string to double
-      std::stringstream temp;
-      temp << buffer;
-      temp >> double_value_;
-
-      // doubles are encoded as strings, so we have to change the size to
-      // the appropriate double representation
-      size_ = sizeof (double);
+      memcpy (&double_value_, buffer, sizeof (double_value_)); 
+      double_value_ = Madara::Utility::endian_swap (double_value_);
     }
 
     else if (is_file_type ())

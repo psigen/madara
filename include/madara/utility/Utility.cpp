@@ -543,6 +543,28 @@ Madara::Utility::endian_swap (int32_t value)
   return value;
 }
 
+/**
+  * Converts a host format double into big endian
+  **/
+double
+Madara::Utility::endian_swap (double orig)
+{
+  int64_t * value = (int64_t *)&orig;
+  double result = orig;
+  // if host is little endian, then we have work to do
+  if (::endianness.is_little)
+  {
+    *value = ((*value << 8) & 0xFF00FF00FF00FF00ULL )
+          | ((*value >> 8) & 0x00FF00FF00FF00FFULL );
+    *value = ((*value << 16) & 0xFFFF0000FFFF0000ULL )
+          | ((*value >> 16) & 0x0000FFFF0000FFFFULL );
+    *value = (*value << 32) | (*value >> 32);
+    memcpy (&result, value, 8);
+  }
+
+  return result;
+}
+
 int
   Madara::Utility::read_file (const std::string & filename,
   void *& buffer, size_t & size, bool add_zero_char)
