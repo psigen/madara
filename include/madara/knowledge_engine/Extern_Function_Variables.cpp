@@ -427,7 +427,7 @@ Madara::Knowledge_Engine::Variables::evaluate (
   *                      range.
   * @return              entries in the resulting vector
   **/
-unsigned int
+size_t
 Madara::Knowledge_Engine::Variables::to_vector (
                               const std::string & subject,
                               unsigned int start,
@@ -447,7 +447,7 @@ Madara::Knowledge_Engine::Variables::to_vector (
   *                      and the Knowledge Records they correspond to
   * @return              entries in the resulting map
   **/
-unsigned int
+size_t
 Madara::Knowledge_Engine::Variables::to_map (
   const std::string & expression,
   std::map <std::string, Knowledge_Record> & target)

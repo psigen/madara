@@ -264,7 +264,7 @@ namespace Madara
        *                      range.
        * @return              entries in the resulting vector
        **/
-      unsigned int to_vector (const std::string & subject,
+      size_t to_vector (const std::string & subject,
                               unsigned int start,
                               unsigned int end,
                               std::vector <Knowledge_Record> & target);
@@ -279,7 +279,7 @@ namespace Madara
        *                      and the Knowledge Records they correspond to
        * @return              entries in the resulting map
        **/
-      unsigned int to_map    (const std::string & subject,
+      size_t to_map    (const std::string & subject,
                        std::map <std::string, Knowledge_Record> & target);
 
     private:

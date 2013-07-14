@@ -1309,7 +1309,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
 {
   // format is [key_size | key | type | value_size | value]
 
-  uint32_t key_size = key.size () + 1;
+  uint32_t key_size = uint32_t (key.size () + 1);
   char * size_location = 0;
   uint32_t size_intermediate = 0;
   uint32_t uint32_temp;
@@ -1327,7 +1327,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   buffer_remaining -= sizeof (key_size);
 
   // Remove the key from the buffer
-  if (buffer_remaining >= sizeof (char) * key_size)
+  if (buffer_remaining >= (int64_t) sizeof (char) * key_size)
   {
     // copy the string and set null terminator in buffer
     strncpy (buffer, key.c_str (), key_size - 1);
@@ -1368,14 +1368,14 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   if      (is_string_type ())
   {
     // strings do not have to be converted
-    if (buffer_remaining >= size_)
+    if (buffer_remaining >=  int64_t (size_))
     {
       memcpy (buffer, str_value_.get_ptr (), size_);
     }
   }
   else if (type_ == INTEGER)
   {
-    if (buffer_remaining >= size_ * sizeof (Integer))
+    if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
     {
       integer_temp = Madara::Utility::endian_swap (int_value_);
       memcpy (buffer, &integer_temp, sizeof (integer_temp));
@@ -1385,7 +1385,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   }
   else if (type_ == INTEGER_ARRAY)
   {
-    if (buffer_remaining >= size_ * sizeof (Integer))
+    if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
     {
       // convert integers to network byte order
       Integer * ptr_temp = int_array_.get_ptr ();
@@ -1402,7 +1402,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   }
   else if (type_ == DOUBLE)
   {
-    if (buffer_remaining >= size_ * sizeof (double))
+    if (buffer_remaining >= int64_t (size_ * sizeof (double)))
     {
       double_temp = Madara::Utility::endian_swap (double_value_);
       memcpy (buffer, &double_temp, sizeof (double_temp));
@@ -1412,7 +1412,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   }
   else if (type_ == DOUBLE_ARRAY)
   {
-    if (buffer_remaining >= size_* sizeof (double))
+    if (buffer_remaining >= int64_t (size_* sizeof (double)))
     {
       // convert integers to network byte order
       double * ptr_temp = double_array_.get_ptr ();
@@ -1475,14 +1475,14 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   buffer_remaining -= sizeof (key_size);
 
   // Remove the key from the buffer
-  if (buffer_remaining >= sizeof (char) * key_size)
+  if (buffer_remaining >= int64_t (sizeof (char) * int64_t (key_size)))
   {
     // don't worry about null terminator
     key.assign (buffer, key_size - 1);
 
     buffer += sizeof (char) * key_size;
   }
-  buffer_remaining -= sizeof (char) * key_size;
+  buffer_remaining -= sizeof (char) * int64_t (key_size);
   
   // Remove the type of value from the buffer
   if (buffer_remaining >= sizeof (type_))
@@ -1509,7 +1509,7 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   buffer_remaining -= sizeof (size_);
   
   // Remove the value from the buffer
-  if (size_ > 0 && buffer_remaining >= buff_value_size)
+  if (size_ > 0 && buffer_remaining >= int64_t (buff_value_size))
   {
     if      (is_string_type ())
     {

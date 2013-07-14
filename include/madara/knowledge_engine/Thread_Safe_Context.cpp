@@ -1219,8 +1219,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
   // vectors for holding parsed tokens and pivot_list
   std::vector< std::string> tokens;
   std::vector< std::string> pivot_list;
-  unsigned int subcount = 0;
-  unsigned int begin_exp = 0;
+  size_t subcount = 0;
+  size_t begin_exp = 0;
 
   std::stringstream builder;
 
@@ -1418,7 +1418,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::compile (
   return ce;
 }
 
-unsigned int
+size_t
   Madara::Knowledge_Engine::Thread_Safe_Context::to_vector (
   const std::string & subject,
   unsigned int start,
@@ -1447,7 +1447,7 @@ unsigned int
 }
 
 
-unsigned int
+size_t
   Madara::Knowledge_Engine::Thread_Safe_Context::to_map (
   const std::string & expression,
   std::map <std::string, Knowledge_Record> & target)

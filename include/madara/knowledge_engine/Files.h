@@ -51,7 +51,7 @@ namespace Madara
        * @param filename           file to write to
        * @param knowledge_key       key to read the file from
        **/
-      MADARA_Export int write_file (const std::string & knowledge_key,
+      MADARA_Export ssize_t write_file (const std::string & knowledge_key,
                       const std::string & filename);
 
       /**
@@ -61,7 +61,7 @@ namespace Madara
        * @param size                size of the buffer
        * @return                    amount written to file (-1 if error)
        **/
-      MADARA_Export int write_file (const char * filename, 
+      MADARA_Export ssize_t write_file (const char * filename, 
                      void *& buffer, size_t & size);
       
       

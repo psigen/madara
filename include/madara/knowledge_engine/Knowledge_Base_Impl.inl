@@ -47,7 +47,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::read_policy (
 }
 
 /// Write file from the knowledge base to a specified file
-inline int
+inline ssize_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
   const std::string & knowledge_key, const std::string & filename)
 {
@@ -276,7 +276,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get_id (void)
   * @return              entries in the resulting vector
   **/
 inline
-unsigned int
+size_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::to_vector (
                               const std::string & subject,
                               unsigned int start,
@@ -297,7 +297,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::to_vector (
   * @return              entries in the resulting map
   **/
 inline
-unsigned int
+size_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::to_map (
   const std::string & expression,
   std::map <std::string, Knowledge_Record> & target)

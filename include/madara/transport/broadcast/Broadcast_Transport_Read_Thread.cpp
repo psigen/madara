@@ -125,7 +125,7 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
     }
 
     // read the message
-    int bytes_read = socket_.recv ((void *)buffer, 
+    ssize_t bytes_read = socket_.recv ((void *)buffer, 
       settings_.queue_length, remote, 0, &wait_time);
  
 

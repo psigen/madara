@@ -94,7 +94,7 @@ Madara::Knowledge_Engine::Knowledge_Base::read_policy (const std::string & knowl
   return impl_->read_policy (knowledge_key, filename);
 }
 
-int
+ssize_t
 Madara::Knowledge_Engine::Knowledge_Base::write_file (const std::string & knowledge_key, 
                      const std::string & filename)
 {
@@ -415,7 +415,7 @@ Madara::Knowledge_Engine::Knowledge_Base::get_id (void)
   *                      range.
   * @return              entries in the resulting vector
   **/
-unsigned int
+size_t
 Madara::Knowledge_Engine::Knowledge_Base::to_vector (
                               const std::string & subject,
                               unsigned int start,
@@ -435,7 +435,7 @@ Madara::Knowledge_Engine::Knowledge_Base::to_vector (
   *                      and the Knowledge Records they correspond to
   * @return              entries in the resulting map
   **/
-unsigned int
+size_t
 Madara::Knowledge_Engine::Knowledge_Base::to_map (
   const std::string & expression,
   std::map <std::string, Knowledge_Record> & target)

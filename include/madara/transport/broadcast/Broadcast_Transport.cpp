@@ -188,7 +188,7 @@ Madara::Transport::Broadcast_Transport::send_data (
   }
 
   // only 1 update in a send_data message
-  header->updates = updates.size ();
+  header->updates = uint32_t (updates.size ());
 
   // compute size of this header
   header->size = header->encoded_size ();
@@ -258,8 +258,8 @@ Madara::Transport::Broadcast_Transport::send_data (
   
     if (addresses_.size () > 0)
     {
-      int bytes_sent = socket_.send(
-        buffer, size, addresses_[0]);
+      ssize_t bytes_sent = socket_.send(
+        buffer, (ssize_t)size, addresses_[0]);
 
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport::send_data:" \

@@ -154,7 +154,7 @@ Madara::Knowledge_Record::set_value (const std::string & new_value)
   status_ = MODIFIED;
 
   // create a new char array and copy over the string
-  size_ = new_value.length () + 1;
+  size_ = uint32_t (new_value.length () + 1);
   char * temp = new char [size_];
   strncpy (temp, new_value.c_str (), size_ - 1);
   temp[size_ - 1] = 0;
@@ -170,7 +170,7 @@ Madara::Knowledge_Record::set_xml (const char * new_value, size_t size)
   status_ = MODIFIED;
 
   // create a new char array and copy over the string
-  size_ = size + 1;
+  size_ = uint32_t (size + 1);
   char * temp = new char [size_];
   strncpy (temp, new_value, size_ - 1);
   temp[size_ - 1] = 0;
@@ -186,7 +186,7 @@ Madara::Knowledge_Record::set_text (const char * new_value, size_t size)
   status_ = MODIFIED;
 
   // create a new char array and copy over the string
-  size_ = size + 1;
+  size_ = uint32_t (size + 1);
   char * temp = new char [size_];
   strncpy (temp, new_value, size_ - 1);
   temp[size_ - 1] = 0;
@@ -203,7 +203,7 @@ Madara::Knowledge_Record::set_jpeg (const unsigned char * new_value,
   status_ = MODIFIED;
 
   // create a new char array and copy over the string
-  size_ = size;
+  size_ = uint32_t (size);
   unsigned char * temp = new unsigned char [size_];
   memcpy (temp, new_value, size_);
   file_value_ = temp;
@@ -219,7 +219,7 @@ Madara::Knowledge_Record::set_file (const unsigned char * new_value,
   status_ = MODIFIED;
 
   // create a new char array and copy over the string
-  size_ = size;
+  size_ = uint32_t (size);
   unsigned char * temp = new unsigned char [size_];
   memcpy (temp, new_value, size_);
   file_value_ = temp;
@@ -262,7 +262,7 @@ Madara::Knowledge_Record::set_value (const std::vector <Integer> & new_value)
   type_ = INTEGER_ARRAY;
   status_ = MODIFIED;
 
-  size_ = new_value.size ();
+  size_ = uint32_t (new_value.size ());
   Integer * temp_array = new Integer [new_value.size ()];
 
   for (unsigned int i = 0; i < new_value.size (); ++i)
@@ -308,7 +308,7 @@ Madara::Knowledge_Record::set_value (const std::vector <double> & new_value)
   type_ = DOUBLE_ARRAY;
   status_ = MODIFIED;
 
-  size_ = new_value.size ();
+  size_ = uint32_t (new_value.size ());
   double * temp_array = new double [new_value.size ()];
 
   for (unsigned int i = 0; i < new_value.size (); ++i)

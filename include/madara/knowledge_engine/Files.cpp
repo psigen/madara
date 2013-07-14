@@ -108,12 +108,12 @@ Madara::Knowledge_Engine::Files::read_file (
 }
 
 /// Write a file from the knowledge base to a specified location
-int 
+ssize_t 
 Madara::Knowledge_Engine::Files::write_file (
   const std::string & knowledge_key, const std::string & filename)
 {
   // return value for function
-  int ret = 0;
+  ssize_t ret = 0;
 
   // Stringstreams for building the name of the files
   std::stringstream source_filename;
@@ -177,7 +177,7 @@ Madara::Knowledge_Engine::Files::write_file (
 }
 
 /// Write a memory buffer to file
-int 
+ssize_t 
 Madara::Knowledge_Engine::Files::write_file (const char * filename, 
                      void *& buffer, size_t & size)
 {
