@@ -77,6 +77,6 @@ namespace Madara
     };
   }
 }
-#include "madara/utility/Scoped_Array.cpp"
+#include "madara/utility/Scoped_Array.inl"
 
 #endif /* _MADARA_UTILITY_SCOPED_ARRAY_H_ */

@@ -42,7 +42,11 @@ void
 Madara::Utility::Scoped_Array<T>::operator= (T *ptr)
 {
   decrement ();
-  ptr_ = new Shim (ptr);
+
+  if (ptr)
+    ptr_ = new Shim (ptr);
+  else
+    ptr_ = 0;
 }
 
   /// assignment operator
@@ -90,14 +94,14 @@ void
 Madara::Utility::Scoped_Array<T>::decrement (void)
 {
   if (ptr_)
+  {
+    --ptr_->refcount_;
+    if (ptr_->refcount_ <= 0)
     {
-      --ptr_->refcount_;
-      if (ptr_->refcount_ <= 0)
-        {
-          delete ptr_;
-          ptr_ = 0;
-        }
+      delete ptr_;
+      ptr_ = 0;
     }
+  }
 }
 
 template <typename T>

@@ -157,7 +157,7 @@ namespace Madara
         compile (const std::string & expression);
 
       /**
-       * Sets a knowledge value to a specified value
+       * Sets a knowledge variable to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
@@ -172,7 +172,37 @@ namespace Madara
           Eval_Settings ());
        
       /**
-       * Sets a knowledge value to a specified value
+       * Sets a knowledge variable to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           array of integers to set at the location
+       * @param size            number of elements in the array
+       * @param settings        settings for applying the update
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set (const std::string & key,
+        const Madara::Knowledge_Record::Integer * value,
+        uint32_t size,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+       
+      /**
+       * Sets a knowledge variable to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           array of integers to set at the location
+       * @param settings        settings for applying the update
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set (const std::string & key,
+        const std::vector <Knowledge_Record::Integer> & value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+       
+      /**
+       * Sets a knowledge variable to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location
@@ -183,9 +213,39 @@ namespace Madara
       int set (const std::string & key, double value, 
         const Eval_Settings & settings =
           Eval_Settings ());
-      
+       
       /**
-       * Sets a knowledge value to a specified value
+       * Sets a knowledge variable to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           array of doubles to set at the location
+       * @param size            number of elements in the array
+       * @param settings        settings for applying the update
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set (const std::string & key,
+        const double * value,
+        uint32_t size,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+       
+      /**
+       * Sets a knowledge variable to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param value           array of doubles to set at the location
+       * @param settings        settings for applying the update
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set (const std::string & key,
+        const std::vector <double> & value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+        
+      /**
+       * Sets a knowledge variable to a specified value
        *
        * @param key             knowledge variable location
        * @param value           value to set at location

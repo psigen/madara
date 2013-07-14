@@ -10,181 +10,83 @@
 #include <stdlib.h>
 
 Madara::Knowledge_Record::Knowledge_Record ()
-      : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
         quality (0), write_quality (0),
-        size_ (sizeof (Integer)), type_ (INTEGER), int_value_ (0)
+        int_value_ (0), type_ (0)
 {
 }
 
 Madara::Knowledge_Record::Knowledge_Record (Integer value)
-      : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0),
-        size_ (sizeof (Integer)), type_ (INTEGER), int_value_ (value)
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0)
 {
+  set_value (value);
+}
+
+Madara::Knowledge_Record::Knowledge_Record (
+  const std::vector <Integer> & value)
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0)
+{
+  set_value (value);
 }
 
 Madara::Knowledge_Record::Knowledge_Record (double value)
-      : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0),
-        size_ (sizeof (Integer)), type_ (DOUBLE), double_value_ (value)
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0)
 {
+  set_value (value);
+}
+
+Madara::Knowledge_Record::Knowledge_Record (
+  const std::vector <double> & value)
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0)
+{
+  set_value (value);
 }
 
 Madara::Knowledge_Record::Knowledge_Record (const std::string & value)
-      : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0),
-        size_ (sizeof (Integer)), type_ (INTEGER)
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0)
 {
   set_value (value);
 }
 
 Madara::Knowledge_Record::Knowledge_Record (const char * value)
-      : status (UNCREATED), clock (0), scope (LOCAL_SCOPE),
-        quality (0), write_quality (0),
-        size_ (sizeof (Integer)), type_ (INTEGER)
+      : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
+        quality (0), write_quality (0)
 {
   set_value (std::string (value));
 }
 
 Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
-      : status (rhs.status), clock (rhs.clock),
+      : status_ (rhs.status_), clock (rhs.clock),
       scope (rhs.scope), quality (rhs.quality),
       write_quality (rhs.write_quality),
       size_ (rhs.size_), type_ (rhs.type_)
 {
-  if      (rhs.type_ == INTEGER)
-    int_value_ = rhs.int_value_;
-  else if (rhs.type_ == DOUBLE)
-    double_value_ = rhs.double_value_;
-  else if (rhs.is_string_type ())
-    str_value_ = rhs.str_value_;
-  else if (rhs.is_file_type ())
-    file_value_ = rhs.file_value_;
+  if      (status_ != UNCREATED)
+  {
+    if      (rhs.type_ == INTEGER)
+      int_value_ = rhs.int_value_;
+    else if (rhs.type_ == INTEGER_ARRAY)
+      int_array_ = rhs.int_array_;
+    else if (rhs.type_ == DOUBLE)
+      double_value_ = rhs.double_value_;
+    else if (rhs.type_ == DOUBLE_ARRAY)
+      double_array_ = rhs.double_array_;
+    else if (rhs.is_string_type ())
+      str_value_ = rhs.str_value_;
+    else if (rhs.is_file_type ())
+      file_value_ = rhs.file_value_;
+  }
 }
 
 Madara::Knowledge_Record::~Knowledge_Record ()
 {
 }
 
-
-void
-Madara::Knowledge_Record::clear_value (void)
-{
-  if (is_string_type ())
-    str_value_ = 0;
-  else if (is_file_type ())
-    file_value_ = 0;
-}
-
-
-// reset the value_ to an integer
-void  
-Madara::Knowledge_Record::reset_value (void)
-{
-  clear_value ();
-
-  type_ = INTEGER;
-  int_value_ = 0;
-  size_ = sizeof (int_value_);
-  quality = 0;
-  write_quality = 0;
-  clock = 0;
-}
-
-// set the value_ to a string
-void
-Madara::Knowledge_Record::set_value (const std::string & new_value)
-{
-  clear_value ();
-  type_ = STRING;
-
-  // create a new char array and copy over the string
-  size_ = new_value.length () + 1;
-  char * temp = new char [size_];
-  strncpy (temp, new_value.c_str (), size_ - 1);
-  temp[size_ - 1] = 0;
-  str_value_ = temp;
-}
-
-// set the value_ to a string
-void
-Madara::Knowledge_Record::set_xml (const char * new_value, size_t size)
-{
-  clear_value ();
-  type_ = XML;
-
-  // create a new char array and copy over the string
-  size_ = size + 1;
-  char * temp = new char [size_];
-  strncpy (temp, new_value, size_ - 1);
-  temp[size_ - 1] = 0;
-  str_value_ = temp;
-}
-
-// set the value_ to a string
-void
-Madara::Knowledge_Record::set_text (const char * new_value, size_t size)
-{
-  clear_value ();
-  type_ = TEXT_FILE;
-
-  // create a new char array and copy over the string
-  size_ = size + 1;
-  char * temp = new char [size_];
-  strncpy (temp, new_value, size_ - 1);
-  temp[size_ - 1] = 0;
-  str_value_ = temp;
-}
-
-// set the value_ to a string
-void
-Madara::Knowledge_Record::set_jpeg (const unsigned char * new_value,
-                                    size_t size)
-{
-  clear_value ();
-  type_ = IMAGE_JPEG;
-
-  // create a new char array and copy over the string
-  size_ = size;
-  unsigned char * temp = new unsigned char [size_];
-  memcpy (temp, new_value, size_);
-  file_value_ = temp;
-}
-
-// set the value_ to a string
-void
-Madara::Knowledge_Record::set_file (const unsigned char * new_value,
-                                    size_t size)
-{
-  clear_value ();
-  type_ = UNKNOWN_FILE_TYPE;
-
-  // create a new char array and copy over the string
-  size_ = size;
-  unsigned char * temp = new unsigned char [size_];
-  memcpy (temp, new_value, size_);
-  file_value_ = temp;
-}
-
-// set the value_ to an integer
-void
-Madara::Knowledge_Record::set_value (const Integer & new_value_)
-{
-  clear_value ();
-  type_ = INTEGER;
-  size_ = sizeof (int_value_);
-  int_value_ = new_value_;
-}
-
-// set the value_ to a double
-void
-Madara::Knowledge_Record::set_value (const double & new_value_)
-{
-  clear_value ();
-  type_ = DOUBLE;
-  size_ = sizeof (double_value_);
-  double_value_ = new_value_;
-}
 
 /**
   * reads an XML file from a string
@@ -229,6 +131,7 @@ Madara::Knowledge_Record::read_file (
         type_ = XML;
       else
         type_ = TEXT_FILE;
+      status_ = MODIFIED;
     }
     else
     {
@@ -239,6 +142,7 @@ Madara::Knowledge_Record::read_file (
         type_ = IMAGE_JPEG;
       else
         type_ = UNKNOWN_FILE_TYPE;
+      status_ = MODIFIED;
     }
 
     return 0;
@@ -276,94 +180,249 @@ Madara::Knowledge_Record::to_file (const std::string & filename) const
 double
 Madara::Knowledge_Record::to_double (void) const
 {
-  if (type_ != DOUBLE)
+  double value = 0;
+
+  if (status_ != UNCREATED)
   {
-    std::stringstream buffer;
-    double value;
+    if (type_ == DOUBLE)
+      value = double_value_;
+    else if (type_ == DOUBLE_ARRAY)
+      value = *(double_array_.get_ptr ());
+    else
+    {
+      std::stringstream buffer;
 
-    // read the value_ into a stringstream and then convert it to double
-    if (     type_ == INTEGER)
-      buffer << int_value_;
-    else if (is_string_type ())
-      buffer << str_value_.get_ptr ();
-    buffer >> value;
+      // read the value_ into a stringstream and then convert it to double
+      if (type_ == INTEGER)
+        buffer << int_value_;
+      else if (type_ == INTEGER_ARRAY)
+        buffer << *(int_array_.get_ptr ());
+      else if (is_string_type ())
+        buffer << str_value_.get_ptr ();
 
-    return value;
+      buffer >> value;
+    }
   }
-  else
-    return double_value_;
+
+  return value;
 }
 
 Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::to_integer (void) const
 {
-  if (type_ != INTEGER)
-  {
-    std::stringstream buffer;
-    Integer value;
+  Integer value (0);
 
-    // read the value_ into a stringstream and then convert it to double
-    if (     type_ == DOUBLE)
-      buffer << double_value_;
-    else if (is_string_type ())
-      buffer << str_value_.get_ptr ();
-    buffer >> value;
-    
-    return value;
+  if (status_ != UNCREATED)
+  {
+    if (type_ == INTEGER)
+      value = int_value_;
+    else if (type_ == INTEGER_ARRAY)
+      value = *(int_array_.get_ptr ());
+    else
+    {
+      std::stringstream buffer;
+
+      // read the value_ into a stringstream and then convert it to double
+      if (type_ == DOUBLE)
+        buffer << double_value_;
+      else if (type_ == DOUBLE_ARRAY)
+        buffer << *(double_array_.get_ptr ());
+      else if (is_string_type ())
+        buffer << str_value_.get_ptr ();
+
+      buffer >> value;
+    }
   }
-  else
-    return int_value_;
+  
+  return value;
+}
+
+std::vector <Madara::Knowledge_Record::Integer>
+Madara::Knowledge_Record::to_integers (void) const
+{
+  std::vector <Integer> integers;
+
+  if (status_ != UNCREATED)
+  {
+    unsigned int size = (unsigned int) size_;
+    integers.resize (size);
+    if (type_ == INTEGER)
+      integers[0] = int_value_;
+    else if (type_ == INTEGER_ARRAY)
+    {
+      const Integer * ptr_temp = int_array_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        integers[i] = *ptr_temp;
+    }
+    else if (type_ == DOUBLE)
+      integers[0] = Integer (double_value_);
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      const double * ptr_temp = double_array_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        integers[i] = Integer (*ptr_temp);
+    }
+    else if (is_string_type ())
+    {
+      const char * ptr_temp = str_value_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        integers[i] = Integer (*ptr_temp);
+    }
+    else if (is_file_type ())
+    {
+      const unsigned char * ptr_temp = file_value_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        integers[i] = Integer (*ptr_temp);
+    }
+  }
+
+  return integers;
+}
+
+std::vector <double>
+Madara::Knowledge_Record::to_doubles (void) const
+{
+  std::vector <double> doubles;
+
+  if (status_ != UNCREATED)
+  {
+    unsigned int size = (unsigned int) size_;
+    doubles.resize (size);
+
+    if      (type_ == INTEGER)
+      doubles[0] = double (int_value_);
+    else if (type_ == INTEGER_ARRAY)
+    {
+      const Integer * ptr_temp = int_array_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        doubles[i] = double (*ptr_temp);
+    }
+    else if (type_ == DOUBLE)
+      doubles[0] = double_value_;
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      const double * ptr_temp = double_array_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        doubles[i] = *ptr_temp;
+    }
+    else if (is_string_type ())
+    {
+      const char * ptr_temp = str_value_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        doubles[i] = double (*ptr_temp);
+    }
+    else if (is_file_type ())
+    {
+      const unsigned char * ptr_temp = file_value_.get_ptr ();
+
+      for (unsigned int i = 0; i < size; ++i)
+        doubles[i] = double (*ptr_temp);
+    }
+  }
+
+  return doubles;
 }
 
 // read the value_ in a string format
 std::string
-Madara::Knowledge_Record::to_string (void) const
+Madara::Knowledge_Record::to_string (const std::string & delimiter) const
 {
-  if (!is_string_type ())
+  if (status_ != UNCREATED)
   {
-    std::stringstream buffer;
+    if (!is_string_type ())
+    {
+      std::stringstream buffer;
     
-    if (     type_ == INTEGER)
-      buffer << int_value_;
-    else if (type_ == DOUBLE)
-      buffer << double_value_;
-    return buffer.str ();
+      if      (type_ == INTEGER)
+        buffer << int_value_;
+      else if (type_ == INTEGER_ARRAY)
+      {
+        const Integer * ptr_temp = int_array_.get_ptr ();
+
+        if (size_ >= 1)
+          buffer << *ptr_temp;
+
+        ++ptr_temp;
+
+        for (uint32_t i = 1; i < size_; ++i, ++ptr_temp)
+          buffer << delimiter << *ptr_temp; 
+      }
+      else if (type_ == DOUBLE)
+        buffer << double_value_;
+      else if (type_ == DOUBLE_ARRAY)
+      {
+        const double * ptr_temp = double_array_.get_ptr ();
+
+        if (size_ >= 1)
+          buffer << *ptr_temp;
+
+        ++ptr_temp;
+
+        for (uint32_t i = 1; i < size_; ++i, ++ptr_temp)
+          buffer << delimiter << *ptr_temp; 
+      }
+      return buffer.str ();
+    }
+    else
+      return std::string (str_value_.get_ptr ());
   }
   else
-    return std::string (str_value_.get_ptr ());
+    return "";
 }
 
 // read the value_ in a string format
 unsigned char *
-Madara::Knowledge_Record::to_unmanaged_buffer (void)
+Madara::Knowledge_Record::to_unmanaged_buffer (unsigned int & size)
 {
-  unsigned char * buffer = new unsigned char [size_];
+  if (status_ != UNCREATED)
+  {
+    unsigned char * buffer = new unsigned char [size_];
 
-  if (is_string_type ())
-  {
-    memcpy (buffer, str_value_.get_ptr (), size_);
-  }
-  else if (is_file_type ())
-  {
-    memcpy (buffer, file_value_.get_ptr (), size_);
+    if (is_string_type ())
+    {
+      memcpy (buffer, str_value_.get_ptr (), size_);
+    }
+    else if (is_file_type ())
+    {
+      memcpy (buffer, file_value_.get_ptr (), size_);
+    }
+    else if (type_ == INTEGER)
+    {
+      memcpy (buffer, &int_value_, sizeof(Integer) * size_);
+    }
+    else if (type_ == DOUBLE)
+    {
+      memcpy (buffer, &double_value_, sizeof(double) * size_);
+    }
+    else if (type_ == INTEGER_ARRAY)
+    {
+      memcpy (buffer, int_array_.get_ptr (), sizeof(Integer) * size_);
+    }
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      memcpy (buffer, double_array_.get_ptr (), sizeof(double) * size_);
+    }
+
+    return buffer;
   }
   else
-  {
-    /**
-     * because we use a union of the int and double representations,
-     * this actually works
-     **/
-    memcpy (buffer, &int_value_, size_);
-  }
-
-  return buffer;
+    return 0;
 }
 
 
 Madara::Knowledge_Record
 Madara::Knowledge_Record::fragment (unsigned int first, unsigned int last)
 {
-  if (first <= last)
+  Knowledge_Record ret;
+
+  if (first <= last && status_ != UNCREATED)
   {
     if (is_string_type ())
     {
@@ -376,7 +435,7 @@ Madara::Knowledge_Record::fragment (unsigned int first, unsigned int last)
       memcpy (new_buffer, str_value_.get_ptr () + first, last - first + 1);
       new_buffer[last-first + 1] = 0;
 
-      return new_buffer;
+      ret.set_value (new_buffer);
     }
     else if (is_file_type ())
     {
@@ -390,24 +449,41 @@ Madara::Knowledge_Record::fragment (unsigned int first, unsigned int last)
       memcpy (new_buffer, file_value_.get_ptr () + first, last - first + 1);
 
       // create a new record with the unsigned char buffer as contents
-      Knowledge_Record ret_value;
-      ret_value.set_file (new_buffer, size);
-      return ret_value;
+      ret.set_file (new_buffer, size);
     }
-    else if (type_ == INTEGER)
+    else if (type_ == INTEGER_ARRAY)
     {
       // make sure last is accessible in the data type
       last = std::min <unsigned int> (last, size_ - 1);
       uint32_t size = last - first + 1;
 
-      Integer new_value;
-      memcpy (&new_value, &int_value_ + first, size);
+      std::vector <Integer> integers;
+      integers.resize (size);
+      Integer * ptr_temp = int_array_.get_ptr ();
 
-      return new_value;
+      for (unsigned int i = first; i <= last; ++i, ++ptr_temp)
+        integers[i] = *ptr_temp;
+
+      ret.set_value (integers);
+    }
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      // make sure last is accessible in the data type
+      last = std::min <unsigned int> (last, size_ - 1);
+      uint32_t size = last - first + 1;
+
+      std::vector <double> doubles;
+      doubles.resize (size);
+      double * ptr_temp = double_array_.get_ptr ();
+
+      for (unsigned int i = first; i <= last; ++i, ++ptr_temp)
+        doubles[i] = *ptr_temp;
+
+      ret.set_value (doubles);
     }
   }
 
-  return Integer (0);
+  return ret;
 }
 
 Madara::Knowledge_Record
@@ -416,28 +492,26 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
   Madara::Knowledge_Record record;
 
   // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    if (rhs.is_string_type ())
+    Integer lhs = this->to_integer ();
+
+    if (rhs.is_double_type () || rhs.is_string_type ())
     {
-      // when comparing strings to anything else, convert the
-      // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = int_value_ < temp;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs < other));
     }
-
-    // integer to double comparison
-    else if (rhs.type_ == DOUBLE)
-      record.int_value_ = int_value_ < rhs.double_value_;
-
-    // default is the int_value comparison
-    else
-      record.int_value_ = int_value_ < rhs.int_value_;
+    else if (rhs.is_integer_type ())
+    {
+      Integer other = rhs.to_integer ();
+    
+      record.set_value (Integer (
+        lhs < other));
+    }
   }
+
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -445,64 +519,59 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.int_value_ = 
+      record.set_value (Integer (
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) < 0;
+        size () >= rhs.size () ? size () : rhs.size ()) < 0));
     }
     
     // string to double comparison
-    else if (rhs.type_ == DOUBLE)
+    else if (rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp < rhs.double_value_;
+      double temp = to_double ();
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        temp < other));
     }
-
+    
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp < rhs.int_value_;
+      Integer temp = to_integer ();
+      Integer other = rhs.to_integer ();
+      
+      record.set_value (Integer (
+        temp < other));
     }
   }
 
   // if the left hand side is a double
-  else if (type_ == DOUBLE)
+  else if (is_double_type ())
   {
+    double lhs = to_double ();
+
     // string to string comparison
-    if      (rhs.is_string_type ())
+    if      (rhs.is_string_type () || rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
 
-      record.int_value_ = double_value_ < temp;
-    }
-
-    // string to double comparison
-    else if (rhs.type_ == DOUBLE)
-    {
-      record.int_value_ = double_value_ < rhs.double_value_;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs < other));
     }
 
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
-      record.int_value_ = double_value_ < rhs.int_value_;
+      Integer other = rhs.to_integer ();
+      record.set_value (Integer (
+        lhs < other));
     }
   }
 
@@ -515,30 +584,26 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
   Madara::Knowledge_Record record;
 
   // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    // for string comparisons against integers, assume the user
-    // means the length of the string
-    if (rhs.is_string_type ())
+    Integer lhs = this->to_integer ();
+
+    if (rhs.is_double_type () || rhs.is_string_type ())
     {
-      // when comparing strings to anything else, convert the
-      // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = int_value_ <= temp;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs <= other));
     }
-
-    // integer to double comparison
-    else if (rhs.type_ == DOUBLE)
-      record.int_value_ = int_value_ <= rhs.double_value_;
-
-    // default is the int_value comparison
-    else
-      record.int_value_ = int_value_ <= rhs.int_value_;
+    else if (rhs.is_integer_type ())
+    {
+      Integer other = rhs.to_integer ();
+    
+      record.set_value (Integer (
+        lhs <= other));
+    }
   }
+
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -546,64 +611,59 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.int_value_ = 
+      record.set_value (Integer (
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) <= 0;
+        size () >= rhs.size () ? size () : rhs.size ()) <= 0));
     }
     
     // string to double comparison
-    else if (rhs.type_ == DOUBLE)
+    else if (rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp <= rhs.double_value_;
+      double temp = to_double ();
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        temp <= other));
     }
-
+    
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp <= rhs.int_value_;
+      Integer temp = to_integer ();
+      Integer other = rhs.to_integer ();
+      
+      record.set_value (Integer (
+        temp <= other));
     }
   }
 
   // if the left hand side is a double
-  else if (type_ == DOUBLE)
+  else if (is_double_type ())
   {
+    double lhs = to_double ();
+
     // string to string comparison
-    if      (rhs.is_string_type ())
+    if      (rhs.is_string_type () || rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
 
-      record.int_value_ = double_value_ <= temp;
-    }
-
-    // string to double comparison
-    else if (rhs.type_ == DOUBLE)
-    {
-      record.int_value_ = double_value_ <= rhs.double_value_;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs <= other));
     }
 
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
-      record.int_value_ = double_value_ <= rhs.int_value_;
+      Integer other = rhs.to_integer ();
+      record.set_value (Integer (
+        lhs <= other));
     }
   }
 
@@ -616,30 +676,26 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
   Madara::Knowledge_Record record;
 
   // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    // for string comparisons against integers, assume the user
-    // means the length of the string
-    if (rhs.is_string_type ())
+    Integer lhs = this->to_integer ();
+
+    if (rhs.is_double_type () || rhs.is_string_type ())
     {
-      // when comparing strings to anything else, convert the
-      // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = int_value_ == temp;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs == other));
     }
-
-    // integer to double comparison
-    else if (rhs.type_ == DOUBLE)
-      record.int_value_ = int_value_ == rhs.double_value_;
-
-    // default is the int_value comparison
-    else
-      record.int_value_ = int_value_ == rhs.int_value_;
+    else if (rhs.is_integer_type ())
+    {
+      Integer other = rhs.to_integer ();
+    
+      record.set_value (Integer (
+        lhs == other));
+    }
   }
+
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -647,64 +703,59 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.int_value_ = 
+      record.set_value (Integer (
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) == 0;
+        size () >= rhs.size () ? size () : rhs.size ()) == 0));
     }
     
     // string to double comparison
-    else if (rhs.type_ == DOUBLE)
+    else if (rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp == rhs.double_value_;
+      double temp = to_double ();
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        temp == other));
     }
-
+    
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp == rhs.int_value_;
+      Integer temp = to_integer ();
+      Integer other = rhs.to_integer ();
+      
+      record.set_value (Integer (
+        temp == other));
     }
   }
 
   // if the left hand side is a double
-  else if (type_ == DOUBLE)
+  else if (is_double_type ())
   {
+    double lhs = to_double ();
+
     // string to string comparison
-    if      (rhs.is_string_type ())
+    if      (rhs.is_string_type () || rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
 
-      record.int_value_ = double_value_ == temp;
-    }
-
-    // string to double comparison
-    else if (rhs.type_ == DOUBLE)
-    {
-      record.int_value_ = double_value_ == rhs.double_value_;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs == other));
     }
 
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
-      record.int_value_ = double_value_ == rhs.int_value_;
+      Integer other = rhs.to_integer ();
+      record.set_value (Integer (
+        lhs == other));
     }
   }
 
@@ -716,10 +767,16 @@ Madara::Knowledge_Record::operator== (Integer value) const
 {
   // for this type of comparison, we can only be equal if we are the same
   // base type
-  if (type_ == INTEGER)
-    return int_value_ == value;
-  else
-    return false;
+  if (is_integer_type ())
+  {
+    return to_integer () == value;
+  }
+  else if (is_double_type () || is_string_type ())
+  {
+    return to_double () == value;
+  }
+  
+  return false;
 }
 
 bool
@@ -727,29 +784,28 @@ Madara::Knowledge_Record::operator== (double value) const
 {
   // for this type of comparison, we can only be equal if we are the same
   // base type
-  if (type_ == DOUBLE)
-    return double_value_ == value;
-  else
-    return false;
+  if (is_integer_type ())
+  {
+    return to_integer () == value;
+  }
+  else if (is_double_type () || is_string_type ())
+  {
+    return to_double () == value;
+  }
+  
+  return false;
 }
 
 bool
 Madara::Knowledge_Record::operator== (const std::string & value) const
 {
-  // for this type of comparison, we can only be equal if we are the same
-  // base type
-  if (is_string_type ())
-    return strncmp (
-      str_value_.get_ptr (), value.c_str (),
-      size () >= value.size () ? size () : value.size ()) == 0;
-  else
-    return false;
+  return to_string () == value;
 }
 
 bool
 Madara::Knowledge_Record::operator== (const char * value) const
 {
-  return *this == std::string (value);
+  return to_string () == std::string (value);
 }
 
 Madara::Knowledge_Record  
@@ -792,10 +848,9 @@ Madara::Knowledge_Record::operator! (void) const
 {
   Madara::Knowledge_Record record;
   
-  record.int_value_ = !is_true ();
+  record.set_value (Integer (
+    !is_true ()));
   
-  record.type_ = INTEGER;
-
   return record;
 }
 
@@ -807,10 +862,10 @@ Madara::Knowledge_Record
 {
   Madara::Knowledge_Record record (*this);
 
-  if (type_ == INTEGER)
-    record.int_value_ = -record.int_value_;
-  else if (type_ == DOUBLE)
-    record.double_value_ = -record.double_value_;
+  if (is_integer_type ())
+    record.set_value (-to_integer ());
+  else if (is_double_type ())
+    record.set_value (-to_double ());
 
   return record;
 }
@@ -821,30 +876,26 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
   Madara::Knowledge_Record record;
 
   // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    // for string comparisons against integers, assume the user
-    // means the length of the string
-    if (rhs.is_string_type ())
+    Integer lhs = this->to_integer ();
+
+    if (rhs.is_double_type () || rhs.is_string_type ())
     {
-      // when comparing strings to anything else, convert the
-      // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = int_value_ > temp;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs > other));
     }
-
-    // integer to double comparison
-    else if (rhs.type_ == DOUBLE)
-      record.int_value_ = int_value_ > rhs.double_value_;
-
-    // default is the int_value comparison
-    else
-      record.int_value_ = int_value_ > rhs.int_value_;
+    else if (rhs.is_integer_type ())
+    {
+      Integer other = rhs.to_integer ();
+    
+      record.set_value (Integer (
+        lhs > other));
+    }
   }
+
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -852,64 +903,59 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.int_value_ = 
-        strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (),
-          size () >= rhs.size () ? size () : rhs.size ()) > 0;
+      record.set_value (Integer (
+        strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
+        size () >= rhs.size () ? size () : rhs.size ()) > 0));
     }
     
     // string to double comparison
-    else if (rhs.type_ == DOUBLE)
+    else if (rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp > rhs.double_value_;
+      double lhs = to_double ();
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs > other));
     }
-
+    
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp > rhs.int_value_;
+      Integer lhs = to_integer ();
+      Integer other = rhs.to_integer ();
+      
+      record.set_value (Integer (
+        lhs > other));
     }
   }
 
   // if the left hand side is a double
-  else if (type_ == DOUBLE)
+  else if (is_double_type ())
   {
+    double lhs = to_double ();
+
     // string to string comparison
-    if      (rhs.is_string_type ())
+    if      (rhs.is_string_type () || rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
 
-      record.int_value_ = double_value_ > temp;
-    }
-
-    // string to double comparison
-    else if (rhs.type_ == DOUBLE)
-    {
-      record.int_value_ = double_value_ > rhs.double_value_;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs > other));
     }
 
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
-      record.int_value_ = double_value_ > rhs.int_value_;
+      Integer other = rhs.to_integer ();
+      record.set_value (Integer (
+        lhs > other));
     }
   }
 
@@ -922,30 +968,26 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
   Madara::Knowledge_Record record;
 
   // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    // for string comparisons against integers, assume the user
-    // means the length of the string
-    if (rhs.is_string_type ())
+    Integer lhs = this->to_integer ();
+
+    if (rhs.is_double_type () || rhs.is_string_type ())
     {
-      // when comparing strings to anything else, convert the
-      // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = int_value_ >= temp;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs >= other));
     }
-
-    // integer to double comparison
-    else if (rhs.type_ == DOUBLE)
-      record.int_value_ = int_value_ >= rhs.double_value_;
-
-    // default is the int_value comparison
-    else
-      record.int_value_ = int_value_ >= rhs.int_value_;
+    else if (rhs.is_integer_type ())
+    {
+      Integer other = rhs.to_integer ();
+    
+      record.set_value (Integer (
+        lhs >= other));
+    }
   }
+
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -953,64 +995,59 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.int_value_ =  
-        strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (),
-          size () >= rhs.size () ? size () : rhs.size ()) >= 0;
+      record.set_value (Integer (
+        strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
+        size () >= rhs.size () ? size () : rhs.size ()) >= 0));
     }
     
     // string to double comparison
-    else if (rhs.type_ == DOUBLE)
+    else if (rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp >= rhs.double_value_;
+      double lhs = to_double ();
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs >= other));
     }
-
+    
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << str_value_.get_ptr ();
-      buffer >> temp;
-
-      record.int_value_ = temp >= rhs.int_value_;
+      Integer lhs = to_integer ();
+      Integer other = rhs.to_integer ();
+      
+      record.set_value (Integer (
+        lhs >= other));
     }
   }
 
   // if the left hand side is a double
-  else if (type_ == DOUBLE)
+  else if (is_double_type ())
   {
+    double lhs = to_double ();
+
     // string to string comparison
-    if      (rhs.is_string_type ())
+    if      (rhs.is_string_type () || rhs.is_double_type ())
     {
       // when comparing strings to anything else, convert the
       // value into a double for maximum precision
-      double temp;
-      std::stringstream buffer;
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> temp;
 
-      record.int_value_ = double_value_ >= temp;
-    }
-
-    // string to double comparison
-    else if (rhs.type_ == DOUBLE)
-    {
-      record.int_value_ = double_value_ >= rhs.double_value_;
+      double other = rhs.to_double ();
+      
+      record.set_value (Integer (
+        lhs >= other));
     }
 
     // default is string to integer comparison
-    else
+    else if (rhs.is_integer_type ())
     {
-      record.int_value_ = double_value_ >= rhs.int_value_;
+      Integer other = rhs.to_integer ();
+      record.set_value (Integer (
+        lhs >= other));
     }
   }
 
@@ -1026,22 +1063,29 @@ Madara::Knowledge_Record::operator= (const Knowledge_Record & rhs)
   // clear any dynamic memory being used on the left hand side
   clear_value ();
 
-  // set the instance properties accordingly
-  clock = rhs.clock;
-  quality = rhs.quality;
-  scope = rhs.scope;
-  status = rhs.status;
-  type_ = rhs.type_;
-  size_ = rhs.size_;
+  if (rhs.status_ != UNCREATED)
+  {
+    // set the instance properties accordingly
+    clock = rhs.clock;
+    quality = rhs.quality;
+    scope = rhs.scope;
+    status_ = rhs.status_;
+    size_ = rhs.size_;
+    type_ = rhs.type_;
 
-  if (is_string_type ())
-    str_value_ = rhs.str_value_;
-  else if (type_ == INTEGER)
-    this->int_value_ = rhs.int_value_;
-  else if (type_ == DOUBLE)
-    this->double_value_ = rhs.double_value_;
-  else if (is_file_type ())
-    file_value_ = rhs.file_value_;
+    if (is_string_type ())
+      str_value_ = rhs.str_value_;
+    else if (type_ == INTEGER)
+      int_value_ = rhs.int_value_;
+    else if (type_ == INTEGER_ARRAY)
+      int_array_ = rhs.int_array_;
+    else if (type_ == DOUBLE)
+      double_value_ = rhs.double_value_;
+    else if (type_ == DOUBLE_ARRAY)
+      double_array_ = rhs.double_array_;
+    else if (is_file_type ())
+      file_value_ = rhs.file_value_;
+  }
 
   return *this;
 }
@@ -1052,110 +1096,19 @@ Madara::Knowledge_Record::operator= (const Knowledge_Record & rhs)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator+= (const Knowledge_Record & rhs)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    if (rhs.is_string_type ())
-    {
-      std::stringstream buffer;
-      type_ = STRING;
-
-      buffer << int_value_;
-      buffer << rhs.str_value_.get_ptr ();
-      size_ = buffer.str ().size () + 1;
-      str_value_ = new char [size_];
-      strncpy (str_value_.get_ptr (), buffer.str ().c_str (), size_ - 1);
-      str_value_.get_ptr () [size_ - 1] = 0;
-    }
-
-    else if (rhs.type_ == DOUBLE)
-    {
-      // to save precision, convert our type to a double and
-      // initialize ourselves appropriately
-      type_ = DOUBLE;
-      double_value_ = (double) int_value_;
-      double_value_ += rhs.double_value_;
-    }
-
-    // default is the int_value comparison
+    if (rhs.is_integer_type ())
+      set_value (to_integer () + rhs.to_integer ());
     else
-      int_value_ += rhs.int_value_;
+      set_value (to_integer () + rhs.to_double ());
   }
+  else if (is_double_type ())
+    set_value (to_double () + rhs.to_double ());
 
-  // if the left hand side is a string
   else if (is_string_type ())
-  {
-    // string to string comparison
-    if      (rhs.is_string_type ())
-    {
-      std::stringstream buffer;
+    set_value (to_string () + rhs.to_string ());
 
-      buffer << str_value_.get_ptr ();
-      buffer << rhs.str_value_.get_ptr ();
-      size_ = buffer.str ().size () + 1;
-      str_value_ = new char [size_];
-      strncpy (str_value_.get_ptr (), buffer.str ().c_str (), size_ - 1);
-      str_value_.get_ptr () [size_ - 1] = 0;
-    }
-
-    // string to double comparison
-    else if (rhs.type_ == DOUBLE)
-    {
-      std::stringstream buffer;
-
-      buffer << str_value_.get_ptr ();
-      buffer << rhs.double_value_;
-      size_ = buffer.str ().size () + 1;
-      str_value_ = new char [size_];
-      strncpy (str_value_.get_ptr (), buffer.str ().c_str (), size_ - 1);
-      str_value_.get_ptr () [size_ - 1] = 0;
-    }
-
-    // default is string to integer comparison
-    else
-    {
-      std::stringstream buffer;
-
-      buffer << str_value_.get_ptr ();
-      buffer << rhs.int_value_;
-      size_ = buffer.str ().size () + 1;
-      str_value_ = new char [size_];
-      strncpy (str_value_.get_ptr (), buffer.str ().c_str (), size_ - 1);
-      str_value_.get_ptr () [size_ - 1] = 0;
-    }
-  }
-
-  // if the left hand side is a double
-  else if (type_ == DOUBLE)
-  {
-    // string subtracted from a double
-    if      (rhs.is_string_type ())
-    {
-      std::stringstream buffer;
-      double   rhs_value;
-      type_ = STRING;
-
-      buffer << rhs.str_value_.get_ptr ();
-      buffer >> rhs_value;
-      
-      size_ = buffer.str ().size () + 1;
-      str_value_ = new char [size_];
-      strncpy (str_value_.get_ptr (), buffer.str ().c_str (), size_ - 1);
-      str_value_.get_ptr () [size_ - 1] = 0;
-    }
-
-    // double subtracted from a double
-    else if (rhs.type_ == DOUBLE)
-    {
-      double_value_ += rhs.double_value_;
-    }
-
-    // an integer subtracted from a double retains precision
-    else
-    {
-      double_value_ += rhs.int_value_;
-    }
-  }
   return *this;
 }
      
@@ -1165,17 +1118,11 @@ Madara::Knowledge_Record::operator+= (const Knowledge_Record & rhs)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator-- (void)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER)
-  {
-    --int_value_;
-  }
+  if (is_integer_type ())
+    set_value (to_integer () - 1);
 
-  // if the left hand side is a double
-  else if (type_ == DOUBLE)
-  {
-    --double_value_;
-  }
+  else if (is_double_type ())
+    set_value (to_double () - 1);
 
   return *this;
 }
@@ -1186,17 +1133,12 @@ Madara::Knowledge_Record::operator-- (void)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator++ (void)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER)
-  {
-    ++int_value_;
-  }
+  if (is_integer_type ())
+    set_value (to_integer () + 1);
 
-  // if the left hand side is a double
-  else if (type_ == DOUBLE)
-  {
-    ++double_value_;
-  }
+  else if (is_double_type ())
+    set_value (to_double () + 1);
+
 
   return *this;
 }
@@ -1207,38 +1149,15 @@ Madara::Knowledge_Record::operator++ (void)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator-= (const Knowledge_Record & rhs)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    if (rhs.type_ == INTEGER)
-    {
-      int_value_ -= rhs.int_value_;
-    }
-    else if (rhs.type_ == DOUBLE)
-    {
-      // to save precision, convert our type to a double and
-      // initialize ourselves appropriately
-      type_ = DOUBLE;
-      double_value_ = (double) int_value_;
-      double_value_ -= rhs.double_value_;
-    }
+    if (rhs.is_integer_type ())
+      set_value (to_integer () - rhs.to_integer ());
+    else
+      set_value (to_integer () - rhs.to_double ());
   }
-
-  // if the left hand side is a double
-  else if (type_ == DOUBLE)
-  {
-    // string to string comparison
-    if      (rhs.type_ == INTEGER)
-    {
-      double_value_ -= rhs.int_value_;
-    }
-
-    // double subtracted from a double
-    else if (rhs.type_ == DOUBLE)
-    {
-      double_value_ -= rhs.double_value_;
-    }
-  }
+  else if (is_double_type () || is_string_type ())
+    set_value (to_double () - rhs.to_double ());
 
   return *this;
 }
@@ -1249,38 +1168,16 @@ Madara::Knowledge_Record::operator-= (const Knowledge_Record & rhs)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator*= (const Knowledge_Record & rhs)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    // default is the int_value comparison
-    if      (rhs.type_ == INTEGER)
-      int_value_ *= rhs.int_value_;
-    else if (rhs.type_ == DOUBLE)
-    {
-      // to save precision, convert our type to a double and
-      // initialize ourselves appropriately
-      type_ = DOUBLE;
-      double_value_ = (double) int_value_;
-      double_value_ *= rhs.double_value_;
-    }
-
+    if (rhs.is_integer_type ())
+      set_value (to_integer () * rhs.to_integer ());
+    else
+      set_value (to_integer () * rhs.to_double ());
   }
+  else if (is_double_type () || is_string_type ())
+    set_value (to_double () * rhs.to_double ());
 
-  // if the left hand side is a double
-  else if (type_ == DOUBLE)
-  {
-    // double times an integer
-    if (rhs.type_ == DOUBLE)
-    {
-      double_value_ *= rhs.double_value_;
-    }
-    // double times a double
-    else if (rhs.type_ == INTEGER)
-    {
-      double_value_ *= rhs.int_value_;
-    }
-
-  }
   return *this;
 }
     
@@ -1290,35 +1187,36 @@ Madara::Knowledge_Record::operator*= (const Knowledge_Record & rhs)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator/= (const Knowledge_Record & rhs)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER)
+  if (is_integer_type ())
   {
-    if      (rhs.type_ == INTEGER)
+    if (rhs.is_integer_type ())
     {
-      int_value_ /= rhs.int_value_;
+      Integer denom = rhs.to_integer ();
+      if (denom == 0)
+        set_value ("Division by Zero");
+      else
+        set_value (to_integer () / denom);
     }
-    else if (rhs.type_ == DOUBLE)
+    else
     {
-      // to save precision, convert our type to a double and
-      // initialize ourselves appropriately
-      type_ = DOUBLE;
-      double_value_ = (double) int_value_;
-      double_value_ /= rhs.double_value_;
+      double denom = rhs.to_double ();
+
+      if (denom == 0)
+        set_value ("Division by Zero");
+      else
+        set_value (to_integer () / denom);
     }
+  }
+  else if (is_double_type () || is_string_type ())
+  {
+    double denom = rhs.to_double ();
+
+    if (denom == 0)
+      set_value ("Division by Zero");
+    else
+      set_value (to_double () / denom);
   }
 
-  // if the left hand side is a double
-  else if (type_ == DOUBLE)
-  {
-    if      (rhs.type_ == DOUBLE)
-    {
-      double_value_ /= rhs.double_value_;
-    }
-    else if (rhs.type_ == INTEGER)
-    {
-      double_value_ /= rhs.int_value_;
-    }
-  }
   return *this;
 }
    
@@ -1328,10 +1226,16 @@ Madara::Knowledge_Record::operator/= (const Knowledge_Record & rhs)
 Madara::Knowledge_Record
 Madara::Knowledge_Record::operator%= (const Knowledge_Record & rhs)
 {
-  // if the left hand side is an integer
-  if (type_ == INTEGER && rhs.type_ == INTEGER)
+  if (is_integer_type ())
   {
-      int_value_ %= rhs.int_value_;
+    if (rhs.is_integer_type ())
+    {
+      Integer denom = rhs.to_integer ();
+      if (denom == 0)
+        set_value ("Division by Zero");
+      else
+        set_value (to_integer () % denom);
+    }
   }
 
   return *this;
@@ -1465,24 +1369,62 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   {
     // strings do not have to be converted
     if (buffer_remaining >= size_)
+    {
       memcpy (buffer, str_value_.get_ptr (), size_);
+    }
   }
   else if (type_ == INTEGER)
   {
-    if (buffer_remaining >= size_)
+    if (buffer_remaining >= size_ * sizeof (Integer))
     {
-      // convert integers to network byte order
       integer_temp = Madara::Utility::endian_swap (int_value_);
       memcpy (buffer, &integer_temp, sizeof (integer_temp));
+
+      size_intermediate = size_ * sizeof (Integer);
+    }
+  }
+  else if (type_ == INTEGER_ARRAY)
+  {
+    if (buffer_remaining >= size_ * sizeof (Integer))
+    {
+      // convert integers to network byte order
+      Integer * ptr_temp = int_array_.get_ptr ();
+
+      for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
+      {
+        integer_temp = Madara::Utility::endian_swap (*ptr_temp);
+        memcpy (buffer, &integer_temp, sizeof (integer_temp));
+        buffer += sizeof (Integer);
+      }
+
+      size_intermediate = size_ * sizeof (Integer);
     }
   }
   else if (type_ == DOUBLE)
   {
-    if (buffer_remaining >= size_)
+    if (buffer_remaining >= size_ * sizeof (double))
     {
-      // convert doubles to network byte order
       double_temp = Madara::Utility::endian_swap (double_value_);
       memcpy (buffer, &double_temp, sizeof (double_temp));
+
+      size_intermediate = size_ * sizeof (Integer);
+    }
+  }
+  else if (type_ == DOUBLE_ARRAY)
+  {
+    if (buffer_remaining >= size_* sizeof (double))
+    {
+      // convert integers to network byte order
+      double * ptr_temp = double_array_.get_ptr ();
+
+      for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
+      {
+        double_temp = Madara::Utility::endian_swap (*ptr_temp);
+        memcpy (buffer, &double_temp, sizeof (double_temp));
+        buffer += sizeof (double);
+      }
+      
+      size_intermediate = size_ * sizeof (double);
 
       /**
        * note that we once converted doubles into strings to attempt
@@ -1500,15 +1442,15 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   {
     // strings do not have to be converted
     if (buffer_remaining >= size_)
-      memcpy (buffer, file_value_.get_ptr (), size_);
+    {
+      memcpy (buffer, file_value_.get_ptr (), size_); 
+    }
   }
 
   if (size_location)
   {
     buffer_remaining -= size_intermediate;
     buffer += size_intermediate;
-    size_intermediate = (uint32_t) Madara::Utility::endian_swap (size_intermediate);
-    memcpy (size_location, &size_intermediate, sizeof (size_intermediate));
   }
 
   return buffer;
@@ -1558,11 +1500,16 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
     size_ = Madara::Utility::endian_swap (size_);
     buff_value_size = size_;
     buffer += sizeof (size_);
+
+    if (is_integer_type ())
+      buff_value_size *= sizeof (Integer);
+    else if (is_double_type ())
+      buff_value_size *= sizeof (double);
   }
   buffer_remaining -= sizeof (size_);
   
   // Remove the value from the buffer
-  if (size_ > 0 && buffer_remaining >= size_)
+  if (size_ > 0 && buffer_remaining >= buff_value_size)
   {
     if      (is_string_type ())
     {
@@ -1572,14 +1519,43 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
   
     else if (type_ == INTEGER)
     {
-      memcpy (&int_value_, buffer, sizeof (int_value_)); 
+      memcpy (&int_value_, buffer, buff_value_size); 
       int_value_ = Madara::Utility::endian_swap (int_value_);
     }
 
+    else if (type_ == INTEGER_ARRAY)
+    {
+      buff_value_size = size_ * sizeof (Integer);
+      Integer * ptr_temp = new Integer [size_];
+
+      memcpy (ptr_temp, buffer, buff_value_size); 
+
+      for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
+      {
+        ptr_temp[i] = Madara::Utility::endian_swap (ptr_temp[i]);
+      }
+
+      int_array_ = ptr_temp;
+    }
+    
     else if (type_ == DOUBLE)
     {
-      memcpy (&double_value_, buffer, sizeof (double_value_)); 
+      memcpy (&double_value_, buffer, buff_value_size); 
       double_value_ = Madara::Utility::endian_swap (double_value_);
+    }
+
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      double * ptr_temp = new double [size_];
+
+      memcpy (ptr_temp, buffer, buff_value_size);
+
+      for (uint32_t i = 0; i < size_; ++i)
+      {
+        ptr_temp[i] = Madara::Utility::endian_swap (ptr_temp[i]);
+      }
+      
+      double_array_ = ptr_temp;
     }
 
     else if (is_file_type ())
@@ -1590,6 +1566,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
 
     buffer += buff_value_size;
     buffer_remaining -= sizeof (char) * buff_value_size;
+
+    status_ = MODIFIED;
   }
 
   return buffer;
@@ -1679,13 +1657,20 @@ Madara::Knowledge_Record::is_true (void) const
     DLINFO "Knowledge_Record::apply:" \
     " checking if record is non-zero.\n"));
 
-  if (type_ == INTEGER)
-    return int_value_ != 0;
-  else if (type_ == DOUBLE)
-    return double_value_ < 0 || double_value_ > 0;
-  else
+  if (is_integer_type ())
+    return to_integer () != 0;
+  else if (is_double_type ())
+  {
+    double value = to_double ();
+    return value < 0 || value > 0;
+  }
+  else if (is_string_type ())
   {
     return size_ > 1;
+  }
+  else
+  {
+    return size_ >= 1;
   }
 }
 
@@ -1701,15 +1686,19 @@ Madara::Knowledge_Record::is_false (void) const
 std::ostream & operator<< (std::ostream & stream,
   const Madara::Knowledge_Record & rhs)
 {
-  if      (rhs.type () == Madara::Knowledge_Record::INTEGER)
-    stream << rhs.to_integer ();
-  else if (rhs.type () == Madara::Knowledge_Record::DOUBLE)
-    stream << rhs.to_double ();
-  else if (rhs.type () == Madara::Knowledge_Record::STRING)
-    stream << rhs.to_string ();
-  else if (rhs.type () == Madara::Knowledge_Record::XML)
-    stream << rhs.to_string ();
-
+  if (rhs.status () != rhs.UNCREATED)
+  {
+    if      (rhs.type () == Madara::Knowledge_Record::INTEGER)
+      stream << rhs.to_integer ();
+    else if (rhs.type () == Madara::Knowledge_Record::INTEGER_ARRAY)
+      stream << rhs.to_string (", ");
+    else if (rhs.type () == Madara::Knowledge_Record::DOUBLE)
+      stream << rhs.to_double ();
+    else if (rhs.type () == Madara::Knowledge_Record::DOUBLE_ARRAY)
+      stream << rhs.to_string (", ");
+    else if (rhs.is_string_type ())
+      stream << rhs.to_string ();
+  }
 
   return stream;
 }

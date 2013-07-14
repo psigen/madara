@@ -54,30 +54,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::write_file (
   return map_.get_record (knowledge_key)->to_file (filename);
 }
 
-inline int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
-                                    Madara::Knowledge_Record::Integer value)
-{
-  Eval_Settings settings;
-  return set (key, value, settings);
-}
-
-inline int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
-                                               double value)
-{
-  Eval_Settings settings;
-  return set (key, value, settings);
-}
-
-inline int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::set (const std::string & key,
-                                               const std::string & value)
-{
-  Eval_Settings settings;
-  return set (key, value, settings);
-}
-
 /// Set quality of writing to a variable
 inline void 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set_quality (

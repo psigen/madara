@@ -341,6 +341,20 @@ void test_doubles (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.set (".var2", 1.0);
   knowledge.set (".var3", 10.0);
 
+  knowledge.print ("  .var1={.var1}, .var2={.var2}, .var3={.var3}\n");
+
+  knowledge.print (".  var4 = .var2 / .var1");
+  knowledge.evaluate (".var4 = .var2 / .var1");
+  assert (knowledge.get (".var4") == 2.0);
+  
+  knowledge.print ("  .var5 = .var3 / .var1");
+  knowledge.evaluate (".var5 = .var3 / .var1");
+  assert (knowledge.get (".var5") == 20.0);
+  
+  knowledge.print ("  .var6 = .var3 / (.var1 + .var2)");
+  knowledge.evaluate (".var6 = .var3 / (.var1 + .var2)");
+  assert (knowledge.get (".var6") == 10.0 / 1.5);
+
   knowledge.evaluate (".var4 = .var2 / .var1; .var5 = .var3 / .var1;" \
     ".var6 = .var3 / (.var1 + .var2)");
   assert (knowledge.get (".var4") == 2.0 && 
@@ -476,7 +490,7 @@ void test_dijkstra_sync (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   std::string s1_logic = "(S1+1) % 3 == S0 => S1 = S0; (S1+1) % 3 == S2 => S1 = S2;";
 
   std::string s2_logic = "S1 == S0 && (S1 + 1) % 3 != S2 => S2 = (S1 + 1) % 3;";
-
+  
   ACE_DEBUG ((LM_INFO, 
     "Evaluating Dijkstra 3-state Synchronizations in order: S0->S1->S2\n"));
 

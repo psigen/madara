@@ -38,8 +38,7 @@ namespace Madara
     enum
     {
       UNCREATED = 0,
-      UNMODIFIED = 1,
-      MODIFIED = 2
+      MODIFIED = 1
     };
 
     enum
@@ -57,16 +56,14 @@ namespace Madara
       UNKNOWN_FILE_TYPE = 3,
       XML = 4,
       TEXT_FILE = 5,
-      IMAGE_JPEG = 50
+      INTEGER_ARRAY = 10,
+      DOUBLE_ARRAY = 11,
+      IMAGE_JPEG = 50,
+      UNINITIALIZED = 100
     };
     
     typedef  int64_t     Integer;
 
-    /**
-     * status of the knowledge record
-     **/
-    int status;
-    
     /**
      * last modification time
      **/
@@ -90,6 +87,11 @@ namespace Madara
   private:
    
     /**
+     * status of the knowledge record
+     **/
+    int status_;
+    
+    /**
      * size of the value
      **/
     uint32_t size_;
@@ -100,12 +102,24 @@ namespace Madara
     int32_t type_;
     
     /**
-     * potential integer or double value of the knowledge record
+     * Non-array versions of double/integer. About 10x faster
+     * than using the ref-counted arrays
      **/
-    union {
+    union
+    {
       Integer int_value_;
       double double_value_;
     };
+
+    /**
+     * potential string value of the node (size int)
+     **/
+    Madara::Utility::Scoped_Array <Integer> int_array_;
+
+    /**
+     * potential string value of the node (size int)
+     **/
+    Madara::Utility::Scoped_Array <double> double_array_;
 
     /**
      * potential string value of the node (size int)
@@ -128,6 +142,12 @@ namespace Madara
     /* Double constructor */
     Knowledge_Record (double value);
     
+    /* Integer array constructor */
+    Knowledge_Record (const std::vector <Integer> & value);
+    
+    /* Double array constructor */
+    Knowledge_Record (const std::vector <double> & value);
+    
     /* String constructor */
     Knowledge_Record (const std::string & value);
     
@@ -141,9 +161,12 @@ namespace Madara
     ~Knowledge_Record ();
     
     /**
-     * converts the value to a string
+     * converts the value to a string.
+     * @param   delimeter   characters to insert in between
+     *                      elements of an array
+     * @return  the value as a string
      **/
-    std::string to_string (void) const;
+    std::string to_string (const std::string & delimiter = "") const;
     
     /**
      * writes the value to a file
@@ -162,6 +185,18 @@ namespace Madara
     double to_double (void) const;
     
     /**
+     * converts the value to a vector of integers
+     * @return  a vector of integers
+     **/
+    std::vector <Integer> to_integers (void) const;
+
+    /**
+     * converts the value to a vector of doubles
+     * @return  a vector of doubles
+     **/
+    std::vector <double> to_doubles (void) const;
+    
+    /**
      * returns an unmanaged buffer that the user will have
      * to take care of (this is a copy of the internal value).
      * If you use this function, you must explicitly delete the
@@ -172,15 +207,30 @@ namespace Madara
      * delete [] my_value;
      *
      * Failure to do the above WILL result in a memory leak
+     * @param   size    size of the unmanaged buffer
+     * @return  the unmanaged buffer of size bytes
      **/
-    unsigned char * to_unmanaged_buffer (void);
+    unsigned char * to_unmanaged_buffer (unsigned int & size);
     
     /**
      * sets the value to a double
      * @param    new_value   new value of the Knowledge Record
      **/
     void set_value (const Integer & new_value);
-
+    
+    /**
+     * sets the value to an array of integers
+     * @param    new_value   new value of the Knowledge Record
+     * @param    size        num elements in the array
+     **/
+    void set_value (const Integer * new_value, uint32_t size);
+    
+    /**
+     * sets the value to an array of integers
+     * @param    new_value   new value of the Knowledge Record
+     **/
+    void set_value (const std::vector <Integer> & new_value);
+    
     /**
      * sets the value to a string
      * @param    new_value   new value of the Knowledge Record
@@ -192,6 +242,19 @@ namespace Madara
      * @param    new_value   new value of the Knowledge Record
      **/
     void set_value (const double & new_value);
+    
+    /**
+     * sets the value to an array of doubles
+     * @param    new_value   new value of the Knowledge Record
+     * @param    size        num elements in the array
+     **/
+    void set_value (const double * new_value, uint32_t size);
+    
+    /**
+     * sets the value to an array of doubles
+     * @param    new_value   new value of the Knowledge Record
+     **/
+    void set_value (const std::vector <double> & new_value);
     
     /**
      * sets the value to an xml string
@@ -222,6 +285,17 @@ namespace Madara
     void set_file (const unsigned char * new_value, size_t size);
 
     /**
+     * returns the status of the record.
+     * @return   1 if modified, 0 if uncreated
+     **/
+    int status (void) const;
+
+    /**
+     * sets the status to modified
+     **/
+    void set_modified (void);
+
+    /**
      * reads a file and sets the type appropriately according to
      * the extension
      * @param   filename         location of the file to read from
@@ -246,34 +320,52 @@ namespace Madara
     /**
      * returns the size of the value
      **/
-    inline uint32_t size (void) const
-    {
-      return size_;
-    }
+    uint32_t size (void) const;
     
     /**
      * returns the size of the value
      **/
-    inline int32_t type (void) const
-    {
-      return type_;
-    }
+    int32_t type (void) const;
+    
+    /**
+     * returns true if the record is a string type (STRING, XML, TEXT_FILE)
+     * @return   true if the record is a string
+     **/
+    bool is_string_type (void) const;
     
     /**
      * returns if the record is a string type (STRING, XML, TEXT_FILE)
+     * @param   type the type to check
+     * @return   true if the record is a string
      **/
-    inline bool is_string_type (void) const
-    {
-      return type_ == STRING || type_ == XML || type_ == TEXT_FILE;
-    }
+    bool is_string_type (uint32_t type) const;
     
     /**
-     * returns if the record is a string type (STRING, XML, TEXT_FILE)
+     * returns if the record is a double type (DOUBLE, DOUBLE_ARRAY)
+     * @return   true if the record is a double
      **/
-    inline bool is_string_type (uint32_t type) const
-    {
-      return type == STRING || type == XML || type == TEXT_FILE;
-    }
+    bool is_double_type (void) const;
+     
+    /**
+     * returns if the record is a double type (DOUBLE, DOUBLE_ARRAY)
+     * @param   type the type to check
+     * @return   true if the record is a double
+     **/
+    bool is_double_type (uint32_t type) const;
+     
+    /**
+     * returns if the record is a integer type (INTEGER, INTEGER_ARRAY)
+     * @return   true if the record is an integer
+     **/
+    bool is_integer_type (void) const;
+    
+    /**
+     * returns if the record is a integer type (INTEGER, INTEGER_ARRAY)
+     * @param   type the type to check
+     * @return   true if the record is an integer
+     **/
+    bool is_integer_type (uint32_t type) const;
+     
     
     /**
      * returns a record containing a fragment of the character buffer.
@@ -286,25 +378,31 @@ namespace Madara
      **/
     Knowledge_Record fragment (unsigned int first, unsigned int last);
 
-    inline bool is_image_type (void) const
-    {
-      return type_ == IMAGE_JPEG;
-    }
+    /**
+     * returns true if the knowledge record has an image type
+     * @return    true if type is an image type
+     **/
+    bool is_image_type (void) const;
     
-    inline bool is_image_type (uint32_t type) const
-    {
-      return type == IMAGE_JPEG;
-    }
+    /**
+     * returns true if the knowledge record has an image type
+     * @param     type   the type of the record
+     * @return    true if type is an image type
+     **/
+    bool is_image_type (uint32_t type) const;
     
-    inline bool is_file_type (void) const
-    {
-      return type_ == XML || type_ == IMAGE_JPEG || type_ == UNKNOWN_FILE_TYPE;
-    }
+    /**
+     * returns true if the knowledge record has a file type
+     * @return    true if type is a file type
+     **/
+    bool is_file_type (void) const;
     
-    inline bool is_file_type (uint32_t type) const
-    {
-      return type == XML || type == IMAGE_JPEG || type == UNKNOWN_FILE_TYPE;
-    }
+    /**
+     * returns true if the knowledge record has a file type
+     * @param     type   the type of the record
+     * @return    true if type is a file type
+     **/
+    bool is_file_type (uint32_t type) const;
 
     /**
      * Less than
@@ -498,18 +596,7 @@ namespace Madara
    * @param    records     the list of records to gauge quality of
    * @return   the maximum quality within the list of records
    **/
-  inline uint32_t max_quality (const Knowledge_Records & records)
-  {
-    uint32_t max = 0;
-
-    // iterate over the list and return the max
-    for (Knowledge_Records::const_iterator i = records.begin ();
-         i != records.end (); ++i)
-    {
-      max = std::max <uint32_t> (i->second->quality, max);
-    }
-    return max;
-  }
+  uint32_t max_quality (const Knowledge_Records & records);
 
 }
 
@@ -519,7 +606,8 @@ namespace Madara
   **/
 MADARA_Export std::ostream & operator<< (std::ostream & stream,
   const Madara::Knowledge_Record & rhs);
-  
+
+#include "Knowledge_Record.inl"
 
 
 #endif  // _KNOWLEDGE_RECORD_H_

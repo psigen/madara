@@ -337,6 +337,95 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   const std::string & key, 
+  const Knowledge_Record::Integer * value,
+  uint32_t size,
+  const Eval_Settings & settings)
+{
+  if (key == "")
+    return -1;
+
+  int result = map_.set (key, value, size, settings);
+
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
+      map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const std::string & key, 
+  const std::vector <Knowledge_Record::Integer> & value,
+  const Eval_Settings & settings)
+{
+  if (key == "")
+    return -1;
+
+  int result = map_.set (key, value, settings);
+
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
+      map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const std::string & key, 
   double value, 
   const Eval_Settings & settings)
 {
@@ -348,6 +437,95 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   // only send an update if we have a transport, we have been asked to send
   // modifieds, and this is NOT a local key
   
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
+      map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const std::string & key, 
+  const double * value,
+  uint32_t size,
+  const Eval_Settings & settings)
+{
+  if (key == "")
+    return -1;
+
+  int result = map_.set (key, value, size, settings);
+
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      for (unsigned int i = 0; i < transports_.size (); ++i)
+        transports_[i]->send_data (modified);
+
+      map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "Knowledge_Base_Impl::set:" \
+          " no modifications to send during this set\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::set:" \
+        " not sending knowledge mutations \n"));
+  }
+
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
+  const std::string & key, 
+  const std::vector <double> & value,
+  const Eval_Settings & settings)
+{
+  if (key == "")
+    return -1;
+
+  int result = map_.set (key, value, settings);
+
+  // only send an update if we have a transport, we have been asked to send
+  // modifieds, and this is NOT a local key
+
   if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
     const Madara::Knowledge_Records & modified = map_.get_modified ();

@@ -70,9 +70,9 @@ namespace Madara
         else
           *record *= rhs_->evaluate (settings);
         
-        if (key[0] != '.' && !settings.treat_globals_as_locals)
+        if ((*key_ptr)[0] != '.' && !settings.treat_globals_as_locals)
         {
-          context_.mark_modified (key, *record,
+          context_.mark_modified (*key_ptr, *record,
             Knowledge_Engine::Knowledge_Update_Settings ());
         }
 

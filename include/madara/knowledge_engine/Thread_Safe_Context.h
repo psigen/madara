@@ -145,6 +145,32 @@ namespace Madara
               Knowledge_Update_Settings ());
       
       /**
+       * Atomically sets the value of a variable to an integer array.
+       * @param   key       unique identifier of the variable
+       * @param   value     an array of Integers
+       * @param   size      number of elements in the array
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const std::string & key,
+        const Madara::Knowledge_Record::Integer * value,
+        uint32_t size,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to an integer array.
+       * @param   key       unique identifier of the variable
+       * @param   value     a STL vector of Integers
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const std::string & key,
+        const std::vector <Knowledge_Record::Integer> & value,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+      
+      /**
        * Atomically sets the value of a variable to a double.
        * @param   key       unique identifier of the variable
        * @param   value     new value of the variable
@@ -153,6 +179,32 @@ namespace Madara
        **/
       int set (const std::string & key,
         double value, 
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a double array.
+       * @param   key       unique identifier of the variable
+       * @param   value     an array of doubles
+       * @param   size      number of elements in the array
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const std::string & key,
+        const double * value,
+        uint32_t size,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a double array.
+       * @param   key       unique identifier of the variable
+       * @param   value     a STL vector of doubles
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const std::string & key,
+        const std::vector <double> & value,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings ());
       

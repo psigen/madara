@@ -82,7 +82,7 @@ Madara::Expression_Tree::Composite_Assignment_Node::evaluate (
   left_->set (rhs, settings);
 
   // return the value
-  return left_->evaluate (settings);
+  return rhs;
 }
 
 

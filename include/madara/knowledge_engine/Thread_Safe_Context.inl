@@ -125,7 +125,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::exists (
 
     // if it's found, then return the value
     if (found != map_.end ())
-      return found->second.status != Knowledge_Record::UNCREATED;
+      return found->second.status () != Knowledge_Record::UNCREATED;
   }
 
   // if no match, return empty (0)
@@ -411,8 +411,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
   {
     changed_map_[*key_ptr] = &record;
 
-    if (record.status != Madara::Knowledge_Record::MODIFIED)
-      record.status = Madara::Knowledge_Record::MODIFIED;
+    if (record.status () != Madara::Knowledge_Record::MODIFIED)
+      record.set_modified ();
   }
 }
 

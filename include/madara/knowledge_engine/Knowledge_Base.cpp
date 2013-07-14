@@ -126,7 +126,41 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+  const Knowledge_Record::Integer * value,
+  uint32_t size,
+  const Eval_Settings & settings)
+{
+  return impl_->set (key, value, size, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+  const std::vector <Knowledge_Record::Integer> & value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (key, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
   double value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (key, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+  const double * value,
+  uint32_t size,
+  const Eval_Settings & settings)
+{
+  return impl_->set (key, value, size, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+  const std::vector <double> & value,
   const Eval_Settings & settings)
 {
   return impl_->set (key, value, settings);
