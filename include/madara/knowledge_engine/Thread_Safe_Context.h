@@ -66,6 +66,18 @@ namespace Madara
         get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ()) const;
+      
+      /**
+       * Retrieves a value at a specified index within a knowledge array
+       * @param key              knowledge location
+       * @param index            index within the array
+       * @param settings         settings for referring to knowledge variables
+       * @return                 value at knowledge location
+       **/
+      Madara::Knowledge_Record retrieve_index (const std::string & key,
+             size_t index,
+             const Knowledge_Reference_Settings & settings =
+                     Knowledge_Reference_Settings ()) const;
 
       /**
        * Retrieves a knowledge record from the key. This function is useful
@@ -145,6 +157,19 @@ namespace Madara
               Knowledge_Update_Settings ());
       
       /**
+       * Atomically sets the value of an array index to a double.
+       * @param   key       unique identifier of the variable
+       * @param   index     index within array
+       * @param   value     new value of the array index
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_index (const std::string & key,
+        size_t index, Knowledge_Record::Integer value, 
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+      
+      /**
        * Atomically sets the value of a variable to an integer array.
        * @param   key       unique identifier of the variable
        * @param   value     an array of Integers
@@ -179,6 +204,19 @@ namespace Madara
        **/
       int set (const std::string & key,
         double value, 
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+      
+      /**
+       * Atomically sets the value of an array index to a double.
+       * @param   key       unique identifier of the variable
+       * @param   index     index within array
+       * @param   value     new value of the array index
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_index (const std::string & key,
+        size_t index, double value, 
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings ());
       

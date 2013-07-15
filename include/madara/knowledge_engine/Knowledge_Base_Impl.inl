@@ -23,6 +23,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
   return map_.get (t_key, settings);
 }
 
+inline Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base_Impl::retrieve_index (
+  const std::string & t_key,
+  size_t index,
+  const Knowledge_Reference_Settings & settings)
+{
+  return map_.retrieve_index (t_key, index, settings);
+}
+
 inline bool
 Madara::Knowledge_Engine::Knowledge_Base_Impl::exists (
   const std::string & key,

@@ -59,6 +59,41 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (const std::string & key,
   return record;
 }
 
+// return the value of a variable
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_index (const std::string & key,
+             size_t index,
+             const Knowledge_Reference_Settings & settings) const
+{
+  std::string key_actual;
+  const std::string * key_ptr;
+  Context_Guard guard (mutex_);
+
+  Madara::Knowledge_Record record;
+
+  if (settings.expand_variables)
+  {
+    key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &key;
+
+  // if key is not null
+  if (*key_ptr != "")
+  {
+    // find the key in the knowledge base
+    Knowledge_Map::const_iterator found = map_.find (*key_ptr);
+
+    // if it's found, then return the value
+    if (found != map_.end ())
+      return found->second.retrieve_index (index);
+  }
+
+  // if no match, return empty (0)
+  return record;
+}
+
 /**
  * Retrieves a knowledge record from the key. This function is useful
  * for performance reasons and also for using a Knowledge_Record that
@@ -123,6 +158,56 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     return -2;
 
   record.set_value (value);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if ((*key_ptr)[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (*key_ptr, record,
+        Knowledge_Update_Settings ());
+    }
+  }
+
+  if (settings.signal_changes)
+    changed_.signal ();
+
+  return 0;
+}
+
+// set the value of an array index
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
+  const std::string & key, size_t index,
+  Madara::Knowledge_Record::Integer value,
+  const Knowledge_Update_Settings & settings)
+{
+  // enter the mutex
+  std::string key_actual;
+  const std::string * key_ptr;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+  {
+    key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &key;
+  
+  // check for null key
+  if (*key_ptr == "")
+    return -1;
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[*key_ptr];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  record.set_index (index, value);
   record.quality = record.write_quality;
   
   // otherwise set the value
@@ -274,6 +359,56 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     return -2;
 
   record.set_value (value);
+  record.quality = record.write_quality;
+  
+  // otherwise set the value
+  if ((*key_ptr)[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (*key_ptr, record,
+        Knowledge_Update_Settings ());
+    }
+  }
+  
+  if (settings.signal_changes)
+    changed_.signal ();
+
+  return 0;
+}
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
+  const std::string & key, size_t index,
+  double value,
+  const Knowledge_Update_Settings & settings)
+{
+  // enter the mutex
+  std::string key_actual;
+  const std::string * key_ptr;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+  {
+    key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &key;
+  
+  // check for null key
+  if (*key_ptr == "")
+    return -1;
+
+  // create the key if it didn't exist
+  Knowledge_Record & record = map_[*key_ptr];
+
+  // check if we have the appropriate write quality
+  if (!settings.always_overwrite && record.write_quality < record.quality)
+    return -2;
+
+  record.set_index (index, value);
   record.quality = record.write_quality;
   
   // otherwise set the value

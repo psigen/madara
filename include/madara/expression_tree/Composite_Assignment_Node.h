@@ -5,6 +5,7 @@
 #include "madara/expression_tree/Composite_Binary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Composite_Array_Reference.h"
 
 namespace Madara
 {
@@ -65,7 +66,8 @@ namespace Madara
        * instead of having to dynamic cast a Symbol * should be much
        * fater.
        **/
-      Variable_Node * left_;
+      Variable_Node * var_;
+      Composite_Array_Reference * array_;
     };
   }
 }

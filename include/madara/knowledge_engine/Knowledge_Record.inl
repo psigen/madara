@@ -242,7 +242,7 @@ inline void
 Madara::Knowledge_Record::set_value (const Integer * new_value, uint32_t size)
 {
   clear_value ();
-  type_ = DOUBLE_ARRAY;
+  type_ = INTEGER_ARRAY;
   status_ = MODIFIED;
 
   size_ = size;

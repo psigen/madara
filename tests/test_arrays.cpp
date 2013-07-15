@@ -87,9 +87,24 @@ void create_arrays (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   
   knowledge.set ("doubles_vector", doubles_vector);
 
+  Madara::Knowledge_Record::Integer * integer_array =
+    new Madara::Knowledge_Record::Integer [3];
+  integer_array[0] = 0;
+  integer_array[1] = 1;
+  integer_array[2] = 2;
+
+  knowledge.set ("integers_vector", integer_array, 3);
+
+  knowledge.evaluate ("var_array[1] = 3.0");
+  knowledge.evaluate ("var_array[3] = 20");
+
   knowledge.set ("finished_transmitting");
-  knowledge.print ("doubles_vector = [{doubles_vector}]");
-  
+  knowledge.print ("Sending the following data sets to id 1\n");
+  knowledge.print ("doubles_vector = [{doubles_vector}]\n");
+  knowledge.print ("integers_vector = [{integers_vector}]\n");
+  knowledge.print ("var_array = [{var_array}]\n");
+
+  delete integer_array;
 }
 
 
@@ -97,7 +112,45 @@ void create_arrays (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 void write_transported_arrays (
   Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
-  knowledge.print ("doubles_vector = [{doubles_vector}]");
+  knowledge.print ("\nReceived the following arrays from id 0\n");
+  knowledge.print ("doubles_vector = [{doubles_vector}]\n");
+  knowledge.print ("integers_vector = [{integers_vector}]\n");
+  knowledge.print ("var_array = [{var_array}]\n\n");
+
+  Madara::Knowledge_Record doubles_vector = knowledge.get ("doubles_vector");
+  doubles_vector.set_index (5, 127.25);
+  doubles_vector.set_index (6, 1.2575);
+
+  std::cerr << "adding two doubles (127.25, 1.2575) to the doubles_vector\n";
+  std::cerr << "doubles_vector = [" << 
+    doubles_vector.to_string (", ") << "]" << std::endl;
+  
+  Madara::Knowledge_Record integers_vector = knowledge.get ("integers_vector");
+  
+  std::cerr << "\nintegers_vector = [" << 
+    integers_vector.to_string (", ") << "]" << std::endl;
+  
+  integers_vector.set_index (7, Madara::Knowledge_Record::Integer (7));
+  
+  std::cerr << "adding one integer (7) to the integers_vector\n";
+  
+  std::cerr << "integers_vector = [" << 
+    integers_vector.to_string (", ") << "]" << std::endl;
+  
+  std::cerr << "adding one double (6.0) to the integers_vector\n";
+  
+  integers_vector.set_index (6, 6.0);
+  
+  std::cerr << "integers_vector = [" << 
+    integers_vector.to_string (", ") << "]\n\n";
+
+  
+  knowledge.print ("var_array = [{var_array}]\n");
+  std::cerr << "copying elements of var_array to var_array\n";
+  knowledge.evaluate ("var_array[0] = var_array[3]");
+  knowledge.evaluate ("var_array[2] = var_array[1]");
+  knowledge.evaluate ("var_array[8] = 100.012");
+  knowledge.print ("var_array = [{var_array}]\n\n");
 }
 
 int parse_args (int argc, ACE_TCHAR * argv[])

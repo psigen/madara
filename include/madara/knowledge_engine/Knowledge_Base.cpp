@@ -78,6 +78,14 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const std::string & key,
   return impl_->get (key, settings);
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base::retrieve_index (
+  const std::string & key, size_t index,
+  const Knowledge_Reference_Settings & settings)
+{
+  return impl_->retrieve_index (key, index, settings);
+}
+
 
 int
 Madara::Knowledge_Engine::Knowledge_Base::read_file (const std::string & knowledge_key, 
@@ -125,6 +133,15 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 }
 
 int
+Madara::Knowledge_Engine::Knowledge_Base::set_index (const std::string & key,
+  size_t index,
+  Madara::Knowledge_Record::Integer value,
+  const Eval_Settings & settings)
+{
+  return impl_->set_index (key, index, value, settings);
+}
+
+int
 Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
   const Knowledge_Record::Integer * value,
   uint32_t size,
@@ -147,6 +164,15 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
   const Eval_Settings & settings)
 {
   return impl_->set (key, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set_index (const std::string & key,
+  size_t index,
+  double value,
+  const Eval_Settings & settings)
+{
+  return impl_->set_index (key, index, value, settings);
 }
 
 int

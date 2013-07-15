@@ -6,6 +6,8 @@
 #include <vector>
 
 #include "madara/expression_tree/Component_Node.h"
+#include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Composite_Array_Reference.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
@@ -26,7 +28,7 @@ namespace Madara
     {
     public:
       /// Ctor.
-      Variable_Increment_Node (const std::string &key,
+      Variable_Increment_Node (Component_Node * lhs,
         Madara::Knowledge_Record value,
         Component_Node * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context &context);
@@ -36,54 +38,6 @@ namespace Madara
 
       /// Return the item stored in the node.
       virtual Madara::Knowledge_Record item (void) const;
-
-      /// Atomically increment the variable.
-      inline Madara::Knowledge_Record inc (
-        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
-      {
-        Madara::Knowledge_Record * record = record_;
-        std::string key;
-        const std::string * key_ptr;
-
-        // if we don't have a static record, get the dynamic one
-        if (!record)
-        {
-          key = expand_key ();
-          record = context_.get_record (key);
-          key_ptr = &key;
-        }
-        else
-          key_ptr = &key_;
-
-        // notice that we assume the context is locked
-        // check if we have the appropriate write quality
-        if (!settings.always_overwrite &&
-            record->write_quality < record->quality)
-          return *record;
-
-        // cheaper to read than write, so check to see if
-        // we actually need to update quality and status
-        if (record->write_quality != record->quality)
-          record->quality = record->write_quality;
-        
-        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "Variable_Increment_Node::inc:" \
-          " Performing actual addition.\n",
-          key_ptr->c_str ()));
-
-        if (!rhs_)
-          *record += this->value_;
-        else
-          *record += rhs_->evaluate (settings);
-        
-        if ((*key_ptr)[0] != '.' && !settings.treat_globals_as_locals)
-        {
-          context_.mark_modified (*key_ptr, *record,
-            Knowledge_Engine::Knowledge_Update_Settings ());
-        }
-
-        return *record;
-      }
 
       /// Prune the tree of unnecessary nodes. 
       /// Returns evaluation of the node and sets can_change appropriately.
@@ -107,8 +61,11 @@ namespace Madara
       virtual void accept (Visitor &visitor) const; 
 
     private:
-      /// Key for retrieving value of this variable.
-      const std::string key_;
+      /// variable holder
+      Variable_Node * var_;
+
+      /// variable index holder
+      Composite_Array_Reference * array_;
 
       /// amount to increment by. Note that this can also do decrement.
       Madara::Knowledge_Record value_;
@@ -116,16 +73,7 @@ namespace Madara
       /// holds a right hand side argument if it is not value_
       Component_Node * rhs_;
 
-      Madara::Knowledge_Record * record_;
-
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-
-      /// Expansion necessary
-      bool key_expansion_necessary_;
-
-      std::vector< std::string> splitters_;
-      std::vector< std::string> tokens_;
-      std::vector< std::string> pivot_list_;
 
       /// Reference to context for variable retrieval
     };

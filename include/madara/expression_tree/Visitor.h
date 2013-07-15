@@ -14,6 +14,7 @@ namespace Madara
     class Variable_Multiply_Node;
     class Variable_Compare_Node;
     class List_Node;
+    class Composite_Array_Reference;
     class Composite_Negate_Node;
     class Composite_Predecrement_Node;
     class Composite_Preincrement_Node;
@@ -67,6 +68,9 @@ namespace Madara
     public:
       /// Visit a Leaf_Node.
       virtual void visit (const Leaf_Node &node) = 0;
+      
+      /// Visit an array reference.
+      virtual void visit (const Composite_Array_Reference &node) = 0;
 
       /// Visit a Variable_Node.
       virtual void visit (const Variable_Node &node) = 0;

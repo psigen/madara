@@ -117,6 +117,7 @@ Madara::Knowledge_Record
 
 
 // test functions
+void test_array_math (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
 void test_to_vector (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
 void test_to_map (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
 void test_strings (Madara::Knowledge_Engine::Knowledge_Base &  knowledge);
@@ -153,6 +154,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   // run tests
 //  test_tree_compilation (knowledge);
+  test_array_math (knowledge);
   test_mathops (knowledge);
   test_functions (knowledge);
   test_to_vector (knowledge);
@@ -174,6 +176,23 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.print_knowledge ();
 
   return 0;
+}
+
+void test_array_math (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
+{
+  ACE_TRACE (ACE_TEXT ("test_array_math"));
+  ACE_DEBUG ((LM_INFO, "Testing array math\n"));
+  
+  std::vector <Madara::Knowledge_Record> records;
+
+  knowledge.clear ();
+  
+  knowledge.evaluate ("array[10] += 10");
+  knowledge.evaluate ("array[1] += 5");
+  knowledge.evaluate ("array[1] += 5");
+  knowledge.evaluate ("vector5=6; vector6=5; vector7=4; vector8=3");
+
+  assert (knowledge.evaluate ("array[1]").to_integer () == 10);
 }
 
 void test_to_vector (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
@@ -1227,16 +1246,15 @@ void test_for_loops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   result = knowledge.evaluate (".i[ 1 -2> 9 ] (agent{.i}.state=1)");
   assert (result.to_integer () == 5 && knowledge.get ("agent3.state").to_integer () == 1);
   
-  result = knowledge.evaluate (".i[9)");
-  assert (result.to_integer () == 9 && knowledge.get (".i").to_integer () == 9);
-
-  result = knowledge.evaluate (".i[9]");
-  assert (result.to_integer () == 10 && knowledge.get (".i").to_integer () == 10);
+  
+  result = knowledge.evaluate ("array[10] = 0; .i[ 1 -> 9 ] (array[.i]+=.i)");
+  assert (result.to_integer () == 9 && knowledge.evaluate ("array[9]").to_integer () == 9);
+  
 
   result = knowledge.evaluate (
-    "agent11.state = 15; .i[9); .j[9]; .k[0->10) (agent{.k}.state=20)");
-  assert (result.to_integer () == 15 && knowledge.get (".i").to_integer () == 9 &&
-    knowledge.get (".j").to_integer () == 10 && knowledge.get (".k").to_integer () == 10 &&
+    "agent11.state = 15; .k[0->10) (agent{.k}.state=20)");
+  assert (result.to_integer () == 15 &&
+    knowledge.get (".k").to_integer () == 10 &&
     knowledge.get ("agent3.state").to_integer () == 20);
 }
 

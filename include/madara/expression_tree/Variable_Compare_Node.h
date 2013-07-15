@@ -6,6 +6,8 @@
 #include <vector>
 
 #include "madara/expression_tree/Component_Node.h"
+#include "madara/expression_tree/Variable_Node.h"
+#include "madara/expression_tree/Composite_Array_Reference.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
@@ -26,7 +28,7 @@ namespace Madara
     {
     public:
       /// Ctor.
-      Variable_Compare_Node (const std::string &key,
+      Variable_Compare_Node (Component_Node * lhs,
         Madara::Knowledge_Record value,
         int type, Component_Node * rhs,
         Madara::Knowledge_Engine::Thread_Safe_Context &context);
@@ -68,8 +70,11 @@ namespace Madara
       virtual void accept (Visitor &visitor) const; 
 
     private:
-      /// Key for retrieving value of this variable.
-      const std::string key_;
+      /// variable holder
+      Variable_Node * var_;
+
+      /// variable index holder
+      Composite_Array_Reference * array_;
 
       /// amount to increment by. Note that this can also do decrement.
       Madara::Knowledge_Record value_;
@@ -77,19 +82,10 @@ namespace Madara
       /// holds a right hand side argument if it is not value_
       Component_Node * rhs_;
 
-      Madara::Knowledge_Record * record_;
-
       Madara::Knowledge_Engine::Thread_Safe_Context & context_;
 
       /// comparison function
       int compare_type_;
-
-      /// Expansion necessary
-      bool key_expansion_necessary_;
-
-      std::vector< std::string> splitters_;
-      std::vector< std::string> tokens_;
-      std::vector< std::string> pivot_list_;
 
       /// Reference to context for variable retrieval
     };

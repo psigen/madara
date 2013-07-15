@@ -109,6 +109,18 @@ namespace Madara
       Madara::Knowledge_Record get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
+      
+      /**
+       * Retrieves a value at a specified index within a knowledge array
+       * @param key              knowledge location
+       * @param index            index within the array
+       * @param settings         settings for referring to knowledge variables
+       * @return                 value at knowledge location
+       **/
+      Madara::Knowledge_Record retrieve_index (const std::string & key,
+             size_t index,
+             const Knowledge_Reference_Settings & settings =
+                     Knowledge_Reference_Settings ());
 
       /**
        * Read a file into the knowledge base
@@ -170,7 +182,23 @@ namespace Madara
           Madara::Knowledge_Record::MODIFIED, 
         const Eval_Settings & settings =
           Eval_Settings ());
-       
+
+      /**
+       * Sets an index within an array to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param index           index of the location in the array
+       * @param value           value to set at location
+       * @param settings        settings for applying the update
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set_index (const std::string & key,
+        size_t index,
+        Madara::Knowledge_Record::Integer value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+
       /**
        * Sets a knowledge variable to a specified value
        *
@@ -213,7 +241,23 @@ namespace Madara
       int set (const std::string & key, double value, 
         const Eval_Settings & settings =
           Eval_Settings ());
-       
+
+      /**
+       * Sets an index within an array to a specified value
+       *
+       * @param key             knowledge variable location
+       * @param index           index of the location in the array
+       * @param value           value to set at location
+       * @param settings        settings for applying the update
+       * @return                0 if successful, -1 if key is null, and
+       *                        -2 if quality isn't high enough
+       **/
+      int set_index (const std::string & key,
+        size_t index,
+        double value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+
       /**
        * Sets a knowledge variable to a specified value
        *

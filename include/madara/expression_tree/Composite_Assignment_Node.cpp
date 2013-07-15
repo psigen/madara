@@ -17,7 +17,10 @@ Madara::Expression_Tree::Composite_Assignment_Node::Composite_Assignment_Node (
   Component_Node *left, Component_Node *right)
   : Composite_Unary_Node (right)
 {
-  left_ = dynamic_cast <Variable_Node *> (left);
+  var_ = dynamic_cast <Variable_Node *> (left);
+
+  if (!var_)
+    array_ = dynamic_cast <Composite_Array_Reference *> (left);
 }
 
 Madara::Knowledge_Record
@@ -34,7 +37,7 @@ Madara::Expression_Tree::Composite_Assignment_Node::prune (bool & can_change)
   bool right_child_can_change = false;
   Madara::Knowledge_Record right_value;
 
-  if (this->left_ != 0)
+  if (this->var_ != 0 || this->array_ != 0)
     left_child_can_change = true;
   else
   {
@@ -72,14 +75,38 @@ Madara::Expression_Tree::Composite_Assignment_Node::evaluate (
 {
   Madara::Knowledge_Record rhs = right_->evaluate (settings);
 
-  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-    "Attempting to set variable %s to %s.\n",
-    left_->expand_key ().c_str (),
-    rhs.to_string ().c_str ()));
-
   // get the value from the right side and set the variable's value with it
   //Madara::Knowledge_Record value = right_->evaluate ();
-  left_->set (rhs, settings);
+  if (var_)
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      "Composite_Assignment_Node::evaluate: "
+      "Attempting to set variable %s to %s.\n",
+      var_->expand_key ().c_str (),
+      rhs.to_string ().c_str ()));
+
+    var_->set (rhs, settings);
+  }
+  else if (array_)
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      "Composite_Assignment_Node::evaluate: "
+      "Attempting to set index of var %s to %s.\n",
+      array_->expand_key ().c_str (),
+      rhs.to_string ().c_str ()));
+
+    array_->set (rhs, settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      "Composite_Assignment_Node::evaluate: "
+      "left hand side was neither a variable nor an array reference. "
+      "Check your expression for errors.\n",
+      array_->expand_key ().c_str (),
+      rhs.to_string ().c_str ()));
+
+  }
 
   // return the value
   return rhs;

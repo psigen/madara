@@ -1456,6 +1456,141 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   return buffer;
 }
 
+
+Madara::Knowledge_Record
+Madara::Knowledge_Record::retrieve_index (size_t index) const
+{
+  Knowledge_Record ret_value;
+
+  if (type_ == INTEGER_ARRAY)
+  {
+    if (index < size_t (size_))
+      ret_value.set_value (int_array_.get_ptr ()[index]);
+  }
+  else if (type_ == DOUBLE_ARRAY)
+  {
+    if (index < size_t (size_))
+      ret_value.set_value (double_array_.get_ptr ()[index]);
+  }
+
+  return ret_value;
+}
+
+/**
+  * sets the value at the index to the specified value. If the
+  * record was previously not an array or if the array is not
+  * large enough, a new array is created.
+  **/
+void
+Madara::Knowledge_Record::set_index (size_t index, Integer value)
+{
+  if (type_ == DOUBLE_ARRAY)
+  {
+    // let the set_index for doubles take care of this
+    set_index (index, double (value));
+    return;
+  }
+  else if (type_ == INTEGER_ARRAY)
+  {
+    if (index >= size_)
+    {
+      Integer * ptr_temp = new Integer [index+1];
+      memcpy (ptr_temp, int_array_.get_ptr (), size_ * sizeof (Integer));
+
+      for (size_t i = size_; i < index; ++i)
+        ptr_temp[i] = 0;
+
+      size_ = index+1;
+      int_array_ = ptr_temp;
+    }
+  }
+  else
+  {
+    Integer * ptr_temp = new Integer [index+1];
+    size_ = index+1;
+
+    for (size_t i = 0; i < index; ++i)
+      ptr_temp[i] = 0;
+
+    int_array_ = ptr_temp;
+    type_ = INTEGER_ARRAY;
+  }
+  
+  int_array_.get_ptr ()[index] = value;
+
+  if (status_ != MODIFIED)
+    status_ = MODIFIED;
+}
+ 
+/**
+  * sets the value at the index to the specified value. If the
+  * record was previously not an array or if the array is not
+  * large enough, a new array is created.
+  **/
+void
+Madara::Knowledge_Record::set_index (size_t index, double value)
+{
+  if (type_ == INTEGER_ARRAY)
+  {
+    /**
+     * if this was previously an integer array, then copy
+     * all of the elements and update the index appropriately
+     **/
+    size_t size = size_ > index + 1 ? size_ : index + 1;
+    double * ptr_temp = new double [size];
+    Integer * source_array = int_array_.get_ptr ();
+
+    // go through each element of the old array and copy over
+    for (size_t i = 0; i < size_; ++i)
+      ptr_temp[i] = source_array[i];
+    
+    for (size_t i = size_; i < size; ++i)
+      ptr_temp[i] = 0;
+
+    double_array_ = ptr_temp;
+    size_ = size;
+    type_ = DOUBLE_ARRAY;
+  }
+  else if (type_ != DOUBLE_ARRAY)
+  {
+    double * ptr_temp = new double [index+1];
+    size_ = index+1;
+
+    if (size_ > 1)
+    {
+      for (size_t i = 0; i < size_ - 1; ++i)
+        ptr_temp[i] = 0;
+    }
+
+    double_array_ = ptr_temp;
+    type_ = DOUBLE_ARRAY;
+  }
+  else
+  {
+    if (index + 1 >= size_)
+    {
+      size_t size = index + 1;
+      double * ptr_temp = new double [size];
+      double * source_array = double_array_.get_ptr ();
+
+      // go through each element of the old array and copy over
+      for (size_t i = 0; i < size_; ++i)
+        ptr_temp[i] = source_array[i];
+
+      for (size_t i = size_; i < size; ++i)
+        ptr_temp[i] = 0;
+
+      double_array_ = ptr_temp;
+      size_ = size;
+    }
+  }
+  
+  double_array_.get_ptr ()[index] = value;
+
+  if (status_ != MODIFIED)
+    status_ = MODIFIED;
+}
+  
 char *
 Madara::Knowledge_Record::read (char * buffer, std::string & key,
                                 int64_t & buffer_remaining)
@@ -1530,7 +1665,7 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
 
       memcpy (ptr_temp, buffer, buff_value_size); 
 
-      for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
+      for (uint32_t i = 0; i < size_; ++i)
       {
         ptr_temp[i] = Madara::Utility::endian_swap (ptr_temp[i]);
       }

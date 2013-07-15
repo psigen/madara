@@ -115,6 +115,8 @@ namespace Madara
        * @param    i             current position in expression
        * @param    accumulated_precedence  current precedence
        * @param    list          list of symbols to insert for loop into
+       * @param    returnableInput  used to interact with lastValidInput if
+       *                            an array reference is found
        **/
       void handle_for_loop (
         Madara::Knowledge_Engine::Thread_Safe_Context &context,
@@ -122,7 +124,8 @@ namespace Madara
                                             const std::string &input,
                                            std::string::size_type &i,
                                           int & accumulated_precedence,
-                                           ::std::list<Symbol *>& list);
+                                           ::std::list<Symbol *>& list,
+                                          Symbol *& returnableInput);
 
       /**
        * Inserts a variable into the tree

@@ -161,6 +161,32 @@ namespace Madara
     ~Knowledge_Record ();
     
     /**
+     * retrieves the value at an array index. If the
+     * knowledge record is not an array, false is returned.
+     * @param    index    index of the array item
+     * @return   value at the index
+     **/
+    Knowledge_Record retrieve_index (size_t index) const;
+
+    /**
+     * sets the value at the index to the specified value. If the
+     * record was previously not an array or if the array is not
+     * large enough, a new array is created.
+     * @param    index   index of the value to set
+     * @param    value   the value to set at the specified index
+     **/
+    void set_index (size_t index, Integer value);
+     
+    /**
+     * sets the value at the index to the specified value. If the
+     * record was previously not an array or if the array is not
+     * large enough, a new array is created.
+     * @param    index   index of the value to set
+     * @param    value   the value to set at the specified index
+     **/
+    void set_index (size_t index, double value);
+
+    /**
      * converts the value to a string.
      * @param   delimeter   characters to insert in between
      *                      elements of an array
