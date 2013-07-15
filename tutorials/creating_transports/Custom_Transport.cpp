@@ -134,7 +134,7 @@ Custom_Transport::send_data (
   strncpy (header.originator, id_.c_str (), sizeof (header.originator) - 1);
 
   // only 1 update in a send_data message
-  header.updates = updates.size ();
+  header.updates = uint32_t (updates.size ());
 
   // send data is generally an assign type. However, Message_Header is
   // flexible enough to support both, and this will simply our read thread
