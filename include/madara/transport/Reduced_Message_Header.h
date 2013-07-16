@@ -31,9 +31,9 @@ namespace Madara
     *
     *        size = buffer[0] (8 byte)
     *        transport id = buffer[8] (8 byte)
-    *        updates = buffer[12] (unsigned 4 byte number of updates)
-    *        clock = buffer[16] (unsigned 8 byte clock for this message)
-    *        knowledge = buffer[24] (the new knowledge starts here)
+    *        updates = buffer[16] (unsigned 4 byte number of updates)
+    *        clock = buffer[20] (unsigned 8 byte clock for this message)
+    *        knowledge = buffer[28] (the new knowledge starts here)
     */
 
     class MADARA_Export Reduced_Message_Header : public Message_Header
