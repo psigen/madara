@@ -266,9 +266,8 @@ Madara::Transport::Broadcast_Transport::send_data (
         " Sent packet with size %d\n",
         bytes_sent));
     }
-
-    delete header;
   }
-
+  
+  delete header;
   return 0;
 }
