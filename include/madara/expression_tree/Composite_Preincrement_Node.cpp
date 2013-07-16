@@ -18,7 +18,11 @@
 Madara::Expression_Tree::Composite_Preincrement_Node::Composite_Preincrement_Node (
   Component_Node *right)
   : Composite_Unary_Node (right)
-{    
+{
+  var_ = dynamic_cast <Variable_Node *> (right);
+
+  if (!var_)
+    array_ = dynamic_cast <Composite_Array_Reference *> (right);
 }
 
 // Dtor
@@ -71,18 +75,12 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::Composite_Preincrement_Node::evaluate (
   const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
-  Variable_Node * right = dynamic_cast <Variable_Node *> (this->right_);
-  if (right)
-  {
-    return right->inc (settings);
-  }
-  
-  // if we get to this point, we've somehow got a predecrement of a non-var.
-  // We go along with this with a temporary record, but this is highly unusual.
-  Madara::Knowledge_Record record (this->right_->evaluate (settings));
-  ++record;
-  
-  return record;
+  if (var_)
+    return var_->inc (settings);
+  else if (array_)
+    return array_->inc (settings);
+  else
+    return ++(this->right_->evaluate (settings));
 }
 
 // accept a visitor

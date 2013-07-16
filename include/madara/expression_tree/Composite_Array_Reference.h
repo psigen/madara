@@ -32,7 +32,17 @@ namespace Madara
       
       /// Dtor.
       virtual ~Composite_Array_Reference (void);
-
+      
+      /// Sets the value stored in the node.
+      Knowledge_Record dec (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings ());
+      
+      /// Sets the value stored in the node.
+      Knowledge_Record inc (
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings ());
+      
       /// Return the item stored in the node.
       virtual Madara::Knowledge_Record item (void) const;
 

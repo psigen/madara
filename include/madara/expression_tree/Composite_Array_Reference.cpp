@@ -167,6 +167,93 @@ Madara::Expression_Tree::Composite_Array_Reference::key () const
   return key_;
 }
 
+
+/// Sets the value stored in the node.
+Madara::Knowledge_Record
+Madara::Expression_Tree::Composite_Array_Reference::dec (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
+{
+  size_t index = size_t (right_->evaluate (settings).to_integer ());
+
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
+      return context_.retrieve_index (expand_key (), index, settings);
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    Knowledge_Record result (record_->dec_index (index));
+
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
+    {
+      context_.mark_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
+
+    return result;
+  }
+  else
+  {
+    Knowledge_Record result = 
+      context_.retrieve_index (expand_key (), index, settings) - Knowledge_Record::Integer (1);
+
+    if (result.type () == Knowledge_Record::INTEGER)
+      context_.set_index (expand_key (), index, result.to_integer (), settings);
+    else if (result.type () == Knowledge_Record::DOUBLE)
+      context_.set_index (expand_key (), index, result.to_double (), settings);
+
+    return result;
+  }
+}
+      
+/// Sets the value stored in the node.
+Madara::Knowledge_Record
+Madara::Expression_Tree::Composite_Array_Reference::inc (
+  const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
+{
+  size_t index = size_t (right_->evaluate (settings).to_integer ());
+
+  if (record_)
+  {
+    // notice that we assume the context is locked
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite && record_->write_quality < record_->quality)
+      return context_.retrieve_index (expand_key (), index, settings);
+
+    // cheaper to read than write, so check to see if
+    // we actually need to update quality and status
+    if (record_->write_quality != record_->quality)
+      record_->quality = record_->write_quality;
+
+    Knowledge_Record result (record_->dec_index (index));
+
+    if (key_[0] != '.' && !settings.treat_globals_as_locals)
+    {
+      context_.mark_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
+
+    return result;
+  }
+  else
+  {
+    Knowledge_Record result = 
+      context_.retrieve_index (expand_key (), index, settings) - Knowledge_Record::Integer (1);
+
+    if (result.type () == Knowledge_Record::INTEGER)
+      context_.set_index (expand_key (), index, result.to_integer (), settings);
+    else if (result.type () == Knowledge_Record::DOUBLE)
+      context_.set_index (expand_key (), index, result.to_double (), settings);
+
+    return result;
+  }
+}
+
 int
 Madara::Expression_Tree::Composite_Array_Reference::set (
   const Madara::Knowledge_Record & value,

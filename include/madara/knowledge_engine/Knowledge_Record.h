@@ -167,7 +167,23 @@ namespace Madara
      * @return   value at the index
      **/
     Knowledge_Record retrieve_index (size_t index) const;
-
+    
+    /**
+     * decrements the value at the index to the specified value. If the
+     * record was previously not an array or if the array is not
+     * large enough, a new array is created.
+     * @param    index   index of the value to set
+     **/
+    Knowledge_Record dec_index (size_t index);
+     
+    /**
+     * increments the value at the index to the specified value. If the
+     * record was previously not an array or if the array is not
+     * large enough, a new array is created.
+     * @param    index   index of the value to set
+     **/
+    Knowledge_Record inc_index (size_t index);
+     
     /**
      * sets the value at the index to the specified value. If the
      * record was previously not an array or if the array is not

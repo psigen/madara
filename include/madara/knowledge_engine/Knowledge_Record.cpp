@@ -1476,6 +1476,104 @@ Madara::Knowledge_Record::retrieve_index (size_t index) const
   return ret_value;
 }
 
+Madara::Knowledge_Record 
+Madara::Knowledge_Record::dec_index (size_t index)
+{
+  if (type_ == DOUBLE_ARRAY)
+  {
+    if (index >= size_)
+    {
+      double * ptr_temp = new double [index+1];
+      memcpy (ptr_temp, double_array_.get_ptr (), size_ * sizeof (double));
+      
+      for (size_t i = size_; i < index+1; ++i)
+        ptr_temp[i] = 0;
+      
+      size_ = index+1;
+      double_array_ = ptr_temp;
+    }
+  }
+  else if (type_ == INTEGER_ARRAY)
+  {
+    if (index >= size_)
+    {
+      Integer * ptr_temp = new Integer [index+1];
+      memcpy (ptr_temp, int_array_.get_ptr (), size_ * sizeof (Integer));
+
+      for (size_t i = size_; i < index+1; ++i)
+        ptr_temp[i] = 0;
+
+      size_ = index+1;
+      int_array_ = ptr_temp;
+    }
+  }
+  else
+  {
+    Integer * ptr_temp = new Integer [index+1];
+    size_ = index+1;
+
+    for (size_t i = 0; i < index + 1; ++i)
+      ptr_temp[i] = 0;
+
+    int_array_ = ptr_temp;
+    type_ = INTEGER_ARRAY;
+  }
+  
+  if (status_ != MODIFIED)
+    status_ = MODIFIED;
+
+  return Knowledge_Record (--int_array_.get_ptr ()[index]);
+}
+ 
+Madara::Knowledge_Record 
+Madara::Knowledge_Record::inc_index (size_t index)
+{
+  if (type_ == DOUBLE_ARRAY)
+  {
+    if (index >= size_)
+    {
+      double * ptr_temp = new double [index+1];
+      memcpy (ptr_temp, double_array_.get_ptr (), size_ * sizeof (double));
+      
+      for (size_t i = size_; i < index+1; ++i)
+        ptr_temp[i] = 0;
+      
+      size_ = index+1;
+      double_array_ = ptr_temp;
+    }
+  }
+  else if (type_ == INTEGER_ARRAY)
+  {
+    if (index >= size_)
+    {
+      Integer * ptr_temp = new Integer [index+1];
+      memcpy (ptr_temp, int_array_.get_ptr (), size_ * sizeof (Integer));
+
+      for (size_t i = size_; i < index+1; ++i)
+        ptr_temp[i] = 0;
+
+      size_ = index+1;
+      int_array_ = ptr_temp;
+    }
+  }
+  else
+  {
+    Integer * ptr_temp = new Integer [index+1];
+    size_ = index+1;
+
+    for (size_t i = 0; i < index + 1; ++i)
+      ptr_temp[i] = 0;
+
+    int_array_ = ptr_temp;
+    type_ = INTEGER_ARRAY;
+  }
+  
+  if (status_ != MODIFIED)
+    status_ = MODIFIED;
+
+  return Knowledge_Record (++int_array_.get_ptr ()[index]);
+}
+ 
 /**
   * sets the value at the index to the specified value. If the
   * record was previously not an array or if the array is not

@@ -4,6 +4,8 @@
 
 #include "madara/expression_tree/Composite_Unary_Node.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/expression_tree/Composite_Array_Reference.h"
+#include "madara/expression_tree/Variable_Node.h"
 
 namespace Madara
 {
@@ -58,6 +60,14 @@ namespace Madara
        * @param    visitor   visitor instance to use
        **/
       virtual void accept (Visitor &visitor) const;
+
+    private:
+
+      /// variable holder
+      Variable_Node * var_;
+
+      /// variable index holder
+      Composite_Array_Reference * array_;
     };
   }
 }

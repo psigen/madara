@@ -191,8 +191,28 @@ void test_array_math (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.evaluate ("array[1] += 5");
   knowledge.evaluate ("array[1] += 5");
   knowledge.evaluate ("vector5=6; vector6=5; vector7=4; vector8=3");
-
   assert (knowledge.evaluate ("array[1]").to_integer () == 10);
+
+  knowledge.evaluate ("++array[1]; ++array[1]");
+
+  assert (knowledge.evaluate ("array[1]").to_integer () == 12);
+
+  knowledge.evaluate ("++array[2]; ++array[4]");
+  
+  assert (
+    knowledge.evaluate ("array[1]").to_integer () == 12 &&
+    knowledge.evaluate ("array[2]").to_integer () == 1 &&
+    knowledge.evaluate ("array[4]").to_integer () == 1 &&);
+  
+
+  knowledge.evaluate ("--array[1]; --array[1]");
+  assert (knowledge.evaluate ("array[1]").to_integer () == 10);
+  
+  knowledge.evaluate ("--array[0]; --array[0]");
+  assert (knowledge.evaluate ("array[0]").to_integer () == -2);
+  
+
+
 }
 
 void test_to_vector (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
@@ -360,17 +380,12 @@ void test_doubles (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.set (".var2", 1.0);
   knowledge.set (".var3", 10.0);
 
-  knowledge.print ("  .var1={.var1}, .var2={.var2}, .var3={.var3}\n");
-
-  knowledge.print (".  var4 = .var2 / .var1");
   knowledge.evaluate (".var4 = .var2 / .var1");
   assert (knowledge.get (".var4") == 2.0);
   
-  knowledge.print ("  .var5 = .var3 / .var1");
   knowledge.evaluate (".var5 = .var3 / .var1");
   assert (knowledge.get (".var5") == 20.0);
   
-  knowledge.print ("  .var6 = .var3 / (.var1 + .var2)");
   knowledge.evaluate (".var6 = .var3 / (.var1 + .var2)");
   assert (knowledge.get (".var6") == 10.0 / 1.5);
 
