@@ -202,7 +202,7 @@ void test_array_math (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   assert (
     knowledge.evaluate ("array[1]").to_integer () == 12 &&
     knowledge.evaluate ("array[2]").to_integer () == 1 &&
-    knowledge.evaluate ("array[4]").to_integer () == 1 &&);
+    knowledge.evaluate ("array[4]").to_integer () == 1);
   
 
   knowledge.evaluate ("--array[1]; --array[1]");
