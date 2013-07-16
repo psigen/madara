@@ -1489,7 +1489,7 @@ Madara::Knowledge_Record::dec_index (size_t index)
       for (size_t i = size_; i < index+1; ++i)
         ptr_temp[i] = 0;
       
-      size_ = index+1;
+      size_ = uint32_t (index+1);
       double_array_ = ptr_temp;
     }
   }
@@ -1503,14 +1503,14 @@ Madara::Knowledge_Record::dec_index (size_t index)
       for (size_t i = size_; i < index+1; ++i)
         ptr_temp[i] = 0;
 
-      size_ = index+1;
+      size_ = uint32_t (index+1);
       int_array_ = ptr_temp;
     }
   }
   else
   {
     Integer * ptr_temp = new Integer [index+1];
-    size_ = index+1;
+    size_ = uint32_t (index+1);
 
     for (size_t i = 0; i < index + 1; ++i)
       ptr_temp[i] = 0;
@@ -1538,7 +1538,7 @@ Madara::Knowledge_Record::inc_index (size_t index)
       for (size_t i = size_; i < index+1; ++i)
         ptr_temp[i] = 0;
       
-      size_ = index+1;
+      size_ = uint32_t (index+1);
       double_array_ = ptr_temp;
     }
   }
@@ -1552,14 +1552,14 @@ Madara::Knowledge_Record::inc_index (size_t index)
       for (size_t i = size_; i < index+1; ++i)
         ptr_temp[i] = 0;
 
-      size_ = index+1;
+      size_ = uint32_t (index+1);
       int_array_ = ptr_temp;
     }
   }
   else
   {
     Integer * ptr_temp = new Integer [index+1];
-    size_ = index+1;
+    size_ = uint32_t (index+1);
 
     for (size_t i = 0; i < index + 1; ++i)
       ptr_temp[i] = 0;

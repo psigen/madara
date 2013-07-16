@@ -706,7 +706,7 @@ uint64_t test_looped_sr (
   knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
   knowledge.set (".actual_iterations", (Madara::Knowledge_Record::Integer) actual_iterations);
 
-  buffer = ".var2[.iterations) (++.var1)";
+  buffer = ".var2[0->.iterations) (++.var1)";
 
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
@@ -1032,7 +1032,7 @@ uint64_t test_looped_si (
 
   knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
   
-  buffer = ".var2[.iterations) (1 => ++.var1)";
+  buffer = ".var2[0->.iterations) (1 => ++.var1)";
 
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
@@ -1157,7 +1157,7 @@ uint64_t test_looped_li (
   knowledge.set (".iterations", (Madara::Knowledge_Record::Integer) iterations);
   knowledge.set (".actual_iterations", (Madara::Knowledge_Record::Integer) actual_iterations);
 
-  buffer = ".var2[.iterations) (1 => ++.var1)";
+  buffer = ".var2[0->.iterations) (1 => ++.var1)";
 
   Madara::Knowledge_Engine::Compiled_Expression ce;
 
