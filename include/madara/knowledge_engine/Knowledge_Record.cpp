@@ -81,6 +81,8 @@ Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
     else if (rhs.is_file_type ())
       file_value_ = rhs.file_value_;
   }
+  else
+    set_value (Integer (0));
 }
 
 Madara::Knowledge_Record::~Knowledge_Record ()
@@ -374,7 +376,7 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
       return std::string (str_value_.get_ptr ());
   }
   else
-    return "";
+    return "0";
 }
 
 // read the value_ in a string format
@@ -1086,6 +1088,8 @@ Madara::Knowledge_Record::operator= (const Knowledge_Record & rhs)
     else if (is_file_type ())
       file_value_ = rhs.file_value_;
   }
+  else
+    set_value (Integer (0));
 
   return *this;
 }
