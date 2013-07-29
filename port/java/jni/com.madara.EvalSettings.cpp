@@ -5,20 +5,11 @@
  * https://code.google.com/p/smash-cmu/wiki/License
  *********************************************************************/
 
-#include "com.madara.EvalSettings_Glue.h"
-#include "com.madara.EvalSettings_Impl.h"
+#include "com.madara.EvalSettings.h"
+#include "madara/knowledge_engine/Eval_Settings.h"
 
-/*
- * Class:     com_madara_EvalSettings
- * Method:    jni_getDefaultEvalSettings
- * Signature: (I)J
- */
-JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1getDefaultEvalSettings(JNIEnv *env, jclass clazz, jint which)
-{
-	void* ret;
-	jni_getDefaultEvalSettings_impl_RI(&ret, which);
-	return ret;
-}
+#include <stdio.h>
+#include <string>
 
 /*
  * Class:     com_madara_EvalSettings
@@ -27,9 +18,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1getDefaultEvalSettings
  */
 JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1evalSettings__(JNIEnv *env, jobject obj)
 {
-	void* ret;
-	jni_EvalSettings_impl_RV(&ret);
-	return ret;
+	return (jlong)(new Madara::Knowledge_Engine::Eval_Settings());
 }
 
 /*
@@ -37,11 +26,9 @@ JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1evalSettings__(JNIEnv 
  * Method:    jni_evalSettings
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1evalSettings__J(JNIEnv *env, jobject obj, jlong cptr)
+JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1evalSettings__J(JNIEnv *env, jobject obj, jlong original)
 {
-	void* ret;
-	jni_EvalSettings_impl_RP(&ret, cptr);
-	return ret;
+	return (jlong) (new Madara::Knowledge_Engine::Eval_Settings(*(Madara::Knowledge_Engine::Eval_Settings*)original));
 }
 
 /*
@@ -51,7 +38,8 @@ JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1evalSettings__J(JNIEnv
  */
 JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setDelaySendingModifieds (JNIEnv * env, jobject obj, jlong cptr, jboolean delaySendingModifieds)
 {
-	jni_EvalSettings_set_delay_sending_modifieds_impl_PB(cptr, delaySendingModifieds);
+	Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    evalSettings->delay_sending_modifieds = delaySendingModifieds;
 }
 
 /*
@@ -61,7 +49,8 @@ JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setDelaySendingModified
  */
 JNIEXPORT jboolean JNICALL Java_com_madara_EvalSettings_jni_1getDelaySendingModifieds (JNIEnv * env, jobject obj, jlong cptr)
 {
-	return (jboolean) jni_EvalSettings_get_delay_sending_modifieds_impl_P(cptr);	
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+	return (jboolean) evalSettings->delay_sending_modifieds;
 }
 
 /*
@@ -71,11 +60,12 @@ JNIEXPORT jboolean JNICALL Java_com_madara_EvalSettings_jni_1getDelaySendingModi
  */
 JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setPrePrintStatement (JNIEnv * env, jobject obj, jlong cptr, jstring prePrintStatement)
 {
-	const char *nativePrePrint = (*env)->GetStringUTFChars(env, prePrintStatement, 0);
+	const char *nativePrePrint = env->GetStringUTFChars(prePrintStatement, 0);
 	
-	jni_EvalSettings_set_pre_print_statement_impl_PS(cptr, nativePrePrint);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    evalSettings->pre_print_statement = std::string(nativePrePrint);
 	
-	(*env)->ReleaseStringUTFChars(env, prePrintStatement, nativePrePrint);
+	env->ReleaseStringUTFChars(prePrintStatement, nativePrePrint);
 }
 
 /*
@@ -85,7 +75,9 @@ JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setPrePrintStatement (J
  */
 JNIEXPORT jstring JNICALL Java_com_madara_EvalSettings_jni_1getPrePrintStatement (JNIEnv * env, jobject obj, jlong cptr)
 {
-	return (*env)->NewStringUTF(env, jni_EvalSettings_get_pre_print_statement_impl_P(cptr));
+    
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+	return env->NewStringUTF(evalSettings->pre_print_statement.c_str());
 }
 
 /*
@@ -95,11 +87,12 @@ JNIEXPORT jstring JNICALL Java_com_madara_EvalSettings_jni_1getPrePrintStatement
  */
 JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setPostPrintStatement (JNIEnv *env, jobject obj, jlong cptr, jstring postPrintStatement)
 {
-	const char *nativePostPrint = (*env)->GetStringUTFChars(env, postPrintStatement, 0);
+	const char *nativePostPrint = env->GetStringUTFChars(postPrintStatement, 0);
 	
-	jni_EvalSettings_set_post_print_statement_impl_PS(cptr, nativePostPrint);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    evalSettings->post_print_statement = std::string(nativePostPrint);
 	
-	(*env)->ReleaseStringUTFChars(env, postPrintStatement, nativePostPrint);
+	env->ReleaseStringUTFChars(postPrintStatement, nativePostPrint);
 }
 
 /*
@@ -109,7 +102,8 @@ JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setPostPrintStatement (
  */
 JNIEXPORT jstring JNICALL Java_com_madara_EvalSettings_jni_1getPostPrintStatement (JNIEnv * env, jobject obj, jlong cptr)
 {
-	return (*env)->NewStringUTF(env, jni_EvalSettings_get_post_print_statement_impl_P(cptr));
+	Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+	return env->NewStringUTF(evalSettings->post_print_statement.c_str());
 }
 
 /*
@@ -119,7 +113,8 @@ JNIEXPORT jstring JNICALL Java_com_madara_EvalSettings_jni_1getPostPrintStatemen
  */
 JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setAlwaysOverwrite (JNIEnv * env, jobject obj, jlong cptr, jboolean alwaysOverwrite)
 {
-	jni_EvalSettings_set_always_overwrite_impl_PB(cptr, alwaysOverwrite);
+	Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    evalSettings->always_overwrite = alwaysOverwrite;
 }
 
 /*
@@ -129,7 +124,8 @@ JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setAlwaysOverwrite (JNI
  */
 JNIEXPORT jboolean JNICALL Java_com_madara_EvalSettings_jni_1getAlwaysOverwrite (JNIEnv * env, jobject obj, jlong cptr)
 {
-	return (jboolean) jni_EvalSettings_get_always_overwrite_impl_P(cptr);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+	return (jboolean) evalSettings->always_overwrite;
 }
 
 /*
@@ -139,7 +135,8 @@ JNIEXPORT jboolean JNICALL Java_com_madara_EvalSettings_jni_1getAlwaysOverwrite 
  */
 JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setTreatGlobalsAsLocals (JNIEnv *env, jobject obj, jlong cptr, jboolean treatGlobalsAsLocals)
 {
-	jni_EvalSettings_set_treat_globals_as_locals_impl_PB(cptr, treatGlobalsAsLocals);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    evalSettings->treat_globals_as_locals = treatGlobalsAsLocals;
 }
 
 /*
@@ -149,7 +146,8 @@ JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setTreatGlobalsAsLocals
  */
 JNIEXPORT jboolean JNICALL Java_com_madara_EvalSettings_jni_1getTreatGlobalsAsLocals (JNIEnv * env, jobject obj, jlong cptr)
 {
-	return (jboolean) jni_EvalSettings_get_treat_globals_as_locals_impl_P(cptr);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+	return (jboolean) evalSettings->treat_globals_as_locals;
 }
 
 /*
@@ -159,7 +157,8 @@ JNIEXPORT jboolean JNICALL Java_com_madara_EvalSettings_jni_1getTreatGlobalsAsLo
  */
 JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setClockIncrement (JNIEnv *env, jobject obj, jlong cptr, jlong defaultClockIncrement)
 {
-	jni_EvalSettings_set_clock_increment_impl_PJ(cptr, defaultClockIncrement);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    evalSettings->clock_increment = defaultClockIncrement;
 }
 
 /*
@@ -169,7 +168,8 @@ JNIEXPORT void JNICALL Java_com_madara_EvalSettings_jni_1setClockIncrement (JNIE
  */
 JNIEXPORT jlong JNICALL Java_com_madara_EvalSettings_jni_1getClockIncrement (JNIEnv *env, jobject obj, jlong cptr)
 {
-	return (jlong) jni_EvalSettings_get_clock_increment(cptr);
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+	return (jlong) evalSettings->clock_increment;
 }
   
   

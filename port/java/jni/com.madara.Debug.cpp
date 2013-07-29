@@ -5,8 +5,8 @@
  * https://code.google.com/p/smash-cmu/wiki/License
  *********************************************************************/
 
-#include "com.madara.Debug_Glue.h"
-#include "com.madara.Debug_Impl.h"
+#include "com.madara.Debug.h"
+#include "madara/utility/Log_Macros.h"
 
 /*
  * Class:     com_madara_Debug
@@ -15,5 +15,5 @@
  */
 JNIEXPORT void JNICALL Java_com_madara_Debug_jni_1setDebugLevel (JNIEnv *env, jclass clazz, jint debugLevel)
 {
-	jni_Debug_set_debug_level_I(debugLevel);
+	MADARA_debug_level = debugLevel;
 }

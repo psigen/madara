@@ -5,20 +5,8 @@
  * https://code.google.com/p/smash-cmu/wiki/License
  *********************************************************************/
  
-#include "com.madara.WaitSettings_Glue.h"
-#include "com.madara.WaitSettings_Impl.h"
-
-/*
- * Class:     com_madara_WaitSettings
- * Method:    jni_getDefaultWaitSettings
- * Signature: (I)J
- */
-JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSettings (JNIEnv *env, jclass clazz, jint which)
-{
-	void* ret;
-	jni_WaitSettings_get_default_wait_settings_RI(&ret, which);
-	return ret;
-}
+#include "com.madara.WaitSettings.h"
+#include "madara/knowledge_engine/Wait_Settings.h"
 
 /*
  * Class:     com_madara_WaitSettings
@@ -27,9 +15,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSettings
  */
 JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__(JNIEnv * env, jobject obj)
 {
-	void* ret;
-	jni_WaitSettings_RV(&ret);
-	return ret;
+    return (jlong) new Madara::Knowledge_Engine::Wait_Settings();
 }
 
 /*
@@ -39,9 +25,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__(JNIEnv 
  */
 JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J (JNIEnv * env, jobject obj, jlong original)
 {
-	void* ret;
-	jni_WaitSettings_RP(&ret, original);
-	return ret;
+    return (jlong) new Madara::Knowledge_Engine::Wait_Settings(*(Madara::Knowledge_Engine::Wait_Settings*)original);
 }
 
 /*
@@ -51,7 +35,8 @@ JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J (JNIEn
  */
 JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency (JNIEnv *env, jobject obj, jlong cptr, jdouble pollFreq)
 {
-	jni_WaitSettings_set_poll_frequency_PD(cptr, pollFreq);
+    Madara::Knowledge_Engine::Wait_Settings* waitSettings = (Madara::Knowledge_Engine::Wait_Settings*) cptr;
+    waitSettings->poll_frequency = pollFreq;
 }
 
 /*
@@ -61,7 +46,8 @@ JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency (JNIEn
  */
 JNIEXPORT jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency (JNIEnv *env, jobject obj, jlong cptr)
 {
-	return jni_WaitSettings_get_poll_frequency_P(cptr);
+    Madara::Knowledge_Engine::Wait_Settings* waitSettings = (Madara::Knowledge_Engine::Wait_Settings*) cptr;
+    return (jdouble) waitSettings->poll_frequency;
 }
 
 /*
@@ -71,7 +57,8 @@ JNIEXPORT jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency (JN
  */
 JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime (JNIEnv *env, jobject obj, jlong cptr, jdouble maxWaitTime)
 {
-	jni_WaitSettings_set_max_wait_time_PD(cptr, maxWaitTime);
+    Madara::Knowledge_Engine::Wait_Settings* waitSettings = (Madara::Knowledge_Engine::Wait_Settings*) cptr;
+    waitSettings->max_wait_time = maxWaitTime;
 }
 
 /*
@@ -81,7 +68,8 @@ JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime (JNIEnv 
  */
 JNIEXPORT jdouble JNICALL Java_com_madara_WaitSettings_jni_1getMaxWaitTime (JNIEnv *env, jobject obj, jlong cptr)
 {
-	return jni_WaitSettings_get_max_wait_time(cptr);
+    Madara::Knowledge_Engine::Wait_Settings* waitSettings = (Madara::Knowledge_Engine::Wait_Settings*) cptr;
+    return (jdouble) waitSettings->max_wait_time;
 }
 
 
