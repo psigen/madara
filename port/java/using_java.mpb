@@ -2,15 +2,16 @@ feature (java) {
 
   requires += java
 
-  includes += $(MADARA_ROOT)/port/java/jni
-
   includes += $(JAVA_HOME)/include
-  includes += $(JAVA_HOME)/include/linux
-  includes += $(JAVA_HOME)/include/win32
-  includes += $(JAVA_HOME)/include/mac
+  
+  specific (prop:windows) {
+    includes += $(JAVA_HOME)/include/win32
+  } else {
+    includes += $(JAVA_HOME)/include/linux
+  }
 
   Source_Files {
-    port/java/jni/
+    port/java/jni
   }
   
   Header_Files {
