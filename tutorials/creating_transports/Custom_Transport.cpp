@@ -61,7 +61,7 @@ Custom_Transport::setup (void)
 
   socket_.set_option (IPPROTO_IP,
                      IP_MULTICAST_TTL,
-                     (void*) &ttl,
+                     (void *) &ttl,
                      sizeof ttl);
 
   if (addresses_.size () > 0)
