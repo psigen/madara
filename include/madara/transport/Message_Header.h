@@ -57,36 +57,19 @@ namespace Madara
       /**
        * Constructor
        **/
-      Message_Header ()
-        : size (0),
-          type (0), updates (0), quality (0), clock (0)
-      {
-        memcpy (madara_id, MADARA_IDENTIFIER, 7);
-        madara_id[7] = 0;
-
-        originator[0] = 0;
-        domain[0] = 0;
-      }
+      Message_Header ();
 
       /**
        * Destructor
        **/
-      ~Message_Header ()
-      {
-      }
+      virtual ~Message_Header ();
 
       /**
        * Returns the size of the encoded Message_Header class, which may be
        * different from sizeof (Message_Header) because of compiler
        * optimizations for word boundaries
        **/
-      virtual int encoded_size (void)
-      {
-        return sizeof (uint64_t) * 2
-          + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH
-                             + MAX_ORIGINATOR_LENGTH)
-          + sizeof (uint32_t) * 2;
-      }
+      virtual int encoded_size (void) const;
 
       /**
        * Reads a Message_Header instance from a buffer and updates

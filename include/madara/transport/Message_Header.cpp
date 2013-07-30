@@ -2,6 +2,31 @@
 #include "madara/utility/Utility.h"
 #include <algorithm>
 
+Madara::Transport::Message_Header::Message_Header ()
+: size (0),
+  type (0), updates (0), quality (0), clock (0)
+{
+  memcpy (madara_id, MADARA_IDENTIFIER, 7);
+  madara_id[7] = 0;
+
+  originator[0] = 0;
+  domain[0] = 0;
+}
+
+
+Madara::Transport::Message_Header::~Message_Header ()
+{
+}
+
+int
+Madara::Transport::Message_Header::encoded_size (void) const
+{
+  return sizeof (uint64_t) * 2
+    + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH
+                        + MAX_ORIGINATOR_LENGTH)
+    + sizeof (uint32_t) * 2;
+}
+
 char *
 Madara::Transport::Message_Header::read (char * buffer,
                                          int64_t & buffer_remaining)

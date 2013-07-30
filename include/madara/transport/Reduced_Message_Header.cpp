@@ -3,6 +3,25 @@
 #include <algorithm>
 #include <string.h>
 
+Madara::Transport::Reduced_Message_Header::Reduced_Message_Header ()
+: Message_Header ()
+{
+  memcpy (madara_id, REDUCED_MADARA_ID, 7);
+  madara_id[7] = 0;
+}
+
+Madara::Transport::Reduced_Message_Header::~Reduced_Message_Header ()
+{
+}
+
+int
+Madara::Transport::Reduced_Message_Header::encoded_size (void) const
+{
+  return sizeof (uint64_t) * 1                   // clock
+    + sizeof (char) * (MADARA_IDENTIFIER_LENGTH) // KaRLR1.0
+    + sizeof (uint32_t) * 1;                     // updates
+}
+
 char *
   Madara::Transport::Reduced_Message_Header::read (char * buffer,
   int64_t & buffer_remaining)
@@ -82,9 +101,11 @@ char *
 }
 
 bool
-  Madara::Transport::Reduced_Message_Header::equals (const Message_Header & other)
+Madara::Transport::Reduced_Message_Header::equals (
+  const Message_Header & other)
 {
   return size == other.size &&
     updates == other.updates &&
     clock == other.clock;
 }
+
