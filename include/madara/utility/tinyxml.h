@@ -255,9 +255,9 @@ public:
 	int Row() const			{ return location.row + 1; }
 	int Column() const		{ return location.col + 1; }	///< See Row()
 
-	void  SetUserData( void* user )			{ userData = user; }	///< Set a pointer to arbitrary user data.
-	void* GetUserData()						{ return userData; }	///< Get a pointer to arbitrary user data.
-	const void* GetUserData() const 		{ return userData; }	///< Get a pointer to arbitrary user data.
+	void  SetUserData( void * user )			{ userData = user; }	///< Set a pointer to arbitrary user data.
+	void * GetUserData()						{ return userData; }	///< Get a pointer to arbitrary user data.
+	const void * GetUserData() const 		{ return userData; }	///< Get a pointer to arbitrary user data.
 
 	// Table that returs, for a given lead byte, the total number of bytes
 	// in the UTF-8 sequence.
@@ -384,7 +384,7 @@ protected:
 	TiXmlCursor location;
 
     /// Field containing a generic user pointer
-	void*			userData;
+	void *			userData;
 	
 	// None of these methods are reliable for any language except English.
 	// Good for approximation, not great for accuracy.
