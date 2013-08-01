@@ -166,7 +166,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
 
@@ -216,7 +216,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
 
@@ -267,7 +267,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
 
@@ -317,7 +317,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
 
@@ -367,7 +367,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -417,7 +417,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -468,7 +468,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
 
@@ -518,7 +518,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
 
@@ -568,7 +568,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -618,7 +618,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -668,7 +668,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -718,7 +718,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -768,7 +768,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -818,7 +818,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
     if (!settings.treat_globals_as_locals)
     {
       mark_modified (*key_ptr, record,
-        Knowledge_Update_Settings ());
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -1036,7 +1036,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       if (!settings.treat_globals_as_locals)
       {
         mark_modified (*key_ptr, record,
-          Knowledge_Update_Settings ());
+          Knowledge_Reference_Settings (false));
       }
     }
     
@@ -1128,7 +1128,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       if (!settings.treat_globals_as_locals)
       {
         mark_modified (*key_ptr, record,
-          Knowledge_Update_Settings ());
+          Knowledge_Reference_Settings (false));
       }
     }
     
@@ -1220,7 +1220,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       if (!settings.treat_globals_as_locals)
       {
         mark_modified (*key_ptr, record,
-          Knowledge_Update_Settings ());
+          Knowledge_Reference_Settings (false));
       }
     }
     
@@ -1287,7 +1287,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
       if (!settings.treat_globals_as_locals)
       {
         mark_modified (*key_ptr, found->second,
-          Knowledge_Update_Settings ());
+          Knowledge_Reference_Settings (false));
       }
     }
   }
@@ -1303,7 +1303,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
       if (!settings.treat_globals_as_locals)
       {
         mark_modified (*key_ptr, current_value,
-          Knowledge_Update_Settings ());
+          Knowledge_Reference_Settings (false));
       }
     }
   }
