@@ -230,7 +230,7 @@ Madara::Expression_Tree::Composite_Array_Reference::inc (
     if (record_->write_quality != record_->quality)
       record_->quality = record_->write_quality;
 
-    Knowledge_Record result (record_->dec_index (index));
+    Knowledge_Record result (record_->inc_index (index));
 
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
@@ -243,7 +243,8 @@ Madara::Expression_Tree::Composite_Array_Reference::inc (
   else
   {
     Knowledge_Record result = 
-      context_.retrieve_index (expand_key (), index, settings) - Knowledge_Record::Integer (1);
+      context_.retrieve_index (expand_key (), index, settings)
+        + Knowledge_Record::Integer (1);
 
     if (result.type () == Knowledge_Record::INTEGER)
       context_.set_index (expand_key (), index, result.to_integer (), settings);
