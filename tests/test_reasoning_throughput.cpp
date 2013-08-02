@@ -178,7 +178,7 @@ void
 {
   std::stringstream buffer;
 
-  std::locale loc(""); 
+  std::locale loc ("C"); 
   buffer.imbue (loc); 
 
   buffer << type;
@@ -216,7 +216,7 @@ to_legible_hertz (uint64_t hertz)
 {
   std::stringstream buffer;
 
-  std::locale loc(""); 
+  std::locale loc ("C"); 
   buffer.imbue (loc); 
 
   const int ghz_mark = 1000000000;
@@ -429,7 +429,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     std::stringstream buffer;
     
-    std::locale loc(""); 
+    std::locale loc ("C"); 
     buffer.imbue (loc); 
 
     buffer << " ";
@@ -457,7 +457,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   {
     std::stringstream buffer;
     
-    std::locale loc(""); 
+    std::locale loc ("C"); 
     buffer.imbue (loc); 
 
     buffer << " ";

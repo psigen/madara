@@ -57,7 +57,7 @@ to_legible_hertz (uint64_t hertz)
 {
   std::stringstream buffer;
 
-  std::locale loc(""); 
+  std::locale loc ("C"); 
   buffer.imbue (loc); 
 
   const int ghz_mark = 1000000000;
@@ -256,7 +256,7 @@ int main (int argc, char ** argv)
     compiled_expressions.resize (tests.size ());
   
     // use locale settings to print large numbers with commas
-    std::locale loc(""); 
+    std::locale loc ("C"); 
     std::cout.imbue (loc); 
 
     warmup (knowledge);
