@@ -70,7 +70,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	/**
 	 * Creates a KnowledgeBase
-	 * @param hostname/ip of this machine
+	 * @param host hostname/ip of this machine
 	 * @param transport to use for knowledge dissemination
 	 * @param domain knowledge domain we want to join
 	 */
@@ -105,6 +105,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluate(String, EvalSettings) KnowledgeRecord.evaluate(String, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * <br/>The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) 
 	 * at some point. If it is to be ignored, consider using {@link #evaluateNoReturn(String)}
@@ -112,22 +113,23 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public KnowledgeRecord evaluate(String expression)
 	{
-		checkContextLock();
-		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.evaluate(String) is no longer supported by MADARA");
 	}
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluateNoReturn(String, EvalSettings) KnowledgeRecord.evaluateNoReturn(String, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public void evaluateNoReturn(String expression)
 	{
-		checkContextLock();
-		evaluateNoReturn(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.evaluateNoReturn(String) is no longer supported by MADARA");
 	}
 	
 	
@@ -161,6 +163,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluate(CompiledExpression, EvalSettings) KnowledgeRecord.evaluate(CompiledExpression, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) at some point. If
 	 * it is to be ignored, consider using {@link #evaluateNoReturn(CompiledExpression)}
@@ -168,22 +171,23 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public KnowledgeRecord evaluate(CompiledExpression expression)
 	{
-		checkContextLock();
-		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.evaluate(CompiledExpression) is no longer supported by MADARA");
 	}
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluateNoReturn(CompiledExpression, EvalSettings) KnowledgeRecord.evaluateNoReturn(CompiledExpression, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public void evaluateNoReturn(CompiledExpression expression)
 	{
-		checkContextLock();
-		evaluateNoReturn(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.evaluateNoReturn(CompiledExpression) is no longer supported by MADARA");
 	}
 	
 	
@@ -230,6 +234,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
+	 * <b>Currently unsupported</b><br/>
 	 * Defines a function.
 	 * @param name name of the function
 	 * @param function Implementation of MadaraFunction
@@ -237,9 +242,12 @@ public class KnowledgeBase extends MadaraJNI
 	 */
 	public void defineFunction(String name, MadaraFunction function)
 	{
-		checkContextLock();
-		callbacks.put(name, function);
-		jni_defineFunction(getCPtr(), name);
+		throw new UnsupportedOperationException("KnowledgeBase.defineFunction(String, MadaraFunction) is unsupported at this time, it will return soon");
+		
+		//TODO: Fix jni_defineFunction(long, String) in com.madara.KnowledgeBase.cpp
+		//checkContextLock();
+		//callbacks.put(name, function);
+		//jni_defineFunction(getCPtr(), name);
 	}
 	
 	
@@ -361,6 +369,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#wait(String, WaitSettings) KnowledgeRecord.wait(String, WaitSettings)} instead</b><br/><br/>
 	 * Waits for an expression to be non-zero. 
 	 * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) 
 	 * at some point. If it is to be ignored, consider using {@link #waitNoReturn(String)}
@@ -368,14 +377,15 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public KnowledgeRecord wait(String expression)
 	{
-		checkContextLock();
-		return wait(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.wait(String) is no longer supported by MADARA");
 	}
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#wait(CompiledExpression, WaitSettings) KnowledgeRecord.wait(CompiledExpression, WaitSettings)} instead</b><br/><br/>
 	 * Waits for an expression to be non-zero.
 	 * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) 
 	 * at some point. If it is to be ignored, consider using {@link #waitNoReturn(CompiledExpression)}
@@ -383,10 +393,10 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public KnowledgeRecord wait(CompiledExpression expression)
 	{
-		checkContextLock();
-		return wait(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.wait(CompiledExpression) is no longer supported by MADARA");
 	}
 	
 	
@@ -424,26 +434,28 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#waitNoReturn(String, WaitSettings) KnowledgeRecord.waitNoReturn(String, WaitSettings)} instead</b><br/><br/>
 	 * Waits for an expression to be non-zero. 
 	 * @param expression KaRL expression to evaluate
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public void waitNoReturn(String expression)
 	{
-		checkContextLock();
-		waitNoReturn(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.waitNoReturn(String) is no longer supported by MADARA");
 	}
 	
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#waitNoReturn(CompiledExpression, WaitSettings) KnowledgeRecord.waitNoReturn(CompiledExpression, WaitSettings)} instead</b><br/><br/>
 	 * Waits for an expression to be non-zero. 
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public void waitNoReturn(CompiledExpression expression)
 	{
-		checkContextLock();
-		waitNoReturn(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
+		throw new UnsupportedOperationException("KnowledgeBase.waitNoReturn(CompiledExpression) is no longer supported by MADARA");
 	}
 	
 	
@@ -517,9 +529,9 @@ public class KnowledgeBase extends MadaraJNI
 	
 	/**
 	 * Checks the CONTEXT_LOCK to see if the current thread is allowed
-	 * to invoke member methods. Access will be denied if the a MadaraFunction
+	 * to invoke member methods. Access will be denied if the a {@link com.madara.MadaraFunction MadaraFunction}
 	 * is in in stack trace.
-	 * @see {@link com.madara.MadaraFunction MadaraFunction}
+	 * @see MadaraFunction
 	 * @throws KnowledgeBaseLockedException
 	 */
 	private void checkContextLock()

@@ -18,12 +18,12 @@ static jmethodID callbackMethod = 0;
 //===================================================================================
 //KnowledgeBase
 //===================================================================================
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__ (JNIEnv * env, jobject obj)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__ (JNIEnv * env, jobject obj)
 {
     return (jlong) (new Madara::Knowledge_Engine::Knowledge_Base());
 }
 
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Ljava_lang_String_2ILjava_lang_String_2 (JNIEnv * env, jobject obj, jstring host, jint transport, jstring domain)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Ljava_lang_String_2ILjava_lang_String_2 (JNIEnv * env, jobject obj, jstring host, jint transport, jstring domain)
 {
 
 	const char *nativeHost = env->GetStringUTFChars(host, 0);
@@ -37,7 +37,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Ljava_
 	return (jlong) knowledge;
 }
 
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Ljava_lang_String_2J (JNIEnv *env, jobject obj, jstring host, jlong settings)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Ljava_lang_String_2J (JNIEnv *env, jobject obj, jstring host, jlong settings)
 {
 	const char *nativeHost = env->GetStringUTFChars(host, 0);
 	
@@ -48,7 +48,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Ljava_
 	return (jlong) knowledge;
 }
 
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__J (JNIEnv * env, jobject obj, jlong original)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__J (JNIEnv * env, jobject obj, jlong original)
 {
     return (jlong) new Madara::Knowledge_Engine::Knowledge_Base(*(Madara::Knowledge_Engine::Knowledge_Base*) original);
 }
@@ -59,7 +59,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__J (JNI
  * Method:    jni_evaluate
  * Signature: (JLjava/lang/String;J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1evaluate__JLjava_lang_String_2J (JNIEnv *env, jobject obj, jlong cptr, jstring expression, jlong evalSettings)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1evaluate__JLjava_lang_String_2J (JNIEnv *env, jobject obj, jlong cptr, jstring expression, jlong evalSettings)
 {
 	const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 	
@@ -78,7 +78,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1evaluate__JLjava_lang
  * Method:    jni_evaluate
  * Signature: (JJJ)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1evaluate__JJJ (JNIEnv *env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1evaluate__JJJ (JNIEnv *env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
 {
     Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
     Madara::Knowledge_Engine::Compiled_Expression compiled_expression = *(Madara::Knowledge_Engine::Compiled_Expression*)expression;
@@ -92,7 +92,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1evaluate__JJJ (JNIEnv
  * Method:    jni_evaluateNoReturn
  * Signature: (JLjava/lang/String;J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1evaluateNoReturn__JLjava_lang_String_2J (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jlong evalSettings)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1evaluateNoReturn__JLjava_lang_String_2J (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jlong evalSettings)
 {
 	const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 	
@@ -109,7 +109,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1evaluateNoReturn__JLja
  * Method:    jni_evaluateNoReturn
  * Signature: (JJJ)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1evaluateNoReturn__JJJ (JNIEnv *env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1evaluateNoReturn__JJJ (JNIEnv *env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
 {
 	Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
     Madara::Knowledge_Engine::Compiled_Expression compiled_expression = *(Madara::Knowledge_Engine::Compiled_Expression*)expression;
@@ -123,7 +123,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1evaluateNoReturn__JJJ 
  * Method:    jni_compile
  * Signature: (JLjava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1compile (JNIEnv *env, jobject obj, jlong cptr, jstring expression)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1compile (JNIEnv *env, jobject obj, jlong cptr, jstring expression)
 {
 	const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 
@@ -164,7 +164,7 @@ void c_callback(void** ret, const char* name, void** args, unsigned int argsLen,
  * Signature: (JLjava/lang/String;)V
  */
 /*
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2 (JNIEnv *env, jobject obj, jlong cptr, jstring name)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2 (JNIEnv *env, jobject obj, jlong cptr, jstring name)
 {
 	if (!knowledgeBaseClass)
 	{
@@ -188,7 +188,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava
  * Signature: (JLjava/lang/String;Ljava/lang/String;)V
  */
 /*
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2Ljava_lang_String_2 (JNIEnv *env, jobject obj, jlong cptr, jstring name, jstring expression)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2Ljava_lang_String_2 (JNIEnv *env, jobject obj, jlong cptr, jstring name, jstring expression)
 {
 	const char *nativeExpression = (*env)->GetStringUTFChars(env, expression, 0);
 	const char *nativeName = (*env)->GetStringUTFChars(env, name, 0);
@@ -206,7 +206,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava
  * Signature: (JLjava/lang/String;J)V
  */
 /*
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2J (JNIEnv *env, jobject obj, jlong cptr, jstring name, jlong expression)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2J (JNIEnv *env, jobject obj, jlong cptr, jstring name, jlong expression)
 {
 	const char *nativeName = (*env)->GetStringUTFChars(env, name, 0);
 	
@@ -221,7 +221,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava
  * Method:    jni_clear
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1clear (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1clear (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
     knowledge->clear();
@@ -232,7 +232,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1clear (JNIEnv *env, jo
  * Method:    jni_get
  * Signature: (JLjava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1get (JNIEnv *env, jobject obj, jlong cptr, jstring var)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1get (JNIEnv *env, jobject obj, jlong cptr, jstring var)
 {
 	const char *nativeVar = env->GetStringUTFChars(var, 0);
     
@@ -249,7 +249,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1get (JNIEnv *env, job
  * Method:    jni_set
  * Signature: (JLjava/lang/String;J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
 {
 	const char *nativeVar = env->GetStringUTFChars(var, 0);
 
@@ -277,7 +277,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1set (JNIEnv *env, jobj
  * Method:    jni_wait
  * Signature: (JLjava/lang/String;J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1wait__JLjava_lang_String_2J (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jlong waitSettings)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1wait__JLjava_lang_String_2J (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jlong waitSettings)
 {
 	const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 	
@@ -295,7 +295,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1wait__JLjava_lang_Str
  * Method:    jni_wait
  * Signature: (JJJ)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1wait__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong waitSettings)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1wait__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong waitSettings)
 {
     Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
     Madara::Knowledge_Engine::Compiled_Expression compiled_expression = *(Madara::Knowledge_Engine::Compiled_Expression*)expression;
@@ -310,7 +310,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeBase_jni_1wait__JJJ (JNIEnv * e
  * Method:    jni_waitNoReturn
  * Signature: (JLjava/lang/String;J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JLjava_lang_String_2J (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jlong waitSettings)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JLjava_lang_String_2J (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jlong waitSettings)
 {
     const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 	
@@ -326,7 +326,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JLjava_l
  * Method:    jni_waitNoReturn
  * Signature: (JJJ)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong waitSettings)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong waitSettings)
 {
     Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
     Madara::Knowledge_Engine::Compiled_Expression compiled_expression = *(Madara::Knowledge_Engine::Compiled_Expression*)expression;
@@ -339,7 +339,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1waitNoReturn__JJJ (JNI
  * Method:    jni_freeKnowledgeBase
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1freeKnowledgeBase (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1freeKnowledgeBase (JNIEnv * env, jobject obj, jlong cptr)
 {
 	Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
     if (knowledge)
@@ -352,7 +352,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1freeKnowledgeBase (JNI
  * Signature: (JLjava/lang/String;II)[J
  */
 
-JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeList (JNIEnv * env, jobject obj, jlong cptr, jstring subject, jint start, jint end)
+MADARA_Export jlongArray JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeList (JNIEnv * env, jobject obj, jlong cptr, jstring subject, jint start, jint end)
 {
 	const char *nativeSubject = env->GetStringUTFChars(subject, 0);
     
@@ -382,7 +382,7 @@ JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeList 
  * Signature: (JLjava/lang/String;Lcom/madara/KnowledgeBase/MapReturn;)V
  */
 
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeMap (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jobject jniRet)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeMap (JNIEnv * env, jobject obj, jlong cptr, jstring expression, jobject jniRet)
 {
 	jclass jniRetClass = env->GetObjectClass(jniRet);
     jclass classStrArray = env->FindClass("java/lang/String");
@@ -430,7 +430,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_jni_1toKnowledgeMap (JNIEnv
  * Method:    jni_freeCompiledExpression
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeBase_00024CompiledExpression_jni_1freeCompiledExpression (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_00024CompiledExpression_jni_1freeCompiledExpression (JNIEnv * env, jobject obj, jlong cptr)
 {
 	Madara::Knowledge_Engine::Compiled_Expression* expression = (Madara::Knowledge_Engine::Compiled_Expression*)cptr;
     if (expression)

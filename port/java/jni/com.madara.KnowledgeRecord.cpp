@@ -13,7 +13,7 @@
  * Method:    jni_KnowledgeRecord
  * Signature: (Ljava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__Ljava_lang_String_2 (JNIEnv * env, jobject obj, jstring data)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__Ljava_lang_String_2 (JNIEnv * env, jobject obj, jstring data)
 {
 	const char *nativeData = env->GetStringUTFChars(data, 0);
 	
@@ -29,7 +29,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__Lj
  * Method:    jni_KnowledgeRecord
  * Signature: (D)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__D (JNIEnv * env, jobject obj, jdouble data)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__D (JNIEnv * env, jobject obj, jdouble data)
 {
     return (jlong) (new Madara::Knowledge_Record(data));
 }
@@ -39,7 +39,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__D 
  * Method:    jni_KnowledgeRecord
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__J (JNIEnv * env, jobject obj, jlong data)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__J (JNIEnv * env, jobject obj, jlong data)
 {
 	return (jlong) (new Madara::Knowledge_Record(Madara::Knowledge_Record::Integer(data)));
 }
@@ -49,7 +49,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__J 
  * Method:    jni_toLongValue
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongValue (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongValue (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
 	return (jlong) record.to_integer();
@@ -60,7 +60,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongValue (JNIEnv
  * Method:    jni_toStringValue
  * Signature: (J)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_madara_KnowledgeRecord_jni_1toStringValue (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jstring JNICALL Java_com_madara_KnowledgeRecord_jni_1toStringValue (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
     return env->NewStringUTF(record.to_string().c_str());
@@ -71,7 +71,7 @@ JNIEXPORT jstring JNICALL Java_com_madara_KnowledgeRecord_jni_1toStringValue (JN
  * Method:    jni_toDoubleValue
  * Signature: (J)D
  */
-JNIEXPORT jdouble JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleValue (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jdouble JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleValue (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
     return (jdouble) record.to_double();
@@ -82,7 +82,7 @@ JNIEXPORT jdouble JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleValue (JN
  * Method:    jni_getType
  * Signature: (J)I
  */
-JNIEXPORT jint JNICALL Java_com_madara_KnowledgeRecord_jni_1getType (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_KnowledgeRecord_jni_1getType (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
     return record.type();
@@ -93,7 +93,7 @@ JNIEXPORT jint JNICALL Java_com_madara_KnowledgeRecord_jni_1getType (JNIEnv *env
  * Method:    jni_freeKnowledgeRecord
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Knowledge_Record* record = (Madara::Knowledge_Record*)cptr;
     if (record)
@@ -105,7 +105,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord 
  * Method:    jni_freeKnowledgeList
  * Signature: ([JI)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeList_jni_1freeKnowledgeList (JNIEnv *env, jobject obj, jlongArray records, jint length)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeList_jni_1freeKnowledgeList (JNIEnv *env, jobject obj, jlongArray records, jint length)
 {
 	jboolean jniNoCopy = JNI_FALSE;
 	jlong* nativeRecords = env->GetLongArrayElements(records, &jniNoCopy);
@@ -120,7 +120,7 @@ JNIEXPORT void JNICALL Java_com_madara_KnowledgeList_jni_1freeKnowledgeList (JNI
  * Method:    jni_freeKnowledgeMap
  * Signature: ([JI)V
  */
-JNIEXPORT void JNICALL Java_com_madara_KnowledgeMap_jni_1freeKnowledgeMap (JNIEnv * env, jobject obj, jlongArray records, jint length)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeMap_jni_1freeKnowledgeMap (JNIEnv * env, jobject obj, jlongArray records, jint length)
 {
 	//KnowledgeMap#free is exactly the same as KnowledgeList#free, no reason to re-implement
 	Java_com_madara_KnowledgeList_jni_1freeKnowledgeList(env, obj, records, length);

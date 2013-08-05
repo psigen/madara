@@ -11,19 +11,6 @@ package com.madara;
  */
 public class WaitSettings extends EvalSettings
 {
-
-	/**
-	 * 
-	 */
-	public static final WaitSettings DEFAULT_WAIT_SETTINGS = getDefaultWaitSettings(0);
-	
-	
-	private static native long jni_getDefaultWaitSettings(int which);
-	private static WaitSettings getDefaultWaitSettings(int which)
-	{
-		return new WaitSettings(jni_getDefaultWaitSettings(which));
-	}
-	
 	//Constructors
 	private native long jni_waitSettings();
 	private native long jni_waitSettings(long oldPtr);

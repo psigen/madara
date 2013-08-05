@@ -11,9 +11,6 @@ package com.madara;
  */
 public class EvalSettings extends MadaraJNI
 {
-
-	//For Defaults
-	private static native long jni_getDefaultEvalSettings(int which);
 	
 	//Constructors
 	private native long jni_evalSettings();
@@ -32,31 +29,6 @@ public class EvalSettings extends MadaraJNI
 	private native boolean jni_getTreatGlobalsAsLocals(long cptr);
 	private native void jni_setClockIncrement(long cptr, long defaultClockIncrement);
 	private native long jni_getClockIncrement(long cptr);
-	
-	
-	
-	/**
-	 * 
-	 */
-	public static final EvalSettings DEFAULT_EVAL_SETTINGS = getDefaultEvalSettings(0);
-	/**
-	 * 
-	 */
-	public static final EvalSettings DELAY_AND_TREAT_AS_LOCAL_EVAL_SETTINGS = getDefaultEvalSettings(1);
-	/**
-	 * 
-	 */
-	public static final EvalSettings DELAY_ONLY_EVAL_SETTINGS = getDefaultEvalSettings(2);
-	/**
-	 * 
-	 */
-	public static final EvalSettings TREAT_AS_LOCAL_EVAL_SETTINGS = getDefaultEvalSettings(3);
-	
-	//Easier to pass in a # than make 8 methods
-	private static EvalSettings getDefaultEvalSettings(int which)
-	{
-		return new EvalSettings(jni_getDefaultEvalSettings(0));
-	}
 	
 	
 	/**

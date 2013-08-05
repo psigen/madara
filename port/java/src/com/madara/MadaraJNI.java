@@ -7,6 +7,8 @@
 package com.madara;
 
 
+
+
 /**
  * Abstract class that insures loading of libMADARA.so and holds the C pointer
  */
@@ -14,7 +16,7 @@ public abstract class MadaraJNI
 {	
 	static
 	{
-		//We must load libMADARA.so to get access to JNI and MADARA
+		System.loadLibrary("ACE");
 		System.loadLibrary("MADARA");
 	}
 	

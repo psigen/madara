@@ -40,14 +40,16 @@ public class MadaraVariables extends MadaraJNI
 	}
 	
 	/**
+	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.MadaraVariables#evaluate(CompiledExpression, EvalSettings) MadaraVariables.evaluate(CompiledExpression, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * The returned KnowledgeRecord should either be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) or returned
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @return value of expression
 	 */
+	@Deprecated
 	public KnowledgeRecord evaluate(CompiledExpression expression)
 	{
-		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
+		throw new RuntimeException("KnowledgeBase.waitNoReturn(String) is no longer supported by MADARA");
 	}
 	
 	/**

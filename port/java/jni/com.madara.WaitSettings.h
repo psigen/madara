@@ -5,10 +5,11 @@
  * https://code.google.com/p/smash-cmu/wiki/License
  *********************************************************************/
 
-#ifndef _Included_com_madara_WaitSettings_Glue
-#define _Included_com_madara_WaitSettings_Glue
+#ifndef _Included_com_madara_WaitSettings
+#define _Included_com_madara_WaitSettings
 
 #include <jni.h>
+#include "madara/MADARA_export.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,7 +19,7 @@ extern "C" {
  * Method:    jni_getDefaultWaitSettings
  * Signature: (I)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSettings
+MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSettings
   (JNIEnv *, jclass, jint);
 
 /*
@@ -26,7 +27,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSettings
  * Method:    jni_waitSettings
  * Signature: ()J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__
+MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__
   (JNIEnv *, jobject);
 
 /*
@@ -34,7 +35,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__
  * Method:    jni_waitSettings
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J
+MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -42,7 +43,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J
  * Method:    jni_setPollFrequency
  * Signature: (JD)V
  */
-JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency
+MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency
   (JNIEnv *, jobject, jlong, jdouble);
 
 /*
@@ -50,7 +51,7 @@ JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency
  * Method:    jni_getPollFrequency
  * Signature: (J)D
  */
-JNIEXPORT jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency
+MADARA_Export jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -58,7 +59,7 @@ JNIEXPORT jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency
  * Method:    jni_setMaxWaitTime
  * Signature: (JD)V
  */
-JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime
+MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime
   (JNIEnv *, jobject, jlong, jdouble);
 
 /*
@@ -66,7 +67,7 @@ JNIEXPORT void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime
  * Method:    jni_getMaxWaitTime
  * Signature: (J)D
  */
-JNIEXPORT jdouble JNICALL Java_com_madara_WaitSettings_jni_1getMaxWaitTime
+MADARA_Export jdouble JNICALL Java_com_madara_WaitSettings_jni_1getMaxWaitTime
   (JNIEnv *, jobject, jlong);
 
 #ifdef __cplusplus

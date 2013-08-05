@@ -13,7 +13,7 @@
  * Method:    jni_evaluate
  * Signature: (JJJ)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_MadaraVariables_jni_1evaluate__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
+MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1evaluate__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
 {
 	Madara::Knowledge_Engine::Variables vars = *(Madara::Knowledge_Engine::Variables*)cptr;
 	Madara::Knowledge_Engine::Compiled_Expression compiled_expression = *(Madara::Knowledge_Engine::Compiled_Expression*)expression;
@@ -26,7 +26,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_MadaraVariables_jni_1evaluate__JJJ (JNIE
  * Method:    jni_compile
  * Signature: (JLjava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_MadaraVariables_jni_1compile (JNIEnv *env, jobject obj, jlong cptr, jstring expression)
+MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1compile (JNIEnv *env, jobject obj, jlong cptr, jstring expression)
 {
 	const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 
@@ -43,7 +43,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_MadaraVariables_jni_1compile (JNIEnv *en
  * Method:    jni_get
  * Signature: (JLjava/lang/String;)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_MadaraVariables_jni_1get (JNIEnv * env, jobject obj, jlong cptr, jstring var)
+MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1get (JNIEnv * env, jobject obj, jlong cptr, jstring var)
 {
 	const char *nativeVar = env->GetStringUTFChars(var, 0);
     
@@ -59,7 +59,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_MadaraVariables_jni_1get (JNIEnv * env, 
  * Method:    jni_set
  * Signature: (JLjava/lang/String;J)V
  */
-JNIEXPORT void JNICALL Java_com_madara_MadaraVariables_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
+MADARA_Export void JNICALL Java_com_madara_MadaraVariables_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
 {
 	const char *nativeVar = env->GetStringUTFChars(var, 0);
 
