@@ -315,6 +315,8 @@ namespace Madara
     /**
      * Sets the double precision of a double record when using
      * to_string (). All doubles will have this fixed precision.
+     * To return to default precision, set new_precision to a
+     * negative number.
      * @param   new_precision  new double precision to use
      **/
     static void set_precision (int new_precision);
