@@ -313,6 +313,13 @@ namespace Madara
     void set_text (const char * new_value, size_t size);
     
     /**
+     * Sets the double precision of a double record when using
+     * to_string (). All doubles will have this fixed precision.
+     * @param   new_precision  new double precision to use
+     **/
+    static void set_precision (int new_precision);
+
+    /**
      * sets the value to an xml string
      * @param    new_value   new value of the Knowledge Record
      * @param    size        size of the new_value buffer

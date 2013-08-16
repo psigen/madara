@@ -104,6 +104,13 @@ void create_arrays (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
   knowledge.print ("integers_vector = [{integers_vector}]\n");
   knowledge.print ("var_array = [{var_array}]\n");
 
+  Madara::Knowledge_Record::set_precision (10);
+  
+  knowledge.print ("Setting precision to 10 and reprinting\n");
+  knowledge.print ("doubles_vector = [{doubles_vector}]\n");
+  knowledge.print ("integers_vector = [{integers_vector}]\n");
+  knowledge.print ("var_array = [{var_array}]\n");
+
   delete integer_array;
 }
 

@@ -8,6 +8,16 @@
 #include <sstream>
 #include <algorithm>
 #include <stdlib.h>
+#include <iomanip>
+#include <iostream>
+
+int madara_double_precision (-1);
+
+void
+Madara::Knowledge_Record::set_precision (int new_precision)
+{
+  madara_double_precision = new_precision;
+}
 
 Madara::Knowledge_Record::Knowledge_Record ()
       : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
@@ -357,9 +367,22 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
           buffer << delimiter << *ptr_temp; 
       }
       else if (type_ == DOUBLE)
+      {
+        if (madara_double_precision >= 0)
+        {
+          buffer << std::setprecision (madara_double_precision);
+          buffer << std::fixed;
+        }
         buffer << double_value_;
+      }
       else if (type_ == DOUBLE_ARRAY)
       {
+        if (madara_double_precision >= 0)
+        {
+          buffer << std::setprecision (madara_double_precision);
+          buffer << std::fixed;
+        }
+
         const double * ptr_temp = double_array_.get_ptr ();
 
         if (size_ >= 1)

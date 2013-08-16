@@ -4645,8 +4645,7 @@ Madara::Expression_Tree::Interpreter::interpret (Madara::Knowledge_Engine::Threa
     delete list.back ();
 
     // store this optimized tree into cached memory
-    if (cache_.find (input) == cache_.end ())
-      cache_[input] = tree;
+    cache_[input] = tree;
 
     return tree;
   }
