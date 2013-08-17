@@ -1,9 +1,26 @@
 
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
+#include "madara/utility/Log_Macros.h"
 
 #include <sstream>
 #include <iostream>
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::log_level (int level)
+{
+  if (level >= 0)
+    MADARA_debug_level = level;
+
+  return MADARA_debug_level;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::log_level (void)
+{
+  return MADARA_debug_level;
+}
+
 
 Madara::Knowledge_Engine::Knowledge_Base::Knowledge_Base ()
 : impl_ (new Knowledge_Base_Impl ())

@@ -70,7 +70,14 @@ file), users can call $MADARA_ROOT/bin/system_calls to see a listing of all of
 the system calls which can be used in MADARA to work with files, return
 substrings, change logging levels, and various other tools.
 
-8.) distributed_knowledge/counting_agents.cpp
+8.) system_calls/controlling_types.cpp
+
+The controlling types tutorial walks the user through type casting values
+into any supported type in the system. Additionally, double precision is
+covered, which can be helpful when displaying floating point types. Basics
+of logging levels are also covered in this tutorial.
+
+9.) distributed_knowledge/counting_agents.cpp
 
 The MADARA KaRL engine supports a variety of transports for ensuring
 consistency across an agent reasoning network. Because the engine is
@@ -82,7 +89,7 @@ that could range from 1 to N). In this example, we showcase
 how to count the number of agents that are online on the network using
 the MADARA KaRL engine.
 
-9.) distributed_knowledge/packet_aggregation.cpp
+10.) distributed_knowledge/packet_aggregation.cpp
 
 The MADARA KaRL engine aggregates all changes made in an evaluation of a logic
 and then sends those changes in bulk to ensure consistency in knowledge. This

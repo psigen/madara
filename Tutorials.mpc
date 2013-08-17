@@ -171,6 +171,25 @@ project (Tutorial_Functions) : using_madara, using_ace {
   }
 }
 
+project (Tutorial_Controlling_Types) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_controlling_types
+  
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tutorials/system_primitives/controlling_types.cpp
+  }
+}
+
 project (Tutorial_Creating_Transports) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = tutorial_custom_transport

@@ -49,8 +49,15 @@
 #include "madara/expression_tree/System_Call_Print_System_Calls.h"
 #include "madara/expression_tree/System_Call_Read_File.h"
 #include "madara/expression_tree/System_Call_Set_Clock.h"
+#include "madara/expression_tree/System_Call_Set_Precision.h"
 #include "madara/expression_tree/System_Call_Size.h"
+#include "madara/expression_tree/System_Call_To_Buffer.h"
+#include "madara/expression_tree/System_Call_To_Double.h"
+#include "madara/expression_tree/System_Call_To_Doubles.h"
 #include "madara/expression_tree/System_Call_To_Host_Dirs.h"
+#include "madara/expression_tree/System_Call_To_Integer.h"
+#include "madara/expression_tree/System_Call_To_Integers.h"
+#include "madara/expression_tree/System_Call_To_String.h"
 #include "madara/expression_tree/System_Call_Type.h"
 #include "madara/expression_tree/System_Call_Write_File.h"
 #include "madara/expression_tree/Interpreter.h"
@@ -369,6 +376,86 @@ namespace Madara
       /// destructor
       virtual ~Size (void);
     };
+  
+    /**
+    * @class Set_Precision
+    * @brief Sets the precision of doubles
+    */
+    class Set_Precision : public System_Call
+    {
+    public:
+      /// constructor
+      Set_Precision (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Set_Precision (void);
+    };
+      
+    /**
+    * @class To_Buffer
+    * @brief Returns a buffer
+    */
+    class To_Buffer : public System_Call
+    {
+    public:
+      /// constructor
+      To_Buffer (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_Buffer (void);
+    };
+    
+    /**
+    * @class To_Double
+    * @brief Returns a double
+    */
+    class To_Double : public System_Call
+    {
+    public:
+      /// constructor
+      To_Double (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_Double (void);
+    };
+    
+    /**
+    * @class To_Doubles
+    * @brief Returns a double array
+    */
+    class To_Doubles : public System_Call
+    {
+    public:
+      /// constructor
+      To_Doubles (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_Doubles (void);
+    };
 
     /**
     * @class To_Host_Dirs
@@ -389,6 +476,66 @@ namespace Madara
 
       /// destructor
       virtual ~To_Host_Dirs (void);
+    };
+
+    /**
+    * @class To_Integer
+    * @brief Returns an integer
+    */
+    class To_Integer : public System_Call
+    {
+    public:
+      /// constructor
+      To_Integer (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_Integer (void);
+    };
+    
+    /**
+    * @class To_Integers
+    * @brief Returns an integers
+    */
+    class To_Integers : public System_Call
+    {
+    public:
+      /// constructor
+      To_Integers (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_Integers (void);
+    };
+    
+    /**
+    * @class To_String
+    * @brief Returns a string
+    */
+    class To_String : public System_Call
+    {
+    public:
+      /// constructor
+      To_String (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~To_String (void);
     };
     
     /**
@@ -1701,6 +1848,34 @@ Madara::Expression_Tree::Set_Clock::build ()
 
 
 // constructor
+Madara::Expression_Tree::Set_Precision::Set_Precision (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Set_Precision::~Set_Precision (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Set_Precision::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Set_Precision::build ()
+{
+  return new System_Call_Set_Precision (context_, nodes_);
+}
+
+
+
+// constructor
 Madara::Expression_Tree::Print::Print (
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : System_Call (context)
@@ -1840,6 +2015,87 @@ Madara::Expression_Tree::Size::build ()
 
 
 // constructor
+Madara::Expression_Tree::To_Buffer::To_Buffer (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_Buffer::~To_Buffer (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_Buffer::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_Buffer::build ()
+{
+  return new System_Call_To_Buffer (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::To_Double::To_Double (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_Double::~To_Double (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_Double::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_Double::build ()
+{
+  return new System_Call_To_Double (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::To_Doubles::To_Doubles (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_Doubles::~To_Doubles (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_Doubles::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_Doubles::build ()
+{
+  return new System_Call_To_Doubles (context_, nodes_);
+}
+
+
+// constructor
 Madara::Expression_Tree::To_Host_Dirs::To_Host_Dirs (
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : System_Call (context)
@@ -1865,6 +2121,86 @@ Madara::Expression_Tree::To_Host_Dirs::build ()
   return new System_Call_To_Host_Dirs (context_, nodes_);
 }
 
+
+// constructor
+Madara::Expression_Tree::To_Integer::To_Integer (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_Integer::~To_Integer (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_Integer::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_Integer::build ()
+{
+  return new System_Call_To_Integer (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::To_Integers::To_Integers (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_Integers::~To_Integers (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_Integers::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_Integers::build ()
+{
+  return new System_Call_To_Integers (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::To_String::To_String (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::To_String::~To_String (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::To_String::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::To_String::build ()
+{
+  return new System_Call_To_String (context_, nodes_);
+}
 
 
 // constructor
@@ -3781,13 +4117,41 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     {
       call = new Set_Clock (context);
     }
+    else if (name == "#set_precision" || name == "#precision")
+    {
+      call = new Set_Precision (context);
+    }
     else if (name == "#size")
     {
       call = new Size (context);
     }
+    else if (name == "#to_buffer" || name == "#buffer")
+    {
+      call = new To_Buffer (context);
+    }
+    else if (name == "#to_double" || name == "#double")
+    {
+      call = new To_Double (context);
+    }
+    else if (name == "#to_doubles" || name == "#doubles")
+    {
+      call = new To_Doubles (context);
+    }
     else if (name == "#to_host_dirs")
     {
       call = new To_Host_Dirs (context);
+    }
+    else if (name == "#to_integer" || name == "#integer")
+    {
+      call = new To_Integer (context);
+    }
+    else if (name == "#to_integers" || name == "#integers")
+    {
+      call = new To_Integers (context);
+    }
+    else if (name == "#to_string" || name == "#string")
+    {
+      call = new To_String (context);
     }
     else if (name == "#type")
     {

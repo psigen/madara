@@ -73,7 +73,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 /// Tests logicals operators (&&, ||)
 void create_arrays (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 {
-  ACE_TRACE (ACE_TEXT ("test_assignments"));
+  ACE_TRACE (ACE_TEXT ("create_arrays"));
 
   knowledge.clear ();
 

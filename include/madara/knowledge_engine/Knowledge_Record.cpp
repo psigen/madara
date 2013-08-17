@@ -13,9 +13,19 @@
 
 int madara_double_precision (-1);
 
+int
+Madara::Knowledge_Record::get_precision (void)
+{
+  return madara_double_precision;
+}
+
 void
 Madara::Knowledge_Record::set_precision (int new_precision)
 {
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Record::set_precision:" \
+      " setting precision to %d\n", madara_double_precision));
+
   madara_double_precision = new_precision;
 }
 
@@ -256,16 +266,19 @@ Madara::Knowledge_Record::to_integers (void) const
 
   if (status_ != UNCREATED)
   {
-    unsigned int size = (unsigned int) size_;
+    unsigned int size = (unsigned int)size_;;
     integers.resize (size);
+
     if (type_ == INTEGER)
+    {
       integers[0] = int_value_;
+    }
     else if (type_ == INTEGER_ARRAY)
     {
       const Integer * ptr_temp = int_array_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        integers[i] = *ptr_temp;
+        integers[i] = ptr_temp[i];
     }
     else if (type_ == DOUBLE)
       integers[0] = Integer (double_value_);
@@ -274,21 +287,21 @@ Madara::Knowledge_Record::to_integers (void) const
       const double * ptr_temp = double_array_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        integers[i] = Integer (*ptr_temp);
+        integers[i] = Integer (ptr_temp[i]);
     }
     else if (is_string_type ())
     {
       const char * ptr_temp = str_value_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        integers[i] = Integer (*ptr_temp);
+        integers[i] = Integer (ptr_temp[i]);
     }
     else if (is_file_type ())
     {
       const unsigned char * ptr_temp = file_value_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        integers[i] = Integer (*ptr_temp);
+        integers[i] = Integer (ptr_temp[i]);
     }
   }
 
@@ -302,7 +315,7 @@ Madara::Knowledge_Record::to_doubles (void) const
 
   if (status_ != UNCREATED)
   {
-    unsigned int size = (unsigned int) size_;
+    unsigned int size = (unsigned int)size_;;
     doubles.resize (size);
 
     if      (type_ == INTEGER)
@@ -312,7 +325,7 @@ Madara::Knowledge_Record::to_doubles (void) const
       const Integer * ptr_temp = int_array_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        doubles[i] = double (*ptr_temp);
+        doubles[i] = double (ptr_temp[i]);
     }
     else if (type_ == DOUBLE)
       doubles[0] = double_value_;
@@ -321,21 +334,21 @@ Madara::Knowledge_Record::to_doubles (void) const
       const double * ptr_temp = double_array_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        doubles[i] = *ptr_temp;
+        doubles[i] = ptr_temp[i];
     }
     else if (is_string_type ())
     {
       const char * ptr_temp = str_value_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        doubles[i] = double (*ptr_temp);
+        doubles[i] = double (ptr_temp[i]);
     }
     else if (is_file_type ())
     {
       const unsigned char * ptr_temp = file_value_.get_ptr ();
 
       for (unsigned int i = 0; i < size; ++i)
-        doubles[i] = double (*ptr_temp);
+        doubles[i] = double (ptr_temp[i]);
     }
   }
 
@@ -350,6 +363,10 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
   {
     if (!is_string_type ())
     {
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Knowledge_Record::to_string:" \
+          " type_ is %d\n", type_));
+
       std::stringstream buffer;
     
       if      (type_ == INTEGER)
@@ -372,7 +389,18 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
         {
           buffer << std::setprecision (madara_double_precision);
           buffer << std::fixed;
+
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Knowledge_Record::to_string:" \
+              " precision set to %d\n", madara_double_precision));
         }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Knowledge_Record::to_string:" \
+              " precision set to default\n", madara_double_precision));
+        }
+
         buffer << double_value_;
       }
       else if (type_ == DOUBLE_ARRAY)
@@ -381,6 +409,16 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
         {
           buffer << std::setprecision (madara_double_precision);
           buffer << std::fixed;
+
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Knowledge_Record::to_string:" \
+              " precision set to %d\n", madara_double_precision));
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Knowledge_Record::to_string:" \
+              " precision set to default\n", madara_double_precision));
         }
 
         const double * ptr_temp = double_array_.get_ptr ();
@@ -404,7 +442,7 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
 
 // read the value_ in a string format
 unsigned char *
-Madara::Knowledge_Record::to_unmanaged_buffer (unsigned int & size)
+Madara::Knowledge_Record::to_unmanaged_buffer (size_t & size)
 {
   if (status_ != UNCREATED)
   {
@@ -1949,11 +1987,11 @@ std::ostream & operator<< (std::ostream & stream,
   if (rhs.status () != rhs.UNCREATED)
   {
     if      (rhs.type () == Madara::Knowledge_Record::INTEGER)
-      stream << rhs.to_integer ();
+      stream << rhs.to_string ();
     else if (rhs.type () == Madara::Knowledge_Record::INTEGER_ARRAY)
       stream << rhs.to_string (", ");
     else if (rhs.type () == Madara::Knowledge_Record::DOUBLE)
-      stream << rhs.to_double ();
+      stream << rhs.to_string ();
     else if (rhs.type () == Madara::Knowledge_Record::DOUBLE_ARRAY)
       stream << rhs.to_string (", ");
     else if (rhs.is_string_type ())

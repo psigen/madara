@@ -157,14 +157,44 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "  variable values are rejected at the transport layer. Returns the\n"
       "  new clock value.\n";
       
+    calls_["#set_precision"] =
+      "\n#set_precision (value) or #precision (value):\n"
+      "  Sets the precision that is used to convert doubles to strings.\n"
+      "  This is a fixed precision (e.g., 5 for pi would be 3.14159).\n"
+      "  Negative value resets to default precision.\n";
+      
     calls_["#size"] =
       "\n#size (value):\n"
       "  Returns the size of the variable or value.\n";
+      
+    calls_["#to_buffer"] =
+      "\n#to_buffer (value) or #buffer (value):\n"
+      "  Converts the value to an unsigned char array.\n";
+      
+    calls_["#to_double"] =
+      "\n#to_double (value) or #double (value):\n"
+      "  Converts the value to a double.\n";
+      
+    calls_["#to_doubles"] =
+      "\n#to_doubles (value) or #doubles (value):\n"
+      "  Converts the value to an array of doubles.\n";
       
     calls_["#to_host_dirs"] =
       "\n#to_host_dirs (directory):\n"
       "  Returns the host appropriate directory structure, e.g.,.\n"
       "  files/file.txt to files\file.txt on Windows.\n";
+      
+    calls_["#to_integer"] =
+      "\n#to_integer (value) or #integer (value):\n"
+      "  Converts the value to an integer.\n";
+      
+    calls_["#to_integers"] =
+      "\n#to_integers (value) or #integers (value):\n"
+      "  Converts the value to an array of integers.\n";
+      
+    calls_["#to_string"] =
+      "\n#to_string (value) or #string (value):\n"
+      "  Converts the value to an ASCII string.\n";
       
     calls_["#type"] =
       "\n#type (value):\n"

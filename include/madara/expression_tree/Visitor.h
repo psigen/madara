@@ -50,8 +50,15 @@ namespace Madara
     class System_Call_Print_System_Calls;
     class System_Call_Read_File;
     class System_Call_Set_Clock;
+    class System_Call_Set_Precision;
     class System_Call_Size;
+    class System_Call_To_Buffer;
+    class System_Call_To_Double;
+    class System_Call_To_Doubles;
     class System_Call_To_Host_Dirs;
+    class System_Call_To_Integer;
+    class System_Call_To_Integers;
+    class System_Call_To_String;
     class System_Call_Type;
     class System_Call_Write_File;
 
@@ -201,15 +208,36 @@ namespace Madara
       /// Visit a System_Call_Size.
       virtual void visit (const System_Call_Size &node) = 0;
       
+      /// Visit a System_Call_To_Buffer.
+      virtual void visit (const System_Call_To_Buffer &node) = 0;
+      
+      /// Visit a System_Call_To_Double.
+      virtual void visit (const System_Call_To_Double &node) = 0;
+      
+      /// Visit a System_Call_To_Doubles.
+      virtual void visit (const System_Call_To_Doubles &node) = 0;
+      
       /// Visit a System_Call_To_Host_Dirs.
       virtual void visit (const System_Call_To_Host_Dirs &node) = 0;
+      
+      /// Visit a System_Call_To_Integer.
+      virtual void visit (const System_Call_To_Integer &node) = 0;
+      
+      /// Visit a System_Call_To_Integers.
+      virtual void visit (const System_Call_To_Integers &node) = 0;
+      
+      /// Visit a System_Call_To_String.
+      virtual void visit (const System_Call_To_String &node) = 0;
       
       /// Visit a System_Call_Type.
       virtual void visit (const System_Call_Type &node) = 0;
       
       /// Visit a System_Call_Write_File.
       virtual void visit (const System_Call_Write_File &node) = 0;
-
+      
+      /// Visit a System_Call_To_Buffer.
+      virtual void visit (const System_Call_Set_Precision &node) = 0;
+      
       /// No-op destructor to hold things together.
       virtual ~Visitor (void) = 0;
     };

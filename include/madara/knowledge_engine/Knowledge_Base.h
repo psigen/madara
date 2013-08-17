@@ -435,6 +435,49 @@ namespace Madara
       int apply_modified (void);
 
       /**
+       * Sets the log level to dictate the detail of MADARA logging. A higher
+       * log level will print out all lower levels of logging. 10 is currently
+       * the highest log level. Anything higher than this will be the
+       * equivalent of setting the log level to 10.
+       * level      
+       * 0          Emergency printing. Generally major, critical errors
+       * 1          Impending critical errors. Usually lead to a level 0 error
+       * 2          Non-fatal errors. These indicate lowest level of errors.
+       * 3          Error details. These describe errors above this level.
+       * 4          Warnings. These indicate potential problems.
+       * 5          Major events. Normal, important events.
+       * 6          Minor events. Normal, minor events.
+       * 7          Event trace. Normal components of minor events.
+       * 8          Debug info. Configuration information.
+       * 9          Debug trace. Trace information for debugging info.
+       * 10         Debug detailed trace. Very detailed trace information.
+       * @param   level    severity of log messages to log
+       * @return    the resulting log level
+       **/
+      static int log_level (int level);
+      
+      /**
+       * Gets the log level to dictate the detail of MADARA logging. A higher
+       * log level will print out all lower levels of logging. 10 is currently
+       * the highest log level. Anything higher than this will be the
+       * equivalent of setting the log level to 10.
+       * level      
+       * 0          Emergency printing. Generally major, critical errors
+       * 1          Impending critical errors. Usually lead to a level 0 error
+       * 2          Non-fatal errors. These indicate lowest level of errors.
+       * 3          Error details. These describe errors above this level.
+       * 4          Warnings. These indicate potential problems.
+       * 5          Major events. Normal, important events.
+       * 6          Minor events. Normal, minor events.
+       * 7          Event trace. Normal components of minor events.
+       * 8          Debug info. Configuration information.
+       * 9          Debug trace. Trace information for debugging info.
+       * 10         Debug detailed trace. Very detailed trace information.
+       * @return    the log level currently used to log information
+       **/
+      static int log_level (void);
+
+      /**
        * Prints knowledge variables and values at a logging level
        * @param   level    level to log the knowledge at
        **/

@@ -252,7 +252,7 @@ namespace Madara
      * @param   size    size of the unmanaged buffer
      * @return  the unmanaged buffer of size bytes
      **/
-    unsigned char * to_unmanaged_buffer (unsigned int & size);
+    unsigned char * to_unmanaged_buffer (size_t & size);
     
     /**
      * sets the value to a double
@@ -320,6 +320,12 @@ namespace Madara
      * @param   new_precision  new double precision to use
      **/
     static void set_precision (int new_precision);
+    
+    /**
+     * Gets the current double precision for double to string conversion
+     * @return  the double precision for double to string conversion
+     **/
+    static int get_precision (void);
 
     /**
      * sets the value to an xml string
