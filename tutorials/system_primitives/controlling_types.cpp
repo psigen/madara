@@ -88,6 +88,13 @@ int main (int argc, char * argv[])
    * internally inside of an evaluate call with system calls specific to the
    * results you want. Here is a list of system calls that cast values to
    * other types, followed by examples of their usage.
+   *
+   * #string or #to_string     convert to a string
+   * #double or #to_double     convert to a double
+   * #doubles or #to_doubles   convert to an array of doubles
+   * #integer or #to_integer   convert to an integer
+   * #integers or #to_integers convert to an array of integers
+   * #buffer or #to_buffers    convert to an unsigned char array
    **/
   
   knowledge.print ("\n\n*************TYPE CASTING SECTION******\n\n");
