@@ -882,6 +882,10 @@ namespace Madara
 
       }
 
+      virtual ~Base ()
+      {
+      }
+
       /**
        * Add a vector of hosts to the current host list
        * @param   hosts        a vector of hosts to add to the list

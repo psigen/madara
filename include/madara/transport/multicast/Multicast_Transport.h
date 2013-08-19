@@ -50,7 +50,7 @@ namespace Madara
       /**
        * Destructor
        **/
-      ~Multicast_Transport ();
+      virtual ~Multicast_Transport ();
       
       /**
        * Sends a list of knowledge updates to listeners

@@ -51,7 +51,7 @@ namespace Madara
       /**
        * Destructor
        **/
-      ~Broadcast_Transport ();
+      virtual ~Broadcast_Transport ();
 
       /**
        * Sends a list of knowledge updates to listeners

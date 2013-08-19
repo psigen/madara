@@ -6,13 +6,20 @@
 #include "madara/transport/udp/UDP_Transport_Read_Thread.h"
 #include "madara/transport/Transport.h"
 
+#include <string>
+#include <map>
+
+#include "ace/INET_Addr.h"
+#include "ace/SOCK_Dgram.h"
+
+
 namespace Madara
 {
   namespace Transport
   {
     /**
      * @class UDP_Transport
-     * @brief UDP-based transport (skeleton code)
+     * @brief UDP-based transport for knowledge records
      **/
     class UDP_Transport : public Base
     {
@@ -42,7 +49,7 @@ namespace Madara
       /**
        * Destructor
        **/
-      ~UDP_Transport ();
+      virtual ~UDP_Transport ();
 
       /**
        * Sends a list of knowledge updates to listeners
@@ -69,11 +76,23 @@ namespace Madara
       int setup (void);
     protected:
     private:
-      const std::string                               id_;
+      const std::string                         id_;
 
       UDP_Transport_Read_Thread *               thread_;
 
       bool                                      valid_setup_;
+      
+      std::map <std::string, ACE_INET_Addr>     addresses_;
+      
+      /// data received rules, defined in Transport settings
+      Madara::Expression_Tree::Expression_Tree  on_data_received_;
+
+      /// buffer for sending
+      Madara::Utility::Scoped_Array <char>      buffer_;
+
+      /// underlying socket for sending
+      ACE_SOCK_Dgram                            socket_;
+
     };
   }
 }

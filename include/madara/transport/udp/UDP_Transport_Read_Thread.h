@@ -13,6 +13,8 @@
 #include "ace/Thread_Mutex.h"
 
 #include "ace/Synch.h"
+#include "ace/INET_Addr.h"
+#include "ace/SOCK_Dgram.h"
 
 namespace Madara
 {
@@ -20,31 +22,85 @@ namespace Madara
   {
     /**
      * @class UDP_Transport_Read_Thread
-     * @brief Thread for reading knowledge updates through a TCP socket
-     *        (unused but planned)
+     * @brief Thread for reading knowledge updates through a UDP socket
      **/
     class UDP_Transport_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
     {
     public:
+      /**
+       * Constructor
+       * @param    settings   Transport settings
+       * @param    id      host:port identifier of this process, to allow for 
+       *                   rejection of duplicates
+       * @param    context    the knowledge variables to update
+       * @param    address    the ACE socket address to read from 
+       **/
       UDP_Transport_Read_Thread (
+        const Settings & settings,
         const std::string & id,
-        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+        Madara::Knowledge_Engine::Thread_Safe_Context & context,
+        const ACE_INET_Addr & address);
+      
+      /**
+      * Destructor
+      **/
       ~UDP_Transport_Read_Thread ();
 
-      /// service exit point for thread
+      /**
+      * Signals the read thread to terminate
+      **/
       int enter_barrier (void);
+      
+      /**
+      * Closes the reading socket and clean up the thread
+      **/
       int close (void);
+      
+      /**
+      * Reads messages from a socket
+      **/
       int svc (void);
+
+      /**
+      * Wait for the transport to be ready
+      **/
       void wait_for_ready (void);
     private:
-      const std::string                                 id_;
-      ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
-      ACE_Barrier barrier_;
-      ACE_Atomic_Op<ACE_Mutex,bool> terminated_;
+      /// Transport settings
+      const Settings & settings_;
 
+      /// host:port identifier of this process
+      const std::string                                 id_;
+
+      /// knowledge context
+      ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
+      
+      /// barrier for closing and waiting on the read thread
+      ACE_Barrier barrier_;
+
+      /// atomic variable that signals termination
+      ACE_Atomic_Op<ACE_Mutex, bool>     terminated_;
+      
+      /// Mutex for use with terminated_
       ACE_Thread_Mutex                   mutex_;
+      
+      /// Condition that is waited on my calling transport on startup
       Madara::Transport::Condition       is_not_ready_;
+
+      /// Indicates whether the read thread is ready to accept messages
       bool                               is_ready_;
+
+      /// The broadcast address we are subscribing to
+      ACE_INET_Addr                      address_;
+      
+      /// The broadcast socket we are reading from
+      ACE_SOCK_Dgram                     socket_;
+
+      /// data received rules, defined in Transport settings
+      Madara::Expression_Tree::Expression_Tree  on_data_received_;
+      
+      /// buffer for sending
+      Madara::Utility::Scoped_Array <char>      buffer_;
     };
   }
 }

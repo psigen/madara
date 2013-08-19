@@ -75,6 +75,25 @@ project (Test_Multicast_Rules) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_UDP_Rules) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_udp_rules
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/udp/test_udp_rules.cpp
+  }
+}
+
 project (Test_Swarm_Drone) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_swarm_drone
@@ -636,6 +655,26 @@ project (Test_CID_Linked) : using_madara, using_ace, using_cid {
   }
 }
 
+
+project (Test_UDP) : using_madara, using_ace {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_udp
+  
+  // 
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/udp/test_udp.cpp
+  }
+}
 
 project (Test_Multicast) : using_madara, using_ace {
   requires += tests

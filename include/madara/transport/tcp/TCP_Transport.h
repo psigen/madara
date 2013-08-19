@@ -43,7 +43,7 @@ namespace Madara
       /**
        * Destructor
        **/
-      ~TCP_Transport ();
+      virtual ~TCP_Transport ();
       
       /**
        * Sends a list of knowledge updates to listeners
