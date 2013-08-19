@@ -39,7 +39,7 @@ public:
   /**
     * Destructor
     **/
-  ~Custom_Transport ();
+  virtual ~Custom_Transport ();
       
   /**
     * Sends a list of knowledge updates to listeners
