@@ -49,17 +49,19 @@ namespace Madara
 
     enum
     {
-      INTEGER = 0,
-      STRING = 1,
-      DOUBLE = 2,
-      FLOAT = 2,
-      UNKNOWN_FILE_TYPE = 3,
-      XML = 4,
-      TEXT_FILE = 5,
-      INTEGER_ARRAY = 10,
-      DOUBLE_ARRAY = 11,
-      IMAGE_JPEG = 50,
-      UNINITIALIZED = 100
+      UNINITIALIZED = 0,
+      INTEGER = 1,
+      STRING = 2,
+      DOUBLE = 4,
+      FLOAT = 4,
+      UNKNOWN_FILE_TYPE = 8,
+      XML = 16,
+      TEXT_FILE = 32,
+      INTEGER_ARRAY = 64,
+      DOUBLE_ARRAY = 128,
+      IMAGE_JPEG = 256,
+      ALL_FILE_TYPES = UNKNOWN_FILE_TYPE | XML | TEXT_FILE | IMAGE_JPEG,
+      ALL_TYPES = 0xFFFFFFFF
     };
     
     typedef  int64_t     Integer;

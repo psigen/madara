@@ -27,7 +27,7 @@ namespace Madara
    
     typedef  std::vector <Knowledge_Record>   Function_Arguments;
      
-    class Function
+    class MADARA_Export Function
     {
     /**
      * @class Function

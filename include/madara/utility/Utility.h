@@ -237,6 +237,33 @@ namespace Madara
      **/
     ssize_t write_file (const std::string & filename,
       void * buffer, size_t size);
+
+    /**
+     * Adds values to a bit mask
+     * @param   values  values to bitwise add to mask
+     * @return  resulting mask
+     **/
+    template <typename T>
+    T bitmask_add (T mask, T values);
+    
+    /**
+     * Returns true if mask contains values
+     * @param   values  values to check for inclusion in mask
+     * @return  true if values in exist in mask, false otherwise
+     **/
+    template <typename T>
+    bool bitmask_check (T mask, T values);
+    
+    /**
+     * Removes values from a bit mask
+     * @param   values  values to bitwise remove from mask
+     * @return  resulting mask
+     **/
+    template <typename T>
+    T bitmask_remove (T mask, T values);
   }
 }
+
+#include "Utility.inl"
+
 #endif

@@ -8,7 +8,8 @@
 #include <algorithm>
 
 Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread (
-  const Settings & settings, const std::string & id,
+  const Settings & settings,
+  const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context,
   const ACE_INET_Addr & address)
   : settings_ (settings), id_ (id), context_ (context),
@@ -18,6 +19,8 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
   // Subscribe
   int port = address_.get_port_number ();
   const char * host = address_.get_host_addr ();
+  
+  qos_settings_ = dynamic_cast <const QoS_Transport_Settings *> (&settings);
 
   if (-1 == socket_.join (address_, 1))
   {
@@ -195,6 +198,53 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
             " remote id (%s:%d) is not our own\n",
             remote.get_host_addr (), remote.get_port_number ()));
         }
+
+        std::stringstream remote_buffer;
+        remote_buffer << remote.get_host_addr ();
+        remote_buffer << ":";
+        remote_buffer << remote.get_port_number ();
+
+        if (!qos_settings_ || qos_settings_->is_trusted (remote_buffer.str ()))
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "Multicast_Transport_Read_Thread::svc:" \
+            " remote id (%s:%d) is trusted\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "Multicast_Transport_Read_Thread::svc:" \
+            " dropping message from untrusted peer (%s:%d)\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+
+          // delete the header and continue to the svc loop
+          delete header;
+          continue;
+        }
+
+        std::string originator (header->originator);
+        
+        if (!qos_settings_ || qos_settings_->is_trusted (originator))
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "Multicast_Transport_Read_Thread::svc:" \
+            " remote id (%s) is trusted\n",
+            originator.c_str ()));
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "Multicast_Transport_Read_Thread::svc:" \
+            " dropping message from untrusted peer (%s)\n",
+            originator.c_str ()));
+
+          // delete the header and continue to the svc loop
+          delete header;
+          continue;
+        }
+
+
 
         // reject the message if it is from a different domain
         if (strncmp (header->domain, settings_.domains.c_str (),

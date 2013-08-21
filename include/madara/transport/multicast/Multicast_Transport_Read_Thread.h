@@ -13,8 +13,9 @@
 
 #include "madara/utility/Scoped_Array.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/transport/Transport.h"
+#include "madara/transport/QoS_Transport_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/transport/Transport.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"
@@ -76,8 +77,8 @@ namespace Madara
       **/
       void wait_for_ready (void);
     private:
-      /// Transport settings
-      const Settings & settings_;
+      /// quality-of-service transport settings
+      const Settings  &          settings_;
 
       /// host:port identifier of this process
       const std::string                                 id_;
@@ -111,6 +112,9 @@ namespace Madara
 
       /// buffer for receiving
       Madara::Utility::Scoped_Array <char>      buffer_;
+
+      /// pointer to qos_settings (if applicable)
+      const QoS_Transport_Settings *      qos_settings_;
     };
   }
 }

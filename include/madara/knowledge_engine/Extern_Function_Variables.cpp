@@ -3,6 +3,7 @@
 
 #include "madara/knowledge_engine/Extern_Function_Variables.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Knowledge_Record_Filters.h"
 
 #include "madara/utility/Log_Macros.h"
 

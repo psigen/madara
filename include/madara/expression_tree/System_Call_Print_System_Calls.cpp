@@ -146,9 +146,9 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "  Reads a file and returns its contents. Default is to determine\n"
       "  file type by filname extension. Explicit type can be a string\n"
       "  or an integer of the following values:\n"
-      "    'xml' = 4\n"
-      "    'text' = 5\n"
-      "    'jpeg' = 50\n";
+      "    'xml' = 16\n"
+      "    'text' = 32\n"
+      "    'jpeg' = 256\n";
       
     calls_["#set_clock"] =
       "\n#set_clock (value) or #set_clock (variable, value):\n"
@@ -200,13 +200,16 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "\n#type (value):\n"
       "  Returns the integer type of the variable or value.\n"
       "  Supported types are:\n"
-      "    INTEGER = 0\n"
-      "    STRING = 1\n"
-      "    DOUBLE = 2\n"
-      "    UNKNOWN_FILE_TYPE = 3\n"
-      "    XML = 4\n"
-      "    TEXT_FILE = 5\n"
-      "    IMAGE_JPEG = 50\n";
+      "    UNINITIALIZED = 0\n"
+      "    INTEGER = 1\n"
+      "    STRING = 2\n"
+      "    DOUBLE = 4\n"
+      "    UNKNOWN_FILE_TYPE = 8\n"
+      "    XML = 16\n"
+      "    TEXT_FILE = 32\n"
+      "    INTEGER_ARRAY = 64\n"
+      "    DOUBLE_ARRAY = 128\n"
+      "    IMAGE_JPEG = 256\n";
       
     calls_["#write_file"] =
       "\n#write_file (filename, value):\n"

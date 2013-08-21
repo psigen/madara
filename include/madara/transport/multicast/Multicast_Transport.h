@@ -13,6 +13,8 @@
 
 #include "madara/utility/Scoped_Array.h"
 #include "madara/transport/multicast/Multicast_Transport_Read_Thread.h"
+#include "madara/transport/QoS_Transport_Settings.h"
+#include "madara/transport/Transport.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "ace/SOCK_Dgram.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"

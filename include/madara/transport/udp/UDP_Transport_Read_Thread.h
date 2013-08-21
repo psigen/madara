@@ -101,6 +101,9 @@ namespace Madara
       
       /// buffer for sending
       Madara::Utility::Scoped_Array <char>      buffer_;
+
+      /// pointer to qos_settings (if applicable)
+      const QoS_Transport_Settings *      qos_settings_;
     };
   }
 }

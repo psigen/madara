@@ -17,6 +17,8 @@ Madara::Transport::UDP_Transport_Read_Thread::UDP_Transport_Read_Thread (
 {
   // for receiving, we only want to bind to the local port
   ACE_INET_Addr local (address.get_port_number ());
+  
+  qos_settings_ = dynamic_cast <const QoS_Transport_Settings *> (&settings);
 
   if (-1 == socket_.open (local, 2, 0, 0))
   {
@@ -195,6 +197,51 @@ Madara::Transport::UDP_Transport_Read_Thread::svc (void)
             DLINFO "UDP_Transport_Read_Thread::svc:" \
             " remote id (%s:%d) is not our own\n",
             remote.get_host_addr (), remote.get_port_number ()));
+        }
+        
+        std::stringstream remote_buffer;
+        remote_buffer << remote.get_host_addr ();
+        remote_buffer << ":";
+        remote_buffer << remote.get_port_number ();
+
+        if (!qos_settings_ || qos_settings_->is_trusted (remote_buffer.str ()))
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "UDP_Transport_Read_Thread::svc:" \
+            " remote id (%s:%d) is trusted\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "UDP_Transport_Read_Thread::svc:" \
+            " dropping message from untrusted peer (%s:%d)\n",
+            remote.get_host_addr (), remote.get_port_number ()));
+
+          // delete the header and continue to the svc loop
+          delete header;
+          continue;
+        }
+
+        std::string originator (header->originator);
+        
+        if (!qos_settings_ || qos_settings_->is_trusted (originator))
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "UDP_Transport_Read_Thread::svc:" \
+            " remote id (%s) is trusted\n",
+            originator.c_str ()));
+        }
+        else
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "UDP_Transport_Read_Thread::svc:" \
+            " dropping message from untrusted peer (%s)\n",
+            originator.c_str ()));
+
+          // delete the header and continue to the svc loop
+          delete header;
+          continue;
         }
 
         // reject the message if it is from a different domain

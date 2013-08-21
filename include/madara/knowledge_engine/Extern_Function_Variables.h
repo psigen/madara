@@ -27,6 +27,7 @@ namespace Madara
   namespace Knowledge_Engine
   {
     class Thread_Safe_Context;
+    class Knowledge_Record_Filters;
     
     typedef Madara::Knowledge_Record VALUE_TYPE;
    
@@ -39,6 +40,7 @@ namespace Madara
     {
     public:
       friend class Madara::Expression_Tree::Composite_Function_Node;
+      friend class Madara::Knowledge_Engine::Knowledge_Record_Filters;
 
       /**
        * Constructor
@@ -47,7 +49,7 @@ namespace Madara
         : context_ (0)
       {
       }
-
+      
       /**
        * Retrieves the value of a variable.
        * @param   key       unique identifier of the variable

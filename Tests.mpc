@@ -37,6 +37,25 @@ project (Test_Encoding) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_QoS_Transport_Settings) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_qos_transport_settings
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/test_qos_transport_settings.cpp
+  }
+}
+
 project (Test_Evaluate) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_evaluate
@@ -320,6 +339,24 @@ project (Test_Files) : using_madara, using_ace, using_splice {
 
   Source_Files {
     tests/test_files.cpp
+  }
+}
+
+project (Test_Filters) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_filters
+  
+  requires += tests
+
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_filters.cpp
   }
 }
 

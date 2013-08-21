@@ -32,7 +32,7 @@ Madara::Knowledge_Record::set_precision (int new_precision)
 Madara::Knowledge_Record::Knowledge_Record ()
       : status_ (UNCREATED), clock (0), scope (LOCAL_SCOPE),
         quality (0), write_quality (0),
-        int_value_ (0), type_ (0)
+        int_value_ (0), type_ (INTEGER)
 {
 }
 
@@ -1760,8 +1760,8 @@ Madara::Knowledge_Record::read (char * buffer, std::string & key,
 {
   // format is [key_size | key | type | value_size | value]
 
-  uint32_t key_size;
-  uint32_t buff_value_size;
+  uint32_t key_size (0);
+  uint32_t buff_value_size (0);
 
   // Remove the key size from the buffer
   if (buffer_remaining >= sizeof (key_size))
