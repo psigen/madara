@@ -1,7 +1,8 @@
 #include "madara/transport/QoS_Transport_Settings.h"
 
 Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings ()
-  : Settings (), rebroadcast_ttl_ (0), rebroadcast_types_ (0)
+  : Settings (), rebroadcast_ttl_ (0), rebroadcast_types_ (0),
+    trusted_peers_ (), banned_peers_ ()
 {
 
 }
@@ -20,9 +21,12 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
   const Settings & settings)
   : Settings (settings),
     rebroadcast_ttl_ (0),
-    rebroadcast_types_ (0)
+    rebroadcast_types_ (0),
+    trusted_peers_ (),
+    banned_peers_ ()
 {
-  QoS_Transport_Settings * rhs = (QoS_Transport_Settings *) &settings;
+  const QoS_Transport_Settings * rhs = dynamic_cast <const QoS_Transport_Settings *> (
+    &settings);
   if (rhs)
   {
     rebroadcast_ttl_ = rhs->rebroadcast_ttl_;
