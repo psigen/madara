@@ -65,6 +65,11 @@ Madara::Transport::QoS_Transport_Settings::operator= (
 {
   if (this != &rhs)
   {
+    rebroadcast_ttl_ = 0;
+    rebroadcast_types_ = 0;
+    trusted_peers_.clear ();
+    banned_peers_.clear ();
+
     Settings * lhs_base = (Settings *)this;
     Settings * rhs_base = (Settings *)&rhs;
 
@@ -173,4 +178,98 @@ Madara::Transport::QoS_Transport_Settings::is_trusted (
   }
 
   return condition;
+}
+
+
+void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (uint32_t types,
+  Madara::Knowledge_Record (*function) (
+    Knowledge_Engine::Function_Arguments &, Knowledge_Engine::Variables &))
+{
+  send_filters_.add (types, function);
+}
+       
+void
+Madara::Transport::QoS_Transport_Settings::add_receive_filter (uint32_t types,
+  Madara::Knowledge_Record (*function) (
+    Knowledge_Engine::Function_Arguments &, Knowledge_Engine::Variables &))
+{
+  receive_filters_.add (types, function);
+}
+       
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (uint32_t types,
+  Madara::Knowledge_Record (*function) (
+    Knowledge_Engine::Function_Arguments &, Knowledge_Engine::Variables &))
+{
+  rebroadcast_filters_.add (types, function);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::attach (
+  Knowledge_Engine::Thread_Safe_Context * context)
+{
+  send_filters_.attach (context);
+  receive_filters_.attach (context);
+  rebroadcast_filters_.attach (context);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::clear_send_filters (uint32_t types)
+{
+  send_filters_.clear (types);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::clear_receive_filters (uint32_t types)
+{
+  receive_filters_.clear (types);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::clear_rebroadcast_filters (uint32_t types)
+{
+  rebroadcast_filters_.clear (types);
+}
+
+      
+Madara::Knowledge_Record
+Madara::Transport::QoS_Transport_Settings::filter_send (
+  const Madara::Knowledge_Record & input)
+{
+  return send_filters_.filter (input);
+}
+         
+
+Madara::Knowledge_Record
+Madara::Transport::QoS_Transport_Settings::filter_receive (
+  const Madara::Knowledge_Record & input)
+{
+  return receive_filters_.filter (input);
+}
+      
+Madara::Knowledge_Record
+Madara::Transport::QoS_Transport_Settings::filter_rebroadcast (
+  const Madara::Knowledge_Record & input)
+{
+  return rebroadcast_filters_.filter (input);
+}
+
+       
+void
+Madara::Transport::QoS_Transport_Settings::print_num_filters_send (void)
+{
+  send_filters_.print_num_filters ();
+}
+       
+void
+Madara::Transport::QoS_Transport_Settings::print_num_filters_receive (void)
+{
+  receive_filters_.print_num_filters ();
+}
+       
+void
+Madara::Transport::QoS_Transport_Settings::print_num_filters_rebroadcast (void)
+{
+  rebroadcast_filters_.print_num_filters ();
 }

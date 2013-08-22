@@ -86,7 +86,7 @@ Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
       write_quality (rhs.write_quality),
       size_ (rhs.size_), type_ (rhs.type_)
 {
-  if      (status_ != UNCREATED)
+  if      (rhs.status_ != UNCREATED)
   {
     if      (rhs.type_ == INTEGER)
       int_value_ = rhs.int_value_;
@@ -101,8 +101,6 @@ Madara::Knowledge_Record::Knowledge_Record (const Knowledge_Record & rhs)
     else if (rhs.is_file_type ())
       file_value_ = rhs.file_value_;
   }
-  else
-    set_value (Integer (0));
 }
 
 Madara::Knowledge_Record::~Knowledge_Record ()
@@ -1149,8 +1147,6 @@ Madara::Knowledge_Record::operator= (const Knowledge_Record & rhs)
     else if (is_file_type ())
       file_value_ = rhs.file_value_;
   }
-  else
-    set_value (Integer (0));
 
   return *this;
 }

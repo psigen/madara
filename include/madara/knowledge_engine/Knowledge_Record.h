@@ -60,8 +60,10 @@ namespace Madara
       INTEGER_ARRAY = 64,
       DOUBLE_ARRAY = 128,
       IMAGE_JPEG = 256,
+      ALL_PRIMITIVE_TYPES = INTEGER | STRING | DOUBLE |
+                            INTEGER_ARRAY | DOUBLE_ARRAY,
       ALL_FILE_TYPES = UNKNOWN_FILE_TYPE | XML | TEXT_FILE | IMAGE_JPEG,
-      ALL_TYPES = 0xFFFFFFFF
+      ALL_TYPES = ALL_PRIMITIVE_TYPES | ALL_FILE_TYPES
     };
     
     typedef  int64_t     Integer;

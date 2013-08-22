@@ -12,8 +12,10 @@
 #include <string>
 
 #include "madara/transport/Transport_Settings.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
+#include "madara/knowledge_engine/Knowledge_Record_Filters.h"
 
 namespace Madara
 {
@@ -64,6 +66,106 @@ namespace Madara
        **/
       uint32_t add_rebroadcastable_type (uint32_t type);
       
+      /**
+       * Adds a filter that will be applied to certain types before sending
+       * @param   types      the types to add the filter to
+       * @param   function   the function that will take the knowledge record
+       *                     in Function_Arguments.
+       **/
+      void add_send_filter (uint32_t types,
+        Knowledge_Record (*function) (Knowledge_Engine::Function_Arguments &,
+                                      Knowledge_Engine::Variables &));
+       
+      /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before applying to the local knowledge base
+       * @param   types      the types to add the filter to
+       * @param   function   the function that will take the knowledge record
+       *                     in Function_Arguments.
+       **/
+      void add_receive_filter (uint32_t types,
+        Knowledge_Record (*function) (Knowledge_Engine::Function_Arguments &,
+                                      Knowledge_Engine::Variables &));
+       
+      /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before rebroadcasting (if TTL > 0)
+       * @param   types      the types to add the filter to
+       * @param   function   the function that will take the knowledge record
+       *                     in Function_Arguments.
+       **/
+      void add_rebroadcast_filter (uint32_t types,
+        Knowledge_Record (*function) (Knowledge_Engine::Function_Arguments &,
+                                      Knowledge_Engine::Variables &));
+      
+      /**
+       * Attaches a context to the various filtering systems. If the context
+       * ever goes out of scope, a 0 should be passed into this function to
+       * the context.
+       * @param   context     context to be used for Variable lookups
+       **/
+      void attach (Knowledge_Engine::Thread_Safe_Context * context);
+      
+      /**
+       * Clears the list of filters for the specified types
+       * @param   types   the types to clear the filters of
+       **/
+      void clear_send_filters (uint32_t types);
+
+      /**
+       * Clears the list of filters for the specified types
+       * @param   types   the types to clear the filters of
+       **/
+      void clear_receive_filters (uint32_t types);
+
+      /**
+       * Clears the list of filters for the specified types
+       * @param   types   the types to clear the filters of
+       **/
+      void clear_rebroadcast_filters (uint32_t types);
+
+      
+      /**
+       * Filters an input according to send's filter chain
+       * @param   input   the argument to the filter chain
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter_send (const Knowledge_Record & input);
+         
+      /**
+       * Filters an input according to receive's filter chain
+       * @param   input   the argument to the filter chain
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter_receive (const Knowledge_Record & input);
+      
+      /**
+       * Filters an input according to rebroadcast's filter chain
+       * @param   input   the argument to the filter chain
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter_rebroadcast (const Knowledge_Record & input);
+
+       
+      /**
+       * Prints the number of filters chained for each type to the
+       * send filter
+       **/
+      void print_num_filters_send (void);
+       
+      /**
+       * Prints the number of filters chained for each type to the
+       * receive filter
+       **/
+      void print_num_filters_receive (void);
+       
+      /**
+       * Prints the number of filters chained for each type to the
+       * rebroadcast filter
+       **/
+      void print_num_filters_rebroadcast (void);
+
+
       /**
        * Removes a type from the acceptable rebroadcast types. @see
        * Madara::Knowledge_Record for list of types.
@@ -154,6 +256,21 @@ namespace Madara
        * A container of all banned peers
        **/
       std::map <std::string, int> banned_peers_;
+
+      /**
+       * A container for rebroadcast filters
+       **/
+      Knowledge_Engine::Knowledge_Record_Filters  rebroadcast_filters_;
+         
+      /**
+       * A container for filters applied before sending from this host
+       **/
+      Knowledge_Engine::Knowledge_Record_Filters  send_filters_;
+
+      /**
+       * A container for receive filters
+       **/
+      Knowledge_Engine::Knowledge_Record_Filters  receive_filters_;
     };
   } // end Transport namespace
 } // end Madara namespace

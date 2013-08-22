@@ -130,6 +130,7 @@ Madara::Knowledge_Record::clear_value (void)
 
     type_ = INTEGER;
     status_ = UNCREATED;
+    size_ = 0;
   }
 }
 
