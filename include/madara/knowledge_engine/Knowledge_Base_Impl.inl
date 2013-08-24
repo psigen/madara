@@ -24,6 +24,22 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
 }
 
 inline Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
+  const Variable_Reference & variable,
+  const Knowledge_Reference_Settings & settings)
+{
+  return map_.get (variable, settings);
+}
+
+inline Madara::Knowledge_Engine::Variable_Reference
+Madara::Knowledge_Engine::Knowledge_Base_Impl::get_ref (
+  const std::string & t_key,
+  const Knowledge_Reference_Settings & settings)
+{
+  return map_.get_ref (t_key, settings);
+}
+
+inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base_Impl::retrieve_index (
   const std::string & t_key,
   size_t index,
@@ -32,10 +48,19 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::retrieve_index (
   return map_.retrieve_index (t_key, index, settings);
 }
 
+inline Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base_Impl::retrieve_index (
+  const Variable_Reference & variable,
+  size_t index,
+  const Knowledge_Reference_Settings & settings)
+{
+  return map_.retrieve_index (variable, index, settings);
+}
+
 inline bool
 Madara::Knowledge_Engine::Knowledge_Base_Impl::exists (
   const std::string & key,
-  const Knowledge_Reference_Settings & settings) const
+  const Knowledge_Reference_Settings & settings)
 {
   return map_.exists (key, settings);
 }

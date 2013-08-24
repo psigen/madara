@@ -119,7 +119,7 @@ Madara::Transport::Multicast_Transport::setup (void)
 
 long
 Madara::Transport::Multicast_Transport::send_data (
-  const Madara::Knowledge_Records & updates)
+  const Madara::Knowledge_Records & orig_updates)
 {
   // check to see if we are shutting down
   long ret = this->check_transport ();
@@ -137,8 +137,30 @@ Madara::Transport::Multicast_Transport::send_data (
   }
  
   // get the maximum quality from the updates
-  uint32_t quality = Madara::max_quality (updates);
+  uint32_t quality = Madara::max_quality (orig_updates);
   bool reduced = false;
+
+  Knowledge_Map filtered_updates;
+  
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "Multicast_Transport::send_data:" \
+    " Applying filters before sending...\n"));
+
+  /**
+   * filter the updates according to the filters specified by
+   * the user in QoS_Transport_Settings (if applicable)
+   **/
+  for (Knowledge_Records::const_iterator i = orig_updates.begin ();
+        i != orig_updates.end (); ++i)
+  {
+    Knowledge_Record result = settings_.filter_send (*i->second);
+    if (result.status () != Knowledge_Record::UNCREATED)
+      filtered_updates[i->first] = result;
+  }
+  
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "Multicast_Transport::send_data:" \
+    " Finished applying filters before sending...\n"));
 
 
   // allocate a buffer to send
@@ -196,7 +218,7 @@ Madara::Transport::Multicast_Transport::send_data (
     header->type = Madara::Transport::MULTIASSIGN;
   }
 
-  header->updates = uint32_t (updates.size ());
+  header->updates = uint32_t (filtered_updates.size ());
 
   // compute size of this header
   header->size = header->encoded_size ();
@@ -227,24 +249,24 @@ Madara::Transport::Multicast_Transport::send_data (
   // [key|value]
   
   int j = 0;
-  for (Knowledge_Records::const_iterator i = updates.begin ();
-    i != updates.end (); ++i, ++j)
+  for (Knowledge_Map::const_iterator i = filtered_updates.begin ();
+    i != filtered_updates.end (); ++i, ++j)
   {
-    update = i->second->write (update, i->first, buffer_remaining);
+    update = i->second.write (update, i->first, buffer_remaining);
     
     if (buffer_remaining > 0)
     {
       MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
         DLINFO "Multicast_Transport::send_data:" \
         " update[%d] => encoding %s of type %d and size %d\n",
-        j, i->first.c_str (), i->second->type (), i->second->size ()));
+        j, i->first.c_str (), i->second.type (), i->second.size ()));
     }
     else
     {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       DLINFO "Multicast_Transport::send_data:" \
       " unable to encode update[%d] => %s of type %d and size %d\n",
-      j, i->first.c_str (), i->second->type (), i->second->size ()));
+      j, i->first.c_str (), i->second.type (), i->second.size ()));
     }
   }
   

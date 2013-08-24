@@ -7,8 +7,25 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::Knowledge_Record_Filters ()
 {
 }
 
+Madara::Knowledge_Engine::Knowledge_Record_Filters::Knowledge_Record_Filters (
+  const Knowledge_Record_Filters & filters)
+  : filters_ (filters.filters_), context_ (filters.context_)
+{
+}
+
 Madara::Knowledge_Engine::Knowledge_Record_Filters::~Knowledge_Record_Filters ()
 {
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::operator= (
+  const Knowledge_Record_Filters & rhs)
+{
+  if (this != &rhs)
+  {
+    filters_ = rhs.filters_;
+    context_ = rhs.context_;
+  }
 }
 
 void
@@ -105,4 +122,11 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
   }
 
   return result;
+}
+
+
+size_t
+Madara::Knowledge_Engine::Knowledge_Record_Filters::get_number_of_filtered_types (void)
+{
+  return filters_.size ();
 }

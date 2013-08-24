@@ -38,12 +38,22 @@ namespace Madara
   
       /**
        * Constructor
+        * @param  t_treat_globals_as_locals true if global variables should
+        *                                   be marked as not to be sent to the
+        *                                   transport
+        * @param  t_signal_updates          indicates whether to signal updates
+        *                                   to a separate thread that may be
+        *                                   waiting. This is only potentially
+        *                                   useful to multithreaded MADARA apps
+        * @param  t_always_overwrite        always overwrite, despite quality
+        * @param  t_always_expand           always try to expand variable names
        **/
       Knowledge_Update_Settings (bool t_treat_globals_as_locals,
         bool t_signal_changes = true,
         bool t_always_overwrite = false,
+        bool t_always_expand = true,
         uint64_t t_clock_increment = 1)
-        : Knowledge_Reference_Settings (),
+        : Knowledge_Reference_Settings (t_always_expand),
           treat_globals_as_locals (t_treat_globals_as_locals),
           signal_changes (t_signal_changes),
           always_overwrite (t_always_overwrite),

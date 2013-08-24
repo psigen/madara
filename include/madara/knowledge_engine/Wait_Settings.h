@@ -32,15 +32,32 @@ namespace Madara
 
        /**
         * Constructor
+        * @param  t_delay_sending_modifieds true to send modifieds
+        * @param  t_treat_globals_as_locals true if global variables should
+        *                                   be marked as not to be sent to the
+        *                                   transport
+        * @param  t_signal_updates          indicates whether to signal updates
+        *                                   to a separate thread that may be
+        *                                   waiting. This is only potentially
+        *                                   useful to multithreaded MADARA apps
+        * @param  t_always_overwrite        always overwrite, despite quality
+        * @param  t_always_expand           always try to expand variable names
+        * @param  t_pre_print_statement     statement to print out before
+        *                                   evaluations
+        * @param  t_post_print_statement    statement to print out after
+        *                                   evaluations
         **/
        Wait_Settings (bool t_delay_sending_modifieds,
          bool t_treat_globals_as_locals,
-         bool signal_updates,
+         bool t_signal_updates,
+         bool t_always_overwrite,
+         bool t_always_expand,
          std::string t_pre_print_statement,
          std::string t_post_print_statement,
          double t_poll_frequency, double t_max_wait_time)
          : Eval_Settings (t_delay_sending_modifieds,
-              t_treat_globals_as_locals, signal_updates,
+              t_treat_globals_as_locals, t_signal_updates,
+              t_always_overwrite, t_always_expand,
               t_pre_print_statement, t_post_print_statement),
            poll_frequency (t_poll_frequency), max_wait_time (t_max_wait_time)
        {

@@ -103,6 +103,22 @@ uint64_t test_optimal_loop (
 uint64_t test_looped_li (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
+uint64_t test_normal_set (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_var_ref_set (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_get_ref (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_get_expand_ref (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_variables_inc_var_ref (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+
 
 // C++ function for increment with boolean check, rather than allowing C++ 
 // to optimize by putting things in registers
@@ -195,6 +211,7 @@ void
 }
 
 Madara::Knowledge_Engine::Compiled_Expression   increment_ce;
+Madara::Knowledge_Engine::Variable_Reference    increment_var;
 
 Madara::Knowledge_Record
   increment_var1 (Madara::Knowledge_Engine::Function_Arguments & args,
@@ -202,6 +219,13 @@ Madara::Knowledge_Record
 {
   return variables.evaluate (increment_ce,
     Madara::Knowledge_Engine::Knowledge_Update_Settings (false, false));
+}
+
+Madara::Knowledge_Record
+  increment_var1_through_variables (Madara::Knowledge_Engine::Function_Arguments & args,
+            Madara::Knowledge_Engine::Variables & variables)
+{
+  return variables.inc (increment_var);
 }
 
 Madara::Knowledge_Record
@@ -282,7 +306,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
 
-  increment_ce = knowledge.compile ("++var1");
+  increment_ce = knowledge.compile ("++.var1");
+  increment_var = knowledge.get_ref (".var1");
 
   if (num_runs == 0 || num_iterations == 0)
   {
@@ -292,7 +317,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
-  const int num_test_types = 24;
+  const int num_test_types = 29;
 
   // make everything all pretty and for-loopy
   uint64_t results[num_test_types];
@@ -317,6 +342,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "KaRL: Optimal Loop            ",
     "KaRL: Looped SI               ",
     "KaRL: Looped LI               ",
+    "KaRL: Get Variable Reference  ",
+    "KaRL: Get Expanded Reference  ",
+    "KaRL: Normal Set Operation    ",
+    "KaRL: Variable Reference Set  ",
+    "KaRL: Variables Inc Var Ref   ",
     "C++: Optimized Assignments    ",
     "C++: Optimized Reinforcements ",
     "C++: Optimized Inferences     ",
@@ -345,6 +375,11 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     OptimalLoop,
     LoopedSI,
     LoopedLI,
+    GetVariableReference,
+    GetExpandedReference,
+    NormalSet,
+    VariableReferenceSet,
+    VariablesIncVarRef,
     OptimizedAssignment,
     OptimizedReinforcement,
     OptimizedInference,
@@ -378,6 +413,12 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[OptimalLoop] = test_optimal_loop;
   test_functions[LoopedSI] = test_looped_si;
   test_functions[LoopedLI] = test_looped_li;
+  
+  test_functions[GetExpandedReference] = test_get_expand_ref;
+  test_functions[GetVariableReference] = test_get_ref;
+  test_functions[NormalSet] = test_normal_set;
+  test_functions[VariableReferenceSet] = test_var_ref_set;
+  test_functions[VariablesIncVarRef] = test_variables_inc_var_ref;
   
   test_functions[OptimizedAssignment] = test_optimal_assignment;
   test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
@@ -973,6 +1014,172 @@ uint64_t test_simple_inference (
 
   print (measured, knowledge.get (".var1"), iterations,
     "Simple Inference: ");
+
+  return measured;
+}
+
+uint64_t test_normal_set (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_compiled_si"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("1 => ++.var1");
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    knowledge.set ("var1", Madara::Knowledge_Record::Integer (i));
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Normal Set Operation: ");
+
+  return measured;
+}
+
+uint64_t test_get_ref (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_var_ref_set"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("1 => ++.var1");
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    Madara::Knowledge_Engine::Variable_Reference variable =
+      knowledge.get_ref ("var1");
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Get Reference Operation: ");
+
+  return measured;
+}
+
+uint64_t test_get_expand_ref (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_get_expand_ref"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("1 => ++.var1");
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    Madara::Knowledge_Engine::Variable_Reference variable =
+      knowledge.get_ref ("var1",
+      Madara::Knowledge_Engine::Knowledge_Reference_Settings (true));
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Get Expanded Ref: ");
+
+  return measured;
+}
+
+uint64_t test_var_ref_set (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_var_ref_set"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("1 => ++.var1");
+
+  timer.start ();
+
+  Madara::Knowledge_Engine::Variable_Reference variable =
+    knowledge.get_ref ("var1");
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    knowledge.set (variable, Madara::Knowledge_Record::Integer (i));
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Variable Reference Set: ");
+
+  return measured;
+}
+
+uint64_t test_variables_inc_var_ref (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_variables_inc_var_ref"));
+
+  knowledge.clear ();
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  Madara::Knowledge_Engine::Compiled_Expression ce;
+
+  ce = knowledge.compile ("inc_var_ref ()");
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    knowledge.evaluate (ce);
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Variables Inc Var Ref: ");
 
   return measured;
 }

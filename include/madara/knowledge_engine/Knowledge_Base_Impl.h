@@ -18,6 +18,7 @@
 #include "madara/knowledge_engine/Wait_Settings.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
+#include "madara/knowledge_engine/Variable_Reference.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Files.h"
@@ -94,7 +95,31 @@ namespace Madara
       Madara::Knowledge_Record get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
-
+      
+      /**
+       * Atomically returns the value of a variable.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   settings  the settings for referring to variables
+       * @return         the Madara::Knowledge_Record::Integer value for the variable
+       **/
+      Madara::Knowledge_Record
+        get (const Variable_Reference & variable,
+             const Knowledge_Reference_Settings & settings =
+                     Knowledge_Reference_Settings ());
+      
+      /**
+       * Atomically returns a reference to the variable. Variable references are
+       * efficient mechanisms for reference variables individually--similar to
+       * speedups seen from Compiled_Expression.
+       * @param   key       unique identifier of the variable
+       * @param settings         settings for referring to knowledge variables
+       * @return            reference to the variable in the context
+       **/
+      Variable_Reference
+        get_ref (const std::string & key,
+             const Knowledge_Reference_Settings & settings =
+                     Knowledge_Reference_Settings ());
+      
       /**
        * Retrieves a value at a specified index within a knowledge array
        * @param key              knowledge location
@@ -103,6 +128,19 @@ namespace Madara
        * @return                 value at knowledge location
        **/
       Madara::Knowledge_Record retrieve_index (const std::string & key,
+             size_t index,
+             const Knowledge_Reference_Settings & settings =
+                     Knowledge_Reference_Settings ());
+      
+      /**
+       * Retrieves a value at a specified index within a knowledge array
+       * @param   variable   reference to a variable (@see get_ref)
+       * @param   index      index within the array
+       * @param   settings   settings for referring to knowledge variables
+       * @return             value at knowledge location
+       **/
+      Madara::Knowledge_Record retrieve_index (
+             const Variable_Reference & variable,
              size_t index,
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
@@ -284,7 +322,187 @@ namespace Madara
         double value,
         const Eval_Settings & settings =
           Eval_Settings ());
+      
+      /**
+       * Atomically reads a file into a variable
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   filename  file to read
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if unsuccessful
+       **/
+      int
+      read_file (
+        const Variable_Reference & variable,
+        const std::string & filename,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a string
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const std::string & value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a double array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     a STL vector of doubles
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const std::vector <double> & value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a double array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     an array of doubles
+       * @param   size      number of elements in the array
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const double * value,
+        uint32_t size,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of an array index to a double.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   index     index within array
+       * @param   value     new value of the array index
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_index (const Variable_Reference & variable,
+        size_t index, double value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a double.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        double value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+ 
+      /**
+       * Atomically sets the value of a variable to an integer array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     a STL vector of Integers
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const std::vector <Knowledge_Record::Integer> & value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to an integer array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     an array of Integers
+       * @param   size      number of elements in the array
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const Madara::Knowledge_Record::Integer * value,
+        uint32_t size,
+        const Eval_Settings & settings =
+          Eval_Settings ());
 
+      /**
+       * Atomically sets the value of an array index to a double.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   index     index within array
+       * @param   value     new value of the array index
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_index (const Variable_Reference & variable,
+        size_t index, Knowledge_Record::Integer value,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to an integer.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        Madara::Knowledge_Record::Integer value, 
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a text file's contents.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_text (const Variable_Reference & variable,
+        const char * value, size_t size, 
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to an arbitrary string.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_file (const Variable_Reference & variable,
+        const unsigned char * value, size_t size, 
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to a JPEG image
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_jpeg (const Variable_Reference & variable,
+        const unsigned char * value, size_t size, 
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
+      /**
+       * Atomically sets the value of a variable to an XML string.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_xml (const Variable_Reference & variable,
+        const char * value, size_t size, 
+        const Eval_Settings & settings =
+          Eval_Settings ());
+      
       /**
        * Sets a knowledge value to a specified value
        *
@@ -349,7 +567,7 @@ namespace Madara
        **/
       bool exists (const std::string & key,
         const Knowledge_Reference_Settings & settings =
-          Knowledge_Reference_Settings ()) const;
+          Knowledge_Reference_Settings ());
 
       /**
        * Sets the quality of writing to a certain variable from this entity
@@ -564,11 +782,11 @@ namespace Madara
        **/
       void setup_uniquehostport (const std::string & host);
 
-      Thread_Safe_Context           map_;
-      ACE_SOCK_Acceptor             unique_bind_;
-      std::string                   id_;
-      Madara::Transport::Settings   settings_;
-      Files                         files_;
+      Thread_Safe_Context                 map_;
+      ACE_SOCK_Acceptor                   unique_bind_;
+      std::string                         id_;
+      Transport::QoS_Transport_Settings   settings_;
+      Files                               files_;
 
       Madara::Transport::Transports transports_;
     };

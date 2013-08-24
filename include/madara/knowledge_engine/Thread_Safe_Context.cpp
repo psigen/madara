@@ -25,75 +25,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::~Thread_Safe_Context (void)
   delete interpreter_;
 }
 
-// return the value of a variable
-Madara::Knowledge_Record
-Madara::Knowledge_Engine::Thread_Safe_Context::get (const std::string & key,
-             const Knowledge_Reference_Settings & settings) const
-{
-  std::string key_actual;
-  const std::string * key_ptr;
-  Context_Guard guard (mutex_);
-
-  Madara::Knowledge_Record record;
-
-  if (settings.expand_variables)
-  {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
-  }
-  else
-    key_ptr = &key;
-
-  // if key is not null
-  if (*key_ptr != "")
-  {
-    // find the key in the knowledge base
-    Knowledge_Map::const_iterator found = map_.find (*key_ptr);
-
-    // if it's found, then return the value
-    if (found != map_.end ())
-      return found->second;
-  }
-
-  // if no match, return empty (0)
-  return record;
-}
-
-// return the value of a variable
-Madara::Knowledge_Record
-Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_index (const std::string & key,
-             size_t index,
-             const Knowledge_Reference_Settings & settings) const
-{
-  std::string key_actual;
-  const std::string * key_ptr;
-  Context_Guard guard (mutex_);
-
-  Madara::Knowledge_Record record;
-
-  if (settings.expand_variables)
-  {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
-  }
-  else
-    key_ptr = &key;
-
-  // if key is not null
-  if (*key_ptr != "")
-  {
-    // find the key in the knowledge base
-    Knowledge_Map::const_iterator found = map_.find (*key_ptr);
-
-    // if it's found, then return the value
-    if (found != map_.end ())
-      return found->second.retrieve_index (index);
-  }
-
-  // if no match, return empty (0)
-  return record;
-}
-
 /**
  * Retrieves a knowledge record from the key. This function is useful
  * for performance reasons and also for using a Knowledge_Record that
@@ -107,8 +38,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
   std::string key_actual;
   const std::string * key_ptr;
   Context_Guard guard (mutex_);
-
-  Madara::Knowledge_Record record;
 
   if (settings.expand_variables)
   {
@@ -126,18 +55,19 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_record (
   return &map_[*key_ptr];
 }
 
-// set the value of a variable
-int
-Madara::Knowledge_Engine::Thread_Safe_Context::set (
+
+Madara::Knowledge_Engine::Variable_Reference
+Madara::Knowledge_Engine::Thread_Safe_Context::get_ref (
   const std::string & key,
-  Madara::Knowledge_Record::Integer value,
-  const Knowledge_Update_Settings & settings)
+  const Knowledge_Reference_Settings & settings)
 {
-  // enter the mutex
   std::string key_actual;
   const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
+
+  Variable_Reference record;
+
+  // expand the key if the user asked for it
   if (settings.expand_variables)
   {
     key_actual = expand_statement (key);
@@ -146,82 +76,147 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
   else
     key_ptr = &key;
   
-  // check for null key
-  if (*key_ptr == "")
-    return -1;
+  // set name to the expanded key, for debugging purposes
+  record.set_name (*key_ptr);
 
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
+  // if the key is possible, create a reference to the record
+  if (*key_ptr != "")
   {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
+    record.record_ = &map_[*key_ptr];
   }
+  return record;
+}
 
-  if (settings.signal_changes)
-    changed_.signal ();
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set (
+  const Variable_Reference & variable,
+  Madara::Knowledge_Record::Integer value,
+  const Knowledge_Update_Settings & settings)
+{
+  Context_Guard guard (mutex_);
+  if (variable.record_)
+  {
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
+  }
+  else
+    return -1;
 
   return 0;
 }
+
+// set the value of a variable
+int
+Madara::Knowledge_Engine::Thread_Safe_Context::set (
+  const Variable_Reference & variable,
+  const Madara::Knowledge_Record & value,
+  const Knowledge_Update_Settings & settings)
+{
+  Context_Guard guard (mutex_);
+  if (variable.record_)
+  {
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    // copy size and type from the record value
+    variable.record_->size_ = value.size_;
+    variable.record_->type_ = value.type_;
+
+    // copy the value from the record value
+    if (     value.type () == Knowledge_Record::INTEGER)
+      variable.record_->int_value_ = value.int_value_;
+
+    else if (value.type () == Knowledge_Record::DOUBLE)
+      variable.record_->double_value_ = value.double_value_;
+    
+    else if (value.type () == Knowledge_Record::INTEGER_ARRAY)
+      variable.record_->int_array_ = value.int_array_;
+
+    else if (value.type () == Knowledge_Record::DOUBLE_ARRAY)
+      variable.record_->double_array_ = value.double_array_;
+    
+    else if (value.is_string_type ())
+      variable.record_->str_value_ = value.str_value_;
+
+    else if (value.is_binary_file_type ())
+      variable.record_->file_value_ = value.file_value_;
+
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
+  }
+  else
+    return -1;
+
+  return 0;
+}
+
 
 // set the value of an array index
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
-  const std::string & key, size_t index,
+  const Variable_Reference & variable, size_t index,
   Madara::Knowledge_Record::Integer value,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_index (index, value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_index (index, value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -229,50 +224,37 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const std::string & key,
+  const Variable_Reference & variable,
   const Knowledge_Record::Integer * value,
   uint32_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value, size);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value, size);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -280,49 +262,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const std::string & key,
+  const Variable_Reference & variable,
   const std::vector <Knowledge_Record::Integer> & value,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -330,49 +299,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const std::string & key,
+  const Variable_Reference & variable,
   double value,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -380,49 +336,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
-  const std::string & key, size_t index,
+  const Variable_Reference & variable, size_t index,
   double value,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_index (index, value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_index (index, value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -430,50 +373,37 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const std::string & key,
+  const Variable_Reference & variable,
   const double * value,
   uint32_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value, size);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value, size);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -481,49 +411,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const std::string & key,
+  const Variable_Reference & variable,
   const std::vector <double> & value,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -531,49 +448,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
-  const std::string & key,
+  const Variable_Reference & variable,
   const std::string & value,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_value (value);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_value (value);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -581,49 +485,37 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
-  const std::string & key,
+  const Variable_Reference & variable,
   const char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
-  Context_Guard guard (mutex_);
   
-  if (settings.expand_variables)
+  Context_Guard guard (mutex_);
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_xml (value, size);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-  
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_xml (value, size);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -631,49 +523,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
-  const std::string & key,
+  const Variable_Reference & variable,
   const char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_text (value, size);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-  
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_text (value, size);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -681,49 +560,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
-  const std::string & key,
+  const Variable_Reference & variable,
   const unsigned char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_jpeg (value, size);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-  
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_jpeg (value, size);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -731,49 +597,36 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
-  const std::string & key,
+  const Variable_Reference & variable,
   const unsigned char * value, size_t size,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    variable.record_->set_file (value, size);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
     return -1;
-  
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
-
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  record.set_file (value, size);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
 
   return 0;
 }
@@ -781,51 +634,39 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
-  const std::string & key,
+  const Variable_Reference & variable,
   const std::string & filename,
   const Knowledge_Update_Settings & settings)
 {
-  // enter the mutex
-  std::string key_actual;
-  const std::string * key_ptr;
+  int return_value = 0;
   Context_Guard guard (mutex_);
-  
-  if (settings.expand_variables)
+  if (variable.record_)
   {
-    key_actual = expand_statement (key);
-    key_ptr = &key_actual;
+    // check if we have the appropriate write quality
+    if (!settings.always_overwrite &&
+        variable.record_->write_quality < variable.record_->quality)
+      return -2;
+
+    return_value = variable.record_->read_file (filename);
+    variable.record_->quality = variable.record_->write_quality;
+  
+    // otherwise set the value
+    if (variable.name_.get_ptr ()[0] != '.')
+    {
+      if (!settings.treat_globals_as_locals)
+      {
+        mark_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+
+    if (settings.signal_changes)
+      changed_.signal ();
   }
   else
-    key_ptr = &key;
-  
-  // check for null key
-  if (*key_ptr == "")
-    return -1;
-  
-  // create the key if it didn't exist
-  Knowledge_Record & record = map_[*key_ptr];
+    return return_value = -1;
 
-  // check if we have the appropriate write quality
-  if (!settings.always_overwrite && record.write_quality < record.quality)
-    return -2;
-
-  int ret_value = record.read_file (filename);
-  record.quality = record.write_quality;
-  
-  // otherwise set the value
-  if ((*key_ptr)[0] != '.')
-  {
-    if (!settings.treat_globals_as_locals)
-    {
-      mark_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-  }
-  
-  if (settings.signal_changes)
-    changed_.signal ();
-
-  return ret_value;
+  return return_value;
 }
 
 /// get quality of last update to a variable.
@@ -1346,14 +1187,12 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (
 /// keys.
 std::string 
 Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
-  const std::string & statement) const
+  const std::string & statement)
 {
   // enter the mutex
   Context_Guard guard (mutex_);
 
   // vectors for holding parsed tokens and pivot_list
-  std::vector< std::string> tokens;
-  std::vector< std::string> pivot_list;
   size_t subcount = 0;
   size_t begin_exp = 0;
 

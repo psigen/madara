@@ -40,10 +40,12 @@ namespace Madara
         * @param  t_treat_globals_as_locals true if global variables should
         *                                   be marked as not to be sent to the
         *                                   transport
-        * @param  signal_updates            indicates whether to signal updates
+        * @param  t_signal_updates          indicates whether to signal updates
         *                                   to a separate thread that may be
         *                                   waiting. This is only potentially
         *                                   useful to multithreaded MADARA apps
+        * @param  t_always_overwrite        always overwrite, despite quality
+        * @param  t_always_expand           always try to expand variable names
         * @param  t_pre_print_statement     statement to print out before
         *                                   evaluations
         * @param  t_post_print_statement    statement to print out after
@@ -51,10 +53,13 @@ namespace Madara
         **/
        Eval_Settings (bool t_delay_sending_modifieds,
          bool t_treat_globals_as_locals = false,
-         bool signal_updates = true,
+         bool t_signal_updates = true,
+         bool t_always_overwrite = false,
+         bool t_always_expand = true,
          std::string t_pre_print_statement = "",
          std::string t_post_print_statement = "")
-         : Knowledge_Update_Settings (t_treat_globals_as_locals, signal_updates),
+         : Knowledge_Update_Settings (t_treat_globals_as_locals,
+                                      t_signal_updates, t_always_overwrite, t_always_expand),
            delay_sending_modifieds (t_delay_sending_modifieds),
            pre_print_statement (t_pre_print_statement),
            post_print_statement (t_post_print_statement)

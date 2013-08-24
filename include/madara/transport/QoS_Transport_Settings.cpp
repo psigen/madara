@@ -13,7 +13,10 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     rebroadcast_ttl_ (settings.rebroadcast_ttl_),
     rebroadcast_types_ (settings.rebroadcast_types_),
     trusted_peers_ (settings.trusted_peers_),
-    banned_peers_ (settings.banned_peers_)
+    banned_peers_ (settings.banned_peers_),
+    rebroadcast_filters_ (settings.rebroadcast_filters_),
+    receive_filters_ (settings.receive_filters_),
+    send_filters_ (settings.send_filters_)
 {
 }
 
@@ -33,6 +36,9 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     rebroadcast_types_ = rhs->rebroadcast_types_;
     trusted_peers_ = rhs->trusted_peers_;
     banned_peers_ = rhs->banned_peers_;
+    send_filters_ = rhs->send_filters_;
+    receive_filters_ = rhs->receive_filters_;
+    rebroadcast_filters_ = rhs->rebroadcast_filters_;
   }
 }
 
@@ -56,6 +62,9 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     rebroadcast_types_ = rhs.rebroadcast_types_;
     trusted_peers_ = rhs.trusted_peers_;
     banned_peers_ = rhs.banned_peers_;
+    send_filters_ = rhs.send_filters_;
+    receive_filters_ = rhs.receive_filters_;
+    rebroadcast_filters_ = rhs.rebroadcast_filters_;
   }
 }
 
@@ -69,6 +78,9 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     rebroadcast_types_ = 0;
     trusted_peers_.clear ();
     banned_peers_.clear ();
+    send_filters_.clear (Knowledge_Record::ALL_TYPES);
+    receive_filters_.clear (Knowledge_Record::ALL_TYPES);
+    rebroadcast_filters_.clear (Knowledge_Record::ALL_TYPES);
 
     Settings * lhs_base = (Settings *)this;
     Settings * rhs_base = (Settings *)&rhs;
@@ -272,4 +284,29 @@ void
 Madara::Transport::QoS_Transport_Settings::print_num_filters_rebroadcast (void)
 {
   rebroadcast_filters_.print_num_filters ();
+}
+
+
+
+size_t
+Madara::Transport::QoS_Transport_Settings::get_number_of_send_filtered_types (
+  void)
+{
+  return send_filters_.get_number_of_filtered_types ();
+}
+      
+
+size_t
+Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_filtered_types (
+  void)
+{
+  return rebroadcast_filters_.get_number_of_filtered_types ();
+}
+
+
+size_t
+Madara::Transport::QoS_Transport_Settings::get_number_of_received_filtered_types (
+  void)
+{
+  return receive_filters_.get_number_of_filtered_types ();
 }

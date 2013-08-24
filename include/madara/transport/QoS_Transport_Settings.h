@@ -191,6 +191,24 @@ namespace Madara
        * per message).
        **/
       uint32_t get_rebroadcast_ttl (void);
+      
+      /**
+       * Returns the number of types that are filtered before send
+       * @return  the number of types that have filters
+       **/
+      size_t get_number_of_send_filtered_types (void);
+      
+      /**
+       * Returns the number of types that are filtered before rebroadcast
+       * @return  the number of types that have filters
+       **/
+      size_t get_number_of_rebroadcast_filtered_types (void);
+
+      /**
+       * Returns the number of types that are filtered after received
+       * @return  the number of types that have filters
+       **/
+      size_t get_number_of_received_filtered_types (void);
 
       /**
        * Adds a trusted peer. By default, all peers are trusted unless
@@ -263,14 +281,15 @@ namespace Madara
       Knowledge_Engine::Knowledge_Record_Filters  rebroadcast_filters_;
          
       /**
+       * A container for receive filters
+       **/
+      Knowledge_Engine::Knowledge_Record_Filters  receive_filters_;
+
+      /**
        * A container for filters applied before sending from this host
        **/
       Knowledge_Engine::Knowledge_Record_Filters  send_filters_;
 
-      /**
-       * A container for receive filters
-       **/
-      Knowledge_Engine::Knowledge_Record_Filters  receive_filters_;
     };
   } // end Transport namespace
 } // end Madara namespace

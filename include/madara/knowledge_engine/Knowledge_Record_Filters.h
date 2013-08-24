@@ -4,10 +4,10 @@
 #define _KNOWLEDGE_RECORD_FILTERS_H_
 
 /**
- * @file Knowledge_Record.h
+ * @file Knowledge_Record_Filters.h
  * @author James Edmondson <jedmondson@gmail.com>
  *
- * This file contains the Knowledge_Record class, helper typdefs and functions
+ * This file contains the Knowledge_Record_Filters class, helper typdefs and functions
  **/
 
 #include <string>
@@ -42,11 +42,22 @@ namespace Madara
        * Default constructor
        **/
       Knowledge_Record_Filters ();
+      
+      /**
+       * Copy constructor
+       **/
+      Knowledge_Record_Filters (const Knowledge_Record_Filters & filters);
 
       /**
        * Destructor
        **/
       virtual ~Knowledge_Record_Filters ();
+
+      /**
+       * Assignment operator
+       * @param  rhs   the value to be copied into this class
+       **/
+      void operator= (const Knowledge_Record_Filters & rhs);
 
       /**
        * Adds a filter to the list of types
@@ -81,6 +92,12 @@ namespace Madara
        * Prints the number of filters chained for each type
        **/
       void print_num_filters (void);
+
+      /**
+       * Returns the number of types that have filters
+       * @return  the number of types that have filters
+       **/
+      size_t get_number_of_filtered_types (void);
 
     protected:
       /**

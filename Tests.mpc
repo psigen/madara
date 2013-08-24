@@ -75,7 +75,7 @@ project (Test_Evaluate) : using_madara, using_ace, using_splice {
   }
 }
 
-project (Test_Multicast_Rules) : using_madara, using_ace, using_splice {
+project (Test_Multicast_Rules) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_multicast_rules
   
@@ -91,6 +91,25 @@ project (Test_Multicast_Rules) : using_madara, using_ace, using_splice {
 
   Source_Files {
     tests/transports/multicast/test_multicast_rules.cpp
+  }
+}
+
+project (Test_Multicast_Filters) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_multicast_filters
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/multicast/test_multicast_filters.cpp
   }
 }
 
@@ -110,6 +129,25 @@ project (Test_UDP_Rules) : using_madara, using_ace, using_splice {
 
   Source_Files {
     tests/transports/udp/test_udp_rules.cpp
+  }
+}
+
+project (Test_UDP_Filters) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_udp_filters
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/udp/test_udp_filters.cpp
   }
 }
 

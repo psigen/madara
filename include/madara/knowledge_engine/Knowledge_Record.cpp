@@ -1365,7 +1365,7 @@ Madara::Knowledge_Record::operator- (const Knowledge_Record & rhs) const
 
 char *
 Madara::Knowledge_Record::write (char * buffer, const std::string & key,
-   int64_t & buffer_remaining)
+   int64_t & buffer_remaining) const
      
 {
   // format is [key_size | key | type | value_size | value]
@@ -1449,7 +1449,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
     if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
     {
       // convert integers to network byte order
-      Integer * ptr_temp = int_array_.get_ptr ();
+      const Integer * ptr_temp = int_array_.get_ptr ();
 
       for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
       {
@@ -1476,7 +1476,7 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
     if (buffer_remaining >= int64_t (size_* sizeof (double)))
     {
       // convert integers to network byte order
-      double * ptr_temp = double_array_.get_ptr ();
+      const double * ptr_temp = double_array_.get_ptr ();
 
       for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
       {

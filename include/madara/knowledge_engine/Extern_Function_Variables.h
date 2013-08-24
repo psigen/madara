@@ -8,6 +8,7 @@
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
+#include "madara/knowledge_engine/Variable_Reference.h"
 
 /**
  * @file Functions.h
@@ -58,8 +59,27 @@ namespace Madara
        **/
       Knowledge_Record get (const std::string & key,
         const Knowledge_Reference_Settings & settings =
-        Knowledge_Engine::Knowledge_Reference_Settings ())
-        const;
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+      
+      /**
+       * Retrieves the value of a variable.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   settings  settings when referring to variables
+       * @return   the value of the keyed variable
+       **/
+      Knowledge_Record get (const Variable_Reference & variable,
+        const Knowledge_Reference_Settings & settings =
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+      
+      /**
+       * Retrieves the value of a variable.
+       * @param   key       unique identifier of the variable
+       * @param   settings  settings when referring to variables
+       * @return   a variable reference to the key (efficient accessor)
+       **/
+      Variable_Reference get_ref (const std::string & key,
+        const Knowledge_Reference_Settings & settings =
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
       
       /**
        * Sets the value of a variable.
@@ -71,7 +91,21 @@ namespace Madara
       int set (const std::string & key,
         Madara::Knowledge_Record::Integer value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings ());
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Sets the value of a variable.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
+       * @return   the new value of the keyed variable
+       **/
+      int set (const Variable_Reference & key,
+        Madara::Knowledge_Record::Integer value,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Atomically sets the value of a variable to an integer array.
@@ -84,8 +118,24 @@ namespace Madara
       int set (const std::string & key,
         const Madara::Knowledge_Record::Integer * value,
         uint32_t size,
-        const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings ());
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Atomically sets the value of a variable to an integer array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     an array of Integers
+       * @param   size      number of elements in the array
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & key,
+        const Madara::Knowledge_Record::Integer * value,
+        uint32_t size,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Atomically sets the value of a variable to an integer array.
@@ -96,8 +146,22 @@ namespace Madara
        **/
       int set (const std::string & key,
         const std::vector <Knowledge_Record::Integer> & value,
-        const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings ());
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Atomically sets the value of a variable to an integer array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     a STL vector of Integers
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const std::vector <Knowledge_Record::Integer> & value,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Sets the value of a variable.
@@ -108,7 +172,20 @@ namespace Madara
        **/
       int set (const std::string & key, double value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings ());
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Sets the value of a variable.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
+       * @return   the new value of the keyed variable
+       **/
+      int set (const Variable_Reference & variable, double value,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Atomically sets the value of a variable to a double array.
@@ -121,8 +198,24 @@ namespace Madara
       int set (const std::string & key,
         const double * value,
         uint32_t size,
-        const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings ());
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Atomically sets the value of a variable to a double array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     an array of doubles
+       * @param   size      number of elements in the array
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const double * value,
+        uint32_t size,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Atomically sets the value of a variable to a double array.
@@ -133,8 +226,22 @@ namespace Madara
        **/
       int set (const std::string & key,
         const std::vector <double> & value,
-        const Knowledge_Update_Settings & settings = 
-              Knowledge_Update_Settings ());
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Atomically sets the value of a variable to a double array.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     a STL vector of doubles
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set (const Variable_Reference & variable,
+        const std::vector <double> & value,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Sets the value of a variable.
@@ -145,7 +252,20 @@ namespace Madara
        **/
       int set (const std::string & key, const std::string & value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings ());
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Sets the value of a variable.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
+       * @return   the new value of the keyed variable
+       **/
+      int set (const Variable_Reference & variable, const std::string & value,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Sets the value of a variable.
@@ -157,27 +277,65 @@ namespace Madara
       int set (const std::string & key,
         const Madara::Knowledge_Record & value,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings ());
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Sets the value of a variable.
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   value     new value of the variable
+       * @param   settings  Settings for updating knowledge
+       * @return   the new value of the keyed variable
+       **/
+      int set (const Variable_Reference & variable,
+        const Madara::Knowledge_Record & value,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
       
       /**
        * Atomically increments the value of the variable
-       * @param   key            unique identifier of the variable
+       * @param   key       unique identifier of the variable
        * @param   settings  Settings for updating knowledge
        * @return                 new value of variable
        **/
       Knowledge_Record inc (const std::string & key,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings ());
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Atomically increments the value of the variable
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   settings  Settings for updating knowledge
+       * @return            new value of variable
+       **/
+      Knowledge_Record inc (const Variable_Reference & variable,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
 
       /**
        * Decrements the value of the variable
-       * @param   key            unique identifier of the variable
+       * @param   key       unique identifier of the variable
        * @param   settings  Settings for updating knowledge
-       * @return                 new value of variable
+       * @return            new value of variable
        **/
       Knowledge_Record dec (const std::string & key,
         const Knowledge_Update_Settings & settings =
-        Knowledge_Engine::Knowledge_Update_Settings ());
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
+      
+      /**
+       * Decrements the value of the variable
+       * @param   variable  reference to a variable (@see get_ref)
+       * @param   settings  Settings for updating knowledge
+       * @return            new value of variable
+       **/
+      Knowledge_Record dec (const Variable_Reference & variable,
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings (
+            false, true, false, false));
 
       /**
        * Prints all variables and values in the context

@@ -35,6 +35,9 @@ namespace Madara
   class MADARA_Export Knowledge_Record
   {
   public:
+    // allow Thread_Safe_Context to modify private members
+    friend class Knowledge_Engine::Thread_Safe_Context;
+
     enum
     {
       UNCREATED = 0,
@@ -464,7 +467,20 @@ namespace Madara
      * @return    true if type is a file type
      **/
     bool is_file_type (uint32_t type) const;
-
+     
+    /**
+     * returns true if the knowledge record has a binary file type
+     * @return    true if type is a file type
+     **/
+    bool is_binary_file_type (void) const;
+    
+    /**
+     * returns true if the knowledge record has a binary file type
+     * @param     type   the type of the record
+     * @return    true if type is a file type
+     **/
+    bool is_binary_file_type (uint32_t type) const;
+    
     /**
      * Less than
      **/
@@ -609,7 +625,8 @@ namespace Madara
       *                              buffer to read
       * @return    current buffer position for next read
       **/
-    char * read (char * buffer, std::string & key, int64_t & buffer_remaining);
+    char * read (char * buffer, std::string & key,
+                 int64_t & buffer_remaining);
       
     /**
       * Writes a Knowledge_Record instance to a buffer and updates
@@ -620,7 +637,8 @@ namespace Madara
       *                              buffer to read
       * @return    current buffer position for next write
       **/
-    char * write (char * buffer, const std::string & key, int64_t & buffer_remaining);
+    char * write (char * buffer, const std::string & key,
+                  int64_t & buffer_remaining) const;
      
     /**
      * Apply the knowledge record to a context, given some quality and clock

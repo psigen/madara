@@ -95,6 +95,21 @@ Madara::Knowledge_Engine::Knowledge_Base::get (const std::string & key,
   return impl_->get (key, settings);
 }
 
+Madara::Knowledge_Engine::Variable_Reference
+Madara::Knowledge_Engine::Knowledge_Base::get_ref (const std::string & key,
+             const Knowledge_Reference_Settings & settings)
+{
+  return impl_->get_ref (key, settings);
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base::get (
+  const Variable_Reference & variable,
+  const Knowledge_Reference_Settings & settings)
+{
+  return impl_->get (variable, settings);
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Base::retrieve_index (
   const std::string & key, size_t index,
@@ -103,18 +118,37 @@ Madara::Knowledge_Engine::Knowledge_Base::retrieve_index (
   return impl_->retrieve_index (key, index, settings);
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base::retrieve_index (
+  const Variable_Reference & variable, size_t index,
+  const Knowledge_Reference_Settings & settings)
+{
+  return impl_->retrieve_index (variable, index, settings);
+}
+
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::read_file (const std::string & knowledge_key, 
-                     const std::string & filename, 
-                     const Eval_Settings & settings)
+Madara::Knowledge_Engine::Knowledge_Base::read_file (
+  const std::string & knowledge_key, 
+  const std::string & filename, 
+  const Eval_Settings & settings)
 {
   return impl_->read_file (knowledge_key, filename, settings);
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::read_policy (const std::string & knowledge_key, 
-                     const std::string & filename)
+Madara::Knowledge_Engine::Knowledge_Base::read_file (
+  const Variable_Reference & variable, 
+  const std::string & filename, 
+  const Eval_Settings & settings)
+{
+  return impl_->read_file (variable, filename, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::read_policy (
+  const std::string & knowledge_key, 
+  const std::string & filename)
 {
   return impl_->read_policy (knowledge_key, filename);
 }
@@ -142,7 +176,8 @@ Madara::Knowledge_Engine::Knowledge_Base::compile (
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const std::string & key,
   Madara::Knowledge_Record::Integer value,
   const Eval_Settings & settings)
 {
@@ -150,7 +185,17 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set_index (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  Madara::Knowledge_Record::Integer value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set_index (
+  const std::string & key,
   size_t index,
   Madara::Knowledge_Record::Integer value,
   const Eval_Settings & settings)
@@ -159,7 +204,18 @@ Madara::Knowledge_Engine::Knowledge_Base::set_index (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set_index (
+  const Variable_Reference & variable,
+  size_t index,
+  Madara::Knowledge_Record::Integer value,
+  const Eval_Settings & settings)
+{
+  return impl_->set_index (variable, index, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const std::string & key,
   const Knowledge_Record::Integer * value,
   uint32_t size,
   const Eval_Settings & settings)
@@ -168,7 +224,18 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  const Knowledge_Record::Integer * value,
+  uint32_t size,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, size, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const std::string & key,
   const std::vector <Knowledge_Record::Integer> & value,
   const Eval_Settings & settings)
 {
@@ -176,7 +243,17 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  const std::vector <Knowledge_Record::Integer> & value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const std::string & key,
   double value,
   const Eval_Settings & settings)
 {
@@ -184,7 +261,17 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set_index (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  double value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set_index (
+  const std::string & key,
   size_t index,
   double value,
   const Eval_Settings & settings)
@@ -193,7 +280,18 @@ Madara::Knowledge_Engine::Knowledge_Base::set_index (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set_index (
+  const Variable_Reference & variable,
+  size_t index,
+  double value,
+  const Eval_Settings & settings)
+{
+  return impl_->set_index (variable, index, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const std::string & key,
   const double * value,
   uint32_t size,
   const Eval_Settings & settings)
@@ -202,11 +300,31 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
 }
 
 int
-Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  const double * value,
+  uint32_t size,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, size, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const std::string & key,
   const std::vector <double> & value,
   const Eval_Settings & settings)
 {
   return impl_->set (key, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  const std::vector <double> & value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, settings);
 }
 
 int
@@ -215,6 +333,15 @@ Madara::Knowledge_Engine::Knowledge_Base::set (const std::string & key,
   const Eval_Settings & settings)
 {
   return impl_->set (key, value, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set (
+  const Variable_Reference & variable,
+  const std::string & value,
+  const Eval_Settings & settings)
+{
+  return impl_->set (variable, value, settings);
 }
 
 
@@ -231,7 +358,7 @@ Madara::Knowledge_Engine::Knowledge_Base::set_quality (
 bool
 Madara::Knowledge_Engine::Knowledge_Base::exists (
   const std::string & key,
-  const Knowledge_Reference_Settings & settings) const
+  const Knowledge_Reference_Settings & settings)
 
 {
   return impl_->exists (key, settings);

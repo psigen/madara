@@ -40,7 +40,7 @@ Madara::Knowledge_Record::type (void) const
 inline bool
 Madara::Knowledge_Record::is_string_type (void) const
 {
-  return type_ == STRING || type_ == XML || type_ == TEXT_FILE;
+  return is_string_type (type_);
 }
 
 inline bool
@@ -52,7 +52,7 @@ Madara::Knowledge_Record::is_string_type (uint32_t type) const
 inline bool
 Madara::Knowledge_Record::is_double_type (void) const
 {
-  return type_ == DOUBLE || type_ == DOUBLE_ARRAY;
+  return is_double_type (type_);
 }
 
 inline bool
@@ -64,7 +64,7 @@ Madara::Knowledge_Record::is_double_type (uint32_t type) const
 inline bool
 Madara::Knowledge_Record::is_integer_type (void) const
 {
-  return type_ == INTEGER || type_ == INTEGER_ARRAY;
+  return is_integer_type (type_);
 }
 
 
@@ -77,7 +77,7 @@ Madara::Knowledge_Record::is_integer_type (uint32_t type) const
 inline bool
 Madara::Knowledge_Record::is_image_type (void) const
 {
-  return type_ == IMAGE_JPEG;
+  return is_image_type (type_);
 }
 
 inline bool
@@ -89,13 +89,26 @@ Madara::Knowledge_Record::is_image_type (uint32_t type) const
 inline bool
 Madara::Knowledge_Record::is_file_type (void) const
 {
-  return type_ == XML || type_ == IMAGE_JPEG || type_ == UNKNOWN_FILE_TYPE;
+  return is_file_type (type_);
 }
 
 inline bool
 Madara::Knowledge_Record::is_file_type (uint32_t type) const
 {
-  return type == XML || type == IMAGE_JPEG || type == UNKNOWN_FILE_TYPE;
+  return type == TEXT_FILE || type == XML ||
+         type == IMAGE_JPEG || type == UNKNOWN_FILE_TYPE;
+}
+
+inline bool
+Madara::Knowledge_Record::is_binary_file_type (void) const
+{
+  return is_binary_file_type (type_);
+}
+
+inline bool
+Madara::Knowledge_Record::is_binary_file_type (uint32_t type) const
+{
+  return type == IMAGE_JPEG || type == UNKNOWN_FILE_TYPE;
 }
 
 inline uint32_t
