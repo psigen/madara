@@ -112,7 +112,7 @@ Madara::Transport::Multicast_Transport::setup (void)
 
     // start thread with the addresses (only looks at the first one for now)
     thread_ = new Madara::Transport::Multicast_Transport_Read_Thread (
-                    settings_, id_, context_, addresses_[0]);
+                    settings_, id_, context_, addresses_[0], socket_);
   }
   return this->validate_transport ();
 }
@@ -153,7 +153,7 @@ Madara::Transport::Multicast_Transport::send_data (
   for (Knowledge_Records::const_iterator i = orig_updates.begin ();
         i != orig_updates.end (); ++i)
   {
-    Knowledge_Record result = settings_.filter_send (*i->second);
+    Knowledge_Record result = settings_.filter_send (*i->second, i->first);
     if (result.status () != Knowledge_Record::UNCREATED)
       filtered_updates[i->first] = result;
   }
@@ -198,7 +198,7 @@ Madara::Transport::Multicast_Transport::send_data (
   }
 
   // get the clock
-  header->clock = Madara::Utility::endian_swap (context_.get_clock ());
+  header->clock = context_.get_clock ();
 
   if (!reduced)
   {
@@ -207,7 +207,7 @@ Madara::Transport::Multicast_Transport::send_data (
       sizeof (header->domain) - 1);
 
     // get the quality of the key
-    header->quality = Madara::Utility::endian_swap (quality);
+    header->quality = quality;
 
     // copy the message originator (our id)
     strncpy (header->originator, id_.c_str (), sizeof (header->originator) - 1);
@@ -216,6 +216,9 @@ Madara::Transport::Multicast_Transport::send_data (
     // flexible enough to support both, and this will simply our read thread
     // handling
     header->type = Madara::Transport::MULTIASSIGN;
+
+    // set the time-to-live
+    header->ttl = settings_.get_rebroadcast_ttl ();
   }
 
   header->updates = uint32_t (filtered_updates.size ());
@@ -239,7 +242,8 @@ Madara::Transport::Multicast_Transport::send_data (
    * updates = buffer[116] (unsigned 32 bit number of updates)
    * quality = buffer[120] (unsigned 32 bit quality of message)
    * clock = buffer[124] (unsigned 64 bit clock for this message)
-   * knowledge = buffer[132] (the new knowledge starts here)
+   * ttl = buffer[132] (the new knowledge starts here)
+   * knowledge = buffer[133] (the new knowledge starts here)
   **/
 
   // zero out the memory

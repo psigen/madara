@@ -18,7 +18,7 @@ namespace Madara
   namespace Transport
   {
 
-    #define REDUCED_MADARA_ID    "karl1.2"
+    #define REDUCED_MADARA_ID    "karl1.3"
 
     /**
     * @class Reduced_Message_Header
@@ -33,7 +33,8 @@ namespace Madara
     *        transport id = buffer[8] (8 byte)
     *        updates = buffer[16] (unsigned 4 byte number of updates)
     *        clock = buffer[20] (unsigned 8 byte clock for this message)
-    *        knowledge = buffer[28] (the new knowledge starts here)
+    *        ttl = buffer[28] (unsigned char time to live for rebroadcasts)
+    *        knowledge = buffer[29] (the new knowledge starts here)
     */
 
     class MADARA_Export Reduced_Message_Header : public Message_Header

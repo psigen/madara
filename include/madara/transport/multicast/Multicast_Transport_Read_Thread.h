@@ -16,6 +16,7 @@
 #include "madara/transport/QoS_Transport_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/transport/Transport.h"
+#include "madara/transport/Message_Header.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"
@@ -50,7 +51,8 @@ namespace Madara
         const Settings & settings,
         const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
-        const ACE_INET_Addr & address);
+        const ACE_INET_Addr & address,
+        ACE_SOCK_Dgram & socket);
       
       /**
       * Destructor
@@ -72,6 +74,15 @@ namespace Madara
       **/
       int svc (void);
       
+      /**
+       * Sends a rebroadcast packet.
+       * @param   header   header for the rebroadcasted packet
+       * @param   records  records to rebroadcast (already filtered for
+       *                   rebroadcast)
+       **/
+      void rebroadcast (Message_Header * header,
+        const Knowledge_Map & records);
+
       /**
       * Wait for the transport to be ready
       **/
@@ -105,7 +116,10 @@ namespace Madara
       ACE_INET_Addr                      address_;
 
       /// The multicast socket we are reading from
-      ACE_SOCK_Dgram_Mcast               socket_;
+      ACE_SOCK_Dgram_Mcast               read_socket_;
+      
+      /// underlying socket for sending
+      ACE_SOCK_Dgram       &             write_socket_;
 
       /// data received rules, defined in Transport settings
       Madara::Expression_Tree::Expression_Tree  on_data_received_;

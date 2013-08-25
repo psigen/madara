@@ -84,20 +84,22 @@ namespace Madara
       /**
        * Filters an input according to its filter chain
        * @param   input   the argument to the filter chain
+       * @param   name    variable name ("" if unnamed)
        * @return  the result of filtering the input
        **/
-      Knowledge_Record filter (const Knowledge_Record & input);
+      Knowledge_Record filter (const Knowledge_Record & input,
+        const std::string & name = "") const;
 
       /**
        * Prints the number of filters chained for each type
        **/
-      void print_num_filters (void);
+      void print_num_filters (void) const;
 
       /**
        * Returns the number of types that have filters
        * @return  the number of types that have filters
        **/
-      size_t get_number_of_filtered_types (void);
+      size_t get_number_of_filtered_types (void) const;
 
     protected:
       /**

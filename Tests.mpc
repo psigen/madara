@@ -94,6 +94,25 @@ project (Test_Multicast_Rules) : using_madara, using_ace {
   }
 }
 
+project (Test_Multicast_Rebroadcast) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_multicast_rebroadcast
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/multicast/test_multicast_rebroadcast.cpp
+  }
+}
+
 project (Test_Multicast_Filters) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_multicast_filters
@@ -148,6 +167,25 @@ project (Test_UDP_Filters) : using_madara, using_ace {
 
   Source_Files {
     tests/transports/udp/test_udp_filters.cpp
+  }
+}
+
+project (Test_UDP_Rebroadcast) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_udp_rebroadcast
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/udp/test_udp_rebroadcast.cpp
   }
 }
 
@@ -243,6 +281,44 @@ project (Test_Broadcast_Rules) : using_madara, using_ace, using_splice {
 
   Source_Files {
     tests/transports/broadcast/test_broadcast_rules.cpp
+  }
+}
+
+project (Test_Broadcast_Filters) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_broadcast_filters
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/broadcast/test_broadcast_filters.cpp
+  }
+}
+
+project (Test_Broadcast_Rebroadcast) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_broadcast_rebroadcast
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/broadcast/test_broadcast_rebroadcast.cpp
   }
 }
 

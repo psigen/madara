@@ -26,8 +26,8 @@ namespace Madara
     class Variables;
 
     /**
-     * @class Compiled_Expression
-     * @brief Compiled, optimized KaRL logic
+     * @class Variable_Reference
+     * @brief Optimized reference to a variable within the knowledge base
      **/
     class MADARA_Export Variable_Reference
     {

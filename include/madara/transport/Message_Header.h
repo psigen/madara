@@ -17,7 +17,7 @@ namespace Madara
   namespace Transport
   {
     #define MADARA_IDENTIFIER_LENGTH    8
-    #define MADARA_IDENTIFIER           "KaRL1.2"
+    #define MADARA_IDENTIFIER           "KaRL1.3"
     #define MADARA_DOMAIN_MAX_LENGTH    32
     #define PAIR_COUNT_TYPE             uint32_t
     #define KNOWLEDGE_QUALITY_TYPE      uint32_t
@@ -147,7 +147,10 @@ namespace Madara
        **/
       uint64_t              clock;
 
-
+      /**
+       * time to live (number of rebroadcasts to perform after original send
+       **/
+      unsigned char         ttl;
     };
   }
 }

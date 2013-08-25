@@ -11,10 +11,12 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
   const Settings & settings,
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context,
-  const ACE_INET_Addr & address)
+  const ACE_INET_Addr & address,
+  ACE_SOCK_Dgram & socket)
   : settings_ (settings), id_ (id), context_ (context),
     barrier_ (2), terminated_ (false), 
-    mutex_ (), is_not_ready_ (mutex_), is_ready_ (false), address_ (address)
+    mutex_ (), is_not_ready_ (mutex_), is_ready_ (false), address_ (address),
+    write_socket_ (socket)
 {
   // Subscribe
   int port = address_.get_port_number ();
@@ -22,7 +24,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
   
   qos_settings_ = dynamic_cast <const QoS_Transport_Settings *> (&settings);
 
-  if (-1 == socket_.join (address_, 1))
+  if (-1 == read_socket_.join (address_, 1))
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
@@ -68,14 +70,14 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
 Madara::Transport::Multicast_Transport_Read_Thread::~Multicast_Transport_Read_Thread ()
 {
   // Unsubscribe
-  if (-1 == socket_.leave (address_))
+  if (-1 == read_socket_.leave (address_))
   { 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Multicast_Transport_Read_Thread::close:" \
       " Error unsubscribing to multicast address\n"));
   }
 
-  socket_.close ();
+  read_socket_.close ();
 }
 
 int
@@ -105,6 +107,59 @@ int Madara::Transport::Multicast_Transport_Read_Thread::enter_barrier (void)
   return 0;
 }
 
+void
+Madara::Transport::Multicast_Transport_Read_Thread::rebroadcast (
+  Message_Header * header,
+  const Knowledge_Map & records)
+{
+  if (header->ttl > 0 && records.size () > 0)
+  {
+    char * buffer = buffer_.get_ptr ();
+    int64_t buffer_remaining = settings_.queue_length;
+  
+    // keep track of the message_size portion of buffer
+    uint64_t * message_size = (uint64_t *)buffer;
+
+    // the number of updates will be the size of the records map
+    header->updates = uint32_t (records.size ());
+
+    // set the update to the end of the header
+    char * update = header->write (buffer, buffer_remaining);
+
+    for (Knowledge_Map::const_iterator i = records.begin ();
+         i != records.end (); ++i)
+    {
+      update = i->second.write (update, i->first, buffer_remaining);
+    }
+    
+    if (buffer_remaining > 0)
+    {
+      int size = (int)(settings_.queue_length - buffer_remaining);
+      *message_size = Madara::Utility::endian_swap ((uint64_t)size);
+    
+      ssize_t bytes_sent = write_socket_.send(
+        buffer, (ssize_t)size, address_);
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
+        " Sent packet of size %d\n",
+        bytes_sent));
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
+        " Not enough buffer for rebroadcasting packet\n"));
+    }
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
+      " No rebroadcast necessary.\n",
+      settings_.queue_length));
+  }
+}
 
 int
 Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
@@ -118,6 +173,8 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
 
   while (false == terminated_.value ())
   {
+    Knowledge_Map rebroadcast_records;
+
     if (buffer == 0)
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
@@ -129,7 +186,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
     }
 
     // read the message
-    ssize_t bytes_read = socket_.recv ((void *)buffer, 
+    ssize_t bytes_read = read_socket_.recv ((void *)buffer, 
       settings_.queue_length, remote, 0, &wait_time);
  
 
@@ -313,8 +370,51 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
           " attempting to apply %s=%s\n",
           key.c_str (), record.to_string ().c_str ()));
         
-        int result = record.apply (context_, key, header->quality,
-          header->clock, false);
+        // if the tll is 1 or more and we are participating in rebroadcasts
+        if (header->ttl > 0 && qos_settings_ &&
+            qos_settings_->get_participant_ttl () > 0)
+        {
+          Knowledge_Record rebroadcast_temp (record);
+
+          // if we have rebroadcast filters, apply them
+          if (qos_settings_->get_number_of_rebroadcast_filtered_types () > 0)
+            rebroadcast_temp = qos_settings_->filter_rebroadcast (
+              record, key);
+
+          // if the record was not filtered out entirely, add it to map
+          if (rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
+          {
+            MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Multicast_Transport_Read_Thread::svc:" \
+              " update %s=%s is queued for rebroadcast\n",
+              key.c_str (), rebroadcast_temp.to_string ().c_str ()));
+
+            rebroadcast_records[key] = rebroadcast_temp;
+          }
+          else
+          {
+            MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Multicast_Transport_Read_Thread::svc:" \
+              " update %s was filtered out of rebroadcast\n",
+              key.c_str ()));
+          }
+        }
+
+        // use the original message to apply receive filters
+        if (qos_settings_ &&
+            qos_settings_->get_number_of_received_filtered_types () > 0)
+        {
+          record = qos_settings_->filter_receive (record, key);
+        }
+
+        int result = 0;
+
+        // if receive filter did not delete the update, apply it
+        if (record.status () != Knowledge_Record::UNCREATED)
+        {
+          result = record.apply (context_, key, header->quality,
+            header->clock, false);
+        }
 
         if (result != 1)
         {
@@ -352,6 +452,16 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
       // unlock the context
       context_.unlock ();
       context_.set_changed ();
+      
+      if (header->ttl > 0 && rebroadcast_records.size () > 0 &&
+          qos_settings_ && qos_settings_->get_participant_ttl () > 0)
+      {
+        --header->ttl;
+        header->ttl = std::min (
+          qos_settings_->get_participant_ttl (), header->ttl);
+
+        rebroadcast (header, rebroadcast_records);
+      }
 
       // delete header
       delete header;

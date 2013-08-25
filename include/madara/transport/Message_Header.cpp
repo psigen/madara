@@ -4,7 +4,7 @@
 
 Madara::Transport::Message_Header::Message_Header ()
 : size (0),
-  type (0), updates (0), quality (0), clock (0)
+  type (0), updates (0), quality (0), clock (0), ttl (0)
 {
   memcpy (madara_id, MADARA_IDENTIFIER, 7);
   madara_id[7] = 0;
@@ -23,7 +23,7 @@ Madara::Transport::Message_Header::encoded_size (void) const
 {
   return sizeof (uint64_t) * 2
     + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH
-                        + MAX_ORIGINATOR_LENGTH)
+                        + MAX_ORIGINATOR_LENGTH + 1)
     + sizeof (uint32_t) * 2;
 }
 
@@ -95,6 +95,16 @@ Madara::Transport::Message_Header::read (char * buffer,
   }
   buffer_remaining -= sizeof (clock);
 
+  // Remove the time to live field from the buffer
+  if (buffer_remaining >= 1)
+  {
+    ttl = *(unsigned char *)buffer;
+    
+    memcpy (&ttl, buffer, 1);
+    buffer += 1;
+  }
+  buffer_remaining -= 1;
+
   return buffer;
 }
 
@@ -165,6 +175,13 @@ Madara::Transport::Message_Header::write (char * buffer,
     buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
+
+  if (buffer_remaining >= 1)
+  {
+    memcpy (buffer, &ttl, 1);
+    buffer += 1;
+  }
+  buffer_remaining -= 1;
 
   return buffer;
 }

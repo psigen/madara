@@ -59,14 +59,6 @@ namespace Madara
       void operator= (const Settings & settings);
 
       /**
-       * Adds a type to the acceptable rebroadcast types. @see
-       * Madara::Knowledge_Record for list of types.
-       * @param   type    type to add to the mask
-       * @return          resulting mask
-       **/
-      uint32_t add_rebroadcastable_type (uint32_t type);
-      
-      /**
        * Adds a filter that will be applied to certain types before sending
        * @param   types      the types to add the filter to
        * @param   function   the function that will take the knowledge record
@@ -127,88 +119,84 @@ namespace Madara
       
       /**
        * Filters an input according to send's filter chain
+       * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
        * @return  the result of filtering the input
        **/
-      Knowledge_Record filter_send (const Knowledge_Record & input);
+      Knowledge_Record filter_send (
+        const Madara::Knowledge_Record & input,
+        const std::string & name = "") const;
          
       /**
        * Filters an input according to receive's filter chain
+       * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
        * @return  the result of filtering the input
        **/
-      Knowledge_Record filter_receive (const Knowledge_Record & input);
+      Knowledge_Record filter_receive (
+        const Madara::Knowledge_Record & input,
+        const std::string & name = "") const;
       
       /**
        * Filters an input according to rebroadcast's filter chain
+       * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
        * @return  the result of filtering the input
        **/
-      Knowledge_Record filter_rebroadcast (const Knowledge_Record & input);
+      Knowledge_Record filter_rebroadcast (
+        const Madara::Knowledge_Record & input,
+        const std::string & name = "") const;
 
        
       /**
        * Prints the number of filters chained for each type to the
        * send filter
        **/
-      void print_num_filters_send (void);
+      void print_num_filters_send (void) const;
        
       /**
        * Prints the number of filters chained for each type to the
        * receive filter
        **/
-      void print_num_filters_receive (void);
+      void print_num_filters_receive (void) const;
        
       /**
        * Prints the number of filters chained for each type to the
        * rebroadcast filter
        **/
-      void print_num_filters_rebroadcast (void);
-
-
-      /**
-       * Removes a type from the acceptable rebroadcast types. @see
-       * Madara::Knowledge_Record for list of types.
-       * @param   type    type to remove from the mask
-       * @return          resulting mask
-       **/
-      uint32_t remove_rebroadcastable_type (uint32_t type);
+      void print_num_filters_rebroadcast (void) const;
 
       /**
-       * Checks if type is included in rebroadcastable types.
-       **/
-      bool is_rebroadcastable_type (uint32_t type);
-
-      /**
-       * Sets the time to live for rebroadcasting. This number is decremented
+       * Sets the time to live for our packets. This number is decremented
        * by one by each receiver. If time to live is greater than 0, the
        * message will be rebroadcasted. Default is 0.
+       * @param  ttl   time-to-live for message sent over this transport
        **/
-      uint32_t set_rebroadcast_ttl (uint32_t ttl);
+      void set_rebroadcast_ttl (unsigned char ttl);
 
       /**
        * Gets the time to live for rebroadcasting (number of rebroadcasts
        * per message).
        **/
-      uint32_t get_rebroadcast_ttl (void);
+      unsigned char get_rebroadcast_ttl (void) const;
       
       /**
        * Returns the number of types that are filtered before send
        * @return  the number of types that have filters
        **/
-      size_t get_number_of_send_filtered_types (void);
+      size_t get_number_of_send_filtered_types (void) const;
       
       /**
        * Returns the number of types that are filtered before rebroadcast
        * @return  the number of types that have filters
        **/
-      size_t get_number_of_rebroadcast_filtered_types (void);
+      size_t get_number_of_rebroadcast_filtered_types (void) const;
 
       /**
        * Returns the number of types that are filtered after received
        * @return  the number of types that have filters
        **/
-      size_t get_number_of_received_filtered_types (void);
+      size_t get_number_of_received_filtered_types (void) const;
 
       /**
        * Adds a trusted peer. By default, all peers are trusted unless
@@ -244,6 +232,23 @@ namespace Madara
        * @return true if peer is trusted, false otherwise
        **/
       bool is_trusted (const std::string & peer) const;
+
+      /**
+       * Enables rebroadcast support up to a certain time to live for other
+       * agent's messages. Default is 0 (no participation in rebroadcasts)
+       * @param   maximum_ttl   Maximum time to live to support (0 for not
+       *                        participating in rebroadcasts). A transport
+       *                        cannot participate in more than 255 resends.
+       **/
+      void enable_participant_ttl (unsigned char maximum_ttl = 255);
+
+      /**
+       * Returns the maximum time to live participation of this transport in
+       * rebroadcasting of other agent's messages.
+       * @return                the maximum number of ttls this transport will
+       *                        participate in (per message)
+       **/
+      unsigned char get_participant_ttl (void) const;
     private:
        
       /**
@@ -256,14 +261,16 @@ namespace Madara
        * with a ttl of (rebroadcast_ttl - 1), resulting in 0 ttl when
        * received by C (it will not rebroadcast).
        **/
-      uint32_t rebroadcast_ttl_;
+      unsigned char rebroadcast_ttl_;
 
       /**
-       * A mask for the acceptable types for a rebroadcast. The types are
-       * now all powers of 2 (@see Knowledge_Record), so we can logically
-       * or types together to get an acceptable mask.
+       * This field is meant to limit the number of rebroadcasts that this
+       * transport will participate in. If a ttl > 0 is received on a
+       * message header, the new ttl for rebroadcasts will be set to the
+       * minimum of this field and the decrement of the ttl of the message.
+       * A zero here means the transport will not participate in rebroadcasts
        **/
-      uint32_t rebroadcast_types_;
+      unsigned char participant_rebroadcast_ttl_;
 
       /**
        * A container of all trusted peers

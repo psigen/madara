@@ -8,104 +8,46 @@
 #include <string>
 
 void test_rebroadcast_settings (void)
-{
-  // variables used in this test
+{ 
   Madara::Transport::QoS_Transport_Settings settings;
-  uint32_t current_mask, old_mask, current_types;
-  uint32_t current_ttl, old_ttl;
   
-  std::cerr << std::hex;
+  std::cerr << std::dec <<
+    "\n***********Testing rebroadcast settings************\n\n";
 
-  // get the old values
-  old_mask = settings.add_rebroadcastable_type (0);
-  current_types = Madara::Knowledge_Record::ALL_TYPES;
+  unsigned char old_ttl, current_ttl;
 
-  // add all types
-  current_mask = settings.add_rebroadcastable_type (current_types);
-  std::cerr << "\nAdding types " << current_types << " to " << old_mask;
-  std::cerr << " resulted in " << current_mask << "\n";
-
-  // remove jpeg images from rebroadcastable types
-  old_mask = current_mask;
-  current_types = Madara::Knowledge_Record::IMAGE_JPEG;
-  current_mask = settings.remove_rebroadcastable_type (current_types);
-  std::cerr << "Removing types " << current_types << " from " << old_mask;
-  std::cerr << " resulted in " << current_mask << "\n";
-
-  if (settings.is_rebroadcastable_type (current_types))
-  {
-    std::cerr << "  Removal FAIL.\n";
-  }
-  else
-  {
-    std::cerr << "  Removal SUCCESS.\n";
-  }
-
-  // remove all file types
-  old_mask = current_mask;
-  current_types = Madara::Knowledge_Record::ALL_FILE_TYPES;
-  current_mask = settings.remove_rebroadcastable_type (current_types);
-  std::cerr << "Removing types " << current_types << " from " << old_mask;
-  std::cerr << " resulted in " << current_mask << "\n";
-  
-  if (settings.is_rebroadcastable_type (current_types))
-  {
-    std::cerr << "  Removal FAIL.\n";
-  }
-  else
-  {
-    std::cerr << "  Removal SUCCESS.\n";
-  }
-
-  // remove all types
-  old_mask = current_mask;
-  current_types = Madara::Knowledge_Record::ALL_TYPES;
-  current_mask = settings.remove_rebroadcastable_type (current_types);
-  std::cerr << "Removing types " << current_types << " from " << old_mask;
-  std::cerr << " resulted in " << current_mask << "\n";
-
-  if (settings.is_rebroadcastable_type (
-    Madara::Knowledge_Record::INTEGER | Madara::Knowledge_Record::DOUBLE))
-  {
-    std::cerr << "  Removal FAIL.\n";
-  }
-  else
-  {
-    std::cerr << "  Removal SUCCESS.\n";
-  }
-  
-  // add integers and doubles to rebroadcastable types
-  old_mask = current_mask;
-  current_types =
-    Madara::Knowledge_Record::INTEGER | Madara::Knowledge_Record::DOUBLE;
-  current_mask = settings.add_rebroadcastable_type (current_types);
-  std::cerr << "Adding types " << current_types << " to " << old_mask;
-  std::cerr << " resulted in " << current_mask << "\n";
-  
-  if (settings.is_rebroadcastable_type (
-    Madara::Knowledge_Record::INTEGER | Madara::Knowledge_Record::DOUBLE))
-  {
-    std::cerr << "  Addition SUCCESS.\n";
-  }
-  else
-  {
-    std::cerr << "  Addition FAIL.\n";
-  }
-  
   std::cerr << "Setting rebroadcast ttl to 3... ";
+
   // set the time to live for rebroadcast messages
-  old_ttl = settings.set_rebroadcast_ttl (3);
+  old_ttl = 3;
+  settings.set_rebroadcast_ttl (old_ttl);
   current_ttl = settings.get_rebroadcast_ttl ();
 
   if (old_ttl == current_ttl && current_ttl == 3)
     std::cerr << "SUCCESS.\n";
   else
     std::cerr << "FAIL.\n";
+  
+  std::cerr << "Setting participant rebroadcast ttl to 4... ";
+
+  // set the time to live for participant rebroadcast messages
+  old_ttl = settings.get_participant_ttl ();
+  settings.enable_participant_ttl (4);
+  current_ttl = settings.get_participant_ttl ();
+
+  if (old_ttl == 0 && current_ttl == 4)
+    std::cerr << "SUCCESS.\n";
+  else
+    std::cerr << "FAIL.\n";
+
 }
 
 void test_peer_list (void)
 {
   Madara::Transport::QoS_Transport_Settings settings;
+  
+  std::cerr << std::dec <<
+    "\n***********Testing peer lists************\n\n";
 
   std::string peer1 = "127.0.0.1:13000";
   std::string peer2 = "127.0.0.1:13001";

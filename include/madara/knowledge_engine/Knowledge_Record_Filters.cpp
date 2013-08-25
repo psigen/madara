@@ -76,7 +76,8 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::clear (uint32_t types)
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Record_Filters::print_num_filters (void)
+Madara::Knowledge_Engine::Knowledge_Record_Filters::print_num_filters (
+  void) const
 {
   MADARA_DEBUG (0, (LM_DEBUG,
     "Printing Knowledge Record Filter Chains by Type...\n"));
@@ -92,25 +93,42 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::print_num_filters (void)
 
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
-  const Knowledge_Record & input)
+  const Knowledge_Record & input,
+  const std::string & name) const
 {
   // grab the filter chain entry for the type
   uint32_t type = input.type ();
-  Filter_Map::iterator type_match = filters_.find (type);
+  Filter_Map::const_iterator type_match = filters_.find (type);
   Knowledge_Record result (input);
 
   // if there are filters for this type
   if (type_match != filters_.end ())
   {
-    Filter_Chain & chain = type_match->second;
+    const Filter_Chain & chain = type_match->second;
     Function_Arguments arguments;
     Variables variables;
     variables.context_ = context_;
-
-    for (Filter_Chain::iterator i = chain.begin (); i != chain.end (); ++i)
+    
+    for (Filter_Chain::const_iterator i = chain.begin ();
+         i != chain.end (); ++i)
     {
+      /**
+       * arguments vector is modifiable by filter, so we have to
+       * resize every filter call to make sure we have adequate space
+       **/
+
+      if (name == "")
+      {
+        arguments.resize (1);
+      }
+      else
+      {
+        // second argument is the variable name, if applicable
+        arguments.resize (2);
+        arguments[1].set_value (name);
+      }
+
       // setup arguments to the function
-      arguments.resize (1);
       arguments[0] = result;
 
       // if the function is not zero
@@ -126,7 +144,8 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
 
 
 size_t
-Madara::Knowledge_Engine::Knowledge_Record_Filters::get_number_of_filtered_types (void)
+Madara::Knowledge_Engine::Knowledge_Record_Filters::get_number_of_filtered_types (
+  void) const
 {
   return filters_.size ();
 }

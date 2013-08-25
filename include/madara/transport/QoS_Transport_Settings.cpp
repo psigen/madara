@@ -1,7 +1,8 @@
 #include "madara/transport/QoS_Transport_Settings.h"
 
 Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings ()
-  : Settings (), rebroadcast_ttl_ (0), rebroadcast_types_ (0),
+  : Settings (), rebroadcast_ttl_ (0),
+    participant_rebroadcast_ttl_ (0),
     trusted_peers_ (), banned_peers_ ()
 {
 
@@ -11,7 +12,7 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
   const QoS_Transport_Settings & settings)
   : Settings (settings),
     rebroadcast_ttl_ (settings.rebroadcast_ttl_),
-    rebroadcast_types_ (settings.rebroadcast_types_),
+    participant_rebroadcast_ttl_ (settings.participant_rebroadcast_ttl_),
     trusted_peers_ (settings.trusted_peers_),
     banned_peers_ (settings.banned_peers_),
     rebroadcast_filters_ (settings.rebroadcast_filters_),
@@ -24,7 +25,7 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
   const Settings & settings)
   : Settings (settings),
     rebroadcast_ttl_ (0),
-    rebroadcast_types_ (0),
+    participant_rebroadcast_ttl_ (0),
     trusted_peers_ (),
     banned_peers_ ()
 {
@@ -33,7 +34,7 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
   if (rhs)
   {
     rebroadcast_ttl_ = rhs->rebroadcast_ttl_;
-    rebroadcast_types_ = rhs->rebroadcast_types_;
+    participant_rebroadcast_ttl_ = rhs->participant_rebroadcast_ttl_;
     trusted_peers_ = rhs->trusted_peers_;
     banned_peers_ = rhs->banned_peers_;
     send_filters_ = rhs->send_filters_;
@@ -59,7 +60,7 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     *lhs_base = *rhs_base;
     
     rebroadcast_ttl_ = rhs.rebroadcast_ttl_;
-    rebroadcast_types_ = rhs.rebroadcast_types_;
+    participant_rebroadcast_ttl_ = rhs.participant_rebroadcast_ttl_;
     trusted_peers_ = rhs.trusted_peers_;
     banned_peers_ = rhs.banned_peers_;
     send_filters_ = rhs.send_filters_;
@@ -75,7 +76,7 @@ Madara::Transport::QoS_Transport_Settings::operator= (
   if (this != &rhs)
   {
     rebroadcast_ttl_ = 0;
-    rebroadcast_types_ = 0;
+    participant_rebroadcast_ttl_ = 0;
     trusted_peers_.clear ();
     banned_peers_.clear ();
     send_filters_.clear (Knowledge_Record::ALL_TYPES);
@@ -89,39 +90,29 @@ Madara::Transport::QoS_Transport_Settings::operator= (
   }
 }
 
-uint32_t
-Madara::Transport::QoS_Transport_Settings::add_rebroadcastable_type (
-  uint32_t type)
+void
+Madara::Transport::QoS_Transport_Settings::set_rebroadcast_ttl (unsigned char ttl)
 {
-  return rebroadcast_types_ |= type;
-}
-      
-uint32_t
-Madara::Transport::QoS_Transport_Settings::remove_rebroadcastable_type (
-  uint32_t type)
-{
-  // clear the type by taking the complement and logically anding
-  return rebroadcast_types_ &= ~type;
+  rebroadcast_ttl_ = ttl;
 }
 
-bool
-Madara::Transport::QoS_Transport_Settings::is_rebroadcastable_type (
-  uint32_t type)
-{
-  // if the type is available, the logical and will return a non-zero value
-  return (rebroadcast_types_ & type) > 0;
-}
-
-uint32_t
-Madara::Transport::QoS_Transport_Settings::set_rebroadcast_ttl (uint32_t ttl)
-{
-  return rebroadcast_ttl_ = ttl;
-}
-
-uint32_t
-Madara::Transport::QoS_Transport_Settings::get_rebroadcast_ttl (void)
+unsigned char
+Madara::Transport::QoS_Transport_Settings::get_rebroadcast_ttl (void) const
 {
   return rebroadcast_ttl_;
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::enable_participant_ttl (
+  unsigned char ttl)
+{
+  participant_rebroadcast_ttl_ = ttl;
+}
+
+unsigned char
+Madara::Transport::QoS_Transport_Settings::get_participant_ttl (void) const
+{
+  return participant_rebroadcast_ttl_;
 }
 
 void
@@ -247,41 +238,47 @@ Madara::Transport::QoS_Transport_Settings::clear_rebroadcast_filters (uint32_t t
       
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_send (
-  const Madara::Knowledge_Record & input)
+  const Madara::Knowledge_Record & input,
+  const std::string & name) const
 {
-  return send_filters_.filter (input);
+  return send_filters_.filter (input, name);
 }
          
 
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_receive (
-  const Madara::Knowledge_Record & input)
+  const Madara::Knowledge_Record & input,
+  const std::string & name) const
 {
-  return receive_filters_.filter (input);
+  return receive_filters_.filter (input, name);
 }
       
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_rebroadcast (
-  const Madara::Knowledge_Record & input)
+  const Madara::Knowledge_Record & input,
+  const std::string & name) const
 {
-  return rebroadcast_filters_.filter (input);
+  return rebroadcast_filters_.filter (input, name);
 }
 
        
 void
-Madara::Transport::QoS_Transport_Settings::print_num_filters_send (void)
+Madara::Transport::QoS_Transport_Settings::print_num_filters_send (
+  void) const
 {
   send_filters_.print_num_filters ();
 }
        
 void
-Madara::Transport::QoS_Transport_Settings::print_num_filters_receive (void)
+Madara::Transport::QoS_Transport_Settings::print_num_filters_receive (
+  void) const
 {
   receive_filters_.print_num_filters ();
 }
        
 void
-Madara::Transport::QoS_Transport_Settings::print_num_filters_rebroadcast (void)
+Madara::Transport::QoS_Transport_Settings::print_num_filters_rebroadcast (
+  void) const
 {
   rebroadcast_filters_.print_num_filters ();
 }
@@ -290,7 +287,7 @@ Madara::Transport::QoS_Transport_Settings::print_num_filters_rebroadcast (void)
 
 size_t
 Madara::Transport::QoS_Transport_Settings::get_number_of_send_filtered_types (
-  void)
+  void) const
 {
   return send_filters_.get_number_of_filtered_types ();
 }
@@ -298,7 +295,7 @@ Madara::Transport::QoS_Transport_Settings::get_number_of_send_filtered_types (
 
 size_t
 Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_filtered_types (
-  void)
+  void) const
 {
   return rebroadcast_filters_.get_number_of_filtered_types ();
 }
@@ -306,7 +303,7 @@ Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_filtered_ty
 
 size_t
 Madara::Transport::QoS_Transport_Settings::get_number_of_received_filtered_types (
-  void)
+  void) const
 {
   return receive_filters_.get_number_of_filtered_types ();
 }

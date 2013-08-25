@@ -17,9 +17,9 @@ Madara::Transport::Reduced_Message_Header::~Reduced_Message_Header ()
 int
 Madara::Transport::Reduced_Message_Header::encoded_size (void) const
 {
-  return sizeof (uint64_t) * 1                   // clock
-    + sizeof (char) * (MADARA_IDENTIFIER_LENGTH) // KaRLR1.0
-    + sizeof (uint32_t) * 1;                     // updates
+  return sizeof (uint64_t) * 1                       // clock
+    + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + 1) // KaRL1.0 + ttl
+    + sizeof (uint32_t) * 1;                         // updates
 }
 
 char *
@@ -57,6 +57,16 @@ char *
     buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
+  
+  // Remove the time to live field from the buffer
+  if (buffer_remaining >= 1)
+  {
+    ttl = *(unsigned char *)buffer;
+    
+    memcpy (&ttl, buffer, 1);
+    buffer += 1;
+  }
+  buffer_remaining -= 1;
 
   return buffer;
 }
@@ -96,6 +106,14 @@ char *
     buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
+  
+  // Write the time to live field
+  if (buffer_remaining >= 1)
+  {
+    memcpy (buffer, &ttl, 1);
+    buffer += 1;
+  }
+  buffer_remaining -= 1;
 
   return buffer;
 }

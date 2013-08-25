@@ -13,9 +13,10 @@
 
 #include "madara/utility/Scoped_Array.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/transport/Transport.h"
 #include "madara/transport/QoS_Transport_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/transport/Transport.h"
+#include "madara/transport/Message_Header.h"
 
 #include "ace/Task.h"
 #include "ace/Mutex.h"
@@ -23,6 +24,7 @@
 #include "ace/Atomic_Op_T.h"
 #include "ace/Thread_Mutex.h"
 #include "ace/SOCK_Dgram.h"
+#include "ace/SOCK_Dgram_Bcast.h"
 
 #include "ace/Synch.h"
 
@@ -45,12 +47,14 @@ namespace Madara
        *                   rejection of duplicates
        * @param    context    the knowledge variables to update
        * @param    address    the ACE socket address to read from 
+       * @param    socket     socket for sending
        **/
       Broadcast_Transport_Read_Thread (
         const Settings & settings,
         const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
-        const ACE_INET_Addr & address);
+        const ACE_INET_Addr & address,
+        ACE_SOCK_Dgram_Bcast & socket);
       
       /**
       * Destructor
@@ -72,6 +76,15 @@ namespace Madara
       **/
       int svc (void);
       
+      /**
+       * Sends a rebroadcast packet.
+       * @param   header   header for the rebroadcasted packet
+       * @param   records  records to rebroadcast (already filtered for
+       *                   rebroadcast)
+       **/
+      void rebroadcast (Message_Header * header,
+        const Knowledge_Map & records);
+
       /**
       * Wait for the transport to be ready
       **/
@@ -105,7 +118,10 @@ namespace Madara
       ACE_INET_Addr                      address_;
       
       /// The broadcast socket we are reading from
-      ACE_SOCK_Dgram                     socket_;
+      ACE_SOCK_Dgram                     read_socket_;
+      
+      /// underlying socket for rebroadcasting
+      ACE_SOCK_Dgram_Bcast               write_socket_;
 
       /// data received rules, defined in Transport settings
       Madara::Expression_Tree::Expression_Tree  on_data_received_;
