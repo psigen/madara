@@ -208,3 +208,19 @@ project (Tutorial_Creating_Transports) : using_madara, using_ace {
     tutorials/creating_transports
   }
 }
+
+project (Tutorial_Bandwidth_Filtering) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_bandwidth_filtering
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Source_Files {
+    tutorials/advanced/bandwidth_filtering.cpp
+  }
+}
+

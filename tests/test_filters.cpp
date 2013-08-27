@@ -87,10 +87,15 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   Madara::Knowledge_Record double_record (17.0);
   Madara::Knowledge_Record string_record ("This string should not change.");
 
+  Madara::Transport::Transport_Context transport_context;
+
   // Filter the records;
-  Madara::Knowledge_Record integer_result = filters.filter (integer_record);
-  Madara::Knowledge_Record double_result = filters.filter (double_record);
-  Madara::Knowledge_Record string_result = filters.filter (string_record);
+  Madara::Knowledge_Record integer_result = filters.filter (integer_record,
+    "", transport_context);
+  Madara::Knowledge_Record double_result = filters.filter (double_record,
+    "", transport_context);
+  Madara::Knowledge_Record string_result = filters.filter (string_record,
+    "", transport_context);
 
   std::cerr << "The result of the filtering was the following:\n";
   std::cerr << "  integer result = " << integer_result << " (";
@@ -119,7 +124,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     decrement_primitives);
   
   
-  string_result = filters.filter (string_record);
+  string_result = filters.filter (string_record,
+    "", transport_context);
 
   std::cerr << 
     "Running filter on string type (should delete string)\n";

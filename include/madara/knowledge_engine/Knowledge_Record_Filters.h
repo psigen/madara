@@ -90,9 +90,8 @@ namespace Madara
        * @return  the result of filtering the input
        **/
       Knowledge_Record filter (const Knowledge_Record & input,
-        const std::string & name = "",
-        Transport::Transport_Context & context =
-          Transport::Transport_Context ()) const;
+        const std::string & name,
+        Transport::Transport_Context & context) const;
 
       /**
        * Prints the number of filters chained for each type
