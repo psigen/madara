@@ -277,15 +277,17 @@ void test_filters (void)
   file_record.read_file (Madara::Utility::expand_envs (
     "$(MADARA_ROOT)/tests/images/manaus_hotel_100x100.jpg"));
 
+  Madara::Transport::Transport_Context transport_context;
+
   // Filter the records;
   Madara::Knowledge_Record integer_result =
-    settings.filter_rebroadcast (integer_record);
+    settings.filter_rebroadcast (integer_record, "", transport_context);
   Madara::Knowledge_Record double_result =
-    settings.filter_rebroadcast (double_record);
+    settings.filter_rebroadcast (double_record, "", transport_context);
   Madara::Knowledge_Record string_result =
-    settings.filter_rebroadcast (string_record);
+    settings.filter_rebroadcast (string_record, "", transport_context);
   Madara::Knowledge_Record file_result =
-    settings.filter_rebroadcast (file_record);
+    settings.filter_rebroadcast (file_record, "", transport_context);
   
   std::cerr << "The result of the rebroadcast filtering was the following:\n";
   std::cerr << "  integer result = " << integer_result << 
@@ -322,13 +324,13 @@ void test_filters (void)
   
   // Filter the records;
   integer_result =
-    settings.filter_send (integer_record);
+    settings.filter_send (integer_record, "", transport_context);
   double_result =
-    settings.filter_send (double_record);
+    settings.filter_send (double_record, "", transport_context);
   string_result =
-    settings.filter_send (string_record);
+    settings.filter_send (string_record, "", transport_context);
   file_result =
-    settings.filter_send (file_record);
+    settings.filter_send (file_record, "", transport_context);
   
   std::cerr << "The result of the send filtering was the following:\n";
   std::cerr << "  integer result = " << integer_result << 
@@ -365,13 +367,13 @@ void test_filters (void)
   
   // Filter the records;
   integer_result =
-    settings.filter_receive (integer_record);
+    settings.filter_receive (integer_record, "", transport_context);
   double_result =
-    settings.filter_receive (double_record);
+    settings.filter_receive (double_record, "", transport_context);
   string_result =
-    settings.filter_receive (string_record);
+    settings.filter_receive (string_record, "", transport_context);
   file_result =
-    settings.filter_receive (file_record);
+    settings.filter_receive (file_record, "", transport_context);
   
   std::cerr << "The result of the receive filtering was the following:\n";
   std::cerr << "  integer result = " << integer_result << 
