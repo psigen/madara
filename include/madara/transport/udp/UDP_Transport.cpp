@@ -129,6 +129,15 @@ Madara::Transport::UDP_Transport::send_data (
     DLINFO "UDP_Transport::send_data:" \
     " Applying filters before sending...\n"));
   
+  if (filtered_updates.size () == 0)
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "UDP_Transport::send_data:" \
+      " Filters removed all data. Nothing to send.\n"));
+
+    return 0;
+  }
+
   Transport_Context transport_context (Transport_Context::SENDING_OPERATION,
       receive_monitor_.get_bytes_per_second (),
       send_monitor_.get_bytes_per_second ());

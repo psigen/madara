@@ -77,7 +77,7 @@ namespace Madara
         settings_.setup ();
 
 #endif // _USE_CID_
-
+        settings_.attach (&context_);
       }
 
       virtual ~Base ()

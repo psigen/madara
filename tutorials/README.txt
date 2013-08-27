@@ -100,6 +100,16 @@ follows agents around a grid with four zones. The agents stay within the grid,
 change vectors and can potentially query other agents (this last part is left
 as an exercise).
 
+11.) advanced/bandwidth_filtering.cpp
+
+The MADARA KaRL engine includes some advanced features like bandwidth filtering
+to stop bursty clients from overwhelming the agent network. In this tutorial,
+we examine the QoS_Transport_Settings class and use send and receive filters
+to monitor and respond to a bursty client and slow it down at the sender side.
+Also included in this tutorial are custom filter creation, compiled expressions,
+variable references, and other features that enable fast execution to meet
+real-time goals.
+
 
 ======== Additional example programs ==========
 

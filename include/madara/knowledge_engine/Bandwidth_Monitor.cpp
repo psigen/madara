@@ -104,7 +104,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::print_utilization (
 {
   Bandwidth_Guard guard (mutex_);
 
-  get_utilization ();
+  update_utilization ();
 
   MADARA_DEBUG (0, (LM_DEBUG,
     "Bandwidth: %d messages "
@@ -115,8 +115,11 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::print_utilization (
 
 size_t
 Madara::Knowledge_Engine::Bandwidth_Monitor::get_number_of_messages (
-  void) const
+  void)
 {
   Bandwidth_Guard guard (mutex_);
+  
+  update_utilization ();
+
   return messages_.size ();
 }

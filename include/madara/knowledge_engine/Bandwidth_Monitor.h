@@ -105,7 +105,7 @@ namespace Madara
        * Returns the number of messages in the past window
        * @return  the number of types that have filters
        **/
-      size_t get_number_of_messages (void) const;
+      size_t get_number_of_messages (void);
 
     protected:
       /**

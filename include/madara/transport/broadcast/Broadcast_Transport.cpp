@@ -162,6 +162,15 @@ Madara::Transport::Broadcast_Transport::send_data (
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
     DLINFO "Broadcast_Transport::send_data:" \
     " Finished applying filters before sending...\n"));
+  
+  if (filtered_updates.size () == 0)
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Broadcast_Transport::send_data:" \
+      " Filters removed all data. Nothing to send.\n"));
+
+    return 0;
+  }
 
   // allocate a buffer to send
   char * buffer = buffer_.get_ptr ();
