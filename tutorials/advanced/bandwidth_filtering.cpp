@@ -1,6 +1,6 @@
 
 /**
- * @file counting_agents.cpp
+ * @file bandwidth_filtering.cpp
  * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains a simple distributed application that reads images from
@@ -11,14 +11,12 @@
  *   cd %MADARA_ROOT%\bin
  *   tutorial_bandwidth_filtering 0 (in one terminal)
  *   tutorial_bandwidth_filtering 1 (in a second terminal)
- *   tutorial_bandwidth_filtering 2 (in a third terminal)
  *   etc.
  *
  * Linux:
  *   cd $MADARA_ROOT/bin
  *   tutorial_bandwidth_filtering 0 (in one terminal)
  *   tutorial_bandwidth_filtering 1 (in a second terminal)
- *   tutorial_bandwidth_filtering 2 (in a third terminal)
  *
  **/
 
