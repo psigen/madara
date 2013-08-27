@@ -13,6 +13,7 @@
 
 #include "madara/utility/Scoped_Array.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Bandwidth_Monitor.h"
 #include "madara/transport/QoS_Transport_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/transport/Transport.h"
@@ -46,13 +47,19 @@ namespace Madara
        *                   rejection of duplicates
        * @param    context    the knowledge variables to update
        * @param    address    the multicast address we will read from
+       * @param    socket     socket for sending
+       * @param    send_monitor    bandwidth monitor for enforcing send limits
+       * @param    receive_monitor    bandwidth monitor for enforcing
+       *                              receive limits
        **/
       Multicast_Transport_Read_Thread (
         const Settings & settings,
         const std::string & id,
-        Madara::Knowledge_Engine::Thread_Safe_Context & context,
+        Knowledge_Engine::Thread_Safe_Context & context,
         const ACE_INET_Addr & address,
-        ACE_SOCK_Dgram & socket);
+        ACE_SOCK_Dgram & socket,
+        Knowledge_Engine::Bandwidth_Monitor & send_monitor,
+        Knowledge_Engine::Bandwidth_Monitor & receive_monitor);
       
       /**
       * Destructor
@@ -129,6 +136,12 @@ namespace Madara
 
       /// pointer to qos_settings (if applicable)
       const QoS_Transport_Settings *      qos_settings_;
+      
+      /// monitor for sending bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor   &   send_monitor_;
+      
+      /// monitor for receiving bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor   &   receive_monitor_;
     };
   }
 }

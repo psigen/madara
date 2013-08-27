@@ -19,6 +19,7 @@
 #include "ace/SOCK_Dgram.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/knowledge_engine/Bandwidth_Monitor.h"
 
 namespace Madara
 {
@@ -109,6 +110,12 @@ namespace Madara
 
       /// buffer for sending
       Madara::Utility::Scoped_Array <char>      buffer_;
+      
+      /// monitor for sending bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor       send_monitor_;
+      
+      /// monitor for receiving bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor       receive_monitor_;
     };
   }
 }

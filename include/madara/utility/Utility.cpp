@@ -11,6 +11,13 @@
 #include "ace/OS_NS_fcntl.h"
 #include "ace/OS_NS_unistd.h"
 
+std::string
+Madara::Utility::get_version (void)
+{
+  return file_to_string (
+    expand_envs ("$(MADARA_ROOT)/VERSION.txt"));
+}
+
 /// Convert string to uppercase
 std::string &
 Madara::Utility::upper (std::string &input)

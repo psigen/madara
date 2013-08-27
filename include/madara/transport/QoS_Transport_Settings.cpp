@@ -239,26 +239,29 @@ Madara::Transport::QoS_Transport_Settings::clear_rebroadcast_filters (uint32_t t
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_send (
   const Madara::Knowledge_Record & input,
-  const std::string & name) const
+  const std::string & name,
+  Transport::Transport_Context & context) const
 {
-  return send_filters_.filter (input, name);
+  return send_filters_.filter (input, name, context);
 }
          
 
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_receive (
   const Madara::Knowledge_Record & input,
-  const std::string & name) const
+  const std::string & name,
+  Transport::Transport_Context & context) const
 {
-  return receive_filters_.filter (input, name);
+  return receive_filters_.filter (input, name, context);
 }
       
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_rebroadcast (
   const Madara::Knowledge_Record & input,
-  const std::string & name) const
+  const std::string & name,
+  Transport::Transport_Context & context) const
 {
-  return rebroadcast_filters_.filter (input, name);
+  return rebroadcast_filters_.filter (input, name, context);
 }
 
        

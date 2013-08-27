@@ -92,7 +92,12 @@ namespace Madara
 
       /// underlying socket for sending
       ACE_SOCK_Dgram                            socket_;
-
+      
+      /// monitor for sending bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor       send_monitor_;
+      
+      /// monitor for receiving bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor       receive_monitor_;
     };
   }
 }

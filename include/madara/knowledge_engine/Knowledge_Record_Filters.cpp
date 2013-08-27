@@ -94,7 +94,8 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::print_num_filters (
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
   const Knowledge_Record & input,
-  const std::string & name) const
+  const std::string & name,
+  Transport::Transport_Context & transport_context) const
 {
   // grab the filter chain entry for the type
   uint32_t type = input.type ();
@@ -116,17 +117,26 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
        * arguments vector is modifiable by filter, so we have to
        * resize every filter call to make sure we have adequate space
        **/
+      
+      arguments.resize (5);
 
-      if (name == "")
-      {
-        arguments.resize (1);
-      }
-      else
+      if (name != "")
       {
         // second argument is the variable name, if applicable
-        arguments.resize (2);
         arguments[1].set_value (name);
       }
+
+      // third argument is the operation being performed
+      arguments[2].set_value (Knowledge_Record::Integer (
+        transport_context.get_operation ()));
+      
+      // fourth argument is the send/rebroadcast bandwidth utilization
+      arguments[3].set_value (Knowledge_Record::Integer (
+        transport_context.get_send_bandwidth ()));
+      
+      // fifth argument is the send/rebroadcast bandwidth utilization
+      arguments[4].set_value (Knowledge_Record::Integer (
+        transport_context.get_receive_bandwidth ()));
 
       // setup arguments to the function
       arguments[0] = result;

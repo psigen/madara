@@ -18,6 +18,25 @@ project (Test_Arrays) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Bandwidth_Monitor) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_bandwidth_monitor
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_bandwidth_monitor.cpp
+  }
+}
+
 project (Test_Encoding) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_encoding

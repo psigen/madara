@@ -1,5 +1,6 @@
 #include "madara/transport/broadcast/Broadcast_Transport.h"
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
+#include "madara/transport/Transport_Context.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/transport/Reduced_Message_Header.h"
 #include "madara/utility/Utility.h"
@@ -103,7 +104,8 @@ Madara::Transport::Broadcast_Transport::setup (void)
     
     // start thread with the addresses (only looks at the first one for now)
     thread_ = new Madara::Transport::Broadcast_Transport_Read_Thread (
-                    settings_, id_, context_, addresses_[0], socket_);
+                    settings_, id_, context_, addresses_[0], socket_,
+                    send_monitor_, receive_monitor_);
     
   }
   return this->validate_transport ();
@@ -145,7 +147,12 @@ Madara::Transport::Broadcast_Transport::send_data (
   for (Knowledge_Records::const_iterator i = orig_updates.begin ();
         i != orig_updates.end (); ++i)
   {
-    Knowledge_Record result = settings_.filter_send (*i->second, i->first);
+    // filter the record according to the send filter chain
+    Knowledge_Record result = settings_.filter_send (*i->second, i->first,
+      Transport_Context (Transport_Context::SENDING_OPERATION,
+      receive_monitor_.get_bytes_per_second (),
+      send_monitor_.get_bytes_per_second ()));
+
     if (result.status () != Knowledge_Record::UNCREATED)
       filtered_updates[i->first] = result;
   }
@@ -289,6 +296,13 @@ Madara::Transport::Broadcast_Transport::send_data (
         DLINFO "Broadcast_Transport::send_data:" \
         " Sent packet with size %d\n",
         bytes_sent));
+
+      send_monitor_.add ((uint32_t)bytes_sent);
+      
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Broadcast_Transport::send_data:" \
+        " Send bandwidth = %d B/s\n",
+        send_monitor_.get_bytes_per_second ()));
     }
   }
   

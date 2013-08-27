@@ -100,7 +100,7 @@ alter_rebroadcast (
   if (args.size () > 0)
   {
     // if the second argument is equal to our var_ref
-    if (args.size () == 2 && args[1].to_string () == source_var)
+    if (args.size () >= 2 && args[1].to_string () == source_var)
     {
       args[0].set_value (Madara::Knowledge_Record::Integer (1));
     }

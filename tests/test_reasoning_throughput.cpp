@@ -432,6 +432,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   knowledge.define_function ("inc", increment_var1);
   knowledge.define_function ("no_op", no_op);
 
+  std::cerr << "Testing throughput for MADARA v" <<
+    Madara::Utility::get_version () << std::endl;
 
   for (uint32_t i = 0; i < num_runs; ++i)
   {

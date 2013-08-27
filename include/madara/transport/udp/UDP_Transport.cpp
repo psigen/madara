@@ -1,5 +1,6 @@
 #include "madara/transport/udp/UDP_Transport.h"
 #include "madara/transport/udp/UDP_Transport_Read_Thread.h"
+#include "madara/transport/Transport_Context.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/transport/Reduced_Message_Header.h"
@@ -92,7 +93,8 @@ Madara::Transport::UDP_Transport::setup (void)
       std::cout << "UDP socket failed to open\n";
 
     thread_ = new Madara::Transport::UDP_Transport_Read_Thread (
-      settings_, id_, context_, addresses_, socket_);
+                    settings_, id_, context_, addresses_, socket_,
+                    send_monitor_, receive_monitor_);
   
   }
 
@@ -134,7 +136,12 @@ Madara::Transport::UDP_Transport::send_data (
   for (Knowledge_Records::const_iterator i = orig_updates.begin ();
         i != orig_updates.end (); ++i)
   {
-    Knowledge_Record result = settings_.filter_send (*i->second, i->first);
+    // filter the record according to the send filter chain
+    Knowledge_Record result = settings_.filter_send (*i->second, i->first,
+      Transport_Context (Transport_Context::SENDING_OPERATION,
+      receive_monitor_.get_bytes_per_second (),
+      send_monitor_.get_bytes_per_second ()));
+
     if (result.status () != Knowledge_Record::UNCREATED)
       filtered_updates[i->first] = result;
   }
@@ -276,7 +283,14 @@ Madara::Transport::UDP_Transport::send_data (
         DLINFO "UDP_Transport::send_data:" \
         " Sent packet to %s with size %d\n",
         i->first.c_str (), bytes_sent));
+
+      send_monitor_.add ((uint32_t)bytes_sent);
     }
+      
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "UDP_Transport::send_data:" \
+      " Send bandwidth = %d B/s\n",
+      send_monitor_.get_bytes_per_second ()));
   }
   
   delete header;

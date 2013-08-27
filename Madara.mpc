@@ -33,6 +33,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
   Inline_Files {
     include/madara/knowledge_engine
     include/madara/utility
+    include/madara/transport/Transport_Settings.inl
   }
 
   Template_Files {
@@ -51,6 +52,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/transport/Reduced_Message_Header.cpp
     include/madara/transport/QoS_Transport_Settings.cpp
     include/madara/transport/Transport_Settings.cpp
+    include/madara/transport/Transport_Context.cpp
     include/madara/utility/Utility.cpp
     include/madara/utility/Refcounter.cpp
     include/madara/utility/Log_Macros.cpp
@@ -73,6 +75,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/transport/Reduced_Message_Header.h
     include/madara/transport/QoS_Transport_Settings.h
     include/madara/transport/Transport_Settings.h
+    include/madara/transport/Transport_Context.h
     include/madara/knowledge_engine/Functions.h
     include/madara/MADARA_export.h
     include/madara/filters

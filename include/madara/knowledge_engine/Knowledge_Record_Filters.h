@@ -18,6 +18,7 @@
 #include "madara/knowledge_engine/Functions.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Knowledge_Record_Filters.h"
+#include "madara/transport/Transport_Context.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
 
@@ -85,10 +86,13 @@ namespace Madara
        * Filters an input according to its filter chain
        * @param   input   the argument to the filter chain
        * @param   name    variable name ("" if unnamed)
+       * @param   context the context of the transport
        * @return  the result of filtering the input
        **/
       Knowledge_Record filter (const Knowledge_Record & input,
-        const std::string & name = "") const;
+        const std::string & name = "",
+        Transport::Transport_Context & context =
+          Transport::Transport_Context ()) const;
 
       /**
        * Prints the number of filters chained for each type

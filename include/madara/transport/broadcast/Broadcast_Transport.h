@@ -14,6 +14,7 @@
 #include "madara/utility/Scoped_Array.h"
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
+#include "madara/knowledge_engine/Bandwidth_Monitor.h"
 #include "ace/SOCK_Dgram_Bcast.h"
 #include "madara/utility/stdint.h"
 #include "madara/expression_tree/Expression_Tree.h"
@@ -108,6 +109,12 @@ namespace Madara
 
       /// buffer for sending
       Madara::Utility::Scoped_Array <char>      buffer_;
+      
+      /// monitor for sending bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor       send_monitor_;
+      
+      /// monitor for receiving bandwidth usage
+      Knowledge_Engine::Bandwidth_Monitor       receive_monitor_;
     };
   }
 }

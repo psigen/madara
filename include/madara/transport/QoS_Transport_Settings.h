@@ -12,6 +12,7 @@
 #include <string>
 
 #include "madara/transport/Transport_Settings.h"
+#include "madara/transport/Transport_Context.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
@@ -121,31 +122,40 @@ namespace Madara
        * Filters an input according to send's filter chain
        * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
+       * @param   context the context of the transport
        * @return  the result of filtering the input
        **/
       Knowledge_Record filter_send (
         const Madara::Knowledge_Record & input,
-        const std::string & name = "") const;
+        const std::string & name = "",
+        Transport::Transport_Context & context =
+          Transport::Transport_Context ()) const;
          
       /**
        * Filters an input according to receive's filter chain
        * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
+       * @param   context the context of the transport
        * @return  the result of filtering the input
        **/
       Knowledge_Record filter_receive (
         const Madara::Knowledge_Record & input,
-        const std::string & name = "") const;
+        const std::string & name = "",
+        Transport::Transport_Context & context =
+          Transport::Transport_Context ()) const;
       
       /**
        * Filters an input according to rebroadcast's filter chain
        * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
+       * @param   context the context of the transport
        * @return  the result of filtering the input
        **/
       Knowledge_Record filter_rebroadcast (
         const Madara::Knowledge_Record & input,
-        const std::string & name = "") const;
+        const std::string & name = "",
+        Transport::Transport_Context & context =
+          Transport::Transport_Context ()) const;
 
        
       /**

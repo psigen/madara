@@ -12,11 +12,15 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context,
   const ACE_INET_Addr & address,
-  ACE_SOCK_Dgram & socket)
+  ACE_SOCK_Dgram & socket,
+  Knowledge_Engine::Bandwidth_Monitor & send_monitor,
+  Knowledge_Engine::Bandwidth_Monitor & receive_monitor)
   : settings_ (settings), id_ (id), context_ (context),
     barrier_ (2), terminated_ (false), 
     mutex_ (), is_not_ready_ (mutex_), is_ready_ (false), address_ (address),
-    write_socket_ (socket)
+    write_socket_ (socket),
+    send_monitor_ (send_monitor),
+    receive_monitor_ (receive_monitor)
 {
   // Subscribe
   int port = address_.get_port_number ();
@@ -144,6 +148,13 @@ Madara::Transport::Multicast_Transport_Read_Thread::rebroadcast (
         DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
         " Sent packet of size %d\n",
         bytes_sent));
+      
+      send_monitor_.add ((uint32_t)bytes_sent);
+
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
+        " Send bandwidth = %d B/s\n",
+        send_monitor_.get_bytes_per_second ()));
     }
     else
     {
@@ -198,6 +209,14 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
     
     if (bytes_read > 0)
     {
+      // tell the receive bandwidth monitor about the transaction
+      receive_monitor_.add (bytes_read);
+      
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
+        " Receive bandwidth = %d B/s\n",
+        receive_monitor_.get_bytes_per_second ()));
+
       buffer_remaining = (int64_t)bytes_read;
       bool is_reduced = false;
       Message_Header * header;
@@ -379,7 +398,10 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
           // if we have rebroadcast filters, apply them
           if (qos_settings_->get_number_of_rebroadcast_filtered_types () > 0)
             rebroadcast_temp = qos_settings_->filter_rebroadcast (
-              record, key);
+              record, key,
+                Transport_Context (Transport_Context::REBROADCASTING_OPERATION,
+                receive_monitor_.get_bytes_per_second (),
+                send_monitor_.get_bytes_per_second ()));
 
           // if the record was not filtered out entirely, add it to map
           if (rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
@@ -404,7 +426,10 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
         if (qos_settings_ &&
             qos_settings_->get_number_of_received_filtered_types () > 0)
         {
-          record = qos_settings_->filter_receive (record, key);
+          record = qos_settings_->filter_receive (record, key,
+            Transport_Context (Transport_Context::RECEIVING_OPERATION,
+            receive_monitor_.get_bytes_per_second (),
+            send_monitor_.get_bytes_per_second ()));
         }
 
         int result = 0;

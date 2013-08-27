@@ -13,6 +13,12 @@ namespace Madara
   namespace Utility
   {
     /**
+     * Gets the MADARA version number
+     * @return    the MADARA version number
+     **/
+    MADARA_Export std::string get_version (void);
+    
+    /**
      * Converts the string to upper. This function will modify and return the
      * input, so make a copy if needed.
      * @param     input         the string to change
