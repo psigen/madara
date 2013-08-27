@@ -397,6 +397,11 @@ Madara::Transport::UDP_Transport_Read_Thread::svc (void)
           DLINFO "UDP_Transport_Read_Thread::svc:" \
           " attempting to apply %s=%s\n",
           key.c_str (), record.to_string ().c_str ()));
+
+        uint32_t receive_bandwidth = receive_monitor_.get_bytes_per_second ();
+        uint32_t send_bandwidth = send_monitor_.get_bytes_per_second ();
+
+        Transport_Context transport_context;
         
         // if the tll is 1 or more and we are participating in rebroadcasts
         if (header->ttl > 0 && qos_settings_ &&
@@ -406,11 +411,16 @@ Madara::Transport::UDP_Transport_Read_Thread::svc (void)
 
           // if we have rebroadcast filters, apply them
           if (qos_settings_->get_number_of_rebroadcast_filtered_types () > 0)
+          {
+            transport_context.set_operation (
+              Transport_Context::REBROADCASTING_OPERATION);
+            transport_context.set_receive_bandwidth (receive_bandwidth);
+            transport_context.set_send_bandwidth (send_bandwidth);
+        
             rebroadcast_temp = qos_settings_->filter_rebroadcast (
               record, key,
-                Transport_Context (Transport_Context::REBROADCASTING_OPERATION,
-                receive_monitor_.get_bytes_per_second (),
-                send_monitor_.get_bytes_per_second ()));
+              transport_context);
+          }
 
           // if the record was not filtered out entirely, add it to map
           if (rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
@@ -430,15 +440,17 @@ Madara::Transport::UDP_Transport_Read_Thread::svc (void)
               key.c_str ()));
           }
         }
-
+        
         // use the original message to apply receive filters
         if (qos_settings_ &&
             qos_settings_->get_number_of_received_filtered_types () > 0)
         {
+          transport_context.set_operation (Transport_Context::RECEIVING_OPERATION);
+          transport_context.set_receive_bandwidth (receive_bandwidth);
+          transport_context.set_send_bandwidth (send_bandwidth);
+        
           record = qos_settings_->filter_receive (record, key,
-            Transport_Context (Transport_Context::RECEIVING_OPERATION,
-            receive_monitor_.get_bytes_per_second (),
-            send_monitor_.get_bytes_per_second ()));
+            transport_context);
         }
 
         int result = 0;

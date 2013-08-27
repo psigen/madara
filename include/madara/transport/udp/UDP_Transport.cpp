@@ -128,6 +128,10 @@ Madara::Transport::UDP_Transport::send_data (
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
     DLINFO "UDP_Transport::send_data:" \
     " Applying filters before sending...\n"));
+  
+  Transport_Context transport_context (Transport_Context::SENDING_OPERATION,
+      receive_monitor_.get_bytes_per_second (),
+      send_monitor_.get_bytes_per_second ());
 
   /**
    * filter the updates according to the filters specified by
@@ -138,9 +142,7 @@ Madara::Transport::UDP_Transport::send_data (
   {
     // filter the record according to the send filter chain
     Knowledge_Record result = settings_.filter_send (*i->second, i->first,
-      Transport_Context (Transport_Context::SENDING_OPERATION,
-      receive_monitor_.get_bytes_per_second (),
-      send_monitor_.get_bytes_per_second ()));
+      transport_context);
 
     if (result.status () != Knowledge_Record::UNCREATED)
       filtered_updates[i->first] = result;
