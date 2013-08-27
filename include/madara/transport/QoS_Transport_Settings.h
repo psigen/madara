@@ -127,9 +127,8 @@ namespace Madara
        **/
       Knowledge_Record filter_send (
         const Madara::Knowledge_Record & input,
-        const std::string & name = "",
-        Transport::Transport_Context & context =
-          Transport::Transport_Context ()) const;
+        const std::string & name,
+        Transport::Transport_Context & context) const;
          
       /**
        * Filters an input according to receive's filter chain
@@ -140,9 +139,8 @@ namespace Madara
        **/
       Knowledge_Record filter_receive (
         const Madara::Knowledge_Record & input,
-        const std::string & name = "",
-        Transport::Transport_Context & context =
-          Transport::Transport_Context ()) const;
+        const std::string & name,
+        Transport::Transport_Context & context) const;
       
       /**
        * Filters an input according to rebroadcast's filter chain
@@ -153,9 +151,8 @@ namespace Madara
        **/
       Knowledge_Record filter_rebroadcast (
         const Madara::Knowledge_Record & input,
-        const std::string & name = "",
-        Transport::Transport_Context & context =
-          Transport::Transport_Context ()) const;
+        const std::string & name,
+        Transport::Transport_Context & context) const;
 
        
       /**
