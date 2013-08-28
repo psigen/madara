@@ -8,6 +8,8 @@
 #include "com.madara.KnowledgeRecord.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
+#include <stdio.h>
+
 /*
  * Class:     com_madara_KnowledgeRecord
  * Method:    jni_KnowledgeRecord
@@ -42,6 +44,44 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord
 MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__J (JNIEnv * env, jobject obj, jlong data)
 {
 	return (jlong) (new Madara::Knowledge_Record(Madara::Knowledge_Record::Integer(data)));
+}
+
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_KnowledgeRecord
+ * Signature: ([D)J
+ */
+JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3D (JNIEnv * env, jclass cls, jdoubleArray data)
+{
+    jsize len = env->GetArrayLength(data);
+    jboolean isCopy;
+    jdouble* dblArray = env->GetDoubleArrayElements(data, &isCopy);
+    std::vector<double> dblVector(len);
+    for (int x = 0; x < len; x++)
+        dblVector[x] = dblArray[x];
+    jlong ret = (jlong) (new Madara::Knowledge_Record(dblVector));
+    if (isCopy)
+        env->ReleaseDoubleArrayElements(data, dblArray, JNI_ABORT);
+    return ret;
+}
+
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_KnowledgeRecord
+ * Signature: ([J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3J (JNIEnv * env, jclass cls, jlongArray data)
+{
+    jsize len = env->GetArrayLength(data);
+    jboolean isCopy;
+    jlong* intArray = env->GetLongArrayElements(data, &isCopy);
+    std::vector<Madara::Knowledge_Record::Integer> intVector(len);
+    for (int x = 0; x < len; x++)
+        intVector[x] = intArray[x];
+    jlong ret = (jlong) (new Madara::Knowledge_Record(intVector));
+    if (isCopy)
+        env->ReleaseLongArrayElements(data, intArray, JNI_ABORT);
+    return ret;
 }
 
 /*
@@ -98,6 +138,48 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRec
     Madara::Knowledge_Record* record = (Madara::Knowledge_Record*)cptr;
     if (record)
         delete record;
+}
+
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_toDoubleArray
+ * Signature: (J)[D
+ */
+JNIEXPORT jdoubleArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleArray (JNIEnv * env, jclass cls, jlong cptr)
+{
+    Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
+    std::vector<double> vec = record.to_doubles();
+    
+    jdouble tmp[vec.size()];
+    
+    for (int x = 0; x < vec.size(); x++)
+        tmp[x] = (jdouble) vec[x];
+    
+    jdoubleArray ret = env->NewDoubleArray(vec.size());
+    env->SetDoubleArrayRegion(ret, 0, vec.size(), tmp);
+    
+    return ret;
+}
+
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_toLongArray
+ * Signature: (J)[J
+ */
+JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongArray (JNIEnv * env, jclass cls, jlong cptr)
+{
+    Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
+    std::vector<Madara::Knowledge_Record::Integer> vec = record.to_integers();
+    
+    jlong tmp[vec.size()];
+    
+    for (int x = 0; x < vec.size(); x++)
+        tmp[x] = (jlong) vec[x];
+    
+    jlongArray ret = env->NewLongArray(vec.size());
+    env->SetLongArrayRegion(ret, 0, vec.size(), tmp);
+    
+    return ret;
 }
 
 /*

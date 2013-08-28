@@ -256,5 +256,16 @@ MADARA_Export jobjectArray JNICALL Java_com_madara_transport_Settings_jni_1getHo
 	return ret;
 }
 
+/*
+ * Class:     com_madara_transport_Settings
+ * Method:    jni_freeSettings
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1freeSettings (JNIEnv * env, jclass cls, jlong cptr)
+{
+    Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
+    if (settings)
+        delete settings;
+}
 
 

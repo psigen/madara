@@ -21,6 +21,8 @@ public class WaitSettings extends EvalSettings
 	
 	private native void jni_setMaxWaitTime(long cptr, double maxWaitTime);
 	private native double jni_getMaxWaitTime(long cptr);
+
+	private static native void jni_freeWaitSettings(long cptr);
 	
 	
 	/**
@@ -78,8 +80,7 @@ public class WaitSettings extends EvalSettings
 		if (!constant)
 			jni_setMaxWaitTime(getCPtr(), maxWaitTime);
 	}
-	
-	
+
 	/**
 	 * @return current max wait time
 	 */
@@ -87,5 +88,13 @@ public class WaitSettings extends EvalSettings
 	{
 		return jni_getMaxWaitTime(getCPtr());
 	}
-	
+
+	/**
+	 * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be called
+	 * before an instance of WaitSettings gets garbage collected
+	 */
+	public void free()
+	{
+		jni_freeWaitSettings(getCPtr());
+	}
 }

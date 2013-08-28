@@ -29,6 +29,8 @@ public class EvalSettings extends MadaraJNI
 	private native boolean jni_getTreatGlobalsAsLocals(long cptr);
 	private native void jni_setClockIncrement(long cptr, long defaultClockIncrement);
 	private native long jni_getClockIncrement(long cptr);
+
+	private static native void jni_freeEvalSettings(long cptr);
 	
 	
 	/**
@@ -178,6 +180,15 @@ public class EvalSettings extends MadaraJNI
 	public long getDefaultClockIncrement()
 	{
 		return jni_getClockIncrement(getCPtr());
+	}
+
+	/**
+	 * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be called
+	 * before an instance of EvalSettings gets garbage collected
+	 */
+	public void free()
+	{
+		jni_freeEvalSettings(getCPtr());
 	}
 	
 }

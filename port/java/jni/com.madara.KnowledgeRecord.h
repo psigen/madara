@@ -37,6 +37,22 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord
  */
 MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__J
   (JNIEnv *, jobject, jlong);
+    
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_KnowledgeRecord
+ * Signature: ([D)J
+ */
+JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3D
+  (JNIEnv *, jclass, jdoubleArray);
+    
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_KnowledgeRecord
+ * Signature: ([J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3J
+  (JNIEnv *, jclass, jlongArray);
 
 /*
  * Class:     com_madara_KnowledgeRecord
@@ -77,6 +93,22 @@ MADARA_Export jint JNICALL Java_com_madara_KnowledgeRecord_jni_1getType
  */
 MADARA_Export void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord
   (JNIEnv *, jobject, jlong);
+    
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_toDoubleArray
+ * Signature: (J)[D
+ */
+JNIEXPORT jdoubleArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleArray
+  (JNIEnv *, jclass, jlong);
+    
+/*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_toLongArray
+ * Signature: (J)[J
+ */
+JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongArray
+  (JNIEnv *, jclass, jlong);
   
 /*
  * Class:     com_madara_KnowledgeList

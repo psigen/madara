@@ -184,5 +184,14 @@ MADARA_Export jlong JNICALL Java_com_madara_EvalSettings_jni_1getClockIncrement 
 	return (jlong) evalSettings->clock_increment;
 }
   
-  
-  
+/*
+ * Class:     com_madara_EvalSettings
+ * Method:    jni_freeEvalSettings
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_EvalSettings_jni_1freeEvalSettings (JNIEnv * env, jclass cls, jlong cptr)
+{
+    Madara::Knowledge_Engine::Eval_Settings* evalSettings = (Madara::Knowledge_Engine::Eval_Settings*)cptr;
+    if (evalSettings)
+        delete evalSettings;
+}

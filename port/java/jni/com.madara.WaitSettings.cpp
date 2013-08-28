@@ -83,4 +83,14 @@ MADARA_Export jdouble JNICALL Java_com_madara_WaitSettings_jni_1getMaxWaitTime (
     return (jdouble) waitSettings->max_wait_time;
 }
 
-
+/*
+ * Class:     com_madara_WaitSettings
+ * Method:    jni_freeWaitSettings
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1freeWaitSettings (JNIEnv * env, jclass cls, jlong cptr)
+{
+    Madara::Knowledge_Engine::Wait_Settings* waitSettings = (Madara::Knowledge_Engine::Wait_Settings*) cptr;
+    if (waitSettings)
+        delete waitSettings;
+}

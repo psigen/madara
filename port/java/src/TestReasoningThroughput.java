@@ -502,7 +502,7 @@ public class TestReasoningThroughput
 			test.hertz = (1000000000 * EVALUATIONS) / test.elapsed;
 		}
 		
-		System.out.println("\n\nTotal time taken for each test with " + ITERATIONS + " iterations * " + RUNCOUNT + " tests was:");
+		System.out.println("\n\nTotal time taken for each Test with " + ITERATIONS + " iterations * " + RUNCOUNT + " tests was:");
 		System.out.println("=========================================================================");
 		
 		for (Test test : tests)
@@ -520,7 +520,7 @@ public class TestReasoningThroughput
 		}
 		System.out.println("=========================================================================");
 		
-		System.out.println("\n\nHertz for each test with " + ITERATIONS + " iterations * " + RUNCOUNT + " tests was:");
+		System.out.println("\n\nHertz for each Test with " + ITERATIONS + " iterations * " + RUNCOUNT + " tests was:");
 		System.out.println("=========================================================================");
 		
 		for (Test test : tests)

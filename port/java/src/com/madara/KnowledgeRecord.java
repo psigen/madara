@@ -16,11 +16,16 @@ public class KnowledgeRecord extends MadaraJNI
 	private native long jni_KnowledgeRecord(String str);
 	private native long jni_KnowledgeRecord(double str);
 	private native long jni_KnowledgeRecord(long str);
+
+	private static native long jni_KnowledgeRecord(double[] dbls);
+	private static native long jni_KnowledgeRecord(long[] longs);
 	
 	//Getters
 	private native long jni_toLongValue(long cptr);
 	private native String jni_toStringValue(long cptr);
 	private native double jni_toDoubleValue(long cptr);
+	private static native double[] jni_toDoubleArray(long cptr);
+	private static native long[] jni_toLongArray(long cptr);
 	
 	private native int jni_getType(long cptr);
 	
@@ -65,6 +70,25 @@ public class KnowledgeRecord extends MadaraJNI
 	{
 		setCPtr(jni_KnowledgeRecord(dbl));
 	}
+
+	/**
+	 * Constructor for double[] values
+	 * @param dbls value to set
+	 */
+	public KnowledgeRecord(double[] dbls)
+	{
+		setCPtr(jni_KnowledgeRecord(dbls));
+	}
+
+	/**
+	 * Constructor for long[] values
+	 * @param longs value to set
+	 */
+	public KnowledgeRecord(long[] longs)
+	{
+		setCPtr(jni_KnowledgeRecord(longs));
+	}
+
 	
 	/**
 	 * Converts the value to a long
@@ -83,6 +107,24 @@ public class KnowledgeRecord extends MadaraJNI
 	public double toDoubleValue()
 	{
 		return jni_toDoubleValue(getCPtr());
+	}
+
+	/**
+	 * Converts the value to a double array
+	 * @return current array values
+	 */
+	public double[] toDoubleArray()
+	{
+		return jni_toDoubleArray(getCPtr());
+	}
+
+	/**
+	 * Converts the value to a long array
+	 * @return current array values
+	 */
+	public long[] toLongArray()
+	{
+		return jni_toLongArray(getCPtr());
 	}
 	
 	

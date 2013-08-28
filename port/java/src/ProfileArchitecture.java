@@ -59,7 +59,7 @@ public class ProfileArchitecture
 	{
 		System.out.println("Evaluating all expressions 10,000 times...");
 		
-		EvalSettings defaultSettings = EvalSettings.DEFAULT_EVAL_SETTINGS; //Make sure default eval settings are created
+		EvalSettings defaultSettings = new EvalSettings(); //Make sure default eval settings are created
 		
 		int i = 0;
 		for (Test test : tests)

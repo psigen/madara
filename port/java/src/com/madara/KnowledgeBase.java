@@ -36,7 +36,12 @@ public class KnowledgeBase extends MadaraJNI
 	private native void jni_clear(long cptr);
 	
 	private native long jni_get(long cptr, String name);
-	private native void jni_set(long cptr, String name, long record);
+
+	private static native void jni_setInteger(long cptr, String name, long value);
+	private static native void jni_setDouble(long cptr, String name, double value);
+	private static native void jni_setString(long cptr, String name, String value);
+	private static native void jni_setIntegerArray(long cptr, String name, long[] value);
+	private static native void jni_setDoubleArray(long cptr, String name, double[] value);
 	
 	private native void jni_freeKnowledgeBase(long cptr);
 	
@@ -307,12 +312,11 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param record value to set
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
+	@Deprecated
 	public void set(String name, KnowledgeRecord record)
 	{
-		checkContextLock();
-		jni_set(getCPtr(), name, record.getCPtr());
+		throw new UnsupportedOperationException("set(String, KnowledgeRecord) is no longer supported");
 	}
-	
 	
 	/**
 	 * Sets a knowledge value to a specified value.
@@ -323,9 +327,7 @@ public class KnowledgeBase extends MadaraJNI
 	public void set(String name, long value)
 	{
 		checkContextLock();
-		KnowledgeRecord kr = new KnowledgeRecord(value);
-		set(name, kr);
-		kr.free();
+		jni_setInteger(getCPtr(), name, value);
 	}
 	
 	/**
@@ -337,9 +339,7 @@ public class KnowledgeBase extends MadaraJNI
 	public void set(String name, double value)
 	{
 		checkContextLock();
-		KnowledgeRecord kr = new KnowledgeRecord(value);
-		set(name, kr);
-		kr.free();
+		jni_setDouble(getCPtr(), name, value);
 	}
 	
 	/**
@@ -351,9 +351,31 @@ public class KnowledgeBase extends MadaraJNI
 	public void set(String name, String value)
 	{
 		checkContextLock();
-		KnowledgeRecord kr = new KnowledgeRecord(value);
-		set(name, kr);
-		kr.free();
+		jni_setString(getCPtr(), name, value);
+	}
+
+	/**
+	 * Sets a knowledge value to a specified value.
+	 * @param name knowledge name
+	 * @param value value to set
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+	 */
+	public void set(String name, double[] value)
+	{
+		checkContextLock();
+		jni_setDoubleArray(getCPtr(), name, value);
+	}
+
+	/**
+	 * Sets a knowledge value to a specified value.
+	 * @param name knowledge name
+	 * @param value value to set
+	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+	 */
+	public void set(String name, long[] value)
+	{
+		checkContextLock();
+		jni_setIntegerArray(getCPtr(), name, value);
 	}
 	
 	/**

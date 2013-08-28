@@ -178,7 +178,23 @@ MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setHosts
  */
 MADARA_Export jobjectArray JNICALL Java_com_madara_transport_Settings_jni_1getHosts
   (JNIEnv *, jobject, jlong);
-
+    
+/*
+ * Class:     com_madara_transport_Settings
+ * Method:    jni_getHosts
+ * Signature: (J)[Ljava/lang/String;
+ */
+MADARA_Export jobjectArray JNICALL Java_com_madara_transport_Settings_jni_1getHosts
+  (JNIEnv *, jobject, jlong);
+    
+/*
+ * Class:     com_madara_transport_Settings
+ * Method:    jni_freeSettings
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1freeSettings
+  (JNIEnv *, jclass, jlong);
+    
 #ifdef __cplusplus
 }
 #endif

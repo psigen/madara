@@ -12,13 +12,21 @@ package com.madara;
  */
 public enum KnowledgeType
 {
-	INTEGER (0),
-	STRING (1),
-	DOUBLE (2),
-	UNKNOWN (3),
-	XML(4),
-	TEXT_FILE (5),
-	IMAGE_JPEG (50);
+	//These are defined in Knowledge_Record.h
+	UNINITIALIZED (0),
+	INTEGER (1),
+	STRING (2),
+	DOUBLE (4),
+	FLOAT (4),
+	UNKNOWN_FILE_TYPE (8),
+	XML (16),
+	TEXT_FILE (32),
+	INTEGER_ARRAY (64),
+	DOUBLE_ARRAY (128),
+	IMAGE_JPEG (256),
+	ALL_PRIMITIVE_TYPES (INTEGER.num | STRING.num | DOUBLE.num | INTEGER_ARRAY.num | DOUBLE_ARRAY.num),
+	ALL_FILE_TYPES (UNKNOWN_FILE_TYPE.num | XML.num | TEXT_FILE.num | IMAGE_JPEG.num),
+	ALL_TYPES (ALL_PRIMITIVE_TYPES.num | ALL_FILE_TYPES.num);
 	
 	private int num;
 	private KnowledgeType(int num)

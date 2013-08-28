@@ -13,7 +13,9 @@ public class Settings extends MadaraJNI
 	
 	private native long jni_Settings();
 	private native long jni_Settings(long cptr);
-	
+
+	private static native void jni_freeSettings(long cptr);
+
 	public Settings()
 	{
 		setCPtr(jni_Settings());
@@ -140,5 +142,14 @@ public class Settings extends MadaraJNI
 	public String[] getHosts()
 	{
 		return jni_getHosts(getCPtr());
+	}
+
+	/**
+	 * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be called
+	 * before an instance of WaitSettings gets garbage collected
+	 * */
+	public void free()
+	{
+		jni_freeSettings(getCPtr());
 	}
 }

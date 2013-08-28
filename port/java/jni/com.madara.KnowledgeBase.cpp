@@ -41,7 +41,7 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Lj
 {
 	const char *nativeHost = env->GetStringUTFChars(host, 0);
 	
-    Madara::Knowledge_Engine::Knowledge_Base* knowledge = new Madara::Knowledge_Engine::Knowledge_Base(std::string(nativeHost), *(Madara::Transport::Settings*) settings);
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = new Madara::Knowledge_Engine::Knowledge_Base(std::string(nativeHost), Madara::Transport::Settings(*(Madara::Transport::Settings*) settings));
 	
 	env->ReleaseStringUTFChars(host, nativeHost);
 
@@ -246,30 +246,85 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1get (JNIEnv *env,
 
 /*
  * Class:     com_madara_KnowledgeBase
- * Method:    jni_set
+ * Method:    jni_setInteger
  * Signature: (JLjava/lang/String;J)V
  */
-MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setInteger (JNIEnv * env, jclass cls, jlong cptr, jstring var, jlong value)
 {
-	const char *nativeVar = env->GetStringUTFChars(var, 0);
-
     Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
-    Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)recordPtr;
-    
-    switch (record.type())
-	{
-		case Madara::Knowledge_Record::INTEGER:
-			knowledge->set(std::string(nativeVar), record.to_integer()); break;
-		case Madara::Knowledge_Record::DOUBLE:
-			knowledge->set(std::string(nativeVar), record.to_double()); break;
-		case Madara::Knowledge_Record::STRING:
-			knowledge->set(std::string(nativeVar), record.to_string()); break;
-			
-		default:
-			break;
-	}
-    
-	env->ReleaseStringUTFChars(var, nativeVar);
+    const char *nativeVar = env->GetStringUTFChars(var, 0);
+    knowledge->set(nativeVar, Madara::Knowledge_Record::Integer(value));
+    env->ReleaseStringUTFChars(var, nativeVar);
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_setDouble
+ * Signature: (JLjava/lang/String;D)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setDouble (JNIEnv * env, jclass cls, jlong cptr, jstring var, jdouble value)
+{
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+    const char *nativeVar = env->GetStringUTFChars(var, 0);
+    knowledge->set(nativeVar, (double) value);
+    env->ReleaseStringUTFChars(var, nativeVar);
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_setString
+ * Signature: (JLjava/lang/String;Ljava/lang/String;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setString (JNIEnv * env, jclass cls, jlong cptr, jstring var, jstring value)
+{
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+    const char *nativeVar = env->GetStringUTFChars(var, 0);
+    const char *nativeValue = env->GetStringUTFChars(value, 0);
+    knowledge->set(nativeVar, std::string(nativeValue));
+    env->ReleaseStringUTFChars(var, nativeVar);
+    env->ReleaseStringUTFChars(value, nativeValue);
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_setIntegerArray
+ * Signature: (JLjava/lang/String;[J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setIntegerArray (JNIEnv * env, jclass cls, jlong cptr, jstring var, jlongArray value)
+{
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+    const char *nativeVar = env->GetStringUTFChars(var, 0);
+    jsize len = env->GetArrayLength(value);
+    jboolean isCopy;
+    jlong* intArray = env->GetLongArrayElements(value, &isCopy);
+    std::vector<Madara::Knowledge_Record::Integer> intVector(len);
+    for (int x = 0; x < len; x++)
+        intVector[x] = intArray[x];
+    knowledge->set(std::string(nativeVar), intVector);
+    if (isCopy)
+        env->ReleaseLongArrayElements(value, intArray, JNI_ABORT);
+    env->ReleaseStringUTFChars(var, nativeVar);
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_setDoubleArray
+ * Signature: (JLjava/lang/String;[D)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleArray (JNIEnv * env, jclass cls, jlong cptr, jstring var, jdoubleArray value)
+{
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+    const char *nativeVar = env->GetStringUTFChars(var, 0);
+    jsize len = env->GetArrayLength(value);
+    jboolean isCopy;
+    jdouble* dblArray = env->GetDoubleArrayElements(value, &isCopy);
+    std::vector<double> dblVector(len);
+    for (int x = 0; x < len; x++)
+        dblVector[x] = dblArray[x];
+    knowledge->set(std::string(nativeVar), dblVector);
+    if (isCopy)
+        env->ReleaseDoubleArrayElements(value, dblArray, JNI_ABORT);
+    env->ReleaseStringUTFChars(var, nativeVar);
 }
 
 /*

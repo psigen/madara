@@ -7,6 +7,7 @@ feature (java) {
   specific (prop:windows) {
     includes += $(JAVA_HOME)/include/win32
   } else {
+    includes += $(JAVA_HOME)/include/darwin
     includes += $(JAVA_HOME)/include/linux
   }
 
