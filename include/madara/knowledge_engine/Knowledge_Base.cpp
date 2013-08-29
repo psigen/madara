@@ -6,6 +6,45 @@
 #include <sstream>
 #include <iostream>
 
+void Madara::Knowledge_Engine::Knowledge_Base::log_to_stderr (
+  bool clear_flags)
+{
+  ACE_LOG_MSG->set_flags (ACE_Log_Msg::STDERR);
+  if (clear_flags)
+  {
+    ACE_LOG_MSG->clr_flags (ACE_Log_Msg::OSTREAM);
+    ACE_LOG_MSG->clr_flags (ACE_Log_Msg::SYSLOG);
+  }
+}
+
+void Madara::Knowledge_Engine::Knowledge_Base::log_to_file (
+  const char * filename, bool clear_flags)
+{
+  // get the old message output stream and delete it
+  ACE_OSTREAM_TYPE * output = new std::ofstream (filename);
+  ACE_LOG_MSG->msg_ostream (output, true);
+  ACE_LOG_MSG->set_flags (ACE_Log_Msg::OSTREAM);
+
+  if (clear_flags)
+  {
+    ACE_LOG_MSG->clr_flags (ACE_Log_Msg::STDERR);
+    ACE_LOG_MSG->clr_flags (ACE_Log_Msg::SYSLOG);
+  }
+}
+
+void Madara::Knowledge_Engine::Knowledge_Base::log_to_system_log (
+  const char * prog_name, bool clear_flags)
+{
+  // open a new socket to the SYSLOG with madara set as logging agent
+  ACE_LOG_MSG->open (prog_name, ACE_Log_Msg::SYSLOG, prog_name);
+
+  if (clear_flags)
+  {
+    ACE_LOG_MSG->clr_flags (ACE_Log_Msg::STDERR);
+    ACE_LOG_MSG->clr_flags (ACE_Log_Msg::OSTREAM);
+  }
+}
+
 int
 Madara::Knowledge_Engine::Knowledge_Base::log_level (int level)
 {

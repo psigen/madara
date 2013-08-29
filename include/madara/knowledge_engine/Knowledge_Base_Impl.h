@@ -24,7 +24,7 @@
 #include "madara/knowledge_engine/Files.h"
 #include "madara/transport/Transport.h"
 #include "madara/expression_tree/Interpreter.h"
-#include "ace/SOCK_Acceptor.h"
+#include "ace/SOCK_Dgram.h"
 
 // declare ACE class so MADARA user will not have to directly link to ACE
 class ACE_SOCK_Acceptor;
@@ -783,7 +783,7 @@ namespace Madara
       void setup_uniquehostport (const std::string & host);
 
       Thread_Safe_Context                 map_;
-      ACE_SOCK_Acceptor                   unique_bind_;
+      ACE_SOCK_Dgram                      unique_bind_;
       std::string                         id_;
       Transport::QoS_Transport_Settings   settings_;
       Files                               files_;

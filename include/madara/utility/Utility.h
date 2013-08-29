@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "ace/SOCK_Acceptor.h"
+#include "ace/SOCK_Dgram.h"
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
 
@@ -124,13 +124,13 @@ namespace Madara
     
     /**
      * Binds to an ephemeral port
-     * @param     acceptor    acceptor socket so caller can use the socket
+     * @param     socket      socket to bind to unique ephemeral
      * @param     host        the host name of this device or computer
      * @param     port        starting port to try to bind to
      * @param     increase_until_bound   if true, increment port until success
      * @return    0 if successful bind. -1 if unsuccessful bind.
      **/
-    MADARA_Export int bind_to_ephemeral_port (ACE_SOCK_Acceptor & acceptor,
+    MADARA_Export int bind_to_ephemeral_port (ACE_SOCK_Dgram & socket,
       std::string & host, unsigned short & port,
       bool increase_until_bound = true);
     

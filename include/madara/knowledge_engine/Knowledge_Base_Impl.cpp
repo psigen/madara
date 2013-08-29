@@ -12,6 +12,7 @@
 
 #include "ace/OS_NS_Thread.h"
 #include "ace/High_Res_Timer.h"
+#include "ace/OS_NS_sys_socket.h"
 
 #ifdef _USE_OPEN_SPLICE_
   #include "madara/transport/splice/Splice_DDS_Transport.h"
@@ -83,13 +84,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
     // definable port range (hopefully avoid conflicts with 49152-49999
     unsigned short port =  50000;
 
-    if (Madara::Utility::bind_to_ephemeral_port (unique_bind_, actual_host, port)
+    if (Madara::Utility::bind_to_ephemeral_port (
+      unique_bind_, actual_host, port)
          == -1)
     {
       MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
         DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
         " unable to bind to any ephemeral port." \
-        " Check firewall.\n"));
+        " Check firewall. ERRORNO = %d\n", ACE_OS::last_error ()));
 
       if (!settings_.never_exit)
         exit (-1);
@@ -240,6 +242,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
         " transport has been closed.\n"));
     }
     transports_.clear ();
+    ACE_OS::socket_fini ();
   }
 }
 

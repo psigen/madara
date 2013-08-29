@@ -37,7 +37,7 @@ namespace Madara
      * @brief Thread for reading knowledge updates through a Multicast
      *        datagram socket
      **/
-    class Multicast_Transport_Read_Thread : public ACE_Task<ACE_MT_SYNCH>
+    class Multicast_Transport_Read_Thread : public ACE_Task<ACE_NULL_SYNCH>
     {
     public:
       /**

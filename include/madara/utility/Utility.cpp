@@ -10,6 +10,7 @@
 #include "ace/Mem_Map.h"
 #include "ace/OS_NS_fcntl.h"
 #include "ace/OS_NS_unistd.h"
+#include "ace/OS_NS_sys_socket.h"
 
 std::string
 Madara::Utility::get_version (void)
@@ -290,7 +291,7 @@ Madara::Utility::merge_hostport_identifier (std::string & key,
 
 /// Bind to an ephemeral port
 int 
-Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
+Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_Dgram & socket,
    std::string & host, unsigned short & port, bool increase_until_bound)
 {
   // start with the initial port provided
@@ -298,6 +299,8 @@ Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
 
   ACE_INET_Addr addr (port);
   host = addr.get_host_name ();
+
+  ACE_OS::socket_init (2, 2);
 
   for ( ; port < 65535; ++port, addr.set (port))
   {
@@ -307,7 +310,7 @@ Madara::Utility::bind_to_ephemeral_port (ACE_SOCK_ACCEPTOR & acceptor,
     // Output some debugging information so we know how far we had to go
     // to get a port
     // return correct if we are able to open the port
-    if (acceptor.open (addr) != -1)
+    if (socket.open (addr, 2, 0, 0) != -1)
       return 0;
 
     // failed to get port

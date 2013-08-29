@@ -797,7 +797,7 @@ namespace Madara
        * @param   clear_flags if true, clears all other logging options. If
        *                      false, retains previous logging options.
        **/
-      void log_to_stderr (bool clear_flags = true);
+      static void log_to_stderr (bool clear_flags = true);
 
       /**
        * Sets logging to a file
@@ -806,7 +806,7 @@ namespace Madara
        * @param   clear_flags if true, clears all other logging options. If
        *                      false, retains previous logging options.
        **/
-      void log_to_file (const char * filename, bool clear_flags = true);
+      static void log_to_file (const char * filename, bool clear_flags = true);
 
       /**
        * Sets logging to the system log
@@ -815,7 +815,7 @@ namespace Madara
        * @param   clear_flags if true, clears all other logging options. If
        *                      false, retains previous logging options
        **/
-      void log_to_system_log (const char * prog_name, bool clear_flags = true);
+      static void log_to_system_log (const char * prog_name, bool clear_flags = true);
 
       /**
        * Fills a vector with Knowledge Records that begin with a common subject

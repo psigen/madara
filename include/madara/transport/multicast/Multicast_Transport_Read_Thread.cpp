@@ -64,11 +64,20 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
   if (settings_.queue_length > 0)
     buffer_ = new char [settings_.queue_length];
 
-  this->activate (THR_NEW_LWP | THR_DETACHED, 1);
+  int result = this->activate ();
 
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
-    " read thread started\n"));
+  if (result != -1)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
+      " read thread started (result = %d)\n", result));
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
+      " failed to create thread. ERRNO = %d\n", ACE_OS::last_error ()));
+  }
 }
 
 Madara::Transport::Multicast_Transport_Read_Thread::~Multicast_Transport_Read_Thread ()
@@ -181,7 +190,11 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
   // allocate a buffer to send
   char * buffer = buffer_.get_ptr ();
   int64_t buffer_remaining = settings_.queue_length;
-
+  
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "Multicast_Transport_Read_Thread::svc:" \
+    " entering main service loop.\n"));
+    
   while (false == terminated_.value ())
   {
     Knowledge_Map rebroadcast_records;
@@ -195,7 +208,11 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
     
       break;
     }
-
+    
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport_Read_Thread::svc:" \
+      " entering a recv on the socket.\n"));
+    
     // read the message
     ssize_t bytes_read = read_socket_.recv ((void *)buffer, 
       settings_.queue_length, remote, 0, &wait_time);
