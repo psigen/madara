@@ -24,7 +24,6 @@ namespace Madara
     class Thread_Safe_Context;
     class Knolwedge_Base_Impl;
     class Variables;
-    class System_Call_Eval;
 
     /**
      * @class Compiled_Expression

@@ -84,11 +84,15 @@ namespace Madara
       
       /**
        * Sends a rebroadcast packet.
+       * @param  print_prefix     prefix to include before every log message,
+       *                          e.g., "My_Transport::svc"
        * @param   header   header for the rebroadcasted packet
        * @param   records  records to rebroadcast (already filtered for
        *                   rebroadcast)
        **/
-      void rebroadcast (Message_Header * header,
+      void rebroadcast (
+        const char * print_prefix,
+        Message_Header * header,
         const Knowledge_Map & records);
 
       /**
@@ -130,7 +134,7 @@ namespace Madara
       ACE_SOCK_Dgram_Bcast               write_socket_;
 
       /// data received rules, defined in Transport settings
-      Madara::Expression_Tree::Expression_Tree  on_data_received_;
+      Madara::Knowledge_Engine::Compiled_Expression  on_data_received_;
       
       /// buffer for sending
       Madara::Utility::Scoped_Array <char>      buffer_;

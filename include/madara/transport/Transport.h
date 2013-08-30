@@ -254,7 +254,7 @@ namespace Madara
         Knowledge_Engine::Bandwidth_Monitor & send_monitor,
         Knowledge_Engine::Bandwidth_Monitor & receive_monitor,
         Knowledge_Map & rebroadcast_records,
-        Expression_Tree::Expression_Tree & on_data_received,
+        Knowledge_Engine::Compiled_Expression & on_data_received,
         const char * print_prefix,
         const char * remote_host,
         Message_Header *& header

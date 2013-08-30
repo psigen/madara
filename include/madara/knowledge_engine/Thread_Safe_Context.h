@@ -931,6 +931,18 @@ namespace Madara
       size_t  to_map    (const std::string & subject,
                        std::map <std::string, Knowledge_Record> & target);
 
+      /**
+       * Evaluate a compiled expression. Please note that if you update
+       * any variables here, they will not be sent through any transports
+       * until you call through the Knowledge_Base.
+       * @param   expression  A compiled expressio to run.
+       * @param   settings    settings for applying the update
+       * @return              result of the evaluation
+       **/
+      Knowledge_Record evaluate (Compiled_Expression expression,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
+
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
 

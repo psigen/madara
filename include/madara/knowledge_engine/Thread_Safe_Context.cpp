@@ -1392,6 +1392,14 @@ Madara::Knowledge_Engine::Thread_Safe_Context::compile (
   return ce;
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Thread_Safe_Context::evaluate (
+  Compiled_Expression expression,
+  const Knowledge_Update_Settings & settings)
+{
+  return expression.expression.evaluate (settings);
+}
+
 size_t
   Madara::Knowledge_Engine::Thread_Safe_Context::to_vector (
   const std::string & subject,

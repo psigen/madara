@@ -40,7 +40,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
       DLINFO "Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thread:" \
       " Success subscribing to multicast address %s:%d\n", host, port));
   }
-
+  
   // check for an on_data_received ruleset
   if (settings_.on_data_received_logic.length () != 0)
   {
@@ -50,8 +50,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
       settings_.on_data_received_logic.c_str ()));
 
     Madara::Expression_Tree::Interpreter interpreter;
-    on_data_received_ = interpreter.interpret (context_,
-      settings_.on_data_received_logic);
+    on_data_received_ = context_.compile (settings_.on_data_received_logic);
   }
   else
   {

@@ -133,7 +133,7 @@ namespace Madara
       ACE_SOCK_Dgram       &             write_socket_;
 
       /// data received rules, defined in Transport settings
-      Madara::Expression_Tree::Expression_Tree  on_data_received_;
+      Madara::Knowledge_Engine::Compiled_Expression  on_data_received_;
 
       /// buffer for receiving
       Madara::Utility::Scoped_Array <char>      buffer_;
