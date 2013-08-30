@@ -27,8 +27,8 @@ Madara::Transport::Message_Header::encoded_size (void) const
     + sizeof (uint32_t) * 2;
 }
 
-char *
-Madara::Transport::Message_Header::read (char * buffer,
+const char *
+Madara::Transport::Message_Header::read (const char * buffer,
                                          int64_t & buffer_remaining)
 {
   // Remove size field from the buffer and update accordingly

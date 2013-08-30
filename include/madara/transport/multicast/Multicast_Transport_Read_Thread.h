@@ -83,11 +83,15 @@ namespace Madara
       
       /**
        * Sends a rebroadcast packet.
+       * @param  print_prefix     prefix to include before every log message,
+       *                          e.g., "My_Transport::svc"
        * @param   header   header for the rebroadcasted packet
        * @param   records  records to rebroadcast (already filtered for
        *                   rebroadcast)
        **/
-      void rebroadcast (Message_Header * header,
+      void rebroadcast (
+        const char * print_prefix,
+        Message_Header * header,
         const Knowledge_Map & records);
 
       /**

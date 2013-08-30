@@ -249,7 +249,7 @@ Madara::Transport::Broadcast_Transport_Read_Thread::svc (void)
         continue;
       }
           
-      char * update = header->read (buffer, buffer_remaining);
+      const char * update = header->read (buffer, buffer_remaining);
 
       if (!is_reduced)
       {

@@ -625,7 +625,7 @@ namespace Madara
       *                              buffer to read
       * @return    current buffer position for next read
       **/
-    char * read (char * buffer, std::string & key,
+    const char * read (const char * buffer, std::string & key,
                  int64_t & buffer_remaining);
       
     /**

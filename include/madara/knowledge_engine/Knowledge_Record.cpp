@@ -1750,8 +1750,8 @@ Madara::Knowledge_Record::set_index (size_t index, double value)
     status_ = MODIFIED;
 }
   
-char *
-Madara::Knowledge_Record::read (char * buffer, std::string & key,
+const char *
+Madara::Knowledge_Record::read (const char * buffer, std::string & key,
                                 int64_t & buffer_remaining)
 {
   // format is [key_size | key | type | value_size | value]

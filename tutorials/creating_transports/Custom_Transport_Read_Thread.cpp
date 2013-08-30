@@ -75,7 +75,7 @@ Custom_Transport_Read_Thread::svc (void)
     {
       int64_t buffer_remaining = (int64_t)bytes_read;
       Madara::Transport::Message_Header header;
-      char * update = header.read (buffer, buffer_remaining);
+      const char * update = header.read (buffer, buffer_remaining);
 
       // reject the message if it is not KaRL
       if (strncmp (header.madara_id, "KaRL", 4) != 0)

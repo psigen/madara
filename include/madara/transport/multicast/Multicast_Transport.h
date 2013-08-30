@@ -87,9 +87,6 @@ namespace Madara
 
     private:
       
-      /// host:port identifier of this process
-      const std::string                               id_;
-
       /// thread for reading knowledge updates
       Multicast_Transport_Read_Thread *         thread_;
       
@@ -104,18 +101,6 @@ namespace Madara
 
       /// underlying socket for sending
       ACE_SOCK_Dgram                            socket_;
-
-      /// data received rules, defined in Transport settings
-      Madara::Expression_Tree::Expression_Tree  on_data_received_;
-
-      /// buffer for sending
-      Madara::Utility::Scoped_Array <char>      buffer_;
-      
-      /// monitor for sending bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor       send_monitor_;
-      
-      /// monitor for receiving bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor       receive_monitor_;
     };
   }
 }

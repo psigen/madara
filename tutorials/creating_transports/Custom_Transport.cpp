@@ -9,8 +9,8 @@
 Custom_Transport::Custom_Transport (const std::string & id,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Madara::Transport::Settings & config, bool launch_transport)
-: Base (config, context),
-  id_ (id), thread_ (0), valid_setup_ (false),
+: Base (id, config, context),
+  thread_ (0), valid_setup_ (false),
   socket_ (ACE_sap_any_cast (ACE_INET_Addr &), PF_INET, 0, 1)
 {
   if (launch_transport)

@@ -122,62 +122,33 @@ int Madara::Transport::Multicast_Transport_Read_Thread::enter_barrier (void)
 
 void
 Madara::Transport::Multicast_Transport_Read_Thread::rebroadcast (
+  const char * print_prefix,
   Message_Header * header,
   const Knowledge_Map & records)
 {
-  if (header->ttl > 0 && records.size () > 0)
+  int64_t buffer_remaining = (int64_t) settings_.queue_length;
+  char * buffer = buffer_.get_ptr ();
+  int result = prep_rebroadcast (buffer, buffer_remaining,
+                                 *qos_settings_, print_prefix, header, records);
+
+  if (result > 0)
   {
-    char * buffer = buffer_.get_ptr ();
-    int64_t buffer_remaining = settings_.queue_length;
-  
-    // keep track of the message_size portion of buffer
-    uint64_t * message_size = (uint64_t *)buffer;
+    ssize_t bytes_sent = write_socket_.send(
+      buffer, (ssize_t)result, address_);
 
-    // the number of updates will be the size of the records map
-    header->updates = uint32_t (records.size ());
-
-    // set the update to the end of the header
-    char * update = header->write (buffer, buffer_remaining);
-
-    for (Knowledge_Map::const_iterator i = records.begin ();
-         i != records.end (); ++i)
-    {
-      update = i->second.write (update, i->first, buffer_remaining);
-    }
-    
-    if (buffer_remaining > 0)
-    {
-      int size = (int)(settings_.queue_length - buffer_remaining);
-      *message_size = Madara::Utility::endian_swap ((uint64_t)size);
-    
-      ssize_t bytes_sent = write_socket_.send(
-        buffer, (ssize_t)size, address_);
-
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
-        " Sent packet of size %d\n",
-        bytes_sent));
-      
-      send_monitor_.add ((uint32_t)bytes_sent);
-
-      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
-        " Send bandwidth = %d B/s\n",
-        send_monitor_.get_bytes_per_second ()));
-    }
-    else
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
-        " Not enough buffer for rebroadcasting packet\n"));
-    }
-  }
-  else
-  {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
-      " No rebroadcast necessary.\n",
-      settings_.queue_length));
+      DLINFO "%s:" \
+      " Sent packet of size %d\n",
+      print_prefix,
+      bytes_sent));
+      
+    send_monitor_.add ((uint32_t)bytes_sent);
+
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Send bandwidth = %d B/s\n",
+      print_prefix,
+      send_monitor_.get_bytes_per_second ()));
   }
 }
 
@@ -189,6 +160,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
   
   // allocate a buffer to send
   char * buffer = buffer_.get_ptr ();
+  const char * print_prefix = "Multicast_Transport_Read_Thread::svc";
   int64_t buffer_remaining = settings_.queue_length;
   
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
@@ -202,16 +174,18 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
     if (buffer == 0)
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::svc:" \
+        DLINFO "%s:" \
         " Unable to allocate buffer of size %d. Exiting thread.\n",
+        print_prefix,
         settings_.queue_length));
     
       break;
     }
     
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport_Read_Thread::svc:" \
-      " entering a recv on the socket.\n"));
+      DLINFO "%s:" \
+      " entering a recv on the socket.\n",
+      print_prefix));
     
     // read the message
     ssize_t bytes_read = read_socket_.recv ((void *)buffer, 
@@ -219,294 +193,25 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
  
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport_Read_Thread::svc:" \
+      DLINFO "%s:" \
       " received a message header of %d bytes from %s:%d\n",
+      print_prefix,
       bytes_read,
       remote.get_host_addr (), remote.get_port_number ()));
     
     if (bytes_read > 0)
     {
-      // tell the receive bandwidth monitor about the transaction
-      receive_monitor_.add (bytes_read);
-      
-      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::rebroadcast:" \
-        " Receive bandwidth = %d B/s\n",
-        receive_monitor_.get_bytes_per_second ()));
+      Message_Header * header = 0;
 
-      buffer_remaining = (int64_t)bytes_read;
-      bool is_reduced = false;
-      Message_Header * header;
+      std::stringstream remote_host;
+      remote_host << remote.get_host_addr ();
+      remote_host << ":";
+      remote_host << remote.get_port_number ();
 
-      // check the buffer for a reduced message header
-      if (Reduced_Message_Header::reduced_message_header_test (buffer))
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " processing reduced KaRL message from %s:%d\n",
-          remote.get_host_addr (), remote.get_port_number ()));
-
-        header = new Reduced_Message_Header ();
-        is_reduced = true;
-      }
-      else if (Message_Header::message_header_test (buffer))
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " processing KaRL message from %s:%d\n",
-          remote.get_host_addr (), remote.get_port_number ()));
-        
-        header = new Message_Header ();
-      }
-      else
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " dropping non-KaRL message from %s:%d\n",
-          remote.get_host_addr (), remote.get_port_number ()));
-        continue;
-      }
-          
-      char * update = header->read (buffer, buffer_remaining);
-
-      if (!is_reduced)
-      {
-        // reject the message if it is us as the originator (no update necessary)
-        if (strncmp (header->originator, id_.c_str (),
-          std::min (sizeof (header->originator), id_.size ())) == 0)
-        {
-          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " dropping message from ourself\n",
-            remote.get_host_addr (), remote.get_port_number ()));
-
-          // delete the header and continue to the svc loop
-          delete header;
-          continue;
-        }
-        else
-        {
-          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " remote id (%s:%d) is not our own\n",
-            remote.get_host_addr (), remote.get_port_number ()));
-        }
-
-        std::stringstream remote_buffer;
-        remote_buffer << remote.get_host_addr ();
-        remote_buffer << ":";
-        remote_buffer << remote.get_port_number ();
-
-        if (!qos_settings_ || qos_settings_->is_trusted (remote_buffer.str ()))
-        {
-          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " remote id (%s:%d) is trusted\n",
-            remote.get_host_addr (), remote.get_port_number ()));
-        }
-        else
-        {
-          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " dropping message from untrusted peer (%s:%d)\n",
-            remote.get_host_addr (), remote.get_port_number ()));
-
-          // delete the header and continue to the svc loop
-          delete header;
-          continue;
-        }
-
-        std::string originator (header->originator);
-        
-        if (!qos_settings_ || qos_settings_->is_trusted (originator))
-        {
-          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " remote id (%s) is trusted\n",
-            originator.c_str ()));
-        }
-        else
-        {
-          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " dropping message from untrusted peer (%s)\n",
-            originator.c_str ()));
-
-          // delete the header and continue to the svc loop
-          delete header;
-          continue;
-        }
-
-
-
-        // reject the message if it is from a different domain
-        if (strncmp (header->domain, settings_.domains.c_str (),
-          std::min (sizeof (header->domain), settings_.domains.size ())) != 0)
-        {
-          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " remote id (%s:%d) in a different domain (%s). Dropping message.\n",
-            remote.get_host_addr (), remote.get_port_number (),
-            header->domain));
-
-          // delete the header and continue to the svc loop
-          delete header;
-          continue;
-        }
-        else
-        {
-          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " remote id (%s:%d) message is in our domain\n",
-            remote.get_host_addr (), remote.get_port_number ()));
-        }
-      }
-      
-      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::svc:" \
-        " iterating over the %d updates\n",
-        header->updates));
-      
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::svc:" \
-        " locking context\n"));
-      
-      // temporary record for reading from the updates buffer
-      Knowledge_Record record;
-      record.quality = header->quality;
-      record.clock = header->clock;
-      std::string key;
-
-      // lock the context
-      context_.lock ();
-      
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::svc:" \
-        " past the lock\n"));
-
-      // iterate over the updates
-      for (uint32_t i = 0; i < header->updates; ++i)
-      {
-        // read converts everything into host format from the update stream
-        update = record.read (update, key, buffer_remaining);
-        
-        if (buffer_remaining < 0)
-        {
-          MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " unable to process message. Buffer remaining is negative." \
-            " Server is likely being targeted by custom KaRL tools.\n"));
-
-          // we do not delete the header as this will be cleaned up later
-          break;
-        }
-
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " attempting to apply %s=%s\n",
-          key.c_str (), record.to_string ().c_str ()));
-        
-        uint32_t receive_bandwidth = receive_monitor_.get_bytes_per_second ();
-        uint32_t send_bandwidth = send_monitor_.get_bytes_per_second ();
-
-        Transport_Context transport_context;
-        
-        // if the tll is 1 or more and we are participating in rebroadcasts
-        if (header->ttl > 0 && qos_settings_ &&
-            qos_settings_->get_participant_ttl () > 0)
-        {
-          Knowledge_Record rebroadcast_temp (record);
-
-          // if we have rebroadcast filters, apply them
-          if (qos_settings_->get_number_of_rebroadcast_filtered_types () > 0)
-          {
-            transport_context.set_operation (
-              Transport_Context::REBROADCASTING_OPERATION);
-            transport_context.set_receive_bandwidth (receive_bandwidth);
-            transport_context.set_send_bandwidth (send_bandwidth);
-        
-            rebroadcast_temp = qos_settings_->filter_rebroadcast (
-              record, key,
-              transport_context);
-          }
-
-          // if the record was not filtered out entirely, add it to map
-          if (rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
-          {
-            MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-              DLINFO "Multicast_Transport_Read_Thread::svc:" \
-              " update %s=%s is queued for rebroadcast\n",
-              key.c_str (), rebroadcast_temp.to_string ().c_str ()));
-
-            rebroadcast_records[key] = rebroadcast_temp;
-          }
-          else
-          {
-            MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-              DLINFO "Multicast_Transport_Read_Thread::svc:" \
-              " update %s was filtered out of rebroadcast\n",
-              key.c_str ()));
-          }
-        }
-
-        // use the original message to apply receive filters
-        if (qos_settings_ &&
-            qos_settings_->get_number_of_received_filtered_types () > 0)
-        {
-          transport_context.set_operation (
-            Transport_Context::RECEIVING_OPERATION);
-          transport_context.set_receive_bandwidth (receive_bandwidth);
-          transport_context.set_send_bandwidth (send_bandwidth);
-        
-          record = qos_settings_->filter_receive (record, key,
-            transport_context);
-        }
-
-        int result = 0;
-
-        // if receive filter did not delete the update, apply it
-        if (record.status () != Knowledge_Record::UNCREATED)
-        {
-          result = record.apply (context_, key, header->quality,
-            header->clock, false);
-        }
-
-        if (result != 1)
-        {
-          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " update %s=%s was rejected\n",
-            key.c_str (), record.to_string ().c_str ()));
-        }
-        else
-        {
-          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-            DLINFO "Multicast_Transport_Read_Thread::svc:" \
-            " update %s=%s was accepted\n",
-            key.c_str (), record.to_string ().c_str ()));
-        }
-      }
-      
-      // before we send to others, we first execute rules
-      if (settings_.on_data_received_logic.length () != 0)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " evaluating rules in %s\n", 
-          settings_.on_data_received_logic.c_str ()));
-
-        on_data_received_.evaluate ();
-      }
-      else
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "Multicast_Transport_Read_Thread::svc:" \
-          " no permanent rules were set\n"));
-      }
-
-      // unlock the context
-      context_.unlock ();
-      context_.set_changed ();
+      process_received_update (buffer, bytes_read, id_, context_,
+        *qos_settings_, send_monitor_, receive_monitor_, rebroadcast_records,
+        on_data_received_, "Multicast_Transport_Read_Thread::svc",
+        remote_host.str ().c_str (), header);
       
       if (header->ttl > 0 && rebroadcast_records.size () > 0 &&
           qos_settings_ && qos_settings_->get_participant_ttl () > 0)
@@ -515,7 +220,7 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
         header->ttl = std::min (
           qos_settings_->get_participant_ttl (), header->ttl);
 
-        rebroadcast (header, rebroadcast_records);
+        rebroadcast (print_prefix, header, rebroadcast_records);
       }
 
       // delete header
@@ -524,14 +229,16 @@ Madara::Transport::Multicast_Transport_Read_Thread::svc (void)
     else
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Multicast_Transport_Read_Thread::svc:" \
-        " wait timeout on new messages. Proceeding to next wait\n"));
+        DLINFO "%s:" \
+        " wait timeout on new messages. Proceeding to next wait\n",
+        print_prefix));
     }
   }
   
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "Multicast_Transport_Read_Thread::svc:" \
-    " entering barrier.\n"));
+    DLINFO "%s:" \
+    " entering barrier.\n",
+    print_prefix));
 
   barrier_.wait ();
   return 0;

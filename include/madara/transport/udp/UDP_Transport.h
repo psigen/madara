@@ -76,28 +76,14 @@ namespace Madara
       int setup (void);
     protected:
     private:
-      const std::string                         id_;
-
       UDP_Transport_Read_Thread *               thread_;
 
       bool                                      valid_setup_;
       
       std::map <std::string, ACE_INET_Addr>     addresses_;
       
-      /// data received rules, defined in Transport settings
-      Madara::Expression_Tree::Expression_Tree  on_data_received_;
-
-      /// buffer for sending
-      Madara::Utility::Scoped_Array <char>      buffer_;
-
       /// underlying socket for sending
       ACE_SOCK_Dgram                            socket_;
-      
-      /// monitor for sending bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor       send_monitor_;
-      
-      /// monitor for receiving bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor       receive_monitor_;
     };
   }
 }

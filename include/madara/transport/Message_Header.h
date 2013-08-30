@@ -79,7 +79,8 @@ namespace Madara
        *                              buffer to read
        * @return    current buffer position for next read
        **/
-      virtual char * read (char * buffer, int64_t & buffer_remaining);
+      virtual const char * read (const char * buffer,
+        int64_t & buffer_remaining);
       
       /**
        * Writes a Message_Header instance to a buffer and updates
@@ -102,7 +103,7 @@ namespace Madara
        * Tests the buffer for a normal message identifier
        * @return   true if identifier indicates reduced message header
        **/
-      static inline bool message_header_test (char * buffer)
+      static inline bool message_header_test (const char * buffer)
       {
         return strncmp (&(buffer[8]), MADARA_IDENTIFIER, 7) == 0; 
       }
