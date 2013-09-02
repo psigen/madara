@@ -1,10 +1,12 @@
 #include "Message_Header.h"
 #include "madara/utility/Utility.h"
 #include <algorithm>
+#include <time.h>
 
 Madara::Transport::Message_Header::Message_Header ()
 : size (0),
-  type (0), updates (0), quality (0), clock (0), ttl (0)
+  type (0), updates (0), quality (0), clock (0), 
+  timestamp (time (NULL)), ttl (0)
 {
   memcpy (madara_id, MADARA_IDENTIFIER, 7);
   madara_id[7] = 0;
@@ -21,10 +23,10 @@ Madara::Transport::Message_Header::~Message_Header ()
 int
 Madara::Transport::Message_Header::encoded_size (void) const
 {
-  return sizeof (uint64_t) * 2
+  return sizeof (uint64_t) * 3  // size, clock, timestamp
     + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH
                         + MAX_ORIGINATOR_LENGTH + 1)
-    + sizeof (uint32_t) * 2;
+    + sizeof (uint32_t) * 3;   // type, updates, quality 
 }
 
 const char *
@@ -94,6 +96,14 @@ Madara::Transport::Message_Header::read (const char * buffer,
     buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
+  
+  // Remove timestamp field from the buffer and update accordingly
+  if (buffer_remaining >= sizeof (timestamp))
+  {
+    timestamp = Madara::Utility::endian_swap (*(uint64_t *)buffer);
+    buffer += sizeof (timestamp);
+  }
+  buffer_remaining -= sizeof (timestamp);
 
   // Remove the time to live field from the buffer
   if (buffer_remaining >= 1)
@@ -175,6 +185,14 @@ Madara::Transport::Message_Header::write (char * buffer,
     buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
+  
+  // Write timestamp field from the buffer and update accordingly
+  if (buffer_remaining >= sizeof (timestamp))
+  {
+    *(uint64_t *) buffer = Madara::Utility::endian_swap (timestamp);
+    buffer += sizeof (timestamp);
+  }
+  buffer_remaining -= sizeof (timestamp);
 
   if (buffer_remaining >= 1)
   {
@@ -194,6 +212,7 @@ Madara::Transport::Message_Header::equals (const Message_Header & other)
          updates == other.updates &&
          quality == other.quality &&
          clock == other.clock &&
+         timestamp == other.timestamp &&
          strncmp (madara_id, other.madara_id, MADARA_IDENTIFIER_LENGTH) == 0 &&
          strncmp (domain, other.domain, MADARA_DOMAIN_MAX_LENGTH) == 0 &&
          strncmp (originator, other.originator, MAX_ORIGINATOR_LENGTH) == 0;

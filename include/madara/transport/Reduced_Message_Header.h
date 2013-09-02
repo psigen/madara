@@ -41,6 +41,8 @@ namespace Madara
     {
     public:
 
+#define REDUCED_ORIGINATOR_SIZE    24
+
       /**
        * Constructor
        **/

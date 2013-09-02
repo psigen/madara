@@ -19,6 +19,19 @@ namespace Madara
     MADARA_Export std::string get_version (void);
     
     /**
+     * Gets the MADARA version number
+     * @return    the MADARA 4 byte version number
+     **/
+    MADARA_Export uint32_t get_uint_version (void);
+    
+    /**
+     * Converts a MADARA uint32_t version number to human-readable
+     * @param   version     the 4 byte version number
+     * @return              the stringified version number
+     **/
+    MADARA_Export std::string to_string_version (uint32_t version);
+
+    /**
      * Converts the string to upper. This function will modify and return the
      * input, so make a copy if needed.
      * @param     input         the string to change

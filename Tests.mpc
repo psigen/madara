@@ -18,6 +18,25 @@ project (Test_Arrays) : using_madara, using_ace, using_splice {
   }
 }
 
+project (Test_Checkpointing) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_checkpointing
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_checkpointing.cpp
+  }
+}
+
 project (Test_Bandwidth_Monitor) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_bandwidth_monitor

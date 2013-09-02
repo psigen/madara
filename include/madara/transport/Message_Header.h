@@ -38,15 +38,15 @@ namespace Madara
     *        
     *        Format:
     *
-    *        size = buffer[0] (unsigned 64 bit)
-    *        transport id = buffer[8] (8 byte)
-    *        domain = buffer[16] (32 byte domain name)
-    *        originator = buffer[48] (64 byte originator host:port)
-    *        type = buffer[112] (unsigned 32 bit type of message)
-    *           2 = MULTIASSIGN (most common type)
-    *        updates = buffer[116] (unsigned 32 bit number of updates)
-    *        quality = buffer[120] (unsigned 32 bit quality of message)
-    *        clock = buffer[124] (unsigned 64 bit clock for this message)
+    *        size = buffer[0] (unsigned 64 bit)<br />
+    *        transport id = buffer[8] (8 byte)<br />
+    *        domain = buffer[16] (32 byte domain name)<br />
+    *        originator = buffer[48] (64 byte originator host:port)<br />
+    *        type = buffer[112] (unsigned 32 bit type of message)<br />
+    *           2 = MULTIASSIGN (most common type)<br />
+    *        updates = buffer[116] (unsigned 32 bit number of updates)<br />
+    *        quality = buffer[120] (unsigned 32 bit quality of message)<br />
+    *        clock = buffer[124] (unsigned 64 bit clock for this message)<br />
     *        knowledge = buffer[132] (the new knowledge starts here)
     */
 
@@ -147,6 +147,11 @@ namespace Madara
        * the clock of the sender when the message was generated
        **/
       uint64_t              clock;
+
+      /**
+       * the timestamp of the sender when the message was generated
+       **/
+      uint64_t              timestamp;
 
       /**
        * time to live (number of rebroadcasts to perform after original send

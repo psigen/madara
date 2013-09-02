@@ -106,10 +106,30 @@ void test_endian_swap (void)
 
 }
 
+void
+test_version (void)
+{
+  std::string human_readable_version = Madara::Utility::get_version ();
+  uint32_t uint_version = Madara::Utility::get_uint_version ();
+  std::string converted_version =
+    Madara::Utility::to_string_version (uint_version);
+  
+  std::cout << "\n********* Testing version functions *************\n\n";
+  std::cout << "Version in VERSION.txt is " << human_readable_version << ".\n";
+  std::cout << "Version from get_uint_version is " << uint_version << ".\n";
+  std::cout << "Converted uint_version is " << converted_version << ".\n";
+
+  if (human_readable_version == converted_version)
+    std::cout << "Current version conversion is a SUCCESS.\n";
+  else
+    std::cout << "Current version conversion is a FAIL.\n";
+}
+
 int main (int argc, char ** argv)
 {
   handle_arguments (argc, argv);
   
+  test_version ();
   test_endian_swap ();
 
   return 0;

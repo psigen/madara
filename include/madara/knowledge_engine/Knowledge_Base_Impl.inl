@@ -339,4 +339,28 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::to_map (
   return map_.to_map (expression, target);
 }
 
+
+inline size_t
+Madara::Knowledge_Engine::Knowledge_Base_Impl::save_context (
+  const std::string & filename)
+{
+  return map_.save_context (filename, id_);
+}
+
+inline size_t
+  Madara::Knowledge_Engine::Knowledge_Base_Impl::load_context (
+  const std::string & filename,
+  bool  use_id,
+  const Knowledge_Update_Settings & settings)
+{
+  if (use_id)
+    return map_.load_context (filename, id_, settings);
+  else
+  {
+    std::string id;
+    return map_.load_context (filename, id, settings);
+  }
+}
+
+
 #endif  // _MADARA_KNOWLEDGE_BASE_IMPL_INL_

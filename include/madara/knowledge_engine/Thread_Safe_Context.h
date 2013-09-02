@@ -576,7 +576,8 @@ namespace Madara
        **/
       int update_record_from_external (
         const std::string & key, const Knowledge_Record & rhs,
-        const Knowledge_Update_Settings & settings);
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings ());
       
       /**
        * Atomically gets quality of a variable
@@ -942,6 +943,31 @@ namespace Madara
       Knowledge_Record evaluate (Compiled_Expression expression,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings ());
+
+      /**
+       * Saves the context to a file
+       * @param   filename    name of the file to open
+       * @param   id          unique identifier of the context holder
+       * @return              -1 if file open failed<br />
+       *                      -2 if file write failed<br />
+       *                      >0 if successful (number of bytes written)
+       **/
+      size_t save_context (const std::string & filename,
+        const std::string & id = "");
+      
+      /**
+       * Loads the context from a file
+       * @param   filename    name of the file to open
+       * @param   id          unique identifier of the context holder (will
+       *                      be changed by the function)
+       * @return              -1 if file open failed<br />
+       *                      -2 if file read failed<br />
+       *                      >0 if successful (number of bytes written)
+       **/
+      size_t load_context (const std::string & filename,
+        std::string & id,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings (true, true, true, false));
 
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;

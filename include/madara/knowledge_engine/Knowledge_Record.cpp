@@ -429,6 +429,11 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
         for (uint32_t i = 1; i < size_; ++i, ++ptr_temp)
           buffer << delimiter << *ptr_temp; 
       }
+      else if (is_binary_file_type ())
+      {
+        buffer << "binary:size=";
+        buffer << size_; 
+      }
       return buffer.str ();
     }
     else
@@ -1363,6 +1368,27 @@ Madara::Knowledge_Record::operator- (const Knowledge_Record & rhs) const
 }
     
 
+int64_t
+Madara::Knowledge_Record::get_encoded_size (const std::string & key) const
+{
+  int64_t buffer_size (sizeof (uint32_t) * 3 );
+  buffer_size += (key.size () + 1);
+  if (type_ & (INTEGER | INTEGER_ARRAY))
+  {
+    buffer_size += sizeof (int_value_) * size_;
+  }
+  else if (type_ & (DOUBLE | DOUBLE_ARRAY))
+  {
+    buffer_size += sizeof (double) * size_;
+  }
+  else
+  {
+    buffer_size += size_;
+  }
+
+  return buffer_size;
+}
+
 char *
 Madara::Knowledge_Record::write (char * buffer, const std::string & key,
    int64_t & buffer_remaining) const
@@ -1377,143 +1403,157 @@ Madara::Knowledge_Record::write (char * buffer, const std::string & key,
   Integer integer_temp;
   double double_temp;
 
+  int64_t encoded_size = get_encoded_size (key);
 
-  // Remove the key size from the buffer
-  if (buffer_remaining >= sizeof (key_size))
+  if (buffer_remaining >= encoded_size)
   {
-    uint32_temp = Madara::Utility::endian_swap (key_size);
-    memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
-    buffer += sizeof (key_size);
-  }
-  buffer_remaining -= sizeof (key_size);
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Record::write:" \
+        " encoding %Q byte message\n", encoded_size));
 
-  // Remove the key from the buffer
-  if (buffer_remaining >= (int64_t) sizeof (char) * key_size)
-  {
-    // copy the string and set null terminator in buffer
-    strncpy (buffer, key.c_str (), key_size - 1);
-    buffer[key_size - 1] = 0;
+    // Remove the key size from the buffer
+    if (buffer_remaining >= sizeof (key_size))
+    {
+      uint32_temp = Madara::Utility::endian_swap (key_size);
+      memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
+      buffer += sizeof (key_size);
+    }
+    buffer_remaining -= sizeof (key_size);
 
-    buffer += sizeof (char) * key_size;
-  }
-  buffer_remaining -= sizeof (char) * key_size;
+    // Remove the key from the buffer
+    if (buffer_remaining >= (int64_t) sizeof (char) * key_size)
+    {
+      // copy the string and set null terminator in buffer
+      strncpy (buffer, key.c_str (), key_size - 1);
+      buffer[key_size - 1] = 0;
+
+      buffer += sizeof (char) * key_size;
+    }
+    buffer_remaining -= sizeof (char) * key_size;
   
-  // Remove the type of value from the buffer
-  if (buffer_remaining >= sizeof (type_))
-  {
-    uint32_temp = Madara::Utility::endian_swap (type_);
-    memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
-    buffer += sizeof (type_);
-  }
-  buffer_remaining -= sizeof (type_);
+    // Remove the type of value from the buffer
+    if (buffer_remaining >= sizeof (type_))
+    {
+      uint32_temp = Madara::Utility::endian_swap (type_);
+      memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
+      buffer += sizeof (type_);
+    }
+    buffer_remaining -= sizeof (type_);
 
-  // Remove the size of value from the buffer
-  if (buffer_remaining >= sizeof (size_))
-  {
-    // set a pointer to size, in case we need to modify it during
-    // value copy (e.g. during double conversion)
-    size_location = buffer;
-    size_intermediate = size_;
+    // Remove the size of value from the buffer
+    if (buffer_remaining >= sizeof (size_))
+    {
+      // set a pointer to size, in case we need to modify it during
+      // value copy (e.g. during double conversion)
+      size_location = buffer;
+      size_intermediate = size_;
     
-    uint32_temp = Madara::Utility::endian_swap (size_);
-    memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
+      uint32_temp = Madara::Utility::endian_swap (size_);
+      memcpy (buffer, &uint32_temp, sizeof (uint32_temp));
 
-    // note that we do not encode the size yet because it may change
-    // and we need the architectural-specific version for other checks
+      // note that we do not encode the size yet because it may change
+      // and we need the architectural-specific version for other checks
 
-    buffer += sizeof (size_);
-  }
-  buffer_remaining -= sizeof (size_);
+      buffer += sizeof (size_);
+    }
+    buffer_remaining -= sizeof (size_);
   
-  // Remove the value from the buffer
-  if      (is_string_type ())
-  {
-    // strings do not have to be converted
-    if (buffer_remaining >=  int64_t (size_))
+    // Remove the value from the buffer
+    if      (is_string_type ())
     {
-      memcpy (buffer, str_value_.get_ptr (), size_);
-    }
-  }
-  else if (type_ == INTEGER)
-  {
-    if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
-    {
-      integer_temp = Madara::Utility::endian_swap (int_value_);
-      memcpy (buffer, &integer_temp, sizeof (integer_temp));
-
-      size_intermediate = size_ * sizeof (Integer);
-    }
-  }
-  else if (type_ == INTEGER_ARRAY)
-  {
-    if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
-    {
-      // convert integers to network byte order
-      const Integer * ptr_temp = int_array_.get_ptr ();
-
-      for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
+      // strings do not have to be converted
+      if (buffer_remaining >=  int64_t (size_))
       {
-        integer_temp = Madara::Utility::endian_swap (*ptr_temp);
+        memcpy (buffer, str_value_.get_ptr (), size_);
+      }
+    }
+    else if (type_ == INTEGER)
+    {
+      if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
+      {
+        integer_temp = Madara::Utility::endian_swap (int_value_);
         memcpy (buffer, &integer_temp, sizeof (integer_temp));
-        buffer += sizeof (Integer);
+
+        size_intermediate = size_ * sizeof (Integer);
       }
-
-      size_intermediate = size_ * sizeof (Integer);
     }
-  }
-  else if (type_ == DOUBLE)
-  {
-    if (buffer_remaining >= int64_t (size_ * sizeof (double)))
+    else if (type_ == INTEGER_ARRAY)
     {
-      double_temp = Madara::Utility::endian_swap (double_value_);
-      memcpy (buffer, &double_temp, sizeof (double_temp));
-
-      size_intermediate = size_ * sizeof (Integer);
-    }
-  }
-  else if (type_ == DOUBLE_ARRAY)
-  {
-    if (buffer_remaining >= int64_t (size_* sizeof (double)))
-    {
-      // convert integers to network byte order
-      const double * ptr_temp = double_array_.get_ptr ();
-
-      for (uint32_t i = 0; i < size_; ++i, ++ptr_temp)
+      if (buffer_remaining >= int64_t (size_ * sizeof (Integer)))
       {
-        double_temp = Madara::Utility::endian_swap (*ptr_temp);
-        memcpy (buffer, &double_temp, sizeof (double_temp));
-        buffer += sizeof (double);
+        // convert integers to network byte order
+        const Integer * ptr_temp = int_array_.get_ptr ();
+        Integer * target_buffer = (Integer *)buffer;
+
+        for (uint32_t i = 0; i < size_; ++i, ++ptr_temp, ++target_buffer)
+        {
+          integer_temp = Madara::Utility::endian_swap (*ptr_temp);
+          memcpy (target_buffer, &integer_temp, sizeof (Integer));
+        }
+
+        size_intermediate = size_ * sizeof (Integer);
       }
-      
-      size_intermediate = size_ * sizeof (double);
-
-      /**
-       * note that we once converted doubles into strings to attempt
-       * portability, but we are now just assuming that the floating
-       * point units in the architecture are the same endianness as
-       * the integers. This is true of ARM, Intel/AMD, and most architectures.
-       * We are essentially no longer supporting an architecture that
-       * mixes and matches. Persons using such architectures should
-       * perform their own conversions on the knowledge records before
-       * using them.
-       **/
     }
-  }
-  else if (is_file_type ())
-  {
-    // strings do not have to be converted
-    if (buffer_remaining >= size_)
+    else if (type_ == DOUBLE)
     {
-      memcpy (buffer, file_value_.get_ptr (), size_); 
+      if (buffer_remaining >= int64_t (size_ * sizeof (double)))
+      {
+        double_temp = Madara::Utility::endian_swap (double_value_);
+        memcpy (buffer, &double_temp, sizeof (double));
+
+        size_intermediate = size_ * sizeof (double);
+      }
+    }
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      if (buffer_remaining >= int64_t (size_ * sizeof (double)))
+      {
+        // convert integers to network byte order
+        const double * ptr_temp = double_array_.get_ptr ();
+        double * target_buffer = (double *)buffer;
+
+        for (uint32_t i = 0; i < size_; ++i, ++ptr_temp, ++target_buffer)
+        {
+          double_temp = Madara::Utility::endian_swap (*ptr_temp);
+          memcpy (target_buffer, &double_temp, sizeof (double_temp));
+        }
+      
+        size_intermediate = size_ * sizeof (double);
+
+        /**
+         * note that we once converted doubles into strings to attempt
+         * portability, but we are now just assuming that the floating
+         * point units in the architecture are the same endianness as
+         * the integers. This is true of ARM, Intel/AMD, and most architectures.
+         * We are essentially no longer supporting an architecture that
+         * mixes and matches. Persons using such architectures should
+         * perform their own conversions on the knowledge records before
+         * using them.
+         **/
+      }
+    }
+    else if (is_binary_file_type ())
+    {
+      // strings do not have to be converted
+      if (buffer_remaining >= size_)
+      {
+        memcpy (buffer, file_value_.get_ptr (), size_);
+      }
+    }
+
+    if (size_location)
+    {
+      buffer_remaining -= size_intermediate;
+      buffer += size_intermediate;
     }
   }
-
-  if (size_location)
+  else
   {
-    buffer_remaining -= size_intermediate;
-    buffer += size_intermediate;
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Record::write:" \
+        " %q byte buffer cannot contain %q byte message\n",
+        buffer_remaining, encoded_size));
   }
-
   return buffer;
 }
 
@@ -1749,7 +1789,7 @@ Madara::Knowledge_Record::set_index (size_t index, double value)
   if (status_ != MODIFIED)
     status_ = MODIFIED;
 }
-  
+
 const char *
 Madara::Knowledge_Record::read (const char * buffer, std::string & key,
                                 int64_t & buffer_remaining)
@@ -1980,19 +2020,14 @@ Madara::Knowledge_Record::is_false (void) const
 std::ostream & operator<< (std::ostream & stream,
   const Madara::Knowledge_Record & rhs)
 {
-  if (rhs.status () != rhs.UNCREATED)
+  if (rhs.type () &
+        (Madara::Knowledge_Record::INTEGER_ARRAY | 
+         Madara::Knowledge_Record::DOUBLE_ARRAY))
   {
-    if      (rhs.type () == Madara::Knowledge_Record::INTEGER)
-      stream << rhs.to_string ();
-    else if (rhs.type () == Madara::Knowledge_Record::INTEGER_ARRAY)
-      stream << rhs.to_string (", ");
-    else if (rhs.type () == Madara::Knowledge_Record::DOUBLE)
-      stream << rhs.to_string ();
-    else if (rhs.type () == Madara::Knowledge_Record::DOUBLE_ARRAY)
-      stream << rhs.to_string (", ");
-    else if (rhs.is_string_type ())
-      stream << rhs.to_string ();
+    stream << rhs.to_string (", ");
   }
+  else
+    stream << rhs.to_string ();
 
   return stream;
 }

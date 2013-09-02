@@ -19,6 +19,64 @@ Madara::Utility::get_version (void)
     expand_envs ("$(MADARA_ROOT)/VERSION.txt"));
 }
 
+
+uint32_t
+Madara::Utility::get_uint_version (void)
+{
+  std::string str_version = get_version ();
+  unsigned char version_buffer[4] = {0,0,0,0};
+  uint32_t * return_value = (uint32_t *) version_buffer;
+  unsigned int major, minor, revision;
+  char version_delimiter;
+
+  std::stringstream buffer;
+
+  // copy the stringified version
+  buffer << str_version;
+
+  // major version
+  buffer >> major;
+
+  buffer >> version_delimiter;
+
+  // minor version
+  buffer >> minor;
+  
+  buffer >> version_delimiter;
+
+  // revision number
+  buffer >> revision;
+
+  // copy these into the version_buffer
+
+  version_buffer[1] = (unsigned char)major;
+  version_buffer[2] = (unsigned char)minor;
+  version_buffer[3] = (unsigned char)revision;
+
+  return *return_value;
+}
+
+std::string
+Madara::Utility::to_string_version (uint32_t version)
+{
+  std::stringstream new_version;
+  unsigned char * version_ptr = (unsigned char *)&version;
+  unsigned int major, minor, revision;
+
+  major = (unsigned int)version_ptr[1];
+  minor = (unsigned int)version_ptr[2];
+  revision = (unsigned int)version_ptr[3];
+
+  new_version << major;
+  new_version << '.';
+  new_version << minor;
+  new_version << '.';
+  new_version << revision;
+
+  return new_version.str ();
+}
+
+
 /// Convert string to uppercase
 std::string &
 Madara::Utility::upper (std::string &input)
@@ -335,10 +393,15 @@ Madara::Utility::file_to_string (const std::string & filename)
   // if the file was able to open
   if (file.is_open ())
   {
+    std::getline (file, line);
+
+    if (line != "")
+      buffer << line;
+
     // while there is still a line left in the file, read that line
     // into our stringstream buffer
     while (std::getline (file, line))
-      buffer << line << "\n";
+      buffer << "\n" << line;
     file.close ();
   }
   else

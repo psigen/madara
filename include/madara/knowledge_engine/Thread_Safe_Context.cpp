@@ -8,6 +8,10 @@
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/expression_tree/Interpreter.h"
+#include "madara/knowledge_engine/File_Header.h"
+#include "madara/transport/Transport.h"
+#include <stdio.h>
+#include <time.h>
 
 
 // constructor
@@ -1179,7 +1183,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (
        i != map_.end (); 
        ++i)
     MADARA_DEBUG (level, (LM_DEBUG, 
-      "%s=%s\n", i->first.c_str (), i->second.to_string ().c_str ()));
+      "%s=%s\n", i->first.c_str (), i->second.to_string (", ").c_str ()));
 }
 
 /// Expand a string with variable expansions. This is a generic form of
@@ -1384,7 +1388,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::compile (
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "Thread_Safe_Context::compile:" \
       " compiling %s\n", expression.c_str ()));
-
+  
+  Context_Guard guard (mutex_);
   Compiled_Expression ce;
   ce.logic = expression;
   ce.expression = interpreter_->interpret (*this, expression);
@@ -1397,6 +1402,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::evaluate (
   Compiled_Expression expression,
   const Knowledge_Update_Settings & settings)
 {
+  Context_Guard guard (mutex_);
   return expression.expression.evaluate (settings);
 }
 
@@ -1478,4 +1484,185 @@ size_t
 
 
   return target.size ();
+}
+
+size_t
+Madara::Knowledge_Engine::Thread_Safe_Context::save_context (
+  const std::string & filename,
+  const std::string & id)
+{
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Thread_Safe_Context::save_context:" \
+      " opening file %s\n", filename.c_str ()));
+  
+  size_t total_written (0);
+  FILE * file = fopen (filename.c_str (), "wb");
+  
+  File_Header meta;
+  meta.states = 1;
+  strncpy (meta.originator, id.c_str (),
+    sizeof (meta.originator) < id.size () + 1 ?
+    sizeof (meta.originator) : id.size () + 1);
+
+  if (file)
+  {
+    int64_t max_buffer (102800);
+    int64_t buffer_remaining (max_buffer);
+    Utility::Scoped_Array <char> buffer = new char [max_buffer];
+
+    char * current = buffer.get_ptr ();
+  
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Thread_Safe_Context::save_context:" \
+        " generating file meta\n"));
+  
+    current = meta.write (current, buffer_remaining);
+  
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Thread_Safe_Context::save_context:" \
+        " writing records\n"));
+  
+    // lock the context
+    Context_Guard guard (mutex_);
+
+    for (Knowledge_Map::iterator i = map_.begin ();
+         i != map_.end (); ++i)
+    {
+      // get the encoded size of the record for checking buffer boundaries
+      int64_t encoded_size = i->second.get_encoded_size (i->first);
+      meta.size += encoded_size;
+
+      if (encoded_size > buffer_remaining)
+      {
+        /**
+         * if the record is larger than the buffer we have remaining, then
+         * write the buffer to the file
+         **/
+        current = buffer.get_ptr ();
+        fwrite (current,
+          (size_t) (max_buffer - buffer_remaining), 1, file);
+        total_written += (size_t) (max_buffer - buffer_remaining);
+        buffer_remaining = max_buffer;
+
+        if (encoded_size > max_buffer)
+        {
+          /**
+           * If the record is larger than the buffer, then we must allocate a
+           * buffer large enough to write to it.
+           **/
+          buffer = new char [encoded_size];
+          max_buffer = encoded_size;
+          buffer_remaining = max_buffer;
+          current = buffer.get_ptr ();
+        } // end if larger than buffer
+      } // end if larger than buffer remaining
+
+      current = i->second.write (current, i->first, buffer_remaining);
+    }
+  
+    if (buffer_remaining != max_buffer)
+    {
+      fwrite (buffer.get_ptr (),
+        (size_t) (max_buffer - buffer_remaining), 1, file);
+      total_written += (size_t) (max_buffer - buffer_remaining);
+    }
+
+    fseek (file, 0, SEEK_SET);
+
+    meta.size = Madara::Utility::endian_swap (meta.size);
+
+    fwrite (&meta.size, sizeof (int64_t), 1, file);
+
+    fclose (file);
+  }
+
+  return meta.size;
+}
+
+size_t
+Madara::Knowledge_Engine::Thread_Safe_Context::load_context (
+  const std::string & filename, std::string & id,
+  const Knowledge_Update_Settings & settings)
+{
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Thread_Safe_Context::load_context:" \
+      " opening file %s\n", filename.c_str ()));
+  
+  // using ACE for writing to the destination file
+  FILE * file = fopen (filename.c_str (), "rb");
+
+  size_t total_read (0);
+
+  if (file)
+  {
+    int64_t max_buffer (102800);
+    int64_t buffer_remaining (max_buffer);
+
+    Utility::Scoped_Array <char> buffer = new char [max_buffer];
+    const char * current = buffer.get_ptr ();
+    
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "Thread_Safe_Context::load_context:" \
+        " reading file meta data\n"));
+  
+    buffer_remaining = (int64_t) fread (buffer.get_ptr (),
+      1, max_buffer, file);
+    total_read += (size_t) buffer_remaining;
+    
+    if (buffer_remaining > 0)
+    {
+      File_Header meta;
+      current = meta.read (current, buffer_remaining);
+
+      if (meta.size > (uint64_t) max_buffer)
+      {
+        /**
+         * if the size of the file is larger than our buffer
+         * then allocate a new buffer of the file size and
+         * copy the old buffer over
+         **/
+        Utility::Scoped_Array <char> new_buffer (new char [meta.size]);
+        memcpy (new_buffer.get_ptr (), buffer.get_ptr (), max_buffer);
+        size_t size_difference = meta.size - max_buffer;
+
+        int offset = (int) (current - buffer.get_ptr ());
+
+        // set current to the same offset in the new buffer
+        current = new_buffer.get_ptr () + offset;
+        buffer_remaining = (int64_t) meta.size - (int64_t) offset;
+
+        // read the rest of the file into the new_buffer
+        buffer_remaining += (int64_t) fread (new_buffer.get_ptr () + max_buffer,
+          1, size_difference, file);
+        
+        max_buffer = (int64_t) meta.size;
+        total_read = (size_t) max_buffer;
+
+        buffer = new_buffer;
+      }
+
+      Knowledge_Record record;
+      std::string key;
+      
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Thread_Safe_Context::load_context:" \
+          " reading records\n"));
+  
+      // lock the context
+      Context_Guard guard (mutex_);
+
+      // read the records
+      while (buffer_remaining > 0)
+      {
+        // read each record and apply it to the context
+        current = record.read (current, key, buffer_remaining);
+        update_record_from_external (key, record, settings);
+      } // while buffer_remaining > 0
+
+    }  // if buffer_remaining > 0
+
+    fclose (file);
+  }
+
+  return total_read;
 }

@@ -38,13 +38,6 @@ namespace Madara
     class MADARA_Export Knowledge_Base
     {
     public:
-      /// Transport type enumeration
-      enum {
-        NO_TRANSPORT = 0,
-        OPEN_SPLICE_TRANSPORT = 1,
-        TCP_TRANSPORT = 2
-      };
-
       /**
        * Constructor
        **/
@@ -848,6 +841,30 @@ namespace Madara
        **/
       size_t to_map    (const std::string & subject,
                        std::map <std::string, Knowledge_Record> & target);
+      
+      /**
+       * Saves the context to a file
+       * @param   filename    name of the file to open
+       * @return              -1 if file open failed<br />
+       *                      -2 if file write failed<br />
+       *                      >0 if successful (number of bytes written)
+       **/
+      size_t save_context (const std::string & filename);
+      
+      /**
+       * Loads the context from a file
+       * @param   filename    name of the file to open
+       * @param   use_id      if true, sets the unique identifier to the
+       *                      one found in the saved context. If false,
+       *                      keeps the default identifier.
+       * @return              -1 if file open failed<br />
+       *                      -2 if file read failed<br />
+       *                      >0 if successful (number of bytes written)
+       **/
+      size_t load_context (const std::string & filename,
+        bool use_id,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings (true, true, true, false));
 
     private:
 

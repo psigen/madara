@@ -17,7 +17,7 @@ Madara::Transport::Reduced_Message_Header::~Reduced_Message_Header ()
 int
 Madara::Transport::Reduced_Message_Header::encoded_size (void) const
 {
-  return sizeof (uint64_t) * 1                       // clock
+  return sizeof (uint64_t) * 3                       // size, clock, timestamp
     + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + 1) // KaRL1.0 + ttl
     + sizeof (uint32_t) * 1;                         // updates
 }
@@ -58,6 +58,14 @@ const char *
   }
   buffer_remaining -= sizeof (clock);
   
+  // Remove timestamp field from the buffer and update accordingly
+  if (buffer_remaining >= sizeof (timestamp))
+  {
+    timestamp = Madara::Utility::endian_swap (*(uint64_t *)buffer);
+    buffer += sizeof (timestamp);
+  }
+  buffer_remaining -= sizeof (timestamp);
+
   // Remove the time to live field from the buffer
   if (buffer_remaining >= 1)
   {
@@ -107,6 +115,14 @@ char *
   }
   buffer_remaining -= sizeof (clock);
   
+  // Write timestamp field from the buffer and update accordingly
+  if (buffer_remaining >= sizeof (timestamp))
+  {
+    *(uint64_t *) buffer = Madara::Utility::endian_swap (timestamp);
+    buffer += sizeof (timestamp);
+  }
+  buffer_remaining -= sizeof (timestamp);
+
   // Write the time to live field
   if (buffer_remaining >= 1)
   {
@@ -124,6 +140,7 @@ Madara::Transport::Reduced_Message_Header::equals (
 {
   return size == other.size &&
     updates == other.updates &&
-    clock == other.clock;
+    clock == other.clock &&
+    timestamp == other.timestamp;
 }
 

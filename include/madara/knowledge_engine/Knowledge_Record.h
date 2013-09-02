@@ -106,7 +106,7 @@ namespace Madara
     /**
      * type of variable (INTEGER, DOUBLE, STRING, FILE, IMAGE)
      **/
-    int32_t type_;
+    uint32_t type_;
     
     /**
      * Non-array versions of double/integer. About 10x faster
@@ -660,6 +660,13 @@ namespace Madara
      * @return  true if the record is zero or "". False otherwise.
      **/
     bool is_false (void) const;
+
+    /**
+     * Returns the encoded size of the record. This size is what is required
+     * to write the key_size, key, type, value size, and all associated
+     * information in the read () and write () methods.
+     **/
+    int64_t get_encoded_size (const std::string & key) const;
   };
   
   typedef ::std::map < std::string, Knowledge_Record>   Knowledge_Map;

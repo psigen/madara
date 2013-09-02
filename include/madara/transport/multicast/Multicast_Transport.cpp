@@ -112,7 +112,7 @@ Madara::Transport::Multicast_Transport::send_data (
       bytes_sent));
 
     send_monitor_.add ((uint32_t)bytes_sent);
-      
+
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "Multicast_Transport::send_data:" \
       " Send bandwidth = %d B/s\n",
