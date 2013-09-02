@@ -22,13 +22,13 @@ namespace Madara
     *        
     *        Format:
     *
-    *       [00] [64 bit file size]
-    *       [08] [64 bit states]
-    *       [16] [64 bit timestamp]
-    *       [24] [64 bit last_timestamp]
-    *       [32] [8 byte file_type = "KaRL"]
-    *       [40] [32 bit karl_version = version (0.255.255.255)]
-    *       [44] [64 byte id = originator]
+    *       [00] [64 bit file size] <br />
+    *       [08] [64 bit states] <br />
+    *       [16] [64 bit timestamp] <br />
+    *       [24] [64 bit last_timestamp] <br />
+    *       [32] [8 byte file_type = "KaRL"] <br />
+    *       [40] [32 bit karl_version = version (0.255.255.255)] <br />
+    *       [44] [64 byte id = originator] <br />
     *       [108] [Updates]
     */
 
