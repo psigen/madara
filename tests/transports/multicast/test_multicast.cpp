@@ -59,6 +59,15 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-f" || arg1 == "--logfile")
+    {
+      if (i + 1 < argc)
+      {
+        Madara::Knowledge_Engine::Knowledge_Base::log_to_file (argv[i + 1]);
+      }
+
+      ++i;
+    }
     else if (arg1 == "-r" || arg1 == "--reduced")
     {
       settings.send_reduced_message_header = true;
@@ -75,6 +84,7 @@ void handle_arguments (int argc, char ** argv)
         " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
         " [-i|--id id]             the id of this agent (should be non-negative)\n" \
         " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        " [-f|--logfile file]      log to a file\n" \
         " [-r|--reduced]           use the reduced message header\n" \
         "\n",
         argv[0]));

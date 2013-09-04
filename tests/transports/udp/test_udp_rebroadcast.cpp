@@ -51,6 +51,15 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-f" || arg1 == "--logfile")
+    {
+      if (i + 1 < argc)
+      {
+        Madara::Knowledge_Engine::Knowledge_Base::log_to_file (argv[i + 1]);
+      }
+
+      ++i;
+    }
     else if (arg1 == "-l" || arg1 == "--level")
     {
       if (i + 1 < argc)
@@ -76,6 +85,7 @@ void handle_arguments (int argc, char ** argv)
         " [-a|--address ip:port]   add a udp ip:port to send to (first add is self ip:port)\n" \
         " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
         " [-i|--id id]             the id of this agent (should be non-negative)\n" \
+        " [-f|--logfile file]      log to a file\n" \
         " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
         " [-r|--reduced]           use the reduced message header\n" \
         "\n",

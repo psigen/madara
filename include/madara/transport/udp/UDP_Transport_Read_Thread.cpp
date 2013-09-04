@@ -211,18 +211,21 @@ Madara::Transport::UDP_Transport_Read_Thread::svc (void)
         on_data_received_, print_prefix,
         remote_host.str ().c_str (), header);
       
-      if (header->ttl > 0 && rebroadcast_records.size () > 0 &&
-          qos_settings_ && qos_settings_->get_participant_ttl () > 0)
+      if (header)
       {
-        --header->ttl;
-        header->ttl = std::min (
-          qos_settings_->get_participant_ttl (), header->ttl);
+        if (header->ttl > 0 && rebroadcast_records.size () > 0 &&
+            qos_settings_ && qos_settings_->get_participant_ttl () > 0)
+        {
+          --header->ttl;
+          header->ttl = std::min (
+            qos_settings_->get_participant_ttl (), header->ttl);
 
-        rebroadcast (print_prefix, header, rebroadcast_records);
+          rebroadcast (print_prefix, header, rebroadcast_records);
+        }
+
+        // delete header
+        delete header;
       }
-
-      // delete header
-      delete header;
     }
     else
     {
