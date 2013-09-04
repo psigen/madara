@@ -952,7 +952,7 @@ namespace Madara
        *                      -2 if file write failed<br />
        *                      >0 if successful (number of bytes written)
        **/
-      size_t save_context (const std::string & filename,
+      int64_t save_context (const std::string & filename,
         const std::string & id = "");
       
       /**
@@ -964,11 +964,20 @@ namespace Madara
        *                      -2 if file read failed<br />
        *                      >0 if successful (number of bytes written)
        **/
-      size_t load_context (const std::string & filename,
+      int64_t load_context (const std::string & filename,
         std::string & id,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings (true, true, true, false));
 
+      /**
+       * Saves a checkpoint of a list of changes to a file
+       * @param   filename    name of the file to open
+       * @param   id          unique identifier of the context holder
+       **/
+
+      int64_t save_checkpoint (const std::string & filename,
+        const std::string & id = "");
+      
     private:
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
 

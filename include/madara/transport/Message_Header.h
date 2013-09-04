@@ -71,7 +71,15 @@ namespace Madara
        * different from sizeof (Message_Header) because of compiler
        * optimizations for word boundaries
        **/
-      virtual int encoded_size (void) const;
+      virtual uint32_t encoded_size (void) const;
+
+      /**
+       * Returns the size of the encoded Message_Header class. This function
+       * differs from encoded_size () in that encoded_size reports
+       * polymorphically, while this method may be called statically and
+       * always refers to the base class's size.
+       **/
+      static uint32_t static_encoded_size (void);
 
       /**
        * Reads a Message_Header instance from a buffer and updates

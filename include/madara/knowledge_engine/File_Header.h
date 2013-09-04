@@ -51,7 +51,7 @@ namespace Madara
        * different from sizeof (File_Header) because of compiler
        * optimizations for word boundaries
        **/
-      virtual int encoded_size (void) const;
+      static uint32_t encoded_size (void);
 
       /**
        * Reads a File_Header instance from a buffer and updates

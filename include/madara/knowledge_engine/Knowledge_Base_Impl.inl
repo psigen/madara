@@ -340,14 +340,27 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::to_map (
 }
 
 
-inline size_t
+inline int64_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::save_context (
   const std::string & filename)
 {
   return map_.save_context (filename, id_);
 }
 
-inline size_t
+inline int64_t
+Madara::Knowledge_Engine::Knowledge_Base_Impl::save_checkpoint (
+  const std::string & filename,
+  bool reset_modifieds)
+{
+  int64_t total_written = map_.save_checkpoint (filename, id_);
+
+  if (reset_modifieds)
+    map_.reset_modified ();
+
+  return total_written;
+}
+
+inline int64_t
   Madara::Knowledge_Engine::Knowledge_Base_Impl::load_context (
   const std::string & filename,
   bool  use_id,

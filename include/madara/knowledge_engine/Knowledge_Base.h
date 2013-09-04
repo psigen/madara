@@ -845,11 +845,19 @@ namespace Madara
       /**
        * Saves the context to a file
        * @param   filename    name of the file to open
-       * @return              -1 if file open failed<br />
-       *                      -2 if file write failed<br />
-       *                      >0 if successful (number of bytes written)
+       * @return  total bytes written
        **/
-      size_t save_context (const std::string & filename);
+      int64_t save_context (const std::string & filename);
+      
+      /**
+       * Saves a checkpoint of a list of changes to a file
+       * @param   filename    name of the file to open
+       * @param   reset_modifieds  if true, resets the modified list to empty.
+       * @return  total bytes written
+       **/
+
+      int64_t save_checkpoint (const std::string & filename,
+        bool reset_modifieds = true);
       
       /**
        * Loads the context from a file
@@ -857,11 +865,10 @@ namespace Madara
        * @param   use_id      if true, sets the unique identifier to the
        *                      one found in the saved context. If false,
        *                      keeps the default identifier.
-       * @return              -1 if file open failed<br />
-       *                      -2 if file read failed<br />
-       *                      >0 if successful (number of bytes written)
+       * @param   settings    settings to use when applying updates to context
+       * @return  total bytes read
        **/
-      size_t load_context (const std::string & filename,
+      int64_t load_context (const std::string & filename,
         bool use_id,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings (true, true, true, false));

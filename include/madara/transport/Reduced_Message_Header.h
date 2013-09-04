@@ -58,7 +58,7 @@ namespace Madara
       * different from sizeof (Message_Header) because of compiler
       * optimizations for word boundaries
       **/
-      virtual int encoded_size (void) const;
+      virtual uint32_t encoded_size (void) const;
 
       /**
       * Reads a Message_Header instance from a buffer and updates

@@ -4,7 +4,7 @@
 #include <time.h>
 
 Madara::Transport::Message_Header::Message_Header ()
-: size (0),
+: size (encoded_size ()),
   type (0), updates (0), quality (0), clock (0), 
   timestamp (time (NULL)), ttl (0)
 {
@@ -20,8 +20,17 @@ Madara::Transport::Message_Header::~Message_Header ()
 {
 }
 
-int
+uint32_t
 Madara::Transport::Message_Header::encoded_size (void) const
+{
+  return sizeof (uint64_t) * 3  // size, clock, timestamp
+    + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH
+                        + MAX_ORIGINATOR_LENGTH + 1)
+    + sizeof (uint32_t) * 3;   // type, updates, quality 
+}
+
+uint32_t
+Madara::Transport::Message_Header::static_encoded_size (void)
 {
   return sizeof (uint64_t) * 3  // size, clock, timestamp
     + sizeof (char) * (MADARA_IDENTIFIER_LENGTH + MADARA_DOMAIN_MAX_LENGTH

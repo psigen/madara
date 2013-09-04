@@ -25,8 +25,8 @@ Madara::Knowledge_Engine::File_Header::~File_Header ()
 {
 }
 
-int
-Madara::Knowledge_Engine::File_Header::encoded_size (void) const
+uint32_t
+Madara::Knowledge_Engine::File_Header::encoded_size (void)
 {
   return sizeof (uint64_t) * 4
     + sizeof (char) * (64 + 8)

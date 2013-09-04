@@ -50,7 +50,7 @@ void test_checkpointing (void)
 
   std::cerr << "Test 2: loading test1_orig.kkb.\n";
 
-  
+  context_copy.clear ();
   context_copy.load_context ("test1_orig.kkb", id);
 
   std::cerr << "Test 2: loaded context " << id << "\n";
@@ -84,6 +84,7 @@ void test_checkpointing (void)
   
   std::cerr << "Test 3: loading context\n";
   
+  context_copy.clear ();
   context_copy.load_context ("test3_bigger.kkb", id);
   
   std::cerr << "Test 3: Results were... ";
@@ -100,12 +101,16 @@ void test_checkpointing (void)
   else
     std::cerr << "FAIL\n\n";
 
-  context.print (0);
+  context_copy.print (0);
+  
+  std::cerr << "Test 3: saving context\n";
+
+  context_copy.save_context ("test4_resave.kkb", id);
   
   std::cerr << "Test 4: loading context into a knowledge base\n";
   
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
-  knowledge.load_context ("test3_bigger.kkb", false);
+  knowledge.load_context ("test4_resave.kkb", false);
   
   std::cerr << "Test 4: Results were... ";
   if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
@@ -122,10 +127,98 @@ void test_checkpointing (void)
     std::cerr << "FAIL\n\n";
   
   knowledge.print_knowledge ();
+  
+  std::cerr << "Test 5: Adding extra_var to context and saving\n";
+  
+  context_copy.set ("extra_var", 5.0,
+    Madara::Knowledge_Engine::Knowledge_Update_Settings (false, false, false, false));
+
+  context_copy.save_context ("test4_bigger.kkb", "Extra Var Context");
+  context_copy.save_checkpoint ("test4_bigger.kkb", "Extra Var Context");
+  
+  std::cerr << "Test 5: Loading new context\n";
+  
+  knowledge.clear ();
+  knowledge.load_context ("test4_bigger.kkb", true);
+
+  std::cerr << "Test 5: Results were... ";
+  if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
+      && knowledge.get ("double_var") == 3.14159
+      && knowledge.get ("str_var") == "some string"
+      && knowledge.get ("int_array").to_string (", ") == "10, 20, 30"
+      && knowledge.get ("double_array").to_string (", ") ==
+          "10.1, 20.2, 30.3, 40.4"
+      && knowledge.get ("file_var").size () > 500000
+      && knowledge.get ("extra_var") == 5.0)
+  {
+    std::cerr << "SUCCESS\n\n";
+  }
+  else
+    std::cerr << "FAIL\n\n";
+  
+  knowledge.print_knowledge ();
+
+  knowledge.set ("additional_var", 6.0,
+    Madara::Knowledge_Engine::Eval_Settings (true, false, false, false, false));
+  
+  knowledge.save_checkpoint ("test4_bigger.kkb", "Additional Var Context");
+  
+  std::cerr << "Test 6: Loading new context\n";
+  
+  knowledge.clear ();
+  knowledge.load_context ("test4_bigger.kkb", true);
+
+  std::cerr << "Test 6: Results were... ";
+  if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
+      && knowledge.get ("double_var") == 3.14159
+      && knowledge.get ("str_var") == "some string"
+      && knowledge.get ("int_array").to_string (", ") == "10, 20, 30"
+      && knowledge.get ("double_array").to_string (", ") ==
+          "10.1, 20.2, 30.3, 40.4"
+      && knowledge.get ("file_var").size () > 500000
+      && knowledge.get ("extra_var") == 5.0
+      && knowledge.get ("additional_var") == 6.0)
+  {
+    std::cerr << "SUCCESS\n\n";
+  }
+  else
+    std::cerr << "FAIL\n\n";
+  
+  knowledge.print_knowledge ();
+}
+
+void handle_arguments (int argc, char ** argv)
+{
+  for (int i = 1; i < argc; ++i)
+  {
+    std::string arg1 (argv[i]);
+    if (arg1 == "-l" || arg1 == "--level")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> MADARA_debug_level;
+      }
+
+      ++i;
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        "\nProgram summary for %s:\n\n" \
+        "  Test the checkpointing functionality.\n\n" \
+        " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        "\n",
+        argv[0]));
+      exit (0);
+    }
+  }
 }
 
 int main (int argc, char * argv[])
 {
+  handle_arguments (argc, argv);
+
   test_checkpointing ();
 
   // buffer for holding encoding results

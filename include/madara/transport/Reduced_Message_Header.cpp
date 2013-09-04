@@ -14,7 +14,7 @@ Madara::Transport::Reduced_Message_Header::~Reduced_Message_Header ()
 {
 }
 
-int
+uint32_t
 Madara::Transport::Reduced_Message_Header::encoded_size (void) const
 {
   return sizeof (uint64_t) * 3                       // size, clock, timestamp

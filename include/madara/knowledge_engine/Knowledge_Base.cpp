@@ -652,14 +652,22 @@ Madara::Knowledge_Engine::Knowledge_Base::to_map (
   return impl_->to_map (expression, target);
 }
 
-size_t
+int64_t
 Madara::Knowledge_Engine::Knowledge_Base::save_context (
   const std::string & filename)
 {
   return impl_->save_context (filename);
 }
 
-size_t
+int64_t
+Madara::Knowledge_Engine::Knowledge_Base::save_checkpoint (
+  const std::string & filename,
+  bool reset_modifieds)
+{
+  return impl_->save_checkpoint (filename, reset_modifieds);
+}
+
+int64_t
   Madara::Knowledge_Engine::Knowledge_Base::load_context (
   const std::string & filename,
   bool use_id,
