@@ -631,6 +631,13 @@ namespace Madara
        * @return  the modified knowledge records
        **/
       const Knowledge_Records & get_modified (void) const;
+      
+      /**
+       * Retrieves a list of modified local variables. Useful for building a
+       * comprehensive checkpoint.
+       * @return  the modified knowledge records
+       **/
+      const Knowledge_Records & get_local_modified (void) const;
 
       /**
        * Reset all variables to be unmodified. This will clear all global
@@ -644,12 +651,22 @@ namespace Madara
       void apply_modified (void);
 
       /**
-       * Changes all global variables to modified at current clock.
+       * Changes global variables to modified at current clock.
        * @param  key     the key of the record you are changing
        * @param  record  record of the key in the context (should exist)
        * @param  settings  the settings for referring to variables
        **/
       void mark_modified (const std::string & key,
+        Madara::Knowledge_Record & record,
+        const Knowledge_Reference_Settings & settings);
+      
+      /**
+       * Changes local variables to modified at current clock.
+       * @param  key     the key of the record you are changing
+       * @param  record  record of the key in the context (should exist)
+       * @param  settings  the settings for referring to variables
+       **/
+      void mark_local_modified (const std::string & key,
         Madara::Knowledge_Record & record,
         const Knowledge_Reference_Settings & settings);
 
@@ -988,6 +1005,7 @@ namespace Madara
       std::vector< std::string> expansion_splitters_;
       mutable uint64_t clock_;
       Knowledge_Records changed_map_;
+      Knowledge_Records local_changed_map_;
 
       /// map of function names to functions
       Function_Map functions_;

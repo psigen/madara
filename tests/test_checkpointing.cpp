@@ -13,7 +13,7 @@
 
 void test_checkpointing (void)
 {
-  std::cerr << "*********** CHECKPOINTING TO FILE *************.\n";
+  std::cerr << "\n*********** CHECKPOINTING TO FILE *************.\n";
 
   std::cerr << "Test 1: creating a 50k knowledge record.\n";
 
@@ -57,7 +57,7 @@ void test_checkpointing (void)
 
   context.print (0);
   
-  std::cerr << "Test 2: Results were... ";
+  std::cerr << "Test 2: Results were ";
   if (context_copy.get ("int_var") == Madara::Knowledge_Record::Integer (15)
       && context_copy.get ("double_var") == 3.14159
       && context_copy.get ("str_var") == "some string"
@@ -87,7 +87,7 @@ void test_checkpointing (void)
   context_copy.clear ();
   context_copy.load_context ("test3_bigger.kkb", id);
   
-  std::cerr << "Test 3: Results were... ";
+  std::cerr << "Test 3: Results were ";
   if (context_copy.get ("int_var") == Madara::Knowledge_Record::Integer (15)
       && context_copy.get ("double_var") == 3.14159
       && context_copy.get ("str_var") == "some string"
@@ -112,7 +112,7 @@ void test_checkpointing (void)
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
   knowledge.load_context ("test4_resave.kkb", false);
   
-  std::cerr << "Test 4: Results were... ";
+  std::cerr << "Test 4: Results were ";
   if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
       && knowledge.get ("double_var") == 3.14159
       && knowledge.get ("str_var") == "some string"
@@ -141,7 +141,7 @@ void test_checkpointing (void)
   knowledge.clear ();
   knowledge.load_context ("test4_bigger.kkb", true);
 
-  std::cerr << "Test 5: Results were... ";
+  std::cerr << "Test 5: Results were ";
   if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
       && knowledge.get ("double_var") == 3.14159
       && knowledge.get ("str_var") == "some string"
@@ -168,7 +168,7 @@ void test_checkpointing (void)
   knowledge.clear ();
   knowledge.load_context ("test4_bigger.kkb", true);
 
-  std::cerr << "Test 6: Results were... ";
+  std::cerr << "Test 6: Results were ";
   if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
       && knowledge.get ("double_var") == 3.14159
       && knowledge.get ("str_var") == "some string"
@@ -185,6 +185,73 @@ void test_checkpointing (void)
     std::cerr << "FAIL\n\n";
   
   knowledge.print_knowledge ();
+
+  
+  std::cerr << "Test 7: Adding local variable without track local changes\n";
+  knowledge.set (".invisible", "tee hee");
+  
+  std::cerr << "Test 7: Printing .invisible value\n";
+  knowledge.print (".invisible = {.invisible}\n");
+  knowledge.save_checkpoint ("test4_bigger.kkb", "Invisible Var Context");
+  
+  std::cerr << "Test 7: Loading checkpoint\n";
+  knowledge.clear ();
+  knowledge.load_context ("test4_bigger.kkb", true);
+  
+  std::cerr << "Test 7: Printing .invisible value (should be 0)\n";
+  knowledge.print (".invisible = {.invisible}\n");
+  
+  std::cerr << "Test 7: Results were ";
+  if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
+      && knowledge.get ("double_var") == 3.14159
+      && knowledge.get ("str_var") == "some string"
+      && knowledge.get ("int_array").to_string (", ") == "10, 20, 30"
+      && knowledge.get ("double_array").to_string (", ") ==
+          "10.1, 20.2, 30.3, 40.4"
+      && knowledge.get ("file_var").size () > 500000
+      && knowledge.get ("extra_var") == 5.0
+      && knowledge.get ("additional_var") == 6.0
+      && knowledge.get (".invisible").status ()
+           == Madara::Knowledge_Record::UNCREATED)
+  {
+    std::cerr << "SUCCESS\n\n";
+  }
+  else
+    std::cerr << "FAIL\n\n";
+  
+  
+  std::cerr << "Test 8: Adding local variable with track local changes\n";
+  knowledge.set (".invisible", "tee hee",
+    Madara::Knowledge_Engine::Eval_Settings (false, false, false, false, false, true));
+  
+  
+  std::cerr << "Test 8: Printing .invisible value\n";
+  knowledge.print (".invisible = {.invisible}\n");
+  knowledge.save_checkpoint ("test4_bigger.kkb", "Invisible Var Context");
+  
+  std::cerr << "Test 8: Loading checkpoint\n";
+  knowledge.clear ();
+  knowledge.load_context ("test4_bigger.kkb", true);
+  
+  std::cerr << "Test 8: Printing .invisible value (should be 'tee hee')\n";
+  knowledge.print (".invisible = {.invisible}\n");
+  std::cerr << "Test 8: Results were ";
+  if (knowledge.get ("int_var") == Madara::Knowledge_Record::Integer (15)
+      && knowledge.get ("double_var") == 3.14159
+      && knowledge.get ("str_var") == "some string"
+      && knowledge.get ("int_array").to_string (", ") == "10, 20, 30"
+      && knowledge.get ("double_array").to_string (", ") ==
+          "10.1, 20.2, 30.3, 40.4"
+      && knowledge.get ("file_var").size () > 500000
+      && knowledge.get ("extra_var") == 5.0
+      && knowledge.get ("additional_var") == 6.0
+      && knowledge.get (".invisible") == "tee hee")
+  {
+    std::cerr << "SUCCESS\n\n";
+  }
+  else
+    std::cerr << "FAIL\n\n";
+  
 }
 
 void handle_arguments (int argc, char ** argv)
@@ -219,13 +286,14 @@ int main (int argc, char * argv[])
 {
   handle_arguments (argc, argv);
 
-  test_checkpointing ();
-
   // buffer for holding encoding results
   char buffer[BUFFER_SIZE];
   int64_t buffer_remaining;
   std::string key;
   bool header_decoded;
+  
+  std::cerr <<
+    "\n*********** TESTING ENCODING FILE HEADER TO FILE *************.\n";
 
 
   // message headers for encoding and decoding
@@ -266,9 +334,11 @@ int main (int argc, char * argv[])
   std::cerr << "Test 4: decoded dest_header is equal to source_header? " <<
     (header_decoded ? "true" : "false") << std::endl;
   
-  std::cerr << "\nRESULT: " << 
+  std::cerr << "\nEncoding results were " << 
     (header_decoded ?
     "SUCCESS\n" : "FAIL\n");
+  
+  test_checkpointing ();
 
 
 

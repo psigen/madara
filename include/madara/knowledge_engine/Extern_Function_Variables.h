@@ -441,6 +441,33 @@ namespace Madara
        **/
       size_t to_map    (const std::string & subject,
                        std::map <std::string, Knowledge_Record> & target);
+      
+      /**
+       * Saves the context to a file
+       * @param   filename    name of the file to open
+       * @return  total bytes written
+       **/
+      int64_t save_context (const std::string & filename);
+      
+      /**
+       * Saves a checkpoint of a list of changes to a file
+       * @param   filename    name of the file to open
+       * @param   reset_modifieds  if true, resets the modified list to empty.
+       * @return  total bytes written
+       **/
+
+      int64_t save_checkpoint (const std::string & filename,
+        bool reset_modifieds = true);
+      
+      /**
+       * Loads the context from a file
+       * @param   filename    name of the file to open
+       * @param   settings    settings to use when applying updates to context
+       * @return  total bytes read
+       **/
+      int64_t load_context (const std::string & filename,
+        const Knowledge_Update_Settings & settings = 
+              Knowledge_Update_Settings (true, true, true, false));
 
     private:
       /**

@@ -31,7 +31,8 @@ namespace Madara
         : Knowledge_Reference_Settings (), 
           treat_globals_as_locals (false),
           signal_changes (true),
-          always_overwrite (false), 
+          always_overwrite (false),
+          track_local_changes (false),
           clock_increment (1)
       {
       }
@@ -47,16 +48,21 @@ namespace Madara
         *                                   useful to multithreaded MADARA apps
         * @param  t_always_overwrite        always overwrite, despite quality
         * @param  t_always_expand           always try to expand variable names
+        * @param  t_track_local_changes     if true, keep track of modifications
+        *                                   to local variables for checkpoint
+        *                                   saving purposes.
        **/
       Knowledge_Update_Settings (bool t_treat_globals_as_locals,
         bool t_signal_changes = true,
         bool t_always_overwrite = false,
         bool t_always_expand = true,
+        bool t_track_local_changes = false,
         uint64_t t_clock_increment = 1)
         : Knowledge_Reference_Settings (t_always_expand),
           treat_globals_as_locals (t_treat_globals_as_locals),
           signal_changes (t_signal_changes),
           always_overwrite (t_always_overwrite),
+          track_local_changes (t_track_local_changes),
           clock_increment (t_clock_increment)
       {
       }
@@ -69,6 +75,7 @@ namespace Madara
           treat_globals_as_locals (rhs.treat_globals_as_locals),
           signal_changes (rhs.signal_changes),
           always_overwrite (rhs.always_overwrite),
+          track_local_changes (rhs.track_local_changes),
           clock_increment (rhs.clock_increment)
       {
       }
@@ -101,6 +108,11 @@ namespace Madara
       **/
       bool always_overwrite;
       
+      /**
+       * Toggle for keeping track of modifications to local variables.
+       **/
+      bool track_local_changes;
+
       /**
        * Default clock increment
        **/

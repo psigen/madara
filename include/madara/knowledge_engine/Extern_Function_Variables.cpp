@@ -18,9 +18,9 @@ Madara::Knowledge_Engine::Variables::get (const std::string & key,
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::get. Context not set correctly.\n"));
+
     return Madara::Knowledge_Record ();
   }
 }
@@ -33,9 +33,9 @@ Madara::Knowledge_Engine::Variables::get (const Variable_Reference & variable,
     return context_->get (variable, settings);
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::get. Context not set correctly.\n"));
+
     return Madara::Knowledge_Record ();
   }
 }
@@ -48,9 +48,9 @@ Madara::Knowledge_Engine::Variables::get_ref (const std::string & key,
     return context_->get_ref (key, settings);
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::get_ref. Context not set correctly.\n"));
+
     return Madara::Knowledge_Engine::Variable_Reference ();
   }
 }
@@ -67,9 +67,9 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -85,9 +85,9 @@ Madara::Knowledge_Engine::Variables::set (const Variable_Reference & variable,
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -106,9 +106,9 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -126,9 +126,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -146,9 +146,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -165,9 +165,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -185,9 +185,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -204,9 +204,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -224,9 +224,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -243,9 +243,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -264,9 +264,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -284,9 +284,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -304,9 +304,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -323,9 +323,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -342,9 +342,9 @@ Madara::Knowledge_Engine::Variables::set (const std::string & key,
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -361,9 +361,9 @@ Madara::Knowledge_Engine::Variables::set (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::set. Context not set correctly.\n"));
+
     return -4;
   }
 }
@@ -379,9 +379,9 @@ Madara::Knowledge_Engine::Variables::inc (const std::string & key,
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::inc. Context not set correctly.\n"));
+
     return Madara::Knowledge_Record ();
   }
 }
@@ -397,9 +397,9 @@ Madara::Knowledge_Engine::Variables::inc (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::inc. Context not set correctly.\n"));
+
     return Madara::Knowledge_Record ();
   }
 }
@@ -416,9 +416,9 @@ Madara::Knowledge_Engine::Variables::dec (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::dec. Context not set correctly.\n"));
+
     return Madara::Knowledge_Record ();
   }
 }
@@ -434,9 +434,9 @@ Madara::Knowledge_Engine::Variables::dec (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::dec. Context not set correctly.\n"));
+
     return Madara::Knowledge_Record ();
   }
 }
@@ -447,9 +447,8 @@ Madara::Knowledge_Engine::Variables::print (unsigned int level) const
   if (context_)
     context_->print (level);
   else
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::print. Context not set correctly.\n"));
 }
 
 
@@ -460,9 +459,8 @@ Madara::Knowledge_Engine::Variables::print (const std::string & statement,
   if (context_)
     context_->print (statement, level);
   else
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::print. Context not set correctly.\n"));
 }
 
 std::string
@@ -473,9 +471,8 @@ Madara::Knowledge_Engine::Variables::expand_statement (
     return context_->expand_statement (statement);
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::expand_statement. Context not set correctly.\n"));
 
     return "";
   }
@@ -488,9 +485,8 @@ Madara::Knowledge_Engine::Variables::compile (const std::string & expression)
     return context_->compile (expression);
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::compile. Context not set correctly.\n"));
 
     return Compiled_Expression ();
   }
@@ -508,9 +504,8 @@ Madara::Knowledge_Engine::Variables::evaluate (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::evaluate. Context not set correctly.\n"));
 
     return Madara::Knowledge_Record::Integer (0);
   }
@@ -527,9 +522,8 @@ Madara::Knowledge_Engine::Variables::evaluate (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR,
-      "Variables context not set. Please don't create your own Madara::" \
-      "Knowledge_Engine::Variables instances.\n"));
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::evaluate. Context not set correctly.\n"));
 
     return Madara::Knowledge_Record::Integer (0);
   }
@@ -542,7 +536,17 @@ Madara::Knowledge_Engine::Variables::to_vector (
                               unsigned int end,
                               std::vector <Knowledge_Record> & target)
 {
-  return context_->to_vector (subject, start, end, target);
+  if (context_)
+  {
+    return context_->to_vector (subject, start, end, target);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::to_vector. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
+  }
 }
 
 size_t
@@ -550,7 +554,79 @@ Madara::Knowledge_Engine::Variables::to_map (
   const std::string & expression,
   std::map <std::string, Knowledge_Record> & target)
 {
-  return context_->to_map (expression, target);
+  if (context_)
+  {
+    return context_->to_map (expression, target);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::to_map. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
+  }
 }
+
+
+
+int64_t
+Madara::Knowledge_Engine::Variables::save_context (
+  const std::string & filename)
+{
+  if (context_)
+  {
+    return context_->save_context (filename);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::save_context. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
+  }
+}
+
+int64_t
+Madara::Knowledge_Engine::Variables::save_checkpoint (
+  const std::string & filename,
+  bool reset_modifieds)
+{
+  if (context_)
+  {
+    int64_t result = context_->save_context (filename);
+
+    if (reset_modifieds)
+      context_->reset_modified ();
+
+    return result;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::save_checkpoint. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
+  }
+}
+      
+int64_t
+Madara::Knowledge_Engine::Variables::load_context (
+  const std::string & filename,
+  const Knowledge_Update_Settings & settings)
+{
+  if (context_)
+  {
+    std::string id;
+    return context_->load_context (filename, id, settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::load_context. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record::Integer (0);
+  }
+}
+
 
 #endif

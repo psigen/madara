@@ -46,6 +46,9 @@ namespace Madara
         *                                   useful to multithreaded MADARA apps
         * @param  t_always_overwrite        always overwrite, despite quality
         * @param  t_always_expand           always try to expand variable names
+        * @param  t_track_local_changes     if true, keep track of modifications
+        *                                   to local variables for checkpoint
+        *                                   saving purposes.
         * @param  t_pre_print_statement     statement to print out before
         *                                   evaluations
         * @param  t_post_print_statement    statement to print out after
@@ -56,10 +59,12 @@ namespace Madara
          bool t_signal_updates = true,
          bool t_always_overwrite = false,
          bool t_always_expand = true,
+         bool t_track_local_changes = false,
          std::string t_pre_print_statement = "",
          std::string t_post_print_statement = "")
          : Knowledge_Update_Settings (t_treat_globals_as_locals,
-                                      t_signal_updates, t_always_overwrite, t_always_expand),
+                                      t_signal_updates, t_always_overwrite,
+                                      t_always_expand, t_track_local_changes),
            delay_sending_modifieds (t_delay_sending_modifieds),
            pre_print_statement (t_pre_print_statement),
            post_print_statement (t_post_print_statement)

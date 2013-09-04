@@ -117,6 +117,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -176,6 +186,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -214,6 +234,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -252,6 +282,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -289,6 +329,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -326,6 +376,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -363,6 +423,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -401,6 +471,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -438,6 +518,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -475,6 +565,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -513,6 +613,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -550,6 +660,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -587,6 +707,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -624,6 +754,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -662,6 +802,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
         mark_modified (variable.name_.get_ptr (), *(variable.record_),
           Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
 
     if (settings.signal_changes)
@@ -883,6 +1033,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (*key_ptr, record,
           Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (*key_ptr, record,
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+      mark_local_modified (*key_ptr, record,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
     
     if (settings.signal_changes)
@@ -975,6 +1135,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (*key_ptr, record,
           Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (*key_ptr, record,
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+      mark_local_modified (*key_ptr, record,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
     
     if (settings.signal_changes)
@@ -1067,6 +1237,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
         mark_modified (*key_ptr, record,
           Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (*key_ptr, record,
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+      mark_local_modified (*key_ptr, record,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
     
     if (settings.signal_changes)
@@ -1134,6 +1314,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
         mark_modified (*key_ptr, found->second,
           Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (*key_ptr, found->second,
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+      mark_local_modified (*key_ptr, found->second,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   else
@@ -1150,6 +1340,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
         mark_modified (*key_ptr, current_value,
           Knowledge_Reference_Settings (false));
       }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (*key_ptr, current_value,
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
+      }
+    }
+    else if (settings.track_local_changes)
+    {
+      mark_local_modified (*key_ptr, current_value,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   }
   
@@ -1761,23 +1961,26 @@ Madara::Knowledge_Engine::Thread_Safe_Context::save_checkpoint (
         " generating file meta\n"));
   
     meta.size += checkpoint_header.encoded_size ();
-    checkpoint_header.size = checkpoint_header.encoded_size ();
+    checkpoint_header.size = 0;
 
-    // set the file pointer to the end of the file
-    fseek (file, checkpoint_start, SEEK_SET);
-    current = checkpoint_header.write (current, buffer_remaining);
-  
-    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-        DLINFO "Thread_Safe_Context::save_checkpoint:" \
-        " writing records\n"));
-  
     // lock the context
     Context_Guard guard (mutex_);
 
-    const Knowledge_Records & records = this->get_modified ();
+    const Knowledge_Records & records = this->get_modified ();    
+    const Knowledge_Records & local_records = this->get_local_modified ();
 
-    if (records.size () != 0)
+    if (records.size () + local_records.size () != 0)
     {
+      checkpoint_header.size = checkpoint_header.encoded_size ();
+
+      // set the file pointer to the end of the file
+      fseek (file, checkpoint_start, SEEK_SET);
+      current = checkpoint_header.write (current, buffer_remaining);
+  
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "Thread_Safe_Context::save_checkpoint:" \
+          " writing records\n"));
+  
       for (Knowledge_Records::const_iterator i = records.begin ();
            i != records.end (); ++i)
       {
@@ -1821,8 +2024,53 @@ Madara::Knowledge_Engine::Thread_Safe_Context::save_checkpoint (
         } // end if larger than buffer remaining
 
         current = i->second->write (current, i->first, buffer_remaining);
-      }
+      } // end records loop
+
+      for (Knowledge_Records::const_iterator i = local_records.begin ();
+           i != local_records.end (); ++i)
+      {
+        // get the encoded size of the record for checking buffer boundaries
+        int64_t encoded_size = i->second->get_encoded_size (i->first);
+        ++checkpoint_header.updates;
+        meta.size += encoded_size;
+        checkpoint_header.size += encoded_size;
+
+        if (encoded_size > buffer_remaining)
+        {
+          /**
+           * if the record is larger than the buffer we have remaining, then
+           * write the buffer to the file
+           **/
+          current = buffer.get_ptr ();
+          fwrite (current,
+            (size_t) (max_buffer - buffer_remaining), 1, file);
+          total_written += (int64_t) (max_buffer - buffer_remaining);
+          buffer_remaining = max_buffer;
+          
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+              DLINFO "Thread_Safe_Context::save_checkpoint:" \
+              " encoded_size larger than remaining buffer. Flushing.\n"));
   
+          if (encoded_size > max_buffer)
+          {
+            /**
+             * If the record is larger than the buffer, then we must allocate a
+             * buffer large enough to write to it.
+             **/
+            buffer = new char [encoded_size];
+            max_buffer = encoded_size;
+            buffer_remaining = max_buffer;
+            current = buffer.get_ptr ();
+
+            MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+                DLINFO "Thread_Safe_Context::save_checkpoint:" \
+                " encoded_size larger than entire buffer. Reallocating.\n"));
+          } // end if larger than buffer
+        } // end if larger than buffer remaining
+
+        current = i->second->write (current, i->first, buffer_remaining);
+      }
+
       if (buffer_remaining != max_buffer)
       {
         fwrite (buffer.get_ptr (),
@@ -1864,6 +2112,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::save_checkpoint (
     fclose (file);
   }
 
-  return meta.size;
+  return checkpoint_header.size;
 }
 

@@ -1669,14 +1669,15 @@ uint64_t test_volatile_assignment (
 int parse_args (int argc, ACE_TCHAR * argv[])
 {
   // options string which defines all short args
-  ACE_TCHAR options [] = ACE_TEXT ("n:r:c:s:h");
+  ACE_TCHAR options [] = ACE_TEXT ("n:r:f:c:s:h");
 
   // create an instance of the command line args
   ACE_Get_Opt cmd_opts (argc, argv, options);
 
   // set up an alias for '-n' to be '--name'
   cmd_opts.long_option (ACE_TEXT ("help"), 'h', ACE_Get_Opt::NO_ARG);
-  cmd_opts.long_option (ACE_TEXT ("iterations"), 'i', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("iterations"), 'n', ACE_Get_Opt::ARG_REQUIRED);
+  cmd_opts.long_option (ACE_TEXT ("logfile"), 'f', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("runs"), 'r', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("step"), 'i', ACE_Get_Opt::ARG_REQUIRED);
   cmd_opts.long_option (ACE_TEXT ("conditional"), 'r', ACE_Get_Opt::ARG_REQUIRED);
@@ -1698,6 +1699,11 @@ int parse_args (int argc, ACE_TCHAR * argv[])
       buffer.str ("");
       buffer << cmd_opts.opt_arg ();
       buffer >> num_iterations;
+      break;
+    case 'f':
+      // log file
+      Madara::Knowledge_Engine::Knowledge_Base::log_to_file (
+        cmd_opts.opt_arg ());
       break;
     case 'r':
       // thread number

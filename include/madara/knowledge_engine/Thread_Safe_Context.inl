@@ -260,6 +260,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (
           mark_modified (variable.name_.get_ptr (), *(variable.record_),
             Knowledge_Engine::Knowledge_Reference_Settings (false));
         }
+        else if (settings.track_local_changes)
+        {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+        }
+      }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
 
       if (settings.signal_changes)
@@ -364,6 +374,16 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (
           mark_modified (variable.name_.get_ptr (), *(variable.record_),
             Knowledge_Engine::Knowledge_Reference_Settings (false));
         }
+        else if (settings.track_local_changes)
+        {
+          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+            Knowledge_Engine::Knowledge_Reference_Settings (false));
+        }
+      }
+      else if (settings.track_local_changes)
+      {
+        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
+          Knowledge_Engine::Knowledge_Reference_Settings (false));
       }
 
       if (settings.signal_changes)
@@ -585,6 +605,34 @@ Madara::Knowledge_Engine::Thread_Safe_Context::wait_for_change (
 }
 
 inline void
+Madara::Knowledge_Engine::Thread_Safe_Context::mark_local_modified (
+  const std::string & key, Madara::Knowledge_Record & record,
+  const Knowledge_Reference_Settings & settings
+  )
+{
+  // enter the mutex
+  std::string key_actual;
+  const std::string * key_ptr;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+  {
+    key_actual = expand_statement (key);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &key;
+
+  if (*key_ptr != "")
+  {
+    local_changed_map_[*key_ptr] = &record;
+
+    if (record.status () != Madara::Knowledge_Record::MODIFIED)
+      record.set_modified ();
+  }
+}
+
+inline void
 Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
   const std::string & key, Madara::Knowledge_Record & record,
   const Knowledge_Reference_Settings & settings
@@ -621,12 +669,22 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_modified (void) const
   return changed_map_;
 }
 
+/// Return list of variables that have been modified
+inline const Madara::Knowledge_Records &
+Madara::Knowledge_Engine::Thread_Safe_Context::get_local_modified (void) const
+{
+  Context_Guard guard (mutex_);
+
+  return local_changed_map_;
+}
+
 /// Reset all variables to unmodified
 inline void 
 Madara::Knowledge_Engine::Thread_Safe_Context::reset_modified (void)
 {
   Context_Guard guard (mutex_);
   changed_map_.clear ();
+  local_changed_map_.clear ();
 }
 
 /// Changes all global variables to modified at current time

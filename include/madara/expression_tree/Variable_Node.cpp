@@ -184,6 +184,11 @@ Madara::Expression_Tree::Variable_Node::set (
       context_.mark_modified (key_, *record_,
         Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
+    else if (settings.track_local_changes)
+    {
+      context_.mark_local_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
   
     return 0;
   }
@@ -223,6 +228,11 @@ Madara::Expression_Tree::Variable_Node::set (const Madara::Knowledge_Record::Int
       context_.mark_modified (key_, *record_,
         Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
+    else if (settings.track_local_changes)
+    {
+      context_.mark_local_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
   
     return 0;
   }
@@ -251,6 +261,11 @@ Madara::Expression_Tree::Variable_Node::set (double value,
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
+    else if (settings.track_local_changes)
+    {
+      context_.mark_local_modified (key_, *record_,
         Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
@@ -283,6 +298,11 @@ Madara::Expression_Tree::Variable_Node::set (const std::string & value,
       context_.mark_modified (key_, *record_,
         Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
+    else if (settings.track_local_changes)
+    {
+      context_.mark_local_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
   
     return 0;
   }
@@ -313,6 +333,11 @@ Madara::Expression_Tree::Variable_Node::dec (
       context_.mark_modified (key_, *record_,
         Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
+    else if (settings.track_local_changes)
+    {
+      context_.mark_local_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
   
     return *record_;
   }
@@ -341,6 +366,11 @@ Madara::Expression_Tree::Variable_Node::inc (
     if (key_[0] != '.' && !settings.treat_globals_as_locals)
     {
       context_.mark_modified (key_, *record_,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
+    else if (settings.track_local_changes)
+    {
+      context_.mark_local_modified (key_, *record_,
         Knowledge_Engine::Knowledge_Reference_Settings (false));
     }
   
