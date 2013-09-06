@@ -224,3 +224,18 @@ project (Tutorial_Bandwidth_Filtering) : using_madara, using_ace {
   }
 }
 
+
+project (Tutorial_Deadline_Filtering) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_deadline_filtering
+  
+  requires += tutorials
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Source_Files {
+    tutorials/advanced/deadline_filtering.cpp
+  }
+}

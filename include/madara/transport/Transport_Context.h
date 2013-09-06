@@ -3,6 +3,7 @@
 
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
+#include <time.h>
 
 namespace Madara
 {
@@ -28,7 +29,8 @@ namespace Madara
        * Constructor
        **/
       Transport_Context (int64_t operation = IDLE_OPERATION,
-        uint32_t receive_bandwidth = 0, uint32_t send_bandwidth = 0);
+        uint32_t receive_bandwidth = 0, uint32_t send_bandwidth = 0,
+        uint64_t message_time = 0, uint64_t current_time = time (NULL));
 
       /**
        * Copy constructor
@@ -85,6 +87,33 @@ namespace Madara
        **/
       void set_send_bandwidth (uint32_t bandwidth);
 
+      /**
+       * Gets the message timestamp. For receive and rebroadcast operations,
+       * this timestamp will be the time that the message was originally
+       * sent. For send operations, this timestamp is typically the same
+       * as the current timestamp.
+       * @return    timestamp of message
+       **/
+      uint64_t  get_message_time (void);
+
+      /**
+       * Gets the current timestamp.
+       **/
+      uint64_t  get_current_time (void);
+
+      /**
+       * Sets the message time. For receive and rebroadcast operations,
+       * this timestamp will be the time that the message was originally
+       * sent. For send operations, this timestamp is typically the same
+       * as the current timestamp.
+       **/
+      void set_message_time (uint64_t message_time);
+
+      /**
+       * Sets the current time. This should be time (NULL).
+       **/
+      void set_current_time (uint64_t current_time);
+
     private:
 
       /**
@@ -101,6 +130,16 @@ namespace Madara
        * Bandwidth being utilized for send operations
        **/
       uint32_t send_bandwidth_;
+
+      /**
+       * Message timestamp
+       **/
+      uint64_t message_time_;
+
+      /**
+       * Current timestamp
+       **/
+      uint64_t current_time_;
     };
   }
 }

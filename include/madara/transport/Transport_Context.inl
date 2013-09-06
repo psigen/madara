@@ -21,6 +21,18 @@ Madara::Transport::Transport_Context::get_send_bandwidth (void)
   return send_bandwidth_;
 }
 
+inline uint64_t
+Madara::Transport::Transport_Context::get_current_time (void)
+{
+  return current_time_;
+}
+
+inline uint64_t
+Madara::Transport::Transport_Context::get_message_time (void)
+{
+  return message_time_;
+}
+
 inline void
 Madara::Transport::Transport_Context::set_operation (
   int64_t operation)
@@ -40,6 +52,20 @@ Madara::Transport::Transport_Context::set_send_bandwidth (
   uint32_t bandwidth)
 {
   send_bandwidth_ = bandwidth;
+}
+
+inline void
+  Madara::Transport::Transport_Context::set_current_time (
+  uint64_t current_time)
+{
+  current_time_ = current_time;
+}
+
+inline void
+  Madara::Transport::Transport_Context::set_message_time (
+  uint64_t message_time)
+{
+  message_time_ = message_time;
 }
 
 #endif   // _TRANSPORT_CONTEXT_INL_

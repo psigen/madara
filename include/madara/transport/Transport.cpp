@@ -250,6 +250,7 @@ Madara::Transport::process_received_update (
     print_prefix));
 
   int actual_updates = 0;
+  uint64_t current_time = time (NULL);
 
   // iterate over the updates
   for (uint32_t i = 0; i < header->updates; ++i)
@@ -278,7 +279,12 @@ Madara::Transport::process_received_update (
     uint32_t receive_bandwidth = receive_monitor.get_bytes_per_second ();
     uint32_t send_bandwidth = send_monitor.get_bytes_per_second ();
 
-    Transport_Context transport_context;
+    Transport_Context transport_context (
+      Transport_Context::REBROADCASTING_OPERATION,
+      receive_bandwidth,
+      send_bandwidth,
+      header->timestamp,
+      current_time);
         
     // if the tll is 1 or more and we are participating in rebroadcasts
     if (header->ttl > 0 && 
@@ -288,12 +294,7 @@ Madara::Transport::process_received_update (
 
       // if we have rebroadcast filters, apply them
       if (settings.get_number_of_rebroadcast_filtered_types () > 0)
-      {
-        transport_context.set_operation (
-          Transport_Context::REBROADCASTING_OPERATION);
-        transport_context.set_receive_bandwidth (receive_bandwidth);
-        transport_context.set_send_bandwidth (send_bandwidth);
-        
+      { 
         rebroadcast_temp = settings.filter_rebroadcast (
           record, key,
           transport_context);
@@ -476,7 +477,8 @@ long Madara::Transport::Base::prep_send (
   
   Transport_Context transport_context (Transport_Context::SENDING_OPERATION,
       receive_monitor_.get_bytes_per_second (),
-      send_monitor_.get_bytes_per_second ());
+      send_monitor_.get_bytes_per_second (),
+      (uint64_t) time (NULL));
 
   /**
    * filter the updates according to the filters specified by

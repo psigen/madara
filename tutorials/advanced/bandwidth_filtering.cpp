@@ -98,6 +98,8 @@ extern "C" void terminate (int)
  *                                     is enabled in Transport Settings)
  * args[3] : Bandwidth used while sending through this transport
  * args[4] : Bandwidth used while receiving from this transport
+ * args[5] : Message timestamp (when the message was originally sent)
+ * args[6] : Current timestamp (the result of time (NULL))
  * 
  * These args are modifiable in the understanding that future arguments may be
  * communication channels back to the transport to inform some higher level

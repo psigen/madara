@@ -83,7 +83,25 @@ namespace Madara
       void clear (uint32_t types);
 
       /**
-       * Filters an input according to its filter chain
+       * Filters an input according to its filter chain.
+       *
+       * <p>The arguments passed to the filter are the following:</p>
+       *
+       * args[0] : The knowledge record that the filter is acting upon<br />
+       * args[1] : The name of the knowledge record, if applicable ("" if unnamed)<br />
+       * args[2] : The type of operation calling the filter (integer valued).<br />
+       *         : IDLE_OPERATION (should never see)<br />
+       *         : SENDING_OPERATION (transport is about to send the record)<br />
+       *         : RECEIVING_OPERATION (transport has received the record and is
+       *         :                      about to apply the update)<br />
+       *         : REBROADCASTING_OPERATION (transport is about to rebroadcast the
+       *                                     record -- only happens if rebroadcast
+       *                                     is enabled in Transport Settings)<br />
+       * args[3] : Bandwidth used while sending through this transport<br />
+       * args[4] : Bandwidth used while receiving from this transport<br />
+       * args[5] : Message timestamp (when the message was originally sent)<br />
+       * args[6] : Current timestamp (the result of time (NULL))<br />
+       * 
        * @param   input   the argument to the filter chain
        * @param   name    variable name ("" if unnamed)
        * @param   context the context of the transport

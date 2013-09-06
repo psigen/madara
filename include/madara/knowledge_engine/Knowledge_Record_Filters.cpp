@@ -118,7 +118,7 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
        * resize every filter call to make sure we have adequate space
        **/
       
-      arguments.resize (5);
+      arguments.resize (7);
 
       if (name != "")
       {
@@ -137,6 +137,14 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       // fifth argument is the send/rebroadcast bandwidth utilization
       arguments[4].set_value (Knowledge_Record::Integer (
         transport_context.get_receive_bandwidth ()));
+
+      // sixth argument is the message timestamp
+      arguments[5].set_value (Knowledge_Record::Integer (
+        transport_context.get_message_time ()));
+      
+      // sixth argument is the message timestamp
+      arguments[6].set_value (Knowledge_Record::Integer (
+        transport_context.get_current_time ()));
 
       // setup arguments to the function
       arguments[0] = result;
