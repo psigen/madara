@@ -766,11 +766,29 @@ namespace Madara
        * Attaches a transport to the Knowledge Engine. Note that the
        * transport should use the same Thread_Safe_Context as the
        * Knowledge Engine.
-       * @param  transport   a new transport to attach tot he Knowledge Base
+       * @param  transport   a new transport to attach to the Knowledge Base
        * @return             the number of transports now attached
        **/
-      ssize_t attach_transport (Madara::Transport::Base * transport);
+      size_t attach_transport (Madara::Transport::Base * transport);
       
+      /**
+       * Adds a built-in transport with the specified settings
+       * @param  id          unique identifier for this agent (empty string
+       *                     will use default generated id)
+       * @param  settings    settings for the new transport
+       * @return             the number of transports now attached
+       **/
+      size_t attach_transport (const std::string & id,
+        Transport::Settings & settings);
+      
+      /**
+       * Removes a transport
+       * @param   index      index of the transport to remove. If invalid,
+       *                     nothing is removed.
+       * @return             the size of transports now attached
+       **/
+      size_t remove_transport (size_t index);
+
       /**
        * Returns the Thread_Safe_Context associated with this Knowledge
        * Base. This is necessary for creating custom transports.

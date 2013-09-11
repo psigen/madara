@@ -111,113 +111,121 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
   }
 }
 
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
+size_t
+Madara::Knowledge_Engine::Knowledge_Base_Impl::attach_transport (const std::string & id,
+  Transport::Settings & settings)
 {
   Madara::Transport::Base * transport (0);
-  if (transports_.size () == 0)
+  std::string originator (id);
+
+  if (originator == "")
+    originator = id_;
+
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Knowledge_Base_Impl::attach_transport:" \
+    " activating transport type %d\n", settings.type));
+  if (settings.type == Madara::Transport::BROADCAST)
+  {
+    transport = new Madara::Transport::Broadcast_Transport (originator, map_,
+      settings, true);
+  }
+  else if (settings.type == Madara::Transport::MULTICAST)
+  {
+    transport = new Madara::Transport::Multicast_Transport (originator, map_,
+      settings, true);
+  }
+  else if (settings.type == Madara::Transport::SPLICE)
+  {
+  #ifdef _USE_OPEN_SPLICE_
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " creating Open Splice DDS transport.\n",
+      settings.type));
+
+    transport = new Madara::Transport::Splice_DDS_Transport (originator, map_,
+                        settings, true);
+  #else
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " project was not generated with opensplice=1. Transport is invalid.\n",
+      settings.type));
+  #endif
+  }
+  else if (settings.type == Madara::Transport::NDDS)
+  {
+  #ifdef _USE_NDDS_
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " creating NDDS transport.\n",
+      settings.type));
+
+    transport = new Madara::Transport::NDDS_Transport (originator, map_,
+                        settings, true);
+  #else
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " project was not generated with ndds=1. Transport is invalid.\n",
+      settings.type));
+  #endif
+  }
+  else if (settings.type == Madara::Transport::UDP)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::activate_transport:" \
-      " activating transport type %d\n", settings_.type));
-    if (settings_.type == Madara::Transport::BROADCAST)
-    {
-      transport = new Madara::Transport::Broadcast_Transport (id_, map_,
-        settings_, true);
-    }
-    else if (settings_.type == Madara::Transport::MULTICAST)
-    {
-      transport = new Madara::Transport::Multicast_Transport (id_, map_,
-        settings_, true);
-    }
-    else if (settings_.type == Madara::Transport::SPLICE)
-    {
-    #ifdef _USE_OPEN_SPLICE_
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " creating Open Splice DDS transport.\n",
-        settings_.type));
+      " creating UDP transport.\n",
+      settings.type));
 
-      transport = new Madara::Transport::Splice_DDS_Transport (id_, map_,
-                         settings_, true);
-    #else
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " project was not generated with opensplice=1. Transport is invalid.\n",
-        settings_.type));
+    transport = new Madara::Transport::UDP_Transport (originator, map_,
+      settings, true);
+  }
+  else if (settings.type == Madara::Transport::TCP)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " creating TCP transport.\n",
+      settings.type));
 
-      exit (-2);
-    #endif
-    }
-    else if (settings_.type == Madara::Transport::NDDS)
-    {
-    #ifdef _USE_NDDS_
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " creating NDDS transport.\n",
-        settings_.type));
+    transport = new Madara::Transport::TCP_Transport (originator, map_,
+      settings, true);
+  }
+  else if (settings.type == Madara::Transport::INCONSISTENT)
+  {
+  #ifdef _USE_OPEN_SPLICE_
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " creating Inconsistent transport.\n",
+      settings.type));
 
-      transport = new Madara::Transport::NDDS_Transport (id_, map_,
-                         settings_, true);
-    #else
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " project was not generated with ndds=1. Transport is invalid.\n",
-        settings_.type));
+    transport = new Madara::Transport::Inconsistent_Transport (originator, map_,
+                        settings, true);
+  #else
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " project was not generated with opensplice=1. Transport is invalid.\n",
+      settings.type));
+  #endif
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Knowledge_Base_Impl::activate_transport:" \
+      " no transport was specified. Setting transport to null.\n",
+      settings.type));
+  }
 
-      exit (-2);
-    #endif
-    }
-    else if (settings_.type == Madara::Transport::UDP)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " creating UDP transport.\n",
-        settings_.type));
+  // if we have a valid transport, add it to the transports vector
+  if (transport != 0)
+    transports_.push_back (transport);
 
-      transport = new Madara::Transport::UDP_Transport (id_, map_,
-        settings_, true);
-    }
-    else if (settings_.type == Madara::Transport::TCP)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " creating TCP transport.\n",
-        settings_.type));
+  return transports_.size ();
+}
 
-      transport = new Madara::Transport::TCP_Transport (id_, map_,
-        settings_, true);
-    }
-    else if (settings_.type == Madara::Transport::INCONSISTENT)
-    {
-    #ifdef _USE_OPEN_SPLICE_
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " creating Inconsistent transport.\n",
-        settings_.type));
-
-      transport = new Madara::Transport::Inconsistent_Transport (id_, map_,
-                         settings_, true);
-    #else
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " project was not generated with opensplice=1. Transport is invalid.\n",
-        settings_.type));
-
-      exit (-2);
-    #endif
-    }
-    else
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "Knowledge_Base_Impl::activate_transport:" \
-        " no transport was specified. Setting transport to null.\n",
-        settings_.type));
-    }
-
-    // if we have a valid transport, add it to the transports vector
-    if (transport != 0)
-      transports_.push_back (transport);
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
+{
+  if (transports_.size () == 0)
+  {
+    attach_transport (id_, settings_);
   }
   else
   {

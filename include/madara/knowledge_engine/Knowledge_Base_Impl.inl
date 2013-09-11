@@ -246,9 +246,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (const std::strin
   map_.define_function (name, expression);
 }
       
-/**
-  * Defines a MADARA KaRL function    
-  **/
+
 inline
 void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
@@ -258,15 +256,22 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
   map_.define_function (name, expression);
 }
      
-/**
-  * Attaches a transport to the Knowledge Engine.   
-  **/
 inline
-ssize_t
+size_t
 Madara::Knowledge_Engine::Knowledge_Base_Impl::attach_transport (
   Madara::Transport::Base * transport)
 {
   transports_.push_back (transport);
+  return transports_.size ();
+}
+ 
+inline
+size_t
+Madara::Knowledge_Engine::Knowledge_Base_Impl::remove_transport (size_t index)
+{
+  if (index < transports_.size ())
+    transports_.erase (transports_.begin () + index);
+
   return transports_.size ();
 }
 
