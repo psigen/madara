@@ -823,6 +823,19 @@ namespace Madara
         bool use_id,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings (true, true, true, false));
+      
+      /**
+       * Sends all modified variables through the attached transports.
+       * @param   prefix      for logging purposes, the descriptor prefix for 
+       *                      calling method
+       * @param   settings    settings for sending modifications
+       * @return  number of transports the modifications were sent to
+       **/
+      int send_modifieds (
+        const std::string & prefix,
+        const Eval_Settings & settings =
+          Eval_Settings ());
+
     private:
       /**
        * Binds to an ephemeral port for unique tie breakers in global ordering

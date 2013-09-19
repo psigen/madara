@@ -380,5 +380,56 @@ inline int64_t
   }
 }
 
+inline int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::send_modifieds (
+  const std::string & prefix,
+  const Eval_Settings & settings)
+{
+  int result = 0;
+
+  if (transports_.size () > 0 && !settings.delay_sending_modifieds)
+  {
+    const Madara::Knowledge_Records & modified = map_.get_modified ();
+
+    if (modified.size () > 0)
+    {
+      for (unsigned int i = 0; i < transports_.size (); ++i, ++result)
+        transports_[i]->send_data (modified);
+
+      map_.reset_modified ();
+      if (settings.signal_changes)
+        map_.signal (false);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "%s:" \
+          " no modifications to send\n", prefix.c_str ()));
+      result = -1;
+    }
+  }
+  else
+  {
+    if (transports_.size () == 0)
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "%s:" \
+          "  No transport configured.\n", prefix.c_str ()));
+
+      result = -2;
+    }
+    else if (settings.delay_sending_modifieds)
+    {
+      MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+          DLINFO "%s:" \
+          "  User requested to not send modifieds.\n", prefix.c_str ()));
+
+      result = -3;
+    }
+  }
+
+  return result;
+}
+
 
 #endif  // _MADARA_KNOWLEDGE_BASE_IMPL_INL_

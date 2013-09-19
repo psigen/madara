@@ -602,6 +602,14 @@ Madara::Knowledge_Engine::Knowledge_Base::get_context (void)
   return impl_->get_context ();
 }
 
+int
+Madara::Knowledge_Engine::Knowledge_Base::send_modifieds (
+  const std::string & prefix,
+  const Eval_Settings & settings)
+{
+  return impl_->send_modifieds (prefix, settings);
+}
+
 /**
   * Returns the unique host and ephemeral binding for this Knowlede Base
   * @return             host:port identifier for this knowledge base

@@ -891,6 +891,18 @@ namespace Madara
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings (true, true, true, false));
 
+      /**
+       * Sends all modified variables through the attached transports.
+       * @param   prefix      for logging purposes, the descriptor prefix for 
+       *                      calling method
+       * @param   settings    settings for sending modifications
+       * @return  number of transports the modifications were sent to
+       **/
+      int send_modifieds (
+        const std::string & prefix = "Knowledge_Base::send_modifieds",
+        const Eval_Settings & settings =
+          Eval_Settings ());
+
     private:
 
       /// Pointer to actual implementation, i.e., the "bridge", which is
