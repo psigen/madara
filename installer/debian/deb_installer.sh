@@ -8,8 +8,8 @@ VERSION="$(cat $MADARA_ROOT/VERSION.txt)"
 # libs are not actually created with the correct version. Instead,
 # MPC creates a shared object with the ACE_VERSION + 1 minor version
 # The following variables MUST BE CHANGED with each new ACE version used
-ACE_VERSION=6.1.5
-LIB_VERSION=6.1.5
+ACE_VERSION=6.2.0
+LIB_VERSION=6.2.0
 ARCHITECTURE=i386
 ROOT_DIR=usr/local
 REVISION=1
@@ -74,7 +74,7 @@ PACKAGE_DIR="madara_${VERSION}-${REVISION}_${ARCHITECTURE}"
 
 # create a source tarball for ACE and MADARA source
 echo "Creating madara-$VERSION directory"
-rm -rf $PACKAGE_DIR
+sudo rm -rf $PACKAGE_DIR
 mkdir $PACKAGE_DIR
 cd $PACKAGE_DIR
 
