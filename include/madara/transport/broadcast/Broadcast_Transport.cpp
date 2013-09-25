@@ -59,7 +59,7 @@ Madara::Transport::Broadcast_Transport::setup (void)
 
   // resize addresses to be the size of the list of hosts
   addresses_.resize (this->settings_.hosts_.size ());
-
+  
   if (addresses_.size () > 0)
   {
     // convert the string host:port into an ACE address
@@ -76,11 +76,68 @@ Madara::Transport::Broadcast_Transport::setup (void)
     // open the broadcast socket to any port for sending
     if (socket_.open (ACE_Addr::sap_any) == -1)
       std::cout << "Broadcast socket failed to open\n";
+    else
+    {
+      int send_buff_size = 0, tar_buff_size (settings_.queue_length);
+      int rcv_buff_size = 0;
+      int opt_len = sizeof (int);
+
+      socket_.get_option (SOL_SOCKET, SO_SNDBUF,
+        (void *)&send_buff_size, &opt_len);
+
+      socket_.get_option (SOL_SOCKET, SO_RCVBUF,
+        (void *)&rcv_buff_size, &opt_len);
+  
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Broadcast_Transport::Broadcast_Transport:" \
+        " default socket buff size is send=%d, rcv=%d\n",
+        send_buff_size, rcv_buff_size));
+  
+      if (send_buff_size < tar_buff_size)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Broadcast_Transport::Broadcast_Transport:" \
+          " setting send buff size to settings.queue_length (%d)\n",
+          tar_buff_size));
+  
+        socket_.set_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&tar_buff_size, opt_len);
     
-    // start thread with the addresses (only looks at the first one for now)
-    thread_ = new Madara::Transport::Broadcast_Transport_Read_Thread (
-                    settings_, id_, context_, addresses_[0], socket_,
-                    send_monitor_, receive_monitor_);
+        socket_.get_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&send_buff_size, &opt_len);
+    
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "Broadcast_Transport::Broadcast_Transport:" \
+          " current socket buff size is send=%d, rcv=%d\n",
+          send_buff_size, rcv_buff_size));
+      }
+  
+      if (rcv_buff_size < tar_buff_size)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO
+          "Broadcast_Transport::Broadcast_Transport:" \
+          " setting rcv buff size to settings.queue_length (%d)\n",
+          tar_buff_size));
+  
+        socket_.set_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&tar_buff_size, opt_len);
+    
+        socket_.get_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&rcv_buff_size, &opt_len);
+    
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO
+          "Broadcast_Transport::Broadcast_Transport:" \
+          " current socket buff size is send=%d, rcv=%d\n",
+          send_buff_size, rcv_buff_size));
+      }
+
+      // start thread with the addresses (only looks at the first one for now)
+      thread_ = new Madara::Transport::Broadcast_Transport_Read_Thread (
+                      settings_, id_, context_, addresses_[0], socket_,
+                      send_monitor_, receive_monitor_);
+    }
     
   }
   return this->validate_transport ();

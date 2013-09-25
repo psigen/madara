@@ -43,37 +43,93 @@ Madara::Transport::UDP_Transport_Read_Thread::UDP_Transport_Read_Thread (
         DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
         " Success subscribing to broadcast address %s:%d\n",
         local.get_host_addr (), local.get_port_number ()));
-    }
+      
+      int send_buff_size = 0, tar_buff_size (settings_.queue_length);
+      int rcv_buff_size = 0;
+      int opt_len = sizeof (int);
+    
+      ACE_SOCK_Dgram & bare_socket = read_socket_;
 
-    // check for an on_data_received ruleset
-    if (settings_.on_data_received_logic.length () != 0)
-    {
+      bare_socket.get_option (SOL_SOCKET, SO_RCVBUF,
+        (void *)&rcv_buff_size, &opt_len);
+  
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO
+        "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+        " default socket buff size is send=%d, rcv=%d\n",
+        send_buff_size, rcv_buff_size));
+  
+      if (send_buff_size < tar_buff_size)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO
+          "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+          " setting send buff size to settings.queue_length (%d)\n",
+          tar_buff_size));
+  
+        bare_socket.set_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&tar_buff_size, opt_len);
+    
+        bare_socket.get_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&send_buff_size, &opt_len);
+
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO
+          "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+          " current socket buff size is send=%d, rcv=%d\n",
+          send_buff_size, rcv_buff_size));
+      }
+  
+      if (rcv_buff_size < tar_buff_size)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO
+          "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+          " setting rcv buff size to settings.queue_length (%d)\n",
+          tar_buff_size));
+  
+        bare_socket.set_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&tar_buff_size, opt_len);
+    
+        bare_socket.get_option (SOL_SOCKET, SO_SNDBUF,
+          (void *)&rcv_buff_size, &opt_len);
+    
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO
+          "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+          " current socket buff size is send=%d, rcv=%d\n",
+          send_buff_size, rcv_buff_size));
+      }
+    
+      // check for an on_data_received ruleset
+      if (settings_.on_data_received_logic.length () != 0)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+          " setting rules to %s\n", 
+          settings_.on_data_received_logic.c_str ()));
+
+        Madara::Expression_Tree::Interpreter interpreter;
+        on_data_received_ = context_.compile (settings_.on_data_received_logic);
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
+          " no permanent rules were set\n"));
+      }
+  
+      // setup the receive buffer
+      if (settings_.queue_length > 0)
+        buffer_ = new char [settings_.queue_length];
+
+      this->activate (THR_NEW_LWP | THR_DETACHED, 1);
+
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
-        " setting rules to %s\n", 
-        settings_.on_data_received_logic.c_str ()));
-
-      Madara::Expression_Tree::Interpreter interpreter;
-      on_data_received_ = context_.compile (settings_.on_data_received_logic);
-    }
-    else
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
-        " no permanent rules were set\n"));
-    }
-  
-  
-    // setup the receive buffer
-    if (settings_.queue_length > 0)
-      buffer_ = new char [settings_.queue_length];
-
-    this->activate (THR_NEW_LWP | THR_DETACHED, 1);
-
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
-      " read thread started\n"));
-  }
+        " read thread started\n"));
+    } // if successful socket
+  } // if appropriate addresses
 }
 
 Madara::Transport::UDP_Transport_Read_Thread::~UDP_Transport_Read_Thread ()

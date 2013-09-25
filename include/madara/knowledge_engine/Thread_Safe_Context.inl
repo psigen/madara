@@ -708,8 +708,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::apply_modified (void)
       // aren't really a part of local variable checking anyway
       //i->second.status = Madara::Knowledge_Record::MODIFIED;
 
-      mark_modified (i->first, i->second,
-        Knowledge_Update_Settings ());
+      if (i->second.status () != Knowledge_Record::UNCREATED)
+        mark_modified (i->first, i->second, Knowledge_Update_Settings ());
+      else
+        i->second.set_value (Knowledge_Record::Integer (0));
 
       //i->second.clock = this->clock_;
     }

@@ -64,12 +64,66 @@ Madara::Transport::Multicast_Transport::setup (void)
   addresses_.resize (this->settings_.hosts_.size ());
 
   int ttl = 1;
+  int send_buff_size = 0, tar_buff_size (settings_.queue_length);
+  int rcv_buff_size = 0;
+  int opt_len = sizeof (int);
 
   socket_.set_option (IPPROTO_IP,
                      IP_MULTICAST_TTL,
                      (void *) &ttl,
-                     sizeof ttl);
+                     sizeof (ttl));
 
+  socket_.get_option (SOL_SOCKET, SO_SNDBUF,
+    (void *)&send_buff_size, &opt_len);
+
+  socket_.get_option (SOL_SOCKET, SO_RCVBUF,
+    (void *)&rcv_buff_size, &opt_len);
+  
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "Multicast_Transport::Multicast_Transport:" \
+    " default socket buff size is send=%d, rcv=%d\n",
+    send_buff_size, rcv_buff_size));
+  
+  if (send_buff_size < tar_buff_size)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::Multicast_Transport:" \
+      " setting send buff size to settings.queue_length (%d)\n",
+      tar_buff_size));
+  
+    socket_.set_option (SOL_SOCKET, SO_SNDBUF,
+      (void *) &tar_buff_size, opt_len);
+    
+    socket_.get_option (SOL_SOCKET, SO_SNDBUF,
+      (void *)&send_buff_size, &opt_len);
+    
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "Multicast_Transport::Multicast_Transport:" \
+      " current socket buff size is send=%d, rcv=%d\n",
+      send_buff_size, rcv_buff_size));
+  }
+  
+  if (rcv_buff_size < tar_buff_size)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO
+      "Multicast_Transport::Multicast_Transport:" \
+      " setting rcv buff size to settings.queue_length (%d)\n",
+      tar_buff_size));
+  
+    socket_.set_option (SOL_SOCKET, SO_SNDBUF,
+      (void *) &tar_buff_size, opt_len);
+    
+    socket_.get_option (SOL_SOCKET, SO_SNDBUF,
+      (void *)&rcv_buff_size, &opt_len);
+    
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO
+      "Multicast_Transport::Multicast_Transport:" \
+      " current socket buff size is send=%d, rcv=%d\n",
+      send_buff_size, rcv_buff_size));
+  }
+    
   if (addresses_.size () > 0)
   {
     // convert the string host:port into an ACE address
