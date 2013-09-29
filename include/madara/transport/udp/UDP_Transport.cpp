@@ -129,7 +129,7 @@ int
 
     thread_ = new Madara::Transport::UDP_Transport_Read_Thread (
       settings_, id_, context_, addresses_, socket_,
-      send_monitor_, receive_monitor_);
+      send_monitor_, receive_monitor_, packet_scheduler_);
 
   }
 

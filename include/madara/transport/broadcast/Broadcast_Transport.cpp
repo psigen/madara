@@ -136,7 +136,7 @@ Madara::Transport::Broadcast_Transport::setup (void)
       // start thread with the addresses (only looks at the first one for now)
       thread_ = new Madara::Transport::Broadcast_Transport_Read_Thread (
                       settings_, id_, context_, addresses_[0], socket_,
-                      send_monitor_, receive_monitor_);
+                      send_monitor_, receive_monitor_, packet_scheduler_);
     }
     
   }

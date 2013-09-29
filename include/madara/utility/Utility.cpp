@@ -695,3 +695,15 @@ ssize_t
   // return the actual bytes written. -1 if error
   return actual;
 }
+
+double
+Madara::Utility::rand_double (double floor, double ceiling)
+{
+  // Get a double number between 0 and 1.
+  double position_in_range = ((double)rand()) / ((double)RAND_MAX);
+    
+  if (floor < ceiling)
+      return (position_in_range * (ceiling - floor)) + floor;
+  else
+      return (position_in_range * (floor - ceiling)) + ceiling;
+}

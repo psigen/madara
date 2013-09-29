@@ -143,7 +143,7 @@ Madara::Transport::Multicast_Transport::setup (void)
     // start thread with the addresses (only looks at the first one for now)
     thread_ = new Madara::Transport::Multicast_Transport_Read_Thread (
                     settings_, id_, context_, addresses_[0], socket_,
-                    send_monitor_, receive_monitor_);
+                    send_monitor_, receive_monitor_, packet_scheduler_);
   }
   return this->validate_transport ();
 }

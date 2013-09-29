@@ -21,10 +21,10 @@
 
 namespace Madara
 {
-  namespace Knowledge_Engine
+  namespace Transport
   {
     typedef  std::pair <time_t, uint32_t>   Bandwidth_Record;
-    typedef  std::deque <Bandwidth_Record>        Bandwidth_Messages;
+    typedef  std::deque <Bandwidth_Record>  Bandwidth_Messages;
 
     /**
      * @class Bandwidth_Monitor
@@ -92,7 +92,6 @@ namespace Madara
 
       /**
        * Clears the bandwidth monitor
-       * @param   types   the types to clear the filters of
        **/
       void clear (void);
 

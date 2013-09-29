@@ -254,8 +254,15 @@ namespace Madara
      * @param    size       the size of the allocated buffer
      * @return              amount of bytes written (-1 if unsuccessful)
      **/
-    ssize_t write_file (const std::string & filename,
+    MADARA_Export ssize_t write_file (const std::string & filename,
       void * buffer, size_t size);
+
+    /**
+     * Return a random double
+     * @param  floor      lowest possible double
+     * @param  ceiling    highest possible double
+     **/
+    MADARA_Export double rand_double (double floor = 0.0, double ceiling = 1.0);
 
     /**
      * Adds values to a bit mask

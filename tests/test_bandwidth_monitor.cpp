@@ -1,5 +1,5 @@
 
-#include "madara/knowledge_engine/Bandwidth_Monitor.h"
+#include "madara/transport/Bandwidth_Monitor.h"
 #include "madara/utility/Log_Macros.h"
 #include "ace/High_Res_Timer.h"
 #include "ace/OS.h"
@@ -15,7 +15,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
   parse_args (argc, argv);
 
-  Madara::Knowledge_Engine::Bandwidth_Monitor monitor;
+  Madara::Transport::Bandwidth_Monitor monitor;
   
   std::cerr << "Adding ten 150 byte messages to bandwidth monitor...\n";
   std::cerr << "And sleeping for 10s...\n\n";

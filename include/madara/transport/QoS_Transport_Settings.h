@@ -23,6 +23,14 @@ namespace Madara
   namespace Transport
   {
     /**
+     * Enumeration for packet drop policy types
+     **/
+    enum PacketDropType {
+      PACKET_DROP_DETERMINISTIC,
+      PACKET_DROP_PROBABLISTIC
+    };
+
+    /**
      * @class QoS_Transport_Settings
      * @brief Container for quality-of-service settings
      **/
@@ -256,6 +264,36 @@ namespace Madara
        *                        participate in (per message)
        **/
       unsigned char get_participant_ttl (void) const;
+
+      /**
+       * Updates a packet drop rate, type, and burst
+       * @param   drop_rate    percent drop rate for sending packets
+       * @param   drop_type    type of drop rate policy to use
+       *                       @see PacketDropTypes
+       * @param   drop_bursts  number of packets to drop consecutively
+       **/
+      void update_drop_rate (double drop_rate,
+        int drop_type = PACKET_DROP_DETERMINISTIC,
+        uint64_t drop_burst = 1);
+
+      /**
+       * Returns the percentage of dropped packets to enforce on sends
+       * @return the percentage of dropped packets to enforce
+       **/
+      double get_drop_rate (void) const;
+      
+      /**
+       * Returns the policy type for packet drops
+       * @return  the policy type for packet drops
+       **/
+      int get_drop_type (void) const;
+
+      /**
+       * Returns the bursts of packet drops
+       * @return  the consecutive bursts of dropped packets
+       **/
+      uint64_t get_drop_burst (void) const;
+
     private:
        
       /**
@@ -304,6 +342,20 @@ namespace Madara
        **/
       Knowledge_Engine::Knowledge_Record_Filters  send_filters_;
 
+      /**
+       * Rate for dropping packets
+       **/
+      double packet_drop_rate_;
+
+      /**
+       * Drop rate type
+       **/
+      int packet_drop_type_;
+
+      /**
+       * Burst of packet drops
+       **/
+      uint64_t packet_drop_burst_;
     };
   } // end Transport namespace
 } // end Madara namespace

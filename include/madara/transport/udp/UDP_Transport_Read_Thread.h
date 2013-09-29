@@ -5,7 +5,7 @@
 
 #include "madara/utility/Scoped_Array.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/knowledge_engine/Bandwidth_Monitor.h"
+#include "madara/transport/Bandwidth_Monitor.h"
 #include "madara/transport/QoS_Transport_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/transport/Transport.h"
@@ -43,6 +43,7 @@ namespace Madara
        * @param    send_monitor    bandwidth monitor for enforcing send limits
        * @param    receive_monitor    bandwidth monitor for enforcing
        *                              receive limits
+       * @param    packet_scheduler scheduler for mimicking network conditions
        **/
       UDP_Transport_Read_Thread (
         const Settings & settings,
@@ -50,8 +51,9 @@ namespace Madara
         Madara::Knowledge_Engine::Thread_Safe_Context & context,
         std::map <std::string, ACE_INET_Addr> & addresses,
         ACE_SOCK_Dgram & socket,
-        Knowledge_Engine::Bandwidth_Monitor & send_monitor,
-        Knowledge_Engine::Bandwidth_Monitor & receive_monitor);
+        Bandwidth_Monitor & send_monitor,
+        Bandwidth_Monitor & receive_monitor,
+        Packet_Scheduler & packet_scheduler);
       
       /**
       * Destructor
@@ -134,10 +136,13 @@ namespace Madara
       const QoS_Transport_Settings *      qos_settings_;
 
       /// monitor for sending bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor   &   send_monitor_;
+      Bandwidth_Monitor   &   send_monitor_;
       
       /// monitor for receiving bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor   &   receive_monitor_;
+      Bandwidth_Monitor   &   receive_monitor_;
+
+      /// scheduler for mimicking target network conditions
+      Packet_Scheduler    &   packet_scheduler_;
     };
   }
 }

@@ -56,6 +56,25 @@ project (Test_Bandwidth_Monitor) : using_madara, using_ace {
   }
 }
 
+project (Test_Packet_Scheduler) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_packet_scheduler
+  
+  
+  requires += tests
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_packet_scheduler.cpp
+  }
+}
+
 project (Test_Encoding) : using_madara, using_ace, using_splice {
   exeout = $(MADARA_ROOT)/bin
   exename = test_encoding

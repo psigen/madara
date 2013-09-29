@@ -14,7 +14,7 @@
 #include "madara/utility/Scoped_Array.h"
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/knowledge_engine/Bandwidth_Monitor.h"
+#include "madara/transport/Bandwidth_Monitor.h"
 #include "ace/SOCK_Dgram_Bcast.h"
 #include "madara/utility/stdint.h"
 #include "madara/expression_tree/Expression_Tree.h"

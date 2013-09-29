@@ -13,14 +13,16 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
   Madara::Knowledge_Engine::Thread_Safe_Context & context,
   const ACE_INET_Addr & address,
   ACE_SOCK_Dgram & socket,
-  Knowledge_Engine::Bandwidth_Monitor & send_monitor,
-  Knowledge_Engine::Bandwidth_Monitor & receive_monitor)
+  Bandwidth_Monitor & send_monitor,
+  Bandwidth_Monitor & receive_monitor,
+  Packet_Scheduler & packet_scheduler)
   : settings_ (settings), id_ (id), context_ (context),
     barrier_ (2), terminated_ (false), 
     mutex_ (), is_not_ready_ (mutex_), is_ready_ (false), address_ (address),
     write_socket_ (socket),
     send_monitor_ (send_monitor),
-    receive_monitor_ (receive_monitor)
+    receive_monitor_ (receive_monitor),
+    packet_scheduler_ (packet_scheduler)
 {
   // Subscribe
   int port = address_.get_port_number ();
@@ -186,7 +188,9 @@ Madara::Transport::Multicast_Transport_Read_Thread::rebroadcast (
   int64_t buffer_remaining = (int64_t) settings_.queue_length;
   char * buffer = buffer_.get_ptr ();
   int result = prep_rebroadcast (buffer, buffer_remaining,
-                                 *qos_settings_, print_prefix, header, records);
+                                 *qos_settings_, print_prefix,
+                                 header, records,
+                                 packet_scheduler_);
 
   if (result > 0)
   {

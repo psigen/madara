@@ -27,7 +27,8 @@
 #include "madara/transport/QoS_Transport_Settings.h"
 #include "madara/utility/Log_Macros.h"
 #include "Reduced_Message_Header.h"
-#include "madara/knowledge_engine/Bandwidth_Monitor.h"
+#include "madara/transport/Bandwidth_Monitor.h"
+#include "madara/transport/Packet_Scheduler.h"
 
 #ifdef _USE_CID_
 
@@ -206,10 +207,13 @@ namespace Madara
       Madara::Expression_Tree::Expression_Tree  on_data_received_;
 
       /// monitor for sending bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor       send_monitor_;
+      Bandwidth_Monitor       send_monitor_;
       
       /// monitor for receiving bandwidth usage
-      Knowledge_Engine::Bandwidth_Monitor       receive_monitor_;
+      Bandwidth_Monitor       receive_monitor_;
+
+      /// scheduler for dropping packets to simulate network issues
+      Packet_Scheduler        packet_scheduler_;
 
       /// buffer for sending
       Madara::Utility::Scoped_Array <char>      buffer_;
@@ -251,8 +255,8 @@ namespace Madara
         const std::string & id,
         Knowledge_Engine::Thread_Safe_Context & context,
         const QoS_Transport_Settings & settings,
-        Knowledge_Engine::Bandwidth_Monitor & send_monitor,
-        Knowledge_Engine::Bandwidth_Monitor & receive_monitor,
+        Bandwidth_Monitor & send_monitor,
+        Bandwidth_Monitor & receive_monitor,
         Knowledge_Map & rebroadcast_records,
         Knowledge_Engine::Compiled_Expression & on_data_received,
         const char * print_prefix,
@@ -271,6 +275,7 @@ namespace Madara
      *                          e.g., "My_Transport::svc"
      * @param  header           message header from the received message
      * @param  records          a map of variables to records to send
+     * @param  packet_scheduler scheduler for mimicking network conditions
      **/
     int MADARA_Export prep_rebroadcast (
       char * buffer,
@@ -278,7 +283,8 @@ namespace Madara
       const QoS_Transport_Settings & settings,
       const char * print_prefix,
       Message_Header * header,
-      const Knowledge_Map & records);
+      const Knowledge_Map & records,
+      Packet_Scheduler & packet_scheduler);
 
     typedef   std::vector <Base *>    Transports;
   }

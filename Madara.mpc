@@ -35,6 +35,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/utility
     include/madara/transport/Transport_Settings.inl
     include/madara/transport/Transport.inl
+    include/madara/transport/Bandwidth_Monitor.inl
   }
 
   Template_Files {
@@ -49,7 +50,9 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/transport/udp
     include/madara/transport/multicast
     include/madara/transport/broadcast
+    include/madara/transport/Bandwidth_Monitor.cpp
     include/madara/transport/Message_Header.cpp
+    include/madara/transport/Packet_Scheduler.cpp
     include/madara/transport/Reduced_Message_Header.cpp
     include/madara/transport/QoS_Transport_Settings.cpp
     include/madara/transport/Transport_Settings.cpp
@@ -72,8 +75,10 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
     include/madara/transport/udp
     include/madara/transport/multicast
     include/madara/transport/broadcast
+    include/madara/transport/Bandwidth_Monitor.h
     include/madara/transport/Transport.h
     include/madara/transport/Message_Header.h
+    include/madara/transport/Packet_Scheduler.h
     include/madara/transport/Reduced_Message_Header.h
     include/madara/transport/QoS_Transport_Settings.h
     include/madara/transport/Transport_Settings.h

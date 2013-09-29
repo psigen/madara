@@ -3,7 +3,8 @@
 Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings ()
   : Settings (), rebroadcast_ttl_ (0),
     participant_rebroadcast_ttl_ (0),
-    trusted_peers_ (), banned_peers_ ()
+    trusted_peers_ (), banned_peers_ (),
+    packet_drop_rate_ (0.0), packet_drop_burst_ (1)
 {
 
 }
@@ -17,7 +18,10 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     banned_peers_ (settings.banned_peers_),
     rebroadcast_filters_ (settings.rebroadcast_filters_),
     receive_filters_ (settings.receive_filters_),
-    send_filters_ (settings.send_filters_)
+    send_filters_ (settings.send_filters_),
+    packet_drop_rate_ (settings.packet_drop_burst_),
+    packet_drop_type_ (settings.packet_drop_type_),
+    packet_drop_burst_ (settings.packet_drop_burst_)
 {
 }
 
@@ -40,6 +44,9 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     send_filters_ = rhs->send_filters_;
     receive_filters_ = rhs->receive_filters_;
     rebroadcast_filters_ = rhs->rebroadcast_filters_;
+    packet_drop_rate_ = rhs->packet_drop_rate_;
+    packet_drop_type_ = rhs->packet_drop_type_;
+    packet_drop_burst_ = rhs->packet_drop_burst_;
   }
 }
 
@@ -66,6 +73,9 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     send_filters_ = rhs.send_filters_;
     receive_filters_ = rhs.receive_filters_;
     rebroadcast_filters_ = rhs.rebroadcast_filters_;
+    packet_drop_rate_ = rhs.packet_drop_rate_;
+    packet_drop_type_ = rhs.packet_drop_type_;
+    packet_drop_burst_ = rhs.packet_drop_burst_;
   }
 }
 
@@ -82,6 +92,9 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     send_filters_.clear (Knowledge_Record::ALL_TYPES);
     receive_filters_.clear (Knowledge_Record::ALL_TYPES);
     rebroadcast_filters_.clear (Knowledge_Record::ALL_TYPES);
+    packet_drop_rate_ = 0.0;
+    packet_drop_type_ = PACKET_DROP_PROBABLISTIC;
+    packet_drop_burst_ = 1;
 
     Settings * lhs_base = (Settings *)this;
     Settings * rhs_base = (Settings *)&rhs;
@@ -309,4 +322,33 @@ Madara::Transport::QoS_Transport_Settings::get_number_of_received_filtered_types
   void) const
 {
   return receive_filters_.get_number_of_filtered_types ();
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::update_drop_rate (
+  double drop_rate,
+  int drop_type,
+  uint64_t drop_burst)
+{
+  packet_drop_rate_ = drop_rate;
+  packet_drop_type_ = drop_type;
+  packet_drop_burst_ = drop_burst;
+}
+
+double
+Madara::Transport::QoS_Transport_Settings::get_drop_rate (void) const
+{
+  return packet_drop_rate_;
+}
+
+int
+Madara::Transport::QoS_Transport_Settings::get_drop_type (void) const
+{
+  return packet_drop_type_;
+}
+
+uint64_t
+Madara::Transport::QoS_Transport_Settings::get_drop_burst (void) const
+{
+  return packet_drop_burst_;
 }

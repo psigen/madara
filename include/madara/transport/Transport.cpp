@@ -13,7 +13,8 @@ Madara::Transport::Base::Base (const std::string & id,
   settings_ (new_settings), context_ (context)
 {
   settings_.attach (&context_);
-  
+  packet_scheduler_.attach (&settings_);
+
 #ifdef _USE_CID_
   settings_.setup ();
 #endif // _USE_CID_
@@ -79,8 +80,8 @@ Madara::Transport::process_received_update (
   const std::string & id,
   Knowledge_Engine::Thread_Safe_Context & context,
   const QoS_Transport_Settings & settings,
-  Knowledge_Engine::Bandwidth_Monitor & send_monitor,
-  Knowledge_Engine::Bandwidth_Monitor & receive_monitor,
+  Bandwidth_Monitor & send_monitor,
+  Bandwidth_Monitor & receive_monitor,
   Knowledge_Map & rebroadcast_records,
   Knowledge_Engine::Compiled_Expression & on_data_received,
   const char * print_prefix,
@@ -395,9 +396,10 @@ Madara::Transport::prep_rebroadcast (
   const QoS_Transport_Settings & settings,
   const char * print_prefix,
   Message_Header * header,
-  const Knowledge_Map & records)
+  const Knowledge_Map & records,
+  Packet_Scheduler & packet_scheduler)
 {
-  if (header->ttl > 0 && records.size () > 0)
+  if (header->ttl > 0 && records.size () > 0 && packet_scheduler.add ())
   {
     // keep track of the message_size portion of buffer
     uint64_t * message_size = (uint64_t *)buffer;
@@ -480,21 +482,32 @@ long Madara::Transport::Base::prep_send (
       send_monitor_.get_bytes_per_second (),
       (uint64_t) time (NULL));
 
-  /**
-   * filter the updates according to the filters specified by
-   * the user in QoS_Transport_Settings (if applicable)
-   **/
-  for (Knowledge_Records::const_iterator i = orig_updates.begin ();
-        i != orig_updates.end (); ++i)
+  if (packet_scheduler_.add ())
   {
-    // filter the record according to the send filter chain
-    Knowledge_Record result = settings_.filter_send (*i->second, i->first,
-      transport_context);
+    /**
+     * filter the updates according to the filters specified by
+     * the user in QoS_Transport_Settings (if applicable)
+     **/
+    for (Knowledge_Records::const_iterator i = orig_updates.begin ();
+          i != orig_updates.end (); ++i)
+    {
+      // filter the record according to the send filter chain
+      Knowledge_Record result = settings_.filter_send (*i->second, i->first,
+        transport_context);
 
-    if (result.status () != Knowledge_Record::UNCREATED)
-      filtered_updates[i->first] = result;
+      if (result.status () != Knowledge_Record::UNCREATED)
+        filtered_updates[i->first] = result;
+    }
   }
-  
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%:" \
+      " Packet scheduler has dropped packet...\n"));
+
+    return 0;
+  }
+
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
     DLINFO "%:" \
     " Finished applying filters before sending...\n",

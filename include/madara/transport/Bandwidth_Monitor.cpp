@@ -2,25 +2,25 @@
 #include "madara/utility/Utility.h"
 #include "madara/utility/Log_Macros.h"
 
-Madara::Knowledge_Engine::Bandwidth_Monitor::Bandwidth_Monitor (
+Madara::Transport::Bandwidth_Monitor::Bandwidth_Monitor (
   time_t window_in_secs)
   : utilization_ (0), window_ (window_in_secs)
 {
 }
 
-Madara::Knowledge_Engine::Bandwidth_Monitor::Bandwidth_Monitor (
+Madara::Transport::Bandwidth_Monitor::Bandwidth_Monitor (
   const Bandwidth_Monitor & rhs)
   : messages_ (rhs.messages_), utilization_ (rhs.utilization_),
     window_ (rhs.window_)
 {
 }
 
-Madara::Knowledge_Engine::Bandwidth_Monitor::~Bandwidth_Monitor ()
+Madara::Transport::Bandwidth_Monitor::~Bandwidth_Monitor ()
 {
 }
 
 void
-Madara::Knowledge_Engine::Bandwidth_Monitor::operator= (
+Madara::Transport::Bandwidth_Monitor::operator= (
   const Bandwidth_Monitor & rhs)
 {
   Bandwidth_Guard guard (mutex_);
@@ -33,7 +33,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::operator= (
 }
 
 void
-Madara::Knowledge_Engine::Bandwidth_Monitor::set_window (
+Madara::Transport::Bandwidth_Monitor::set_window (
   time_t window_in_secs)
 {
   Bandwidth_Guard guard (mutex_);
@@ -42,7 +42,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::set_window (
 }
 
 void
-Madara::Knowledge_Engine::Bandwidth_Monitor::add (uint32_t size)
+Madara::Transport::Bandwidth_Monitor::add (uint32_t size)
 {
   Bandwidth_Guard guard (mutex_);
   
@@ -56,7 +56,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::add (uint32_t size)
 }
 
 void
-Madara::Knowledge_Engine::Bandwidth_Monitor::add (
+Madara::Transport::Bandwidth_Monitor::add (
   time_t timestamp, uint32_t size)
 {
   Bandwidth_Guard guard (mutex_);
@@ -71,7 +71,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::add (
 }
 
 uint32_t
-Madara::Knowledge_Engine::Bandwidth_Monitor::get_utilization (void)
+Madara::Transport::Bandwidth_Monitor::get_utilization (void)
 {
   Bandwidth_Guard guard (mutex_);
 
@@ -81,7 +81,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::get_utilization (void)
 }
 
 uint32_t
-Madara::Knowledge_Engine::Bandwidth_Monitor::get_bytes_per_second (void)
+Madara::Transport::Bandwidth_Monitor::get_bytes_per_second (void)
 {
   Bandwidth_Guard guard (mutex_);
   
@@ -91,7 +91,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::get_bytes_per_second (void)
 }
 
 void
-Madara::Knowledge_Engine::Bandwidth_Monitor::clear (void)
+Madara::Transport::Bandwidth_Monitor::clear (void)
 {
   Bandwidth_Guard guard (mutex_);
   messages_.clear ();
@@ -99,7 +99,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::clear (void)
 }
 
 void
-Madara::Knowledge_Engine::Bandwidth_Monitor::print_utilization (
+Madara::Transport::Bandwidth_Monitor::print_utilization (
   void)
 {
   Bandwidth_Guard guard (mutex_);
@@ -114,7 +114,7 @@ Madara::Knowledge_Engine::Bandwidth_Monitor::print_utilization (
 
 
 size_t
-Madara::Knowledge_Engine::Bandwidth_Monitor::get_number_of_messages (
+Madara::Transport::Bandwidth_Monitor::get_number_of_messages (
   void)
 {
   Bandwidth_Guard guard (mutex_);

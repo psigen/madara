@@ -19,7 +19,7 @@
 #include "ace/SOCK_Dgram.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/expression_tree/Expression_Tree.h"
-#include "madara/knowledge_engine/Bandwidth_Monitor.h"
+#include "madara/transport/Bandwidth_Monitor.h"
 
 namespace Madara
 {
