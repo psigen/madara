@@ -10,7 +10,7 @@
 
 std::string host ("");
 const std::string default_multicast ("239.255.0.1:4150");
-Madara::Transport::Settings settings;
+Madara::Transport::QoS_Transport_Settings settings;
 
 void handle_arguments (int argc, char ** argv)
 {
@@ -55,6 +55,20 @@ void handle_arguments (int argc, char ** argv)
       {
         std::stringstream buffer (argv[i + 1]);
         buffer >> MADARA_debug_level;
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-p" || arg1 == "--drop-rate")
+    {
+      if (i + 1 < argc)
+      {
+        double drop_rate;
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> drop_rate;
+        
+        settings.update_drop_rate (drop_rate,
+          Madara::Transport::PACKET_DROP_DETERMINISTIC);
       }
 
       ++i;

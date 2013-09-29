@@ -11,7 +11,7 @@
 std::string host ("");
 const std::string default_host1 ("127.0.0.1:43110");
 const std::string default_host2 ("127.0.0.1:43111");
-Madara::Transport::Settings settings;
+Madara::Transport::QoS_Transport_Settings settings;
 
 void handle_arguments (int argc, char ** argv)
 {
@@ -67,6 +67,20 @@ void handle_arguments (int argc, char ** argv)
         int debug_level;
         buffer >> debug_level;
         Madara::Knowledge_Engine::Knowledge_Base::log_level (debug_level);
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-p" || arg1 == "--drop-rate")
+    {
+      if (i + 1 < argc)
+      {
+        double drop_rate;
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> drop_rate;
+        
+        settings.update_drop_rate (drop_rate,
+          Madara::Transport::PACKET_DROP_DETERMINISTIC);
       }
 
       ++i;

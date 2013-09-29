@@ -70,6 +70,20 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-p" || arg1 == "--drop-rate")
+    {
+      if (i + 1 < argc)
+      {
+        double drop_rate;
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> drop_rate;
+        
+        settings.update_drop_rate (drop_rate,
+          Madara::Transport::PACKET_DROP_DETERMINISTIC);
+      }
+
+      ++i;
+    }
     else if (arg1 == "-r" || arg1 == "--reduced")
     {
       settings.send_reduced_message_header = true;
