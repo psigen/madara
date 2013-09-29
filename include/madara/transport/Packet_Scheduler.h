@@ -133,7 +133,7 @@ namespace Madara
       /**
        * queue used by stride scheduling algorithm
        **/
-      std::priority_queue <Stride_Task, std::vector <Stride_Task>> queue_;
+      std::priority_queue <Stride_Task, std::vector <Stride_Task> > queue_;
     };
   }
 }
