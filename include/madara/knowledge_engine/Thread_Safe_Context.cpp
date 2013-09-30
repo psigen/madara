@@ -1473,11 +1473,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   functions_[*key_ptr].extern_unnamed_ = func;
 }
 
-// defines a function by name
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (const char * name, Function_Arguments &, Variables &),
+    Knowledge_Record (*func) (const char * name, Function_Arguments &, Variables &),
         const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
@@ -1502,11 +1501,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
 }
 
 
-/**
-  * Defines a MADARA KaRL function
-  * @param  name       name of the function
-  * @param  expression KaRL function body       
-  **/
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
   const std::string & expression,
@@ -1516,11 +1510,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   define_function (name, compiled, settings);
 }
       
-/**
-  * Defines a MADARA KaRL function
-  * @param  name       name of the function
-  * @param  expression KaRL function body       
-  **/
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
   const Compiled_Expression & expression,
@@ -1549,12 +1538,6 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
 }
 
 
-/**
-  * Retrieves an external function
-  * @param  name       name of the function to retrieve
-  * @param   settings  settings for applying the update
-  * @return            the mapped external function
-  **/
 Madara::Knowledge_Engine::Function *
 Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_function (
   const std::string & name,

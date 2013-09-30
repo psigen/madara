@@ -49,6 +49,8 @@ namespace Madara
         *                                   evaluations
         * @param  t_post_print_statement    statement to print out after
         *                                   evaluations
+        * @param  t_poll_frequency          the frequency to poll for changes
+        * @param  t_max_wait_time           the maximum time to wait for truth
         **/
        Wait_Settings (bool t_delay_sending_modifieds,
          bool t_treat_globals_as_locals,

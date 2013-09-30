@@ -266,6 +266,7 @@ namespace Madara
 
     /**
      * Adds values to a bit mask
+     * @param   mask    the target bit mask
      * @param   values  values to bitwise add to mask
      * @return  resulting mask
      **/
@@ -274,6 +275,7 @@ namespace Madara
     
     /**
      * Returns true if mask contains values
+     * @param   mask    the bit mask to check
      * @param   values  values to check for inclusion in mask
      * @return  true if values in exist in mask, false otherwise
      **/
@@ -282,6 +284,7 @@ namespace Madara
     
     /**
      * Removes values from a bit mask
+     * @param   mask    the target bit mask
      * @param   values  values to bitwise remove from mask
      * @return  resulting mask
      **/

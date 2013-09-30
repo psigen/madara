@@ -33,7 +33,7 @@ namespace Madara
       LQueue_Node (void);
 
       /// Allocate a new LQueue_Node, trying first from the @a free_list_
-      /// and if that's empty try from the global ::operator new.
+      /// and if that's empty try from the global operator new.
       void *operator new (size_t bytes);
 
       /// Return @a ptr to the @a free_list_.

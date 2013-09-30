@@ -225,7 +225,7 @@ namespace Madara
      * performs the bulk of the logic required for a receiver thread.
      *
      * @param  buffer           buffer containing all serialized updates
-     * @parm   bytes_read       bytes in the buffer
+     * @param   bytes_read       bytes in the buffer
      * @param  id               unique identifier for originator strings
      * @param  context          variable context of the knowledge base
      * @param  settings         transport settings
@@ -234,6 +234,7 @@ namespace Madara
      * @param  rebroadcast_records  map of variables to records to be
      *                              rebroadcasted (will be filled in by this
      *                              method)
+     * @param  remote_host      ip:port who actually sent this message
      * @param  on_data_received compiled expression tree of the
      *                          settings.on_data_received_logic (you have to
      *                          provide the compiled tree)

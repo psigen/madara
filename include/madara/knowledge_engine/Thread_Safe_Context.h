@@ -692,7 +692,7 @@ namespace Madara
        * @param   settings  settings for applying the update
        * @return                 new value of variable
        **/
-      Madara::Knowledge_Record inc (const Variable_Reference & key, 
+      Madara::Knowledge_Record inc (const Variable_Reference & variable, 
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings ());
 
@@ -718,7 +718,7 @@ namespace Madara
        * @param   settings  settings for applying the update
        * @return                 new value of variable
        **/
-      Madara::Knowledge_Record dec (const Variable_Reference & key, 
+      Madara::Knowledge_Record dec (const Variable_Reference & variable, 
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings ());
       
@@ -859,7 +859,7 @@ namespace Madara
        * @param  settings   settings for referring to variables
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (Function_Arguments &, Variables &),
+        Knowledge_Record (*func) (Function_Arguments &, Variables &),
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
       
@@ -871,7 +871,7 @@ namespace Madara
        * @param  settings   settings for referring to variables
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &),
+        Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &),
         const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
       
@@ -977,6 +977,7 @@ namespace Madara
        * @param   filename    name of the file to open
        * @param   id          unique identifier of the context holder (will
        *                      be changed by the function)
+       * @param   settings    settings for applying the update
        * @return              -1 if file open failed<br />
        *                      -2 if file read failed<br />
        *                      >0 if successful (number of bytes written)

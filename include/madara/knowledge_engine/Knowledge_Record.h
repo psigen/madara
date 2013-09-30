@@ -211,7 +211,7 @@ namespace Madara
 
     /**
      * converts the value to a string.
-     * @param   delimeter   characters to insert in between
+     * @param   delimiter   characters to insert in between
      *                      elements of an array
      * @return  the value as a string
      **/

@@ -817,6 +817,7 @@ namespace Madara
        * @param   use_id      if true, sets the unique identifier to the
        *                      one found in the saved context. If false,
        *                      keeps the default identifier.
+       * @param   settings    settings for modifying context
        * @return  total bytes read
        **/
       int64_t load_context (const std::string & filename,

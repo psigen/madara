@@ -228,13 +228,14 @@ Madara::Transport::Packet_Scheduler::reset (void)
 
 void
 Madara::Transport::Packet_Scheduler::print_status (
-  void)
+  unsigned int log_level,
+  const char * prefix)
 {
   Scheduler_Guard guard (mutex_);
   
-  MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-    "Packet Scheduler: %Q sent, %Q dropped, %Q consec dropped\n",
-    sent_messages_, dropped_messages_, consecutive_drops_));
+  MADARA_DEBUG (log_level, (LM_DEBUG, 
+    "%s: %Q sent, %Q dropped, %Q consec dropped\n",
+    prefix, sent_messages_, dropped_messages_, consecutive_drops_));
 }
 
 uint64_t

@@ -1433,10 +1433,22 @@ public:
 	bool SaveFile( FILE* ) const;
 
 	#ifdef TIXML_USE_STL
+  /**
+   * Loads a XML file
+   * @param   filename    name of the file to load
+   * @param   encoding    character encoding of the file
+   * @return   true if successful
+   **/
 	bool LoadFile( const std::string& filename, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING )			///< STL std::string version.
 	{
 		return LoadFile( filename.c_str(), encoding );
 	}
+
+  /**
+   * Saves a XML structure to file
+   * @param   filename    name of the file to save to
+   * @return   true if successful
+   **/
 	bool SaveFile( const std::string& filename ) const		///< STL std::string version.
 	{
 		return SaveFile( filename.c_str() );
@@ -1756,7 +1768,7 @@ public:
 	virtual bool Visit( const TiXmlUnknown& unknown );
 
 	/** Set the indent characters for printing. By default 4 spaces
-		but tab (\t) is also useful, or null/empty string for no indentation.
+		but tab is also useful, or null/empty string for no indentation.
 	*/
 	void SetIndent( const char* _indent )			{ indent = _indent ? _indent : "" ; }
 	/// Query the indention string.

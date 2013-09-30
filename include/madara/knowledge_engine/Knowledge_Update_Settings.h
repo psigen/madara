@@ -42,7 +42,7 @@ namespace Madara
         * @param  t_treat_globals_as_locals true if global variables should
         *                                   be marked as not to be sent to the
         *                                   transport
-        * @param  t_signal_updates          indicates whether to signal updates
+        * @param  t_signal_changes          indicates whether to signal updates
         *                                   to a separate thread that may be
         *                                   waiting. This is only potentially
         *                                   useful to multithreaded MADARA apps
@@ -51,6 +51,8 @@ namespace Madara
         * @param  t_track_local_changes     if true, keep track of modifications
         *                                   to local variables for checkpoint
         *                                   saving purposes.
+        * @param  t_clock_increment         amount of clock ticks to increment
+        *                                   updated records by
        **/
       Knowledge_Update_Settings (bool t_treat_globals_as_locals,
         bool t_signal_changes = true,

@@ -96,8 +96,12 @@ namespace Madara
 
       /**
        * Prints the number of status of the packet scheduler
+       * @param   log_level   the log level to print status at
+       * @param   prefix      the prefix of the calling function to allow
+       *                      for more descriptive and relevant status
        **/
-      void print_status (void);
+      void print_status (unsigned int log_level = 0,
+        const char * prefix = "Packet_Scheduler");
 
     protected:
       /**

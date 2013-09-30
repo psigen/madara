@@ -270,7 +270,7 @@ namespace Madara
        * @param   drop_rate    percent drop rate for sending packets
        * @param   drop_type    type of drop rate policy to use
        *                       @see PacketDropTypes
-       * @param   drop_bursts  number of packets to drop consecutively
+       * @param   drop_burst   number of packets to drop consecutively
        **/
       void update_drop_rate (double drop_rate,
         int drop_type = PACKET_DROP_DETERMINISTIC,

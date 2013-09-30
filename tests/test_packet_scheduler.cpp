@@ -33,6 +33,7 @@ void test_probablistic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -57,6 +58,7 @@ void test_probablistic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -82,6 +84,7 @@ void test_probablistic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -108,6 +111,7 @@ void test_probablistic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -134,6 +138,7 @@ void test_probablistic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -160,6 +165,7 @@ void test_probablistic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -197,13 +203,14 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
     "  Results were "));
 
-  if (scheduler.get_dropped () > 40 && scheduler.get_dropped () < 50)
+  if (scheduler.get_dropped () > 20 && scheduler.get_dropped () < 60)
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       "SUCCESS\n"));
   else
@@ -221,6 +228,7 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -246,6 +254,7 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -271,6 +280,7 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
@@ -297,13 +307,14 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
     "  Results were "));
 
-  if (scheduler.get_dropped () == 126)
+  if (scheduler.get_dropped () > 140 && scheduler.get_dropped () < 180)
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       "SUCCESS\n"));
   else
@@ -323,13 +334,14 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
     "  Results were "));
-
-  if (scheduler.get_dropped () == 200)
+  
+  if (scheduler.get_dropped () > 180 && scheduler.get_dropped () < 220)
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       "SUCCESS\n"));
   else
@@ -349,13 +361,14 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   
   MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
     "  Results were "));
-
-  if (scheduler.get_dropped () == 200)
+  
+  if (scheduler.get_dropped () > 180 && scheduler.get_dropped () < 220)
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
       "SUCCESS\n"));
   else
@@ -375,6 +388,7 @@ void test_deterministic (void)
   for (int i = 0; i < 400; ++i)
   {
     scheduler.add ();
+    scheduler.print_status (MADARA_LOG_DETAILED_TRACE);
   }
   scheduler.print_status ();
   

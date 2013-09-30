@@ -399,6 +399,8 @@ Madara::Transport::prep_rebroadcast (
   const Knowledge_Map & records,
   Packet_Scheduler & packet_scheduler)
 {
+  int result = 0;
+
   if (header->ttl > 0 && records.size () > 0 && packet_scheduler.add ())
   {
     // keep track of the message_size portion of buffer
@@ -421,7 +423,7 @@ Madara::Transport::prep_rebroadcast (
       int size = (int)(settings.queue_length - buffer_remaining);
       *message_size = Madara::Utility::endian_swap ((uint64_t)size);
     
-      return size;
+      result = size;
     }
     else
     {
@@ -430,7 +432,7 @@ Madara::Transport::prep_rebroadcast (
         " Not enough buffer for rebroadcasting packet\n",
         print_prefix));
 
-      return -2;
+      result = -2;
     }
   }
   else
@@ -441,8 +443,12 @@ Madara::Transport::prep_rebroadcast (
       print_prefix,
       settings.queue_length));
 
-    return -1;
+    result = -1;
   }
+  
+  packet_scheduler.print_status (MADARA_LOG_DETAILED_TRACE, print_prefix);
+
+  return result;
 }
 
 long Madara::Transport::Base::prep_send (
@@ -507,6 +513,8 @@ long Madara::Transport::Base::prep_send (
 
     return 0;
   }
+
+  packet_scheduler_.print_status (MADARA_LOG_DETAILED_TRACE, print_prefix);
 
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
     DLINFO "%:" \

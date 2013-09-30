@@ -101,7 +101,7 @@ namespace Madara
        * @param   settings  Settings for updating knowledge
        * @return   the new value of the keyed variable
        **/
-      int set (const Variable_Reference & key,
+      int set (const Variable_Reference & variable,
         Madara::Knowledge_Record::Integer value,
         const Knowledge_Update_Settings & settings =
           Knowledge_Engine::Knowledge_Update_Settings (
@@ -130,7 +130,7 @@ namespace Madara
        * @param   settings  settings for applying the update
        * @return   0 if the value was set. -1 if null key
        **/
-      int set (const Variable_Reference & key,
+      int set (const Variable_Reference & variable,
         const Madara::Knowledge_Record::Integer * value,
         uint32_t size,
         const Knowledge_Update_Settings & settings =
@@ -432,7 +432,7 @@ namespace Madara
       /**
        * Fills a variable map with Knowledge Records that match an expression.
        * At the moment, this expression must be of the form "subject*"
-       * @param   expression  An expression that matches the variable names
+       * @param   subject     An expression that matches the variable names
        *                      that are of interest. Wildcards may only be
        *                      at the end.
        * @param   target      The map that will be filled with variable names
