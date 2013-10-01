@@ -31,8 +31,9 @@ public class EvalSettings extends MadaraJNI
 	private native long jni_getClockIncrement(long cptr);
 
 	private static native void jni_freeEvalSettings(long cptr);
-	
-	
+
+	public static final EvalSettings DEFAULT_EVAL_SETTINGS = new EvalSettings(true);
+
 	/**
 	 * Used to determine if the current object should be allowed to change or not
 	 */
@@ -66,6 +67,12 @@ public class EvalSettings extends MadaraJNI
 	{
 		constant = true;
 		setCPtr(cptr);
+	}
+
+	protected EvalSettings(boolean constant)
+	{
+		setCPtr(jni_evalSettings());
+		this.constant = constant;
 	}
 	
 

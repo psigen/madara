@@ -118,10 +118,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public KnowledgeRecord evaluate(String expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.evaluate(String) is no longer supported by MADARA");
+		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
 	}
 	
 	
@@ -131,10 +130,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public void evaluateNoReturn(String expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.evaluateNoReturn(String) is no longer supported by MADARA");
+		evaluateNoReturn(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
 	}
 	
 	
@@ -176,10 +174,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public KnowledgeRecord evaluate(CompiledExpression expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.evaluate(CompiledExpression) is no longer supported by MADARA");
+		return evaluate(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
 	}
 	
 	
@@ -189,10 +186,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public void evaluateNoReturn(CompiledExpression expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.evaluateNoReturn(CompiledExpression) is no longer supported by MADARA");
+		evaluateNoReturn(expression, EvalSettings.DEFAULT_EVAL_SETTINGS);
 	}
 	
 	
