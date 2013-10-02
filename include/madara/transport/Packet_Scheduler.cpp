@@ -104,9 +104,13 @@ Madara::Transport::Packet_Scheduler::add (void)
     // if the user has specified a positive drop rate
     if (drop_rate > 0)
     {
-      // compute the actual drop rate right now
-      double actual_drop_rate = (double)dropped_messages_ /
-        (dropped_messages_ + sent_messages_);
+      // compute the actual drop rate
+      double actual_drop_rate = 0;
+      if (dropped_messages_ + sent_messages_ > 0)
+      {
+        actual_drop_rate = (double)dropped_messages_ /
+          (dropped_messages_ + sent_messages_);
+      }
 
       /**
        * if the drop rate is greater than 100% or
