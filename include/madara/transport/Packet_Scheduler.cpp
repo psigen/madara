@@ -39,7 +39,12 @@ public:
   void set_rate (double rate)
   {
     tickets = 1000000 * rate;
-    stride = max_stride / tickets;
+
+    if (rate > 0)
+      stride = max_stride / tickets;
+    else
+      stride = 1;
+
     pass = stride;
   }
 
