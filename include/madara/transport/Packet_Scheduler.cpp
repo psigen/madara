@@ -40,7 +40,7 @@ public:
   {
     tickets = 1000000 * rate;
 
-    if (rate > 0)
+    if (tickets > 0)
       stride = max_stride / tickets;
     else
       stride = 1;
