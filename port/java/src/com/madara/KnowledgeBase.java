@@ -243,12 +243,9 @@ public class KnowledgeBase extends MadaraJNI
 	 */
 	public void defineFunction(String name, MadaraFunction function)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.defineFunction(String, MadaraFunction) is unsupported at this time, it will return soon");
-		
-		//TODO: Fix jni_defineFunction(long, String) in com.madara.KnowledgeBase.cpp
-		//checkContextLock();
-		//callbacks.put(name, function);
-		//jni_defineFunction(getCPtr(), name);
+		checkContextLock();
+		callbacks.put(name, function);
+		jni_defineFunction(getCPtr(), name);
 	}
 	
 	
@@ -273,8 +270,7 @@ public class KnowledgeBase extends MadaraJNI
 	 */
 	public void defineFunction(String name, CompiledExpression expression)
 	{
-		checkContextLock();
-		jni_defineFunction(getCPtr(), name, expression.getCPtr());
+		throw new UnsupportedOperationException("defineFunction(String, CompiledExpression) is not currently supported. Will be added soon.");
 	}
 	
 	

@@ -8,12 +8,18 @@
 #include "com.madara.KnowledgeBase.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
+#include <iostream>
+
 #include <string>
 #include <map>
 
 
 static jclass knowledgeBaseClass = 0;
 static jmethodID callbackMethod = 0;
+static std::map<std::string, jlong> definedFunctionsMap;
+
+static JavaVM *jvm;
+
 
 //===================================================================================
 //KnowledgeBase
@@ -136,85 +142,75 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1compile (JNIEnv *
 	return (jlong) ret;
 }
 
-/*
-typedef struct
+Madara::Knowledge_Record default_madara_return_function (const char * name, Madara::Knowledge_Engine::Function_Arguments & args, Madara::Knowledge_Engine::Variables & variables)
 {
-	JNIEnv *env;
-	jlong cptr;
-} callback_struct;
+    JNIEnv *env;
+    jvm->AttachCurrentThread((void **)&env, NULL);
 
-void c_callback(void** ret, const char* name, void** args, unsigned int argsLen, void* vars, void* callBackStruct)
-{
-	callback_struct* cbs = (callback_struct*)callBackStruct;
-	JNIEnv *env = cbs->env;
-	jlong cptr = cbs->cptr;
-	
-	//Build the array for the args
-	jlongArray argsArray = (*env)->NewLongArray(env, argsLen);
-	(*env)->SetLongArrayRegion(env, argsArray, 0, argsLen, args);
+	jlong ret;
+	jlong argsArrayNative[args.size()];
+	for (int x = 0; x < args.size(); x++)
+	{
+		argsArrayNative[x] = (jlong)&(args[x]);
+	}
 
-	*ret = (*env)->CallStaticLongMethod(env, knowledgeBaseClass, callbackMethod, (*env)->NewStringUTF(env, name), cptr, argsArray, vars);
+	jlongArray argsArray = env->NewLongArray(args.size());
+	env->SetLongArrayRegion(argsArray, 0, args.size(), argsArrayNative);
+
+    ret = env->CallStaticLongMethod(knowledgeBaseClass, callbackMethod, env->NewStringUTF(name), definedFunctionsMap[std::string(name)], argsArray, &variables);
+
+    if (ret == 0)
+        return Madara::Knowledge_Record::Integer(0);
+    else
+    {
+        Madara::Knowledge_Record returnValue(*(Madara::Knowledge_Record*)ret);
+        delete (Madara::Knowledge_Record*)ret;
+        return returnValue;
+    }
 }
-*/
-
 
 /*
  * Class:     com_madara_KnowledgeBase
  * Method:    jni_defineFunction
  * Signature: (JLjava/lang/String;)V
  */
-/*
 MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2 (JNIEnv *env, jobject obj, jlong cptr, jstring name)
 {
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
 	if (!knowledgeBaseClass)
 	{
-		knowledgeBaseClass = (jclass)(*env)->NewGlobalRef(env, (*env)->GetObjectClass(env, obj));
-		callbackMethod = (*env)->GetStaticMethodID(env, knowledgeBaseClass, "callBack", "(Ljava/lang/String;J[JJ)J" );
+		knowledgeBaseClass = (jclass)env->NewGlobalRef(env->GetObjectClass(obj));
+		callbackMethod = env->GetStaticMethodID(knowledgeBaseClass, "callBack", "(Ljava/lang/String;J[JJ)J" );
 	}
-	
-	callback_struct* data = (callback_struct*)malloc(sizeof(callback_struct));
-	data->env = env;
-	data->cptr = cptr;
-	
-	const char *nativeName = (*env)->GetStringUTFChars(env, name, 0);
-	jni_KnowledgeBase_define_Function_impl_PSPM(cptr, nativeName, data, c_callback);
-	(*env)->ReleaseStringUTFChars(env, name, nativeName);	
+
+	if (!jvm)
+	{
+        env->GetJavaVM(&jvm);
+	}
+
+	const char *nativeName = env->GetStringUTFChars(name, 0);
+	definedFunctionsMap[std::string(nativeName)] = cptr;
+    knowledge->define_function(std::string(nativeName), default_madara_return_function);
+	env->ReleaseStringUTFChars(name, nativeName);
 }
- */
 
 /*
  * Class:     com_madara_KnowledgeBase
  * Method:    jni_defineFunction
  * Signature: (JLjava/lang/String;Ljava/lang/String;)V
  */
-/*
+
 MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2Ljava_lang_String_2 (JNIEnv *env, jobject obj, jlong cptr, jstring name, jstring expression)
 {
-	const char *nativeExpression = (*env)->GetStringUTFChars(env, expression, 0);
-	const char *nativeName = (*env)->GetStringUTFChars(env, name, 0);
-	
-	jni_KnowledgeBase_define_function_impl_PSS(cptr, nativeName, nativeExpression);
-	
-	(*env)->ReleaseStringUTFChars(env, name, nativeName);	
-	(*env)->ReleaseStringUTFChars(env, expression, nativeExpression);
-}
-*/
+	const char *nativeExpression = env->GetStringUTFChars(expression, 0);
+	const char *nativeName = env->GetStringUTFChars(name, 0);
 
-/*
- * Class:     com_madara_KnowledgeBase
- * Method:    jni_defineFunction
- * Signature: (JLjava/lang/String;J)V
- */
-/*
-MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2J (JNIEnv *env, jobject obj, jlong cptr, jstring name, jlong expression)
-{
-	const char *nativeName = (*env)->GetStringUTFChars(env, name, 0);
-	
-	jni_KnowledgeBase_define_function_impl_PSP(cptr, nativeName, expression);
-	
-	(*env)->ReleaseStringUTFChars(env, name, nativeName);	
+	Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+	knowledge->define_function(std::string(nativeName), std::string(nativeExpression));
+
+	env->ReleaseStringUTFChars(name, nativeName);
+	env->ReleaseStringUTFChars(expression, nativeExpression);
 }
-*/
 
 /*
  * Class:     com_madara_KnowledgeBase
