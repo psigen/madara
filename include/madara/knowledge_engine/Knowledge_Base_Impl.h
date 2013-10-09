@@ -465,7 +465,7 @@ namespace Madara
           Eval_Settings ());
       
       /**
-       * Atomically sets the value of a variable to an arbitrary string.
+       * Atomically sets the value of a variable to the contents of a file.
        * @param   variable  reference to a variable (@see get_ref)
        * @param   value     new value of the variable
        * @param   size      indicates the size of the value buffer

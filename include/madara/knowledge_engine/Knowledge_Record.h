@@ -342,7 +342,7 @@ namespace Madara
     void set_jpeg (const unsigned char * new_value, size_t size);
     
     /**
-     * sets the value to an xml string
+     * sets the value to an unknown file type
      * @param    new_value   new value of the Knowledge Record
      * @param    size        size of the new_value buffer
      **/

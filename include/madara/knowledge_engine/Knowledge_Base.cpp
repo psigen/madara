@@ -185,6 +185,54 @@ Madara::Knowledge_Engine::Knowledge_Base::read_file (
 }
 
 int
+Madara::Knowledge_Engine::Knowledge_Base::set_file (
+  const std::string & key,
+  const unsigned char * value, size_t size, 
+  const Eval_Settings & settings)
+{
+  if (key != "")
+  {
+    return impl_->set_file (
+      impl_->get_ref (key, settings), value, size, settings);
+  }
+  else
+    return -1;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set_file (
+  const Variable_Reference & variable,
+  const unsigned char * value, size_t size, 
+  const Eval_Settings & settings)
+{
+  return impl_->set_file (variable, value, size, settings);
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set_jpeg (
+  const std::string & key,
+  const unsigned char * value, size_t size, 
+  const Eval_Settings & settings)
+{
+  if (key != "")
+  {
+    return impl_->set_jpeg (
+      impl_->get_ref (key, settings), value, size, settings);
+  }
+  else
+    return -1;
+}
+
+int
+Madara::Knowledge_Engine::Knowledge_Base::set_jpeg (
+  const Variable_Reference & variable,
+  const unsigned char * value, size_t size, 
+  const Eval_Settings & settings)
+{
+  return impl_->set_jpeg (variable, value, size, settings);
+}
+
+int
 Madara::Knowledge_Engine::Knowledge_Base::read_policy (
   const std::string & knowledge_key, 
   const std::string & filename)

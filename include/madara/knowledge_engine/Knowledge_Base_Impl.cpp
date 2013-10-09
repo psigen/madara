@@ -537,6 +537,34 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::read_file (
 
 /// Read a file into the knowledge base
 int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set_file (
+  const Variable_Reference & variable,
+  const unsigned char * value, size_t size, 
+  const Eval_Settings & settings)
+{
+  int result = map_.set_file (variable, value, size, settings);
+  
+  send_modifieds ("Knowledge_Base_Impl:set_file", settings);
+
+  return result;
+}
+
+/// Read a file into the knowledge base
+int
+Madara::Knowledge_Engine::Knowledge_Base_Impl::set_jpeg (
+  const Variable_Reference & variable,
+  const unsigned char * value, size_t size, 
+  const Eval_Settings & settings)
+{
+  int result = map_.set_jpeg (variable, value, size, settings);
+  
+  send_modifieds ("Knowledge_Base_Impl:set_jpeg", settings);
+
+  return result;
+}
+
+/// Read a file into the knowledge base
+int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::read_file (
   const Variable_Reference & variable,
   const std::string & filename, 

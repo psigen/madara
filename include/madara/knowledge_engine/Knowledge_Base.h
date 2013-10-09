@@ -294,6 +294,32 @@ namespace Madara
       
       /**
        * Atomically sets the value of a variable to an arbitrary string.
+       * @param   key       name of a variable
+       * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_file (const std::string & key,
+        const unsigned char * value, size_t size, 
+        const Eval_Settings & settings =
+          Eval_Settings (false, false, true, false, false));
+      
+      /**
+       * Atomically sets the value of a variable to a JPEG image
+       * @param   key       name of a variable
+       * @param   value     new value of the variable
+       * @param   size      indicates the size of the value buffer
+       * @param   settings  settings for applying the update
+       * @return   0 if the value was set. -1 if null key
+       **/
+      int set_jpeg (const std::string & key,
+        const unsigned char * value, size_t size, 
+        const Eval_Settings & settings =
+          Eval_Settings (false, false, true, false, false));
+      
+      /**
+       * Atomically sets the value of a variable to an arbitrary string.
        * @param   variable  reference to a variable (@see get_ref)
        * @param   value     new value of the variable
        * @param   size      indicates the size of the value buffer
