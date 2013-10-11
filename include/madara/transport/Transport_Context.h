@@ -4,6 +4,8 @@
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
 #include <time.h>
+#include <string>
+#include "madara/knowledge_engine/Knowledge_Record.h"
 
 namespace Madara
 {
@@ -114,6 +116,20 @@ namespace Madara
        **/
       void set_current_time (uint64_t current_time);
 
+      /**
+       * Adds a record to the list that should be appended to send
+       * or rebroadcasts
+       * @param   key      key of the record to add
+       * @param   record   record to add to the append list
+       **/
+      void add_record (const std::string & key,
+        Madara::Knowledge_Record & record);
+
+      /**
+       * Returns the additional records stored in the context
+       **/
+      const Knowledge_Map & get_records (void) const;
+
     private:
 
       /**
@@ -140,6 +156,11 @@ namespace Madara
        * Current timestamp
        **/
       uint64_t current_time_;
+
+      /**
+       * Context specific records
+       **/
+      Knowledge_Map records_;
     };
   }
 }

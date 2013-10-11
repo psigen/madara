@@ -329,9 +329,43 @@ Madara::Transport::process_received_update (
         Transport_Context::RECEIVING_OPERATION);
       transport_context.set_receive_bandwidth (receive_bandwidth);
       transport_context.set_send_bandwidth (send_bandwidth);
-        
+      
+      // filter according to receive rules
       record = settings.filter_receive (record, key,
         transport_context);
+
+      // check for additional records to add to rebroadcast
+      const Knowledge_Map & adds = transport_context.get_records ();
+
+      if (adds.size () > 0)
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "%s:" \
+          " records have been added for sending from a filter\n",
+          print_prefix));
+
+        // if the ttl was 0, set it to 1
+        if (header->ttl < 2)
+        {
+          header->ttl = 2;
+        }
+        
+        // Since we are modifying the message, change the originator
+        strncpy (header->originator,
+          id.c_str (), sizeof (header->originator) - 1);
+        header->type = Madara::Transport::MULTIASSIGN;
+
+        // iterate through additional records and add them to rebroadcast
+        for (Knowledge_Map::const_iterator j = adds.begin ();
+             j != adds.end (); ++j)
+        {
+          rebroadcast_records[j->first] = j->second;
+          MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+            DLINFO "%s:" \
+            " adding %s=%s\n", print_prefix,
+            j->first.c_str (), j->second.to_string ().c_str ()));
+        }
+      }
     }
 
     int result = 0;
@@ -423,6 +457,11 @@ Madara::Transport::prep_rebroadcast (
       int size = (int)(settings.queue_length - buffer_remaining);
       *message_size = Madara::Utility::endian_swap ((uint64_t)size);
     
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " %d updates prepped for rebroadcast packet\n",
+        print_prefix, size));
+
       result = size;
     }
     else

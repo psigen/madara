@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include <sstream>
 #include <assert.h>
 
@@ -12,6 +13,7 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/utility/Log_Macros.h"
 
+// default transport settings
 std::string host ("");
 const std::string default_multicast ("239.255.0.1:4150");
 Madara::Transport::QoS_Transport_Settings settings;
@@ -20,13 +22,25 @@ Madara::Transport::QoS_Transport_Settings settings;
 ACE_hrtime_t elapsed_time, maximum_time;
 ACE_High_Res_Timer timer;
 
+// publisher array for keeping track of ack latencies
+ACE_High_Res_Timer latencies[1000];
+int latencies_received[1000];
+
+// number of sent and received messages
 Madara::Knowledge_Engine::Variable_Reference  num_sent;
 Madara::Knowledge_Engine::Variable_Reference  num_received;
+Madara::Knowledge_Engine::Variable_Reference  ack;
 
+// to stop sending acks, flip to false
+bool send_acks = true;
+
+// amount of time in seconds to burst payloads
 double publish_time = 10.0;
 
+// payload size to burst
 unsigned int data_size = 1000;
 
+// handle command line arguments
 void handle_arguments (int argc, char ** argv)
 {
   for (int i = 1; i < argc; ++i)
@@ -59,6 +73,10 @@ void handle_arguments (int argc, char ** argv)
         settings.type = Madara::Transport::UDP;
       }
       ++i;
+    }
+    else if (arg1 == "-a" || arg1 == "--no-latency")
+    {
+      send_acks = false;
     }
     else if (arg1 == "-o" || arg1 == "--host")
     {
@@ -148,17 +166,18 @@ void handle_arguments (int argc, char ** argv)
         "  Profiles a network transport. Requires 2 processes. The result of\n" \
         "  running these processes should be that each process reports\n" \
         "  latency and throughput statistics.\n\n" \
-        " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
-        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
+        " [-a|--no-latency]        do not test for latency (throughput only)\n" \
         " [-b|--broadcast ip:port] the broadcast ip to send and listen to\n" \
-        " [-u|--udp ip:port]       the udp ips to send to (first is self to bind to)\n" \
         " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
         " [-i|--id id]             the id of this agent (should be non-negative)\n" \
         " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
+        " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
         " [-f|--logfile file]      log to a file\n" \
         " [-r|--reduced]           use the reduced message header\n" \
         " [-s|--size size]         size of data packet to send in bytes\n" \
         " [-t|--time time]         time to burst messages for throughput test\n" \
+        " [-u|--udp ip:port]       the udp ips to send to (first is self to bind to)\n" \
         "\n",
         argv[0]));
       exit (0);
@@ -186,8 +205,77 @@ count_received (
 
       timer.stop ();
 
+      Madara::Knowledge_Record cur_received = vars.inc (num_received);
+
+      if (send_acks)
+      {
+        // only send an ack for the first 2000 messages
+        if (cur_received.to_integer () < 2000)
+        {
+          // this is a safe way to add variables to a rebroadcast
+          // without modifying the local context
+          args.push_back ("ack");
+          args.push_back (vars.inc (ack));
+        }
+        else
+          send_acks = false;
+      }
+    }
+  }
+
+  return result;
+}
+
+// filter for counting received acks, stopping timer and removing payload
+Madara::Knowledge_Record
+handle_acks (
+  Madara::Knowledge_Engine::Function_Arguments & args,
+  Madara::Knowledge_Engine::Variables & vars)
+{
+  Madara::Knowledge_Record result;
+  
+  if (args.size () > 0)
+  {
+    if (args[0].is_integer_type ())
+    {
+      Madara::Knowledge_Record::Integer handled =
+        args[0].to_integer ();
+      
+      if (handled >= 0 && handled < 1000)
+      {
+        latencies_received[handled] = 1;
+        latencies[handled].stop ();
+      }
+
       vars.inc (num_received);
     }
+    result = args[0];
+  }
+
+  return result;
+}
+
+// filter for counting received acks, stopping timer and removing payload
+Madara::Knowledge_Record
+init_ack (
+  Madara::Knowledge_Engine::Function_Arguments & args,
+  Madara::Knowledge_Engine::Variables & vars)
+{
+  Madara::Knowledge_Record result;
+  
+  if (args.size () > 0)
+  {
+    if (args[0].is_binary_file_type ())
+    {
+      Madara::Knowledge_Record::Integer current_send =
+        vars.get (num_sent).to_integer ();
+
+      if (current_send >= 0 && current_send < 1000)
+        latencies[current_send].start ();
+
+      vars.inc (num_sent);
+    }
+    result = args[0];
   }
 
   return result;
@@ -196,9 +284,6 @@ count_received (
 int main (int argc, char ** argv)
 {
   settings.type = Madara::Transport::MULTICAST;
-  settings.add_receive_filter (
-    Madara::Knowledge_Record::ALL_FILE_TYPES,
-    count_received);
   settings.queue_length = data_size * 1000;
  
   // use ACE real time scheduling class
@@ -217,6 +302,23 @@ int main (int argc, char ** argv)
     settings.hosts_.resize (1);
     settings.hosts_[0] = default_multicast;
   }
+  
+  if (settings.id != 0)
+  {
+    settings.add_receive_filter (
+      Madara::Knowledge_Record::ALL_FILE_TYPES,
+      count_received);
+    settings.enable_participant_ttl ();
+  }
+  else
+  {
+    settings.add_receive_filter (
+      Madara::Knowledge_Record::INTEGER,
+      handle_acks);
+    settings.add_send_filter (
+      Madara::Knowledge_Record::ALL_FILE_TYPES,
+      init_ack);
+  }
 
   // create a knowledge base and setup our id
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
@@ -225,10 +327,19 @@ int main (int argc, char ** argv)
   // setup wait settings to wait for 2 * publish_time seconds
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
   wait_settings.max_wait_time = publish_time * 2;
+  
+  // set poll frequency to every 10us
+  //wait_settings.poll_frequency = 0.00001;
 
   // get variable references for real-time, constant-time operations
   num_received = knowledge.get_ref (".num_received");
   num_sent = knowledge.get_ref (".num_sent");
+  ack = knowledge.get_ref (".ack");
+
+  for (unsigned int j = 0; j < 1000; ++j)
+  {
+    latencies_received[j] = 0;
+  }
 
   if (settings.id == 0)
   {
@@ -238,30 +349,66 @@ int main (int argc, char ** argv)
     timer.stop ();
     timer.elapsed_time (elapsed_time);
     Madara::Knowledge_Engine::Compiled_Expression payload_generation =
-      knowledge.compile ("ref_file = .ref_file; ++.num_sent");
+      knowledge.compile ("ref_file = .ref_file");
     
     ACE_Time_Value max_tv;
     max_tv.set (publish_time);
     maximum_time = max_tv.sec () * 1000000000;
     maximum_time += max_tv.usec () * 1000;
-
+    
     while (maximum_time > elapsed_time)
     {
       knowledge.evaluate (payload_generation);
       timer.stop ();
       timer.elapsed_time (elapsed_time);
     }
+
+    Madara::Knowledge_Record::Integer max_latency (0);
+    Madara::Knowledge_Record::Integer min_latency (50000000000);
+    Madara::Knowledge_Record::Integer avg_latency (0), cur_latency (0);
+
+    Madara::Knowledge_Record::Integer i (0);
+    Madara::Knowledge_Record::Integer received =
+      knowledge.get (num_received).to_integer ();
+
+    for (i = 0; i < 1000; ++i)
+    {
+      if (latencies_received[i] != 0)
+      {
+        latencies[i].elapsed_time (elapsed_time);
+        cur_latency = Madara::Knowledge_Record::Integer (elapsed_time);
+
+        if (cur_latency > 1000000)
+          std::cerr << i << ": Unusually large latency (" << cur_latency <<")\n";
+
+        avg_latency += cur_latency;
+        min_latency = std::min (min_latency, cur_latency);
+        max_latency = std::max (max_latency, cur_latency);
+      }
+    }
+
+    if (received > 0)
+      avg_latency = avg_latency / received;
+
+    knowledge.set (".min_latency", min_latency);
+    knowledge.set (".max_latency", max_latency);
+    knowledge.set (".avg_latency", avg_latency);
   }
   else
   {
+    knowledge.set (ack, Madara::Knowledge_Record::Integer (-1),
+      Madara::Knowledge_Engine::Eval_Settings (false, true, false));
+
     // other processes wait for the publisher to send the goods
     knowledge.wait ("0", wait_settings);
 
     timer.elapsed_time (elapsed_time);
 
+    // set the elapsed nanoseconds
     knowledge.set (".elapsed_time",
       Madara::Knowledge_Record::Integer (elapsed_time));
 
+    // convert elapsed time from ns -> s and compute throughput
     knowledge.evaluate (
       ".elapsed_time *= 0.000000001 ;"
       ".elapsed_time > 0 => .throughput = .num_received / .elapsed_time");

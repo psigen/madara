@@ -68,4 +68,20 @@ inline void
   message_time_ = message_time;
 }
 
+inline void
+Madara::Transport::Transport_Context::add_record (
+  const std::string & key,
+  Madara::Knowledge_Record & record)
+{
+  records_[key] = record;
+}
+
+inline const Madara::Knowledge_Map & 
+Madara::Transport::Transport_Context::get_records (void) const
+{
+  return records_;
+}
+
+
+
 #endif   // _TRANSPORT_CONTEXT_INL_

@@ -154,6 +154,27 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       {
         result = i->extern_unnamed_ (arguments, variables);
       }
+
+      // did the filter add records to be sent?
+      if (arguments.size () > 8)
+      {
+        for (unsigned int i = 7; i + 1 < arguments.size (); i += 2)
+        {
+          if (arguments[i].is_string_type ())
+          {
+            transport_context.add_record (
+              arguments[i].to_string (), arguments[i + 1]);
+          }
+          else
+          {
+            MADARA_DEBUG (0, (LM_DEBUG,
+              "Knowledge_Record_Filters::filter: ERROR. Filter attempted to"
+              " add records to transport context, but args[%d] was not"
+              " a string value.\n", i));
+            break;
+          }
+        }
+      }
     }
   }
 
