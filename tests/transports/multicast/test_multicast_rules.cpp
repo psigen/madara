@@ -112,7 +112,7 @@ int main (int argc, char ** argv)
 
   settings.type = Madara::Transport::MULTICAST;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  wait_settings.max_wait_time = 5;
+  wait_settings.max_wait_time = 10;
   
   if (settings.id == 0)
     settings.on_data_received_logic = "out_of_resources => emergency = 1; emergency => shutdown = 1";

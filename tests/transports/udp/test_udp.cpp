@@ -149,7 +149,7 @@ int main (int argc, char ** argv)
 
   settings.type = Madara::Transport::UDP;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  wait_settings.max_wait_time = 5;
+  wait_settings.max_wait_time = 10;
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 

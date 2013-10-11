@@ -101,7 +101,7 @@ int ACE_TMAIN (int argc, char ** argv)
 
   settings.type = Madara::Transport::MULTICAST;
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  wait_settings.max_wait_time = 5;
+  wait_settings.max_wait_time = 10.0;
   wait_settings.post_print_statement =
     "{update}: name == {name}, " \
     "position = {position}, " \
