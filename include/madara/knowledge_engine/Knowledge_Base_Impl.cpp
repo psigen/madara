@@ -250,7 +250,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
         " transport has been closed.\n"));
     }
     transports_.clear ();
-    ACE_OS::socket_fini ();
   }
 }
 
