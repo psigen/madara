@@ -267,6 +267,7 @@ namespace Madara
      * Returns a random double between floor and ceiling
      * @param  floor      lowest possible double
      * @param  ceiling    highest possible double
+     * @param  set_seed_to_time  if true, seed the random generator with time
      * @return a double between floor and ceiling (inclusive)
      **/
     MADARA_Export double rand_double (double floor = 0.0,
@@ -276,6 +277,7 @@ namespace Madara
      * Returns a random integer between a floor and ceiling
      * @param  floor      lowest possible integer
      * @param  ceiling    highest possible integer
+     * @param  set_seed_to_time  if true, seed the random generator with time
      * @return a integer between floor and ceiling (inclusive)
      **/
     MADARA_Export int64_t rand_int (int64_t floor = 0,
