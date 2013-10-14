@@ -258,11 +258,81 @@ namespace Madara
       void * buffer, size_t size);
 
     /**
-     * Return a random double
+     * Returns a time of day in nanoseconds
+     * @return  time of day in nanoseconds
+     **/
+    MADARA_Export int64_t get_time (void);
+
+    /**
+     * Returns a random double between floor and ceiling
      * @param  floor      lowest possible double
      * @param  ceiling    highest possible double
+     * @return a double between floor and ceiling (inclusive)
      **/
-    MADARA_Export double rand_double (double floor = 0.0, double ceiling = 1.0);
+    MADARA_Export double rand_double (double floor = 0.0,
+      double ceiling = 1.0, bool set_seed_to_time = true);
+     
+    /**
+     * Returns a random integer between a floor and ceiling
+     * @param  floor      lowest possible integer
+     * @param  ceiling    highest possible integer
+     * @return a integer between floor and ceiling (inclusive)
+     **/
+    MADARA_Export int64_t rand_int (int64_t floor = 0,
+      int64_t ceiling = RAND_MAX, bool set_seed_to_time = true);
+
+    /**
+     * Rounds a double to the nearest integer
+     * @param  input      real number to round to integer
+     * @return the nearest integer to the input
+     **/
+    MADARA_Export int64_t nearest_int (double input);
+
+    /**
+     * Returns true if left < right
+     **/
+    template <typename T>
+    bool less_compare (const T & left, const T & right);
+
+    /**
+     * Returns true if right < left
+     **/
+    template <typename T>
+    bool greater_compare (const T & left, const T & right);
+
+    /**
+     * Sifts elements down a heap according to a comparator
+     * @param  input       the array to heapify
+     * @param  start       index to start from
+     * @param  end         index that signifies end of range to sift
+     * @param  comparator  a function for comparing two elements
+     **/
+    template <typename T>
+    void sift_down (T * input, int start, int end,
+      bool (*comparator) (const T & left, const T & right) =
+        greater_compare<T>);
+    
+    /**
+     * Builds a heap out of an array of elements
+     * @param  input       the array to heapify
+     * @param  size        the size of the array
+     * @param  comparator  a function for comparing two elements
+     **/
+    template <typename T>
+    void heapify (T * input, int size,
+     bool (*comparator) (const T & left, const T & right) =
+        greater_compare<T>);
+
+    /**
+     * Sorts an array with heap sort
+     * @param  input       the array to heapify
+     * @param  size        the size of the array
+     * @param  comparator  a function for comparing two elements
+     **/
+    template <typename T>
+    void heap_sort (T * input, int size,
+     bool (*comparator) (const T & left, const T & right) =
+        greater_compare<T>);
 
     /**
      * Adds values to a bit mask

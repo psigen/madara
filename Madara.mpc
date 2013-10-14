@@ -11,6 +11,13 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_t
   verbatim (gnuace, local) {
     CPPFLAGS += -w
   }
+  
+  Documentation_Files {
+    INSTALL.txt
+    LICENSE.txt
+    README.txt
+    VERSION.txt
+  }
 
   Build_Files {
     $(MADARA_ROOT)/Madara.mwc

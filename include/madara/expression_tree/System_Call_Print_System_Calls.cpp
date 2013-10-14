@@ -109,6 +109,10 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "\n#get_clock () or #get_clock (variable):\n"
       "  Returns either the system clock or the variable clock. Note that\n"
       "  this is a Lamport clock value and not a wall time value.\n";
+    
+    calls_["#get_time"] =
+      "\n#get_time ():\n"
+      "  Returns wall clock time on the local machine in nanoseconds.\n";
 
     calls_["#log_level"] =
       "\n#log_level () or #log_level (value):\n"
@@ -140,7 +144,15 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
     calls_["#print_system_calls"] =
       "\n#print_system_calls () or #print_system_call (system_call):\n"
       "  Prints help for all system calls or a specific system call.\n";
-
+    
+    calls_["#rand_double"] =
+      "\n#rand_double (floor = 0.0, ceiling = 1.0, update_srand = true):\n"
+      "  Generates a random double from a uniform distribution.\n";
+      
+    calls_["#rand_int"] =
+      "\n#rand_int (floor = 0, ceiling = RAND_MAX, update_srand = true):\n"
+      "  Generates a random integer from a uniform distribution.\n";
+      
     calls_["#read_file"] =
       "\n#read_file (filename) or #read_file (filename, type):\n"
       "  Reads a file and returns its contents. Default is to determine\n"

@@ -110,6 +110,13 @@ Also included in this tutorial are custom filter creation, compiled expressions,
 variable references, and other features that enable fast execution to meet
 real-time goals.
 
+12.) advanced/deadline_filtering.cpp
+
+The MADARA KaRL engine includes some advanced features like deadline filtering
+to stop bursty clients from overwhelming the agent network. In this tutorial,
+we examine the QoS_Transport_Settings class and use send and receive filters
+enforce deadlines.
+
 
 ======== Additional example programs ==========
 

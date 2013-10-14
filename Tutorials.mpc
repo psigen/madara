@@ -6,6 +6,10 @@ project (Tutorial_Hello_World) : using_madara, using_ace {
   
   requires += tutorials
   
+  Documentation_Files {
+    tutorials
+  }
+
   Build_Files {
     Tutorials.mpc
   }
@@ -25,6 +29,10 @@ project (Tutorial_Bad_Career_Counsellor) : using_madara, using_ace {
   
   requires += tutorials
   
+  Documentation_Files {
+    tutorials
+  }
+
   Build_Files {
     Tutorials.mpc
   }
@@ -43,6 +51,10 @@ project (Tutorial_System_Calls) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -62,6 +74,10 @@ project (Tutorial_Counting_Agents) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -81,6 +97,10 @@ project (Tutorial_Packet_Aggregation) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -101,6 +121,10 @@ project (Tutorial_Files) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -120,6 +144,10 @@ project (Tutorial_Integer_Types) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -139,6 +167,10 @@ project (Tutorial_Fractions) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -158,6 +190,10 @@ project (Tutorial_Functions) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -177,6 +213,10 @@ project (Tutorial_Controlling_Types) : using_madara, using_ace {
   
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -195,6 +235,10 @@ project (Tutorial_Creating_Transports) : using_madara, using_ace {
   exename = tutorial_custom_transport
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -214,6 +258,10 @@ project (Tutorial_Bandwidth_Filtering) : using_madara, using_ace {
   exename = tutorial_bandwidth_filtering
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc
@@ -230,6 +278,10 @@ project (Tutorial_Deadline_Filtering) : using_madara, using_ace {
   exename = tutorial_deadline_filtering
   
   requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
   
   Build_Files {
     Tutorials.mpc

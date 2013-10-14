@@ -45,9 +45,12 @@ namespace Madara
     class System_Call_Expand_Statement;
     class System_Call_Fragment;
     class System_Call_Get_Clock;
+    class System_Call_Get_Time;
     class System_Call_Log_Level;
     class System_Call_Print;
     class System_Call_Print_System_Calls;
+    class System_Call_Rand_Double;
+    class System_Call_Rand_Int;
     class System_Call_Read_File;
     class System_Call_Set_Clock;
     class System_Call_Set_Precision;
@@ -190,6 +193,9 @@ namespace Madara
       /// Visit a System_Call_Get_Clock.
       virtual void visit (const System_Call_Get_Clock &node) = 0;
       
+      /// Visit a System_Call_Get_Time.
+      virtual void visit (const System_Call_Get_Time &node) = 0;
+      
       /// Visit a System_Call_Log_Level.
       virtual void visit (const System_Call_Log_Level &node) = 0;
       
@@ -198,6 +204,12 @@ namespace Madara
       
       /// Visit a System_Call_Print_System_Calls.
       virtual void visit (const System_Call_Print_System_Calls &node) = 0;
+      
+      /// Visit a System_Call_Rand_Double.
+      virtual void visit (const System_Call_Rand_Double &node) = 0;
+      
+      /// Visit a System_Call_Rand_Int.
+      virtual void visit (const System_Call_Rand_Int &node) = 0;
       
       /// Visit a System_Call_Read_File.
       virtual void visit (const System_Call_Read_File &node) = 0;

@@ -44,9 +44,12 @@
 #include "madara/expression_tree/System_Call_Expand_Statement.h"
 #include "madara/expression_tree/System_Call_Fragment.h"
 #include "madara/expression_tree/System_Call_Get_Clock.h"
+#include "madara/expression_tree/System_Call_Get_Time.h"
 #include "madara/expression_tree/System_Call_Log_Level.h"
 #include "madara/expression_tree/System_Call_Print.h"
 #include "madara/expression_tree/System_Call_Print_System_Calls.h"
+#include "madara/expression_tree/System_Call_Rand_Double.h"
+#include "madara/expression_tree/System_Call_Rand_Int.h"
 #include "madara/expression_tree/System_Call_Read_File.h"
 #include "madara/expression_tree/System_Call_Set_Clock.h"
 #include "madara/expression_tree/System_Call_Set_Precision.h"
@@ -318,6 +321,46 @@ namespace Madara
     };
     
     /**
+    * @class Rand_Double
+    * @brief Generates a random double
+    */
+    class Rand_Double : public System_Call
+    {
+    public:
+      /// constructor
+      Rand_Double (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Rand_Double (void);
+    };
+    
+    /**
+    * @class Rand_Int
+    * @brief Generates a random integer
+    */
+    class Rand_Int : public System_Call
+    {
+    public:
+      /// constructor
+      Rand_Int (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Rand_Int (void);
+    };
+    
+    /**
     * @class Read_File
     * @brief Reads a file
     */
@@ -577,10 +620,10 @@ namespace Madara
       /// destructor
       virtual ~Log_Level (void);
     };
-
+    
     /**
     * @class Get_Clock
-    * @brief Returns the system or a variable clock
+    * @brief Returns the clock of the argument or the system clock
     */
     class Get_Clock : public System_Call
     {
@@ -596,6 +639,26 @@ namespace Madara
 
       /// destructor
       virtual ~Get_Clock (void);
+    };
+    
+    /**
+    * @class Get_Time
+    * @brief Returns the wall clock time
+    */
+    class Get_Time : public System_Call
+    {
+    public:
+      /// constructor
+      Get_Time (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Get_Time (void);
     };
     
     /**
@@ -1821,6 +1884,33 @@ Madara::Expression_Tree::Get_Clock::build ()
 
 
 // constructor
+Madara::Expression_Tree::Get_Time::Get_Time (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Get_Time::~Get_Time (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Get_Time::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Get_Time::build ()
+{
+  return new System_Call_Get_Time (context_, nodes_);
+}
+
+
+// constructor
 Madara::Expression_Tree::Set_Clock::Set_Clock (
   Madara::Knowledge_Engine::Thread_Safe_Context & context)
 : System_Call (context)
@@ -1929,6 +2019,59 @@ Madara::Expression_Tree::Print_System_Calls::build ()
   return new System_Call_Print_System_Calls (context_, nodes_);
 }
 
+
+// constructor
+Madara::Expression_Tree::Rand_Double::Rand_Double (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Rand_Double::~Rand_Double (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Rand_Double::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Rand_Double::build ()
+{
+  return new System_Call_Rand_Double (context_, nodes_);
+}
+
+
+// constructor
+Madara::Expression_Tree::Rand_Int::Rand_Int (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Rand_Int::~Rand_Int (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Rand_Int::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Rand_Int::build ()
+{
+  return new System_Call_Rand_Int (context_, nodes_);
+}
 
 
 // constructor
@@ -4097,6 +4240,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     {
       call = new Get_Clock (context);
     }
+    else if (name == "#get_time")
+    {
+      call = new Get_Time (context);
+    }
     else if (name == "#log_level")
     {
       call = new Log_Level (context);
@@ -4108,6 +4255,14 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     else if (name == "#print_system_calls" || name == "#print_system_call")
     {
       call = new Print_System_Calls (context);
+    }
+    else if (name == "#rand_double")
+    {
+      call = new Rand_Double (context);
+    }
+    else if (name == "#rand_int" || name == "#rand_integer")
+    {
+      call = new Rand_Int (context);
     }
     else if (name == "#read_file")
     {

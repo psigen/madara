@@ -122,8 +122,8 @@ public:
         cur_latency = Madara::Knowledge_Record::Integer (elapsed_time);
 
         avg_latency_ += cur_latency;
-        min_latency_ = std::min (min_latency_, cur_latency);
-        max_latency_ = std::max (max_latency_, cur_latency);
+        min_latency_ = (std::min) (min_latency_, cur_latency);
+        max_latency_ = (std::max) (max_latency_, cur_latency);
       }
     }
 

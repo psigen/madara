@@ -5,6 +5,9 @@ project (Test_Arrays) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -24,6 +27,9 @@ project (Network_Profiler) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -43,6 +49,9 @@ project (Test_Checkpointing) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -62,6 +71,9 @@ project (Test_Bandwidth_Monitor) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -81,6 +93,9 @@ project (Test_Packet_Scheduler) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -100,6 +115,9 @@ project (Test_Encoding) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -119,6 +137,9 @@ project (Test_QoS_Transport_Settings) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -138,6 +159,9 @@ project (Test_Evaluate) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -157,6 +181,9 @@ project (Test_Multicast_Rules) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -176,6 +203,9 @@ project (Test_Multicast_Rebroadcast) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -195,6 +225,9 @@ project (Test_Multicast_Filters) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -214,6 +247,9 @@ project (Test_UDP_Rules) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -233,6 +269,9 @@ project (Test_UDP_Filters) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -252,6 +291,9 @@ project (Test_UDP_Rebroadcast) : using_madara, using_ace {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -271,6 +313,9 @@ project (Test_Swarm_Drone) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -290,6 +335,9 @@ project (Test_Swarm_Area_Coverage) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -309,6 +357,9 @@ project (Test_Swarm_Terminal) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -328,6 +379,9 @@ project (Test_System_Calls) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -347,6 +401,9 @@ project (Test_Broadcast_Rules) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -366,6 +423,9 @@ project (Test_Broadcast_Filters) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -385,6 +445,9 @@ project (Test_Broadcast_Rebroadcast) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -405,6 +468,9 @@ project (Test_Basic_Reasoning) : using_madara, using_ace, using_splice {
   
   
   requires += tests
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -423,6 +489,9 @@ project (Test_Latency) : using_madara, using_ace, using_splice {
   exename = test_latency
 
   requires += tests deprecated
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -441,6 +510,9 @@ project (Test_Latency_Rounds) : using_madara, using_ace, using_splice, using_cid
   exename = test_latency_rounds
 
   requires += tests cid
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -459,6 +531,9 @@ project (Test_Consistency) : using_madara, using_ace, using_splice {
   exename = test_consistency
 
   requires += tests deprecated
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -477,6 +552,9 @@ project (Test_Dissemination) : using_madara, using_ace, using_splice {
   exename = test_dissemination
 
   requires += tests deprecated
+
+  Documentation_Files {
+  }
   
   Build_Files {
     Tests.mpc
@@ -497,6 +575,9 @@ project (Test_Reasoning_Throughput) : using_madara, using_ace, using_splice {
   
   requires += tests
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -518,6 +599,9 @@ project (Test_Files) : using_madara, using_ace, using_splice {
   
   requires += tests
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -538,6 +622,9 @@ project (Test_Filters) : using_madara, using_ace {
   
   requires += tests
 
+  Documentation_Files {
+  }
+
   Build_Files {
     Tests.mpc
   }
@@ -557,6 +644,9 @@ project (Test_Key_Expansion) : using_madara, using_ace, using_splice {
   
   requires += tests
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -578,6 +668,9 @@ project (Test_Print_Statement) : using_madara, using_ace, using_splice {
   
   requires += tests
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -599,6 +692,9 @@ project (Test_Timed_Wait) : using_madara, using_ace, using_splice {
   
   requires += tests
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -620,6 +716,9 @@ project (Test_Wait_With_ACE) : using_madara, using_ace, using_splice {
   
   requires += tests deprecated
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -642,6 +741,9 @@ project (Test_Distributed_Finisher) : using_madara, using_ace, using_splice {
   
   requires += tests deprecated
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -663,6 +765,9 @@ project (Test_Knowledge_Domains) : using_madara, using_ace, using_splice {
   
   requires += tests deprecated
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -684,6 +789,9 @@ project (Test_Synchronization) : using_madara, using_ace, using_splice {
   
   requires += tests
   
+
+  Documentation_Files {
+  }
   
 
   Build_Files {
@@ -706,6 +814,9 @@ project (Test_Synchronization_Three_State) : using_madara, using_ace, using_spli
   requires += tests
   
   
+  Documentation_Files {
+  }
+
 
   Build_Files {
     Tests.mpc
@@ -727,6 +838,9 @@ project (Test_Quality) : using_madara, using_ace, using_splice {
   requires += tests deprecated
   
   
+  Documentation_Files {
+  }
+
 
   Build_Files {
     Tests.mpc
@@ -747,7 +861,8 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
 
   requires += tests deprecated
     
-  
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -768,7 +883,8 @@ project (Test_KATS_barriers) : using_madara, using_kats, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_kats_barriers
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -788,7 +904,8 @@ project (Test_KATS_syncs) : using_madara, using_kats, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_kats_syncs
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -808,7 +925,8 @@ project (Test_CID) : using_madara, using_ace, using_cid {
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -828,7 +946,8 @@ project (Test_CID_Read_Deployment) : using_madara, using_ace, using_cid {
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid_read_deployment
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -848,7 +967,8 @@ project (Test_CID_Disjoint) : using_madara, using_ace, using_cid {
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid_disjoint
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -868,7 +988,8 @@ project (Test_CID_Linked) : using_madara, using_ace, using_cid {
   exeout = $(MADARA_ROOT)/bin
   exename = test_cid_linked
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -889,7 +1010,8 @@ project (Test_UDP) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_udp
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -909,7 +1031,8 @@ project (Test_Multicast) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_multicast
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -929,7 +1052,8 @@ project (Test_Broadcast) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_broadcast
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -950,7 +1074,8 @@ project (Test_ACE_Broadcast) : using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_ace_broadcast
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -971,7 +1096,8 @@ project (Test_ACE_Multicast) : using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_ace_multicast
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -991,7 +1117,9 @@ project (Profile_Architecture) : using_ace, using_madara {
   exeout = $(MADARA_ROOT)/bin
   exename = profile_architecture
   
-  // 
+  Documentation_Files {
+    tests/settings
+  }
 
   Build_Files {
     Tests.mpc
@@ -1011,7 +1139,8 @@ project (Test_Utility) : using_ace, using_madara {
   exeout = $(MADARA_ROOT)/bin
   exename = test_utility
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -1031,7 +1160,8 @@ project (Test_Primitive_Types) : using_ace, using_madara {
   exeout = $(MADARA_ROOT)/bin
   exename = test_primitive_types
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc
@@ -1051,7 +1181,8 @@ project (Test_Logging) : using_ace, using_madara {
   exeout = $(MADARA_ROOT)/bin
   exename = test_logging
   
-  // 
+  Documentation_Files {
+  }
 
   Build_Files {
     Tests.mpc

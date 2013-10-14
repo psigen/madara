@@ -11,6 +11,7 @@
 #include "ace/OS_NS_fcntl.h"
 #include "ace/OS_NS_unistd.h"
 #include "ace/OS_NS_sys_socket.h"
+#include "ace/High_Res_Timer.h"
 
 std::string
 Madara::Utility::get_version (void)
@@ -696,14 +697,53 @@ ssize_t
   return actual;
 }
 
-double
-Madara::Utility::rand_double (double floor, double ceiling)
+int64_t
+Madara::Utility::get_time (void)
 {
+  ACE_Time_Value tv = ACE_High_Res_Timer::gettimeofday ();
+  int64_t timeofday (tv.sec () * 1000000000);
+  timeofday += tv.usec () * 1000;
+
+  return timeofday;
+}
+
+double
+Madara::Utility::rand_double (double floor, double ceiling,
+                              bool set_seed_to_time)
+{
+  // check if the user has specified setting through srand
+  if (set_seed_to_time)
+  {
+    unsigned int new_seed (get_time ());
+    srand (new_seed);
+  }
+
   // Get a double number between 0 and 1.
   double position_in_range = ((double)rand()) / ((double)RAND_MAX);
-    
+
   if (floor < ceiling)
       return (position_in_range * (ceiling - floor)) + floor;
   else
       return (position_in_range * (floor - ceiling)) + ceiling;
+}
+
+int64_t
+Madara::Utility::rand_int (int64_t floor, int64_t ceiling,
+                           bool set_seed_to_time)
+{
+  double random = rand_double (floor, ceiling, set_seed_to_time);
+  return nearest_int (random);
+}
+
+int64_t
+Madara::Utility::nearest_int (double input)
+{
+  int change = input >= 0 ? 1 : -1;
+  int64_t left = input;
+  int64_t right = input + change;
+
+  if (input - left < -input + right)
+    return left;
+  else
+    return right;
 }
