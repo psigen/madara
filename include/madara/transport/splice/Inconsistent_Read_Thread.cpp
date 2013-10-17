@@ -58,6 +58,8 @@ int Madara::Transport::Inconsistent_Read_Thread::enter_barrier (void)
   return 0;
 }
 
+#ifdef _USE_CID_
+
 /**
  * originator == person who started the latency rounds
  * key == the person replying to the round
@@ -163,6 +165,8 @@ void Madara::Transport::Inconsistent_Read_Thread::handle_latency (
       settings_.latencies.ids[data.quality] = data.key.val ();
   }
 }
+
+#endif // #ifdef _USE_CID_
 
 void Madara::Transport::Inconsistent_Read_Thread::handle_assignment (
   Knowledge::Update & data)
@@ -392,6 +396,7 @@ Madara::Transport::Inconsistent_Read_Thread::svc (void)
           continue;
         }
 
+#ifdef _USE_CID_
         // a latency packet can have the same originator val
         if (Madara::Transport::LATENCY == update_data_list_[i].type)
         {
@@ -404,7 +409,11 @@ Madara::Transport::Inconsistent_Read_Thread::svc (void)
           handle_latency (update_data_list_[i]);
         }
         // everything else cannot
-        else if (id_ != update_data_list_[i].originator.val ())
+        else
+          
+#endif // #ifdef _USE_CID_
+
+        if (id_ != update_data_list_[i].originator.val ())
         {
           if (Madara::Transport::ASSIGN == update_data_list_[i].type)
           {

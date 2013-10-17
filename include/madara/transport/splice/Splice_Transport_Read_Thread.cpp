@@ -7,16 +7,16 @@
 #include <sstream>
 
 Madara::Transport::Splice_Read_Thread::Splice_Read_Thread (
-  const Settings & settings, const std::string & id,
+  const std::string & id,
+  const Settings & settings,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Knowledge::UpdateDataReader_ptr & update_reader,
-  Knowledge::UpdateDataWriter_ptr & update_writer,
-  Madara::Transport::Settings & settings)
-  : id_ (id), context_ (context),
+  Knowledge::UpdateDataWriter_ptr & update_writer)
+  : id_ (id), settings_ (settings), context_ (context),
     update_reader_ (update_reader),
     update_writer_ (update_writer),
     barrier_ (2), terminated_ (false), 
-    mutex_ (), is_not_ready_ (mutex_), settings_ (settings), is_ready_ (false)
+    mutex_ (), is_not_ready_ (mutex_), is_ready_ (false)
 {
   assignment_symbols_.push_back ("=");
   assignment_symbols_.push_back (";");
@@ -637,6 +637,7 @@ Madara::Transport::Splice_Read_Thread::svc (void)
           update_data_list_[i].type, update_data_list_[i].originator.val (),
           update_data_list_[i].quality));
 
+#ifdef _USE_CID_
         // a latency packet can have the same originator val
         if (Madara::Transport::LATENCY == update_data_list_[i].type)
         {
@@ -659,7 +660,9 @@ Madara::Transport::Splice_Read_Thread::svc (void)
           handle_vote (update_data_list_[i]);
         }
         // everything else cannot
-        else if (id_ != update_data_list_[i].originator.val ())
+        else
+#endif // #ifdef _USE_CID_
+        if (id_ != update_data_list_[i].originator.val ())
         {
           if (Madara::Transport::ASSIGN == update_data_list_[i].type)
           {
@@ -683,6 +686,7 @@ Madara::Transport::Splice_Read_Thread::svc (void)
 
             handle_multiassignment (update_data_list_[i]);
           }
+#ifdef _USE_CID_
           else if (
             Madara::Transport::LATENCY_AGGREGATE == update_data_list_[i].type)
           {
@@ -707,6 +711,7 @@ Madara::Transport::Splice_Read_Thread::svc (void)
 
             handle_latency_summation (update_data_list_[i]);
           }
+#endif // #ifdef _USE_CID_
         }
 
         // otherwise the key was null, which is unusable

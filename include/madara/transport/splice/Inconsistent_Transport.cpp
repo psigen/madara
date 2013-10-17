@@ -33,8 +33,8 @@ Madara::Transport::Inconsistent_Transport::Inconsistent_Transport (
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Settings & config, bool launch_transport)
-  : Madara::Transport::Base (config), 
-  id_ (id), context_ (context), domain_ (0), domain_factory_ (0), 
+  : Madara::Transport::Base (id, config, context), 
+  domain_ (0), domain_factory_ (0), 
   domain_participant_ (0), publisher_ (0), subscriber_ (0), 
   datawriter_ (0), datareader_ (0), 
   update_writer_ (0), update_reader_ (0),
@@ -423,6 +423,8 @@ Madara::Transport::Inconsistent_Transport::send_data (
   return 0;
 }
 
+#ifdef _USE_CID_
+
 long
 Madara::Transport::Inconsistent_Transport::start_latency ()
 {
@@ -470,6 +472,8 @@ Madara::Transport::Inconsistent_Transport::start_latency ()
 
   return dds_result;
 }
+
+#endif // #ifdef _USE_CID_
 
 void
 Madara::Transport::Inconsistent_Transport::check_handle (void * handle, 

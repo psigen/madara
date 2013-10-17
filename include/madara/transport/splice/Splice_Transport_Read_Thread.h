@@ -45,10 +45,10 @@ namespace Madara
        * @param    settings   Transport settings
        **/
       Splice_Read_Thread (const std::string & id,
+        const Settings & settings,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Knowledge::UpdateDataReader_ptr & update_reader,
-        Knowledge::UpdateDataWriter_ptr & update_writer,
-        Madara::Transport::Settings & settings);
+        Knowledge::UpdateDataWriter_ptr & update_writer);
 
       /**
        * Destructor
@@ -80,7 +80,8 @@ namespace Madara
        * @param  data  the update that was made
        **/
       void handle_assignment (Knowledge::Update & data);
-
+ 
+#ifdef _USE_CID_
       /**
        * Handles a latency operation
        * @param  data  the update that was made
@@ -100,17 +101,19 @@ namespace Madara
       void handle_latency_summation (Knowledge::Update & data);
 
       /**
-       * Handles a multi-assignment update
-       * @param  data  the update that was made
-       **/
-      void handle_multiassignment (Knowledge::Update & data);
-
-      /**
        * Handles a vote operation
        * @param  data  the vote that was made
        **/
       void handle_vote (Knowledge::Update & data);
       
+#endif // #ifdef _USE_CID_
+
+      /**
+       * Handles a multi-assignment update
+       * @param  data  the update that was made
+       **/
+      void handle_multiassignment (Knowledge::Update & data);
+
       /**
        * We currently allow multiassignments completely through the key. This
        * is probably the least efficient way to handle this and should be
@@ -122,6 +125,11 @@ namespace Madara
        * Unique identifier for this entity (e.g., host:port)
        **/
       const std::string                                    id_;
+      
+      /**
+       * Transport settings
+       **/
+      const Settings                                       &     settings_;
 
       /**
        * The knowledge context that we will be updating
@@ -157,11 +165,6 @@ namespace Madara
        * Condition for waiting on readiness
        **/
       Madara::Transport::Condition       is_not_ready_;
-
-      /**
-       * Transport settings
-       **/
-      Madara::Transport::Settings   &     settings_;
 
       /**
        * If true, the transport is ready

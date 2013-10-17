@@ -55,6 +55,8 @@ namespace Madara
        **/
       long send_data (const Madara::Knowledge_Records & updates);
 	  
+#ifdef _USE_CID_
+
       /**
        * Starts a three phase latency round with all other participants
        * @return  result of dds write operation or -1 if we are shutting down
@@ -66,6 +68,7 @@ namespace Madara
        * @return  result of dds write operation or -1 if we are shutting down
        **/
       long vote (void);
+#endif // #ifdef _USE_CID_
 
       /**
        * Accesses reliability setting
@@ -92,8 +95,6 @@ namespace Madara
       int setup (void);
     protected:
     private:
-      // identifier of this knowledge base
-      const std::string                               id_;
 
       const static char *                             topic_names_[];
       const static char *                             partition_;

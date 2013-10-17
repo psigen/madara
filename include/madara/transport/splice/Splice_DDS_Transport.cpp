@@ -33,8 +33,8 @@ Madara::Transport::Splice_DDS_Transport::Splice_DDS_Transport (
   const std::string & id,
   Madara::Knowledge_Engine::Thread_Safe_Context & context, 
   Settings & config, bool launch_transport)
-  : Madara::Transport::Base (config, context), 
-  id_ (id), domain_ (0), domain_factory_ (0), 
+  : Madara::Transport::Base (id, config, context), 
+  domain_ (0), domain_factory_ (0), 
   domain_participant_ (0), publisher_ (0), subscriber_ (0), 
   datawriter_ (0), datareader_ (0), 
   update_writer_ (0), update_reader_ (0),
@@ -354,8 +354,8 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //mutex_reader_ = dynamic_cast<Knowledge::MutexDataReader_ptr>(datareader_);
   //check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
 
-  thread_ = new Madara::Transport::Splice_Read_Thread (id_, context_, 
-    update_reader_, latency_update_writer_, this->settings_);
+  thread_ = new Madara::Transport::Splice_Read_Thread (id_, this->settings_, context_, 
+    update_reader_, latency_update_writer_);
   
   this->validate_transport ();
 
@@ -425,6 +425,8 @@ Madara::Transport::Splice_DDS_Transport::send_data (
 
   return dds_result;
 }
+
+#ifdef _USE_CID_
 
 long
 Madara::Transport::Splice_DDS_Transport::start_latency (void)
@@ -533,6 +535,9 @@ Madara::Transport::Splice_DDS_Transport::vote (void)
 
   return dds_result;
 }
+
+#endif // #ifdef _USE_CID_
+
 
 void
 Madara::Transport::Splice_DDS_Transport::check_handle (void * handle, 

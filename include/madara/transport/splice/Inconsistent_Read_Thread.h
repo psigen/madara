@@ -81,12 +81,14 @@ namespace Madara
        * @param  data  the update that was made
        **/
       void handle_assignment (Knowledge::Update & data);
-
+ 
+#ifdef _USE_CID_
       /**
        * Handles a latency operation
        * @param  data  the update that was made
        **/
       void handle_latency (Knowledge::Update & data);
+#endif // #ifdef _USE_CID_
 
       /**
        * Handles a multi-assignment update
