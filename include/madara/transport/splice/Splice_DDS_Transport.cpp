@@ -2,6 +2,7 @@
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Update_Types.h"
 #include "madara/utility/Utility.h"
+#include <time.h>
 
 #include <iostream>
 #include <sstream>
@@ -59,32 +60,32 @@ Madara::Transport::Splice_DDS_Transport::close (void)
 {
   this->invalidate_transport ();
 
-  if (thread_)
-  {
-    thread_->close ();
-  }
+  //if (thread_)
+  //{
+  //  thread_->close ();
+  //}
 
-  if (subscriber_.in ())
-  {
-    subscriber_->delete_datareader (update_reader_);
-  }
+  //if (subscriber_.in ())
+  //{
+  //  subscriber_->delete_datareader (update_reader_);
+  //}
 
-  if (publisher_.in ())
-  {
-    publisher_->delete_datawriter (update_writer_);
-    publisher_->delete_datawriter (latency_update_writer_);
-  }
+  //if (publisher_.in ())
+  //{
+  //  publisher_->delete_datawriter (update_writer_);
+  //  publisher_->delete_datawriter (latency_update_writer_);
+  //}
 
 
-  if (domain_participant_.in ())
-  {
-    domain_participant_->delete_subscriber (subscriber_);
-    domain_participant_->delete_publisher (publisher_);
-    domain_participant_->delete_topic (update_topic_);
-  }
+  //if (domain_participant_.in ())
+  //{
+  //  domain_participant_->delete_subscriber (subscriber_);
+  //  domain_participant_->delete_publisher (publisher_);
+  //  domain_participant_->delete_topic (update_topic_);
+  //}
 
-  if (domain_factory_.in ())
-    domain_factory_->delete_participant (domain_participant_);
+  //if (domain_factory_.in ())
+  //  domain_factory_->delete_participant (domain_participant_);
 
   thread_ = 0;
   update_reader_ = 0;
@@ -113,6 +114,7 @@ Madara::Transport::Splice_DDS_Transport::reliability (const int & setting)
 int
 Madara::Transport::Splice_DDS_Transport::setup (void)
 {
+  Base::setup ();
   DDS::ReturnCode_t                         status;
 
   this->is_valid_ = false;
@@ -292,7 +294,7 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   latencywriter_ = publisher_->create_datawriter (update_topic_, 
     datawriter_qos_, NULL, DDS::STATUS_MASK_NONE);
   check_handle(latencywriter_, "DDS::Publisher::create_datawriter (Update)");
-  latency_update_writer_ = dynamic_cast<Knowledge::UpdateDataWriter_ptr> (datawriter_.in ());
+  latency_update_writer_ = dynamic_cast<Knowledge::UpdateDataWriter_ptr> (latencywriter_.in ());
   check_handle(latency_update_writer_, "Knowledge::UpdateDataWriter_ptr::narrow");
 
 
@@ -354,8 +356,9 @@ Madara::Transport::Splice_DDS_Transport::setup (void)
   //mutex_reader_ = dynamic_cast<Knowledge::MutexDataReader_ptr>(datareader_);
   //check_handle(mutex_reader_, "Knowledge::MutexDataReader_ptr::narrow");  
 
-  thread_ = new Madara::Transport::Splice_Read_Thread (id_, this->settings_, context_, 
-    update_reader_, latency_update_writer_);
+  thread_ = new Madara::Transport::Splice_Read_Thread (id_, this->settings_,
+    context_, update_reader_, latency_update_writer_, send_monitor_,
+    receive_monitor_, packet_scheduler_);
   
   this->validate_transport ();
 
@@ -366,21 +369,9 @@ long
 Madara::Transport::Splice_DDS_Transport::send_data (
   const Madara::Knowledge_Records & updates)
 {
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_data: transport is shutting down"));
-    return ret;
-  }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Splice_DDS_Transport::send_data: transport is not valid")); 
-    return ret;
-  }
-  
+  long result =
+    prep_send (updates, "Splice_DDS_Transport::send_data:");
+
   // get the maximum quality from the updates
   uint32_t quality = Madara::max_quality (updates);
 
@@ -390,34 +381,22 @@ Madara::Transport::Splice_DDS_Transport::send_data (
   DDS::ReturnCode_t      dds_result;
   DDS::InstanceHandle_t  handle;
 
-  std::stringstream buffer;
   Knowledge::Update data;
-
-  for (Knowledge_Records::const_iterator i = updates.begin ();
-    i != updates.end (); ++i)
-  {
-    buffer << i->first;
-    buffer << "=";
-    if      (i->second->type () == Madara::Knowledge_Record::INTEGER)
-      buffer << i->second->to_integer ();
-    else if (i->second->type () == Madara::Knowledge_Record::DOUBLE)
-      buffer << i->second->to_double ();
-    else if (i->second->type () == Madara::Knowledge_Record::STRING)
-      buffer << i->second->to_string ();
-    buffer << ";";
-  }
-
-  data.key = buffer.str ().c_str ();
-  data.value = 0;
+  
+  data.buffer = Knowledge::seq_oct (result, result, (unsigned char *)buffer_.get_ptr ());
   data.clock = cur_clock;
   data.quality = quality;
-  data.originator = id_.c_str ();
+  data.updates = DDS::ULong (updates.size ());
+  data.originator = DDS::string_dup(id_.c_str ());
   data.type = Madara::Transport::MULTIASSIGN;
+  data.ttl = settings_.get_rebroadcast_ttl ();
+  data.timestamp = time (NULL);
+  data.madara_id = DDS::string_dup(MADARA_IDENTIFIER);
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "Splice_DDS_Transport::send:" \
-    " sending multiassignment: %s, time=%Q, quality=%u\n", 
-    buffer.str ().c_str (), cur_clock, quality));
+    " sending multiassignment: %d updates, time=%Q, quality=%u\n", 
+    data.updates, cur_clock, quality));
 
   handle = update_writer_->register_instance (data);
   dds_result = update_writer_->write (data, handle); 

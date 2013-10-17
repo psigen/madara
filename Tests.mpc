@@ -877,6 +877,94 @@ project (Test_Distributed_Finisher_With_Set) : using_madara, using_ace, using_sp
 }
 
 
+project (Test_Splice) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_splice
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/splice/test_splice.cpp
+  }
+}
+
+project (Test_Splice_Rules) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_splice_rules
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/splice/test_splice_rules.cpp
+  }
+}
+
+project (Test_Splice_Rebroadcast) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_splice_rebroadcast
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/splice/test_splice_rebroadcast.cpp
+  }
+}
+
+project (Test_Splice_Filters) : using_madara, using_ace, using_splice {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_splice_filters
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/splice/test_splice_filters.cpp
+  }
+}
+
 project (Test_KATS_barriers) : using_madara, using_kats, using_ace {
   requires += tests deprecated
   

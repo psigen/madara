@@ -48,7 +48,10 @@ namespace Madara
         const Settings & settings,
         Madara::Knowledge_Engine::Thread_Safe_Context & context, 
         Knowledge::UpdateDataReader_ptr & update_reader,
-        Knowledge::UpdateDataWriter_ptr & update_writer);
+        Knowledge::UpdateDataWriter_ptr & update_writer,
+        Bandwidth_Monitor & send_monitor,
+        Bandwidth_Monitor & receive_monitor,
+        Packet_Scheduler & packet_scheduler);
 
       /**
        * Destructor
@@ -64,6 +67,19 @@ namespace Madara
        * Closes this thread
        **/
       int close (void);
+      
+      /**
+       * Sends a rebroadcast packet.
+       * @param  print_prefix     prefix to include before every log message,
+       *                          e.g., "My_Transport::svc"
+       * @param   header   header for the rebroadcasted packet
+       * @param   records  records to rebroadcast (already filtered for
+       *                   rebroadcast)
+       **/
+      void rebroadcast (
+        const char * print_prefix,
+        Message_Header * header,
+        const Knowledge_Map & records);
 
       /**
        * Main loop of the thread
@@ -75,12 +91,7 @@ namespace Madara
        **/
       void wait_for_ready (void);
     private:
-      /**
-       * Handles an assignment update
-       * @param  data  the update that was made
-       **/
-      void handle_assignment (Knowledge::Update & data);
- 
+
 #ifdef _USE_CID_
       /**
        * Handles a latency operation
@@ -172,7 +183,22 @@ namespace Madara
       bool                               is_ready_;
 
       /// data received rules, defined in Transport settings
-      Madara::Expression_Tree::Expression_Tree  on_data_received_;
+      Madara::Knowledge_Engine::Compiled_Expression  on_data_received_;
+      
+      /// buffer for receiving
+      Madara::Utility::Scoped_Array <char>      buffer_;
+
+      /// pointer to qos_settings (if applicable)
+      const QoS_Transport_Settings *      qos_settings_;
+      
+      /// monitor for sending bandwidth usage
+      Bandwidth_Monitor   &   send_monitor_;
+      
+      /// monitor for receiving bandwidth usage
+      Bandwidth_Monitor   &   receive_monitor_;
+
+      /// scheduler for mimicking target network conditions
+      Packet_Scheduler    &   packet_scheduler_;
     };
   }
 }

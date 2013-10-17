@@ -58,8 +58,7 @@ namespace Madara
       TCP          = 3,
       UDP          = 4,
       MULTICAST    = 5,
-      BROADCAST    = 6,
-      INCONSISTENT = 100
+      BROADCAST    = 6
     };
 
     enum Reliabilities {

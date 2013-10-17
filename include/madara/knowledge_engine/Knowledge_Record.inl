@@ -125,6 +125,20 @@ Madara::max_quality (const Knowledge_Records & records)
   return max;
 }
 
+inline uint32_t
+Madara::max_quality (const Knowledge_Map & records)
+{
+  uint32_t max = 0;
+
+  // iterate over the list and return the max
+  for (Knowledge_Map::const_iterator i = records.begin ();
+    i != records.end (); ++i)
+  {
+    max = std::max <uint32_t> (i->second.quality, max);
+  }
+  return max;
+}
+
 
 inline void
 Madara::Knowledge_Record::clear_value (void)

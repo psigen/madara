@@ -1,14 +1,18 @@
 
 module Knowledge
 {
+    typedef sequence<octet> seq_oct;
     struct Update
     {
-      string                            key;
-      long long                         value;
-      unsigned long                     quality;
       string                            originator;
+      seq_oct                           buffer;
+      unsigned long                     quality;
+      string                            madara_id;
+      unsigned long                     updates;
       unsigned long                     type;
       unsigned long long                clock;
+      unsigned long long                timestamp;
+      unsigned long                     ttl;
     };
     
     //#pragma keylist Update

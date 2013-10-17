@@ -16,7 +16,6 @@
 
 #ifdef _USE_OPEN_SPLICE_
   #include "madara/transport/splice/Splice_DDS_Transport.h"
-  #include "madara/transport/splice/Inconsistent_Transport.h"
 #endif // _USE_OPEN_SPLICE_
 
 #ifdef _USE_NDDS_
@@ -187,23 +186,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::attach_transport (const std::stri
 
     transport = new Madara::Transport::TCP_Transport (originator, map_,
       settings, true);
-  }
-  else if (settings.type == Madara::Transport::INCONSISTENT)
-  {
-  #ifdef _USE_OPEN_SPLICE_
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Knowledge_Base_Impl::activate_transport:" \
-      " creating Inconsistent transport.\n",
-      settings.type));
-
-    transport = new Madara::Transport::Inconsistent_Transport (originator, map_,
-                        settings, true);
-  #else
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Knowledge_Base_Impl::activate_transport:" \
-      " project was not generated with opensplice=1. Transport is invalid.\n",
-      settings.type));
-  #endif
   }
   else
   {
