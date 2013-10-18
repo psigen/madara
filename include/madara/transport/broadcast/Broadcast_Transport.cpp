@@ -58,14 +58,14 @@ Madara::Transport::Broadcast_Transport::setup (void)
   Base::setup ();
 
   // resize addresses to be the size of the list of hosts
-  addresses_.resize (this->settings_.hosts_.size ());
+  addresses_.resize (this->settings_.hosts.size ());
   
   if (addresses_.size () > 0)
   {
     // convert the string host:port into an ACE address
     for (unsigned int i = 0; i < addresses_.size (); ++i)
     {
-      addresses_[i].set (settings_.hosts_[i].c_str ());
+      addresses_[i].set (settings_.hosts[i].c_str ());
 
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Broadcast_Transport::Broadcast_Transport:" \

@@ -224,8 +224,8 @@ int main (int argc, char * argv[])
 
   // Setup a multicast transport with the settings mentioned above.
   settings.type = Madara::Transport::MULTICAST;
-  settings.hosts_.resize (1);
-  settings.hosts_[0] = multicast_address;
+  settings.hosts.resize (1);
+  settings.hosts[0] = multicast_address;
 
   /**
    * The default queue length is not large enough to accomodate images.

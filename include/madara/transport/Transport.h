@@ -81,20 +81,6 @@ namespace Madara
       virtual ~Base ();
 
       /**
-       * Add a vector of hosts to the current host list
-       * @param   hosts        a vector of hosts to add to the list
-       * @return  0 if successful
-       **/
-      virtual long setHosts (const Hosts_Vector & hosts);
-
-      /**
-       * Add a host to the list of hosts (if the transport allows it)
-       * @param   host        a host to add to the @see Hosts_Vector
-       * @return  0 if successful
-       **/
-      virtual long addHost (const std::string & host);
-
-      /**
        * Validates a transport to indicate it is not shutting down
        **/
       int validate_transport (void);
@@ -191,7 +177,7 @@ namespace Madara
     protected:
       volatile bool is_valid_;
       volatile bool shutting_down_;
-      Hosts_Vector hosts_;
+      Hosts_Vector hosts;
       ACE_Thread_Mutex mutex_;
       Condition valid_setup_;
 

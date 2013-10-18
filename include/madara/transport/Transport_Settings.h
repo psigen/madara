@@ -757,7 +757,7 @@ namespace Madara
        * for a host named localhost and a port of 1234. See the specific
        * transport for more information.
        **/
-      std::vector <std::string> hosts_;
+      std::vector <std::string> hosts;
     };
   }
 }

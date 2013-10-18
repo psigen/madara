@@ -3,14 +3,18 @@ module NDDS
 {
   module Knowledge
   {
+      typedef sequence<octet> seq_oct;
       struct Update
       {
-        string                            key;
-        long long                         value;
-        unsigned long                     quality;
         string                            originator; //@key
+        seq_oct                           buffer;
+        unsigned long                     quality;
+        string                            madara_id;
+        unsigned long                     updates;
         unsigned long                     type;
         unsigned long long                clock;
+        unsigned long long                timestamp;
+        unsigned long                     ttl;
       };  
   };
 };

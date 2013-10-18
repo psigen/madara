@@ -27,7 +27,7 @@ Madara::Transport::UDP_Transport_Read_Thread::UDP_Transport_Read_Thread (
   if (addresses_.size () > 0)
   {
     // for receiving, we only want to bind to the local port
-    ACE_INET_Addr local (addresses_[settings_.hosts_[0]].get_port_number ());
+    ACE_INET_Addr local (addresses_[settings_.hosts[0]].get_port_number ());
   
     qos_settings_ = dynamic_cast <const QoS_Transport_Settings *> (&settings);
 

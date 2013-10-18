@@ -1,4 +1,4 @@
-project (Splice_DDS_Transport_IDL) : using_splice, build_files {
+project (Splice_DDS_Transport_IDL) : using_splice_idl, build_files {
 
   requires += opensplice
 

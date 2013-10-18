@@ -78,8 +78,8 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   Madara::Transport::Settings ts;
   ts.domains = domain;
   ts.type = Madara::Transport::MULTICAST;
-  ts.hosts_.resize (1);
-  ts.hosts_[0] = multicast;
+  ts.hosts.resize (1);
+  ts.hosts[0] = multicast;
 
   // start the knowledge engine
   Madara::Knowledge_Engine::Knowledge_Base knowledge (

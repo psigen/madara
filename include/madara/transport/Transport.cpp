@@ -53,20 +53,6 @@ Madara::Transport::Base::setup (void)
   return validate_transport ();
 }
 
-long
-Madara::Transport::Base::setHosts (const Hosts_Vector & hosts) 
-{ 
-  hosts_ = hosts; 
-  return 0;
-}
-
-long
-Madara::Transport::Base::addHost (const std::string & host) 
-{ 
-  hosts_.push_back (host); 
-  return 0;
-}
-
 void
 Madara::Transport::Base::close (void)
 {

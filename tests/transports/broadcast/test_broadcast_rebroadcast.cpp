@@ -22,7 +22,7 @@ void handle_arguments (int argc, char ** argv)
     if (arg1 == "-b" || arg1 == "--broadcast")
     {
       if (i + 1 < argc)
-        settings.hosts_[0] = argv[i + 1];
+        settings.hosts[0] = argv[i + 1];
 
       ++i;
     }
@@ -138,8 +138,8 @@ alter_rebroadcast (
 
 int main (int argc, char ** argv)
 {
-  settings.hosts_.resize (1);
-  settings.hosts_[0] = default_broadcast;
+  settings.hosts.resize (1);
+  settings.hosts[0] = default_broadcast;
   handle_arguments (argc, argv);
 
   settings.type = Madara::Transport::BROADCAST;

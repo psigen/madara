@@ -61,7 +61,7 @@ Madara::Transport::Multicast_Transport::setup (void)
   Base::setup ();
 
   // resize addresses to be the size of the list of hosts
-  addresses_.resize (this->settings_.hosts_.size ());
+  addresses_.resize (this->settings_.hosts.size ());
 
   int ttl = 1;
   int send_buff_size = 0, tar_buff_size (settings_.queue_length);
@@ -129,7 +129,7 @@ Madara::Transport::Multicast_Transport::setup (void)
     // convert the string host:port into an ACE address
     for (unsigned int i = 0; i < addresses_.size (); ++i)
     {
-      addresses_[i].set (settings_.hosts_[i].c_str ());
+      addresses_[i].set (settings_.hosts[i].c_str ());
 
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "Multicast_Transport::Multicast_Transport:" \

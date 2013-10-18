@@ -1,5 +1,5 @@
 
-project (Madara) : using_ace, using_splice, splice_transport, using_splice_idl, using_ndds, ndds_transport, cid, port/java/using_java {
+project (Madara) : using_ace, using_splice, splice_transport, using_ndds, ndds_transport, cid, port/java/using_java {
 
   sharedname = MADARA
   dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL

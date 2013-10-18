@@ -24,7 +24,7 @@ Madara::Transport::Settings::Settings () :
         redeployment_percentage_allowed (DEFAULT_REDEPLOYMENT_PERCENTAGE),
 #endif // _USE_CID_
 
-        hosts_ ()
+        hosts ()
 {
 }
 
@@ -54,11 +54,11 @@ Madara::Transport::Settings::Settings (const Settings & settings) :
         redeployment_percentage_allowed (
          settings.redeployment_percentage_allowed),
 #endif // _USE_CID_
-         hosts_ ()
+         hosts ()
 {
-  hosts_.resize (settings.hosts_.size ());
-  for (unsigned int i = 0; i < settings.hosts_.size (); ++i)
-    hosts_[i] = settings.hosts_[i];
+  hosts.resize (settings.hosts.size ());
+  for (unsigned int i = 0; i < settings.hosts.size (); ++i)
+    hosts[i] = settings.hosts[i];
 }
 
 void
@@ -91,9 +91,9 @@ Madara::Transport::Settings::operator= (const Settings & settings)
     settings.redeployment_percentage_allowed;
 #endif // _USE_CID_
 
-  hosts_.resize (settings.hosts_.size ());
-  for (unsigned int i = 0; i < settings.hosts_.size (); ++i)
-    hosts_[i] = settings.hosts_[i];
+  hosts.resize (settings.hosts.size ());
+  for (unsigned int i = 0; i < settings.hosts.size (); ++i)
+    hosts[i] = settings.hosts[i];
 }
 
 Madara::Transport::Settings::~Settings ()

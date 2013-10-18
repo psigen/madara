@@ -22,7 +22,7 @@ void handle_arguments (int argc, char ** argv)
     if (arg1 == "-m" || arg1 == "--multicast")
     {
       if (i + 1 < argc)
-        settings.hosts_[0] = argv[i + 1];
+        settings.hosts[0] = argv[i + 1];
 
       ++i;
     }
@@ -112,8 +112,8 @@ void handle_arguments (int argc, char ** argv)
 
 int main (int argc, char ** argv)
 {
-  settings.hosts_.resize (1);
-  settings.hosts_[0] = default_multicast;
+  settings.hosts.resize (1);
+  settings.hosts[0] = default_multicast;
   handle_arguments (argc, argv);
 
   settings.type = Madara::Transport::MULTICAST;

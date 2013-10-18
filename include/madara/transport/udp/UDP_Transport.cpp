@@ -61,11 +61,11 @@ int
   // call base setup method to initialize certain common variables
   Base::setup ();
 
-  if (settings_.hosts_.size () > 0)
+  if (settings_.hosts.size () > 0)
   {
-    for (size_t i = 0; i < settings_.hosts_.size (); ++i)
+    for (size_t i = 0; i < settings_.hosts.size (); ++i)
     {
-      addresses_[settings_.hosts_[i]].set (settings_.hosts_[i].c_str ());
+      addresses_[settings_.hosts[i]].set (settings_.hosts[i].c_str ());
     }
 
     // open the broadcast socket to any port for sending

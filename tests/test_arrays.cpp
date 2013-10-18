@@ -27,8 +27,8 @@ void write_transported_arrays (Madara::Knowledge_Engine::Knowledge_Base & knowle
 
 int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
 {
-  settings.hosts_.resize (1);
-  settings.hosts_[0] = default_multicast;
+  settings.hosts.resize (1);
+  settings.hosts[0] = default_multicast;
   int retcode = parse_args (argc, argv);
 
   // set type to multicast and change queue length to 512K
@@ -169,7 +169,7 @@ int parse_args (int argc, ACE_TCHAR * argv[])
     if (arg1 == "-m" || arg1 == "--multicast")
     {
       if (i + 1 < argc)
-        settings.hosts_[0] = argv[i + 1];
+        settings.hosts[0] = argv[i + 1];
 
       ++i;
     }

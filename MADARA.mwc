@@ -5,6 +5,7 @@ workspace {
   docs/Documentation.mpc
   Kats.mpc
   Madara.mpc
+  Splice_DDS_Transport.mpc
   NDDS_Transport.mpc
   Tests.mpc
   Traffic_Lights_Ambulance.mpc

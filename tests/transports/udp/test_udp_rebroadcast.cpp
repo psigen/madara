@@ -23,7 +23,7 @@ void handle_arguments (int argc, char ** argv)
     if (arg1 == "-a" || arg1 == "--address")
     {
       if (i + 1 < argc)
-        settings.hosts_.push_back (argv[i + 1]);
+        settings.hosts.push_back (argv[i + 1]);
 
       ++i;
     }
@@ -142,33 +142,33 @@ int main (int argc, char ** argv)
   handle_arguments (argc, argv);
 
   // if the user wants us to do defaults for either host1 or 2
-  if (settings.hosts_.size () < 2)
+  if (settings.hosts.size () < 2)
   {
-    size_t cur_size = settings.hosts_.size ();
+    size_t cur_size = settings.hosts.size ();
 
-    settings.hosts_.resize (2);
+    settings.hosts.resize (2);
     
     // if we are id 0, use host1 as our ip
     if (settings.id == 0)
     {
       if (cur_size == 0)
       {
-        settings.hosts_[0] = default_host1;
+        settings.hosts[0] = default_host1;
       }
 
       // and host2 as the other ip
-      settings.hosts_[1] = default_host2;
+      settings.hosts[1] = default_host2;
     }
     else
     {
       // if we are id 1, use host2 as our ip
       if (cur_size == 0)
       {
-        settings.hosts_[0] = default_host2;
+        settings.hosts[0] = default_host2;
       }
 
       // and host1 as the other ip
-      settings.hosts_[1] = default_host1;
+      settings.hosts[1] = default_host1;
     }
   }
   

@@ -231,7 +231,7 @@ void handle_arguments (int argc, char ** argv)
     {
       if (i + 1 < argc)
       {
-        settings.hosts_.push_back (argv[i + 1]);
+        settings.hosts.push_back (argv[i + 1]);
         settings.type = Madara::Transport::MULTICAST;
       }
       ++i;
@@ -240,7 +240,7 @@ void handle_arguments (int argc, char ** argv)
     {
       if (i + 1 < argc)
       {
-        settings.hosts_.push_back (argv[i + 1]);
+        settings.hosts.push_back (argv[i + 1]);
         settings.type = Madara::Transport::BROADCAST;
       }
       ++i;
@@ -249,7 +249,7 @@ void handle_arguments (int argc, char ** argv)
     {
       if (i + 1 < argc)
       {
-        settings.hosts_.push_back (argv[i + 1]);
+        settings.hosts.push_back (argv[i + 1]);
         settings.type = Madara::Transport::UDP;
       }
       ++i;
@@ -505,11 +505,11 @@ int main (int argc, char ** argv)
   // handle all user arguments
   handle_arguments (argc, argv);
 
-  if (settings.hosts_.size () == 0)
+  if (settings.hosts.size () == 0)
   {
     // setup default transport as multicast
-    settings.hosts_.resize (1);
-    settings.hosts_[0] = default_multicast;
+    settings.hosts.resize (1);
+    settings.hosts[0] = default_multicast;
   }
   
   if (settings.id != 0)
