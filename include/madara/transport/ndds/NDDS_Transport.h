@@ -71,8 +71,6 @@ namespace Madara
       int setup (void);
     protected:
     private:
-      // identifier of this knowledge base
-      const std::string                               id_;
 
       const static char *                             topic_names_[];
       const static char *                             partition_;
@@ -85,7 +83,7 @@ namespace Madara
       DDSDataReader *   data_reader_;
       DDSDataWriter *   data_writer_;
       NDDS_Knowledge_UpdateDataWriter * update_writer_;
-      NDDS_Listener listener_;
+      NDDS_Listener * listener_;
     };
   }
 }

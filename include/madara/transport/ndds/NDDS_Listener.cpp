@@ -7,181 +7,50 @@
 
 Madara::Transport::NDDS_Listener::NDDS_Listener(
   const Settings & settings, const std::string & id,
-  Madara::Knowledge_Engine::Thread_Safe_Context & context)
-: settings_ (settings), id_ (id), context_ (context)
+  Madara::Knowledge_Engine::Thread_Safe_Context & context,
+  Bandwidth_Monitor & send_monitor,
+  Bandwidth_Monitor & receive_monitor,
+  Packet_Scheduler & packet_scheduler)
+: settings_ (settings), id_ (id), context_ (context),
+  send_monitor_ (send_monitor), receive_monitor_ (receive_monitor),
+  packet_scheduler_ (packet_scheduler)
 {
+  qos_settings_ = dynamic_cast <const QoS_Transport_Settings *> (&settings);
+  
+  // setup the receive buffer
+  if (settings_.queue_length > 0)
+    buffer_ = new char [settings_.queue_length];
+
   // check for an on_data_received ruleset
   if (settings_.on_data_received_logic.length () != 0)
   {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO
+      "NDDS_Listener::NDDS_Listener:" \
+      " setting rules to %s\n", 
+      settings_.on_data_received_logic.c_str ()));
+
     Madara::Expression_Tree::Interpreter interpreter;
-    on_data_received_ = interpreter.interpret (context_,
-      settings_.on_data_received_logic);
+    on_data_received_ = context_.compile (settings_.on_data_received_logic);
   }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "NDDS_Listener::NDDS_Listener:" \
+      " no permanent rules were set\n"));
+  }
+  
 }
 
 Madara::Transport::NDDS_Listener::NDDS_Listener(const NDDS_Listener &ref)
-: id_ (ref.id_), context_ (ref.context_)
+: settings_ (ref.settings_), id_ (ref.id_), context_ (ref.context_), 
+  send_monitor_ (ref.send_monitor_), receive_monitor_ (ref.receive_monitor_),
+  packet_scheduler_ (ref.packet_scheduler_)
 {
 }
 
 Madara::Transport::NDDS_Listener::~NDDS_Listener()
 {}
-
-void Madara::Transport::NDDS_Listener::handle_assignment (
-  NDDS_Knowledge_Update & data)
-{
-  if (data.key)
-  {
-    // if we aren't evaluating a message from ourselves, process it
-    std::string key = data.key;
-    long long value = data.value;
-    int result = 0;
-
-    MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::handle_assignment:" \
-        " waiting to process assignment\n"));
-
-    context_.lock ();
-
-    // if the data we are updating had a lower clock value or less quality
-    // then that means this update is the latest value. Among
-    // other things, this means our solution will work even
-    // without FIFO channel transports
-
-    // if the data we are updating had a lower clock value
-    // then that means this update is the latest value. Among
-    // other things, this means our solution will work even
-    // without FIFO channel transports
-    result = context_.set_if_unequal (key, value, 
-                                      data.quality, data.clock, false);
-
-    context_.unlock ();
-    context_.set_changed ();
-    
-    // if we actually updated the value
-    if (result == 1)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::handle_assignment:" \
-        " received data[%s]=%q from %s.\n", 
-        key.c_str (), value, data.originator));
-    }
-    // if the data was already current
-    else if (result == 0)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Read_Thread::handle_assignment:" \
-          " discarded data[%s]=%q from %s as the value was already set.\n",
-          key.c_str (), value, data.originator));
-    }
-    else if (result == -1)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::handle_assignment:" \
-        " discarded data due to null key.\n"));
-    }
-    else if (result == -2)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::handle_assignment:" \
-        " discarded data[%s]=%q due to lower quality.\n",
-        key.c_str (), value));
-    }
-    else if (result == -3)
-    {
-      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::handle_assignment:" \
-        " discarded data[%s]=%q due to older timestamp.\n",
-        key.c_str (), value));
-    }
-  }
-}
-
-void Madara::Transport::NDDS_Listener::handle_multiassignment (
-  NDDS_Knowledge_Update & data)
-{
-  if (data.key)
-  {
-    long long value;
-
-    MADARA_DEBUG (MADARA_LOG_MAJOR_DEBUG_INFO, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::multiassignment:" \
-        " waiting to process multiassignment\n"));
-
-    std::vector <std::string> tokens, pivots, splitters;
-
-    splitters.resize (2);
-    splitters[0] = "=";
-    splitters[1] = ";";
-
-    context_.lock ();
-    
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "NDDS_Read_Thread::multiassignment:" \
-        " processing multiassignment (%s).\n",
-          data.key));
-
-    Madara::Utility::tokenizer (data.key, splitters, tokens, pivots);
-
-    for (unsigned int i = 0; i + 1 < tokens.size (); i+=2)
-    {
-      std::string key (tokens[i]);
-      std::stringstream buffer (tokens[i + 1]);
-      buffer >> value;
-
-      int result = 0;
-      //unsigned long long cur_clock = context_.get_clock (key);
-      //unsigned long cur_quality = context_.get_quality (key);
-
-      // if the data we are updating had a lower clock value
-      // then that means this update is the latest value. Among
-      // other things, this means our solution will work even
-      // without FIFO channel transports
-      result = context_.set_if_unequal (key, value, 
-                                        data.quality, data.clock, false);
-
-      // if we actually updated the value
-      if (result == 1)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Read_Thread::handle_multiassignment:" \
-          " received data[%s]=%q from %s.\n",
-          key.c_str (), value, data.originator));
-      }
-      // if the data was already current
-      else if (result == 0)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Read_Thread::handle_multiassignment:" \
-          " discarded data[%s]=%q from %s as the value was already set.\n",
-          key.c_str (), value, data.originator));
-      }
-      else if (result == -1)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Read_Thread::handle_multiassignment:" \
-          " discarded data due to null key.\n"));
-      }
-      else if (result == -2)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Read_Thread::handle_multiassignment:" \
-          " discarded data[%s]=%q due to lower quality.\n",
-          key.c_str (), value));
-      }
-      else if (result == -3)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Read_Thread::handle_multiassignment:" \
-          " discarded data[%s]=%q due to older timestamp.\n",
-          key.c_str (), value));
-      }
-    }
-    
-    context_.unlock ();
-    context_.set_changed ();
-  }
-}
 
 void
 Madara::Transport::NDDS_Listener::on_subscription_matched (
@@ -190,20 +59,56 @@ Madara::Transport::NDDS_Listener::on_subscription_matched (
   context_.set_changed ();
 }
 
+void
+Madara::Transport::NDDS_Listener::rebroadcast (
+  const char * print_prefix,
+  Message_Header * header,
+  const Knowledge_Map & records)
+{
+  int64_t buffer_remaining = (int64_t) settings_.queue_length;
+  char * buffer = buffer_.get_ptr ();
+  unsigned long result = prep_rebroadcast (buffer, buffer_remaining,
+                                 *qos_settings_, print_prefix,
+                                 header, records,
+                                 packet_scheduler_);
+
+  if (result > 0)
+  {
+    ssize_t bytes_sent (result + sizeof (NDDS_Knowledge_Update));
+
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Sent packet of size %d\n",
+      print_prefix,
+      bytes_sent));
+      
+    send_monitor_.add ((uint32_t)bytes_sent);
+
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Send bandwidth = %d B/s\n",
+      print_prefix,
+      send_monitor_.get_bytes_per_second ()));
+  }
+}
+
 void 
 Madara::Transport::NDDS_Listener::on_data_available(DDSDataReader * reader)
 {
   NDDS_Knowledge_UpdateSeq update_data_list;
   DDS_SampleInfoSeq info_seq;
   DDS_ReturnCode_t rc;
+  
+  const char * print_prefix = "NDDS_Listener::svc";
 
   NDDS_Knowledge_UpdateDataReader * update_reader = 
     NDDS_Knowledge_UpdateDataReader::narrow(reader);
   if (update_reader == NULL)
   {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-      "\nNDDS_Listener::svc:" \
-      " Unable to create specialized reader. Leaving callback...\n"));
+      "\n%s:" \
+      " Unable to create specialized reader. Leaving callback...\n",
+      print_prefix));
     return;
   }
 
@@ -222,50 +127,64 @@ Madara::Transport::NDDS_Listener::on_data_available(DDSDataReader * reader)
   else if (rc != DDS_RETCODE_OK)
   {
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "NDDS_Listener::svc:" \
-      " could not take current sample.\n"));
+      DLINFO "%s:" \
+      " could not take current sample.\n", print_prefix));
     return;
   }
 
-  for (int i = 0; i < update_data_list.length(); ++i) {
-    if (info_seq[i].valid_data) {
-      if (Madara::Knowledge_Engine::ASSIGNMENT == update_data_list[i].type)
+  for (int i = 0; i < update_data_list.length(); ++i)
+  {
+    if (info_seq[i].valid_data)
+    {
+      // if we are evaluating a message from ourselves, just continue
+      // to the next one. It's also possible to receive null originators
+      // from what I can only guess is the ospl daemon messing up
+      if (update_data_list[i].originator == "")
       {
-        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Listener::svc:" \
-          " processing %s=%q from %s with time %Q and quality %u.\n", 
-          update_data_list[i].key, update_data_list[i].value, 
-          update_data_list[i].originator,
-          update_data_list[i].clock, update_data_list[i].quality));
+        // if we don't check originator for null, we get phantom sends
+        // when the program exits.
+        MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG,
+          DLINFO "%s:" \
+          " discarding null originator event.\n", print_prefix));
 
-        handle_assignment (update_data_list[i]);
+        continue;
       }
-      else if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list[i].type)
+
+      if (update_data_list[i].type != Madara::Transport::MULTIASSIGN)
+      {
+        // we do not allow any other type than multiassign
+        MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG,
+          DLINFO "%s:" \
+          " discarding non-assignment event.\n", print_prefix));
+
+        continue;
+      }
+
+      Knowledge_Map rebroadcast_records;
+      Message_Header * header = 0;
+
+      if (Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT == update_data_list[i].type)
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-          DLINFO "NDDS_Listener::svc:" \
+          DLINFO "%s:" \
           " processing multassignment from %s with time %Q and quality %u.\n",
-          update_data_list[i].originator,
+          print_prefix, update_data_list[i].originator,
           update_data_list[i].clock, update_data_list[i].quality));
-
-        handle_multiassignment (update_data_list[i]);
+        
+        process_received_update ((char *)update_data_list[i].buffer.get_contiguous_buffer (),
+          update_data_list[i].buffer.length (), id_, context_,
+          *qos_settings_, send_monitor_, receive_monitor_, rebroadcast_records,
+          on_data_received_, print_prefix,
+          "", header);
       }        
     }
-  }
-
-  // before we send to others, we first execute rules
-  if (settings_.on_data_received_logic.length () != 0)
-  {
-    context_.lock ();
-    on_data_received_.evaluate ();
-    context_.unlock ();
   }
 
   rc = update_reader->return_loan(update_data_list, info_seq);
   if (rc != DDS_RETCODE_OK)
   {
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "NDDS_Listener::svc:" \
-      " could return DDS sample instance loan.\n"));
+      DLINFO "%s:" \
+      " could return DDS sample instance loan.\n", print_prefix));
   }
 }

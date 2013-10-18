@@ -20,7 +20,7 @@ Madara::Transport::NDDS_Transport::NDDS_Transport (
   Settings & config, bool launch_transport)
   : Madara::Transport::Base (id, config, context),
   domain_participant_ (0), update_topic_ (0), update_writer_ (0),
-  listener_ (settings, id, context)
+  listener_ (0)
 {
   if (launch_transport)
     setup ();
@@ -100,6 +100,8 @@ Madara::Transport::NDDS_Transport::reliability (const int & setting)
 int
 Madara::Transport::NDDS_Transport::setup (void)
 {
+  Base::setup ();
+
   DDS_ReturnCode_t rc;
   DDS_DomainId_t domain = 0;
   this->is_valid_ = false;
@@ -254,11 +256,14 @@ Madara::Transport::NDDS_Transport::setup (void)
       DDS_BY_SOURCE_TIMESTAMP_DESTINATIONORDER_QOS;
   }
 
+  listener_ = new NDDS_Listener (settings_, id_, context_,
+    send_monitor_, receive_monitor_, packet_scheduler_);
+
   // create a reader for the topic
   data_reader_ = subscriber_->create_datareader (
                       update_topic_,
                       datareader_qos,
-                      &listener_,
+                      listener_,
                       DDS_STATUS_MASK_ALL);
   if (data_reader_ == 0) {
     MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
@@ -276,24 +281,11 @@ long
 Madara::Transport::NDDS_Transport::send_data (
   const Madara::Knowledge_Records & updates)
 {
-  // check to see if we are shutting down
-  long ret = this->check_transport ();
-  if (-1 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "NDDS_Transport::send_multiassignment: transport is shutting down")); 
-    return ret;
-  }
-  else if (-2 == ret)
-  {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "NDDS_Transport::send_multiassignment: transport is not valid")); 
-    return ret;
-  }
+  long result =
+    prep_send (updates, "Splice_DDS_Transport::send_data:");
   
   // get the maximum quality from the updates
   uint32_t quality = Madara::max_quality (updates);
-
 
   /// get current lamport clock. 
   unsigned long long cur_clock = context_.get_clock ();
@@ -304,30 +296,27 @@ Madara::Transport::NDDS_Transport::send_data (
   NDDS_Knowledge_Update data;
 
   NDDS_Knowledge_Update_initialize (&data);
-
-  for (Knowledge_Records::const_iterator i = updates.begin ();
-    i != updates.end (); ++i)
-  {
-    buffer << i->first;
-    buffer << "=";
-    buffer << i->second->value;
-    buffer << ";";
-  }
-
-  strcpy (data.key, buffer.str ().c_str ());
   
-  data.value = 0;
   data.clock = cur_clock;
   data.quality = quality;
 
-  strcpy (data.originator, id_.c_str ());
-
-  data.type = Madara::Knowledge_Engine::MULTIPLE_ASSIGNMENT;
-
+  data.buffer.ensure_length (result, result);
+  data.buffer.from_array ((DDS_Octet *)buffer_.get_ptr (), result);
+  data.clock = cur_clock;
+  data.quality = quality;
+  data.updates = DDS_UnsignedLong (updates.size ());
+  data.originator = new char [id_.size () + 1];
+  strncpy (data.originator, id_.c_str (), id_.size () + 1);
+  data.type = Madara::Transport::MULTIASSIGN;
+  data.ttl = settings_.get_rebroadcast_ttl ();
+  data.timestamp = time (NULL);
+  data.madara_id = new char [strlen (MADARA_IDENTIFIER) + 1];
+  strncpy (data.madara_id, MADARA_IDENTIFIER, strlen (MADARA_IDENTIFIER) + 1);
+  
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "NDDS_Transport::send:" \
-    " sending multiassignment: %s, time=%Q, quality=%u\n", 
-    buffer.str ().c_str (), cur_clock, quality));
+    " sending multiassignment: %d updates, time=%Q, quality=%u\n", 
+    data.updates, cur_clock, quality));
 
   DDS_InstanceHandle_t handle = update_writer_->register_instance (data);
   rc = update_writer_->write (data, handle); 

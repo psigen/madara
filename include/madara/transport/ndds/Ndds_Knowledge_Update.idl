@@ -3,7 +3,7 @@ module NDDS
 {
   module Knowledge
   {
-      typedef sequence<octet> seq_oct;
+      typedef sequence<octet, 600000> seq_oct;
       struct Update
       {
         string                            originator; //@key

@@ -31,7 +31,10 @@ namespace Madara
        **/
       NDDS_Listener(
         const Settings & settings, const std::string & id,
-        Madara::Knowledge_Engine::Thread_Safe_Context & context);
+        Madara::Knowledge_Engine::Thread_Safe_Context & context,
+        Bandwidth_Monitor & send_monitor,
+        Bandwidth_Monitor & receive_monitor,
+        Packet_Scheduler & packet_scheduler);
 
       /**
        * Copy constructor
@@ -44,24 +47,25 @@ namespace Madara
       ~NDDS_Listener();
 
       /**
-       * Handles an assignment update
-       * @param  data  the update that was made
-       **/
-      void handle_assignment (NDDS_Knowledge_Update & data);
-
-      /**
-       * Handles a multi-assignment update
-       * @param  data  the update that was made
-       **/
-      void handle_multiassignment (NDDS_Knowledge_Update & data);
-
-      /**
        * Handles the case where a subscription has been matched
        * @param reader the DDS data reader to read from
        * @param status the status of the matched subscription
        **/
       void on_subscription_matched (DDSDataReader* reader,
                         const DDS_SubscriptionMatchedStatus& status);
+      
+      /**
+       * Sends a rebroadcast packet.
+       * @param  print_prefix     prefix to include before every log message,
+       *                          e.g., "My_Transport::svc"
+       * @param   header   header for the rebroadcasted packet
+       * @param   records  records to rebroadcast (already filtered for
+       *                   rebroadcast)
+       **/
+      void rebroadcast (
+        const char * print_prefix,
+        Message_Header * header,
+        const Knowledge_Map & records);
 
       /**
        * Handles the case that data has become available
@@ -78,7 +82,22 @@ namespace Madara
       ::Madara::Knowledge_Engine::Thread_Safe_Context & context_;
       
       /// data received rules, defined in Transport settings
-      Madara::Expression_Tree::Expression_Tree  on_data_received_;
+      Madara::Knowledge_Engine::Compiled_Expression  on_data_received_;
+      
+      /// buffer for receiving
+      Madara::Utility::Scoped_Array <char>      buffer_;
+
+      /// pointer to qos_settings (if applicable)
+      const QoS_Transport_Settings *      qos_settings_;
+      
+      /// monitor for sending bandwidth usage
+      Bandwidth_Monitor   &   send_monitor_;
+      
+      /// monitor for receiving bandwidth usage
+      Bandwidth_Monitor   &   receive_monitor_;
+
+      /// scheduler for mimicking target network conditions
+      Packet_Scheduler    &   packet_scheduler_;
     };  // End of class NDDS_Listener
   }
 }
