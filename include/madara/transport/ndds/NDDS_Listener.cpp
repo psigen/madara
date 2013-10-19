@@ -139,7 +139,7 @@ Madara::Transport::NDDS_Listener::on_data_available(DDSDataReader * reader)
       // if we are evaluating a message from ourselves, just continue
       // to the next one. It's also possible to receive null originators
       // from what I can only guess is the ospl daemon messing up
-      if (update_data_list[i].originator == "")
+      if (strncmp (update_data_list[i].originator, "", 1) == 0)
       {
         // if we don't check originator for null, we get phantom sends
         // when the program exits.

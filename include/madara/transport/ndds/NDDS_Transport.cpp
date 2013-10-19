@@ -282,7 +282,7 @@ Madara::Transport::NDDS_Transport::send_data (
   const Madara::Knowledge_Records & updates)
 {
   long result =
-    prep_send (updates, "Splice_DDS_Transport::send_data:");
+    prep_send (updates, "NDDS_Transport::send_data:");
   
   // get the maximum quality from the updates
   uint32_t quality = Madara::max_quality (updates);
