@@ -28,6 +28,10 @@ namespace Madara
        * @param    settings   Transport settings
        * @param id  unique identifier of this entity (e.g., host:port)
        * @param context the knowledge context to access and mutate
+       * @param    send_monitor    bandwidth monitor for enforcing send limits
+       * @param    receive_monitor    bandwidth monitor for enforcing
+       *                              receive limits
+       * @param    packet_scheduler scheduler for mimicking network conditions
        **/
       NDDS_Listener(
         const Settings & settings, const std::string & id,

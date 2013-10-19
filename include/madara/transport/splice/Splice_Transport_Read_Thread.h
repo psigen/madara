@@ -38,11 +38,15 @@ namespace Madara
     public:
       /**
        * Constructor
-       * @param id unique identifier of this participant (e.g., host:port)
-       * @param context where to store and access knowledge
-       * @param update_reader reader created in @see Splice_DDS_Transport
-       * @param update_writer writer created in @see Splice_DDS_Transport
+       * @param    id unique identifier of this participant (e.g., host:port)
+       * @param    context where to store and access knowledge
+       * @param    update_reader reader created in @see Splice_DDS_Transport
+       * @param    update_writer writer created in @see Splice_DDS_Transport
        * @param    settings   Transport settings
+       * @param    send_monitor    bandwidth monitor for enforcing send limits
+       * @param    receive_monitor    bandwidth monitor for enforcing
+       *                              receive limits
+       * @param    packet_scheduler scheduler for mimicking network conditions
        **/
       Splice_Read_Thread (const std::string & id,
         const Settings & settings,
