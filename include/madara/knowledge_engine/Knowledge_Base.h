@@ -263,7 +263,8 @@ namespace Madara
        * @return   0 if the value was set. -1 if null key
        **/
       int set_index (const Variable_Reference & variable,
-        size_t index, Knowledge_Record::Integer value,
+        size_t index,
+        Knowledge_Record::Integer value = Knowledge_Record::Integer (1),
         const Eval_Settings & settings =
           Eval_Settings (false, false, true, false, false));
       
@@ -275,7 +276,7 @@ namespace Madara
        * @return   0 if the value was set. -1 if null key
        **/
       int set (const Variable_Reference & variable,
-        Madara::Knowledge_Record::Integer value, 
+        Madara::Knowledge_Record::Integer value = Knowledge_Record::Integer (1), 
         const Eval_Settings & settings =
           Eval_Settings (false, false, true, false, false));
       
