@@ -3,7 +3,7 @@
 #include "madara/utility/Log_Macros.h"
 
 Madara::Transport::Transport_Context::Transport_Context (int64_t operation,
-        uint32_t receive_bandwidth, uint32_t send_bandwidth,
+        uint64_t receive_bandwidth, uint64_t send_bandwidth,
         uint64_t message_time, uint64_t current_time)
   : operation_ (operation),
     receive_bandwidth_ (receive_bandwidth),

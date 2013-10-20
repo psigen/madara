@@ -294,6 +294,47 @@ namespace Madara
        **/
       uint64_t get_drop_burst (void) const;
 
+      /**
+       * Sets a bandwidth limit for sending on this transport in bytes per sec
+       * @param   send_bandwidth  send bandwidth in bytes per second
+       **/
+      void set_send_bandwidth_limit (int64_t send_bandwidth);
+      
+      /**
+       * Returns the limit for sending on this transport in bytes per second
+       * @return the send bandwidth limiting in bytes per second
+       **/
+      int64_t  get_send_bandwidth_limit (void) const;
+       
+      /**
+       * Sets a bandwidth limit for receiving and sending over the transport.
+       * -1 means no limit.
+       * @param   bandwidth   total bandwidth limit in bytes per second
+       **/
+      void set_total_bandwidth_limit (int64_t total_bandwidth);
+       
+      /**
+       * Returns the total limit for this transport in bytes per second.
+       * -1 means no limit.
+       * @return the total bandwidth limit in bytes per second
+       **/
+      int64_t get_total_bandwidth_limit (void) const;
+
+      /**
+       * Sets the packet deadline in seconds. Note that most transports only
+       * enforce deadline in seconds. However, future transports may allow
+       * for microsecond or millisecond deadlines, so we use a double here
+       * for expansion purposes. -1 means no deadline.
+       * @param   deadline   deadline in seconds
+       **/
+       void set_deadline (double deadline);
+
+      /**
+       * Returns the latency deadline in seconds. -1 means no deadline.
+       * @return  deadline in seconds
+       **/
+       double get_deadline (void) const;
+
     private:
        
       /**
@@ -356,6 +397,21 @@ namespace Madara
        * Burst of packet drops
        **/
       uint64_t packet_drop_burst_;
+
+      /**
+       * Maximum send bandwidth usage per second before packets drop
+       **/
+      int64_t max_send_bandwidth_;
+
+      /**
+       * Maximum bandwidth usage for the transport (receive/send) before drop
+       **/
+      int64_t max_total_bandwidth_;
+
+      /**
+       * Deadline for packets at which packets drop
+       **/
+      double latency_deadline_;
     };
   } // end Transport namespace
 } // end Madara namespace

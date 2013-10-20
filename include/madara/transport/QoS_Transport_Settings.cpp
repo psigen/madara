@@ -4,7 +4,9 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings ()
   : Settings (), rebroadcast_ttl_ (0),
     participant_rebroadcast_ttl_ (0),
     trusted_peers_ (), banned_peers_ (),
-    packet_drop_rate_ (0.0), packet_drop_burst_ (1)
+    packet_drop_rate_ (0.0), packet_drop_burst_ (1),
+    max_send_bandwidth_ (-1), max_total_bandwidth_ (-1),
+    latency_deadline_ (-1)
 {
 
 }
@@ -21,7 +23,10 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     send_filters_ (settings.send_filters_),
     packet_drop_rate_ (settings.packet_drop_burst_),
     packet_drop_type_ (settings.packet_drop_type_),
-    packet_drop_burst_ (settings.packet_drop_burst_)
+    packet_drop_burst_ (settings.packet_drop_burst_),
+    max_send_bandwidth_ (settings.max_send_bandwidth_),
+    max_total_bandwidth_ (settings.max_total_bandwidth_),
+    latency_deadline_ (settings.latency_deadline_)
 {
 }
 
@@ -47,6 +52,9 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     packet_drop_rate_ = rhs->packet_drop_rate_;
     packet_drop_type_ = rhs->packet_drop_type_;
     packet_drop_burst_ = rhs->packet_drop_burst_;
+    max_send_bandwidth_ = rhs->max_send_bandwidth_;
+    max_total_bandwidth_ = rhs->max_total_bandwidth_;
+    latency_deadline_ = rhs->latency_deadline_;
   }
 }
 
@@ -76,6 +84,9 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     packet_drop_rate_ = rhs.packet_drop_rate_;
     packet_drop_type_ = rhs.packet_drop_type_;
     packet_drop_burst_ = rhs.packet_drop_burst_;
+    max_send_bandwidth_ = rhs.max_send_bandwidth_;
+    max_total_bandwidth_ = rhs.max_total_bandwidth_;
+    latency_deadline_ = rhs.latency_deadline_;
   }
 }
 
@@ -95,6 +106,9 @@ Madara::Transport::QoS_Transport_Settings::operator= (
     packet_drop_rate_ = 0.0;
     packet_drop_type_ = PACKET_DROP_PROBABLISTIC;
     packet_drop_burst_ = 1;
+    max_send_bandwidth_ = -1;
+    max_total_bandwidth_ = -1;
+    latency_deadline_ = -1;
 
     Settings * lhs_base = (Settings *)this;
     Settings * rhs_base = (Settings *)&rhs;
@@ -351,4 +365,44 @@ uint64_t
 Madara::Transport::QoS_Transport_Settings::get_drop_burst (void) const
 {
   return packet_drop_burst_;
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::set_send_bandwidth_limit (
+  int64_t send_bandwidth)
+{
+  max_send_bandwidth_ = send_bandwidth;
+}
+
+int64_t
+Madara::Transport::QoS_Transport_Settings::get_send_bandwidth_limit (
+  void) const
+{
+  return max_send_bandwidth_;
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::set_total_bandwidth_limit (
+  int64_t total_bandwidth)
+{
+  max_total_bandwidth_ = total_bandwidth;
+}
+
+int64_t
+Madara::Transport::QoS_Transport_Settings::get_total_bandwidth_limit (
+  void) const
+{
+  return max_total_bandwidth_;
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::set_deadline (double deadline)
+{
+  latency_deadline_ = deadline;
+}
+
+double
+Madara::Transport::QoS_Transport_Settings::get_deadline (void) const
+{
+  return latency_deadline_;
 }

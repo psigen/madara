@@ -23,7 +23,7 @@ namespace Madara
 {
   namespace Transport
   {
-    typedef  std::pair <time_t, uint32_t>   Bandwidth_Record;
+    typedef  std::pair <time_t, uint64_t>   Bandwidth_Record;
     typedef  std::deque <Bandwidth_Record>  Bandwidth_Messages;
 
     /**
@@ -61,14 +61,21 @@ namespace Madara
        * Adds a message to the monitor
        * @param   size       the size of the message
        **/
-      void add (uint32_t size);
+      void add (uint64_t size);
 
       /**
        * Adds a message to the monitor
        * @param   timestamp  the time the message occured
        * @param   size       the size of the message
        **/
-      void add (time_t timestamp, uint32_t size);
+      void add (time_t timestamp, uint64_t size);
+
+      /**
+       * Checks send and receive bandwidth against send and receive limits
+       * @param  limit  if -1, does not check. If positive, checks
+       *                against current usage
+       **/
+      bool is_bandwidth_violated (int64_t limit);
 
       /**
        * Sets the window in seconds to measure bandwidth
@@ -81,14 +88,14 @@ namespace Madara
        * @return   current bandwidth utilization in bytes
        *           over the entire window (this is not bytes/s)
        **/
-      uint32_t get_utilization (void);
+      uint64_t get_utilization (void);
       
       /**
        * Queries the monitor for the current bandwidth utilization
        * per second over the past window
        * @return   current bandwidth utilization in bytes/s
        **/
-      uint32_t get_bytes_per_second (void);
+      uint64_t get_bytes_per_second (void);
 
       /**
        * Clears the bandwidth monitor
@@ -131,7 +138,7 @@ namespace Madara
       /**
        * Utilization
        **/
-      uint32_t utilization_;
+      uint64_t utilization_;
 
       /**
        * Time window for useful messages to bandwidth calculations

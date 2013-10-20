@@ -31,7 +31,7 @@ namespace Madara
        * Constructor
        **/
       Transport_Context (int64_t operation = IDLE_OPERATION,
-        uint32_t receive_bandwidth = 0, uint32_t send_bandwidth = 0,
+        uint64_t receive_bandwidth = 0, uint64_t send_bandwidth = 0,
         uint64_t message_time = 0, uint64_t current_time = time (NULL));
 
       /**
@@ -68,26 +68,26 @@ namespace Madara
        * Gets the receive bandwidth in bytes per second
        * @return     the bandwidth taken up in receive operations
        **/
-      uint32_t  get_receive_bandwidth (void);
+      uint64_t  get_receive_bandwidth (void);
       
       /**
        * Gets the send/rebroadcast bandwidth in bytes per second
        * @return     the bandwidth taken up in send/rebroadcast operations
        **/
-      uint32_t  get_send_bandwidth (void);
+      uint64_t  get_send_bandwidth (void);
 
       
       /**
        * Sets the bandwidth used for receives in bytes per second
        * @param  bandwidth   bandwidth being used by the transport
        **/
-      void set_receive_bandwidth (uint32_t bandwidth);
+      void set_receive_bandwidth (uint64_t bandwidth);
       
       /**
        * Sets the bandwidth used for sends/rebroadcast in bytes per second
        * @param  bandwidth   bandwidth being used by the transport
        **/
-      void set_send_bandwidth (uint32_t bandwidth);
+      void set_send_bandwidth (uint64_t bandwidth);
 
       /**
        * Gets the message timestamp. For receive and rebroadcast operations,
@@ -140,12 +140,12 @@ namespace Madara
       /**
        * Bandwidth being utilized for receive operations
        **/
-      uint32_t receive_bandwidth_;
+      uint64_t receive_bandwidth_;
 
       /**
        * Bandwidth being utilized for send operations
        **/
-      uint32_t send_bandwidth_;
+      uint64_t send_bandwidth_;
 
       /**
        * Message timestamp

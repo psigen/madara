@@ -253,6 +253,44 @@ project (Tutorial_Creating_Transports) : using_madara, using_ace {
   }
 }
 
+project (Tutorial_Send_Limit_Bandwidth_Filtering) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_bandwidth_filtering_send_limit
+  
+  requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Source_Files {
+    tutorials/advanced/bandwidth_filtering_send_limit.cpp
+  }
+}
+
+project (Tutorial_Total_Limit_Bandwidth_Filtering) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_bandwidth_filtering_total_limit
+  
+  requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Source_Files {
+    tutorials/advanced/bandwidth_filtering_total_limit.cpp
+  }
+}
+
 project (Tutorial_Bandwidth_Filtering) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = tutorial_bandwidth_filtering

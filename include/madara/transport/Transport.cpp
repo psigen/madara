@@ -187,8 +187,6 @@ Madara::Transport::process_received_update (
       return -4;
     }
 
-
-
     // reject the message if it is from a different domain
     if (settings.domains != header->domain)
     {
@@ -211,7 +209,42 @@ Madara::Transport::process_received_update (
         remote_host));
     }
   }
-      
+
+  int actual_updates = 0;
+  uint64_t current_time = time (NULL);
+  double deadline = settings.get_deadline ();
+
+  uint64_t latency (0);
+  
+  if (deadline > 0)
+  {
+    if (header->timestamp < current_time)
+    {
+      latency = current_time - header->timestamp;
+
+      if (latency > deadline)
+      {
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "%s:" \
+          " deadline violation (latency is %Q, deadline is %f).\n",
+          print_prefix,
+          latency, deadline));
+
+        return -6;
+      }
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Cannot compute message latency." \
+        " Message header timestamp is in the future.\n",
+        " message.timestamp = %Q, cur_timestamp = %Q.\n",
+        print_prefix,
+        header->timestamp, current_time));   
+    }
+  }
+
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
     DLINFO "%s:" \
     " iterating over the %d updates\n",
@@ -236,8 +269,27 @@ Madara::Transport::process_received_update (
     " past the lock\n",
     print_prefix));
 
-  int actual_updates = 0;
-  uint64_t current_time = time (NULL);
+  bool dropped = false;
+
+  if (send_monitor.is_bandwidth_violated (
+        settings.get_send_bandwidth_limit ()))
+  {
+    dropped = true;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%:" \
+      " Send monitor has detected violation of bandwidth limit." \
+      " Dropping packet from rebroadcast list\n", print_prefix));
+  }
+  else if (receive_monitor.is_bandwidth_violated (
+    settings.get_total_bandwidth_limit ()))
+  {
+    dropped = true;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%:" \
+      " Receive monitor has detected violation of bandwidth limit." \
+      " Dropping packet from rebroadcast list...\n", print_prefix));
+  }
+
 
   // iterate over the updates
   for (uint32_t i = 0; i < header->updates; ++i)
@@ -288,7 +340,8 @@ Madara::Transport::process_received_update (
       }
 
       // if the record was not filtered out entirely, add it to map
-      if (rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
+      if (!dropped &&
+          rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
           DLINFO "%s:" \
@@ -420,7 +473,7 @@ Madara::Transport::prep_rebroadcast (
   Packet_Scheduler & packet_scheduler)
 {
   int result = 0;
-
+  
   if (header->ttl > 0 && records.size () > 0 && packet_scheduler.add ())
   {
     // keep track of the message_size portion of buffer
@@ -513,7 +566,28 @@ long Madara::Transport::Base::prep_send (
       send_monitor_.get_bytes_per_second (),
       (uint64_t) time (NULL));
 
-  if (packet_scheduler_.add ())
+  bool dropped = false;
+
+  if (send_monitor_.is_bandwidth_violated (
+        settings_.get_send_bandwidth_limit ()))
+  {
+    dropped = true;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%:" \
+      " Send monitor has detected violation of bandwidth limit." \
+      " Dropping packet...\n", print_prefix));
+  }
+  else if (receive_monitor_.is_bandwidth_violated (
+    settings_.get_total_bandwidth_limit ()))
+  {
+    dropped = true;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%:" \
+      " Receive monitor has detected violation of bandwidth limit." \
+      " Dropping packet...\n", print_prefix));
+  }
+
+  if (!dropped && packet_scheduler_.add ())
   {
     /**
      * filter the updates according to the filters specified by
@@ -534,7 +608,7 @@ long Madara::Transport::Base::prep_send (
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "%:" \
-      " Packet scheduler has dropped packet...\n"));
+      " Packet scheduler has dropped packet...\n", print_prefix));
 
     return 0;
   }

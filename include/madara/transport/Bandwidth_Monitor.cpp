@@ -42,7 +42,7 @@ Madara::Transport::Bandwidth_Monitor::set_window (
 }
 
 void
-Madara::Transport::Bandwidth_Monitor::add (uint32_t size)
+Madara::Transport::Bandwidth_Monitor::add (uint64_t size)
 {
   Bandwidth_Guard guard (mutex_);
   
@@ -57,7 +57,7 @@ Madara::Transport::Bandwidth_Monitor::add (uint32_t size)
 
 void
 Madara::Transport::Bandwidth_Monitor::add (
-  time_t timestamp, uint32_t size)
+  time_t timestamp, uint64_t size)
 {
   Bandwidth_Guard guard (mutex_);
   
@@ -70,7 +70,19 @@ Madara::Transport::Bandwidth_Monitor::add (
   messages_.push_back (entry);
 }
 
-uint32_t
+bool
+Madara::Transport::Bandwidth_Monitor::is_bandwidth_violated (
+  int64_t limit)
+{
+  bool result = false;
+
+  if (limit >= 0 && uint64_t (limit) > get_utilization ())
+    result = true;
+
+  return result;
+}
+
+uint64_t
 Madara::Transport::Bandwidth_Monitor::get_utilization (void)
 {
   Bandwidth_Guard guard (mutex_);
@@ -80,14 +92,14 @@ Madara::Transport::Bandwidth_Monitor::get_utilization (void)
   return utilization_;
 }
 
-uint32_t
+uint64_t
 Madara::Transport::Bandwidth_Monitor::get_bytes_per_second (void)
 {
   Bandwidth_Guard guard (mutex_);
   
   update_utilization ();
 
-  return utilization_ / (uint32_t)window_;
+  return utilization_ / (uint64_t)window_;
 }
 
 void
