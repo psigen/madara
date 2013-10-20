@@ -100,7 +100,21 @@ follows agents around a grid with four zones. The agents stay within the grid,
 change vectors and can potentially query other agents (this last part is left
 as an exercise).
 
-11.) advanced/bandwidth_filtering.cpp
+11.) advanced/bandwidth_filtering_send_limit.cpp
+
+The MADARA KaRL engine includes some advanced features like bandwidth filtering
+to stop bursty clients from overwhelming the agent network. In this tutorial,
+we examine the QoS_Transport_Settings class and use the set_send_bandwidth_limit
+function to drop any packet after we hit a send bandwidth limmit.
+
+12.) advanced/bandwidth_filtering_total_limit.cpp
+
+The MADARA KaRL engine includes some advanced features like bandwidth filtering
+to stop bursty clients from overwhelming the agent network. In this tutorial,
+we examine the QoS_Transport_Settings class and use the set_send_bandwidth_limit
+function to drop any packet after we hit a receive bandwidth limmit.
+
+13.) advanced/bandwidth_filtering.cpp
 
 The MADARA KaRL engine includes some advanced features like bandwidth filtering
 to stop bursty clients from overwhelming the agent network. In this tutorial,
@@ -110,7 +124,7 @@ Also included in this tutorial are custom filter creation, compiled expressions,
 variable references, and other features that enable fast execution to meet
 real-time goals.
 
-12.) advanced/deadline_filtering.cpp
+14.) advanced/deadline_filtering.cpp
 
 The MADARA KaRL engine includes some advanced features like deadline filtering
 to stop bursty clients from overwhelming the agent network. In this tutorial,
