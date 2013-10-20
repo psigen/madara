@@ -296,9 +296,9 @@ namespace Madara
 
       /**
        * Sets a bandwidth limit for sending on this transport in bytes per sec
-       * @param   send_bandwidth  send bandwidth in bytes per second
+       * @param   bandwidth  send bandwidth in bytes per second
        **/
-      void set_send_bandwidth_limit (int64_t send_bandwidth);
+      void set_send_bandwidth_limit (int64_t bandwidth);
       
       /**
        * Returns the limit for sending on this transport in bytes per second
@@ -311,7 +311,7 @@ namespace Madara
        * -1 means no limit.
        * @param   bandwidth   total bandwidth limit in bytes per second
        **/
-      void set_total_bandwidth_limit (int64_t total_bandwidth);
+      void set_total_bandwidth_limit (int64_t bandwidth);
        
       /**
        * Returns the total limit for this transport in bytes per second.
