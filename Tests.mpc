@@ -882,7 +882,7 @@ project (Test_Splice) : using_madara, using_ace, using_splice {
   exename = test_splice
   
   
-  requires += tests
+  requires += tests opensplice
 
   Documentation_Files {
   }
@@ -904,7 +904,7 @@ project (Test_Splice_Rules) : using_madara, using_ace, using_splice {
   exename = test_splice_rules
   
   
-  requires += tests
+  requires += tests opensplice
 
   Documentation_Files {
   }
@@ -926,7 +926,7 @@ project (Test_Splice_Rebroadcast) : using_madara, using_ace, using_splice {
   exename = test_splice_rebroadcast
   
   
-  requires += tests
+  requires += tests opensplice
 
   Documentation_Files {
   }
@@ -948,7 +948,7 @@ project (Test_Splice_Filters) : using_madara, using_ace, using_splice {
   exename = test_splice_filters
   
   
-  requires += tests
+  requires += tests opensplice
 
   Documentation_Files {
   }
@@ -971,7 +971,7 @@ project (Test_NDDS) : using_madara, using_ace, using_ndds {
   exename = test_ndds
   
   
-  requires += tests
+  requires += tests ndds
 
   Documentation_Files {
   }
@@ -993,7 +993,7 @@ project (Test_NDDS_Rules) : using_madara, using_ace, using_ndds {
   exename = test_ndds_rules
   
   
-  requires += tests
+  requires += tests ndds
 
   Documentation_Files {
   }
@@ -1015,7 +1015,7 @@ project (Test_NDDS_Rebroadcast) : using_madara, using_ace, using_ndds {
   exename = test_ndds_rebroadcast
   
   
-  requires += tests
+  requires += tests ndds
 
   Documentation_Files {
   }
@@ -1037,7 +1037,7 @@ project (Test_NDDS_Filters) : using_madara, using_ace, using_ndds {
   exename = test_ndds_filters
   
   
-  requires += tests
+  requires += tests ndds
 
   Documentation_Files {
   }
