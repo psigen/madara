@@ -15,6 +15,7 @@
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/knowledge_engine/Functions.h"
+#include "madara/filters/Arguments.h"
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"

@@ -3,6 +3,20 @@
 
 #include "Utility.h"
 
+inline
+bool Madara::Utility::begins_with (const std::string & input,
+      const std::string & prefix)
+{
+  bool result = false;
+
+  if (prefix.length () <= input.length ())
+  {
+    result = input.substr (0, prefix.length ()) == prefix;
+  }
+
+  return result;
+}
+
 template <typename T>
 T Madara::Utility::bitmask_add (T mask, T values)
 {

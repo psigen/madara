@@ -36,7 +36,10 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
     rebroadcast_ttl_ (0),
     participant_rebroadcast_ttl_ (0),
     trusted_peers_ (),
-    banned_peers_ ()
+    banned_peers_ (),
+    packet_drop_rate_ (0.0), 
+    max_send_bandwidth_ (-1), max_total_bandwidth_ (-1),
+    latency_deadline_ (-1)
 {
   const QoS_Transport_Settings * rhs = dynamic_cast <const QoS_Transport_Settings *> (
     &settings);

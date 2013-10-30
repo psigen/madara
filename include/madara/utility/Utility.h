@@ -291,6 +291,15 @@ namespace Madara
     MADARA_Export int64_t nearest_int (double input);
 
     /**
+     * Check if input contains prefix at the beginning
+     * @param  input     string to check for prefix
+     * @param  prefix    string to match
+     * @return true if input begins with prefix. False otherwise.
+     **/
+    MADARA_Export bool begins_with (const std::string & input,
+      const std::string & prefix);
+
+    /**
      * Returns true if left < right
      **/
     template <typename T>

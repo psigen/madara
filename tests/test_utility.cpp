@@ -4,10 +4,15 @@
 #include <iostream>
 #include <sstream>
 #include <assert.h>
+#include <math.h>
 #include <iomanip>
 #include <algorithm>
 
 #include "madara/utility/Utility.h"
+
+#include "ace/High_Res_Timer.h"
+#include "ace/OS_NS_Thread.h"
+#include "ace/Sched_Params.h"
 
 void handle_arguments (int argc, char ** argv)
 {
@@ -259,10 +264,38 @@ void test_time (void)
     std::cerr << " FAIL\n";
 }
 
+void test_sqrt (void)
+{
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+  int64_t elapsed_ns;
+  
+  std::cout << "\n********* Testing sqrt timing *************\n\n";
+
+  timer.start ();
+
+  double input = 1000000000, result;
+  for (int i = 0; i < 1000000000; ++i)
+  {
+    result = sqrt (input);
+  }
+
+  timer.stop ();
+
+  timer.elapsed_time (measured);
+
+  elapsed_ns = measured / 1000000000;
+
+  std::cerr << "sqrt: 1,000,000,000 iterations in " << measured <<
+    " ns. avg=" << elapsed_ns << "ns.\n";
+}
+
 int main (int argc, char ** argv)
 {
   handle_arguments (argc, argv);
   
+  test_sqrt ();
   test_version ();
   test_endian_swap ();
   test_heaps ();
