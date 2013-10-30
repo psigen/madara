@@ -130,16 +130,16 @@ maekawa_receive (
       args[Madara::Filters::RECORD_NAME].to_string (), "MUTEX."))
     {
       std::vector <std::string> splitters, tokens, pivot_list;
-      splitters.push_bash (".");
+      splitters.push_back (".");
         
-      tokenizer (args[Madara::Filters::RECORD_NAME].to_string (),
+      Madara::Utility::tokenizer (args[Madara::Filters::RECORD_NAME].to_string (),
         splitters, tokens, pivot_list);
 
-      if (pivots.size () == 4)
+      if (tokens.size () == 4)
       {
-        std::string & resource_name = pivots[1];
-        std::string & requester = pivots[2];
-        std::string & third_arg = pivots[3];
+        std::string & resource_name = tokens[1];
+        std::string & requester = tokens[2];
+        std::string & third_arg = tokens[3];
 
         if (third_arg == "request")
         {
@@ -154,6 +154,7 @@ maekawa_receive (
 
         }
       }
+      return Madara::Knowledge_Record ();
     }
     else
       return args[0];

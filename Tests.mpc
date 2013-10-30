@@ -1,5 +1,5 @@
 
-project (Test_Mutex) : using_madara, using_ace {
+project (Test_Multicast_Mutex) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_multicast_mutex
   
