@@ -226,13 +226,13 @@ MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setHosts (JNI
 	
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     
-    settings->hosts_.resize(hostsLen);
+    settings->hosts.resize(hostsLen);
 	
 	for (int x = 0; x < hostsLen; x++)
 	{
 		jstring jhost = (jstring) env->GetObjectArrayElement(hosts, x);
 		const char* curHost = env->GetStringUTFChars(jhost, 0);
-        settings->hosts_[x] = std::string(curHost);
+        	settings->hosts[x] = std::string(curHost);
 		env->ReleaseStringUTFChars(jhost, curHost);
 	}
 }
@@ -246,11 +246,11 @@ MADARA_Export jobjectArray JNICALL Java_com_madara_transport_Settings_jni_1getHo
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     
-	jobjectArray ret = (jobjectArray) env->NewObjectArray(settings->hosts_.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
+	jobjectArray ret = (jobjectArray) env->NewObjectArray(settings->hosts.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
 	
-	for (int x = 0; x < settings->hosts_.size(); x++)
+	for (int x = 0; x < settings->hosts.size(); x++)
 	{
-		env->SetObjectArrayElement(ret, x, env->NewStringUTF(settings->hosts_[x].c_str()));
+		env->SetObjectArrayElement(ret, x, env->NewStringUTF(settings->hosts[x].c_str()));
 	}
 	
 	return ret;
