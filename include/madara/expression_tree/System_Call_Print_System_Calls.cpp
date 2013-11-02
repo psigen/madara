@@ -205,8 +205,10 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
       "  Converts the value to an array of integers.\n";
       
     calls_["#to_string"] =
-      "\n#to_string (value) or #string (value):\n"
-      "  Converts the value to an ASCII string.\n";
+      "\n#to_string (value, delimiter) or #string (value, delimiter):\n"
+      "  Converts the value to an ASCII string. Delimiter is an optional\n"
+      "  string sequence that separates elements of an integer or double"
+      " array.\n";
       
     calls_["#type"] =
       "\n#type (value):\n"

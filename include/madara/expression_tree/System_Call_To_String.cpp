@@ -37,16 +37,17 @@ Madara::Expression_Tree::System_Call_To_String::prune (bool & can_change)
   can_change = true;
   
   Madara::Knowledge_Record result;
-
-  if (nodes_.size () > 0)
+  
+  for (Component_Nodes::iterator i = nodes_.begin (); i != nodes_.end ();
+       ++i)
   {
     bool arg_can_change = false;
-    result = nodes_[0]->prune (arg_can_change);
+    result = (*i)->prune (arg_can_change);
     
-    if (!arg_can_change && dynamic_cast <Leaf_Node *> (nodes_[0]) == 0)
+    if (!arg_can_change && dynamic_cast <Leaf_Node *> (*i) == 0)
     {
-      delete nodes_[0];
-      nodes_[0] = new Leaf_Node (result);
+      delete *i;
+      *i = new Leaf_Node (result);
     }
   }
 
@@ -59,22 +60,38 @@ Madara::Knowledge_Record
 Madara::Expression_Tree::System_Call_To_String::evaluate (
 const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
+  Madara::Knowledge_Record result;
+
   if (nodes_.size () > 0)
   {
+    std::string delimiter = ", ";
+
+    if (nodes_.size () > 1)
+    {
+      // user wants to use a special delimiter
+      delimiter = nodes_[1]->evaluate (settings).to_string (delimiter);
+
+      if (nodes_.size () > 2)
+      { 
+        MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
+          "KARL RUNTIME ERROR: System call to_string"
+          " may have up to 2 arguments. First is a value to change to string."
+          " An optional second is a delimiter for array stringification.\n"));
+      }
+    }
+
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       "System call to_string is converting an argument.\n"));
 
-    return nodes_[0]->evaluate (settings).to_string ();
+    result = nodes_[0]->evaluate (settings).to_string (delimiter);
   }
   else
   {
-    Knowledge_Record return_value;
-
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       "System call to_string is converting 0.\n"));
-    
-    return return_value.to_string ();
   }
+
+  return result;
 }
 
 // accept a visitor

@@ -215,7 +215,7 @@ namespace Madara
      *                      elements of an array
      * @return  the value as a string
      **/
-    std::string to_string (const std::string & delimiter = "") const;
+    std::string to_string (const std::string & delimiter = ", ") const;
     
     /**
      * writes the value to a file

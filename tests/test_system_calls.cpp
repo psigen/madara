@@ -70,6 +70,9 @@ void test_system_calls (
     "sample.type = #type (sample);"
     "#write_file ('/files/sample_from_system_call.jpg', sample);"
     "logging_level = #log_level (5);"
+    "array[5] = 10;"
+    "array[2] = 100;"
+    "array[0] = 1000;"
     "#set_clock (37);"
     "#set_clock (sample, 20);"
     "#set_clock (sample.size, 22);"
@@ -84,6 +87,7 @@ void test_system_calls (
     "small = #fragment ('hello world', 1, 4);"
     "logging_level = #log_level (5);"
     "madara_root = #expand_env ('$(MADARA_ROOT)');"
+    "array_string = #to_string (array);"
     "#print ('Printing to log level 0\n');"
     "#print ('Printing to log level 1\n', 1);"
     "#print ('Printing to log level 2\n', 2);"
@@ -98,7 +102,10 @@ void test_system_calls (
     "#print ('Tried printing 11 statements. 6-10 should not work.\n');"
     "#print ('evaluating ' + statement + '\n');"
     "#eval (statement);"
-    "#print ('var1 = {var1}, var2 = {var2}, var3 = {var3}\n')"
+    "#print ('var1 = {var1}, var2 = {var2}, var3 = {var3}\n');"
+    "#print ('Array is {array_string}.\n');"
+    "array_string = #to_string (array, ' ');"
+    "#print ('Array with space delimiter is {array_string}.\n');"
     );
 }
 
