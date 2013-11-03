@@ -58,6 +58,16 @@ namespace Madara
     MADARA_Export Knowledge_Record
     discard_nonfiles      (Knowledge_Engine::Function_Arguments & args,
                            Knowledge_Engine::Variables & vars);
+
+    /**
+     * Filter for logging args
+     * @param   args        filter arguments (only first argument is used)
+     * @param   vars        variable context (unused)
+     * @return  record with status set to UNCREATED if arg is non-file
+     **/
+    MADARA_Export Knowledge_Record
+    log_args              (Knowledge_Engine::Function_Arguments & args,
+                           Knowledge_Engine::Variables & vars);
   }
 }
 

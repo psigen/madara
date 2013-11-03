@@ -82,6 +82,17 @@ Madara::Transport::Transport_Context::get_records (void) const
   return records_;
 }
 
+inline void
+Madara::Transport::Transport_Context::set_domain (
+  const std::string & domain)
+{
+  domain_ = domain;
+}
 
+inline const std::string &
+Madara::Transport::Transport_Context::get_domain (void) const
+{
+  return domain_;
+}
 
 #endif   // _TRANSPORT_CONTEXT_INL_

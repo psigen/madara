@@ -22,7 +22,8 @@ namespace Madara
       RECEIVED_BANDWIDTH = 4,
       UPDATE_TIME = 5,
       CURRENT_TIME = 6,
-      TOTAL_ARGUMENTS = 7
+      KNOWLEDGE_DOMAIN = 7,
+      TOTAL_ARGUMENTS = 8
     };
   }
 }

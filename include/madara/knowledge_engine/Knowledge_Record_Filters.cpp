@@ -1,6 +1,7 @@
 #include "Knowledge_Record_Filters.h"
 #include "madara/utility/Utility.h"
 #include "madara/utility/Log_Macros.h"
+#include "madara/filters/Arguments.h"
 
 Madara::Knowledge_Engine::Knowledge_Record_Filters::Knowledge_Record_Filters ()
   : context_ (0)
@@ -118,7 +119,7 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
        * resize every filter call to make sure we have adequate space
        **/
       
-      arguments.resize (7);
+      arguments.resize (Madara::Filters::TOTAL_ARGUMENTS);
 
       if (name != "")
       {
@@ -146,6 +147,9 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       arguments[6].set_value (Knowledge_Record::Integer (
         transport_context.get_current_time ()));
 
+      // seventh argument is the networking domain
+      arguments[7].set_value (transport_context.get_domain ());
+
       // setup arguments to the function
       arguments[0] = result;
 
@@ -156,9 +160,10 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       }
 
       // did the filter add records to be sent?
-      if (arguments.size () > 8)
+      if (arguments.size () > 9)
       {
-        for (unsigned int i = 7; i + 1 < arguments.size (); i += 2)
+        for (unsigned int i = Madara::Filters::TOTAL_ARGUMENTS;
+          i + 1 < arguments.size (); i += 2)
         {
           if (arguments[i].is_string_type ())
           {

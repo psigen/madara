@@ -32,7 +32,8 @@ namespace Madara
        **/
       Transport_Context (int64_t operation = IDLE_OPERATION,
         uint64_t receive_bandwidth = 0, uint64_t send_bandwidth = 0,
-        uint64_t message_time = 0, uint64_t current_time = time (NULL));
+        uint64_t message_time = 0, uint64_t current_time = time (NULL),
+        const std::string & domain = "");
 
       /**
        * Copy constructor
@@ -130,6 +131,16 @@ namespace Madara
        **/
       const Knowledge_Map & get_records (void) const;
 
+      /**
+       * Returns the network domain
+       **/
+      const std::string & get_domain (void) const;
+
+      /**
+       * Sets the network domain
+       **/
+      void set_domain (const std::string & domain);
+
     private:
 
       /**
@@ -156,6 +167,11 @@ namespace Madara
        * Current timestamp
        **/
       uint64_t current_time_;
+
+      /**
+       * Networking domain
+       **/
+      std::string domain_;
 
       /**
        * Context specific records

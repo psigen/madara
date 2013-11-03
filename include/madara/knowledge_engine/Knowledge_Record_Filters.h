@@ -101,6 +101,7 @@ namespace Madara
        * args[4] : Bandwidth used while receiving from this transport<br />
        * args[5] : Message timestamp (when the message was originally sent)<br />
        * args[6] : Current timestamp (the result of time (NULL))<br />
+       * args[7] : Network domain (partition of the network knowledge)<br />
        * 
        * @param   input   the argument to the filter chain
        * @param   name    variable name ("" if unnamed)

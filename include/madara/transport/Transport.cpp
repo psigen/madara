@@ -315,15 +315,16 @@ Madara::Transport::process_received_update (
       print_prefix,
       key.c_str (), record.to_string ().c_str ()));
         
-    uint32_t receive_bandwidth = receive_monitor.get_bytes_per_second ();
-    uint32_t send_bandwidth = send_monitor.get_bytes_per_second ();
+    int64_t receive_bandwidth = receive_monitor.get_bytes_per_second ();
+    int64_t send_bandwidth = send_monitor.get_bytes_per_second ();
 
     Transport_Context transport_context (
       Transport_Context::REBROADCASTING_OPERATION,
       receive_bandwidth,
       send_bandwidth,
       header->timestamp,
-      current_time);
+      current_time,
+      settings.domains);
         
     // if the tll is 1 or more and we are participating in rebroadcasts
     if (header->ttl > 0 && 
@@ -368,6 +369,7 @@ Madara::Transport::process_received_update (
         Transport_Context::RECEIVING_OPERATION);
       transport_context.set_receive_bandwidth (receive_bandwidth);
       transport_context.set_send_bandwidth (send_bandwidth);
+      transport_context.set_domain (settings.domains);
       
       // filter according to receive rules
       record = settings.filter_receive (record, key,
@@ -564,7 +566,7 @@ long Madara::Transport::Base::prep_send (
   Transport_Context transport_context (Transport_Context::SENDING_OPERATION,
       receive_monitor_.get_bytes_per_second (),
       send_monitor_.get_bytes_per_second (),
-      (uint64_t) time (NULL));
+      (uint64_t) time (NULL), (uint64_t) time (NULL), settings_.domains);
 
   bool dropped = false;
 

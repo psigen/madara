@@ -4,12 +4,14 @@
 
 Madara::Transport::Transport_Context::Transport_Context (int64_t operation,
         uint64_t receive_bandwidth, uint64_t send_bandwidth,
-        uint64_t message_time, uint64_t current_time)
+        uint64_t message_time, uint64_t current_time,
+        const std::string & domain)
   : operation_ (operation),
     receive_bandwidth_ (receive_bandwidth),
     send_bandwidth_ (send_bandwidth),
     message_time_ (message_time),
-    current_time_ (current_time)
+    current_time_ (current_time),
+    domain_ (domain)
 {
 }
 
@@ -19,7 +21,8 @@ Madara::Transport::Transport_Context::Transport_Context (
   receive_bandwidth_ (rhs.receive_bandwidth_),
   send_bandwidth_ (rhs.send_bandwidth_),
   message_time_ (rhs.message_time_),
-  current_time_ (rhs.current_time_)
+  current_time_ (rhs.current_time_),
+  domain_ (rhs.domain_)
 {
 }
 
@@ -38,5 +41,6 @@ Madara::Transport::Transport_Context::operator= (
     receive_bandwidth_ = rhs.receive_bandwidth_;
     message_time_ = rhs.message_time_;
     current_time_ = rhs.current_time_;
+    domain_ = rhs.domain_;
   }
 }

@@ -149,6 +149,8 @@ int main (int argc, char ** argv)
   }
 
   settings.type = Madara::Transport::UDP;
+  settings.add_send_filter (Madara::Knowledge_Record::ALL_TYPES,
+                            Madara::Filters::log_args);
   settings.add_send_filter (Madara::Knowledge_Record::DOUBLE,
                             Madara::Filters::discard);
 
