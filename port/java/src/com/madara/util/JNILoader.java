@@ -78,6 +78,7 @@ public class JNILoader
 	 * <br> * The library follows proper naming (ie. libTest.so, libTest.dylib, Test.dll)
 	 * @param library The name of the library to load
 	 */
+	@Deprecated
 	public static void load(String library)
 	{
 		System.loadLibrary(library);
@@ -139,7 +140,7 @@ public class JNILoader
 	/**
 	 * Extrat a lib to the local temp directory
 	 * @param lib Lib object containing lib name and a valid input stream
-	 * @return
+	 * @return path to the extracted library
 	 */
 	private static String extract(Lib lib)
 	{

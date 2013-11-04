@@ -55,9 +55,9 @@ public class Debug extends MadaraJNI
 		{
 			this.num = num;
 		}
-		
-		
+
 		/**
+		 * Get the integer value of this {@link com.madara.Debug.DebugLevel DebugLevel}
 		 * @return int value of this {@link com.madara.Debug.DebugLevel DebugLevel}
 		 */
 		public int value()

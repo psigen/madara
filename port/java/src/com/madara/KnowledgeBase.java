@@ -166,7 +166,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluate(CompiledExpression, EvalSettings) KnowledgeRecord.evaluate(CompiledExpression, EvalSettings)} instead</b><br/><br/>
+	 * <b>Invoking this method will cause a runtime exception, use {@link #evaluate(CompiledExpression, EvalSettings) KnowledgeRecord.evaluate(CompiledExpression, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) at some point. If
 	 * it is to be ignored, consider using {@link #evaluateNoReturn(CompiledExpression)}

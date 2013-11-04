@@ -22,7 +22,11 @@ public enum TransportType
 	{
 		this.num = num;
 	}
-	
+
+	/**
+	 * Get the integer value of this enum
+	 * @return value of the enum
+	 */
 	public int value()
 	{
 		return num;

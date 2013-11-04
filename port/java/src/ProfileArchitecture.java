@@ -123,7 +123,7 @@ public class ProfileArchitecture
 		}
 	}
 	
-	public static class Test
+	private static class Test
 	{	
 		public String test;
 		public long maxTime;
@@ -139,7 +139,7 @@ public class ProfileArchitecture
 		}
 	}
 	
-	public static class Timer
+	private static class Timer
 	{
 
 		private long start = 0;

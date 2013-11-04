@@ -28,7 +28,7 @@ public class TestReasoningThroughput
 	
 	private static List<Test> tests = new ArrayList<Test>();
 	
-	public static abstract class Test
+	private static abstract class Test
 	{
 		public long elapsed = 0;
 		public long hertz = 0;
@@ -38,7 +38,7 @@ public class TestReasoningThroughput
 	}
 	
 	
-	public static class SimpleReinforcement extends Test
+	private static class SimpleReinforcement extends Test
 	{
 		@Override
 		public String name()
@@ -66,7 +66,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class LargeReinforcement extends Test
+	private static class LargeReinforcement extends Test
 	{
 		@Override
 		public String name()
@@ -103,7 +103,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class SimpleInference extends Test
+	private static class SimpleInference extends Test
 	{
 		@Override
 		public String name()
@@ -131,7 +131,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class LargeInference extends Test
+	private static class LargeInference extends Test
 	{
 		@Override
 		public String name()
@@ -168,7 +168,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class CompiledSR extends Test
+	private static class CompiledSR extends Test
 	{
 		@Override
 		public String name()
@@ -200,7 +200,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class CompiledLR extends Test
+	private static class CompiledLR extends Test
 	{
 		@Override
 		public String name()
@@ -239,7 +239,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class CompiledSI extends Test
+	private static class CompiledSI extends Test
 	{
 		@Override
 		public String name()
@@ -271,7 +271,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class CompiledLI extends Test
+	private static class CompiledLI extends Test
 	{
 		@Override
 		public String name()
@@ -310,7 +310,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class LoopedSR extends Test
+	private static class LoopedSR extends Test
 	{
 		@Override
 		public String name()
@@ -342,7 +342,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class OptimalLoop extends Test
+	private static class OptimalLoop extends Test
 	{
 		@Override
 		public String name()
@@ -374,7 +374,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class LoopedSI extends Test
+	private static class LoopedSI extends Test
 	{
 		@Override
 		public String name()
@@ -406,7 +406,7 @@ public class TestReasoningThroughput
 		}
 	}
 	
-	public static class OptimalReinforcement extends Test
+	private static class OptimalReinforcement extends Test
 	{
 		
 		@Override
@@ -531,7 +531,7 @@ public class TestReasoningThroughput
 		
 	}
 	
-	public static class Timer
+	private static class Timer
 	{
 
 		private long start = 0;

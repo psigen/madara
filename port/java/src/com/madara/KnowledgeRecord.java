@@ -177,7 +177,7 @@ public class KnowledgeRecord extends MadaraJNI
 	 * @param cptr C pointer to a KnowledgeRecord object
 	 * @return new KnowledgeRecord
 	 */
-	public static KnowledgeRecord fromPointer(long cptr)
+	static KnowledgeRecord fromPointer(long cptr)
 	{
 		KnowledgeRecord ret = new KnowledgeRecord();
 		ret.setCPtr(cptr);

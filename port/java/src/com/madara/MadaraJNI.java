@@ -23,7 +23,7 @@ public abstract class MadaraJNI
 	/**
 	 * C pointer to an object
 	 */
-	protected long cptr = 0;
+	private long cptr = 0;
 
 	/**
 	 * Set the C pointer to the object
