@@ -110,7 +110,6 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluate(String, EvalSettings) KnowledgeRecord.evaluate(String, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * <br/>The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) 
 	 * at some point. If it is to be ignored, consider using {@link #evaluateNoReturn(String)}
@@ -125,7 +124,6 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluateNoReturn(String, EvalSettings) KnowledgeRecord.evaluateNoReturn(String, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
@@ -166,7 +164,6 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link #evaluate(CompiledExpression, EvalSettings) KnowledgeRecord.evaluate(CompiledExpression, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) at some point. If
 	 * it is to be ignored, consider using {@link #evaluateNoReturn(CompiledExpression)}
@@ -181,7 +178,6 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#evaluateNoReturn(CompiledExpression, EvalSettings) KnowledgeRecord.evaluateNoReturn(CompiledExpression, EvalSettings)} instead</b><br/><br/>
 	 * Evaluates an expression.
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
@@ -442,8 +438,7 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#waitNoReturn(CompiledExpression, WaitSettings) KnowledgeRecord.waitNoReturn(CompiledExpression, WaitSettings)} instead</b><br/><br/>
-	 * Waits for an expression to be non-zero. 
+	 * Waits for an expression to be non-zero.
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
