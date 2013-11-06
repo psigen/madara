@@ -8,7 +8,7 @@ package com.madara.transport;
 
 import com.madara.MadaraJNI;
 
-public class Settings extends MadaraJNI
+public class TransportSettings extends MadaraJNI
 {
 	
 	private native long jni_Settings();
@@ -16,14 +16,14 @@ public class Settings extends MadaraJNI
 
 	private static native void jni_freeSettings(long cptr);
 
-	public Settings()
+	public TransportSettings()
 	{
 		setCPtr(jni_Settings());
 	}
 	
-	public Settings(Settings settings)
+	public TransportSettings(TransportSettings transportSettings)
 	{
-		setCPtr(jni_Settings(settings.getCPtr()));
+		setCPtr(jni_Settings(transportSettings.getCPtr()));
 	}
 	
 	private native void jni_setDomains(long cptr, String domains);

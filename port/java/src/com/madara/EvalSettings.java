@@ -13,26 +13,26 @@ public class EvalSettings extends MadaraJNI
 {
 	
 	//Constructors
-	private native long jni_evalSettings();
-	private native long jni_evalSettings(long oldPtr);
+	private static native long jni_evalSettings();
+	private static native long jni_evalSettings(long oldPtr);
 	
 	//Getters/Setters
-	private native void jni_setDelaySendingModifieds(long cptr, boolean delaySendingModifieds);
-	private native boolean jni_getDelaySendingModifieds(long cptr);
-	private native void jni_setPrePrintStatement(long cptr, String prePrintStatement);
-	private native String jni_getPrePrintStatement(long cptr);
-	private native void jni_setPostPrintStatement(long cptr, String prePrintStatement);
-	private native String jni_getPostPrintStatement(long cptr);
-	private native void jni_setAlwaysOverwrite(long cptr, boolean alwaysOverwrite);
-	private native boolean jni_getAlwaysOverwrite(long cptr);
-	private native void jni_setTreatGlobalsAsLocals(long cptr, boolean treatGlobalsAsLocals);
-	private native boolean jni_getTreatGlobalsAsLocals(long cptr);
-	private native void jni_setClockIncrement(long cptr, long defaultClockIncrement);
-	private native long jni_getClockIncrement(long cptr);
+	private static native void jni_setDelaySendingModifieds(long cptr, boolean delaySendingModifieds);
+	private static native boolean jni_getDelaySendingModifieds(long cptr);
+	private static native void jni_setPrePrintStatement(long cptr, String prePrintStatement);
+	private static native String jni_getPrePrintStatement(long cptr);
+	private static native void jni_setPostPrintStatement(long cptr, String prePrintStatement);
+	private static native String jni_getPostPrintStatement(long cptr);
+	private static native void jni_setAlwaysOverwrite(long cptr, boolean alwaysOverwrite);
+	private static native boolean jni_getAlwaysOverwrite(long cptr);
+	private static native void jni_setTreatGlobalsAsLocals(long cptr, boolean treatGlobalsAsLocals);
+	private static native boolean jni_getTreatGlobalsAsLocals(long cptr);
+	private static native void jni_setClockIncrement(long cptr, long defaultClockIncrement);
+	private static native long jni_getClockIncrement(long cptr);
 
 	private static native void jni_freeEvalSettings(long cptr);
 
-	public static final EvalSettings DEFAULT_EVAL_SETTINGS = new EvalSettings(true);
+	public static final EvalSettings DEFAULT_EVAL_SETTINGS = new EvalSettings(jni_evalSettings());
 
 	/**
 	 * Used to determine if the current object should be allowed to change or not
@@ -47,7 +47,6 @@ public class EvalSettings extends MadaraJNI
 		setCPtr(jni_evalSettings());
 		constant = false;
 	}
-	
 	
 	/**
 	 * Copy constructor
@@ -65,14 +64,8 @@ public class EvalSettings extends MadaraJNI
 	 */
 	protected EvalSettings(long cptr)
 	{
-		constant = true;
 		setCPtr(cptr);
-	}
-
-	protected EvalSettings(boolean constant)
-	{
-		setCPtr(jni_evalSettings());
-		this.constant = constant;
+		constant = true;
 	}
 	
 

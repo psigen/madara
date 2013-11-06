@@ -5,8 +5,8 @@
  * https://code.google.com/p/smash-cmu/wiki/License
  *********************************************************************/
 
-#ifndef _Included_com_madara_Debug
-#define _Included_com_madara_Debug
+#ifndef _Included_com_madara_MadaraLog
+#define _Included_com_madara_MadaraLog
 
 #include <jni.h>
 #include "madara/MADARA_export.h"
@@ -15,11 +15,11 @@
 extern "C" {
 #endif
 /*
- * Class:     com_madara_Debug
- * Method:    jni_setDebugLevel
+ * Class:     com_madara_MadaraLog
+ * Method:    jni_setLogLevel
  * Signature: (I)V
  */
-MADARA_Export void JNICALL Java_com_madara_Debug_jni_1setDebugLevel
+MADARA_Export void JNICALL Java_com_madara_MadaraLog_jni_1setLogLevel
   (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus

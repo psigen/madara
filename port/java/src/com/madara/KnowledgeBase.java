@@ -8,7 +8,7 @@ package com.madara;
 
 import java.util.HashMap;
 
-import com.madara.transport.Settings;
+import com.madara.transport.TransportSettings;
 import com.madara.transport.TransportType;
 
 /**
@@ -21,7 +21,7 @@ public class KnowledgeBase extends MadaraJNI
 	private native long jni_KnowledgeBase(String host, int transport, String domain);
 	private native long jni_KnowledgeBase(String host, long config);
 	private native long jni_KnowledgeBase(long original);
-	
+
 	private native long jni_evaluate(long cptr, String expression, long evalSettings);
 	private native long jni_evaluate(long cptr, long expression, long evalSettings);
 	private native void jni_evaluateNoReturn(long cptr, String expression, long evalSettings);
@@ -91,7 +91,7 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param host hostname/ip of this machine
 	 * @param config transport settings to use for dissemination
 	 */
-	public KnowledgeBase(String host, Settings config)
+	public KnowledgeBase(String host, TransportSettings config)
 	{
 		setCPtr(jni_KnowledgeBase(host, config.getCPtr()));
 		knowledgeBases.put(getCPtr(), this);
@@ -297,19 +297,6 @@ public class KnowledgeBase extends MadaraJNI
 		return KnowledgeRecord.fromPointer(jni_get(getCPtr(), name));
 	}
 	
-	
-	/**
-	 * Sets a knowledge value to a specified value.
-	 * @param name knowledge name
-	 * @param record value to set
-	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
-	 */
-	@Deprecated
-	public void set(String name, KnowledgeRecord record)
-	{
-		throw new UnsupportedOperationException("set(String, KnowledgeRecord) is no longer supported");
-	}
-	
 	/**
 	 * Sets a knowledge value to a specified value.
 	 * @param name knowledge name
@@ -383,23 +370,20 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#wait(String, WaitSettings) KnowledgeRecord.wait(String, WaitSettings)} instead</b><br/><br/>
-	 * Waits for an expression to be non-zero. 
+	 * Waits for an expression to be non-zero.
 	 * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) 
 	 * at some point. If it is to be ignored, consider using {@link #waitNoReturn(String)}
 	 * @param expression KaRL expression to evaluate
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public KnowledgeRecord wait(String expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.wait(String) is no longer supported by MADARA");
+		return wait(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
 	}
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#wait(CompiledExpression, WaitSettings) KnowledgeRecord.wait(CompiledExpression, WaitSettings)} instead</b><br/><br/>
 	 * Waits for an expression to be non-zero.
 	 * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed ({@link com.madara.KnowledgeRecord#free() KnowledgeRecord.free()}) 
 	 * at some point. If it is to be ignored, consider using {@link #waitNoReturn(CompiledExpression)}
@@ -407,10 +391,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @return value of expression
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public KnowledgeRecord wait(CompiledExpression expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.wait(CompiledExpression) is no longer supported by MADARA");
+		return wait(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
 	}
 	
 	
@@ -448,15 +431,13 @@ public class KnowledgeBase extends MadaraJNI
 	
 	
 	/**
-	 * <b>Invoking this method will cause a runtime exception, use {@link com.madara.KnowledgeBase#waitNoReturn(String, WaitSettings) KnowledgeRecord.waitNoReturn(String, WaitSettings)} instead</b><br/><br/>
-	 * Waits for an expression to be non-zero. 
+	 * Waits for an expression to be non-zero.
 	 * @param expression KaRL expression to evaluate
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public void waitNoReturn(String expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.waitNoReturn(String) is no longer supported by MADARA");
+		waitNoReturn(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
 	}
 	
 	
@@ -466,10 +447,9 @@ public class KnowledgeBase extends MadaraJNI
 	 * @param expression KaRL expression to evaluate (result of {@link #compile(String)})
 	 * @throws KnowledgeBaseLockedException If called from a MadaraFunction
 	 */
-	@Deprecated
 	public void waitNoReturn(CompiledExpression expression)
 	{
-		throw new UnsupportedOperationException("KnowledgeBase.waitNoReturn(CompiledExpression) is no longer supported by MADARA");
+		waitNoReturn(expression, WaitSettings.DEFAULT_WAIT_SETTINGS);
 	}
 	
 	
@@ -540,7 +520,16 @@ public class KnowledgeBase extends MadaraJNI
 		
 		return new KnowledgeMap(jniRet.keys, jniRet.vals);
 	}
-	
+
+	/**
+	 * Sets the log level to dictate the detail of MADARA logging.
+	 * @param logLevel The log level to set
+	 */
+	public static void setLogLevel(MadaraLog.MadaraLogLevel logLevel)
+	{
+		MadaraLog.setLogLevel(logLevel);
+	}
+
 	/**
 	 * Checks the CONTEXT_LOCK to see if the current thread is allowed
 	 * to invoke member methods. Access will be denied if the a {@link com.madara.MadaraFunction MadaraFunction}
@@ -624,7 +613,7 @@ public class KnowledgeBase extends MadaraJNI
 		}
 	}
 	
-	public static class MapReturn
+	static class MapReturn
 	{
 		public String[] keys;
 		public long[] vals;

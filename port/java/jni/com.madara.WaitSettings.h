@@ -14,13 +14,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     com_madara_WaitSettings
- * Method:    jni_getDefaultWaitSettings
- * Signature: (I)J
- */
-MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSettings
-  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     com_madara_WaitSettings
@@ -28,7 +21,7 @@ MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1getDefaultWaitSett
  * Signature: ()J
  */
 MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_madara_WaitSettings
@@ -36,7 +29,7 @@ MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__
  * Signature: (J)J
  */
 MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_madara_WaitSettings
@@ -44,7 +37,7 @@ MADARA_Export jlong JNICALL Java_com_madara_WaitSettings_jni_1waitSettings__J
  * Signature: (JD)V
  */
 MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency
-  (JNIEnv *, jobject, jlong, jdouble);
+  (JNIEnv *, jclass, jlong, jdouble);
 
 /*
  * Class:     com_madara_WaitSettings
@@ -52,7 +45,7 @@ MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1setPollFrequency
  * Signature: (J)D
  */
 MADARA_Export jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_madara_WaitSettings
@@ -60,7 +53,7 @@ MADARA_Export jdouble JNICALL Java_com_madara_WaitSettings_jni_1getPollFrequency
  * Signature: (JD)V
  */
 MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime
-  (JNIEnv *, jobject, jlong, jdouble);
+  (JNIEnv *, jclass, jlong, jdouble);
 
 /*
  * Class:     com_madara_WaitSettings
@@ -68,7 +61,7 @@ MADARA_Export void JNICALL Java_com_madara_WaitSettings_jni_1setMaxWaitTime
  * Signature: (J)D
  */
 MADARA_Export jdouble JNICALL Java_com_madara_WaitSettings_jni_1getMaxWaitTime
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jclass, jlong);
     
 /*
  * Class:     com_madara_WaitSettings

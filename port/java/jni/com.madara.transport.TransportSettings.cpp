@@ -5,38 +5,38 @@
  * https://code.google.com/p/smash-cmu/wiki/License
  *********************************************************************/
 
-#include "com.madara.transport.Settings.h"
+#include "com.madara.transport.TransportSettings.h"
 #include "madara/transport/Transport.h"
 
 #include <string>
 #include <stdio.h>
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_Settings
  * Signature: ()J
  */
-MADARA_Export jlong JNICALL Java_com_madara_transport_Settings_jni_1Settings__(JNIEnv *env, jobject obj)
+MADARA_Export jlong JNICALL Java_com_madara_transport_TransportSettings_jni_1Settings__(JNIEnv *env, jobject obj)
 {
     return (jlong) new Madara::Transport::Settings();
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_Settings
  * Signature: (J)J
  */
-MADARA_Export jlong JNICALL Java_com_madara_transport_Settings_jni_1Settings__J (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jlong JNICALL Java_com_madara_transport_TransportSettings_jni_1Settings__J (JNIEnv *env, jobject obj, jlong cptr)
 {
     return (jlong) new Madara::Transport::Settings(*(Madara::Transport::Settings*)cptr);
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setDomains
  * Signature: (JLjava/lang/String;)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setDomains (JNIEnv *env, jobject obj, jlong cptr, jstring domains)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setDomains (JNIEnv *env, jobject obj, jlong cptr, jstring domains)
 {
 	const char *nativeDomains = env->GetStringUTFChars(domains, 0);
 	
@@ -47,154 +47,154 @@ MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setDomains (J
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getDomains
  * Signature: (J)Ljava/lang/String;
  */
-MADARA_Export jstring JNICALL Java_com_madara_transport_Settings_jni_1getDomains (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jstring JNICALL Java_com_madara_transport_TransportSettings_jni_1getDomains (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
 	return (jstring) env->NewStringUTF(settings->domains.c_str());
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setQueueLength
  * Signature: (JI)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setQueueLength (JNIEnv * env, jobject obj, jlong cptr, jint queueLength)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setQueueLength (JNIEnv * env, jobject obj, jlong cptr, jint queueLength)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     settings->queue_length = queueLength;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getQueueLength
  * Signature: (J)I
  */
-MADARA_Export jint JNICALL Java_com_madara_transport_Settings_jni_1getQueueLength (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_transport_TransportSettings_jni_1getQueueLength (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
 	return (jint) settings->queue_length;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setDeadline
  * Signature: (JI)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setDeadline (JNIEnv * env, jobject obj, jlong cptr, jint deadline)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setDeadline (JNIEnv * env, jobject obj, jlong cptr, jint deadline)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     settings->deadline = deadline;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getDeadline
  * Signature: (J)I
  */
-MADARA_Export jint JNICALL Java_com_madara_transport_Settings_jni_1getDeadline (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_transport_TransportSettings_jni_1getDeadline (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     return (jint) settings->deadline;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setType
  * Signature: (JI)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setType (JNIEnv * env, jobject obj, jlong cptr, jint type)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setType (JNIEnv * env, jobject obj, jlong cptr, jint type)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     settings->type = type;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getType
  * Signature: (J)I
  */
-MADARA_Export jint JNICALL Java_com_madara_transport_Settings_jni_1getType (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_transport_TransportSettings_jni_1getType (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     return (jint) settings->type;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setReliability
  * Signature: (JI)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setReliability (JNIEnv * env, jobject obj, jlong cptr, jint reliability)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setReliability (JNIEnv * env, jobject obj, jlong cptr, jint reliability)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     settings->reliability = reliability;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getReliability
  * Signature: (J)I
  */
-MADARA_Export jint JNICALL Java_com_madara_transport_Settings_jni_1getReliability (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_transport_TransportSettings_jni_1getReliability (JNIEnv * env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     return (jint) settings->reliability;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setId
  * Signature: (JI)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setId (JNIEnv *env, jobject obj, jlong cptr, jint id)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setId (JNIEnv *env, jobject obj, jlong cptr, jint id)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     settings->id = id;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getId
  * Signature: (J)I
  */
-MADARA_Export jint JNICALL Java_com_madara_transport_Settings_jni_1getId (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_transport_TransportSettings_jni_1getId (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     return (jint) settings->id;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setProcesses
  * Signature: (JI)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setProcesses (JNIEnv *env, jobject obj, jlong cptr, jint processes)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setProcesses (JNIEnv *env, jobject obj, jlong cptr, jint processes)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     settings->processes = processes;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getProcesses
  * Signature: (J)I
  */
-MADARA_Export jint JNICALL Java_com_madara_transport_Settings_jni_1getProcesses (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jint JNICALL Java_com_madara_transport_TransportSettings_jni_1getProcesses (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     return (jint) settings->processes;
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setOnDataReceivedLogic
  * Signature: (JLjava/lang/String;)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setOnDataReceivedLogic (JNIEnv *env, jobject obj, jlong cptr, jstring onDataReceivedLogic)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setOnDataReceivedLogic (JNIEnv *env, jobject obj, jlong cptr, jstring onDataReceivedLogic)
 {
 	const char *nativeOnDataReceivedLogic = env->GetStringUTFChars(onDataReceivedLogic, 0);
 	
@@ -205,22 +205,22 @@ MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setOnDataRece
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getOnDataReceivedLogic
  * Signature: (J)Ljava/lang/String;
  */
-MADARA_Export jstring JNICALL Java_com_madara_transport_Settings_jni_1getOnDataReceivedLogic (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jstring JNICALL Java_com_madara_transport_TransportSettings_jni_1getOnDataReceivedLogic (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
 	return (jstring) env->NewStringUTF(settings->on_data_received_logic.c_str());
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_setHosts
  * Signature: (J[Ljava/lang/String;)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setHosts (JNIEnv *env, jobject obj, jlong cptr, jobjectArray hosts)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1setHosts (JNIEnv *env, jobject obj, jlong cptr, jobjectArray hosts)
 {
 	int hostsLen = env->GetArrayLength(hosts);
 	
@@ -238,11 +238,11 @@ MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1setHosts (JNI
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_getHosts
  * Signature: (J)[Ljava/lang/String;
  */
-MADARA_Export jobjectArray JNICALL Java_com_madara_transport_Settings_jni_1getHosts (JNIEnv *env, jobject obj, jlong cptr)
+MADARA_Export jobjectArray JNICALL Java_com_madara_transport_TransportSettings_jni_1getHosts (JNIEnv *env, jobject obj, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     
@@ -257,11 +257,11 @@ MADARA_Export jobjectArray JNICALL Java_com_madara_transport_Settings_jni_1getHo
 }
 
 /*
- * Class:     com_madara_transport_Settings
+ * Class:     com_madara_transport_TransportSettings
  * Method:    jni_freeSettings
  * Signature: (J)V
  */
-MADARA_Export void JNICALL Java_com_madara_transport_Settings_jni_1freeSettings (JNIEnv * env, jclass cls, jlong cptr)
+MADARA_Export void JNICALL Java_com_madara_transport_TransportSettings_jni_1freeSettings (JNIEnv * env, jclass cls, jlong cptr)
 {
     Madara::Transport::Settings* settings = (Madara::Transport::Settings*)cptr;
     if (settings)

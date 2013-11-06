@@ -9,26 +9,26 @@ package com.madara;
 
 /**
  * Holder for static method to set global debug level.
- * Debug extends MadaraJNI to insure the library is loaded
- * prior to invocation of {@link #setDebugLevel(DebugLevel) setDebugLevel}
+ * MadaraLog extends MadaraJNI to insure the library is loaded
+ * prior to invocation of {@link #setLogLevel(com.madara.MadaraLog.MadaraLogLevel) setLogLevel}
  */
-public class Debug extends MadaraJNI
+public class MadaraLog extends MadaraJNI
 {
-	private static native void jni_setDebugLevel(int debug);
+	private static native void jni_setLogLevel(int debug);
 	
 	/**
 	 * Sets the global debug level
-	 * @param debug {@link com.madara.Debug.DebugLevel DebugLevel} to set
+	 * @param debug {@link com.madara.MadaraLog.MadaraLogLevel MadaraLogLevel} to set
 	 */
-	public static void setDebugLevel(DebugLevel debug)
+	public static void setLogLevel(MadaraLogLevel debug)
 	{
-		jni_setDebugLevel(debug.value());
+		jni_setLogLevel(debug.value());
 	}
 	
 	/**
 	 * private constructor because we do not need any thing but static here
 	 */
-	private Debug()
+	private MadaraLog()
 	{
 		
 	}
@@ -36,7 +36,7 @@ public class Debug extends MadaraJNI
 	/**
 	 * Enumeration of valid debug levels
 	 */
-	public static enum DebugLevel
+	public static enum MadaraLogLevel
 	{
 		MADARA_LOG_EMERGENCY(0),
 		MADARA_LOG_TERMINAL_ERROR(1),
@@ -51,14 +51,14 @@ public class Debug extends MadaraJNI
 		MADARA_LOG_DETAILED_TRACE(10);
 		
 		private int num;
-		private DebugLevel(int num)
+		private MadaraLogLevel(int num)
 		{
 			this.num = num;
 		}
 
 		/**
-		 * Get the integer value of this {@link com.madara.Debug.DebugLevel DebugLevel}
-		 * @return int value of this {@link com.madara.Debug.DebugLevel DebugLevel}
+		 * Get the integer value of this {@link com.madara.MadaraLog.MadaraLogLevel MadaraLogLevel}
+		 * @return int value of this {@link com.madara.MadaraLog.MadaraLogLevel MadaraLogLevel}
 		 */
 		public int value()
 		{
@@ -67,13 +67,13 @@ public class Debug extends MadaraJNI
 		
 		
 		/**
-		 * Converts an int to a {@link com.madara.Debug.DebugLevel DebugLevel}
+		 * Converts an int to a {@link com.madara.MadaraLog.MadaraLogLevel MadaraLogLevel}
 		 * @param val value to convert
-		 * @return {@link com.madara.Debug.DebugLevel DebugLevel} or null if the int is invalid
+		 * @return {@link com.madara.MadaraLog.MadaraLogLevel MadaraLogLevel} or null if the int is invalid
 		 */
-		public static DebugLevel getDebugLevel(int val)
+		public static MadaraLogLevel getDebugLevel(int val)
 		{
-			for (DebugLevel t : values())
+			for (MadaraLogLevel t : values())
 			{
 				if (t.value() == val)
 					return t;

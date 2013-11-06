@@ -12,19 +12,21 @@ package com.madara;
 public class WaitSettings extends EvalSettings
 {
 	//Constructors
-	private native long jni_waitSettings();
-	private native long jni_waitSettings(long oldPtr);
+	private static native long jni_waitSettings();
+	private static native long jni_waitSettings(long oldPtr);
 	
 	//Setters/Getters
-	private native void jni_setPollFrequency(long cptr, double freq);
-	private native double jni_getPollFrequency(long cptr);
+	private static native void jni_setPollFrequency(long cptr, double freq);
+	private static native double jni_getPollFrequency(long cptr);
 	
-	private native void jni_setMaxWaitTime(long cptr, double maxWaitTime);
-	private native double jni_getMaxWaitTime(long cptr);
+	private static native void jni_setMaxWaitTime(long cptr, double maxWaitTime);
+	private static native double jni_getMaxWaitTime(long cptr);
 
 	private static native void jni_freeWaitSettings(long cptr);
 	
-	
+
+	public static WaitSettings DEFAULT_WAIT_SETTINGS = new WaitSettings(jni_waitSettings());
+
 	/**
 	 * Default constructor
 	 */
