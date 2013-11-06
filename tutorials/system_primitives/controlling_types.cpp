@@ -54,16 +54,19 @@ int main (int argc, char * argv[])
   knowledge.print ("[SET RESULTS] .double_value = {.double_value}\n");
   
   knowledge.evaluate (".double_value = #double ('5.1')");
-  knowledge.print ("[SYSTEM CALL #DOUBLE RESULTS] .double_value = {.double_value}\n");
+  knowledge.print (
+    "[SYSTEM CALL #DOUBLE RESULTS] .double_value = {.double_value}\n");
   
   knowledge.evaluate (".double_value = #to_double ('5.1')");
-  knowledge.print ("[SYSTEM CALL #TO_DOUBLE RESULTS] .double_value = {.double_value}\n");
+  knowledge.print (
+    "[SYSTEM CALL #TO_DOUBLE RESULTS] .double_value = {.double_value}\n");
 
   /**
    * Precision in MADARA is the similar to precision in C++. However, in
-   * MADARA, precision is always fixed. You can set precision with the set_precision
-   * method in Madara::Knowledge_Record or inside of an evaluate statement with
-   * #set_precision or #precision (alias). Here are examples of how to use precision.
+   * MADARA, precision is always fixed. You can set precision with the 
+   * set_precision method in Madara::Knowledge_Record or inside of an evaluate
+   * statement with #set_precision or #precision (alias). Here are examples
+   * of how to use precision.
    **/
   
   knowledge.print ("\n\n*************SETTING PRECISION SECTION******\n\n");
@@ -80,7 +83,8 @@ int main (int argc, char * argv[])
   knowledge.print ("[PRECISION = 10] .double_value = {.double_value}\n");
   
   Madara::Knowledge_Record::set_precision (-1);
-  knowledge.print ("[DEFAULT PRECISION (-1)] .double_value = {.double_value}\n");
+  knowledge.print (
+    "[DEFAULT PRECISION (-1)] .double_value = {.double_value}\n");
 
   /**
    * Converting to other types can be done through the Knowledge_Record class
@@ -102,26 +106,32 @@ int main (int argc, char * argv[])
   knowledge.print (".double_value = {.double_value}\n");
   
   knowledge.evaluate (".int_value = #to_integer (.double_value)");
-  knowledge.print ("[#to_integer (.double_value)] .int_value = {.int_value}\n");
+  knowledge.print (
+    "[#to_integer (.double_value)] .int_value = {.int_value}\n");
   
   knowledge.evaluate (".string_value = #to_string (.double_value)");
-  knowledge.print ("[#to_string (.double_value)] .string_value = {.string_value}\n");
+  knowledge.print (
+    "[#to_string (.double_value)] .string_value = {.string_value}\n");
   
   knowledge.evaluate (".double_array [1] = .double_value * .double_value");
   knowledge.evaluate (".double_array [0] = .double_value");
   knowledge.print (".double_array = {.double_array}\n");
 
   knowledge.evaluate (".integer_array = #to_integers (.double_array)");
-  knowledge.print ("[#to_integers (.double_array)] .integer_array = {.integer_array}\n");
+  knowledge.print (
+    "[#to_integers (.double_array)] .integer_array = {.integer_array}\n");
   
   Madara::Knowledge_Record::set_precision (2);
   knowledge.evaluate (".double_array = #to_doubles (.integer_array)");
-  knowledge.print ("[#to_doubles (.integer_array)] .double_array = {.double_array}\n");
+  knowledge.print (
+    "[#to_doubles (.integer_array)] .double_array = {.double_array}\n");
   
   knowledge.evaluate (".double_array [1] = .double_value * .double_value");
   knowledge.evaluate (".double_array [0] = .double_value");
-  knowledge.evaluate (".double_value = .double_array[0]; .double_value2 = .double_array[1]");
-  knowledge.print (".double_value = {.double_value}, .double_value2 = {.double_value2}\n");
+  knowledge.evaluate (
+    ".double_value = .double_array[0]; .double_value2 = .double_array[1]");
+  knowledge.print (
+    ".double_value = {.double_value}, .double_value2 = {.double_value2}\n");
 
   return 0;
 }

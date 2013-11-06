@@ -96,13 +96,14 @@ Custom_Transport::send_data (
   if (-1 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Custom_Transport::send_data: transport has been told to shutdown")); 
+      DLINFO "Custom_Transport::send_data: transport"
+             "has been told to shutdown"));
     return ret;
   }
   else if (-2 == ret)
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Custom_Transport::send_data: transport is not valid")); 
+      DLINFO "Custom_Transport::send_data: transport is not valid"));
     return ret;
   }
  

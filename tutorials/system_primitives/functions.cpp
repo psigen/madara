@@ -14,11 +14,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-  
 /**
- * Madara function that returns a random number. No argument means to generate a
- * random number up to the limits of the stdlib.h implementation's limits. An
+ * Madara function that returns a random number. No argument means to generate
+ * a random number up to the limits of the stdlib.h implementation's limits. An
  * integer argument means to generate a random up to the specified arg limit.
  **/
 Madara::Knowledge_Record
@@ -29,8 +27,12 @@ Madara::Knowledge_Record
   if (args.size () > 0 && 
     args[0].type () == Madara::Knowledge_Record::INTEGER &&
     args[0].to_integer () != 0)
+  {
     // then call rand () with a modulus up to that integer argument
-    return Madara::Knowledge_Record::Integer (rand () % (int)args[0].to_integer ());
+    return Madara::Knowledge_Record::Integer (
+      rand () % (int)args[0].to_integer ());
+  }
+
   // otherwise, just return rand ()
   else
     return Madara::Knowledge_Record::Integer (rand ());
