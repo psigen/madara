@@ -139,6 +139,8 @@ int main (int argc, char ** argv)
 
     knowledge.wait (compiled, wait_settings);
   }
+  
+  knowledge.evaluate (".updates_required = #get_clock ()");
 
   knowledge.print_knowledge ();
 

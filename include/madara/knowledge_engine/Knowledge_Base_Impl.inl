@@ -396,6 +396,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::send_modifieds (
       for (unsigned int i = 0; i < transports_.size (); ++i, ++result)
         transports_[i]->send_data (modified);
 
+      map_.inc_clock (settings);
+
       map_.reset_modified ();
       if (settings.signal_changes)
         map_.signal (false);
