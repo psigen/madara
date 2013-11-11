@@ -7,7 +7,7 @@
 
 /**
  * @file Knowledge_Base.inl
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains the inline functions for the Knowledge_Base_Impl class
  */

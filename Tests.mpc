@@ -21,6 +21,69 @@ project (Test_Multicast_Mutex) : using_madara, using_ace {
   }
 }
 
+project (Test_Multicast_Aggregate_Filters) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_multicast_aggregate_filters
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/multicast/test_multicast_aggregate_filters.cpp
+  }
+}
+
+project (Test_Broadcast_Aggregate_Filters) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_broadcast_aggregate_filters
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/broadcast/test_broadcast_aggregate_filters.cpp
+  }
+}
+
+project (Test_UDP_Aggregate_Filters) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_udp_aggregate_filters
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/udp/test_udp_aggregate_filters.cpp
+  }
+}
+
 project (Test_Arrays) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_arrays

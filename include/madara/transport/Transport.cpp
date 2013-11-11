@@ -92,6 +92,12 @@ Madara::Transport::process_received_update (
   buffer_remaining = (int64_t)bytes_read;
   bool is_reduced = false;
 
+  // clear the rebroadcast records
+  rebroadcast_records.clear ();
+
+  // receive records will be what we pass to the aggregate filter
+  Knowledge_Map updates;
+
   // check the buffer for a reduced message header
   if (Reduced_Message_Header::reduced_message_header_test (buffer))
   {
@@ -213,6 +219,12 @@ Madara::Transport::process_received_update (
   int actual_updates = 0;
   uint64_t current_time = time (NULL);
   double deadline = settings.get_deadline ();
+  Transport_Context transport_context (
+    Transport_Context::RECEIVING_OPERATION,
+    receive_monitor.get_bytes_per_second (),
+    send_monitor.get_bytes_per_second (),
+    header->timestamp, time (NULL),
+    header->domain, header->originator);
 
   uint64_t latency (0);
   
@@ -261,9 +273,6 @@ Madara::Transport::process_received_update (
   record.clock = header->clock;
   std::string key;
 
-  // lock the context
-  context.lock ();
-      
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "%s:" \
     " past the lock\n",
@@ -276,7 +285,7 @@ Madara::Transport::process_received_update (
   {
     dropped = true;
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%:" \
+      DLINFO "%s:" \
       " Send monitor has detected violation of bandwidth limit." \
       " Dropping packet from rebroadcast list\n", print_prefix));
   }
@@ -285,18 +294,29 @@ Madara::Transport::process_received_update (
   {
     dropped = true;
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%:" \
+      DLINFO "%s:" \
       " Receive monitor has detected violation of bandwidth limit." \
       " Dropping packet from rebroadcast list...\n", print_prefix));
   }
+  else if (settings.get_participant_ttl () < header->ttl)
+  {
+    dropped = true;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Transport participant TTL is lower than header ttl." \
+      " Dropping packet from rebroadcast list...\n", print_prefix));
+  }
 
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s:" \
+    " Applying %d updates\n", print_prefix, header->updates));
 
   // iterate over the updates
   for (uint32_t i = 0; i < header->updates; ++i)
   {
     // read converts everything into host format from the update stream
     update = record.read (update, key, buffer_remaining);
-        
+
     if (buffer_remaining < 0)
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
@@ -308,116 +328,79 @@ Madara::Transport::process_received_update (
       // we do not delete the header as this will be cleaned up later
       break;
     }
-
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%s:" \
-      " attempting to apply %s=%s\n",
-      print_prefix,
-      key.c_str (), record.to_string ().c_str ()));
-        
-    int64_t receive_bandwidth = receive_monitor.get_bytes_per_second ();
-    int64_t send_bandwidth = send_monitor.get_bytes_per_second ();
-
-    Transport_Context transport_context (
-      Transport_Context::REBROADCASTING_OPERATION,
-      receive_bandwidth,
-      send_bandwidth,
-      header->timestamp,
-      current_time,
-      settings.domains);
-        
-    // if the tll is 1 or more and we are participating in rebroadcasts
-    if (header->ttl > 0 && 
-        settings.get_participant_ttl () > 0)
+    else
     {
-      Knowledge_Record rebroadcast_temp (record);
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Applying receive filter to %s\n", print_prefix, key.c_str ()));
 
-      // if we have rebroadcast filters, apply them
-      if (settings.get_number_of_rebroadcast_filtered_types () > 0)
-      { 
-        rebroadcast_temp = settings.filter_rebroadcast (
-          record, key,
-          transport_context);
-      }
+      record = settings.filter_receive (record, key, transport_context);
 
-      // if the record was not filtered out entirely, add it to map
-      if (!dropped &&
-          rebroadcast_temp.status () != Knowledge_Record::UNCREATED)
+      if (record.exists ())
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
           DLINFO "%s:" \
-          " update %s=%s is queued for rebroadcast\n",
-          print_prefix,
-          key.c_str (), rebroadcast_temp.to_string ().c_str ()));
+          " Filter results were %s\n", print_prefix, record.to_string ().c_str ()));
 
-        rebroadcast_records[key] = rebroadcast_temp;
+        updates[key] = record;
       }
       else
       {
         MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
           DLINFO "%s:" \
-          " update %s was filtered out of rebroadcast\n",
-          print_prefix,
-          key.c_str ()));
+          " Filter resulted in dropping %s\n", print_prefix, key.c_str ()));
       }
     }
+  }
+  
+  const Knowledge_Map & additionals = transport_context.get_records ();
 
-    // use the original message to apply receive filters
-    if (settings.get_number_of_received_filtered_types () > 0)
-    {
-      transport_context.set_operation (
-        Transport_Context::RECEIVING_OPERATION);
-      transport_context.set_receive_bandwidth (receive_bandwidth);
-      transport_context.set_send_bandwidth (send_bandwidth);
-      transport_context.set_domain (settings.domains);
+  for (Knowledge_Map::const_iterator i = additionals.begin ();
+        i != additionals.end (); ++i)
+  {
+    updates[i->first] = i->second;
+  }
+
+  transport_context.clear_records ();
+
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s:" \
+    " Applying aggregate receive filters.\n", print_prefix));
+
+  // apply aggregate receive filters
+  if (settings.get_number_of_receive_aggregate_filters () > 0
+      && updates.size () > 0)
+  {
+    settings.filter_receive (updates, transport_context);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " No aggregate receive filters were applied...\n",
+        print_prefix));
+  }
+  
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s:" \
+    " Locking the context to apply updates.\n", print_prefix));
+
+  // lock the context
+  context.lock ();
       
-      // filter according to receive rules
-      record = settings.filter_receive (record, key,
-        transport_context);
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s:" \
+    " Applying updates to context.\n", print_prefix));
 
-      // check for additional records to add to rebroadcast
-      const Knowledge_Map & adds = transport_context.get_records ();
-
-      if (adds.size () > 0)
-      {
-        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-          DLINFO "%s:" \
-          " records have been added for sending from a filter\n",
-          print_prefix));
-
-        // if the ttl was 0, set it to 1
-        if (header->ttl < 2)
-        {
-          header->ttl = 2;
-        }
-        
-        // Since we are modifying the message, change the originator
-        strncpy (header->originator,
-          id.c_str (), sizeof (header->originator) - 1);
-        header->type = Madara::Transport::MULTIASSIGN;
-
-        // iterate through additional records and add them to rebroadcast
-        for (Knowledge_Map::const_iterator j = adds.begin ();
-             j != adds.end (); ++j)
-        {
-          rebroadcast_records[j->first] = j->second;
-          MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
-            DLINFO "%s:" \
-            " adding %s=%s\n", print_prefix,
-            j->first.c_str (), j->second.to_string ().c_str ()));
-        }
-      }
-    }
-
+  // apply updates from the update list
+  for (Knowledge_Map::iterator i = updates.begin ();
+    i != updates.end (); ++i)
+  {
     int result = 0;
 
-    // if receive filter did not delete the update, apply it
-    if (record.status () != Knowledge_Record::UNCREATED)
-    {
-      result = record.apply (context, key, header->quality,
-        header->clock, false);
-      ++actual_updates;
-    }
+    result = i->second.apply (context, i->first, header->quality,
+      header->clock, false);
+    ++actual_updates;
 
     if (result != 1)
     {
@@ -436,7 +419,72 @@ Madara::Transport::process_received_update (
         key.c_str (), record.to_string ().c_str ()));
     }
   }
-      
+
+  // unlock the context
+  context.unlock ();
+  
+  if (!dropped)
+  {
+    transport_context.set_operation (
+      Transport_Context::REBROADCASTING_OPERATION);
+  
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Applying rebroadcast filters to receive results.\n", print_prefix));
+
+    // create a list of rebroadcast records from the updates
+    for (Knowledge_Map::iterator i = updates.begin ();
+         i != updates.end (); ++i)
+    {
+      i->second = settings.filter_rebroadcast (
+        i->second, i->first, transport_context);
+
+      if (i->second.exists ())
+      {
+        if (i->second.to_string () != "")
+        {
+          MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+            DLINFO "%s:" \
+            " Filter results were %s\n", print_prefix,
+            i->second.to_string ().c_str ()));
+        }
+        rebroadcast_records[i->first] = i->second;
+      }
+      else
+      {
+        MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+          DLINFO "%s:" \
+          " Filter resulted in dropping %s\n", print_prefix,
+          i->first.c_str ()));
+      }
+    }
+  
+    const Knowledge_Map & additionals = transport_context.get_records ();
+
+    for (Knowledge_Map::const_iterator i = additionals.begin ();
+          i != additionals.end (); ++i)
+    {
+      rebroadcast_records[i->first] = i->second;
+    }
+
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Applying aggregate rebroadcast filters.\n", print_prefix));
+    
+    // apply aggregate filters to the rebroadcast records
+    if (rebroadcast_records.size () > 0)
+    {
+      settings.filter_rebroadcast (rebroadcast_records, transport_context);
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " No aggregate rebroadcast filters were applied...\n",
+          print_prefix));
+    }
+  }
+
   // before we send to others, we first execute rules
   if (settings.on_data_received_logic.length () != 0)
   {
@@ -456,8 +504,6 @@ Madara::Transport::process_received_update (
       print_prefix));
   }
 
-  // unlock the context
-  context.unlock ();
   context.set_changed ();
   
   return actual_updates;
@@ -566,7 +612,9 @@ long Madara::Transport::Base::prep_send (
   Transport_Context transport_context (Transport_Context::SENDING_OPERATION,
       receive_monitor_.get_bytes_per_second (),
       send_monitor_.get_bytes_per_second (),
-      (uint64_t) time (NULL), (uint64_t) time (NULL), settings_.domains);
+      (uint64_t) time (NULL), (uint64_t) time (NULL),
+      settings_.domains,
+      id_);
 
   bool dropped = false;
 
@@ -575,7 +623,7 @@ long Madara::Transport::Base::prep_send (
   {
     dropped = true;
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%:" \
+      DLINFO "%s:" \
       " Send monitor has detected violation of bandwidth limit." \
       " Dropping packet...\n", print_prefix));
   }
@@ -584,7 +632,7 @@ long Madara::Transport::Base::prep_send (
   {
     dropped = true;
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%:" \
+      DLINFO "%s:" \
       " Receive monitor has detected violation of bandwidth limit." \
       " Dropping packet...\n", print_prefix));
   }
@@ -602,23 +650,51 @@ long Madara::Transport::Base::prep_send (
       Knowledge_Record result = settings_.filter_send (*i->second, i->first,
         transport_context);
 
-      if (result.status () != Knowledge_Record::UNCREATED)
+      if (result.exists ())
         filtered_updates[i->first] = result;
+    }
+
+    const Knowledge_Map & additionals = transport_context.get_records ();
+
+    for (Knowledge_Map::const_iterator i = additionals.begin ();
+         i != additionals.end (); ++i)
+    {
+      filtered_updates[i->first] = i->second;
     }
   }
   else
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%:" \
+      DLINFO "%s:" \
       " Packet scheduler has dropped packet...\n", print_prefix));
 
     return 0;
+  }
+  
+  MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+    DLINFO "%s:" \
+    " Applying %d aggregate update send filters to %d updates...\n",
+      print_prefix, settings_.get_number_of_send_aggregate_filters (),
+      filtered_updates.size ()));
+
+  // apply the aggregate filters
+  if (settings_.get_number_of_send_aggregate_filters () > 0 &&
+      filtered_updates.size () > 0)
+  {
+    settings_.filter_send (filtered_updates, transport_context);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " No aggregate send filters were applied...\n",
+        print_prefix));
   }
 
   packet_scheduler_.print_status (MADARA_LOG_DETAILED_TRACE, print_prefix);
 
   MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-    DLINFO "%:" \
+    DLINFO "%s:" \
     " Finished applying filters before sending...\n",
       print_prefix));
 

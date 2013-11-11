@@ -3,15 +3,17 @@
 #include "madara/utility/Log_Macros.h"
 
 Madara::Transport::Transport_Context::Transport_Context (int64_t operation,
-        uint64_t receive_bandwidth, uint64_t send_bandwidth,
-        uint64_t message_time, uint64_t current_time,
-        const std::string & domain)
+  uint64_t receive_bandwidth, uint64_t send_bandwidth,
+  uint64_t message_time, uint64_t current_time,
+  const std::string & domain,
+  const std::string & originator)
   : operation_ (operation),
     receive_bandwidth_ (receive_bandwidth),
     send_bandwidth_ (send_bandwidth),
     message_time_ (message_time),
     current_time_ (current_time),
-    domain_ (domain)
+    domain_ (domain),
+    originator_ (originator)
 {
 }
 
@@ -22,7 +24,8 @@ Madara::Transport::Transport_Context::Transport_Context (
   send_bandwidth_ (rhs.send_bandwidth_),
   message_time_ (rhs.message_time_),
   current_time_ (rhs.current_time_),
-  domain_ (rhs.domain_)
+  domain_ (rhs.domain_),
+  originator_ (rhs.originator_)
 {
 }
 
@@ -42,5 +45,6 @@ Madara::Transport::Transport_Context::operator= (
     message_time_ = rhs.message_time_;
     current_time_ = rhs.current_time_;
     domain_ = rhs.domain_;
+    originator_ = rhs.originator_;
   }
 }

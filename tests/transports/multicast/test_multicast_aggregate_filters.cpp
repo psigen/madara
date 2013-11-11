@@ -10,7 +10,7 @@
 #include "madara/utility/Log_Macros.h"
 
 std::string host ("");
-const std::string default_broadcast ("192.168.1.255:15000");
+const std::string default_multicast ("239.255.0.1:4150");
 Madara::Transport::QoS_Transport_Settings settings;
 
 void handle_arguments (int argc, char ** argv)
@@ -18,8 +18,8 @@ void handle_arguments (int argc, char ** argv)
   for (int i = 1; i < argc; ++i)
   {
     std::string arg1 (argv[i]);
-    
-    if (arg1 == "-b" || arg1 == "--broadcast")
+
+    if (arg1 == "-m" || arg1 == "--multicast")
     {
       if (i + 1 < argc)
         settings.hosts[0] = argv[i + 1];
@@ -95,11 +95,11 @@ void handle_arguments (int argc, char ** argv)
         "  running these processes should be that each process reports\n" \
         "  var2 and var3 being set to 1.\n\n" \
         " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
-        " [-b|--broadcast ip:port] the broadcast ip to send and listen to\n" \
+        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
         " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
         " [-i|--id id]             the id of this agent (should be non-negative)\n" \
-        " [-f|--logfile file]      log to a file\n" \
         " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        " [-f|--logfile file]      log to a file\n" \
         " [-r|--reduced]           use the reduced message header\n" \
         "\n",
         argv[0]));
@@ -108,25 +108,34 @@ void handle_arguments (int argc, char ** argv)
   }
 }
 
+Madara::Knowledge_Record
+discard_var4 (Madara::Knowledge_Map & records,
+  const Madara::Transport::Transport_Context & context,
+  Madara::Knowledge_Engine::Variables & vars)
+{
+  Madara::Knowledge_Record result;
 
+  Madara::Knowledge_Map::const_iterator found = records.find ("var4");
+
+  if (found != records.end ())
+    records.erase (found);
+
+  return result;
+}
 
 int main (int argc, char ** argv)
 {
-  settings.hosts.resize (1);
-  settings.hosts[0] = default_broadcast;
+  settings.hosts.push_back (default_multicast);
   handle_arguments (argc, argv);
 
-  settings.type = Madara::Transport::BROADCAST;
-  settings.add_send_filter (Madara::Knowledge_Record::ALL_TYPES,
-                            Madara::Filters::log_args);
-  settings.add_send_filter (Madara::Knowledge_Record::DOUBLE,
-                            Madara::Filters::discard);
-  settings.add_receive_filter (Madara::Knowledge_Record::ALL_TYPES,
-                               Madara::Filters::log_args);
-
+  settings.type = Madara::Transport::MULTICAST;
+  settings.add_send_filter (Madara::Filters::log_aggregate);
+  settings.add_send_filter (discard_var4);
+  settings.add_send_filter (Madara::Filters::log_aggregate);
+  settings.add_receive_filter (Madara::Filters::log_aggregate);
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  wait_settings.max_wait_time = 10.0;
+  wait_settings.max_wait_time = 10;
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 

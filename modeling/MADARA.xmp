@@ -1,242 +1,458 @@
 <?xml version="1.0"?>
 <!DOCTYPE paradigm SYSTEM "edf.dtd">
 
-<paradigm name="MADARA" version=".002" guid="{B69301A5-45DE-4CEC-B697-C1CCEEF52EB3}" cdate="Mon Oct 04 16:53:59 2010" mdate="Mon Oct 04 16:53:59 2010" >
+<paradigm name="MADARA" version="1.1.15" guid="{E661648D-5B04-42AA-8790-44A85CFA4FAE}" cdate="Mon Oct 04 16:53:59 2010" mdate="Mon Oct 04 16:53:59 2010" >
 
-	<comment>Initial Version</comment>
+	<comment>Bringing model up to speed for high level KaRL programming</comment>
 
 	<author>James Edmondson</author>
 
-	<folder name = "RootFolder" metaref = "1000"  rootobjects = "Process" >
-		<attrdef name="code" metaref = "1001" valuetype = "string" defvalue = "">
+	<folder name = "RootFolder" metaref = "1000"  rootobjects = "Program" >
+		<attrdef name="Clock_Increment" metaref = "1116" valuetype = "integer" defvalue = "1">
+			<regnode name="help" value = "Increment for the underlying Lamport clock after an update"></regnode>
 		</attrdef>
-		<attrdef name="host" metaref = "1002" valuetype = "string" defvalue = "localhost">
-			<regnode name="help" value = "The host that this process resides on (helps to identify the process)"></regnode>
+		<attrdef name="Deadline" metaref = "1001" valuetype = "double" defvalue = "-1.0">
 		</attrdef>
-		<attrdef name="mechanism" metaref = "1100" valuetype = "enum" defvalue = "evaluate">
-			<enumitem dispname = "evaluate" value = "evaluate"></enumitem>
-			<enumitem dispname = "wait" value = "wait"></enumitem>
-			<enumitem dispname = "get" value = "get"></enumitem>
-			<enumitem dispname = "set" value = "set"></enumitem>
-			<regnode name="help" value = "KaRL Engine mechanism to evaluate expression with"></regnode>
+		<attrdef name="Delay_Sending_Modifications" metaref = "1117" valuetype = "boolean" defvalue = "false">
+			<regnode name="help" value = "Delay sending modifications to aggregate updates"></regnode>
 		</attrdef>
-		<attrdef name="transport" metaref = "1003" valuetype = "enum" defvalue = "Splice">
-			<enumitem dispname = "Splice" value = "Splice"></enumitem>
-			<enumitem dispname = "TCP" value = "TCP"></enumitem>
-			<enumitem dispname = "UDP" value = "UDP"></enumitem>
+		<attrdef name="Domains" metaref = "1002" valuetype = "string" defvalue = "">
+		</attrdef>
+		<attrdef name="Expand_Variables" metaref = "1118" valuetype = "boolean" defvalue = "false">
+			<regnode name="help" value = "Expands variable names if set to true"></regnode>
+		</attrdef>
+		<attrdef name="Max_Wait_Time" metaref = "1119" valuetype = "double" defvalue = "-1">
+			<regnode name="help" value = "Maximum amount of time to wait, in seconds"></regnode>
+		</attrdef>
+		<attrdef name="Period_Between_Evaluations" metaref = "1120" valuetype = "double" defvalue = "0.100">
+			<regnode name="help" value = "Period of time between evaluations to check for truth, in seconds"></regnode>
+		</attrdef>
+		<attrdef name="Send_Bandwidth_Limit" metaref = "1003" valuetype = "integer" defvalue = "-1">
+		</attrdef>
+		<attrdef name="Total_Bandwidth_Limit" metaref = "1004" valuetype = "string" defvalue = "-1">
+		</attrdef>
+		<attrdef name="Transport_Type" metaref = "1005" valuetype = "enum" defvalue = "Multicast">
+			<enumitem dispname = "Broadcast" value = "Broadcast"></enumitem>
 			<enumitem dispname = "Multicast" value = "Multicast"></enumitem>
-			<regnode name="help" value = "The transport to use for disseminating / gaining knowledge"></regnode>
+			<enumitem dispname = "PrismTech DDS" value = "PrismTech DDS"></enumitem>
+			<enumitem dispname = "RTI DDS" value = "RTI DDS"></enumitem>
+			<enumitem dispname = "UDP" value = "UDP"></enumitem>
 		</attrdef>
-		<atom name = "Value" metaref = "1004" >
+		<atom name = "Host" metaref = "1121" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_host.png"></regnode>
+		</atom>
+		<atom name = "Value" metaref = "1010" >
 				<regnode name = "namePosition" value ="4"></regnode>
 		</atom>
-		<model name = "Add" metaref = "1005" >
+		<atom name = "Variable_Name" metaref = "1122" >
+				<regnode name = "namePosition" value ="4"></regnode>
+		</atom>
+		<reference name = "Eval_Settings_Reference" metaref = "1123">
+				<regnode name = "namePosition" value ="4"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Eval_Settings"></pointeritem>
+				<pointeritem desc = "Reference_Settings"></pointeritem>
+				<pointeritem desc = "Update_Settings"></pointeritem>
+			</pointerspec>
+		</reference>
+		<reference name = "Wait_Settings_Reference" metaref = "1124">
+				<regnode name = "namePosition" value ="4"></regnode>
+			<pointerspec name = "ref">
+				<pointeritem desc = "Eval_Settings"></pointeritem>
+				<pointeritem desc = "Reference_Settings"></pointeritem>
+				<pointeritem desc = "Update_Settings"></pointeritem>
+				<pointeritem desc = "Wait_Settings"></pointeritem>
+			</pointerspec>
+		</reference>
+		<model name = "Add" metaref = "1011" >
 			<dispname>+</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1101" >
+			<aspect name = "Aspect" metaref = "1390" >
 			</aspect>
 		</model>
-		<model name = "Divide" metaref = "1007" >
+		<model name = "Divide" metaref = "1013" >
 			<dispname>/</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1102" >
+			<aspect name = "Aspect" metaref = "1391" >
 			</aspect>
 		</model>
-		<model name = "Equality" metaref = "1009" >
+		<model name = "Equality" metaref = "1015" >
 			<dispname>==</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1103" >
+			<aspect name = "Aspect" metaref = "1392" >
 			</aspect>
 		</model>
-		<model name = "Expression" metaref = "1011" attributes = "code mechanism" >
+		<model name = "Eval_Settings" metaref = "1128" attributes = "Delay_Sending_Modifications Max_Wait_Time Period_Between_Evaluations" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_eval_settings.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1393" attributes = "Delay_Sending_Modifications Max_Wait_Time Period_Between_Evaluations" >
+			</aspect>
+		</model>
+		<model name = "Evaluate" metaref = "1130" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_evaluate.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidEvaluatePartCardinality1" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Eval_Settings_Reference" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Evaluate, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidEvaluatePartCardinality2" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Eval_Settings" ) -> size + self.parts( "Reference_Settings" ) -> size + self.parts( "Update_Settings" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Evaluate, has to match 0..1.</dispname>
+			</constraint>
+			<role name = "Eval_Settings" metaref = "1131" kind = "Eval_Settings"></role>
+			<role name = "Eval_Settings_Reference" metaref = "1132" kind = "Eval_Settings_Reference"></role>
+			<role name = "Reference_Settings" metaref = "1133" kind = "Reference_Settings"></role>
+			<role name = "Update_Settings" metaref = "1134" kind = "Update_Settings"></role>
+			<aspect name = "Settings_View" metaref = "1238" >
+				<part metaref = "1239" role = "Eval_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1240" role = "Eval_Settings_Reference" primary = "yes" linked = "no"></part>
+				<part metaref = "1241" role = "Reference_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1242" role = "Update_Settings" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Expression" metaref = "1017" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<role name = "Add" metaref = "1012" kind = "Add"></role>
-			<role name = "Divide" metaref = "1013" kind = "Divide"></role>
-			<role name = "Equality" metaref = "1014" kind = "Equality"></role>
-			<role name = "Greater_Than" metaref = "1015" kind = "Greater_Than"></role>
-			<role name = "Greater_Than_Or_Equal_To" metaref = "1016" kind = "Greater_Than_Or_Equal_To"></role>
-			<role name = "Implies" metaref = "1017" kind = "Implies"></role>
-			<role name = "Inequality" metaref = "1018" kind = "Inequality"></role>
-			<role name = "Less_Than" metaref = "1019" kind = "Less_Than"></role>
-			<role name = "Less_Than_Or_Equal_To" metaref = "1020" kind = "Less_Than_Or_Equal_To"></role>
-			<role name = "Logical_And" metaref = "1021" kind = "Logical_And"></role>
-			<role name = "Logical_Both" metaref = "1022" kind = "Logical_Both"></role>
-			<role name = "Logical_Negation" metaref = "1023" kind = "Logical_Negation"></role>
-			<role name = "Logical_Or" metaref = "1025" kind = "Logical_Or"></role>
-			<role name = "Modulus" metaref = "1026" kind = "Modulus"></role>
-			<role name = "Multiply" metaref = "1027" kind = "Multiply"></role>
-			<role name = "Predecrement" metaref = "1028" kind = "Predecrement"></role>
-			<role name = "Preincrement" metaref = "1029" kind = "Preincrement"></role>
-			<role name = "Subtract" metaref = "1030" kind = "Subtract"></role>
-			<role name = "Unary_Minus" metaref = "1031" kind = "Unary_Minus"></role>
-			<role name = "Value" metaref = "1032" kind = "Value"></role>
-			<role name = "Variable" metaref = "1033" kind = "Variable"></role>
-			<aspect name = "Aspect" metaref = "1104" attributes = "code mechanism" >
-				<part metaref = "1035" role = "Add" primary = "yes" linked = "no"></part>
-				<part metaref = "1036" role = "Divide" primary = "yes" linked = "no"></part>
-				<part metaref = "1037" role = "Equality" primary = "yes" linked = "no"></part>
-				<part metaref = "1038" role = "Greater_Than" primary = "yes" linked = "no"></part>
-				<part metaref = "1039" role = "Greater_Than_Or_Equal_To" primary = "yes" linked = "no"></part>
-				<part metaref = "1040" role = "Implies" primary = "yes" linked = "no"></part>
-				<part metaref = "1041" role = "Inequality" primary = "yes" linked = "no"></part>
-				<part metaref = "1042" role = "Less_Than" primary = "yes" linked = "no"></part>
-				<part metaref = "1043" role = "Less_Than_Or_Equal_To" primary = "yes" linked = "no"></part>
-				<part metaref = "1044" role = "Logical_And" primary = "yes" linked = "no"></part>
-				<part metaref = "1045" role = "Logical_Both" primary = "yes" linked = "no"></part>
-				<part metaref = "1046" role = "Logical_Negation" primary = "yes" linked = "no"></part>
-				<part metaref = "1048" role = "Logical_Or" primary = "yes" linked = "no"></part>
-				<part metaref = "1049" role = "Modulus" primary = "yes" linked = "no"></part>
-				<part metaref = "1050" role = "Multiply" primary = "yes" linked = "no"></part>
-				<part metaref = "1051" role = "Predecrement" primary = "yes" linked = "no"></part>
-				<part metaref = "1052" role = "Preincrement" primary = "yes" linked = "no"></part>
-				<part metaref = "1053" role = "Subtract" primary = "yes" linked = "no"></part>
-				<part metaref = "1054" role = "Unary_Minus" primary = "yes" linked = "no"></part>
-				<part metaref = "1055" role = "Value" primary = "yes" linked = "no"></part>
-				<part metaref = "1056" role = "Variable" primary = "yes" linked = "no"></part>
+			<role name = "Add" metaref = "1018" kind = "Add"></role>
+			<role name = "Divide" metaref = "1019" kind = "Divide"></role>
+			<role name = "Equality" metaref = "1020" kind = "Equality"></role>
+			<role name = "Greater_Than" metaref = "1021" kind = "Greater_Than"></role>
+			<role name = "Greater_Than_Or_Equal_To" metaref = "1022" kind = "Greater_Than_Or_Equal_To"></role>
+			<role name = "Implies" metaref = "1023" kind = "Implies"></role>
+			<role name = "Inequality" metaref = "1024" kind = "Inequality"></role>
+			<role name = "Less_Than" metaref = "1025" kind = "Less_Than"></role>
+			<role name = "Less_Than_Or_Equal_To" metaref = "1026" kind = "Less_Than_Or_Equal_To"></role>
+			<role name = "Logical_And" metaref = "1027" kind = "Logical_And"></role>
+			<role name = "Logical_Both" metaref = "1028" kind = "Logical_Both"></role>
+			<role name = "Logical_Negation" metaref = "1029" kind = "Logical_Negation"></role>
+			<role name = "Logical_Or" metaref = "1030" kind = "Logical_Or"></role>
+			<role name = "Modulus" metaref = "1031" kind = "Modulus"></role>
+			<role name = "Multiply" metaref = "1032" kind = "Multiply"></role>
+			<role name = "Predecrement" metaref = "1033" kind = "Predecrement"></role>
+			<role name = "Preincrement" metaref = "1034" kind = "Preincrement"></role>
+			<role name = "Subtract" metaref = "1035" kind = "Subtract"></role>
+			<role name = "Unary_Minus" metaref = "1036" kind = "Unary_Minus"></role>
+			<role name = "Value" metaref = "1037" kind = "Value"></role>
+			<role name = "Variable" metaref = "1038" kind = "Variable"></role>
+			<aspect name = "Expression_View" metaref = "1318" >
+				<part metaref = "1319" role = "Add" primary = "yes" linked = "no"></part>
+				<part metaref = "1320" role = "Divide" primary = "yes" linked = "no"></part>
+				<part metaref = "1321" role = "Equality" primary = "yes" linked = "no"></part>
+				<part metaref = "1322" role = "Greater_Than" primary = "yes" linked = "no"></part>
+				<part metaref = "1323" role = "Greater_Than_Or_Equal_To" primary = "yes" linked = "no"></part>
+				<part metaref = "1324" role = "Implies" primary = "yes" linked = "no"></part>
+				<part metaref = "1325" role = "Inequality" primary = "yes" linked = "no"></part>
+				<part metaref = "1326" role = "Less_Than" primary = "yes" linked = "no"></part>
+				<part metaref = "1327" role = "Less_Than_Or_Equal_To" primary = "yes" linked = "no"></part>
+				<part metaref = "1328" role = "Logical_And" primary = "yes" linked = "no"></part>
+				<part metaref = "1329" role = "Logical_Both" primary = "yes" linked = "no"></part>
+				<part metaref = "1330" role = "Logical_Negation" primary = "yes" linked = "no"></part>
+				<part metaref = "1331" role = "Logical_Or" primary = "yes" linked = "no"></part>
+				<part metaref = "1332" role = "Modulus" primary = "yes" linked = "no"></part>
+				<part metaref = "1333" role = "Multiply" primary = "yes" linked = "no"></part>
+				<part metaref = "1334" role = "Predecrement" primary = "yes" linked = "no"></part>
+				<part metaref = "1335" role = "Preincrement" primary = "yes" linked = "no"></part>
+				<part metaref = "1336" role = "Subtract" primary = "yes" linked = "no"></part>
+				<part metaref = "1337" role = "Unary_Minus" primary = "yes" linked = "no"></part>
+				<part metaref = "1338" role = "Value" primary = "yes" linked = "no"></part>
+				<part metaref = "1339" role = "Variable" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
-		<model name = "Greater_Than" metaref = "1057" >
+		<model name = "Get" metaref = "1141" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_get.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidGetPartCardinality3" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Variable_Name" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Get, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidGetPartCardinality4" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Reference_Settings" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Get, has to match 0..1.</dispname>
+			</constraint>
+			<role name = "Reference_Settings" metaref = "1142" kind = "Reference_Settings"></role>
+			<role name = "Variable_Name" metaref = "1143" kind = "Variable_Name"></role>
+			<aspect name = "Settings_View" metaref = "1244" >
+				<part metaref = "1245" role = "Reference_Settings" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Greater_Than" metaref = "1061" >
 			<dispname>&gt;</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1105" >
+			<aspect name = "Aspect" metaref = "1394" >
 			</aspect>
 		</model>
-		<model name = "Greater_Than_Or_Equal_To" metaref = "1059" >
+		<model name = "Greater_Than_Or_Equal_To" metaref = "1063" >
 			<dispname>&gt;=</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1106" >
+			<aspect name = "Aspect" metaref = "1395" >
 			</aspect>
 		</model>
-		<model name = "Implies" metaref = "1061" >
+		<model name = "Implies" metaref = "1065" >
 			<dispname>=&gt;</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1107" >
+			<aspect name = "Aspect" metaref = "1396" >
 			</aspect>
 		</model>
-		<model name = "Inequality" metaref = "1063" >
+		<model name = "Inequality" metaref = "1067" >
 			<dispname>!=</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1108" >
+			<aspect name = "Aspect" metaref = "1397" >
 			</aspect>
 		</model>
-		<model name = "Less_Than" metaref = "1065" >
+		<model name = "Knowledge_Base" metaref = "1069" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "Transport" metaref = "1070" kind = "Transport"></role>
+			<aspect name = "Settings_View" metaref = "1250" >
+				<part metaref = "1251" role = "Transport" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Less_Than" metaref = "1073" >
 			<dispname>&lt;</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1109" >
+			<aspect name = "Aspect" metaref = "1398" >
 			</aspect>
 		</model>
-		<model name = "Less_Than_Or_Equal_To" metaref = "1067" >
+		<model name = "Less_Than_Or_Equal_To" metaref = "1075" >
 			<dispname>&lt;=</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1110" >
+			<aspect name = "Aspect" metaref = "1399" >
 			</aspect>
 		</model>
-		<model name = "Logical_And" metaref = "1069" >
+		<model name = "Logical_And" metaref = "1077" >
 			<dispname>&amp;&amp;</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1111" >
+			<aspect name = "Aspect" metaref = "1400" >
 			</aspect>
 		</model>
-		<model name = "Logical_Both" metaref = "1071" >
+		<model name = "Logical_Both" metaref = "1079" >
 			<dispname>;</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1112" >
+			<aspect name = "Aspect" metaref = "1401" >
 			</aspect>
 		</model>
-		<model name = "Logical_Negation" metaref = "1073" >
+		<model name = "Logical_Negation" metaref = "1081" >
 			<dispname>!</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1113" >
+			<aspect name = "Aspect" metaref = "1402" >
 			</aspect>
 		</model>
-		<model name = "Logical_Or" metaref = "1075" >
+		<model name = "Logical_Or" metaref = "1083" >
 			<dispname>||</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1114" >
+			<aspect name = "Aspect" metaref = "1403" >
 			</aspect>
 		</model>
-		<model name = "Modulus" metaref = "1077" >
+		<model name = "Modulus" metaref = "1085" >
 			<dispname>%</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1115" >
+			<aspect name = "Aspect" metaref = "1404" >
 			</aspect>
 		</model>
-		<model name = "Multiply" metaref = "1079" >
+		<model name = "Multiply" metaref = "1087" >
 			<dispname>*</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1116" >
+			<aspect name = "Aspect" metaref = "1405" >
 			</aspect>
 		</model>
-		<model name = "Predecrement" metaref = "1081" >
+		<model name = "Predecrement" metaref = "1089" >
 			<dispname>--</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1117" >
+			<aspect name = "Aspect" metaref = "1406" >
 			</aspect>
 		</model>
-		<model name = "Preincrement" metaref = "1083" >
+		<model name = "Preincrement" metaref = "1091" >
 			<dispname>++</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1118" >
+			<aspect name = "Aspect" metaref = "1407" >
 			</aspect>
 		</model>
-		<model name = "Process" metaref = "1085" attributes = "host transport" >
+		<model name = "Print" metaref = "1162" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_print.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1408" >
+			</aspect>
+		</model>
+		<model name = "Program" metaref = "1093" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<role name = "Stage" metaref = "1086" kind = "Stage"></role>
-			<aspect name = "Aspect" metaref = "1119" attributes = "host transport" >
-				<part metaref = "1088" role = "Stage" primary = "yes" linked = "no"></part>
+			<role name = "Eval_Settings" metaref = "1359" kind = "Eval_Settings"></role>
+			<role name = "Evaluate" metaref = "1164" kind = "Evaluate"></role>
+			<role name = "Get" metaref = "1165" kind = "Get"></role>
+			<role name = "Knowledge_Base" metaref = "1094" kind = "Knowledge_Base"></role>
+			<role name = "Print" metaref = "1231" kind = "Print"></role>
+			<role name = "Reference_Settings" metaref = "1360" kind = "Reference_Settings"></role>
+			<role name = "Set" metaref = "1166" kind = "Set"></role>
+			<role name = "Update_Settings" metaref = "1361" kind = "Update_Settings"></role>
+			<role name = "Wait" metaref = "1167" kind = "Wait"></role>
+			<role name = "Wait_Settings" metaref = "1362" kind = "Wait_Settings"></role>
+			<aspect name = "Program_View" metaref = "1263" >
+				<dispname>Program</dispname>
+				<part metaref = "1363" role = "Eval_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1264" role = "Evaluate" primary = "yes" linked = "no"></part>
+				<part metaref = "1265" role = "Get" primary = "yes" linked = "no"></part>
+				<part metaref = "1266" role = "Knowledge_Base" primary = "yes" linked = "no"></part>
+				<part metaref = "1267" role = "Print" primary = "yes" linked = "no"></part>
+				<part metaref = "1364" role = "Reference_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1268" role = "Set" primary = "yes" linked = "no"></part>
+				<part metaref = "1365" role = "Update_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1269" role = "Wait" primary = "yes" linked = "no"></part>
+				<part metaref = "1366" role = "Wait_Settings" primary = "yes" linked = "no"></part>
 			</aspect>
 		</model>
-		<model name = "Stage" metaref = "1089" >
+		<model name = "Reference_Settings" metaref = "1173" attributes = "Expand_Variables Clock_Increment Delay_Sending_Modifications Max_Wait_Time Period_Between_Evaluations" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_eval_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_update_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_eval_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_reference_settings.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1409" attributes = "Expand_Variables Clock_Increment Delay_Sending_Modifications Max_Wait_Time Period_Between_Evaluations" >
+			</aspect>
+		</model>
+		<model name = "Set" metaref = "1175" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_set.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidSetPartCardinality5" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Eval_Settings_Reference" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Set, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidSetPartCardinality6" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Eval_Settings" ) -> size + self.parts( "Reference_Settings" ) -> size + self.parts( "Update_Settings" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Set, has to match 0..1.</dispname>
+			</constraint>
+			<role name = "Eval_Settings" metaref = "1176" kind = "Eval_Settings"></role>
+			<role name = "Eval_Settings_Reference" metaref = "1177" kind = "Eval_Settings_Reference"></role>
+			<role name = "Reference_Settings" metaref = "1178" kind = "Reference_Settings"></role>
+			<role name = "Update_Settings" metaref = "1179" kind = "Update_Settings"></role>
+			<aspect name = "Settings_View" metaref = "1271" >
+				<part metaref = "1272" role = "Eval_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1273" role = "Eval_Settings_Reference" primary = "yes" linked = "no"></part>
+				<part metaref = "1274" role = "Reference_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1275" role = "Update_Settings" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "State" metaref = "1103" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<role name = "Expression" metaref = "1090" kind = "Expression"></role>
-			<aspect name = "Aspect" metaref = "1120" >
-				<part metaref = "1092" role = "Expression" primary = "yes" linked = "no"></part>
+			<aspect name = "Aspect" metaref = "1410" >
 			</aspect>
 		</model>
-		<model name = "State" metaref = "1093" >
-				<regnode name = "namePosition" value ="4"></regnode>
-				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1121" >
-			</aspect>
-		</model>
-		<model name = "Subtract" metaref = "1095" >
+		<model name = "Subtract" metaref = "1105" >
 			<dispname>-</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1122" >
+			<aspect name = "Aspect" metaref = "1411" >
 			</aspect>
 		</model>
-		<model name = "Unary_Minus" metaref = "1097" >
+		<model name = "Transport" metaref = "1107" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="transport.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "Transport_Settings" metaref = "1108" kind = "Transport_Settings"></role>
+			<aspect name = "Settings_View" metaref = "1312" >
+				<part metaref = "1313" role = "Transport_Settings" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Transport_Settings" metaref = "1111" attributes = "Transport_Type Domains Send_Bandwidth_Limit Deadline Total_Bandwidth_Limit" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="transport_settings.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<role name = "Host" metaref = "1188" kind = "Host"></role>
+			<aspect name = "Settings_View" metaref = "1279" attributes = "Transport_Type Domains Send_Bandwidth_Limit Deadline Total_Bandwidth_Limit" >
+				<part metaref = "1389" role = "Host" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Unary_Minus" metaref = "1113" >
 			<dispname>-</dispname>
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1123" >
+			<aspect name = "Aspect" metaref = "1412" >
 			</aspect>
 		</model>
-		<model name = "Variable" metaref = "1099" >
+		<model name = "Update_Settings" metaref = "1192" attributes = "Clock_Increment Delay_Sending_Modifications Max_Wait_Time Period_Between_Evaluations" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_eval_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "icon" value ="kb_update_settings.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1413" attributes = "Clock_Increment Delay_Sending_Modifications Max_Wait_Time Period_Between_Evaluations" >
+			</aspect>
+		</model>
+		<model name = "Variable" metaref = "1115" >
 				<regnode name = "namePosition" value ="4"></regnode>
 				<regnode name = "isTypeInfoShown" value ="true"></regnode>
-			<aspect name = "Aspect" metaref = "1124" >
+			<aspect name = "Aspect" metaref = "1414" >
+			</aspect>
+		</model>
+		<model name = "Wait" metaref = "1195" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_wait.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<constraint name="ValidWaitPartCardinality7" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Wait_Settings_Reference" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Wait, has to match 0..1.</dispname>
+			</constraint>
+			<constraint name="ValidWaitPartCardinality8" eventmask = "0x0" depth = "1" priority = "1">
+				<![CDATA[let partCount = self.parts( "Wait_Settings" ) -> size + self.parts( "Eval_Settings" ) -> size + self.parts( "Reference_Settings" ) -> size + self.parts( "Update_Settings" ) -> size in
+                     (partCount <= 1)]]>
+				<dispname>Multiplicity of parts, which are contained by Wait, has to match 0..1.</dispname>
+			</constraint>
+			<role name = "Eval_Settings" metaref = "1196" kind = "Eval_Settings"></role>
+			<role name = "Reference_Settings" metaref = "1197" kind = "Reference_Settings"></role>
+			<role name = "Update_Settings" metaref = "1198" kind = "Update_Settings"></role>
+			<role name = "Wait_Settings" metaref = "1199" kind = "Wait_Settings"></role>
+			<role name = "Wait_Settings_Reference" metaref = "1200" kind = "Wait_Settings_Reference"></role>
+			<aspect name = "Settings_View" metaref = "1283" >
+				<part metaref = "1284" role = "Eval_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1285" role = "Reference_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1286" role = "Update_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1287" role = "Wait_Settings" primary = "yes" linked = "no"></part>
+				<part metaref = "1288" role = "Wait_Settings_Reference" primary = "yes" linked = "no"></part>
+			</aspect>
+		</model>
+		<model name = "Wait_Settings" metaref = "1207" attributes = "Max_Wait_Time Period_Between_Evaluations" >
+				<regnode name = "namePosition" value ="4"></regnode>
+				<regnode name = "icon" value ="kb_wait_settings.png"></regnode>
+				<regnode name = "isTypeInfoShown" value ="true"></regnode>
+			<aspect name = "Aspect" metaref = "1415" attributes = "Max_Wait_Time Period_Between_Evaluations" >
 			</aspect>
 		</model>
 	</folder>

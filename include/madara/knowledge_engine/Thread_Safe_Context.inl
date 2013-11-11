@@ -3,7 +3,7 @@
 
 /**
  * @file Thread_Safe_Context.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains inline functions for a thread safe context
  */

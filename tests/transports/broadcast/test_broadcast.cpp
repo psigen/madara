@@ -111,8 +111,7 @@ void handle_arguments (int argc, char ** argv)
 
 int main (int argc, char ** argv)
 {
-  settings.hosts.resize (1);
-  settings.hosts[0] = default_broadcast;
+  settings.hosts.push_back (default_broadcast);
   handle_arguments (argc, argv);
 
   settings.type = Madara::Transport::BROADCAST;

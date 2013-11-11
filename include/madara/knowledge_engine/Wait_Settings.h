@@ -3,7 +3,7 @@
 
 /**
  * @file Wait_Settings.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains the Wait_Settings class, which
  * provides settings for the wait mechanism in the Knowledge Engine

@@ -3,7 +3,7 @@
 
 /**
  * @file Eval_Settings.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains the Eval_Settings class, which
  * provides settings for using the eval mechanism in the Knowledge Engine

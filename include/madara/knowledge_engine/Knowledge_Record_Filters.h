@@ -17,7 +17,7 @@
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Functions.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/knowledge_engine/Knowledge_Record_Filters.h"
+#include "madara/knowledge_engine/Aggregate_Filter.h"
 #include "madara/transport/Transport_Context.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
@@ -31,7 +31,7 @@ namespace Madara
 
     /// a map of types to filter chain
     typedef  std::map <uint32_t, Filter_Chain>  Filter_Map;
-    
+
     /**
      * @class Knowledge_Record_Filters
      * @brief Provides map of data types to a filter chain to apply to the data
@@ -69,6 +69,15 @@ namespace Madara
       void add (uint32_t types,
         Knowledge_Record (*function) (Function_Arguments &, Variables &));
 
+
+      /**
+       * Adds an aggregate filter
+       * @param function     the function that will filter the aggregation
+       **/
+      void add (Knowledge_Record (*function) (
+        Knowledge_Map &, const Transport::Transport_Context &,
+        Variables &));
+
       /**
        * Attaches a context. If the context ever goes out of scope,
        * a 0 should be passed into this function to reset the context.
@@ -81,6 +90,11 @@ namespace Madara
        * @param   types   the types to clear the filters of
        **/
       void clear (uint32_t types);
+
+      /**
+       * Clears the aggregate filters
+       **/
+      void clear_aggregate_filters (void);
 
       /**
        * Filters an input according to its filter chain.
@@ -102,6 +116,7 @@ namespace Madara
        * args[5] : Message timestamp (when the message was originally sent)<br />
        * args[6] : Current timestamp (the result of time (NULL))<br />
        * args[7] : Network domain (partition of the network knowledge)<br />
+       * args[8] : Knowledge originator (where this update comes fromm)<br />
        * 
        * @param   input   the argument to the filter chain
        * @param   name    variable name ("" if unnamed)
@@ -111,6 +126,15 @@ namespace Madara
       Knowledge_Record filter (const Knowledge_Record & input,
         const std::string & name,
         Transport::Transport_Context & context) const;
+
+      /**
+       * Calls aggregate filter chain on the provided aggregate records
+       * @param  records             the aggregate record map
+       * @param  transport_context   the context of the transport
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter (Knowledge_Map & records,
+        const Transport::Transport_Context & transport_context) const;
 
       /**
        * Prints the number of filters chained for each type
@@ -123,11 +147,22 @@ namespace Madara
        **/
       size_t get_number_of_filtered_types (void) const;
 
+      /**
+       * Returns the number of aggregate update filters
+       * @return  the number of aggregate update filters
+       **/
+      size_t get_number_of_aggregate_filters (void) const;
+
     protected:
       /**
        * Container for mapping types to filter chains
        **/
       Filter_Map  filters_;
+
+      /**
+       * List of aggregate filters
+       **/
+      Aggregate_Filters  aggregate_filters_;
 
       /**
        * Context used by this filter

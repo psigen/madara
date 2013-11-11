@@ -168,7 +168,6 @@ int main (int argc, char ** argv)
       );
 
     knowledge.wait (compiled, wait_settings);
-
     
     if (knowledge.get ("var3").to_integer () == 1 &&
       knowledge.get ("var4").to_double () == -2.0/3)

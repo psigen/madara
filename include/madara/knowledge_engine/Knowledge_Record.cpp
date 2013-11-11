@@ -108,9 +108,12 @@ Madara::Knowledge_Record::~Knowledge_Record ()
 }
 
 
-/**
-  * reads an XML file from a string
-  **/
+bool
+Madara::Knowledge_Record::exists (void)
+{
+  return status_ != UNCREATED;
+}
+
 int
 Madara::Knowledge_Record::read_file (
   const std::string & filename, uint32_t read_as_type)

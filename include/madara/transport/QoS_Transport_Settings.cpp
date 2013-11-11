@@ -221,7 +221,16 @@ Madara::Transport::QoS_Transport_Settings::add_send_filter (uint32_t types,
 {
   send_filters_.add (types, function);
 }
-       
+
+void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (
+  Knowledge_Record (*function) (
+        Knowledge_Map &, const Transport::Transport_Context &,
+        Knowledge_Engine::Variables &))
+{
+  send_filters_.add (function);
+}
+
 void
 Madara::Transport::QoS_Transport_Settings::add_receive_filter (uint32_t types,
   Madara::Knowledge_Record (*function) (
@@ -229,13 +238,31 @@ Madara::Transport::QoS_Transport_Settings::add_receive_filter (uint32_t types,
 {
   receive_filters_.add (types, function);
 }
-       
+
+void
+  Madara::Transport::QoS_Transport_Settings::add_receive_filter (
+  Knowledge_Record (*function) (
+    Knowledge_Map &, const Transport::Transport_Context &,
+    Knowledge_Engine::Variables &))
+{
+  receive_filters_.add (function);
+}
+
 void
 Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (uint32_t types,
   Madara::Knowledge_Record (*function) (
     Knowledge_Engine::Function_Arguments &, Knowledge_Engine::Variables &))
 {
   rebroadcast_filters_.add (types, function);
+}
+
+void
+  Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+  Knowledge_Record (*function) (
+    Knowledge_Map &, const Transport::Transport_Context &,
+    Knowledge_Engine::Variables &))
+{
+  rebroadcast_filters_.add (function);
 }
 
 void
@@ -254,15 +281,36 @@ Madara::Transport::QoS_Transport_Settings::clear_send_filters (uint32_t types)
 }
 
 void
+Madara::Transport::QoS_Transport_Settings::clear_send_aggregate_filters
+  ()
+{
+  send_filters_.clear_aggregate_filters ();
+}
+
+void
 Madara::Transport::QoS_Transport_Settings::clear_receive_filters (uint32_t types)
 {
   receive_filters_.clear (types);
 }
 
 void
+Madara::Transport::QoS_Transport_Settings::clear_receive_aggregate_filters
+  ()
+{
+  receive_filters_.clear_aggregate_filters ();
+}
+
+void
 Madara::Transport::QoS_Transport_Settings::clear_rebroadcast_filters (uint32_t types)
 {
   rebroadcast_filters_.clear (types);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::clear_rebroadcast_aggregate_filters
+  ()
+{
+  rebroadcast_filters_.clear_aggregate_filters ();
 }
 
       
@@ -274,7 +322,15 @@ Madara::Transport::QoS_Transport_Settings::filter_send (
 {
   return send_filters_.filter (input, name, context);
 }
-         
+
+Madara::Knowledge_Record
+Madara::Transport::QoS_Transport_Settings::filter_send (
+  Knowledge_Map & records,
+  const Transport::Transport_Context & transport_context) const
+{
+  return send_filters_.filter (records, transport_context);
+}
+        
 
 Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_receive (
@@ -286,6 +342,14 @@ Madara::Transport::QoS_Transport_Settings::filter_receive (
 }
       
 Madara::Knowledge_Record
+Madara::Transport::QoS_Transport_Settings::filter_receive (
+  Knowledge_Map & records,
+  const Transport::Transport_Context & transport_context) const
+{
+  return receive_filters_.filter (records, transport_context);
+}
+  
+Madara::Knowledge_Record
 Madara::Transport::QoS_Transport_Settings::filter_rebroadcast (
   const Madara::Knowledge_Record & input,
   const std::string & name,
@@ -294,6 +358,13 @@ Madara::Transport::QoS_Transport_Settings::filter_rebroadcast (
   return rebroadcast_filters_.filter (input, name, context);
 }
 
+Madara::Knowledge_Record
+Madara::Transport::QoS_Transport_Settings::filter_rebroadcast (
+  Knowledge_Map & records,
+  const Transport::Transport_Context & transport_context) const
+{
+  return rebroadcast_filters_.filter (records, transport_context);
+}
        
 void
 Madara::Transport::QoS_Transport_Settings::print_num_filters_send (
@@ -324,7 +395,13 @@ Madara::Transport::QoS_Transport_Settings::get_number_of_send_filtered_types (
 {
   return send_filters_.get_number_of_filtered_types ();
 }
-      
+
+size_t
+Madara::Transport::QoS_Transport_Settings::get_number_of_send_aggregate_filters (
+  void) const
+{
+  return send_filters_.get_number_of_aggregate_filters ();
+}
 
 size_t
 Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_filtered_types (
@@ -333,12 +410,26 @@ Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_filtered_ty
   return rebroadcast_filters_.get_number_of_filtered_types ();
 }
 
+size_t
+Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_aggregate_filters (
+  void) const
+{
+  return rebroadcast_filters_.get_number_of_aggregate_filters ();
+}
+
 
 size_t
-Madara::Transport::QoS_Transport_Settings::get_number_of_received_filtered_types (
+Madara::Transport::QoS_Transport_Settings::get_number_of_receive_filtered_types (
   void) const
 {
   return receive_filters_.get_number_of_filtered_types ();
+}
+
+size_t
+Madara::Transport::QoS_Transport_Settings::get_number_of_receive_aggregate_filters (
+  void) const
+{
+  return receive_filters_.get_number_of_aggregate_filters ();
 }
 
 void

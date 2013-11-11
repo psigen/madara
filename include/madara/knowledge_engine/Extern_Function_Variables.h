@@ -12,7 +12,7 @@
 
 /**
  * @file Functions.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains declarations for declaring external functions that
  * are accessible by the MADARA KARL interpreter

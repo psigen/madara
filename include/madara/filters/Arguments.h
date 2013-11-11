@@ -23,7 +23,8 @@ namespace Madara
       UPDATE_TIME = 5,
       CURRENT_TIME = 6,
       KNOWLEDGE_DOMAIN = 7,
-      TOTAL_ARGUMENTS = 8
+      ORIGINATOR = 8,
+      TOTAL_ARGUMENTS = 9
     };
   }
 }

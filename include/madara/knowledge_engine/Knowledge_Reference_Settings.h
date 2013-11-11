@@ -3,7 +3,7 @@
 
 /**
  * @file Knowledge_Base.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains the Knowledge_Reference_Settings class, which
  * provides settings for applying knowledge updates

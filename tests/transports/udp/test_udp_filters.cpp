@@ -153,6 +153,8 @@ int main (int argc, char ** argv)
                             Madara::Filters::log_args);
   settings.add_send_filter (Madara::Knowledge_Record::DOUBLE,
                             Madara::Filters::discard);
+  settings.add_receive_filter (Madara::Knowledge_Record::ALL_TYPES,
+                               Madara::Filters::log_args);
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
   wait_settings.max_wait_time = 10;
@@ -180,11 +182,11 @@ int main (int argc, char ** argv)
     if (knowledge.get ("var2").to_integer () == 1 &&
       knowledge.get ("var4").status () == Madara::Knowledge_Record::UNCREATED)
     {
-      knowledge.print ("Double value was not received. Sent filter SUCCESS.\n");
+      knowledge.print ("Double value was not received. Send filter SUCCESS.\n");
     }
     else
     {
-      knowledge.print ("Double value was received. Sent filter FAIL.\n");
+      knowledge.print ("Double value was received. Send filter FAIL.\n");
     }
   }
 

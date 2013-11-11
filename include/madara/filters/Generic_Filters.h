@@ -19,6 +19,7 @@
 #include "madara/knowledge_engine/Functions.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
+#include "madara/transport/Transport_Context.h"
 
 namespace Madara
 {
@@ -52,7 +53,7 @@ namespace Madara
      * have a status of UNCREATED. Files are IMAGE_JPEG, TEXT, XML, and
      * UNKNOWN_FILE_TYPE.
      * @param   args        filter arguments (only first argument is used)
-     * @param   vars        variable context (unused)
+     * @param   vars        variable context
      * @return  record with status set to UNCREATED if arg is non-file
      **/
     MADARA_Export Knowledge_Record
@@ -62,12 +63,24 @@ namespace Madara
     /**
      * Filter for logging args
      * @param   args        filter arguments (only first argument is used)
-     * @param   vars        variable context (unused)
+     * @param   vars        variable context
      * @return  record with status set to UNCREATED if arg is non-file
      **/
     MADARA_Export Knowledge_Record
     log_args              (Knowledge_Engine::Function_Arguments & args,
                            Knowledge_Engine::Variables & vars);
+    
+    /**
+     * Filter for logging aggregate update and context
+     * @param   records     aggregate update
+     * @param   vars        variable context
+     * @return  record with status set to UNCREATED if arg is non-file
+     **/
+    MADARA_Export Knowledge_Record
+    log_aggregate         (
+      Knowledge_Map & records,
+      const Transport::Transport_Context & transport_context,
+      Knowledge_Engine::Variables & vars);
   }
 }
 

@@ -98,8 +98,8 @@ void handle_arguments (int argc, char ** argv)
         " [-b|--broadcast ip:port] the broadcast ip to send and listen to\n" \
         " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
         " [-i|--id id]             the id of this agent (should be non-negative)\n" \
-        " [-f|--logfile file]      log to a file\n" \
         " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        " [-f|--logfile file]      log to a file\n" \
         " [-r|--reduced]           use the reduced message header\n" \
         "\n",
         argv[0]));
@@ -108,25 +108,34 @@ void handle_arguments (int argc, char ** argv)
   }
 }
 
+Madara::Knowledge_Record
+discard_var4 (Madara::Knowledge_Map & records,
+  const Madara::Transport::Transport_Context & context,
+  Madara::Knowledge_Engine::Variables & vars)
+{
+  Madara::Knowledge_Record result;
 
+  Madara::Knowledge_Map::const_iterator found = records.find ("var4");
+
+  if (found != records.end ())
+    records.erase (found);
+
+  return result;
+}
 
 int main (int argc, char ** argv)
 {
-  settings.hosts.resize (1);
-  settings.hosts[0] = default_broadcast;
+  settings.hosts.push_back (default_broadcast);
   handle_arguments (argc, argv);
-
+  
   settings.type = Madara::Transport::BROADCAST;
-  settings.add_send_filter (Madara::Knowledge_Record::ALL_TYPES,
-                            Madara::Filters::log_args);
-  settings.add_send_filter (Madara::Knowledge_Record::DOUBLE,
-                            Madara::Filters::discard);
-  settings.add_receive_filter (Madara::Knowledge_Record::ALL_TYPES,
-                               Madara::Filters::log_args);
-
+  settings.add_send_filter (Madara::Filters::log_aggregate);
+  settings.add_send_filter (discard_var4);
+  settings.add_send_filter (Madara::Filters::log_aggregate);
+  settings.add_receive_filter (Madara::Filters::log_aggregate);
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  wait_settings.max_wait_time = 10.0;
+  wait_settings.max_wait_time = 10;
 
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
 

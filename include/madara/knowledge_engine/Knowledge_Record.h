@@ -168,6 +168,12 @@ namespace Madara
     ~Knowledge_Record ();
     
     /**
+     * Checks if record exists (i.e., is not uncreated)
+     * @return true if record exists, false otherwise
+     **/
+    bool exists (void);
+
+    /**
      * retrieves the value at an array index. If the
      * knowledge record is not an array, false is returned.
      * @param    index    index of the array item

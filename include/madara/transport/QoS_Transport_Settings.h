@@ -76,7 +76,16 @@ namespace Madara
       void add_send_filter (uint32_t types,
         Knowledge_Record (*function) (Knowledge_Engine::Function_Arguments &,
                                       Knowledge_Engine::Variables &));
-       
+      
+      /**
+       * Adds an aggregate update filter that will be applied before sending,
+       * after individual record filters.
+       * @param   function  an aggregate update filter
+       **/
+      void add_send_filter (Knowledge_Record (*function) (
+        Knowledge_Map &, const Transport::Transport_Context &,
+        Knowledge_Engine::Variables &));
+
       /**
        * Adds a filter that will be applied to certain types after receiving
        * and before applying to the local knowledge base
@@ -87,7 +96,16 @@ namespace Madara
       void add_receive_filter (uint32_t types,
         Knowledge_Record (*function) (Knowledge_Engine::Function_Arguments &,
                                       Knowledge_Engine::Variables &));
-       
+      
+      /**
+       * Adds an aggregate update filter that will be applied after receiving,
+       * after individual record filters.
+       * @param   function  an aggregate update filter
+       **/
+      void add_receive_filter (Knowledge_Record (*function) (
+        Knowledge_Map &, const Transport::Transport_Context &,
+        Knowledge_Engine::Variables &));
+ 
       /**
        * Adds a filter that will be applied to certain types after receiving
        * and before rebroadcasting (if TTL > 0)
@@ -99,6 +117,15 @@ namespace Madara
         Knowledge_Record (*function) (Knowledge_Engine::Function_Arguments &,
                                       Knowledge_Engine::Variables &));
       
+      /**
+       * Adds an aggregate update filter that will be applied before
+       * rebroadcasting, after individual record filters.
+       * @param   function  an aggregate update filter
+       **/
+      void add_rebroadcast_filter (Knowledge_Record (*function) (
+        Knowledge_Map &, const Transport::Transport_Context &,
+        Knowledge_Engine::Variables &));
+ 
       /**
        * Attaches a context to the various filtering systems. If the context
        * ever goes out of scope, a 0 should be passed into this function to
@@ -114,17 +141,31 @@ namespace Madara
       void clear_send_filters (uint32_t types);
 
       /**
+       * Clears the list of send time aggregate filters
+       **/
+      void clear_send_aggregate_filters (void);
+
+      /**
        * Clears the list of filters for the specified types
        * @param   types   the types to clear the filters of
        **/
       void clear_receive_filters (uint32_t types);
+      
+      /**
+       * Clears the list of receive time aggregate filters
+       **/
+      void clear_receive_aggregate_filters (void);
 
       /**
        * Clears the list of filters for the specified types
        * @param   types   the types to clear the filters of
        **/
       void clear_rebroadcast_filters (uint32_t types);
-
+      
+      /**
+       * Clears the list of rebroadcast time aggregate filters
+       **/
+      void clear_rebroadcast_aggregate_filters (void);
       
       /**
        * Filters an input according to send's filter chain
@@ -137,9 +178,18 @@ namespace Madara
         const Madara::Knowledge_Record & input,
         const std::string & name,
         Transport::Transport_Context & context) const;
-         
+        
       /**
-       * Filters an input according to receive's filter chain
+       * Filters aggregate records according to the send filter chain
+       * @param  records             the aggregate record map
+       * @param  transport_context   the context of the transport
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter_send (Knowledge_Map & records,
+        const Transport::Transport_Context & transport_context) const;
+          
+      /**
+       * Filters an input according to the receive filter chain
        * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
        * @param   context the context of the transport
@@ -151,7 +201,16 @@ namespace Madara
         Transport::Transport_Context & context) const;
       
       /**
-       * Filters an input according to rebroadcast's filter chain
+       * Filters aggregate records according to the receive filter chain
+       * @param  records             the aggregate record map
+       * @param  transport_context   the context of the transport
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter_receive (Knowledge_Map & records,
+        const Transport::Transport_Context & transport_context) const;
+          
+      /**
+       * Filters an input according to the rebroadcast filter chain
        * @param   name    variable name of input ("" for unnamed)
        * @param   input   the argument to the filter chain
        * @param   context the context of the transport
@@ -161,7 +220,16 @@ namespace Madara
         const Madara::Knowledge_Record & input,
         const std::string & name,
         Transport::Transport_Context & context) const;
-
+      
+      /**
+       * Filters aggregate records according to the rebroadcast filter chain
+       * @param  records             the aggregate record map
+       * @param  transport_context   the context of the transport
+       * @return  the result of filtering the input
+       **/
+      Knowledge_Record filter_rebroadcast (Knowledge_Map & records,
+        const Transport::Transport_Context & transport_context) const;
+          
        
       /**
        * Prints the number of filters chained for each type to the
@@ -202,16 +270,35 @@ namespace Madara
       size_t get_number_of_send_filtered_types (void) const;
       
       /**
+       * Returns the number of aggregate filters applied before sending
+       * @ return the number of aggregate filters
+       **/
+      size_t get_number_of_send_aggregate_filters (void) const;
+       
+      /**
+       * Returns the number of aggregate filters applied before
+       * rebroadcasting
+       * @ return the number of aggregate filters
+       **/
+      size_t get_number_of_rebroadcast_aggregate_filters (void) const;
+
+      /**
        * Returns the number of types that are filtered before rebroadcast
        * @return  the number of types that have filters
        **/
       size_t get_number_of_rebroadcast_filtered_types (void) const;
+       
+      /**
+       * Returns the number of aggregate filters applied after receiving
+       * @ return the number of aggregate filters
+       **/
+      size_t get_number_of_receive_aggregate_filters (void) const;
 
       /**
        * Returns the number of types that are filtered after received
        * @return  the number of types that have filters
        **/
-      size_t get_number_of_received_filtered_types (void) const;
+      size_t get_number_of_receive_filtered_types (void) const;
 
       /**
        * Adds a trusted peer. By default, all peers are trusted unless

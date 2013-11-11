@@ -11,7 +11,7 @@
 
 /**
  * @file Functions.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains declarations for declaring external functions that
  * are accessible by the MADARA KARL interpreter
@@ -27,12 +27,12 @@ namespace Madara
    
     typedef  std::vector <Knowledge_Record>   Function_Arguments;
      
-    class MADARA_Export Function
-    {
     /**
      * @class Function
      * @brief This class stores a function definition
      */
+    class MADARA_Export Function
+    {
     public:
       /**
        * Default constructor

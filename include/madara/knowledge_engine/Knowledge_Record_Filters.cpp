@@ -10,7 +10,8 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::Knowledge_Record_Filters ()
 
 Madara::Knowledge_Engine::Knowledge_Record_Filters::Knowledge_Record_Filters (
   const Knowledge_Record_Filters & filters)
-  : filters_ (filters.filters_), context_ (filters.context_)
+  : filters_ (filters.filters_), context_ (filters.context_),
+    aggregate_filters_ (filters.aggregate_filters_)
 {
 }
 
@@ -25,6 +26,7 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::operator= (
   if (this != &rhs)
   {
     filters_ = rhs.filters_;
+    aggregate_filters_ = rhs.aggregate_filters_;
     context_ = rhs.context_;
   }
 }
@@ -48,6 +50,17 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::add (uint32_t types,
       // remove the current flag from the types
       types = Madara::Utility::bitmask_remove (types, cur);
     }
+  }
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
+  Knowledge_Record (*function) (
+    Knowledge_Map &, const Transport::Transport_Context &, Variables &))
+{
+  if (function != 0)
+  {
+    aggregate_filters_.push_back (Aggregate_Filter (function));
   }
 }
 
@@ -77,6 +90,13 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::clear (uint32_t types)
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::clear_aggregate_filters (
+  void)
+{
+  aggregate_filters_.clear ();
+}
+
+void
 Madara::Knowledge_Engine::Knowledge_Record_Filters::print_num_filters (
   void) const
 {
@@ -89,6 +109,9 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::print_num_filters (
     MADARA_DEBUG (0, (LM_DEBUG,
       "%d = %d chained filters\n", i->first, i->second.size ()));
   }
+  
+  MADARA_DEBUG (0, (LM_DEBUG,
+    "%d chained aggregate filters\n", aggregate_filters_.size ()));
 }
 
 
@@ -150,6 +173,9 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       // seventh argument is the networking domain
       arguments[7].set_value (transport_context.get_domain ());
 
+      // eighth argument is the update originator
+      arguments[8].set_value (transport_context.get_originator ());
+
       // setup arguments to the function
       arguments[0] = result;
 
@@ -186,10 +212,40 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
   return result;
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
+  Knowledge_Map & records,
+  const Transport::Transport_Context & transport_context) const
+{
+  Knowledge_Record result;
+
+  // if there are aggregate filters
+  if (aggregate_filters_.size () > 0)
+  {
+    Variables variables;
+    variables.context_ = context_;
+    
+    for (Aggregate_Filters::const_iterator i = aggregate_filters_.begin ();
+         i != aggregate_filters_.end (); ++i)
+    {
+      i->filter (records, transport_context, variables);
+    }
+    result.set_value (Knowledge_Record::Integer (aggregate_filters_.size ()));
+  }
+
+  return result;
+}
 
 size_t
 Madara::Knowledge_Engine::Knowledge_Record_Filters::get_number_of_filtered_types (
   void) const
 {
   return filters_.size ();
+}
+
+size_t
+Madara::Knowledge_Engine::Knowledge_Record_Filters::get_number_of_aggregate_filters (
+  void) const
+{
+  return aggregate_filters_.size ();
 }

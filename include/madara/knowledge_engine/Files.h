@@ -3,7 +3,7 @@
 
 /**
  * @file Files.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains the Knowledge_Base Files class
  **/

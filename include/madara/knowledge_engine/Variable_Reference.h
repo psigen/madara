@@ -4,7 +4,7 @@
 
 /**
  * @file Compiled_Expression.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains the Compiled_Expression class which is used by
  * the Madara::Knowledge_Engine::Knowledge_Base class

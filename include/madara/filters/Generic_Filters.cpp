@@ -124,9 +124,79 @@ Madara::Filters::log_args (Knowledge_Engine::Function_Arguments & args,
     buffer << "  [7:Knowledge Domain]:  " ;
     buffer << args[7].to_string ();
     buffer << "\n";
+    
+    // [8] Knowledge Domain
+    buffer << "  [8:Originator]:        " ;
+    buffer << args[8].to_string ();
+    buffer << "\n";
 
     vars.print (buffer.str (), 0);
   }
+
+  return result;
+}
+
+Madara::Knowledge_Record
+Madara::Filters::log_aggregate (
+  Knowledge_Map & records,
+  const Transport::Transport_Context & transport_context,
+  Knowledge_Engine::Variables & vars)
+{
+  Madara::Knowledge_Record result;
+
+  
+  std::stringstream buffer;
+  buffer << "Aggregate Filter Arguments:\n";
+    
+  // Operation Type
+  buffer << "  Operation Type:    " ;
+  buffer << operation_types [transport_context.get_operation ()];
+  buffer << "\n";
+    
+  // Send Bandwidth
+  buffer << "  Send Bandwidth:    " ;
+  buffer << transport_context.get_send_bandwidth ();
+  buffer << " B/s\n";
+    
+  // Receive Bandwidth
+  buffer << "  Receive Bandwidth: " ;
+  buffer << transport_context.get_receive_bandwidth ();
+  buffer << " B/s\n";
+    
+  // Update Time
+  buffer << "  Update Time:       " ;
+  buffer << transport_context.get_message_time ();
+  buffer << "\n";
+    
+  // Current Time
+  buffer << "  Current Time:      " ;
+  buffer << transport_context.get_current_time ();
+  buffer << "\n";
+    
+  // Knowledge Domain
+  buffer << "  Knowledge Domain:  " ;
+  buffer << transport_context.get_domain ();
+  buffer << "\n";
+    
+  // Originator
+  buffer << "  Originator:        " ;
+  buffer << transport_context.get_originator ();
+  buffer << "\n";
+  
+  buffer << "  Updates:\n" ;
+  if (records.size () > 0)
+  {
+    for (Knowledge_Map::const_iterator i = records.begin ();
+         i != records.end (); ++i)
+    {
+      buffer << "    " << i->first << " = ";
+      buffer << i->second.to_string () << "\n";
+    }
+  }
+  
+  vars.print (buffer.str (), 0);
+
+  result.set_value (Knowledge_Record::Integer (records.size ()));
 
   return result;
 }

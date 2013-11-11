@@ -33,7 +33,8 @@ namespace Madara
       Transport_Context (int64_t operation = IDLE_OPERATION,
         uint64_t receive_bandwidth = 0, uint64_t send_bandwidth = 0,
         uint64_t message_time = 0, uint64_t current_time = time (NULL),
-        const std::string & domain = "");
+        const std::string & domain = "",
+        const std::string & originator = "");
 
       /**
        * Copy constructor
@@ -53,11 +54,16 @@ namespace Madara
       void operator= (const Transport_Context & rhs);
       
       /**
+       * Clears records added through filtering operations
+       **/
+       void clear_records (void);
+
+      /**
        * Get operation that the context is performing
        * @return     operation being performed. See enums
        *             in this class.
        **/
-      int64_t get_operation (void);
+      int64_t get_operation (void) const;
 
       /**
        * Sets the operation that the context is/should be performing
@@ -69,13 +75,13 @@ namespace Madara
        * Gets the receive bandwidth in bytes per second
        * @return     the bandwidth taken up in receive operations
        **/
-      uint64_t  get_receive_bandwidth (void);
+      uint64_t  get_receive_bandwidth (void) const;
       
       /**
        * Gets the send/rebroadcast bandwidth in bytes per second
        * @return     the bandwidth taken up in send/rebroadcast operations
        **/
-      uint64_t  get_send_bandwidth (void);
+      uint64_t  get_send_bandwidth (void) const;
 
       
       /**
@@ -97,12 +103,12 @@ namespace Madara
        * as the current timestamp.
        * @return    timestamp of message
        **/
-      uint64_t  get_message_time (void);
+      uint64_t  get_message_time (void) const;
 
       /**
        * Gets the current timestamp.
        **/
-      uint64_t  get_current_time (void);
+      uint64_t  get_current_time (void) const;
 
       /**
        * Sets the message time. For receive and rebroadcast operations,
@@ -140,6 +146,16 @@ namespace Madara
        * Sets the network domain
        **/
       void set_domain (const std::string & domain);
+      
+      /**
+       * Returns the current message originator
+       **/
+      const std::string & get_originator (void) const;
+
+      /**
+       * Sets the current message originator
+       **/
+      void set_originator (const std::string & originator);
 
     private:
 
@@ -172,6 +188,11 @@ namespace Madara
        * Networking domain
        **/
       std::string domain_;
+
+      /**
+       * Originator of the current message
+       **/
+      std::string originator_;
 
       /**
        * Context specific records

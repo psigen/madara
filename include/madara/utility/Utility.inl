@@ -17,6 +17,22 @@ bool Madara::Utility::begins_with (const std::string & input,
   return result;
 }
 
+inline
+bool Madara::Utility::ends_with (const std::string & input,
+  const std::string & match)
+{
+  bool result = false;
+
+  if (match.length () <= input.length ())
+  {
+    result =
+      input.substr (input.size () - match.length (), match.length ()) == match;
+  }
+
+  return result;
+}
+
+
 template <typename T>
 T Madara::Utility::bitmask_add (T mask, T values)
 {

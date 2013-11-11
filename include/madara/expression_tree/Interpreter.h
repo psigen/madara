@@ -5,7 +5,7 @@
 
 /**
  * @file Interpreter.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains classes and methods specific to the numerical
  * Madara::Expression_Tree::Interpreter class

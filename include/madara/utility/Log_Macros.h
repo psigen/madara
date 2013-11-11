@@ -1,6 +1,6 @@
 /**
  * @file Log_Macros.h
- * @author James Edmondson <james.r.edmondson@vanderbilt.edu>
+ * @author James Edmondson <jedmondson@gmail.com>
  *
  * Macros used for logging in MADARA, based on the DAnCE Log Macros
  * maintained by Will Otte <wotte@dre.vanderbilt.edu>.
