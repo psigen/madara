@@ -116,7 +116,7 @@ discard_var4 (Madara::Knowledge_Map & records,
 {
   Madara::Knowledge_Record result;
 
-  Madara::Knowledge_Map::const_iterator found = records.find ("var4");
+  Madara::Knowledge_Map::iterator found = records.find ("var4");
 
   if (found != records.end ())
     records.erase (found);
@@ -203,3 +203,4 @@ int main (int argc, char ** argv)
 
   return 0;
 }
+
