@@ -8,8 +8,8 @@ VERSION="$(cat $MADARA_ROOT/VERSION.txt)"
 # libs are not actually created with the correct version. Instead,
 # MPC creates a shared object with the ACE_VERSION + 1 minor version
 # The following variables MUST BE CHANGED with each new ACE version used
-ACE_VERSION=6.1.2
-LIB_VERSION=6.1.2
+ACE_VERSION=6.2.3
+LIB_VERSION=6.2.3
 ARCHITECTURE=amd64
 ROOT_DIR=usr/local
 REVISION=1
