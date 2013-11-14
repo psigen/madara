@@ -50,7 +50,9 @@ namespace Madara
         * @param  t_post_print_statement    statement to print out after
         *                                   evaluations
         * @param  t_poll_frequency          the frequency to poll for changes
+        *                                   (in seconds)
         * @param  t_max_wait_time           the maximum time to wait for truth
+        *                                   (in seconds)
         **/
        Wait_Settings (bool t_delay_sending_modifieds,
          bool t_treat_globals_as_locals,
@@ -79,12 +81,12 @@ namespace Madara
        }
 
        /**
-        * Frequency to poll an expression for truth
+        * Frequency to poll an expression for truth (in seconds)
         **/
        double poll_frequency;
 
        /**
-        * Maximum time to wait for an expression to become true
+        * Maximum time to wait for an expression to become true (in seconds)
         **/
        double max_wait_time;
      };

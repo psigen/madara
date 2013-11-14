@@ -582,10 +582,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   Compiled_Expression & ce, 
   const Wait_Settings & settings)
 {
-  ACE_High_Res_Timer timer;
-  ACE_hrtime_t elapsed (0);
-  ACE_hrtime_t maximum (0);
-  timer.start ();
+  // get current time of day
+  ACE_Time_Value current = ACE_OS::gettimeofday ();  
+  ACE_Time_Value max_wait;
+
+  if (settings.max_wait_time >= 0)
+  {
+    max_wait.set (settings.max_wait_time);
+    max_wait = current + max_wait;
+  }
 
   // print the post statement at highest log level (cannot be masked)
   if (settings.pre_print_statement != "")
@@ -598,10 +603,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
       DLINFO "Knowledge_Base_Impl::wait:" \
       " waiting on %s\n", ce.logic.c_str ()));
 
-  // resulting tree of the expression
-  //Madara::Expression_Tree::Expression_Tree tree = interpreter_.interpret (
-  //  map_, expression);
-
   Madara::Knowledge_Record last_value = ce.expression.evaluate (settings);
 
   MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
@@ -612,31 +613,20 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   send_modifieds ("Knowledge_Base_Impl:wait", settings);
 
   map_.unlock ();
+  
 
   ACE_Time_Value poll_frequency;
-
-  if (settings.max_wait_time > 0 && last_value.is_false ())
-  {
-    ACE_Time_Value max_tv;
-    poll_frequency.set (settings.poll_frequency);
-
-    max_tv.set (settings.max_wait_time);
-    maximum = max_tv.sec () * 1000000000;
-    maximum += max_tv.usec () * 1000;
-
-    timer.stop ();
-    timer.elapsed_time (elapsed);
-
-  }
+  poll_frequency.set (settings.poll_frequency);
 
   // wait for expression to be true
   while (!last_value.to_integer () &&
-    (settings.max_wait_time < 0 || maximum > elapsed))
+    (settings.max_wait_time < 0 || current < max_wait))
   {
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
-        " elapsed is %Q and max is %Q (poll freq is %f)\n",
-        elapsed, maximum, settings.poll_frequency));
+        " current is %Q.%Q and max is %Q.%Q (poll freq is %f)\n",
+        current.sec (), current.usec (), max_wait.sec (), max_wait.usec (),
+        settings.poll_frequency));
 
     MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
         DLINFO "Knowledge_Base_Impl::wait:" \
@@ -659,8 +649,10 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
     map_.unlock ();
     map_.signal ();
-    timer.stop ();
-    timer.elapsed_time (elapsed);
+
+    // get current time
+    current = ACE_OS::gettimeofday ();
+
   } // end while (!last)
 
   // print the post statement at highest log level (cannot be masked)
