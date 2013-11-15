@@ -8,8 +8,8 @@ VERSION="$(cat $MADARA_ROOT/VERSION.txt)"
 # libs are not actually created with the correct version. Instead,
 # MPC creates a shared object with the ACE_VERSION + 1 minor version
 # The following variables MUST BE CHANGED with each new ACE version used
-ACE_VERSION=6.2.3
-LIB_VERSION=6.2.3
+ACE_VERSION="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' $ACE_ROOT/VERSION)"
+LIB_VERSION=$ACE_VERSION
 ARCHITECTURE=amd64
 ROOT_DIR=usr/local
 REVISION=1
@@ -19,7 +19,7 @@ do
   if [ "$1" = "--help" -o "$1" = "-h" ] ;
   then
     echo "Packager options:"
-    echo "  --ace-version VER    indicates the ace version (e.g. 6.1.5)"
+    echo "  --ace-version VER    indicates the ace version (e.g. $ACE_VERSION)"
     echo "  --lib-version VER    MADARA so version (reflection of ACE version)"
     echo "                       This is not the contents of VERSION.txt"
     echo "                       See $MADARA_ROOT/lib/libMADARA.so.(VER)"
