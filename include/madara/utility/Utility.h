@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "ace/SOCK_Dgram.h"
+#include "ace/High_Res_Timer.h"
 #include "madara/MADARA_export.h"
 #include "madara/utility/stdint.h"
 
@@ -307,6 +308,20 @@ namespace Madara
      **/
     MADARA_Export bool ends_with (const std::string & input,
       const std::string & ending);
+    
+    /**
+     * Sleeps for a certain amount of time. Unlike other sleep timers
+     * this will sleep for the amount of time regardless of OS interrupts
+     * @param  sleep_time  time in seconds to sleep for
+     **/
+    MADARA_Export void sleep (double sleep_time);
+    
+    /**
+     * Sleeps for a certain amount of time. Unlike other sleep timers
+     * this will sleep for the amount of time regardless of OS interrupts
+     * @param  sleep_time  time to sleep for
+     **/
+    MADARA_Export void sleep (const ACE_Time_Value & sleep_time);
 
     /**
      * Returns true if left < right

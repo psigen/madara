@@ -584,12 +584,16 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 {
   // get current time of day
   ACE_Time_Value current = ACE_OS::gettimeofday ();  
-  ACE_Time_Value max_wait;
+  ACE_Time_Value max_wait, sleep_time, next_epoch;
+  ACE_Time_Value poll_frequency, last = current;
 
   if (settings.max_wait_time >= 0)
   {
     max_wait.set (settings.max_wait_time);
     max_wait = current + max_wait;
+    
+    poll_frequency.set (settings.poll_frequency);
+    next_epoch = current + poll_frequency;
   }
 
   // print the post statement at highest log level (cannot be masked)
@@ -614,9 +618,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
   map_.unlock ();
   
-
-  ACE_Time_Value poll_frequency;
-  poll_frequency.set (settings.poll_frequency);
+  current = ACE_OS::gettimeofday ();
 
   // wait for expression to be true
   while (!last_value.to_integer () &&
@@ -635,7 +637,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     // Unlike the other wait statements, we allow for a time based wait.
     // To do this, we allow a user to specify a 
     if (settings.max_wait_time > 0)
-      ACE_OS::sleep (poll_frequency);
+    {
+      if (current < next_epoch)
+      {
+        sleep_time = next_epoch - current;
+        Madara::Utility::sleep (sleep_time);
+      }
+
+      next_epoch = next_epoch + poll_frequency;
+    }
     else
       map_.wait_for_change (true);
 
@@ -659,8 +669,6 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   if (settings.post_print_statement != "")
     map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
 
-  // release the context lock
-  //map_.unlock ();
   return last_value;
 }
 

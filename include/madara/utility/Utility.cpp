@@ -11,6 +11,7 @@
 #include "ace/OS_NS_fcntl.h"
 #include "ace/OS_NS_unistd.h"
 #include "ace/OS_NS_sys_socket.h"
+#include "ace/OS_NS_Thread.h"
 #include "ace/High_Res_Timer.h"
 
 std::string
@@ -746,4 +747,26 @@ Madara::Utility::nearest_int (double input)
     return left;
   else
     return right;
+}
+
+
+void Madara::Utility::sleep (double sleep_time)
+{
+  ACE_Time_Value actual_time;
+  actual_time.set (sleep_time);
+
+  sleep (actual_time);
+}
+    
+
+void Madara::Utility::sleep (const ACE_Time_Value & sleep_time)
+{
+  ACE_Time_Value current = ACE_OS::gettimeofday ();
+  ACE_Time_Value earliest = current + sleep_time;
+
+  while (current < earliest)
+  {
+    ACE_OS::sleep (earliest - current);
+    current = ACE_OS::gettimeofday ();
+  }
 }

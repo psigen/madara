@@ -1418,6 +1418,27 @@ project (Test_Utility) : using_ace, using_madara {
   }
 }
 
+project (Test_Peroidic_Wait) : using_ace, using_madara {
+  requires += tests
+  
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_periodic_wait
+  
+  Documentation_Files {
+  }
+
+  Build_Files {
+    Tests.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_periodic_wait.cpp
+  }
+}
+
 project (Test_Primitive_Types) : using_ace, using_madara {
   requires += tests
   
