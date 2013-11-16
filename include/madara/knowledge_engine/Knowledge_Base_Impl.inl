@@ -389,16 +389,51 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::send_modifieds (
 
   if (transports_.size () > 0 && !settings.delay_sending_modifieds)
   {
-    const Madara::Knowledge_Records & modified = map_.get_modified ();
+    const Knowledge_Records & modified = map_.get_modified ();
 
     if (modified.size () > 0)
     {
-      for (unsigned int i = 0; i < transports_.size (); ++i, ++result)
-        transports_[i]->send_data (modified);
+      // if there is not an allowed send_list list
+      if (settings.send_list.size () == 0)
+      {
+        // send across each transport
+        for (unsigned int i = 0; i < transports_.size (); ++i, ++result)
+          transports_[i]->send_data (modified);
 
+        // reset the modified map
+        map_.reset_modified ();
+      }
+      else
+      {
+        Knowledge_Records allowed_modifieds;
+        // otherwise, we are only allowed to send a subset of modifieds
+        for (Knowledge_Records::const_iterator i = modified.begin ();
+             i != modified.end (); ++i)
+        {
+          if (settings.send_list.find (i->first) != settings.send_list.end ())
+          {
+            allowed_modifieds[i->first] = i->second;
+          }
+        }
+
+        // if the subset was greater than zero, we send the subset
+        if (allowed_modifieds.size () > 0)
+        {
+          // send across each transport
+          for (unsigned int i = 0; i < transports_.size (); ++i, ++result)
+            transports_[i]->send_data (allowed_modifieds);
+
+          // reset modified list for the allowed modifications
+          for (Knowledge_Records::const_iterator i = allowed_modifieds.begin ();
+               i != allowed_modifieds.end (); ++i)
+          {
+            map_.reset_modified (i->first);
+          }
+        }
+      }
+      
       map_.inc_clock (settings);
 
-      map_.reset_modified ();
       if (settings.signal_changes)
         map_.signal (false);
     }

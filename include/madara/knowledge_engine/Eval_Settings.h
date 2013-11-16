@@ -10,6 +10,7 @@
  */
 
 #include <string>
+#include <map>
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 namespace Madara
@@ -79,7 +80,8 @@ namespace Madara
          : Knowledge_Update_Settings (rhs), 
            delay_sending_modifieds (rhs.delay_sending_modifieds),
            pre_print_statement (rhs.pre_print_statement),
-           post_print_statement (rhs.post_print_statement)
+           post_print_statement (rhs.post_print_statement),
+           send_list (rhs.send_list)
        {
        }
 
@@ -98,8 +100,13 @@ namespace Madara
         * Statement to print after evaluations
         **/
        std::string post_print_statement;
-     };
 
+       /**
+        * Map of record names that are allowed to be sent after operation.
+        * The map is only valid if @see delay_sending_modifieds is false.
+        **/
+       std::map <std::string, bool> send_list;
+     };
   }
 }
 #endif

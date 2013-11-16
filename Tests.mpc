@@ -42,6 +42,27 @@ project (Test_Multicast_Aggregate_Filters) : using_madara, using_ace {
   }
 }
 
+project (Test_Multicast_Send_List) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_multicast_send_list
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/multicast/test_multicast_send_list.cpp
+  }
+}
+
 project (Test_Broadcast_Aggregate_Filters) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_broadcast_aggregate_filters
