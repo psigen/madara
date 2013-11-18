@@ -763,7 +763,7 @@ namespace Madara
        * @param  func       external function to call with this name
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (Function_Arguments &, Variables &));
+        Knowledge_Record (*func) (Function_Arguments &, Variables &));
       
       /**
        * Defines a named function that can distinguish the name it was called
@@ -772,7 +772,7 @@ namespace Madara
        * @param  func       external function to call with this name
        **/
       void define_function (const std::string & name,
-        VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &));
+        Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &));
       
       /**
        * Defines a MADARA KaRL function

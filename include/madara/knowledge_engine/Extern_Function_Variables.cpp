@@ -404,7 +404,7 @@ Madara::Knowledge_Engine::Variables::inc (
   }
 }
 
-Madara::Knowledge_Engine::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::dec (
   const std::string & key,
   const Knowledge_Update_Settings & settings)
@@ -423,7 +423,7 @@ Madara::Knowledge_Engine::Variables::dec (
   }
 }
 
-Madara::Knowledge_Engine::VALUE_TYPE
+Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::dec (
   const Variable_Reference & variable,
   const Knowledge_Update_Settings & settings)

@@ -1449,7 +1449,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (Function_Arguments &, Variables &),
+    Knowledge_Record (*func) (Function_Arguments &, Variables &),
         const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex

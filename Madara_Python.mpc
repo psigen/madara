@@ -1,0 +1,26 @@
+
+project (MADARA_Python) : using_madara, using_ace, port/python/using_python {
+
+  requires += python
+
+  sharedname = MADARA_Python
+  libout = $(MADARA_ROOT)/lib
+  
+  Documentation_Files {
+    port/python
+  }
+
+  Build_Files {
+    Madara_Python.mpc
+    port/python/using_python.mpb
+  }
+
+  Header_Files {
+    port/python/src
+  }
+
+  Source_Files {
+    port/python/src
+  }
+}
+

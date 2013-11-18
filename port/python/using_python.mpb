@@ -1,0 +1,15 @@
+feature (python) {
+
+  requires += python
+
+  includes += $(BOOST_ROOT)
+  includes += $(PYTHON_ROOT)/include
+  
+  libs     += boost_python-vc100-mt-$(BOOST_VERSION)
+  libs     += python$(PYTHON_VERSION)
+  
+  libpaths += $(BOOST_ROOT)/stage/lib
+  libpaths += $(PYTHON_ROOT)/libs
+  
+  after    += MADARA
+}

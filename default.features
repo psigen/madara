@@ -43,3 +43,11 @@ tests                   = 1
 /// Enable this feature if you want to generate tutorial applications
 tutorials               = 0
 
+/// @feature java
+/// Enable this feature if you want to generate a JNI port for Java
+java                    = 0
+
+/// @feature python
+/// Enable this feature if you want to generate a Boost.Python port for Python
+python                  = 0
+

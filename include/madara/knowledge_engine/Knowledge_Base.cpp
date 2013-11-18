@@ -583,7 +583,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 // Defines a function
 void Madara::Knowledge_Engine::Knowledge_Base::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (Function_Arguments &, Variables &))
+    Knowledge_Record (*func) (Function_Arguments &, Variables &))
 {
   impl_->define_function (name, func);
 }
@@ -591,7 +591,7 @@ void Madara::Knowledge_Engine::Knowledge_Base::define_function (
 // Defines a function
 void Madara::Knowledge_Engine::Knowledge_Base::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &))
+    Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &))
 {
   impl_->define_function (name, func);
 }

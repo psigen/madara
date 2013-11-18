@@ -221,7 +221,7 @@ inline void Madara::Knowledge_Engine::Knowledge_Base_Impl::release (void)
 // Defines a function
 inline
 void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
-  const std::string & name, VALUE_TYPE (*func) (Function_Arguments &, Variables &))
+  const std::string & name, Knowledge_Record (*func) (Function_Arguments &, Variables &))
 {
   map_.define_function (name, func);
 }
@@ -230,7 +230,7 @@ void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
 inline
 void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
   const std::string & name,
-    VALUE_TYPE (*func) (const char *, Function_Arguments &, Variables &))
+    Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &))
 {
   map_.define_function (name, func);
 }
