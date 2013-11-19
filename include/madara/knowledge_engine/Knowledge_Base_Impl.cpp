@@ -653,8 +653,19 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     // we can't have a bunch of people changing the variables as 
     // while we're evaluating the tree.
     map_.lock ();
+
+    
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " waiting on %s\n", ce.logic.c_str ()));
+
     last_value = ce.expression.evaluate (settings);
     
+    MADARA_DEBUG (MADARA_LOG_EVENT_TRACE, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " completed eval to get %s\n",
+      last_value.to_string ().c_str ()));
+  
     send_modifieds ("Knowledge_Base_Impl:wait", settings);
 
     map_.unlock ();
@@ -664,6 +675,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
     current = ACE_OS::gettimeofday ();
 
   } // end while (!last)
+  
+  if (current >= max_wait)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::wait:" \
+        " Evaluate did not succeed. Timeout occurred.\n"));
+  }
 
   // print the post statement at highest log level (cannot be masked)
   if (settings.post_print_statement != "")

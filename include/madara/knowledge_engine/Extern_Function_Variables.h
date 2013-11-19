@@ -52,6 +52,19 @@ namespace Madara
       }
       
       /**
+       * Constructor
+       **/
+      Variables (const Variables & rhs)
+        : context_ (rhs.context_)
+      {
+      }
+      
+      /**
+       * Assignment operator
+       **/
+      void operator= (Variables & rhs);
+
+      /**
        * Retrieves the value of a variable.
        * @param   key       unique identifier of the variable
        * @param   settings  settings when referring to variables

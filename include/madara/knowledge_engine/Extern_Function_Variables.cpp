@@ -7,6 +7,13 @@
 
 #include "madara/utility/Log_Macros.h"
 
+void
+Madara::Knowledge_Engine::Variables::operator= (Variables & rhs)
+{
+  if (this != &rhs || context_ != rhs.context_)
+    context_ = rhs.context_;
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::get (const std::string & key,
              const Knowledge_Reference_Settings & settings)
