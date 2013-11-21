@@ -108,6 +108,21 @@ Madara::Knowledge_Engine::Knowledge_Base::operator= (
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Base::lock (void)
+{
+  impl_->lock ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::unlock (void)
+{
+  impl_->unlock ();
+}
+
+
+
+
+void
 Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)
 {
   impl_->activate_transport ();

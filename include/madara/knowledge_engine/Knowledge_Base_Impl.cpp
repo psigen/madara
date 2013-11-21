@@ -219,6 +219,18 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::lock (void)
+{
+  map_.lock ();
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::unlock (void)
+{
+  map_.unlock ();
+}
+
+void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
 {
   if (transports_.size () > 0)

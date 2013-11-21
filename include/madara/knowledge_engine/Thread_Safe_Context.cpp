@@ -1357,8 +1357,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
   if (rhs.clock > this->clock_)
     this->clock_ = rhs.clock;
   
-  if (settings.signal_changes)
-    changed_.signal ();
+  //if (settings.signal_changes)
+  //  changed_.signal ();
 
   // value was changed
   return result;

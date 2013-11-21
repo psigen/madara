@@ -186,19 +186,22 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       }
 
       // did the filter add records to be sent?
-      if (arguments.size () > 9)
+      if (arguments.size () > Madara::Filters::TOTAL_ARGUMENTS)
       {
         for (unsigned int i = Madara::Filters::TOTAL_ARGUMENTS;
           i + 1 < arguments.size (); i += 2)
         {
           if (arguments[i].is_string_type ())
           {
+            MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG,
+              "Knowledge_Record_Filters::filter: Adding %s "
+              "to transport context.\n", arguments[i].to_string ().c_str ()));
             transport_context.add_record (
               arguments[i].to_string (), arguments[i + 1]);
           }
           else
           {
-            MADARA_DEBUG (0, (LM_DEBUG,
+            MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
               "Knowledge_Record_Filters::filter: ERROR. Filter attempted to"
               " add records to transport context, but args[%d] was not"
               " a string value.\n", i));

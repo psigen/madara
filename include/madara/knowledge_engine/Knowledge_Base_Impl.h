@@ -75,6 +75,17 @@ namespace Madara
        * Destructor
        **/
       ~Knowledge_Base_Impl ();
+      
+      /**
+       * Locks the context to prevent updates over the network
+       **/
+      void lock (void);
+      
+      /**
+       * Unlocks the context to allow updates over the network (is only
+       * necessary if the context has been explicitly locked)
+       **/
+      void unlock (void);
 
       /**
        * Starts the transport mechanism for dissemination if it is closed

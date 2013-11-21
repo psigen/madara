@@ -354,23 +354,39 @@ Madara::Transport::process_received_update (
   }
   
   const Knowledge_Map & additionals = transport_context.get_records ();
-
-  for (Knowledge_Map::const_iterator i = additionals.begin ();
-        i != additionals.end (); ++i)
+  
+  if (additionals.size () > 0)
   {
-    updates[i->first] = i->second;
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " %d additional records being handled after receive.\n", print_prefix,
+      additionals.size ()));
+
+    for (Knowledge_Map::const_iterator i = additionals.begin ();
+          i != additionals.end (); ++i)
+    {
+      updates[i->first] = i->second;
+    }
+
+    transport_context.clear_records ();
+
+    if (header->ttl < 2)
+      header->ttl = 2;
+
+    // modify originator to indicate we are the originator of modifications
+    strncpy (header->originator, id.c_str (), 
+             sizeof (header->originator) - 1);
+
   }
-
-  transport_context.clear_records ();
-
-  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-    DLINFO "%s:" \
-    " Applying aggregate receive filters.\n", print_prefix));
 
   // apply aggregate receive filters
   if (settings.get_number_of_receive_aggregate_filters () > 0
       && updates.size () > 0)
   {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Applying aggregate receive filters.\n", print_prefix));
+
     settings.filter_receive (updates, transport_context);
   }
   else
@@ -469,10 +485,12 @@ Madara::Transport::process_received_update (
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \
-      " Applying aggregate rebroadcast filters.\n", print_prefix));
+      " Applying aggregate rebroadcast filters to %d records.\n",
+      print_prefix, rebroadcast_records.size ()));
     
     // apply aggregate filters to the rebroadcast records
-    if (rebroadcast_records.size () > 0)
+    if (settings.get_number_of_rebroadcast_aggregate_filters () > 0
+      && rebroadcast_records.size () > 0)
     {
       settings.filter_rebroadcast (rebroadcast_records, transport_context);
     }
@@ -483,6 +501,19 @@ Madara::Transport::process_received_update (
         " No aggregate rebroadcast filters were applied...\n",
           print_prefix));
     }
+    
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Returning to caller with %d rebroadcast records.\n",
+      print_prefix, rebroadcast_records.size ()));
+    
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Rebroadcast packet was dropped...\n",
+        print_prefix));
   }
 
   // before we send to others, we first execute rules
@@ -563,7 +594,7 @@ Madara::Transport::prep_rebroadcast (
   }
   else
   {
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+    MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \
       " No rebroadcast necessary.\n",
       print_prefix,

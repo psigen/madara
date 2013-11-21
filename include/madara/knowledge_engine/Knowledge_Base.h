@@ -96,6 +96,17 @@ namespace Madara
       void close_transport (void);
 
       /**
+       * Locks the context to prevent updates over the network
+       **/
+      void lock (void);
+      
+      /**
+       * Unlocks the context to allow updates over the network (is only
+       * necessary if the context has been explicitly locked)
+       **/
+      void unlock (void);
+
+      /**
        * Retrieves a knowledge value
        * @param key              knowledge location
        * @param settings         settings for referring to knowledge variables
