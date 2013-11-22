@@ -997,6 +997,15 @@ namespace Madara
         const std::string & id = "");
       
     private:
+      /**
+       * method for marking a record modified and signaling changes
+       * @param   name     variable name
+       * @param   record   record to place in the changed_map
+       * @param   settings settings for applying modification and signalling
+       **/
+      void mark_and_signal (const char * name, Knowledge_Record * record,
+                            const Knowledge_Update_Settings & settings);
+
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
 
       /// Hash table containing variable names and values.

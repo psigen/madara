@@ -751,16 +751,24 @@ Madara::Utility::nearest_int (double input)
 }
 
 
-void Madara::Utility::sleep (double sleep_time)
+double Madara::Utility::sleep (double sleep_time)
 {
+  ACE_Time_Value current = ACE_OS::gettimeofday (); 
   ACE_Time_Value actual_time;
   actual_time.set (sleep_time);
 
   sleep (actual_time);
+
+  ACE_Time_Value end = ACE_OS::gettimeofday ();
+  end = end - current;
+  double time_taken = (double) end.sec ();
+  time_taken += (double) end.usec () / 1000000;
+
+  return time_taken;
 }
     
 
-void Madara::Utility::sleep (const ACE_Time_Value & sleep_time)
+ACE_Time_Value Madara::Utility::sleep (const ACE_Time_Value & sleep_time)
 {
   ACE_Time_Value current = ACE_OS::gettimeofday (); 
   ACE_Time_Value earliest = current + sleep_time;
@@ -770,4 +778,6 @@ void Madara::Utility::sleep (const ACE_Time_Value & sleep_time)
     ACE_OS::sleep (earliest - current);
     current = ACE_OS::gettimeofday ();
   }
+
+  return ACE_OS::gettimeofday () - current;
 }

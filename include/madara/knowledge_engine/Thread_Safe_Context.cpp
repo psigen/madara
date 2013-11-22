@@ -91,6 +91,35 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get_ref (
   return record;
 }
 
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::mark_and_signal (
+  const char * name, Knowledge_Record * record,
+  const Knowledge_Update_Settings & settings)
+{
+  // otherwise set the value
+  if (name[0] != '.')
+  {
+    if (!settings.treat_globals_as_locals)
+    {
+      mark_modified (name, *record,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
+    else if (settings.track_local_changes)
+    {
+      mark_local_modified (name, *record,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+    }
+  }
+  else if (settings.track_local_changes)
+  {
+      mark_local_modified (name, *record,
+        Knowledge_Engine::Knowledge_Reference_Settings (false));
+  }
+
+  if (settings.signal_changes)
+    changed_.signal ();
+}
+
 // set the value of a variable
 int
 Madara::Knowledge_Engine::Thread_Safe_Context::set (
@@ -109,28 +138,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -178,28 +186,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -226,28 +213,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
     variable.record_->set_index (index, value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -274,28 +240,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value, size);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -321,28 +266,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -368,28 +292,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -415,28 +318,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_index (
     variable.record_->set_index (index, value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -463,28 +345,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value, size);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -510,28 +371,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -557,28 +397,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->set_value (value);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -605,28 +424,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_xml (
     variable.record_->set_xml (value, size);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -652,28 +450,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_text (
     variable.record_->set_text (value, size);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -699,28 +476,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_jpeg (
     variable.record_->set_jpeg (value, size);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -746,28 +502,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_file (
     variable.record_->set_file (value, size);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return -1;
@@ -794,28 +529,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
     return_value = variable.record_->read_file (filename);
     variable.record_->quality = variable.record_->write_quality;
   
-    // otherwise set the value
-    if (variable.name_.get_ptr ()[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
   }
   else
     return return_value = -1;
@@ -1025,28 +739,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     // we have a situation where the value needs to be changed
     record.set_value (value);
   
-    // otherwise set the value
-    if ((*key_ptr)[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (*key_ptr, record,
-          Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (*key_ptr, record,
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-      mark_local_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-    
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (key_ptr->c_str (), &record, settings);
   }
 
   // value was changed
@@ -1127,28 +820,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     // we have a situation where the value needs to be changed
     record.set_value (value);
   
-    // otherwise set the value
-    if ((*key_ptr)[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (*key_ptr, record,
-          Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (*key_ptr, record,
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-      mark_local_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-    
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (key_ptr->c_str (), &record, settings);
   }
 
   // value was changed
@@ -1230,29 +902,8 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
     record.set_value (value);
   
     // otherwise set the value
-    if ((*key_ptr)[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (*key_ptr, record,
-          Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (*key_ptr, record,
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-      mark_local_modified (*key_ptr, record,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
-    
-    if (settings.signal_changes)
-      changed_.signal ();
+    mark_and_signal (key_ptr->c_str (), &record, settings);
   }
-
   // value was changed
   return result;
 }
@@ -1306,51 +957,15 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
     // if we reach this point, then the record is safe to copy
     found->second = rhs;
     
-    // otherwise set the value
-    if ((*key_ptr)[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (*key_ptr, found->second,
-          Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (*key_ptr, found->second,
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-      mark_local_modified (*key_ptr, found->second,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
+    mark_and_signal (key_ptr->c_str (), &found->second, settings);
   }
   else
   {
     // if we reach this point, then we have to create the record
     Knowledge_Record & current_value = map_[*key_ptr];
     current_value = rhs;
-
-    // otherwise set the value
-    if ((*key_ptr)[0] != '.')
-    {
-      if (!settings.treat_globals_as_locals)
-      {
-        mark_modified (*key_ptr, current_value,
-          Knowledge_Reference_Settings (false));
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (*key_ptr, current_value,
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-    }
-    else if (settings.track_local_changes)
-    {
-      mark_local_modified (*key_ptr, current_value,
-        Knowledge_Engine::Knowledge_Reference_Settings (false));
-    }
+    
+    mark_and_signal (key_ptr->c_str (), &found->second, settings);
   }
   
   // if we need to update the global clock, then update it

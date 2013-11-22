@@ -291,6 +291,57 @@ void test_sqrt (void)
     " ns. avg=" << elapsed_ns << "ns.\n";
 }
 
+void test_sleep (void)
+{
+  std::cerr << "\n********* Testing sleep *************\n\n";
+
+  std::cerr << std::setprecision (2);
+  std::cerr << std::fixed;
+
+  double sleep_time = 1.5, end_time;
+  std::cerr << "  Testing sleep time of 1.5s... ";
+  end_time = Madara::Utility::sleep (sleep_time);
+
+  std::cerr << "result=" << end_time;
+
+  if (end_time >= sleep_time)
+  {
+    std::cerr << "... SUCCESS\n";
+  }
+  else
+  {
+    std::cerr << "... FAIL\n";
+  }
+  
+  std::cerr << "  Testing sleep time of 2.5s... ";
+  end_time = Madara::Utility::sleep (2.5);
+
+  std::cerr << "result=" << end_time;
+
+  if (end_time >= 2.5)
+  {
+    std::cerr << "... SUCCESS\n";
+  }
+  else
+  {
+    std::cerr << "... FAIL\n";
+  }
+  
+  std::cerr << "  Testing sleep time of 2.25s... ";
+  end_time = Madara::Utility::sleep (2.25);
+
+  std::cerr << "result=" << end_time;
+
+  if (end_time >= 2.25)
+  {
+    std::cerr << "... SUCCESS\n";
+  }
+  else
+  {
+    std::cerr << "... FAIL\n";
+  }
+}
+
 int main (int argc, char ** argv)
 {
   handle_arguments (argc, argv);
@@ -301,6 +352,7 @@ int main (int argc, char ** argv)
   test_heaps ();
   test_time ();
   test_ints ();
+  test_sleep ();
 
   return 0;
 }

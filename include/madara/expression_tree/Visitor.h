@@ -55,6 +55,7 @@ namespace Madara
     class System_Call_Set_Clock;
     class System_Call_Set_Precision;
     class System_Call_Size;
+    class System_Call_Sleep;
     class System_Call_To_Buffer;
     class System_Call_To_Double;
     class System_Call_To_Doubles;
@@ -219,6 +220,9 @@ namespace Madara
       
       /// Visit a System_Call_Size.
       virtual void visit (const System_Call_Size &node) = 0;
+      
+      /// Visit a System_Call_Sleep.
+      virtual void visit (const System_Call_Sleep &node) = 0;
       
       /// Visit a System_Call_To_Buffer.
       virtual void visit (const System_Call_To_Buffer &node) = 0;

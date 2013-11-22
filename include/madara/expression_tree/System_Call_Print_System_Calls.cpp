@@ -178,6 +178,11 @@ Madara::Expression_Tree::System_Call_Print_System_Calls::prune (bool & can_chang
     calls_["#size"] =
       "\n#size (value):\n"
       "  Returns the size of the variable or value.\n";
+       
+    calls_["#sleep"] =
+      "\n#sleep (double time_to_sleep in s):\n"
+      "  Sleeps for at least the specified time and returns "
+      " time spent sleeping in seconds.\n";
       
     calls_["#to_buffer"] =
       "\n#to_buffer (value) or #buffer (value):\n"

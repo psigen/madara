@@ -314,14 +314,14 @@ namespace Madara
      * this will sleep for the amount of time regardless of OS interrupts
      * @param  sleep_time  time in seconds to sleep for
      **/
-    MADARA_Export void sleep (double sleep_time);
+    MADARA_Export double sleep (double sleep_time);
     
     /**
      * Sleeps for a certain amount of time. Unlike other sleep timers
      * this will sleep for the amount of time regardless of OS interrupts
      * @param  sleep_time  time to sleep for
      **/
-    MADARA_Export void sleep (const ACE_Time_Value & sleep_time);
+    MADARA_Export ACE_Time_Value sleep (const ACE_Time_Value & sleep_time);
 
     /**
      * Returns true if left < right

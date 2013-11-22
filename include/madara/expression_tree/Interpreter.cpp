@@ -54,6 +54,7 @@
 #include "madara/expression_tree/System_Call_Set_Clock.h"
 #include "madara/expression_tree/System_Call_Set_Precision.h"
 #include "madara/expression_tree/System_Call_Size.h"
+#include "madara/expression_tree/System_Call_Sleep.h"
 #include "madara/expression_tree/System_Call_To_Buffer.h"
 #include "madara/expression_tree/System_Call_To_Double.h"
 #include "madara/expression_tree/System_Call_To_Doubles.h"
@@ -579,6 +580,26 @@ namespace Madara
 
       /// destructor
       virtual ~To_String (void);
+    };
+    
+    /**
+    * @class Sleep
+    * @brief Sleeps for a certain amount of time
+    */
+    class Sleep : public System_Call
+    {
+    public:
+      /// constructor
+      Sleep (Madara::Knowledge_Engine::Thread_Safe_Context & context_);
+      
+      /// returns the precedence level
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+
+      /// destructor
+      virtual ~Sleep (void);
     };
     
     /**
@@ -2155,6 +2176,32 @@ Madara::Expression_Tree::Size::build ()
   return new System_Call_Size (context_, nodes_);
 }
 
+
+// constructor
+Madara::Expression_Tree::Sleep::Sleep (
+  Madara::Knowledge_Engine::Thread_Safe_Context & context)
+: System_Call (context)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Sleep::~Sleep (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Sleep::add_precedence (int precedence)
+{
+  return this->precedence_ = VARIABLE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Sleep::build ()
+{
+  return new System_Call_Sleep (context_, nodes_);
+}
 
 
 // constructor
@@ -4279,6 +4326,10 @@ Madara::Expression_Tree::Interpreter::system_call_insert (
     else if (name == "#size")
     {
       call = new Size (context);
+    }
+    else if (name == "#sleep")
+    {
+      call = new Sleep (context);
     }
     else if (name == "#to_buffer" || name == "#buffer")
     {

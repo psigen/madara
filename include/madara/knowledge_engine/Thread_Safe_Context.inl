@@ -252,28 +252,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::inc (
       ++(*variable.record_);
       variable.record_->quality = variable.record_->write_quality;
   
-      // otherwise set the value
-      if (variable.name_.get_ptr ()[0] != '.')
-      {
-        if (!settings.treat_globals_as_locals)
-        {
-          mark_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-        }
-        else if (settings.track_local_changes)
-        {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-        }
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-
-      if (settings.signal_changes)
-        changed_.signal ();
+      mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
     }
 
     return *variable.record_;
@@ -366,28 +345,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::dec (
       --(*variable.record_);
       variable.record_->quality = variable.record_->write_quality;
   
-      // otherwise set the value
-      if (variable.name_.get_ptr ()[0] != '.')
-      {
-        if (!settings.treat_globals_as_locals)
-        {
-          mark_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-        }
-        else if (settings.track_local_changes)
-        {
-          mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-            Knowledge_Engine::Knowledge_Reference_Settings (false));
-        }
-      }
-      else if (settings.track_local_changes)
-      {
-        mark_local_modified (variable.name_.get_ptr (), *(variable.record_),
-          Knowledge_Engine::Knowledge_Reference_Settings (false));
-      }
-
-      if (settings.signal_changes)
-        changed_.signal ();
+      mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);
     }
 
     return *variable.record_;
