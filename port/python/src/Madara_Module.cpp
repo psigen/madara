@@ -14,7 +14,7 @@ using namespace boost::python;
 class Knowledge_Engine_NS {};
 class Transport_NS {};
 
-BOOST_PYTHON_MODULE (Madara)
+BOOST_PYTHON_MODULE (madara)
 {
   // Declare classes inside Madara namespace (top namespace of Python module)
   
@@ -523,7 +523,7 @@ BOOST_PYTHON_MODULE (Madara)
           void (Madara::Knowledge_Engine::Variables::*)(
             unsigned int) const
         > (&Madara::Knowledge_Engine::Variables::print),
-        "Evaluate an expression") 
+        "Prints all knowledge in the context") 
         
       // evaluate an expression
       .def( "print",
@@ -531,7 +531,7 @@ BOOST_PYTHON_MODULE (Madara)
           void (Madara::Knowledge_Engine::Variables::*)(
             const std::string &, unsigned int) const
         > (&Madara::Knowledge_Engine::Variables::print),
-        "Evaluate an expression") 
+        "Prints a statement") 
 
       // evaluate an expression
       .def( "evaluate",
@@ -616,11 +616,17 @@ BOOST_PYTHON_MODULE (Madara)
       .def (init <const Madara::Knowledge_Engine::Knowledge_Base &> ())
 
 
-      // prints all knowledge variables
+      // expands a statement with variable expansion
       .def ("expand_statement",
         &Madara::Knowledge_Engine::Knowledge_Base::expand_statement,
         "Expand a statement")
         
+      // locks the knowledge base from updates from other threads
+      .def ("lock",
+        &Madara::Knowledge_Engine::Knowledge_Base::lock,
+        "Locks the knowledge base from updates from other threads")
+
+
       // prints all knowledge variables
       .def ("print_knowledge",
         &Madara::Knowledge_Engine::Knowledge_Base::print_knowledge,
@@ -748,6 +754,12 @@ BOOST_PYTHON_MODULE (Madara)
               Madara::Knowledge_Engine::Variables &))
         > (&Madara::Knowledge_Engine::Knowledge_Base::define_function),
         "defines an unnamed function that can be called within evaluates")
+        
+      // unlocks the knowledge base
+      .def ("unlock",
+        &Madara::Knowledge_Engine::Knowledge_Base::unlock,
+        "Unlocks the knowledge base and allows other threads to access")
+
     ;
 
   }

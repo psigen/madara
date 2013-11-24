@@ -44,6 +44,7 @@ PREREQUISITES
        1. cd to BOOST_ROOT
        2. Run bootstrap in the local directory
        3. Run "b2 link=shared threading=multi stage"
+       4. You can also run b2 with static linking if you want a static lib
          
 3.) Enable the python feature in your MADARA install
 
@@ -59,4 +60,26 @@ PREREQUISITES
       mwc.pl -type vc10 -features python=1 MADARA.mwc
       *open Visual Studio solution*
  
-4.) Integrate the generated MADARA_Python.dll into your Python environment
+4.) Integrate the generated madara module into your Python environment
+
+  4.a) Set env var PYTHONPATH to include the following directories:
+  
+       $MADARA_ROOT/lib
+       $BOOST_ROOT/stage/lib
+       
+  4.b) Type the following from a new command prompt (have to refresh the
+       PYTHONPATH variable):
+       
+       $> python
+       >>> help ('modules')
+       
+       Check the printout to see if "madara" is listed in the available modules
+       
+  4.c) Import the module and use the available classes
+  
+       $> python
+       >>> import madara
+       >>> knowledge = madara.Knowledge_Engine.Knowledge_Base ()
+       >>> knowledge.print_knowledge ()
+       
+       
