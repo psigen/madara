@@ -62,12 +62,18 @@ PREREQUISITES
  
 4.) Integrate the generated madara module into your Python environment
 
-  4.a) Set env var PYTHONPATH to include the following directories:
+  4.a) On Windows, in %MADARA_ROOT%/lib, rename the generated madara.pyd.dll
+       file to madara.pyd. If you have statically compiled, rename
+       madara.pyd.lib to madara.pyd. On Linux, your module should be
+       generated as madara.so, which is built for Python and should not
+       be used interchangeably with MADARA.so (the C++ shared library)
+
+  4.b) Set env var PYTHONPATH to include the following directories:
   
        $MADARA_ROOT/lib
        $BOOST_ROOT/stage/lib
        
-  4.b) Type the following from a new command prompt (have to refresh the
+  4.c) Type the following from a new command prompt (have to refresh the
        PYTHONPATH variable):
        
        $> python
@@ -75,7 +81,7 @@ PREREQUISITES
        
        Check the printout to see if "madara" is listed in the available modules
        
-  4.c) Import the module and use the available classes
+  4.d) Import the module and use the available classes
   
        $> python
        >>> import madara
