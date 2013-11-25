@@ -4,6 +4,24 @@
 #include "ace/Time_Value.h"
 #include "madara/utility/Utility.h"
 
+#ifdef WIN32
+
+#include <process.h>
+
+unsigned __stdcall multicast_windows_glue (void * param)
+{
+  Madara::Transport::Multicast_Transport_Read_Thread * caller = 
+    static_cast <Madara::Transport::Multicast_Transport_Read_Thread *> (
+      param);
+  if (caller)
+    return (unsigned) caller->svc ();
+  else
+    return 0;
+}
+
+#endif
+
+
 #include <iostream>
 #include <algorithm>
 
@@ -122,7 +140,15 @@ Madara::Transport::Multicast_Transport_Read_Thread::Multicast_Transport_Read_Thr
     if (settings_.queue_length > 0)
       buffer_ = new char [settings_.queue_length];
 
-    int result = this->activate ();
+    int result;
+
+#ifndef WIN32
+    result = this->activate ();
+#else
+    result = 0;
+    _beginthreadex(NULL, 0, multicast_windows_glue, (void*)this, 0, 0);
+    
+#endif
 
     if (result != -1)
     {

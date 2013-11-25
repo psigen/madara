@@ -29,6 +29,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, using_
     splice_transport.mpb
     ndds_transport.mpb
     using_ace.mpb
+    using_boost.mpb
     using_cid.mpb
     using_madara.mpb
     using_splice.mpb

@@ -27,7 +27,7 @@
 #include "ace/SOCK_Dgram_Mcast.h"
 
 #include "ace/Synch.h"
-
+ 
 namespace Madara
 {
   namespace Transport
@@ -100,6 +100,7 @@ namespace Madara
       * Wait for the transport to be ready
       **/
       void wait_for_ready (void);
+
     private:
       /// quality-of-service transport settings
       const Settings  &          settings_;

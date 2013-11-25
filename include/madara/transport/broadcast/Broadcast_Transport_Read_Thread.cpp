@@ -6,6 +6,23 @@
 
 #include <iostream>
 
+#ifdef WIN32
+
+#include <process.h>
+
+unsigned __stdcall broadcast_windows_glue (void * param)
+{
+  Madara::Transport::Broadcast_Transport_Read_Thread * caller = 
+    static_cast <Madara::Transport::Broadcast_Transport_Read_Thread *> (
+      param);
+  if (caller)
+    return (unsigned) caller->svc ();
+  else
+    return 0;
+}
+
+#endif
+
 Madara::Transport::Broadcast_Transport_Read_Thread::Broadcast_Transport_Read_Thread (
   const Settings & settings,
   const std::string & id,
@@ -120,12 +137,29 @@ Madara::Transport::Broadcast_Transport_Read_Thread::Broadcast_Transport_Read_Thr
     // setup the receive buffer
     if (settings_.queue_length > 0)
       buffer_ = new char [settings_.queue_length];
+    
+    int result;
 
-    this->activate (THR_NEW_LWP | THR_DETACHED, 1);
-
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Broadcast_Transport_Read_Thread::Broadcast_Transport_Read_Thread:" \
-      " read thread started\n"));
+#ifndef WIN32
+    result = this->activate ();
+#else
+    result = 0;
+    _beginthreadex(NULL, 0, broadcast_windows_glue, (void*)this, 0, 0);
+    
+#endif
+    
+    if (result != -1)
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Broadcast_Transport_Read_Thread::Broadcast_Transport_Read_Thread:" \
+        " read thread started (result = %d)\n", result));
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Broadcast_Transport_Read_Thread::Broadcast_Transport_Read_Thread:" \
+        " failed to create thread. ERRNO = %d\n", ACE_OS::last_error ()));
+    }
   }
 }
 
