@@ -354,7 +354,7 @@ namespace Madara
        * Prints all variables and values in the context
        * @param   level          log level. @see Log_Macros.h
        **/
-      void print (unsigned int level) const;
+      void print (unsigned int level = 0) const;
 
       /**
        * Print a statement, similar to printf (variable expansions
@@ -362,8 +362,34 @@ namespace Madara
        * @param   statement      templated statement to print from
        * @param   level          log level. @see Log_Macros.h
        **/
-      void print (const std::string & statement, unsigned int level) const;
+      void print (const std::string & statement, unsigned int level = 0) const;
       
+      /**
+       * Retrieves a value at a specified index within a knowledge array
+       * @param   key        variable name of the array
+       * @param   index      index within the array
+       * @param   settings   settings for referring to knowledge variables
+       * @return             value at knowledge location
+       **/
+      Madara::Knowledge_Record retrieve_index (
+             const std::string & key,
+             size_t index,
+             const Knowledge_Reference_Settings & settings =
+               Knowledge_Engine::Knowledge_Reference_Settings (false));
+
+      /**
+       * Retrieves a value at a specified index within a knowledge array
+       * @param   variable   reference to a variable (@see get_ref)
+       * @param   index      index within the array
+       * @param   settings   settings for referring to knowledge variables
+       * @return             value at knowledge location
+       **/
+      Madara::Knowledge_Record retrieve_index (
+             const Variable_Reference & variable,
+             size_t index,
+             const Knowledge_Reference_Settings & settings =
+               Knowledge_Engine::Knowledge_Reference_Settings (false));
+
       /**
        * Expands a string with variable expansion. For instance, if
        * .id == 5, and a statement of "MyVar{.id} = {.id} * 30" then

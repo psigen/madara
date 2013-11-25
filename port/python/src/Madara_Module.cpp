@@ -1,5 +1,8 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "Function_Defaults.h"
+
 #include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 /**
  * @file Madara_Module.cpp
@@ -18,6 +21,13 @@ BOOST_PYTHON_MODULE (madara)
 {
   // Declare classes inside Madara namespace (top namespace of Python module)
   
+  class_ <std::vector <std::string> > ("string_vector")
+    .def(vector_indexing_suite<std::vector<std::string> >());
+
+  /********************************************************
+   * Knowledge Record definitions
+   ********************************************************/
+
   class_<Madara::Knowledge_Record> ("Knowledge_Record", init <> ())
     
     // integer constructor
@@ -146,7 +156,9 @@ BOOST_PYTHON_MODULE (madara)
 
     // convert to a string
     .def ("to_string", &Madara::Knowledge_Record::to_string,
-        "Converts the record to a string")
+       m_to_string_0_of_1 (
+         args("delimiter"),
+          "Converts the record to a string"))
 
     // convert to an integer
     .def ("to_integer", &Madara::Knowledge_Record::to_integer,
@@ -279,6 +291,10 @@ BOOST_PYTHON_MODULE (madara)
     //.def ("to_unmanaged_buffer", &Madara::Knowledge_Record::to_unmanaged_buffer)
   ;
   
+  /********************************************************
+   * Transport Namespace definitions
+   ********************************************************/
+
   // Declare the Transport namespace
   {
     scope Transport
@@ -309,8 +325,11 @@ BOOST_PYTHON_MODULE (madara)
       .value("BROADCAST",
         Madara::Transport::BROADCAST)
     ;
+    
+    /********************************************************
+     * Transport Settings definitions
+     ********************************************************/
 
-    // The base class for Transport Settings
     class_<Madara::Transport::Settings> ("Settings",
       "The main transport settings class", init <> ())
       
@@ -362,7 +381,10 @@ BOOST_PYTHON_MODULE (madara)
         "List of hosts for the transport layer")
     ;
     
-    // The Quality-of-Server-enabled Transport Settings class
+    /********************************************************
+     * QoS_Transport_Settings definitions
+     ********************************************************/
+
     class_<Madara::Transport::QoS_Transport_Settings,
            bases<Madara::Transport::Settings> > (
              "QoS_Transport_Settings",
@@ -425,12 +447,19 @@ BOOST_PYTHON_MODULE (madara)
         "Informs the transport of the deadline, in seconds, for useful info")
     ;
   }
+  
+  /********************************************************
+    * Knowledge_Engine namespace definitions
+    ********************************************************/
 
-  // Declare the Knowledge namespace
   {
     scope Knowledge_Engine
       = class_ <Knowledge_Engine_NS> ("Knowledge_Engine");
-    
+   
+    /********************************************************
+     * Knowledge_Reference_Settings definitions
+     ********************************************************/
+ 
     class_<Madara::Knowledge_Engine::Knowledge_Reference_Settings> (
         "Knowledge_Reference_Settings",
         "Settings for referencing knowledge records", init<> ())
@@ -449,12 +478,18 @@ BOOST_PYTHON_MODULE (madara)
 
     ; // end class Knowledge_Reference_Settings
           
+    /********************************************************
+     * Knowledge_Update_Settings definitions
+     ********************************************************/
+ 
     class_<Madara::Knowledge_Engine::Knowledge_Update_Settings,
            bases<Madara::Knowledge_Engine::Knowledge_Reference_Settings> > (
              "Knowledge_Update_Settings",
              "Settings for updating knowledge records", init <> ())
     
-      // could use the other constructors here
+      // other constructors here
+      .def (init <
+        const Madara::Knowledge_Engine::Knowledge_Update_Settings &> ())
 
       // define readwrite variables within the class
       .def_readwrite ("treat_globals_as_locals",
@@ -474,11 +509,19 @@ BOOST_PYTHON_MODULE (madara)
          "Integer increment for updates to Lamport clocks")
     ; // end class Knowledge_Update_Settings
           
+    /********************************************************
+     * Eval_Settings definitions
+     ********************************************************/
+ 
     class_<Madara::Knowledge_Engine::Eval_Settings,
            bases<Madara::Knowledge_Engine::Knowledge_Update_Settings> > (
              "Eval_Settings",
              "Settings for evaluate calls", init <> ())
-        
+    
+      // other constructors here
+      .def (init <
+        const Madara::Knowledge_Engine::Eval_Settings &> ())
+    
       // define readwrite variables within the class
       .def_readwrite ("delay_sending_modifieds",
       	 &Madara::Knowledge_Engine::Eval_Settings::delay_sending_modifieds,
@@ -495,9 +538,17 @@ BOOST_PYTHON_MODULE (madara)
 
     ; // end class Eval_Settings
           
+    /********************************************************
+     * Wait_Settings definitions
+     ********************************************************/
+ 
     class_<Madara::Knowledge_Engine::Wait_Settings,
            bases<Madara::Knowledge_Engine::Eval_Settings> > ("Wait_Settings",
            "Settings for wait calls", init <> ())
+    
+      // other constructors here
+      .def (init <
+        const Madara::Knowledge_Engine::Wait_Settings &> ())
         
       // define readwrite variables within the class
       .def_readwrite ("poll_frequency",
@@ -508,7 +559,9 @@ BOOST_PYTHON_MODULE (madara)
          "Maximum amount of time to wait for truth")
     ; // end class Wait_Settings
 
-
+    /********************************************************
+     * Variables definitions
+     ********************************************************/
     
     class_<Madara::Knowledge_Engine::Variables> ("Variables", init <> ())
       
@@ -540,7 +593,9 @@ BOOST_PYTHON_MODULE (madara)
             const std::string &,
             const Madara::Knowledge_Engine::Knowledge_Update_Settings &)
         > (&Madara::Knowledge_Engine::Variables::evaluate),
-        "Evaluate an expression") 
+          m_eval_1_of_2 (
+          args("expression", "settings"),
+          "Evaluates an expression"))
 
       // get a knowledge record
       .def( "get",
@@ -549,8 +604,22 @@ BOOST_PYTHON_MODULE (madara)
             const std::string &,
             const Madara::Knowledge_Engine::Knowledge_Reference_Settings &)
         > (&Madara::Knowledge_Engine::Variables::get),
-        "Retrieves a knowledge record") 
-
+        m_get_1_of_2 (
+          args("key", "settings"),
+          "Retrieves a knowledge record"))
+          
+      // get a knowledge record at an index
+      .def( "retrieve_index",
+        static_cast<
+          Madara::Knowledge_Record (Madara::Knowledge_Engine::Variables::*)(
+            const std::string &,
+             size_t,
+             const Madara::Knowledge_Engine::Knowledge_Reference_Settings &)
+        > (&Madara::Knowledge_Engine::Variables::retrieve_index),
+        m_retrieve_index_2_of_3 (
+          args("key", "index", "settings"),
+          "Retrieves a knowledge record from an index"))
+          
       // sets a knowledge record to a double
       .def( "set",
         static_cast<
@@ -602,9 +671,17 @@ BOOST_PYTHON_MODULE (madara)
         "sets a knowledge record to a string") 
     ;
     
+    /********************************************************
+     * Function_Arguments definitions
+     ********************************************************/
+ 
     class_<Madara::Knowledge_Engine::Function_Arguments> ("Function_Arguments",
       "Arguments passed to a function");
-
+    
+    /********************************************************
+     * Knowledge_Base definitions
+     ********************************************************/
+ 
     class_<Madara::Knowledge_Engine::Knowledge_Base> ("Knowledge_Base",
       "Network-enabled, thread-safe knowledge context", init <> ())
       
@@ -615,44 +692,32 @@ BOOST_PYTHON_MODULE (madara)
       // define constructors
       .def (init <const Madara::Knowledge_Engine::Knowledge_Base &> ())
 
-
-      // expands a statement with variable expansion
-      .def ("expand_statement",
-        &Madara::Knowledge_Engine::Knowledge_Base::expand_statement,
-        "Expand a statement")
+      // sets an array index to a double
+      .def( "define_function",
+        static_cast<
+          void (Madara::Knowledge_Engine::Knowledge_Base::*)(
+            const std::string &,
+            Madara::Knowledge_Record (*) (
+              Madara::Knowledge_Engine::Function_Arguments &,
+              Madara::Knowledge_Engine::Variables &))
+        > (&Madara::Knowledge_Engine::Knowledge_Base::define_function),
+        "defines an unnamed function that can be called within evaluates")
         
-      // locks the knowledge base from updates from other threads
-      .def ("lock",
-        &Madara::Knowledge_Engine::Knowledge_Base::lock,
-        "Locks the knowledge base from updates from other threads")
-
-
-      // prints all knowledge variables
-      .def ("print_knowledge",
-        &Madara::Knowledge_Engine::Knowledge_Base::print_knowledge,
-        "Print all variables in the knowledge base")
-        
-      // expands and prints a statement
-      .def ("print",
-        &Madara::Knowledge_Engine::Knowledge_Base::print,
-        "Expand and print a statement")
-
       // evaluate an expression
       .def( "evaluate",
         static_cast<
           Madara::Knowledge_Record (Madara::Knowledge_Engine::Knowledge_Base::*)(
             const std::string &, const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::evaluate),
-        "Evaluate an expression") 
-
-      // wait on an expression
-      .def( "wait",
-        static_cast<
-          Madara::Knowledge_Record (Madara::Knowledge_Engine::Knowledge_Base::*)(
-            const std::string &, const Madara::Knowledge_Engine::Wait_Settings &)
-        > (&Madara::Knowledge_Engine::Knowledge_Base::wait),
-        "Wait for an expression to evaluate to true")
-
+          m_eval_1_of_2 (
+          args("expression", "settings"),
+          "Evaluates an expression"))
+      
+      // expands a statement with variable expansion
+      .def ("expand_statement",
+        &Madara::Knowledge_Engine::Knowledge_Base::expand_statement,
+        "Expand a statement")
+            
       // get a knowledge record
       .def( "get",
         static_cast<
@@ -660,17 +725,87 @@ BOOST_PYTHON_MODULE (madara)
             const std::string &,
             const Madara::Knowledge_Engine::Knowledge_Reference_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::get),
-        "Retrieves a knowledge record") 
+        m_get_1_of_2 (
+          args("key", "settings"),
+          "Retrieves a knowledge record"))
         
+      // expands and prints a statement
+      .def ("load_context",
+        &Madara::Knowledge_Engine::Knowledge_Base::load_context,
+        m_load_context_1_of_3 (
+          args("filename", "use_id", "settings"),
+          "Loads a variable context from a file"))
+          
+      // locks the knowledge base from updates from other threads
+      .def ("lock",
+        &Madara::Knowledge_Engine::Knowledge_Base::lock,
+        "Locks the knowledge base from updates from other threads")
+        
+      // Sets a logging level
+      .def( "log_level",
+        static_cast<
+          int (*)(int)
+        > (&Madara::Knowledge_Engine::Knowledge_Base::log_level),
+        "Sets a logging level") 
+        
+      // Gets the logging level
+      .def( "log_level",
+        static_cast<
+          int (*)(void)
+        > (&Madara::Knowledge_Engine::Knowledge_Base::log_level),
+        "Gets a logging level") 
+        
+      .def ("log_to_file",
+        &Madara::Knowledge_Engine::Knowledge_Base::log_to_file,
+        "Logs to a file")
+        
+      .def ("log_to_stderr",
+        &Madara::Knowledge_Engine::Knowledge_Base::log_to_stderr,
+        "Logs to stderr")
+        
+      .def ("log_to_system_log",
+        &Madara::Knowledge_Engine::Knowledge_Base::log_to_system_log,
+        "Logs to a system logger")
+        
+      // expands and prints a statement
+      .def ("print",
+        &Madara::Knowledge_Engine::Knowledge_Base::print,
+        m_print_1_of_2 (
+          args("statement", "level"), "Expand and print a statement"))
+          
+      // prints all knowledge variables
+      .def ("print_knowledge",
+        &Madara::Knowledge_Engine::Knowledge_Base::print_knowledge,
+        m_print_knowledge_0_of_1 (
+          args("level"), "Print all variables in the knowledge base"))
+
       // get a knowledge record at an index
       .def( "retrieve_index",
         static_cast<
           Madara::Knowledge_Record (Madara::Knowledge_Engine::Knowledge_Base::*)(
-            const std::string & key,
-             size_t index,
+            const std::string &,
+             size_t,
              const Madara::Knowledge_Engine::Knowledge_Reference_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::retrieve_index),
-        "Retrieves a knowledge record from an index") 
+        m_retrieve_index_2_of_3 (
+          args("key", "index", "settings"),
+          "Retrieves a knowledge record from an index"))
+          
+      // expands and prints a statement
+      .def ("save_context",
+        &Madara::Knowledge_Engine::Knowledge_Base::save_context,
+          "Saves the context to a file")
+          
+      // Sends all modified variables through the attached transports
+      .def( "send_modifieds",
+        static_cast<
+          int (Madara::Knowledge_Engine::Knowledge_Base::*)(
+            const std::string &,
+            const Madara::Knowledge_Engine::Eval_Settings &)
+        > (&Madara::Knowledge_Engine::Knowledge_Base::send_modifieds),
+        m_send_modifieds_0_of_2 (
+          args("prefix", "settings"),
+          "Sends all modified variables through the attached transports."))
 
       // sets a knowledge record to a double
       .def( "set",
@@ -680,7 +815,9 @@ BOOST_PYTHON_MODULE (madara)
             double,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set),
-        "sets a knowledge record to a double") 
+        m_set_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets a knowledge record to a double"))
         
       // sets a knowledge record to an array of doubles
       .def( "set",
@@ -690,7 +827,9 @@ BOOST_PYTHON_MODULE (madara)
             const std::vector <double> &,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set),
-        "sets a knowledge record to an array of doubles") 
+        m_set_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets a knowledge record to an array of doubles"))
         
       // sets a knowledge record to an integer
       .def( "set",
@@ -700,7 +839,9 @@ BOOST_PYTHON_MODULE (madara)
             Madara::Knowledge_Record::Integer,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set),
-        "sets a knowledge record to a integer") 
+        m_set_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets a knowledge record to an integer"))
         
       // sets a knowledge record to an array of integer
       .def( "set",
@@ -710,7 +851,9 @@ BOOST_PYTHON_MODULE (madara)
             const std::vector <Madara::Knowledge_Record::Integer> &,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set),
-        "sets a knowledge record to an array of integers") 
+        m_set_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets a knowledge record to an array of integers"))
         
       // sets a knowledge record to a string
       .def( "set",
@@ -720,7 +863,9 @@ BOOST_PYTHON_MODULE (madara)
             const std::string &,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set),
-        "sets a knowledge record to a string") 
+        m_set_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets a knowledge record to a string"))
         
       // sets an array index to an integer
       .def( "set_index",
@@ -731,7 +876,9 @@ BOOST_PYTHON_MODULE (madara)
             Madara::Knowledge_Record::Integer,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set_index),
-        "sets an array index to an integer") 
+        m_set_index_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets an array index to an integer"))
         
       // sets an array index to a double
       .def( "set_index",
@@ -742,23 +889,24 @@ BOOST_PYTHON_MODULE (madara)
             double,
             const Madara::Knowledge_Engine::Eval_Settings &)
         > (&Madara::Knowledge_Engine::Knowledge_Base::set_index),
-        "sets an array index to a double") 
-      
-      // sets an array index to a double
-      .def( "define_function",
-        static_cast<
-          void (Madara::Knowledge_Engine::Knowledge_Base::*)(
-            const std::string &,
-            Madara::Knowledge_Record (*func) (
-              Madara::Knowledge_Engine::Function_Arguments &,
-              Madara::Knowledge_Engine::Variables &))
-        > (&Madara::Knowledge_Engine::Knowledge_Base::define_function),
-        "defines an unnamed function that can be called within evaluates")
-        
+        m_set_index_2_of_3 (
+          args("key", "value", "settings"),
+          "Sets an array index to a double"))
+            
       // unlocks the knowledge base
       .def ("unlock",
         &Madara::Knowledge_Engine::Knowledge_Base::unlock,
         "Unlocks the knowledge base and allows other threads to access")
+  
+      // wait on an expression
+      .def( "wait",
+        static_cast<
+          Madara::Knowledge_Record (Madara::Knowledge_Engine::Knowledge_Base::*)(
+            const std::string &, const Madara::Knowledge_Engine::Wait_Settings &)
+        > (&Madara::Knowledge_Engine::Knowledge_Base::wait),
+          m_wait_1_of_2 (
+          args("expression", "settings"),
+          "Waits for an expression to evaluate to true"))
 
     ;
 

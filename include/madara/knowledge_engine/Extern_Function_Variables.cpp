@@ -47,6 +47,43 @@ Madara::Knowledge_Engine::Variables::get (const Variable_Reference & variable,
   }
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Variables::retrieve_index (
+  const std::string & key,
+  size_t index,
+  const Knowledge_Reference_Settings & settings)
+{
+  if (context_)
+  {
+    Variable_Reference variable = context_->get_ref (key, settings);
+    return context_->retrieve_index (variable, index, settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::retrieve_index. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record ();
+  }
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Variables::retrieve_index (
+  const Variable_Reference & variable,
+  size_t index,
+  const Knowledge_Reference_Settings & settings)
+{
+  if (context_)
+    return context_->retrieve_index (variable, index, settings);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::retrieve_index. Context not set correctly.\n"));
+
+    return Madara::Knowledge_Record ();
+  }
+}
+
 Madara::Knowledge_Engine::Variable_Reference
 Madara::Knowledge_Engine::Variables::get_ref (const std::string & key,
              const Knowledge_Reference_Settings & settings)

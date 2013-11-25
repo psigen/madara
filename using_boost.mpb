@@ -1,0 +1,3 @@
+feature (boost) {
+  includes += $(BOOST_ROOT)
+}

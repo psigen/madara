@@ -926,7 +926,7 @@ namespace Madara
        * @return  total bytes read
        **/
       int64_t load_context (const std::string & filename,
-        bool use_id,
+        bool use_id = true,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings (true, true, true, false));
 
