@@ -18,6 +18,11 @@
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Knowledge_Record_Filters.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+  #include <boost/python.hpp>
+#endif
+
+
 namespace Madara
 {
   namespace Transport
@@ -126,6 +131,39 @@ namespace Madara
         Knowledge_Map &, const Transport::Transport_Context &,
         Knowledge_Engine::Variables &));
  
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      
+      /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before applying updates to the Knowledge_Base
+       * @param   types      the types to add the filter to
+       * @param   object     a python callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_receive_filter (
+        uint32_t types, boost::python::object & object);
+      
+      /**
+       * Adds a filter that will be applied to certain types before sending
+       * @param   types      the types to add the filter to
+       * @param   object     a python callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_send_filter (
+        uint32_t types, boost::python::object & object);
+      
+      /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before rebroadcasting (if TTL > 0)
+       * @param   types      the types to add the filter to
+       * @param   object     a python callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_rebroadcast_filter (
+        uint32_t types, boost::python::object & object);
+      
+#endif
+
       /**
        * Attaches a context to the various filtering systems. If the context
        * ever goes out of scope, a 0 should be passed into this function to

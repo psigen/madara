@@ -1,2 +1,5 @@
 feature (python) {
+  Header_Files {
+    include/madara/python
+  }
 }

@@ -50,7 +50,7 @@ namespace Madara
       LOCAL_SCOPE = 1
     };
 
-    enum
+    enum Value_Types
     {
       UNINITIALIZED = 0,
       INTEGER = 1,

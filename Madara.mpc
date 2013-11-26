@@ -33,7 +33,7 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, using_
     using_boost.mpb
     using_cid.mpb
     using_madara.mpb
-    using_python.mpb
+    port/python/using_python.mpb
     using_splice.mpb
     using_splice_idl.mpb
     using_ndds.mpb

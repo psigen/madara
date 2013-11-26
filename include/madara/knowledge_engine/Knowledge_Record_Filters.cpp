@@ -5,7 +5,8 @@
 
 #ifdef _MADARA_PYTHON_CALLBACKS_
 
-  #include <boost/python/call.hpp> 
+#include <boost/python/call.hpp> 
+#include "madara/python/Acquire_GIL.h"
 
 #endif
 
@@ -69,6 +70,33 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
     aggregate_filters_.push_back (Aggregate_Filter (function));
   }
 }
+
+
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (uint32_t types,
+  boost::python::object & callable)
+{
+  if (!callable.is_none ())
+  {
+    // start with 1st bit, check every bit until types is 0
+    for (uint32_t cur = 1; types > 0; cur <<= 1)
+    {
+      // if current is set in the bitmask
+      if (Madara::Utility::bitmask_check (types, cur))
+      {
+        // remove the filter list from the type cur
+        filters_[cur].push_back (Function (callable));
+      }
+
+      // remove the current flag from the types
+      types = Madara::Utility::bitmask_remove (types, cur);
+    }
+  }
+}
+
+#endif
 
 void
 Madara::Knowledge_Engine::Knowledge_Record_Filters::attach (
@@ -195,6 +223,9 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
 
       else if (i->type == i->PYTHON_CALLABLE && !i->python_function.is_none ())
       {
+        // acquire the interpreter lock to use the python function
+        Python::Acquire_GIL acquire_gil;
+
         // some guides have stated that we should let python handle exceptions
         result = boost::python::call <Madara::Knowledge_Record> (
           i->python_function.ptr (), boost::ref (arguments), boost::ref (variables));

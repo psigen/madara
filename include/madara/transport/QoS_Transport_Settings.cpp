@@ -265,6 +265,31 @@ void
   rebroadcast_filters_.add (function);
 }
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      
+void
+Madara::Transport::QoS_Transport_Settings::add_receive_filter (
+  uint32_t types, boost::python::object & object)
+{
+  receive_filters_.add (types, object);
+}
+     
+void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (
+  uint32_t types, boost::python::object & object)
+{
+  send_filters_.add (types, object);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+  uint32_t types, boost::python::object & object)
+{
+  rebroadcast_filters_.add (types, object);
+}
+      
+#endif
+
 void
 Madara::Transport::QoS_Transport_Settings::attach (
   Knowledge_Engine::Thread_Safe_Context * context)

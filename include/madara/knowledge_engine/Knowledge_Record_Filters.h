@@ -22,6 +22,10 @@
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+  #include <boost/python.hpp>
+#endif
+
 namespace Madara
 {
   namespace Knowledge_Engine
@@ -77,6 +81,19 @@ namespace Madara
       void add (Knowledge_Record (*function) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Variables &));
+         
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      
+      /**
+       * Adds a python filter to the list of types
+       * @param   types      the types to add the filter to
+       * @param   callable   the function that will take the knowledge record
+       *                     in Function_Arguments.
+       **/
+      void add (uint32_t types,
+        boost::python::object & callable);
+
+#endif
 
       /**
        * Attaches a context. If the context ever goes out of scope,
