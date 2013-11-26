@@ -598,7 +598,7 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
 // Defines a function
 void Madara::Knowledge_Engine::Knowledge_Base::define_function (
   const std::string & name,
-    Knowledge_Record (*func) (Function_Arguments &, Variables &))
+    Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &))
 {
   impl_->define_function (name, func);
 }
@@ -606,11 +606,21 @@ void Madara::Knowledge_Engine::Knowledge_Base::define_function (
 // Defines a function
 void Madara::Knowledge_Engine::Knowledge_Base::define_function (
   const std::string & name,
-    Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &))
+    Knowledge_Record (*func) (Function_Arguments &, Variables &))
 {
   impl_->define_function (name, func);
 }
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+// Defines a function
+void Madara::Knowledge_Engine::Knowledge_Base::define_function (
+  const std::string & name, boost::python::object callable)
+{
+  impl_->define_function (name, callable);
+}
+
+#endif
 
 /**
   * Defines a MADARA KaRL function

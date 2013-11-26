@@ -21,8 +21,11 @@ BOOST_PYTHON_MODULE (madara)
 {
   // Declare classes inside Madara namespace (top namespace of Python module)
   
-  class_ <std::vector <std::string> > ("string_vector")
+  class_ <std::vector <std::string> > ("String_Vector")
     .def(vector_indexing_suite<std::vector<std::string> >());
+
+  class_ <std::vector <Madara::Knowledge_Record> > ("Knowledge_Record_Vector")
+    .def(vector_indexing_suite<std::vector<Madara::Knowledge_Record> >());
 
   /********************************************************
    * Knowledge Record definitions
@@ -256,6 +259,13 @@ BOOST_PYTHON_MODULE (madara)
 
     .def ("operator=", &Madara::Knowledge_Record::operator=,
         "Assigns the value of one record to another")
+        
+    .def( "operator==",
+      static_cast<Madara::Knowledge_Record::Integer (
+        Madara::Knowledge_Record::*)(
+          const Madara::Knowledge_Record &) const> (
+            &Madara::Knowledge_Record::operator==),
+          "Compares two records for equality") 
 
     .def( "operator==",
       static_cast<bool (Madara::Knowledge_Record::*)(
@@ -264,15 +274,17 @@ BOOST_PYTHON_MODULE (madara)
         "Compares two records for equality") 
 
     .def( "operator&&",
-      static_cast<Madara::Knowledge_Record (Madara::Knowledge_Record::*)(
-        const Madara::Knowledge_Record &) const> (
-          &Madara::Knowledge_Record::operator&&),
+      static_cast<Madara::Knowledge_Record::Integer (
+        Madara::Knowledge_Record::*)(
+          const Madara::Knowledge_Record &) const> (
+            &Madara::Knowledge_Record::operator&&),
         "Logically and two records together") 
 
     .def( "operator||",
-      static_cast<Madara::Knowledge_Record (Madara::Knowledge_Record::*)(
-        const Madara::Knowledge_Record &) const> (
-          &Madara::Knowledge_Record::operator||),
+      static_cast<Madara::Knowledge_Record::Integer (
+        Madara::Knowledge_Record::*)(
+          const Madara::Knowledge_Record &) const> (
+            &Madara::Knowledge_Record::operator||),
         "Logically ors two records together") 
 
     .def( "operator++",
@@ -675,8 +687,9 @@ BOOST_PYTHON_MODULE (madara)
      * Function_Arguments definitions
      ********************************************************/
  
-    class_<Madara::Knowledge_Engine::Function_Arguments> ("Function_Arguments",
-      "Arguments passed to a function");
+    class_ <std::vector <Madara::Knowledge_Engine::Function_Arguments> > (
+          "Function_Arguments", "List of arguments to a function")
+    ;
     
     /********************************************************
      * Knowledge_Base definitions
@@ -692,16 +705,14 @@ BOOST_PYTHON_MODULE (madara)
       // define constructors
       .def (init <const Madara::Knowledge_Engine::Knowledge_Base &> ())
 
-      // sets an array index to a double
+      // defines a python function
       .def( "define_function",
         static_cast<
           void (Madara::Knowledge_Engine::Knowledge_Base::*)(
             const std::string &,
-            Madara::Knowledge_Record (*) (
-              Madara::Knowledge_Engine::Function_Arguments &,
-              Madara::Knowledge_Engine::Variables &))
+            object)
         > (&Madara::Knowledge_Engine::Knowledge_Base::define_function),
-        "defines an unnamed function that can be called within evaluates")
+        "defines a named function that can be called within evaluates")
         
       // evaluate an expression
       .def( "evaluate",

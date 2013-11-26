@@ -48,7 +48,7 @@ Madara::Expression_Tree::Composite_Both_Node::prune (bool & can_change)
       *i = new Leaf_Node (value);
     }
 
-    if (j == 0 || (value > return_value).is_true ())
+    if (j == 0 || value > return_value)
       return_value = value;
 
     can_change = can_change || value_changes;
@@ -72,7 +72,7 @@ Madara::Expression_Tree::Composite_Both_Node::evaluate (
   {
     Madara::Knowledge_Record value = (*i)->evaluate (settings);
 
-    if (j == 0 || (value > return_value).is_true ())
+    if (j == 0 || value > return_value)
       return_value = value;
   }
 

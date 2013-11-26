@@ -28,6 +28,10 @@
 #include "madara/knowledge_engine/Knowledge_Reference_Settings.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+#include "boost/python/object.hpp"
+#endif
+
 namespace Madara
 {
   namespace Expression_Tree
@@ -875,6 +879,18 @@ namespace Madara
         const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
       
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      /**
+       * Defines a named python function
+       * @param  name       name of the function
+       * @param  callable   external python function to call with this name
+       * @param  settings   settings for referring to variables
+       **/
+      void define_function (const std::string & name, boost::python::object callable,
+                            const Knowledge_Reference_Settings & settings =
+                     Knowledge_Reference_Settings ());
+#endif
+
       /**
       /**
        * Defines a MADARA KaRL function

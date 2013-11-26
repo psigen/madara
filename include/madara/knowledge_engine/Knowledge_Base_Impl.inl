@@ -235,6 +235,18 @@ void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
   map_.define_function (name, func);
 }
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+inline
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
+  const std::string & name, boost::python::object callable)
+{
+  map_.define_function (name, callable);
+}
+
+#endif  
+
 /**
   * Defines a MADARA KaRL function      
   **/
@@ -245,7 +257,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (const std::strin
 {
   map_.define_function (name, expression);
 }
-      
+     
 
 inline
 void

@@ -9,6 +9,10 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/knowledge_engine/Extern_Function_Variables.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+  #include <boost/python.hpp>
+#endif
+
 /**
  * @file Functions.h
  * @author James Edmondson <jedmondson@gmail.com>
@@ -34,48 +38,113 @@ namespace Madara
     class MADARA_Export Function
     {
     public:
+
+      /**
+       * Types of functions supported
+       **/
+      enum Types
+      {
+        UNINITIALIZED = 0,
+        EXTERN_UNNAMED = 1,
+        EXTERN_NAMED = 2,
+        KARL_EXPRESSION = 3,
+        PYTHON_CALLABLE = 4
+      };
+
       /**
        * Default constructor
        **/
       Function ()
-        : extern_named_ (0), extern_unnamed_ (0)
+        : extern_named (0), extern_unnamed (0), type (UNINITIALIZED)
       {
       }
 
       /**
        * Constructor for function pointer
        **/
-      Function (Knowledge_Record (*extern_func) (Function_Arguments &, Variables &))
-        : extern_named_ (0), extern_unnamed_ (extern_func)
+      Function (Knowledge_Record (*func) (Function_Arguments &, Variables &))
+        : extern_named (0), extern_unnamed (func), type (EXTERN_UNNAMED)
       {
       }
       
       /**
        * Constructor for function pointer
        **/
-      Function (Knowledge_Record (*extern_func) (const char *, 
+      Function (Knowledge_Record (*func) (const char *, 
         Function_Arguments &, Variables &))
-        : extern_named_ (extern_func), extern_unnamed_ (0)
+        : extern_named (func), extern_unnamed (0), type (EXTERN_NAMED)
       {
       }
       
       /**
-       * Constructor for function pointer
+       * Constructor for KaRL expression
        **/
-      Function (const Madara::Expression_Tree::Expression_Tree & function_contents)
-        : function_contents_ (function_contents)
+      Function (const Madara::Expression_Tree::Expression_Tree & func)
+        : function_contents (func), type (KARL_EXPRESSION)
       {
       }
+
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      /**
+       * Constructor for function pointer
+       **/
+      Function (boost::python::object & func)
+        : python_function (func), type (PYTHON_CALLABLE)
+      {
+        bool invalid_callable = false;
+   
+        // Check to make sure its a callable object
+        if (0 == PyObject_HasAttrString (func.ptr (), "__call__"))
+        {
+          // If not, lets throw an exception to warn the user
+          PyErr_SetString (
+            PyExc_TypeError,
+            "Handler must be a callable object");
+
+          boost::python::throw_error_already_set(); 
+        } 
+      }
       
+      bool is_python_callable (void)
+      {
+        return type == PYTHON_CALLABLE && !python_function.is_none ();
+      }
+
+      boost::python::object python_function;
+#endif
+      
+      bool is_extern_unnamed (void)
+      {
+        return type == EXTERN_UNNAMED && extern_unnamed;
+      }
+      
+      bool is_extern_named (void)
+      {
+        return type == EXTERN_NAMED && extern_named;
+      }
+  
+      bool is_karl_expression (void)
+      {
+        return type == KARL_EXPRESSION;
+      }
+
+      bool is_uninitialized (void)
+      {
+        return type == UNINITIALIZED;
+      }
+
       // internal function pointer
-      Knowledge_Record (*extern_named_) (
+      Knowledge_Record (*extern_named) (
         const char *, Function_Arguments &, Variables &);
 
       // internal function pointer
-      Knowledge_Record (*extern_unnamed_) (Function_Arguments &, Variables &);
-
+      Knowledge_Record (*extern_unnamed) (Function_Arguments &, Variables &);
+       
       // expression tree
-      Madara::Expression_Tree::Expression_Tree function_contents_;
+      Madara::Expression_Tree::Expression_Tree function_contents;
+
+      // type of function definition
+      int type;
     };
     
   }

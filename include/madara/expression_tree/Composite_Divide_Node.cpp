@@ -74,7 +74,7 @@ Madara::Expression_Tree::Composite_Divide_Node::prune (bool & can_change)
       }
       // the only time we should delete right is if we have a clean division
       if (!left_child_can_change && 
-          (left_value % right_value == zero).is_true ())
+          left_value % right_value == zero)
       {
         // don't worry about allocating anything. This is about to be
         // reclaimed anyway since !right_can_change and !left_can_change

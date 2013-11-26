@@ -87,7 +87,7 @@ void test_primitive_encoding (void)
     dest.to_string () << " from buffer. Bytes remaining=" << 
     buffer_remaining << std::endl;
   
-  string_decoded = (dest == string_helloworld_source).to_integer () == 1;
+  string_decoded = dest == string_helloworld_source;
 
   std::cerr << "Test 4: decoded knowledge record is equal to " <<
     "string_helloworld_source? " <<
@@ -112,7 +112,7 @@ void test_primitive_encoding (void)
     dest.to_string () << " from buffer. Bytes remaining=" << 
     buffer_remaining << std::endl;
   
-  int_decoded = (dest == int_source).to_integer () == 1;
+  int_decoded = dest == int_source;
 
   std::cerr << "Test 6: decoded knowledge record is equal to " <<
     "int_source? " <<
@@ -137,7 +137,7 @@ void test_primitive_encoding (void)
     dest.to_string () << " from buffer. Bytes remaining=" << 
     buffer_remaining << std::endl;
   
-  double_decoded = (dest == double_source).to_integer () == 1;
+  double_decoded = dest == double_source;
 
   std::cerr << "Test 8: decoded knowledge record is equal to " <<
     "double_source? " <<

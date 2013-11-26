@@ -14,6 +14,12 @@
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Functions.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+  #include <boost/python/call.hpp> 
+
+#endif
+
 // Ctor
 
 Madara::Expression_Tree::Composite_Function_Node::Composite_Function_Node (
@@ -108,17 +114,25 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
     this->name_.c_str (), args.size ()));
   
   // if the user has defined a named function, return that
-  if (function_->extern_named_)
-    return function_->extern_named_ (name_.c_str (), args, variables);
+  if (function_->is_extern_named ())
+    return function_->extern_named (name_.c_str (), args, variables);
 
   // if the user has defined an unnamed function, return that
-  else if (function_->extern_unnamed_)
-    return function_->extern_unnamed_ (args, variables);
+  else if (function_->is_extern_unnamed ())
+    return function_->extern_unnamed (args, variables);
+
+  
+#ifdef _MADARA_PYTHON_CALLBACKS_
+  else if (function_->is_python_callable ())
+    return boost::python::call <Madara::Knowledge_Record> (
+          function_->python_function.ptr (),
+          boost::ref (args), boost::ref (variables));
+#endif
 
   // otherwise, assume it is a MADARA function
   else
   {
-    return function_->function_contents_.evaluate ();
+    return function_->function_contents.evaluate ();
     //Madara::Knowledge_Record zero;
     //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
     //  "Function %s has not been defined.\n", name_.c_str ()));

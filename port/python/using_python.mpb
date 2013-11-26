@@ -1,11 +1,7 @@
 feature (python) {
 
-  requires += python
-
   includes += $(BOOST_ROOT)
   includes += $(PYTHON_ROOT)/include
-
-  macros += BOOST_PYTHON_STATIC_LIB
 
   lit_libs += libboost_python3-vc100-mt-$(BOOST_VERSION)
 
@@ -13,6 +9,6 @@ feature (python) {
   
   libpaths += $(BOOST_ROOT)/stage/lib
   libpaths += $(PYTHON_ROOT)/libs
-  
-  after    += MADARA
+
+  macros += _MADARA_PYTHON_CALLBACKS_
 }

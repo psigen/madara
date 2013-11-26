@@ -3,6 +3,8 @@ project (MADARA_Python) : using_madara, using_ace, port/python/using_python {
 
   requires += python
   
+  after    += MADARA
+
   specific(prop:windows) {
     staticname = madara.pyd
   } else {

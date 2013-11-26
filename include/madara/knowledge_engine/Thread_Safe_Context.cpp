@@ -716,7 +716,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = -3;
 
     // check for value already set
-    else if ((found->second == rhs).is_true ())
+    else if (found->second == rhs)
       result = 0;
   }
 
@@ -797,7 +797,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = -3;
 
     // check for value already set
-    else if ((found->second == rhs).is_true ())
+    else if (found->second == rhs)
       result = 0;
   }
 
@@ -878,7 +878,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set_if_unequal (
       result = -3;
 
     // check for value already set
-    else if ((found->second == rhs).is_true ())
+    else if (found->second == rhs)
       result = 0;
   }
 
@@ -1084,8 +1084,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   if (*key_ptr == "")
     return;
   
-  functions_[*key_ptr].extern_named_ = 0;
-  functions_[*key_ptr].extern_unnamed_ = func;
+  functions_[*key_ptr] = Function (func);
 }
 
 void
@@ -1111,10 +1110,37 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   if (*key_ptr == "")
     return;
   
-  functions_[*key_ptr].extern_named_ = func;
-  functions_[*key_ptr].extern_unnamed_ = 0;
+  functions_[*key_ptr] = Function (func);
 }
 
+
+#ifdef _MADARA_PYTHON_CALLBACKS_
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
+  boost::python::object callable,
+  const Knowledge_Reference_Settings & settings)
+{
+  // enter the mutex
+  std::string key_actual;
+  const std::string * key_ptr;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+  {
+    key_actual = expand_statement (name);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &name;
+  
+  // check for null key
+  if (*key_ptr == "")
+    return;
+  
+  functions_[*key_ptr] = Function (callable);
+}
+ 
+#endif
 
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
@@ -1124,7 +1150,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   Compiled_Expression compiled = compile (expression);
   define_function (name, compiled, settings);
 }
-      
+     
 void
 Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
   const Compiled_Expression & expression,
@@ -1147,9 +1173,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::strin
   if (*key_ptr == "")
     return;
   
-  functions_[*key_ptr].extern_unnamed_ = 0;
-  functions_[*key_ptr].extern_named_ = 0;
-  functions_[*key_ptr].function_contents_ = expression.expression;
+  functions_[*key_ptr] = Function (expression.expression);
 }
 
 

@@ -715,7 +715,16 @@ namespace Madara
        **/
       void define_function (const std::string & name,
         Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &));
-      
+              
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      /**
+       * Defines a named python function
+       * @param  name       name of the function
+       * @param  callable   external python function to call with this name
+       **/
+      void define_function (const std::string & name, boost::python::object callable);
+#endif
+
       /**
        * Defines a MADARA KaRL function
        * @param  name       name of the function

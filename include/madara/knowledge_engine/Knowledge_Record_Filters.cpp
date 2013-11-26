@@ -3,6 +3,12 @@
 #include "madara/utility/Log_Macros.h"
 #include "madara/filters/Arguments.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+  #include <boost/python/call.hpp> 
+
+#endif
+
 Madara::Knowledge_Engine::Knowledge_Record_Filters::Knowledge_Record_Filters ()
   : context_ (0)
 {
@@ -180,10 +186,21 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       arguments[0] = result;
 
       // if the function is not zero
-      if (i->extern_unnamed_)
+      if (i->type == i->EXTERN_UNNAMED && i->extern_unnamed)
       {
-        result = i->extern_unnamed_ (arguments, variables);
+        result = i->extern_unnamed (arguments, variables);
       }
+      
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+      else if (i->type == i->PYTHON_CALLABLE && !i->python_function.is_none ())
+      {
+        // some guides have stated that we should let python handle exceptions
+        result = boost::python::call <Madara::Knowledge_Record> (
+          i->python_function.ptr (), boost::ref (arguments), boost::ref (variables));
+      }
+
+#endif
 
       // did the filter add records to be sent?
       if (arguments.size () > Madara::Filters::TOTAL_ARGUMENTS)

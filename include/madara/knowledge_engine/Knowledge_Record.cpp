@@ -555,10 +555,10 @@ Madara::Knowledge_Record::fragment (unsigned int first, unsigned int last)
   return ret;
 }
 
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
+  Integer result;
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -569,18 +569,15 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
     {
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs < other));
+      result = lhs < other;
     }
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
     
-      record.set_value (Integer (
-        lhs < other));
+      result = lhs < other;
     }
   }
-
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -588,9 +585,9 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.set_value (Integer (
+      result =
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) < 0));
+        size () >= rhs.size () ? size () : rhs.size ()) < 0;
     }
     
     // string to double comparison
@@ -601,8 +598,7 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
       double temp = to_double ();
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        temp < other));
+      result = temp < other;
     }
     
     // default is string to integer comparison
@@ -613,8 +609,7 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
       Integer temp = to_integer ();
       Integer other = rhs.to_integer ();
       
-      record.set_value (Integer (
-        temp < other));
+      result = temp < other;
     }
   }
 
@@ -631,26 +626,24 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
 
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs < other));
+      result = lhs < other;
     }
 
     // default is string to integer comparison
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
-      record.set_value (Integer (
-        lhs < other));
+      result = lhs < other;
     }
   }
 
-  return record;
+  return result;
 }
 
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
+  Integer result;
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -661,18 +654,15 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
     {
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs <= other));
+      result = lhs <= other;
     }
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
     
-      record.set_value (Integer (
-        lhs <= other));
+      result = lhs <= other;
     }
   }
-
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -680,9 +670,9 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.set_value (Integer (
+      result = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) <= 0));
+        size () >= rhs.size () ? size () : rhs.size ()) <= 0;
     }
     
     // string to double comparison
@@ -693,8 +683,7 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
       double temp = to_double ();
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        temp <= other));
+      result = temp <= other;
     }
     
     // default is string to integer comparison
@@ -705,8 +694,7 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
       Integer temp = to_integer ();
       Integer other = rhs.to_integer ();
       
-      record.set_value (Integer (
-        temp <= other));
+      result = temp <= other;
     }
   }
 
@@ -723,26 +711,24 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
 
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs <= other));
+      result = lhs <= other;
     }
 
     // default is string to integer comparison
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
-      record.set_value (Integer (
-        lhs <= other));
+      result = lhs <= other;
     }
   }
 
-  return record;
+  return result;
 }
 
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
+  Integer result;
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -753,18 +739,15 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
     {
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs == other));
+      result = lhs == other;
     }
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
     
-      record.set_value (Integer (
-        lhs == other));
+      result = lhs == other;
     }
   }
-
 
   // if the left hand side is a string
   else if (is_string_type ())
@@ -772,9 +755,9 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.set_value (Integer (
+      result = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) == 0));
+        size () >= rhs.size () ? size () : rhs.size ()) == 0;
     }
     
     // string to double comparison
@@ -785,8 +768,7 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
       double temp = to_double ();
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        temp == other));
+      result = temp == other;
     }
     
     // default is string to integer comparison
@@ -797,8 +779,7 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
       Integer temp = to_integer ();
       Integer other = rhs.to_integer ();
       
-      record.set_value (Integer (
-        temp == other));
+      result = temp == other;
     }
   }
 
@@ -815,20 +796,19 @@ Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
 
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs == other));
+      result = lhs == other;
     }
 
     // default is string to integer comparison
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
-      record.set_value (Integer (
-        lhs == other));
+
+      result = lhs == other;
     }
   }
 
-  return record;
+  return result;
 }
 
 bool
@@ -877,7 +857,7 @@ Madara::Knowledge_Record::operator== (const char * value) const
   return to_string () == std::string (value);
 }
 
-Madara::Knowledge_Record  
+Madara::Knowledge_Record::Integer 
 Madara::Knowledge_Record::operator!= (const Knowledge_Record & rhs) const
 {
   return !(*this == rhs);
@@ -886,41 +866,28 @@ Madara::Knowledge_Record::operator!= (const Knowledge_Record & rhs) const
 /**
   * Logical and.
   **/
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
   Madara::Knowledge_Record::operator&& (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
-
-  record.set_value ((Integer)(this->is_true () && rhs.is_true ()));
-
-  return record;
+  return this->is_true () && rhs.is_true ();
 }
 
 /**
   * Logical or.
   **/
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
   Madara::Knowledge_Record::operator|| (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
-
-  record.set_value ((Integer)(this->is_true () || rhs.is_true ()));
-
-  return record;
+  return this->is_true () || rhs.is_true ();
 }
 
 /**
   * Logical not.
   **/
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator! (void) const
 {
-  Madara::Knowledge_Record record;
-  
-  record.set_value (Integer (
-    !is_true ()));
-  
-  return record;
+  return !is_true ();
 }
 
 /**
@@ -939,10 +906,10 @@ Madara::Knowledge_Record
   return record;
 }
 
-Madara::Knowledge_Record
+Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
+  Integer result;
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -953,15 +920,13 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
     {
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs > other));
+      result = lhs > other;
     }
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
     
-      record.set_value (Integer (
-        lhs > other));
+      result = lhs > other;
     }
   }
 
@@ -972,9 +937,9 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.set_value (Integer (
+      result = 
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) > 0));
+        size () >= rhs.size () ? size () : rhs.size ()) > 0;
     }
     
     // string to double comparison
@@ -985,8 +950,7 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
       double lhs = to_double ();
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs > other));
+      result = lhs > other;
     }
     
     // default is string to integer comparison
@@ -997,8 +961,7 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
       Integer lhs = to_integer ();
       Integer other = rhs.to_integer ();
       
-      record.set_value (Integer (
-        lhs > other));
+      result = lhs > other;
     }
   }
 
@@ -1015,26 +978,25 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
 
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs > other));
+      result = lhs > other;
     }
 
     // default is string to integer comparison
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
-      record.set_value (Integer (
-        lhs > other));
+
+      result = lhs > other;
     }
   }
 
-  return record;
+  return result;
 }
 
-Madara::Knowledge_Record  
+Madara::Knowledge_Record::Integer 
 Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
 {
-  Madara::Knowledge_Record record;
+  Integer result;
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -1045,15 +1007,13 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
     {
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs >= other));
+      result = lhs >= other;
     }
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
     
-      record.set_value (Integer (
-        lhs >= other));
+      result = lhs >= other;
     }
   }
 
@@ -1064,9 +1024,9 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
     // string to string comparison
     if      (rhs.is_string_type ())
     {
-      record.set_value (Integer (
+      result =
         strncmp (str_value_.get_ptr (), rhs.str_value_.get_ptr (), 
-        size () >= rhs.size () ? size () : rhs.size ()) >= 0));
+        size () >= rhs.size () ? size () : rhs.size ()) >= 0;
     }
     
     // string to double comparison
@@ -1077,8 +1037,7 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
       double lhs = to_double ();
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs >= other));
+      result = lhs >= other;
     }
     
     // default is string to integer comparison
@@ -1089,8 +1048,7 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
       Integer lhs = to_integer ();
       Integer other = rhs.to_integer ();
       
-      record.set_value (Integer (
-        lhs >= other));
+      result = lhs >= other;
     }
   }
 
@@ -1107,20 +1065,19 @@ Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
 
       double other = rhs.to_double ();
       
-      record.set_value (Integer (
-        lhs >= other));
+      result = lhs >= other;
     }
 
     // default is string to integer comparison
     else if (rhs.is_integer_type ())
     {
       Integer other = rhs.to_integer ();
-      record.set_value (Integer (
-        lhs >= other));
+
+      result = lhs >= other;
     }
   }
 
-  return record;
+  return result;
 }
 
 Madara::Knowledge_Record

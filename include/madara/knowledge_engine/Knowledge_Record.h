@@ -495,17 +495,17 @@ namespace Madara
     /**
      * Less than
      **/
-    Knowledge_Record operator< (const Knowledge_Record & rhs) const;
+    Integer operator< (const Knowledge_Record & rhs) const;
     
     /**
      * Less than or equal to
      **/
-    Knowledge_Record operator<= (const Knowledge_Record & rhs) const;
+    Integer operator<= (const Knowledge_Record & rhs) const;
     
     /**
      * Equal to
      **/
-    Knowledge_Record operator== (const Knowledge_Record & rhs) const;
+    Integer operator== (const Knowledge_Record & rhs) const;
     
     /**
      * Equal to
@@ -530,22 +530,22 @@ namespace Madara
     /**
      * Unequal to
      **/
-    Knowledge_Record operator!= (const Knowledge_Record & rhs) const;
+    Integer operator!= (const Knowledge_Record & rhs) const;
     
     /**
      * Greater than
      **/
-    Knowledge_Record operator> (const Knowledge_Record & rhs) const;
+    Integer operator> (const Knowledge_Record & rhs) const;
     
     /**
      * Greater than or equal to
      **/
-    Knowledge_Record operator>= (const Knowledge_Record & rhs) const;
+    Integer operator>= (const Knowledge_Record & rhs) const;
     
     /**
      * Logical not.
      **/
-    Knowledge_Record operator! (void) const;
+    Integer operator! (void) const;
 
     /**
      * Negate.
@@ -610,12 +610,12 @@ namespace Madara
     /**
      * And operator
      **/
-    Knowledge_Record operator&& (const Knowledge_Record & rhs) const;
+    Integer operator&& (const Knowledge_Record & rhs) const;
     
     /**
      * Or operator
      **/
-    Knowledge_Record operator|| (const Knowledge_Record & rhs) const;
+    Integer operator|| (const Knowledge_Record & rhs) const;
     
     /**
      * Preincrement operator
