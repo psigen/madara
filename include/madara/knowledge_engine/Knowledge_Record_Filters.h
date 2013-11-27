@@ -92,7 +92,13 @@ namespace Madara
        **/
       void add (uint32_t types,
         boost::python::object & callable);
-
+      
+      /**
+       * Adds an aggregate filter
+       * @param callable     the function that will filter the aggregation
+       **/
+      void add (boost::python::object & callable);
+         
 #endif
 
       /**

@@ -162,7 +162,7 @@ int main (int argc, char * argv[])
    * Print all the variables just to see what we did. This is very useful for
    * debugging purposes as you are developing a MADARA application.
    **/
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

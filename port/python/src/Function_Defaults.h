@@ -57,6 +57,9 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS (m_wait_1_of_2,
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS (m_print_1_of_2,
   print, 1, 2)
+  
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS (m_print_0_of_1,
+  print, 0, 1)
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS (m_print_knowledge_0_of_1,
   print_knowledge, 0, 1)

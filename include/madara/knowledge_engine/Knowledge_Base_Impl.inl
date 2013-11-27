@@ -67,7 +67,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::exists (
 
 inline std::string
 Madara::Knowledge_Engine::Knowledge_Base_Impl::expand_statement (
-  const std::string & statement)
+  const std::string & statement) const
 {
   return map_.expand_statement (statement);
 }
@@ -178,8 +178,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 }
 
 inline void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (
-  unsigned int level)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::print (
+  unsigned int level) const
 {
   MADARA_DEBUG (level, (LM_INFO, 
     "\nKnowledge in Knowledge Base:\n"));
@@ -188,7 +188,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::print_knowledge (
 
 inline void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::print (
-  const std::string & statement, unsigned int level)
+  const std::string & statement, unsigned int level) const
 {
   map_.print (statement, level);
 }

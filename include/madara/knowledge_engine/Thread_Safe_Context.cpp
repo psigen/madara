@@ -956,8 +956,10 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
 
     // if we reach this point, then the record is safe to copy
     found->second = rhs;
-    
-    mark_and_signal (key_ptr->c_str (), &found->second, settings);
+
+    Knowledge_Record & current_value = found->second;
+
+    mark_and_signal (key_ptr->c_str (), &current_value, settings);
   }
   else
   {
@@ -965,7 +967,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
     Knowledge_Record & current_value = map_[*key_ptr];
     current_value = rhs;
     
-    mark_and_signal (key_ptr->c_str (), &found->second, settings);
+    mark_and_signal (key_ptr->c_str (), &current_value, settings);
   }
   
   // if we need to update the global clock, then update it
@@ -1006,7 +1008,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::print (
 /// keys.
 std::string 
 Madara::Knowledge_Engine::Thread_Safe_Context::expand_statement (
-  const std::string & statement)
+  const std::string & statement) const
 {
   // enter the mutex
   Context_Guard guard (mutex_);

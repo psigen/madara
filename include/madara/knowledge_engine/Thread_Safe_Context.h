@@ -70,7 +70,7 @@ namespace Madara
       Madara::Knowledge_Record
         get (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings ());
+                     Knowledge_Reference_Settings ()) const;
       
       /**
        * Atomically returns the value of a variable.
@@ -81,7 +81,7 @@ namespace Madara
       Madara::Knowledge_Record
         get (const Variable_Reference & variable,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings ());
+                     Knowledge_Reference_Settings ()) const;
       
       /**
        * Atomically returns a reference to the variable. Variable references are
@@ -751,7 +751,7 @@ namespace Madara
        **/
       bool exists (const std::string & key,
              const Knowledge_Reference_Settings & settings =
-                     Knowledge_Reference_Settings ());
+                     Knowledge_Reference_Settings ()) const;
 
       /**
        * Atomically prints all variables and values in the context
@@ -765,7 +765,7 @@ namespace Madara
        * @param   statement      templated statement to print from
        * @param   level          log level. @see Log_Macros.h
        **/
-      void print (const std::string & statement, unsigned int level);
+      void print (const std::string & statement, unsigned int level) const;
 
       /**
        * Clears all variables and their values
@@ -853,7 +853,7 @@ namespace Madara
        * @param  statement  statement to expand. Useful for printing.
        * @return            variable expanded statement
        **/
-      std::string expand_statement (const std::string & statement);
+      std::string expand_statement (const std::string & statement) const;
 
 
       /**

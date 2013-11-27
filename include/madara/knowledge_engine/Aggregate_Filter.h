@@ -9,6 +9,10 @@
 #include "madara/knowledge_engine/Extern_Function_Variables.h"
 #include "madara/transport/Transport_Context.h"
 
+#ifdef _MADARA_PYTHON_CALLBACKS_
+  #include <boost/python.hpp>
+#endif
+
 /**
  * @file Aggregate_Filter.h
  * @author James Edmondson <jedmondson@gmail.com>
@@ -29,10 +33,21 @@ namespace Madara
     {
     public:
       /**
+       * Types of functions supported
+       **/
+      enum Types
+      {
+        UNINITIALIZED = 0,
+        EXTERN_UNNAMED = 1,
+        EXTERN_NAMED = 2,
+        PYTHON_CALLABLE = 3
+      };
+
+      /**
        * Default constructor
        **/
       Aggregate_Filter ()
-        : filter (0)
+        : unnamed_filter (0), type (UNINITIALIZED)
       {
       }
 
@@ -42,14 +57,67 @@ namespace Madara
       Aggregate_Filter (Knowledge_Record (*extern_func) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Variables &))
-        : filter (extern_func)
+        : unnamed_filter (extern_func), type (EXTERN_UNNAMED)
       {
       }
       
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      /**
+       * Constructor for function pointer
+       **/
+      Aggregate_Filter (boost::python::object & func)
+        : python_function (func), type (PYTHON_CALLABLE)
+      {
+        bool invalid_callable = false;
+   
+        // Check to make sure its a callable object
+        if (0 == PyObject_HasAttrString (func.ptr (), "__call__"))
+        {
+          // If not, lets throw an exception to warn the user
+          PyErr_SetString (
+            PyExc_TypeError,
+            "Handler must be a callable object");
+
+          boost::python::throw_error_already_set(); 
+        } 
+      }
+      
+      bool is_python_callable (void) const
+      {
+        return type == PYTHON_CALLABLE && !python_function.is_none ();
+      }
+
+      boost::python::object python_function;
+#endif
+      
+      bool is_extern_unnamed (void) const
+      {
+        return type == EXTERN_UNNAMED && unnamed_filter;
+      }
+      
+      bool is_extern_named (void) const
+      {
+        return type == EXTERN_NAMED && named_filter;
+      }
+  
+      bool is_uninitialized (void) const
+      {
+        return type == UNINITIALIZED;
+      }
+
       /// mapped function call for aggregate filter
-      Knowledge_Record (*filter) (
+      Knowledge_Record (*unnamed_filter) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Variables &);
+      
+      /// mapped function call for aggregate filter
+      Knowledge_Record (*named_filter) (
+        const char *, Knowledge_Map &, 
+        const Transport::Transport_Context &,
+        Variables &);
+
+      // type of function definition
+      int type;
     };
 
     /**

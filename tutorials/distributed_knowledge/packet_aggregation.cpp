@@ -405,6 +405,6 @@ int main (int argc, char * argv[])
 .max_agents = (.max_agents ; .cur_agents)"
   , eval_settings);
   
-  knowledge.print_knowledge ();
+  knowledge.print ();
   return 0;
 }

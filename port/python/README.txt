@@ -86,6 +86,6 @@ PREREQUISITES
        $> python
        >>> import madara
        >>> knowledge = madara.Knowledge_Engine.Knowledge_Base ()
-       >>> knowledge.print_knowledge ()
+       >>> knowledge.print ()
        
        

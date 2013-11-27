@@ -187,7 +187,7 @@ int main (int argc, char * argv[])
   );
   knowledge.print ("Money: ${.money}\n");
   
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   /**
    * This tutorial has showcased a rather silly example, but it is enough

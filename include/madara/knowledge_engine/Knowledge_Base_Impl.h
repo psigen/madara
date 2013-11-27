@@ -164,7 +164,7 @@ namespace Madara
        * @param statement          statement to expand
        * @return                   expanded statement
        **/
-      std::string expand_statement (const std::string & statement);
+      std::string expand_statement (const std::string & statement) const;
 
       /**
        * Compiles a KaRL expression into an expression tree
@@ -655,10 +655,10 @@ namespace Madara
         const Wait_Settings & settings);
 
       /**
-       * Prints knowledge variables and values at a logging level
+       * Prints all knowledge variables and values in the context
        * @param   level    level to log the knowledge at
        **/
-      void print_knowledge (unsigned int level);
+      void print (unsigned int level) const;
 
       /**
        * Expands and prints a user provided statement at a logging level.
@@ -668,7 +668,7 @@ namespace Madara
        * @param   statement  statement to expand with variable values
        * @param   level      level to log the knowledge at
        **/
-      void print (const std::string & statement, unsigned int level);
+      void print (const std::string & statement, unsigned int level) const;
 
       /**
        * Clears the knowledge base

@@ -105,7 +105,7 @@ namespace Madara
         } 
       }
       
-      bool is_python_callable (void)
+      bool is_python_callable (void) const
       {
         return type == PYTHON_CALLABLE && !python_function.is_none ();
       }
@@ -113,22 +113,22 @@ namespace Madara
       boost::python::object python_function;
 #endif
       
-      bool is_extern_unnamed (void)
+      bool is_extern_unnamed (void) const
       {
         return type == EXTERN_UNNAMED && extern_unnamed;
       }
       
-      bool is_extern_named (void)
+      bool is_extern_named (void) const
       {
         return type == EXTERN_NAMED && extern_named;
       }
   
-      bool is_karl_expression (void)
+      bool is_karl_expression (void) const
       {
         return type == KARL_EXPRESSION;
       }
 
-      bool is_uninitialized (void)
+      bool is_uninitialized (void) const
       {
         return type == UNINITIALIZED;
       }

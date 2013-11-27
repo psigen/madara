@@ -120,7 +120,7 @@ int main (int argc, char ** argv)
     knowledge.evaluate (input_buffer, eval_settings);
   }
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

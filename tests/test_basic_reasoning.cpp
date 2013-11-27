@@ -173,7 +173,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_both_operator (knowledge);
   test_dijkstra_sync (knowledge);
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

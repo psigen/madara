@@ -126,7 +126,7 @@ void test_checkpointing (void)
   else
     std::cerr << "FAIL\n\n";
   
-  knowledge.print_knowledge ();
+  knowledge.print ();
   
   std::cerr << "Test 5: Adding extra_var to context and saving\n";
   
@@ -156,7 +156,7 @@ void test_checkpointing (void)
   else
     std::cerr << "FAIL\n\n";
   
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   knowledge.set ("additional_var", 6.0,
     Madara::Knowledge_Engine::Eval_Settings (true, false, false, false, false));
@@ -184,7 +184,7 @@ void test_checkpointing (void)
   else
     std::cerr << "FAIL\n\n";
   
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   
   std::cerr << "Test 7: Adding local variable without track local changes\n";

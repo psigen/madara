@@ -4,6 +4,7 @@
 
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+#include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
 /**
  * @file Madara_Module.cpp
@@ -31,6 +32,11 @@ BOOST_PYTHON_MODULE (madara)
 
   class_ <std::vector <Madara::Knowledge_Record> > ("Knowledge_Record_Vector")
     .def(vector_indexing_suite<std::vector<Madara::Knowledge_Record> >());
+  
+  class_ <std::map <std::string, Madara::Knowledge_Record> > (
+    "Knowledge_Record_Map")
+    .def(map_indexing_suite<std::map <
+      std::string, Madara::Knowledge_Record> >());
 
   /********************************************************
    * Knowledge Record definitions
@@ -423,7 +429,87 @@ BOOST_PYTHON_MODULE (madara)
       .value("BROADCAST",
         Madara::Transport::BROADCAST)
     ;
+    
+    {
+      /********************************************************
+       * Transport Context definitions
+       ********************************************************/
+    
+      scope Transport_Context = 
+        class_<Madara::Transport::Transport_Context> ("Transport_Context",
+        "Container for transport-related state information", init <> ())
 
+        // copy constructor
+        .def (init<const Madara::Transport::Transport_Context> ())
+
+        // clear records
+        .def ("clear_records",
+          &Madara::Transport::Transport_Context::clear_records,
+          "Clears any uncommitted records associated with the context")
+        
+        // Retrieves the operation type
+        .def ("get_operation",
+          &Madara::Transport::Transport_Context::get_operation,
+          "Retrieves the operation type")
+        
+        // Retrieves receive bandwidth usage
+        .def ("get_receive_bandwidth",
+          &Madara::Transport::Transport_Context::get_receive_bandwidth,
+          "Returns received bandwidth usage in B/s over past 10s")
+        
+        // Retrieves send bandwidth usage
+        .def ("get_send_bandwidth",
+          &Madara::Transport::Transport_Context::get_send_bandwidth,
+          "Returns send bandwidth usage in B/s over past 10s")
+        
+        // Retrieves time that message was generated
+        .def ("get_message_time",
+          &Madara::Transport::Transport_Context::get_message_time,
+          "Retrieves time that message was generated")
+        
+        // Retrieves time that message is being processed
+        .def ("get_current_time",
+          &Madara::Transport::Transport_Context::get_current_time,
+          "Retrieves time that message is being processed")
+          
+        // Adds a record to the context for rebroadcasting or applying
+        .def ("add_record",
+          &Madara::Transport::Transport_Context::add_record,
+          "Adds a record to the context for rebroadcasting or applying")
+          
+        // Retrieves the knowledge domain (similar to topics in pub/sub)
+        .def ("get_domain",
+          &Madara::Transport::Transport_Context::get_domain, 
+          return_value_policy<reference_existing_object>(),
+          "Retrieves the knowledge domain (similar to topics in pub/sub)")
+          
+        // Retrieves the message originator
+        .def ("get_originator",
+          &Madara::Transport::Transport_Context::get_originator, 
+          return_value_policy<reference_existing_object>(),
+          "Retrieves the message originator")
+          
+        // Retrieves the current uncommitted record list"
+        .def ("get_records",
+          &Madara::Transport::Transport_Context::get_records, 
+          return_value_policy<reference_existing_object>(),
+          "Retrieves the current uncommitted record list")
+
+      ;
+
+      // the types of packet drop policies for QoS_Transport_Settings class
+      enum_<Madara::Transport::Transport_Context::Operations> ("Operations")
+        .value("IDLE_OPERATION",
+          Madara::Transport::Transport_Context::IDLE_OPERATION)
+        .value("SENDING_OPERATION",
+          Madara::Transport::Transport_Context::SENDING_OPERATION)
+        .value("RECEIVING_OPERATION",
+          Madara::Transport::Transport_Context::RECEIVING_OPERATION)
+        .value("REBROADCASTING_OPERATION",
+          Madara::Transport::Transport_Context::REBROADCASTING_OPERATION)
+        ;
+    }
+      
     /********************************************************
      * Transport Settings definitions
      ********************************************************/
@@ -500,6 +586,14 @@ BOOST_PYTHON_MODULE (madara)
         > (&Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter),
         "Adds a python callback to the typed rebroadcst filter chains")
         
+      // adds a python callback to the aggregate send filter chains
+      .def( "add_rebroadcast_filter",
+        static_cast<
+          void (Madara::Transport::QoS_Transport_Settings::*)(
+                boost::python::object & object)
+        > (&Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter),
+        "Adds a python callback to the aggregate rebroadcast filter chains")
+        
       // adds a python callback to the typed receive filter chains
       .def( "add_receive_filter",
         static_cast<
@@ -508,6 +602,14 @@ BOOST_PYTHON_MODULE (madara)
         > (&Madara::Transport::QoS_Transport_Settings::add_receive_filter),
         "Adds a python callback to the typed receive filter chains")
         
+      // adds a python callback to the aggregate receive filter chains
+      .def( "add_receive_filter",
+        static_cast<
+          void (Madara::Transport::QoS_Transport_Settings::*)(
+                boost::python::object & object)
+        > (&Madara::Transport::QoS_Transport_Settings::add_receive_filter),
+        "Adds a python callback to the aggregate receive filter chains")
+        
       // adds a python callback to the typed send filter chains
       .def( "add_send_filter",
         static_cast<
@@ -515,6 +617,14 @@ BOOST_PYTHON_MODULE (madara)
                 uint32_t types, boost::python::object & object)
         > (&Madara::Transport::QoS_Transport_Settings::add_send_filter),
         "Adds a python callback to the typed send filter chains")
+        
+      // adds a python callback to the aggregate send filter chains
+      .def( "add_send_filter",
+        static_cast<
+          void (Madara::Transport::QoS_Transport_Settings::*)(
+                boost::python::object & object)
+        > (&Madara::Transport::QoS_Transport_Settings::add_send_filter),
+        "Adds a python callback to the aggregate send filter chains")
         
         
       // Clears the rebroadcast filters for a specified type
@@ -531,6 +641,21 @@ BOOST_PYTHON_MODULE (madara)
       .def ("clear_send_filters",
         &Madara::Transport::QoS_Transport_Settings::clear_send_filters,
         "Clears the send filters for a specified type")
+        
+      // Clears the rebroadcast filters for a specified type
+      .def ("clear_rebroadcast_aggregate_filters",
+        &Madara::Transport::QoS_Transport_Settings::clear_rebroadcast_aggregate_filters,
+        "Clears the rebroadcast aggregate filters")
+        
+      // Clears the receive filters for a specified type
+      .def ("clear_receive_aggregate_filters",
+        &Madara::Transport::QoS_Transport_Settings::clear_receive_aggregate_filters,
+        "Clears the receive aggregate filters")
+        
+      // Clears the send filters for a specified type
+      .def ("clear_send_aggregate_filters",
+        &Madara::Transport::QoS_Transport_Settings::clear_send_aggregate_filters,
+        "Clears the send aggregate filters")
         
 
       // get the drop burst rate
@@ -563,6 +688,40 @@ BOOST_PYTHON_MODULE (madara)
         &Madara::Transport::QoS_Transport_Settings::print_num_filters_send,
         "Prints the number of send filters for a specified type")
         
+        
+        
+      // Gets the number of rebroadcast aggregate filters
+      .def ("get_number_of_rebroadcast_aggregate_filters",
+        &Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_aggregate_filters,
+        "Gets the number of receive aggregate filters")
+        
+      // Gets the number of receive filters for a specified type
+      .def ("get_number_of_receive_aggregate_filters",
+        &Madara::Transport::QoS_Transport_Settings::get_number_of_receive_aggregate_filters,
+        "Gets the number of receive aggregate filters")
+        
+      // Gets the number of send aggregate filters
+      .def ("get_number_of_send_aggregate_filters",
+        &Madara::Transport::QoS_Transport_Settings::get_number_of_send_aggregate_filters,
+        "Gets the number of send aggregate filters")
+        
+
+      // Gets the number of rebroadcast filters for a specified type
+      .def ("get_number_of_rebroadcast_filtered_types",
+        &Madara::Transport::QoS_Transport_Settings::get_number_of_rebroadcast_filtered_types,
+        "Gets the number of rebroadcast filters for a specified type")
+        
+      // Gets the number of receive filters for a specified type
+      .def ("get_number_of_receive_filtered_types",
+        &Madara::Transport::QoS_Transport_Settings::get_number_of_receive_filtered_types,
+        "Gets the number of receive filters for a specified type")
+        
+      // Gets the number of send filters for a specified type
+      .def ("get_number_of_send_filtered_types",
+        &Madara::Transport::QoS_Transport_Settings::get_number_of_send_filtered_types,
+        "Gets the number of send filters for a specified type")
+        
+
       // update the drop rate
       .def ("update_drop_rate",
         &Madara::Transport::QoS_Transport_Settings::update_drop_rate,
@@ -920,18 +1079,31 @@ BOOST_PYTHON_MODULE (madara)
       .def ("log_to_system_log",
         &Madara::Knowledge_Engine::Knowledge_Base::log_to_system_log,
         "Logs to a system logger")
-        
-      // expands and prints a statement
-      .def ("print",
-        &Madara::Knowledge_Engine::Knowledge_Base::print,
-        m_print_1_of_2 (
-          args("statement", "level"), "Expand and print a statement"))
           
+      // evaluate an expression
+      .def( "print",
+        static_cast<
+          void (Madara::Knowledge_Engine::Knowledge_Base::*)(
+            unsigned int) const
+        > (&Madara::Knowledge_Engine::Knowledge_Base::print),
+        m_print_0_of_1 (
+          args("level"), "Prints all variables in the knowledge base"))
+        
+      // evaluate an expression
+      .def( "print",
+        static_cast<
+          void (Madara::Knowledge_Engine::Knowledge_Base::*)(
+            const std::string &, unsigned int) const
+        > (&Madara::Knowledge_Engine::Knowledge_Base::print),
+        m_print_1_of_2 (
+          args("statement", "level"), "Expands and prints a statement"))
+
       // prints all knowledge variables
       .def ("print_knowledge",
         &Madara::Knowledge_Engine::Knowledge_Base::print_knowledge,
         m_print_knowledge_0_of_1 (
-          args("level"), "Print all variables in the knowledge base"))
+          args("level"),
+          "Alias of print(level). Prints all variables in the knowledge base"))
 
       // get a knowledge record at an index
       .def( "retrieve_index",

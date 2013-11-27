@@ -601,7 +601,7 @@ int main (int argc, char ** argv)
     ACE_OS::sleep (1);
   }
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

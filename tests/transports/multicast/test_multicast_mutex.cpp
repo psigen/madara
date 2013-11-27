@@ -185,7 +185,7 @@ int main (int argc, char ** argv)
   knowledge.set ("SYSTEM.processes",
     (Madara::Knowledge_Record::Integer) processes, eval_settings);
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

@@ -30,7 +30,6 @@
 #include "boost/python/object.hpp"
 #endif
 
-
 namespace Madara
 {
 
@@ -733,10 +732,17 @@ namespace Madara
       static int log_level (void);
 
       /**
-       * Prints knowledge variables and values at a logging level
+       * Prints all knowledge variables and values in the context
        * @param   level    level to log the knowledge at
        **/
-      void print_knowledge (unsigned int level = 0);
+      void print (unsigned int level = 0) const;
+      
+      /**
+       * Deprecated alias for @see print with only level. This class
+       * member will print all knowledge in the context.
+       * @param   level    level to log the knowledge at
+       **/
+      void print_knowledge (unsigned int level = 0) const;
 
       /**
        * Expands and prints a user provided statement at a logging level.
@@ -747,7 +753,7 @@ namespace Madara
        * @param   level      level to log the knowledge at
        **/
       void print (const std::string & statement, 
-        unsigned int level = 0);
+        unsigned int level = 0) const;
 
       /**
        * Clears the knowledge base

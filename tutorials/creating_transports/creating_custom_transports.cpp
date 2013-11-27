@@ -54,7 +54,7 @@ int main (int argc, char * argv[])
   {
     knowledge.evaluate ("agent11.online=1; agent12.online=1");
 
-    knowledge.print_knowledge ();
+    knowledge.print ();
 
     // Sleep for a second so we limit the number of printouts
     ACE_OS::sleep (1);

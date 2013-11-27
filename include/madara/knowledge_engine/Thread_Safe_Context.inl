@@ -21,10 +21,14 @@
 inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Thread_Safe_Context::get (
   const std::string & key,
-  const Knowledge_Reference_Settings & settings)
+  const Knowledge_Reference_Settings & settings) const
 {
-  Variable_Reference variable = get_ref (key, settings);
-  return get (variable, settings);
+  if (exists (key))
+  {
+    return map_.find (key)->second;
+  }
+  else
+    return Knowledge_Record ();
 }
 
 
@@ -42,7 +46,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
 inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Thread_Safe_Context::get (
   const Variable_Reference & variable,
-  const Knowledge_Reference_Settings & settings)
+  const Knowledge_Reference_Settings & settings) const
 {
   Context_Guard guard (mutex_);
 
@@ -297,7 +301,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::delete_variable (
 inline bool
 Madara::Knowledge_Engine::Thread_Safe_Context::exists (
   const std::string & key,
-  const Knowledge_Reference_Settings & settings)
+  const Knowledge_Reference_Settings & settings) const
 {
   // enter the mutex
   std::string key_actual;
@@ -512,7 +516,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::unlock (void) const
 /// e.g. input = "MyVar{.id} = {MyVar{.id}}\n";
 inline void 
 Madara::Knowledge_Engine::Thread_Safe_Context::print (
-  const std::string & statement, unsigned int level)
+  const std::string & statement, unsigned int level) const
 {
   // enter the mutex
   Context_Guard guard (mutex_);

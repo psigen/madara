@@ -312,7 +312,7 @@ int main (int argc, char * argv[])
   /**
    * Print all knowledge at the end of the application run.
    **/
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

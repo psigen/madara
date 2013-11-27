@@ -93,7 +93,7 @@ int ACE_TMAIN (int argc, char * argv[])
 
   knowledge.evaluate ("hertz = #to_double (count) / max_wait");
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

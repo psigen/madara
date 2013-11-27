@@ -287,7 +287,30 @@ Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
 {
   rebroadcast_filters_.add (types, object);
 }
+
       
+void
+Madara::Transport::QoS_Transport_Settings::add_receive_filter (
+  boost::python::object & object)
+{
+  receive_filters_.add (object);
+}
+     
+void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (
+  boost::python::object & object)
+{
+  send_filters_.add (object);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+  boost::python::object & object)
+{
+  rebroadcast_filters_.add (object);
+}
+     
+
 #endif
 
 void

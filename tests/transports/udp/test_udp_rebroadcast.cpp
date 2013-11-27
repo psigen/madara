@@ -238,7 +238,7 @@ int main (int argc, char ** argv)
     }
   }
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

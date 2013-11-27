@@ -539,15 +539,22 @@ Madara::Knowledge_Engine::Knowledge_Base::wait (
 }
 
 void
-Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (
-  unsigned int level)
+Madara::Knowledge_Engine::Knowledge_Base::print (
+  unsigned int level) const
 {
-  impl_->print_knowledge (level);
+  impl_->print (level);
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::print_knowledge (
+  unsigned int level) const
+{
+  impl_->print (level);
 }
 
 void
 Madara::Knowledge_Engine::Knowledge_Base::print (
-  const std::string & statement, unsigned int level)
+  const std::string & statement, unsigned int level) const
 {
   impl_->print (statement, level);
 }

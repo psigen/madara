@@ -77,7 +77,7 @@ inline void
 inline void
 Madara::Transport::Transport_Context::add_record (
   const std::string & key,
-  Madara::Knowledge_Record & record)
+  const Madara::Knowledge_Record & record)
 {
   records_[key] = record;
 }

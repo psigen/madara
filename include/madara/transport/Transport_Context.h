@@ -20,7 +20,7 @@ namespace Madara
     {
     public:
 
-      enum {
+      enum Operations {
         IDLE_OPERATION = 0,
         SENDING_OPERATION = 1,
         RECEIVING_OPERATION = 2,
@@ -125,12 +125,12 @@ namespace Madara
 
       /**
        * Adds a record to the list that should be appended to send
-       * or rebroadcasts
+       * or rebroadcast
        * @param   key      key of the record to add
        * @param   record   record to add to the append list
        **/
       void add_record (const std::string & key,
-        Madara::Knowledge_Record & record);
+        const Madara::Knowledge_Record & record);
 
       /**
        * Returns the additional records stored in the context

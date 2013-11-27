@@ -37,7 +37,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   // run tests
   test_print_statement (knowledge);
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

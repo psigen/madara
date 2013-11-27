@@ -24,7 +24,7 @@ int main (int argc, char * argv[])
   }
   
   knowledge.evaluate (argv[1]);
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

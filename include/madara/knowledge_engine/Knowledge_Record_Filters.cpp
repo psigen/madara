@@ -96,6 +96,16 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::add (uint32_t types,
   }
 }
 
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
+  boost::python::object & callable)
+{
+  if (!callable.is_none ())
+  {
+    aggregate_filters_.push_back (Aggregate_Filter (callable));
+  }
+}
+
 #endif
 
 void
@@ -214,14 +224,14 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       arguments[0] = result;
 
       // if the function is not zero
-      if (i->type == i->EXTERN_UNNAMED && i->extern_unnamed)
+      if (i->is_extern_unnamed ())
       {
         result = i->extern_unnamed (arguments, variables);
       }
       
 #ifdef _MADARA_PYTHON_CALLBACKS_
 
-      else if (i->type == i->PYTHON_CALLABLE && !i->python_function.is_none ())
+      else if (i->is_python_callable ())
       {
         // acquire the interpreter lock to use the python function
         Python::Acquire_GIL acquire_gil;
@@ -278,8 +288,28 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
     
     for (Aggregate_Filters::const_iterator i = aggregate_filters_.begin ();
          i != aggregate_filters_.end (); ++i)
-    {
-      i->filter (records, transport_context, variables);
+    { 
+      // if the function is not zero
+      if (i->is_extern_unnamed ())
+      {
+        result = i->unnamed_filter (records, transport_context, variables);
+      }
+
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+      else if (i->is_python_callable ())
+      {
+        // acquire the interpreter lock to use the python function
+        Python::Acquire_GIL acquire_gil;
+
+        // some guides have stated that we should let python handle exceptions
+        result = boost::python::call <Madara::Knowledge_Record> (
+          i->python_function.ptr (),
+          boost::ref (records), boost::ref (transport_context), boost::ref (variables));
+      }
+
+#endif
+
     }
     result.set_value (Knowledge_Record::Integer (aggregate_filters_.size ()));
   }

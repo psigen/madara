@@ -138,7 +138,7 @@ int main (int argc, char ** argv)
     knowledge.wait (compiled, wait_settings);
   }
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

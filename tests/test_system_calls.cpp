@@ -33,7 +33,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   
   test_system_calls (knowledge);
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
 
   if (

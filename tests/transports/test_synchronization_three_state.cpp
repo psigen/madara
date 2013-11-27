@@ -179,7 +179,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     knowledge.evaluate (self_state_broadcast, default_eval);
   }
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

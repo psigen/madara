@@ -65,7 +65,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     write_transported_arrays (knowledge);
   }
 
-  //knowledge.print_knowledge ();
+  //knowledge.print ();
 
   return 0;
 }

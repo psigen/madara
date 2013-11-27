@@ -141,7 +141,7 @@ int main (int argc, char ** argv)
   
   knowledge.evaluate (".updates_required = #get_clock ()");
 
-  knowledge.print_knowledge ();
+  knowledge.print ();
 
   return 0;
 }

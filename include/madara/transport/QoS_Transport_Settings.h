@@ -162,6 +162,30 @@ namespace Madara
       void add_rebroadcast_filter (
         uint32_t types, boost::python::object & object);
       
+      /**
+       * Adds an aggregate filter for a map of variables to values
+       * before applying updates to the Knowledge_Base
+       * @param   object     a python callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_receive_filter (boost::python::object & object);
+      
+      /**
+       * Adds an aggregate filter for a map of variables to values
+       * before sending
+       * @param   object     a python callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_send_filter (boost::python::object & object);
+      
+      /**
+       * Adds an aggregate filter for a map of variables to values 
+       * after receiving and before rebroadcasting (if TTL > 0)
+       * @param   object     a python callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_rebroadcast_filter (boost::python::object & object);
+      
 #endif
 
       /**
