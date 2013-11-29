@@ -18,6 +18,9 @@ PREREQUISITES
        PYTHON_VERSION The major and minor version number (e.g. 33 for 3.3)
     
        PYTHON_VERSION is used to locate the python{PYTHON_VERSION).lib
+       On Linux, this is likely to be something like 3.3 or 2.7 (see
+       /usr/lib/libpython* for information). On Windows, this is likely
+       to be something like 33 or 27.
 
 2.) Boost.Python
 
@@ -26,7 +29,10 @@ PREREQUISITES
        BOOST_ROOT      The location of your Boost install folder
        BOOST_VERSION   The version number (e.g. 1_55)
          
-       BOOST_VERSION is used to locate the boost.python library
+       BOOST_VERSION is used to locate the boost.python library.
+       On Linux, this is likely to be something like py32 or py33 (see
+       /usr/lib/libboost* for information). On Windows, this is likely
+       to be something like 1_32 or 1_33.
     
   2.b) Setup your user-config.jam file in your home directory
     
