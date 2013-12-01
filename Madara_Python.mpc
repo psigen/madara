@@ -7,6 +7,7 @@ project (MADARA_Python) : using_madara, using_ace, port/python/using_python {
 
   specific(prop:windows) {
     staticname = madara.pyd
+    postbuild = python port/python/rename_lib.py
   } else {
     staticname = madara
   }
