@@ -36,18 +36,37 @@ Madara::Expression_Tree::Variable_Node::Variable_Node (
     }
 
     // check for braces that are not properly closed
-    std::vector< std::string>::const_iterator pivot = pivot_list_.begin ();
+    std::vector<std::string>::const_iterator pivot = pivot_list_.begin ();
+    unsigned int num_opens = 0;
+    unsigned int num_closes = 0;
 
-    for (; count < pivot_list_.size () && pivot != pivot_list_.end (); 
-           pivot+=2, count+=2)
+    for (; pivot != pivot_list_.end (); ++pivot)
     {
-      if (pivot_list_[count-1] != "{" || pivot_list_[count] != "}")
+      if (*pivot == "{")
       {
-        MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
-          "\nKARL COMPILE ERROR: matching braces not found in %s\n",
-          key.c_str ()));
-        exit (-1);
+        ++num_opens;
       }
+      else if (*pivot == "}")
+      {
+        ++num_closes;
+      }
+    }
+
+    if (num_opens > num_closes)
+    {
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        "Variable name has more opening braces than closing in %s\n",
+        key.c_str ()));
+      exit (-1);
+    }
+    else if (num_closes > num_opens)
+    {
+      MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, DLINFO
+        "\nKARL COMPILE ERROR: " \
+        "Variable name has more closing braces than opening in %s\n",
+        key.c_str ()));
+      exit (-1);
     }
   }
   // no variable expansion necessary. Create a hard link to the record_->
