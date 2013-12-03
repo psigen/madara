@@ -396,7 +396,7 @@ void define_transport (void)
   scope Transport = transport;
 
   // the types of packet drop policies for QoS_Transport_Settings class
-  enum_<Madara::Transport::PacketDropType>("DropType")
+  enum_<Madara::Transport::PacketDropType>("DropTypes")
     .value("PACKET_DROP_DETERMINISTIC",
       Madara::Transport::PACKET_DROP_DETERMINISTIC)
     .value("PACKET_DROP_PROBABLISTIC",
