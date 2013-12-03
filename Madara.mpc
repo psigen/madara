@@ -1,5 +1,5 @@
 
-project (Madara) : using_ace, using_splice, splice_transport, using_ndds, using_boost, ndds_transport, cid, port/python/using_python, python_callbacks, port/java/using_java {
+project (Madara) : install, using_ace, using_splice, splice_transport, using_ndds, using_boost, ndds_transport, cid, port/python/using_python, python_callbacks, port/java/using_java {
 
   sharedname = MADARA
   dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL
@@ -44,7 +44,6 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, using_
   Inline_Files {
     include/madara/knowledge_engine
     include/madara/utility
-    include/madara/transport/Transport_Settings.inl
     include/madara/transport/Transport.inl
     include/madara/transport/Bandwidth_Monitor.inl
   }
@@ -94,7 +93,6 @@ project (Madara) : using_ace, using_splice, splice_transport, using_ndds, using_
     include/madara/transport/QoS_Transport_Settings.h
     include/madara/transport/Transport_Settings.h
     include/madara/transport/Transport_Context.h
-    include/madara/knowledge_engine/Functions.h
     include/madara/MADARA_export.h
     include/madara/filters
   }
