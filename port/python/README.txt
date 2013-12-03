@@ -32,7 +32,9 @@ PREREQUISITES
        BOOST_VERSION is used to locate the boost.python library.
        On Linux, this is likely to be something like py32 or py33 (see
        /usr/lib/libboost* for information). On Windows, this is likely
-       to be something like 1_32 or 1_33.
+       to be something like 1_32 or 1_33. If installing from a package
+       manager into /usr/lib, BOOST_ROOT and PYTHON_ROOT are
+       unnecessary on Linux.
     
   2.b) Setup your user-config.jam file in your home directory
     

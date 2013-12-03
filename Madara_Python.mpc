@@ -6,10 +6,10 @@ project (MADARA_Python) : using_madara, using_ace, port/python/using_python {
   after    += MADARA
 
   specific(prop:windows) {
-    staticname = madara.pyd
+    sharedname = madara.pyd
     postbuild = python port/python/rename_lib.py
   } else {
-    staticname = madara
+    sharedname = madara
   }
 
   libout = $(MADARA_ROOT)/lib
