@@ -481,4 +481,11 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::send_modifieds (
 }
 
 
+inline void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::wait_for_change (void)
+{
+  map_.wait_for_change ();
+}
+
+
 #endif  // _MADARA_KNOWLEDGE_BASE_IMPL_INL_

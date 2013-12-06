@@ -856,6 +856,11 @@ namespace Madara
         const std::string & prefix,
         const Eval_Settings & settings =
           Eval_Settings ());
+      
+      /**
+       * Wait for a change to happen to the context (e.g., from transports)
+       **/
+      void wait_for_change (void);
 
     private:
       /**

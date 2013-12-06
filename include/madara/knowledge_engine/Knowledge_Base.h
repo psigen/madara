@@ -962,6 +962,13 @@ namespace Madara
         const Eval_Settings & settings =
           Eval_Settings ());
 
+      
+      /**
+       * Wait for a change to happen to the context (e.g., from transports)
+       **/
+      void wait_for_change (void);
+
+
     private:
 
       /// Pointer to actual implementation, i.e., the "bridge", which is

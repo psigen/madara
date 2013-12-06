@@ -758,10 +758,16 @@ Madara::Knowledge_Engine::Knowledge_Base::save_checkpoint (
 }
 
 int64_t
-  Madara::Knowledge_Engine::Knowledge_Base::load_context (
+Madara::Knowledge_Engine::Knowledge_Base::load_context (
   const std::string & filename,
   bool use_id,
   const Knowledge_Update_Settings & settings)
 {
   return impl_->load_context (filename, use_id, settings);
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Base::wait_for_change (void)
+{
+  impl_->wait_for_change ();
 }
