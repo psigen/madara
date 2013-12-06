@@ -443,9 +443,9 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::send_modifieds (
           }
         }
       }
-      
+     
       map_.inc_clock (settings);
-
+ 
       if (settings.signal_changes)
         map_.signal (false);
     }
