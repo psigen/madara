@@ -971,7 +971,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
   }
   
   // if we need to update the global clock, then update it
-  if (rhs.clock > this->clock_)
+  if (rhs.clock >= this->clock_)
     this->clock_ = rhs.clock + 1;
   
   //if (settings.signal_changes)
