@@ -11,6 +11,7 @@
 
 #include <string>
 
+#include "madara/MADARA_export.h"
 #include "madara/utility/Scoped_Array.h"
 #include "madara/transport/broadcast/Broadcast_Transport_Read_Thread.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
@@ -27,15 +28,16 @@ namespace Madara
     /**
      * @class Broadcast_Transport
      * @brief Multicast-based transport for knowledge. This transport currently
-     *        the following transport settings:
-     *        1) a single host:port pairing
-     *        2) the reduced message header
-     *        3) the normal message header
-     *        4) domain differentiation
-     *        5) on data received logic
-     *        6) multi-assignment of records
+     * supports the following transport settings:<br />
+     *        1) a single host:port pairing<br />
+     *        2) the reduced message header<br />
+     *        3) the normal message header<br />
+     *        4) domain differentiation<br />
+     *        5) on data received logic<br />
+     *        6) multi-assignment of records<br />
+     *        7) rebroadcasting<br />
      **/
-    class Broadcast_Transport : public Base
+    class MADARA_Export Broadcast_Transport : public Base
     {
     public:
       /**

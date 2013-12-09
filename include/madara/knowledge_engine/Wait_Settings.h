@@ -26,7 +26,7 @@ namespace Madara
         * Constructor
         **/
        Wait_Settings ()
-         : Eval_Settings (), poll_frequency (0.010), max_wait_time (-1.0)
+         : Eval_Settings (), poll_frequency (0.100), max_wait_time (-1.0)
        {
        }
 

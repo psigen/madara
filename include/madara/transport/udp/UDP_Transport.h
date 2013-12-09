@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "madara/MADARA_export.h"
 #include "madara/transport/udp/UDP_Transport_Read_Thread.h"
 #include "madara/transport/Transport.h"
 
@@ -19,9 +20,17 @@ namespace Madara
   {
     /**
      * @class UDP_Transport
-     * @brief UDP-based transport for knowledge records
+     * @brief UDP-based transport for knowledge. This transport currently
+     * supports the following transport settings:<br />
+     *        1) multiple host:port pairing with self first in vector<br />
+     *        2) the reduced message header<br />
+     *        3) the normal message header<br />
+     *        4) domain differentiation<br />
+     *        5) on data received logic<br />
+     *        6) multi-assignment of records<br />
+     *        7) rebroadcasting<br />
      **/
-    class UDP_Transport : public Base
+    class MADARA_Export UDP_Transport : public Base
     {
     public:
   
