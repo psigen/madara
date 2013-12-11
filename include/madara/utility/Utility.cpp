@@ -332,7 +332,9 @@ int
 Madara::Utility::merge_hostport_identifier (std::string & key, 
   const std::string & host, const std::string & port)
 {
-  key = host;
+  if ((const std::string *)&key != &host)
+    key = host;
+
   key += ':';
   key += port;
 

@@ -38,7 +38,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   // override default settings for the arguments
   settings_.type = transport;
 
-  setup_uniquehostport (host);
+  id_ = setup_unique_hostport (host);
   activate_transport ();
 }
 
@@ -51,7 +51,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   settings_.type = transport;
   settings_.domains = knowledge_domain;
 
-  setup_uniquehostport (host);
+  id_ = setup_unique_hostport (host);
   activate_transport ();
 }
 
@@ -59,7 +59,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl (
   const std::string & host, const Madara::Transport::Settings & config)
 : settings_ (config), files_ (map_)
 {
-  setup_uniquehostport (host);
+  id_ = setup_unique_hostport (host);
   if (!settings_.delay_launch)
     activate_transport ();
 }
@@ -70,14 +70,14 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::~Knowledge_Base_Impl ()
   unique_bind_.close ();
 }
 
-void
-Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
+std::string
+Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_unique_hostport (
   const std::string & host)
 {
   // placeholder for our ip address
-  std::string actual_host;
+  std::string actual_host (host);
 
-  if (settings_.type != Madara::Transport::NO_TRANSPORT)
+  if (host == "")
   {
     // start from 50k, which is just above the bottom of the user
     // definable port range (hopefully avoid conflicts with 49152-49999
@@ -88,26 +88,23 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_uniquehostport (
          == -1)
     {
       MADARA_ERROR (MADARA_LOG_TERMINAL_ERROR, (LM_ERROR, 
-        DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
+        DLINFO "Knowledge_Base_Impl::setup_unique_hostport:" \
         " unable to bind to any ephemeral port." \
         " Check firewall. ERRORNO = %d\n", ACE_OS::last_error ()));
 
       if (!settings_.never_exit)
         exit (-1);
     }
-   
-    // if the user doesn't want us using the actual host, trust them with the
-    // provided host
-    if (host != "")
-      actual_host = host;
 
     // we were able to bind to an ephemeral port
-    Madara::Utility::merge_hostport_identifier (id_, actual_host, port);
+    Madara::Utility::merge_hostport_identifier (actual_host, actual_host, port);
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Knowledge_Base_Impl::setup_uniquehostport:" \
+      DLINFO "Knowledge_Base_Impl::setup_unique_hostport:" \
       " unique bind to %s\n", id_.c_str ()));
   }
+
+  return actual_host;
 }
 
 size_t

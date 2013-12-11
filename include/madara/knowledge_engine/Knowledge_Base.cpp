@@ -771,3 +771,10 @@ Madara::Knowledge_Engine::Knowledge_Base::wait_for_change (void)
 {
   impl_->wait_for_change ();
 }
+
+std::string
+Madara::Knowledge_Engine::Knowledge_Base::setup_unique_hostport (
+  const std::string & host)
+{
+  return impl_->setup_unique_hostport (host);
+}

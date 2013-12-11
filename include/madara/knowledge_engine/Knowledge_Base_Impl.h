@@ -861,13 +861,19 @@ namespace Madara
        * Wait for a change to happen to the context (e.g., from transports)
        **/
       void wait_for_change (void);
+      
+      /**
+       * Binds to an ephemeral port for unique tie breakers in global ordering.
+       * Call this function if you want to generate a unique id for a
+       * custom transport to use (or a built-in transport if you are creating
+       * one outside of the Knowledge_Base.
+       * @param  host   unique host identifier string ("" if requesting a
+       *                generated id.
+       * @return        unique host id (same as host param if host is not "")
+       **/
+      std::string setup_unique_hostport (const std::string & host = "");
 
     private:
-      /**
-       * Binds to an ephemeral port for unique tie breakers in global ordering
-       **/
-      void setup_uniquehostport (const std::string & host);
-
       Thread_Safe_Context                 map_;
       ACE_SOCK_Dgram                      unique_bind_;
       std::string                         id_;

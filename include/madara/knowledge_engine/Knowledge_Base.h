@@ -565,6 +565,17 @@ namespace Madara
       void set_quality (const std::string & key, uint32_t quality,
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings (false));
+      
+      /**
+       * Binds to an ephemeral port for unique tie breakers in global ordering.
+       * Call this function if you want to generate a unique id for a
+       * custom transport to use (or a built-in transport if you are creating
+       * one outside of the Knowledge_Base.
+       * @param  host   unique host identifier string ("" if requesting a
+       *                generated id.
+       * @return        unique host id (same as host param if host is not "")
+       **/
+      std::string setup_unique_hostport (const std::string & host = "");
 
 #ifdef _USE_CID_
       
