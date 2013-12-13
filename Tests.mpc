@@ -21,6 +21,28 @@ project (Test_Multicast_Mutex) : using_madara, using_ace {
   }
 }
 
+project (Test_File_Rebroadcasts) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_file_rebroadcasts
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/test_file_rebroadcasts.cpp
+  }
+}
+
 project (Test_Multicast_Aggregate_Filters) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_multicast_aggregate_filters

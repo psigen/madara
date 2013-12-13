@@ -324,6 +324,20 @@ namespace Madara
     MADARA_Export ACE_Time_Value sleep (const ACE_Time_Value & sleep_time);
 
     /**
+     * Checks if a file exists
+     * @param filename   path and name of the file to open
+     * @return true if file exists. false otherwise.
+     **/
+    MADARA_Export bool file_exists (const std::string & filename);
+
+    /**
+     * Returns the size of a file
+     * @param filename   path and name of the file to open
+     * @return size of the file
+     **/
+    MADARA_Export unsigned int file_size (const std::string & filename);
+
+    /**
      * Returns true if left < right
      **/
     template <typename T>

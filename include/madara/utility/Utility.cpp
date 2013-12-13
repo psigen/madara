@@ -1,9 +1,11 @@
 #include <ctype.h>
 #include <stdlib.h>
-#include "madara/utility/Utility.h"
+#include <stdio.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
+
+#include "madara/utility/Utility.h"
 #include "ace/INET_Addr.h"
 #include "madara/utility/Log_Macros.h"
 #include "ace/Default_Constants.h"
@@ -782,4 +784,32 @@ ACE_Time_Value Madara::Utility::sleep (const ACE_Time_Value & sleep_time)
   }
 
   return ACE_OS::gettimeofday () - current;
+}
+
+bool
+Madara::Utility::file_exists (const std::string & filename)
+{
+  if (FILE * file = fopen (filename.c_str(), "r"))
+  {
+    fclose(file);
+    return true;
+  }
+  else
+  {
+    return false;
+  }   
+}
+
+unsigned int
+Madara::Utility::file_size (const std::string & filename)
+{
+  unsigned int size = 0;
+  if (FILE * file = fopen (filename.c_str(), "r"))
+  {
+    fseek (file, 0L, SEEK_END);
+    size = ftell (file);
+    fclose (file);
+  }
+
+  return size;
 }
