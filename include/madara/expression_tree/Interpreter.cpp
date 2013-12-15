@@ -14,6 +14,8 @@
 #include "madara/expression_tree/Variable_Multiply_Node.h"
 #include "madara/expression_tree/List_Node.h"
 #include "madara/expression_tree/Composite_Negate_Node.h"
+#include "madara/expression_tree/Composite_Postdecrement_Node.h"
+#include "madara/expression_tree/Composite_Postincrement_Node.h"
 #include "madara/expression_tree/Composite_Predecrement_Node.h"
 #include "madara/expression_tree/Composite_Preincrement_Node.h"
 #include "madara/expression_tree/Composite_Not_Node.h"
@@ -1403,6 +1405,50 @@ namespace Madara
       /// builds an equivalent Expression_Tree node
       virtual Component_Node * build (void);
     };
+    
+    /**
+    * @class Postdecrement
+    * @brief Postdecrement node of the parse tree
+    */
+
+    class Postdecrement : public Unary_Operator
+    {
+    public:
+      /// constructor
+      Postdecrement (void);
+
+      /// destructor
+      virtual ~Postdecrement (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+    };
+    
+    /**
+    * @class Postincrement
+    * @brief Postincrement node of the parse tree
+    */
+
+    class Postincrement : public Unary_Operator
+    {
+    public:
+      /// constructor
+      Postincrement (void);
+
+      /// destructor
+      virtual ~Postincrement (void);
+
+      /// returns the precedence level
+      //virtual int precedence (void);
+      virtual int add_precedence (int accumulated_precedence);
+
+      /// builds an equivalent Expression_Tree node
+      virtual Component_Node * build (void);
+    };
 
     /**
     * @class Predecrement
@@ -2459,6 +2505,56 @@ Madara::Expression_Tree::For_Loop::build ()
   else
   return new Composite_Assignment_Node (precondition_->left_->build (),
                                           condition_->right_->build ());
+}
+
+// constructor
+Madara::Expression_Tree::Postdecrement::Postdecrement (void)
+: Unary_Operator (0, NEGATE_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Postdecrement::~Postdecrement (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Postdecrement::add_precedence (int precedence)
+{
+  return this->precedence_ = NEGATE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Postdecrement::build ()
+{
+  return new Composite_Postdecrement_Node (right_->build ());
+}
+
+// constructor
+Madara::Expression_Tree::Postincrement::Postincrement (void)
+: Unary_Operator (0, NEGATE_PRECEDENCE)
+{
+}
+
+// destructor
+Madara::Expression_Tree::Postincrement::~Postincrement (void)
+{
+}
+
+// returns the precedence level
+int 
+Madara::Expression_Tree::Postincrement::add_precedence (int precedence)
+{
+  return this->precedence_ = NEGATE_PRECEDENCE + precedence;
+}
+
+// builds an equivalent Expression_Tree node
+Madara::Expression_Tree::Component_Node *
+Madara::Expression_Tree::Postincrement::build ()
+{
+  return new Composite_Postincrement_Node (right_->build ());
 }
 
 // constructor
@@ -3796,6 +3892,29 @@ void
     Symbol * op = new Array_Ref (variable, index, context);
     op->add_precedence (accumulated_precedence);
 
+    // check for post increments and decrements
+    if (i + 2 < input.size ())
+    {
+      if (input[i + 1] == '+' && input[i + 2] == '+')
+      {
+        Symbol * array_ref = op;
+        op = new Postincrement ();
+        op->add_precedence (accumulated_precedence);
+        op->right_ = array_ref;
+        i += 2;
+      }
+      else if (input[i + 1] == '-' && input[i + 2] == '-')
+      {
+        Symbol * array_ref = op;
+        op = new Postdecrement ();
+        op->add_precedence (accumulated_precedence);
+        op->right_ = array_ref;
+        i += 2;
+      }
+    }
+    
+    lastValidInput = op;
+
     precedence_insert (op, list);
 
     returnableInput = op;
@@ -4188,12 +4307,33 @@ Madara::Expression_Tree::Interpreter::variable_insert (
   }
   else
   {
-    Variable * variable = new Variable (name, context);
-    variable->add_precedence (accumulated_precedence);
+    Symbol * op = new Variable (name, context);
+    op->add_precedence (accumulated_precedence);
 
-    lastValidInput = variable;
+    // check for post increments and decrements
+    if (i + 1 < input.size ())
+    {
+      if (input[i] == '+' && input[i + 1] == '+')
+      {
+        Symbol * variable = op;
+        op = new Postincrement ();
+        op->add_precedence (accumulated_precedence);
+        op->right_ = variable;
+        i += 2;
+      }
+      else if (input[i] == '-' && input[i + 1] == '-')
+      {
+        Symbol * variable = op;
+        op = new Postdecrement ();
+        op->add_precedence (accumulated_precedence);
+        op->right_ = variable;
+        i += 2;
+      }
+    }
+    
+    lastValidInput = op;
 
-    precedence_insert (variable, list);
+    precedence_insert (op, list);
   }
 
 }

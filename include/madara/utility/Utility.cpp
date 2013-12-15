@@ -20,8 +20,9 @@
 std::string
 Madara::Utility::get_version (void)
 {
-  return file_to_string (
-    expand_envs ("$(MADARA_ROOT)/VERSION.txt"));
+#include "madara/Version.h"
+  
+  return version;
 }
 
 

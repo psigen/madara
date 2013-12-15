@@ -5,6 +5,8 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
   dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL
   libout = $(MADARA_ROOT)/lib
   
+  prebuild = perl $(MADARA_ROOT)/bin/generate_version_include.pl
+
   includes += $(MADARA_ROOT)/include
   libpaths += $(MADARA_ROOT)/lib 
 
@@ -95,5 +97,24 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     include/madara/transport/Transport_Context.h
     include/madara/MADARA_export.h
     include/madara/filters
+  }
+}
+
+project (Madara_Version) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = madara_version
+  
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Madara.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/madara_version.cpp
   }
 }

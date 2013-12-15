@@ -263,6 +263,11 @@ Section "-tutorials"
   File /r "..\..\tutorials"
 SectionEnd
 
+Section "-requiredtools"
+  SetOutPath "$INSTDIR\bin"
+  File /r "..\..\bin\madara_version.exe"
+SectionEnd
+
 Section "-basic" SEC08
   SetOutPath "$INSTDIR"
   File "..\..\VERSION.txt"

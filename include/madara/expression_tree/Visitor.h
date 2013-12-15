@@ -16,6 +16,8 @@ namespace Madara
     class List_Node;
     class Composite_Array_Reference;
     class Composite_Negate_Node;
+    class Composite_Postdecrement_Node;
+    class Composite_Postincrement_Node;
     class Composite_Predecrement_Node;
     class Composite_Preincrement_Node;
     class Composite_Not_Node;
@@ -107,10 +109,16 @@ namespace Madara
       /// Visit a Composite_Negate_Node.
       virtual void visit (const Composite_Negate_Node &node) = 0;
 
+      /// Visit a Composite_Postdecrement_Node.
+      virtual void visit (const Composite_Postdecrement_Node &node) = 0;
+
+      /// Visit a Composite_Postincrement_Node.
+      virtual void visit (const Composite_Postincrement_Node &node) = 0;
+      
       /// Visit a Composite_Predecrement_Node.
       virtual void visit (const Composite_Predecrement_Node &node) = 0;
 
-      /// Visit a Composite_Increment_Node.
+      /// Visit a Composite_PreIncrement_Node.
       virtual void visit (const Composite_Preincrement_Node &node) = 0;
 
       /// Visit a Composite_Not_Node.

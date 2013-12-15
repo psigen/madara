@@ -68,6 +68,8 @@ Section "debug-libs" SEC01
 SectionEnd
 
 Section "-release-libs" SEC02
+  SetOutPath "$INSTDIR\lib"
+  SetOverwrite ifnewer
 ;  File "..\..\lib\KATS.dll"
   File "..\..\lib\MADARA.dll"
 ;  File "..\..\lib\KATS.lib"
@@ -257,6 +259,11 @@ SectionEnd
 Section "-tutorials"
   SetOutPath "$INSTDIR"
   File /r "..\..\tutorials"
+SectionEnd
+
+Section "-requiredtools"
+  SetOutPath "$INSTDIR\bin"
+  File /r "..\..\bin\madara_version.exe"
 SectionEnd
 
 Section "-basic" SEC08

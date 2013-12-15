@@ -1024,6 +1024,27 @@ void test_mathops (Madara::Knowledge_Engine::Knowledge_Base & knowledge)
 
   knowledge.evaluate (".var0 = .var1 = 0; ++.var{.var1}");
   assert (knowledge.get (".var0").to_integer () == 1);
+  
+  knowledge.evaluate (".var0 = .var1 = 0; .var{.var1}++");
+  assert (knowledge.get (".var0").to_integer () == 1);
+
+  knowledge.evaluate (".var0 = .var1 = 0; .var{.var1}--");
+  assert (knowledge.get (".var0").to_integer () == -1);
+  
+  knowledge.evaluate (".var = 0; .var--");
+  assert (knowledge.get (".var").to_integer () == -1);
+  
+  knowledge.evaluate (".array[1] = 1; .array[1]++");
+  assert (knowledge.evaluate (".array[1]").to_integer () == 2);
+  
+  knowledge.evaluate (".array[1] = 2; .array[1]--");
+  assert (knowledge.evaluate (".array[1]").to_integer () == 1);
+  
+  knowledge.evaluate (".array[1] = 2; ++.array[1]");
+  assert (knowledge.evaluate (".array[1]").to_integer () == 3);
+  
+  knowledge.evaluate (".array[1] = 2; --.array[1]");
+  assert (knowledge.evaluate (".array[1]").to_integer () == 1);
 
 }
 
