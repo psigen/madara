@@ -116,6 +116,7 @@ cp $ACE_ROOT/ace/libACE.so.$ACE_VERSION $ROOT_DIR/lib
 cp $MADARA_ROOT/libMADARA.so.$LIB_VERSION $ROOT_DIR/lib
 
 cp $MADARA_ROOT/bin/system_calls $ROOT_DIR/bin/madara_system_calls
+cp $MADARA_ROOT/bin/madara_version $ROOT_DIR/bin/madara_version
 
 
 OLD_DIR=$(pwd)
