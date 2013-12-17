@@ -26,6 +26,10 @@ std::string filename =
 
 std::string target_location;
 
+Madara::Knowledge_Record::Integer target_id (1);
+
+Madara::Knowledge_Engine::Compiled_Expression ack;
+
 // keep track of time
 ACE_hrtime_t elapsed_time, maximum_time;
 ACE_High_Res_Timer timer;
@@ -139,6 +143,26 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-q" || arg1 == "--queue-length")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> settings.queue_length;
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-z" || arg1 == "--target-id")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> target_id;
+      }
+
+      ++i;
+    }
     else
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
@@ -148,15 +172,17 @@ void handle_arguments (int argc, char ** argv)
 " [-b|--broadcast ip:port] the broadcast ip to send and listen to\n" \
 " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
 " [-e|--rebroadcasts hops] maximum number of rebroadcasts allowed\n" \
+" [-f|--logfile file]      log to a file\n" \
 " [-i|--id id]             the id of this agent (should be non-negative)\n" \
 " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
 " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
 " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
-" [-f|--logfile file]      log to a file\n" \
-" [-r|--reduced]           use the reduced message header\n" \
 " [-p|--payload filename]  file to use as payload for the message\n" \
-" [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
+" [-q|--queue-length length] length of transport queue in bytes\n" \
+" [-r|--reduced]           use the reduced message header\n" \
 " [-t|--target path]       file system location to save received files to\n" \
+" [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
+" [-z|--target-id id]      id of the entity that must acknowledge receipt\n" \
 "\n",
         argv[0]));
       exit (0);
@@ -199,6 +225,9 @@ write_file (Madara::Knowledge_Map & records,
 
       delete [] buffer;
     }
+
+    vars.evaluate (ack);
+    vars.print ("Received file. Sending file ack for id {.id}.\n");
   }
 
   return Madara::Knowledge_Record::Integer (1);
@@ -228,28 +257,62 @@ int main (int argc, char ** argv)
   Madara::Knowledge_Engine::Eval_Settings delay_sending;
   delay_sending.delay_sending_modifieds = true;
 
+  Madara::Knowledge_Engine::Eval_Settings suppress_globals;
+  suppress_globals.treat_globals_as_locals = true;
+  
+
+  Madara::Knowledge_Engine::Wait_Settings wait_settings;
+  wait_settings.poll_frequency = 2.0;
+  wait_settings.max_wait_time = 20.0;
+
   // create a knowledge base and setup our id
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
   knowledge.set (".id", Madara::Knowledge_Record::Integer (settings.id));
+  knowledge.set (".target", target_id);
+
+  ack = knowledge.compile (knowledge.expand_statement ("file.{.id}.ack = 1"));
 
   if (settings.id == 0)
   {
     if (target_location == "")
       target_location = ".";
+    
+    knowledge.print (
+      "Sending file until id {.target} acknowledges receipt.\n");
 
     knowledge.read_file ("file", filename, delay_sending);
     knowledge.set ("file_name",
       Madara::Utility::extract_filename (filename), delay_sending);
     knowledge.set ("file_location", target_location, delay_sending);
 
+    knowledge.evaluate (ack, suppress_globals);
+
     knowledge.print (
       "Writing {file_name} to network. "
       "Suggested target is {file_location}.\n");
 
     knowledge.send_modifieds ();
+
+    knowledge.wait (
+      "file = file ;>"
+      "file_name = file_name ;>"
+      "file_location = file_location ;>"
+      "file.{.target}.ack", wait_settings);
+
+    knowledge.evaluate ("terminated = 1");
+
+    knowledge.print (
+      "Finished waiting."
+      " file.{.target}.ack == {file.{.target}.ack}\n");
   }
-  knowledge.print ("Sleeping for 10s...\n");
-  Madara::Utility::sleep (10);
+  else
+  {
+    knowledge.print ("Waiting for 20s or id 0 to signal terminate.\n");
+
+    knowledge.wait ("terminated", wait_settings);
+
+    knowledge.print ("Finished waiting.\n");
+  }
 
   knowledge.print ();
 
