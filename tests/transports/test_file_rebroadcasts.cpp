@@ -33,6 +33,7 @@ unsigned int data_size = 0;
 unsigned int data_size_increment = 1000;
 unsigned int data_size_end = 0;
 double max_wait = 20.0;
+bool is_terminator = false;
 
 
 Madara::Knowledge_Engine::Compiled_Expression ack;
@@ -210,6 +211,12 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-9" || arg1 == "--terminate")
+    {
+      is_terminator = true;
+
+      ++i;
+    }
     else
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
@@ -231,6 +238,7 @@ void handle_arguments (int argc, char ** argv)
 " [-si|--size-increment inc] increment of size from start to end (see -se)\n"\
 " [-se|--size-end end]     last automated size to test (see -s and -si)\n"\
 " [-t|--target path]       file system location to save received files to\n" \
+" [-9|--terminator]        send terminate message\n" \
 " [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
 " [-w|--max-wait time]     maximum time to wait in seconds (double format)\n"\
 " [-z|--target-id id]      id of the entity that must acknowledge receipt\n" \
@@ -325,6 +333,9 @@ int main (int argc, char ** argv)
   ack = knowledge.compile (knowledge.expand_statement (
     "file.{.id}.ack = #size (file)"));
 
+  if (is_terminator)
+    knowledge.set ("terminated", 1.0);
+
   if (settings.id == 0)
   {
     if (target_location == "")
@@ -374,7 +385,7 @@ int main (int argc, char ** argv)
       "file = file ;>"
       "file_name = file_name ;>"
       "file_location = file_location ;>"
-      "file.{.target}.ack >= #size (file)", wait_settings);
+      "file.{.target}.ack >= #size (file) || terminated", wait_settings);
 
     for (data_size += data_size_increment; data_size <= data_size_end;
          data_size += data_size_increment)
@@ -406,7 +417,7 @@ int main (int argc, char ** argv)
         "file = file ;>"
         "file_name = file_name ;>"
         "file_location = file_location ;>"
-        "file.{.target}.ack >= #size (file)", wait_settings);
+        "file.{.target}.ack >= #size (file) || terminated", wait_settings);
     }
 
     knowledge.evaluate ("terminated = 1");
