@@ -507,6 +507,15 @@ namespace Madara
       int64_t load_context (const std::string & filename,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings (true, true, true, false));
+      
+      /**
+       * Write a file from the context to a specified location
+       * @param filename           file to write to
+       * @param knowledge_key       key to read the file from
+       * @return   -1 if unsuccessful, 0 otherwise
+       */
+      ssize_t write_file (const std::string & knowledge_key, 
+                          const std::string & filename);
 
     private:
       /**

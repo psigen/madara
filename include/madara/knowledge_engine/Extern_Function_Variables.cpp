@@ -671,6 +671,24 @@ Madara::Knowledge_Engine::Variables::load_context (
     return Madara::Knowledge_Record::Integer (0);
   }
 }
+     
+ssize_t
+Madara::Knowledge_Engine::Variables::write_file (
+  const std::string & knowledge_key, 
+  const std::string & filename)
+{
+  if (context_)
+  {
+    return context_->get_record (knowledge_key)->to_file (filename);;
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::write_file. Context not set correctly.\n"));
+
+    return 0;
+  }
+}
 
 
 #endif

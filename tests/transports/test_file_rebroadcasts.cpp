@@ -28,6 +28,10 @@ std::string target_location;
 
 Madara::Knowledge_Record::Integer target_id (1);
 
+// payload size to burst
+unsigned int data_size = 0;
+
+
 Madara::Knowledge_Engine::Compiled_Expression ack;
 
 // keep track of time
@@ -163,6 +167,16 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-s" || arg1 == "--size")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> data_size;
+      }
+
+      ++i;
+    }
     else
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
@@ -180,6 +194,7 @@ void handle_arguments (int argc, char ** argv)
 " [-p|--payload filename]  file to use as payload for the message\n" \
 " [-q|--queue-length length] length of transport queue in bytes\n" \
 " [-r|--reduced]           use the reduced message header\n" \
+" [-s|--size size]         size of packet to send in bytes (overrides file)\n"\
 " [-t|--target path]       file system location to save received files to\n" \
 " [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
 " [-z|--target-id id]      id of the entity that must acknowledge receipt\n" \
@@ -219,11 +234,12 @@ write_file (Madara::Knowledge_Map & records,
       vars.print (output_buffer.str ());
 
       size_t size = 0;
-      unsigned char * buffer = records["file"].to_unmanaged_buffer (size);
 
-      Madara::Utility::write_file (filename.str (), (void *)buffer, size);
-
-      delete [] buffer;
+      records["file"].to_file (filename.str ());
+    }
+    else
+    {
+      vars.print ("File already exists in folder. Not saving.\n");
     }
 
     vars.evaluate (ack);
@@ -252,7 +268,7 @@ int main (int argc, char ** argv)
     // setup default transport as multicast
     settings.hosts.push_back (default_multicast);
   }
-  
+
   // settings for delaying the sending of modifications
   Madara::Knowledge_Engine::Eval_Settings delay_sending;
   delay_sending.delay_sending_modifieds = true;
@@ -280,9 +296,33 @@ int main (int argc, char ** argv)
     knowledge.print (
       "Sending file until id {.target} acknowledges receipt.\n");
 
-    knowledge.read_file ("file", filename, delay_sending);
-    knowledge.set ("file_name",
-      Madara::Utility::extract_filename (filename), delay_sending);
+    if (data_size == 0)
+    {
+      knowledge.read_file ("file", filename, delay_sending);
+      knowledge.set ("file_name",
+        Madara::Utility::extract_filename (filename), delay_sending);
+    }
+    else
+    {
+      std::stringstream new_name;
+      new_name << "text_payload";
+      new_name << data_size;
+      new_name << ".txt";
+
+      std::string text (data_size, ' ');
+
+      if (data_size > 3)
+      {
+        text[0] = 't';
+        text[1] = 'e';
+        text[2] = 's';
+        text[3] = 't';
+      }
+
+      knowledge.set ("file", text, delay_sending);
+      knowledge.set ("file_name", new_name.str (), delay_sending);
+    }
+
     knowledge.set ("file_location", target_location, delay_sending);
 
     knowledge.evaluate (ack, suppress_globals);
