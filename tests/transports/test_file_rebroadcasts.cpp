@@ -238,10 +238,10 @@ void handle_arguments (int argc, char ** argv)
 " [-si|--size-increment inc] increment of size from start to end (see -se)\n"\
 " [-se|--size-end end]     last automated size to test (see -s and -si)\n"\
 " [-t|--target path]       file system location to save received files to\n" \
-" [-9|--terminator]        send terminate message\n" \
 " [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
 " [-w|--max-wait time]     maximum time to wait in seconds (double format)\n"\
 " [-z|--target-id id]      id of the entity that must acknowledge receipt\n" \
+" [-9|--terminator]        send terminate message\n" \
 "\n",
         argv[0]));
       exit (0);
