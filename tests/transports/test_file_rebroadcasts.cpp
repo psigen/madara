@@ -30,6 +30,9 @@ Madara::Knowledge_Record::Integer target_id (1);
 
 // payload size to burst
 unsigned int data_size = 0;
+unsigned int data_size_increment = 1000;
+unsigned int data_size_end = 0;
+double max_wait = 20.0;
 
 
 Madara::Knowledge_Engine::Compiled_Expression ack;
@@ -177,6 +180,36 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-si" || arg1 == "--size-increment")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> data_size_increment;
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-se" || arg1 == "--size-end")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> data_size_end;
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-w" || arg1 == "--max-wait")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> max_wait;
+      }
+
+      ++i;
+    }
     else
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
@@ -195,8 +228,11 @@ void handle_arguments (int argc, char ** argv)
 " [-q|--queue-length length] length of transport queue in bytes\n" \
 " [-r|--reduced]           use the reduced message header\n" \
 " [-s|--size size]         size of packet to send in bytes (overrides file)\n"\
+" [-si|--size-increment inc] increment of size from start to end (see -se)\n"\
+" [-se|--size-end end]     last automated size to test (see -s and -si)\n"\
 " [-t|--target path]       file system location to save received files to\n" \
 " [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
+" [-w|--max-wait time]     maximum time to wait in seconds (double format)\n"\
 " [-z|--target-id id]      id of the entity that must acknowledge receipt\n" \
 "\n",
         argv[0]));
@@ -243,7 +279,7 @@ write_file (Madara::Knowledge_Map & records,
     }
 
     vars.evaluate (ack);
-    vars.print ("Received file. Sending file ack for id {.id}.\n");
+    vars.print ("Received file. Sending file ack {file.{.id}.ack} for id {.id}.\n");
   }
 
   return Madara::Knowledge_Record::Integer (1);
@@ -279,14 +315,15 @@ int main (int argc, char ** argv)
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
   wait_settings.poll_frequency = 2.0;
-  wait_settings.max_wait_time = 20.0;
+  wait_settings.max_wait_time = max_wait;
 
   // create a knowledge base and setup our id
   Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
   knowledge.set (".id", Madara::Knowledge_Record::Integer (settings.id));
   knowledge.set (".target", target_id);
 
-  ack = knowledge.compile (knowledge.expand_statement ("file.{.id}.ack = 1"));
+  ack = knowledge.compile (knowledge.expand_statement (
+    "file.{.id}.ack = #size (file)"));
 
   if (settings.id == 0)
   {
@@ -309,7 +346,7 @@ int main (int argc, char ** argv)
       new_name << data_size;
       new_name << ".txt";
 
-      std::string text (data_size, ' ');
+      std::string text (data_size - 1, ' ');
 
       if (data_size > 3)
       {
@@ -337,7 +374,40 @@ int main (int argc, char ** argv)
       "file = file ;>"
       "file_name = file_name ;>"
       "file_location = file_location ;>"
-      "file.{.target}.ack", wait_settings);
+      "file.{.target}.ack >= #size (file)", wait_settings);
+
+    for (data_size += data_size_increment; data_size <= data_size_end;
+         data_size += data_size_increment)
+    {
+      std::stringstream new_name;
+      new_name << "text_payload";
+      new_name << data_size;
+      new_name << ".txt";
+
+      std::string text (data_size - 1, ' ');
+
+      if (data_size > 3)
+      {
+        text[0] = 't';
+        text[1] = 'e';
+        text[2] = 's';
+        text[3] = 't';
+      }
+
+      knowledge.set (".size", Madara::Knowledge_Record::Integer (data_size));
+      knowledge.set ("file", text, delay_sending);
+      knowledge.set ("file_name", new_name.str (), delay_sending);
+      
+      knowledge.print (
+        "Writing {file_name} to network. "
+        "Suggested target is {file_location}.\n");
+
+      knowledge.wait (
+        "file = file ;>"
+        "file_name = file_name ;>"
+        "file_location = file_location ;>"
+        "file.{.target}.ack >= #size (file)", wait_settings);
+    }
 
     knowledge.evaluate ("terminated = 1");
 
@@ -347,7 +417,8 @@ int main (int argc, char ** argv)
   }
   else
   {
-    knowledge.print ("Waiting for 20s or id 0 to signal terminate.\n");
+    knowledge.set (".wait", max_wait);
+    knowledge.print ("Waiting for {.wait}s or id 0 to signal terminate.\n");
 
     knowledge.wait ("terminated", wait_settings);
 
