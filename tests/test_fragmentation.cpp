@@ -222,7 +222,7 @@ void test_records_frag (void)
 
   Madara::Knowledge_Map knowledge, copied_knowledge;
   knowledge ["str_var"] = Madara::Knowledge_Record (std::string (254000, ' '));
-  knowledge ["int_var"] = Madara::Knowledge_Record (254LL);
+  knowledge ["int_var"] = Madara::Knowledge_Record::Integer (254LL);
   knowledge ["double_var"] = Madara::Knowledge_Record (5.235);
 
   header.updates = knowledge.size ();
