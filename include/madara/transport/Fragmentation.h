@@ -11,6 +11,7 @@
  **/
 
 #include <map>
+#include <string>
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
 #include "madara/transport/Message_Header.h"
@@ -207,4 +208,5 @@ namespace Madara
 }
 
 
-#endif   // _MESSAGE_HEADER_H_
+#endif   // _FRAGMENTATION_MESSAGE_HEADER_H_
+
