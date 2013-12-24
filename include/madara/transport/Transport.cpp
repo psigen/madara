@@ -101,7 +101,8 @@ Madara::Transport::process_received_update (
   Knowledge_Map updates;
 
   // check the buffer for a reduced message header
-  if (Reduced_Message_Header::reduced_message_header_test (buffer))
+  if (bytes_read > Reduced_Message_Header::static_encoded_size () &&
+      Reduced_Message_Header::reduced_message_header_test (buffer))
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \
@@ -112,7 +113,8 @@ Madara::Transport::process_received_update (
     header = new Reduced_Message_Header ();
     is_reduced = true;
   }
-  else if (Message_Header::message_header_test (buffer))
+  else if (bytes_read > Message_Header::static_encoded_size () &&
+    Message_Header::message_header_test (buffer))
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \
@@ -122,7 +124,8 @@ Madara::Transport::process_received_update (
         
     header = new Message_Header ();
   }
-  else if (Fragment_Message_Header::fragment_message_header_test (buffer))
+  else if (bytes_read > Fragment_Message_Header::static_encoded_size () &&
+    Fragment_Message_Header::fragment_message_header_test (buffer))
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \
@@ -150,8 +153,22 @@ Madara::Transport::process_received_update (
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \
       " Message header.size (%Q bytes) is less than actual"
-      " bytes read (%d bytes)\n",
+      " bytes read (%d bytes). Dropping message.\n",
       print_prefix, header->size, bytes_read));
+
+    return -1;
+  }
+
+  if (is_fragment && 
+      exists (header->originator, header->clock,
+      ((Fragment_Message_Header *)header)->update_number, settings.fragment_map))
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Fragment already exists in fragment map. Dropping.\n",
+      print_prefix));
+
+    return -1;
   }
 
   if (!is_reduced)

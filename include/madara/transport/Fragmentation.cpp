@@ -432,62 +432,6 @@ Madara::Transport::add_fragment (const char * originator, uint64_t clock,
   return result;
 }
 
-bool
-Madara::Transport::is_valid_entry (const char * originator, uint64_t clock,
-  uint32_t update_number, uint32_t queue_length,
-  Originator_Fragment_Map & map)
-{
-  bool result = false;
-
-  /**
-  * truth is determined if
-  * 1) originator does not exist yet in the map<br>
-  * 2) clock is newer than existing fragments<br>
-  * 3) fragment update does not exist yet in an existing clock entry
-  **/
-
-  Originator_Fragment_Map::iterator orig_map = map.find (originator);
-  if (orig_map == map.end ())
-    // originator does not exist (1)
-    result = true;
-
-  else
-  {
-    Clock_Fragment_Map & clock_map (orig_map->second);
-    if (clock_map.size () < queue_length)
-    {
-      // clock queue has not been exhausted (2)
-      result = true;
-    }
-    else
-    {
-      Clock_Fragment_Map::iterator clock_found = clock_map.find (clock);
-      if (clock_found != clock_map.end ())
-      {
-        // we have found the clock entry
-        if (clock_found->second.find (update_number)
-              == clock_found->second.end ())
-        {
-          // the fragment does not exist yet
-          result = true;
-        }
-      }
-      else
-      {
-        uint32_t oldest = clock_map.begin ()->first;
-
-        if (oldest < clock)
-        {
-          // the clock is newer than the oldest clock fragment
-          result = true;
-        }
-      }
-    }
-  }
-
-  return result;
-}
-
 void
 Madara::Transport::Fragment_Message_Header::operator= (
   Message_Header & header)
@@ -602,4 +546,32 @@ Madara::Transport::is_complete (const char * originator, uint64_t clock,
   }
 
   return result;
+}
+
+bool
+Madara::Transport::exists (const char * originator, uint64_t clock,
+  uint32_t update_number, Originator_Fragment_Map & map)
+{
+  bool result = false;
+
+  Originator_Fragment_Map::iterator orig_map = map.find (originator);
+
+  if (orig_map != map.end ())
+  {
+    Clock_Fragment_Map & clock_map (orig_map->second);
+    Clock_Fragment_Map::iterator clock_found = clock_map.find (clock);
+
+    if (clock_found != clock_map.end ())
+    {
+      uint64_t size = clock_found->second.size ();
+
+      if (clock_found->second.find (update_number)
+          != clock_found->second.end ())
+      {
+        result = true;
+      }
+    }
+  }
+
+  return result; 
 }

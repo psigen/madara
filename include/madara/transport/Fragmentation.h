@@ -144,6 +144,8 @@ namespace Madara
      * the aggregate message if the message is complete.
      * @param originator   the originator of the message
      * @param clock        the clock of the message
+     * @param update_number fragment identifier within clock message
+     * @param queue_length number of clock entries allowed per originator
      * @param map          a map of existing message fragments
      * @param clear        if true, clears a fragment entry if message
      *                     is complete
@@ -155,23 +157,6 @@ namespace Madara
       uint32_t queue_length,
       Originator_Fragment_Map & map, bool clear = true);
 
-    /**
-     * Checks a fragment map to see if the clock is valid for inclusion
-     * in the map. The following conditions result in truth:<br>
-     * 1) originator does not exist yet in the map<br>
-     * 2) clock is newer than existing fragments<br>
-     * 3) fragment update does not exist yet in an existing clock entry
-     * @param originator   the originator of the message
-     * @param clock        the clock of the message
-     * @param update_number identifier of the fragment in the message
-     * @param queue_length allowable history depth for fragments
-     * @param map          a map of existing message fragments
-     * @return true if the fragment is useful
-     **/
-    MADARA_Export bool is_valid_entry (const char * originator, uint64_t clock,
-      uint32_t update_number, uint32_t queue_length,
-      Originator_Fragment_Map & map);
-   
     /**
      * Pieces together a fragment map into a single buffer
      * @param  map     map containing fragments
@@ -204,6 +189,17 @@ namespace Madara
      **/
     MADARA_Export bool is_complete (const char * originator, uint64_t clock,
       Originator_Fragment_Map & map);
+
+    /**
+     * Checks if a fragment already exists within a fragment map
+     * @param originator   the originator of the message
+     * @param clock        the clock of the message
+     * @param update_number fragment identifier within clock message
+     * @param map          a map of existing message fragments
+     * @return   true if 
+     **/
+    MADARA_Export bool exists (const char * originator, uint64_t clock,
+      uint32_t update_number, Originator_Fragment_Map & map);
   }
 }
 

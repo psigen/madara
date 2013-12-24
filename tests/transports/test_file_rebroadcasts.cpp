@@ -37,6 +37,7 @@ bool is_terminator = false;
 
 
 Madara::Knowledge_Engine::Variable_Reference ack;
+Madara::Knowledge_Engine::Compiled_Expression id0_wait;
 
 // keep track of time
 ACE_hrtime_t elapsed_time, maximum_time;
@@ -324,7 +325,7 @@ int main (int argc, char ** argv)
   
 
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
-  wait_settings.poll_frequency = 2.0;
+  wait_settings.poll_frequency = 4.0;
   wait_settings.max_wait_time = max_wait;
 
   // create a knowledge base and setup our id
@@ -342,6 +343,18 @@ int main (int argc, char ** argv)
   {
     if (target_location == "")
       target_location = ".";
+
+    id0_wait = knowledge.compile (
+      "(\n"
+      "  file.{.target}.ack >= #size (file)\n"
+      "  ||\n"
+      "  terminated)\n"
+      " ||\n"
+      "(\n"
+      "  file = file;\n"
+      "  file_name = file_name;\n"
+      "  file_location = file_location\n"
+      ")");
     
     knowledge.print (
       "Sending file until id {.target} acknowledges receipt.\n");
@@ -382,12 +395,10 @@ int main (int argc, char ** argv)
       "Suggested target is {file_location}.\n");
 
     knowledge.send_modifieds ();
+    
+    Madara::Utility::sleep (4);
 
-    knowledge.wait (
-      "file = file ;>"
-      "file_name = file_name ;>"
-      "file_location = file_location ;>"
-      "file.{.target}.ack >= #size (file) || terminated", wait_settings);
+    knowledge.wait (id0_wait, wait_settings);
 
     for (data_size += data_size_increment; data_size <= data_size_end;
          data_size += data_size_increment)
@@ -415,11 +426,7 @@ int main (int argc, char ** argv)
         "Writing {file_name} to network. "
         "Suggested target is {file_location}.\n");
 
-      knowledge.wait (
-        "file = file ;>"
-        "file_name = file_name ;>"
-        "file_location = file_location ;>"
-        "file.{.target}.ack >= #size (file) || terminated", wait_settings);
+      knowledge.wait (id0_wait, wait_settings);
     }
 
     knowledge.evaluate ("terminated = 1");
@@ -427,6 +434,10 @@ int main (int argc, char ** argv)
     knowledge.print (
       "Finished waiting."
       " file.{.target}.ack == {file.{.target}.ack}\n");
+
+    Madara::Utility::sleep (4.0);
+
+    knowledge.evaluate ("terminated = 1");
   }
   else
   {
@@ -437,8 +448,6 @@ int main (int argc, char ** argv)
 
     knowledge.print ("Finished waiting.\n");
   }
-
-  Madara::Utility::sleep (1);
 
   knowledge.print ();
 

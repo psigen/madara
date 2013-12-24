@@ -102,6 +102,17 @@ void test_add_frag (void)
 
   transport::add_fragment ("testmachine", 1, 0, map[0], 5, frag_map, true);
   transport::add_fragment ("testmachine", 1, 2, map[2], 5, frag_map, true);
+
+  if (transport::exists ("testmachine", 1, 0, frag_map))
+    std::cerr << "SUCCESS. exists found testmachine:1:0 in frag_map.\n";
+  else
+    std::cerr << "FAIL. exists did not find testmachine:1:0 in frag_map.\n";
+  
+  if (transport::exists ("testmachine", 1, 1, frag_map))
+    std::cerr << "FAIL. exists found testmachine:1:1 in frag_map.\n";
+  else
+    std::cerr << "SUCCESS. exists did not find testmachine:1:1 in frag_map.\n";
+
   transport::add_fragment ("testmachine", 1, 6, map[6], 5, frag_map, true);
   transport::add_fragment ("testmachine", 1, 6, map[6], 5, frag_map, true);
   transport::add_fragment ("testmachine", 1, 1, map[1], 5, frag_map, true);
@@ -121,6 +132,11 @@ void test_add_frag (void)
   else
     std::cerr <<
       "FAIL. is_complete is returning false on cleared defragged entry.\n";
+  
+  if (transport::exists ("testmachine", 1, 1, frag_map))
+    std::cerr << "FAIL. exists found testmachine:1:1 in frag_map.\n";
+  else
+    std::cerr << "SUCCESS. exists did not find testmachine:1:1 in frag_map.\n";
 
   const char * offset = result;
 

@@ -175,7 +175,6 @@ Madara::Transport::Broadcast_Transport::send_data (
           i->second,
           (ssize_t)Message_Header::get_size (i->second),
           addresses_[0]);
-
       }
       
       send_monitor_.add ((uint32_t)bytes_sent);
