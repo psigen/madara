@@ -91,6 +91,8 @@ Madara::Transport::process_received_update (
 
   buffer_remaining = (int64_t)bytes_read;
   bool is_reduced = false;
+  bool is_fragment = false;
+  bool previously_defragged = false;
 
   // clear the rebroadcast records
   rebroadcast_records.clear ();
@@ -120,6 +122,17 @@ Madara::Transport::process_received_update (
         
     header = new Message_Header ();
   }
+  else if (Fragment_Message_Header::fragment_message_header_test (buffer))
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " processing KaRL fragment message from %s\n",
+      print_prefix,
+      remote_host));
+        
+    header = new Fragment_Message_Header ();
+    is_fragment = true;
+  }
   else
   {
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
@@ -131,6 +144,15 @@ Madara::Transport::process_received_update (
   }
           
   const char * update = header->read (buffer, buffer_remaining);
+
+  if (header->size < bytes_read)
+  {
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Message header.size (%Q bytes) is less than actual"
+      " bytes read (%d bytes)\n",
+      print_prefix, header->size, bytes_read));
+  }
 
   if (!is_reduced)
   {
@@ -213,6 +235,83 @@ Madara::Transport::process_received_update (
         " remote id (%s) message is in our domain\n",
         print_prefix,
         remote_host));
+    }
+  }
+
+  // fragments are special cases
+  if (is_fragment)
+  {
+    // grab the fragment header
+    Fragment_Message_Header * frag_header =
+      dynamic_cast <Fragment_Message_Header *> (header);
+    
+    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+      DLINFO "%s:" \
+      " Processing fragment %d of %s:%d.\n",
+      print_prefix, frag_header->update_number,
+      frag_header->originator, frag_header->clock));
+
+    // add the fragment and attempt to defrag the message
+    char * message = Transport::add_fragment (
+      frag_header->originator, frag_header->clock,
+      frag_header->update_number, buffer, settings.fragment_queue_length,
+      settings.fragment_map, true);
+
+    // if we have no return message, we may have previously defragged it
+    if (!message)
+    {
+      //if (Transport::is_complete (frag_header->originator,
+      //  frag_header->clock, settings.fragment_map))
+      //{
+      //  previously_defragged = true;
+      //}
+      return 0;
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Message has been pieced together from fragments. Processing...\n",
+        print_prefix));
+
+      /**
+       * if we defragged the message, then we need to process the message.
+       * In order to do that, we need to overwrite buffer with message
+       * so it can be processed normally.
+       **/
+      buffer_remaining = (int64_t)frag_header->get_size (message);
+      if (buffer_remaining <= settings.queue_length)
+      {
+        char * buffer_override = (char *)buffer;
+        memcpy (buffer_override, message, frag_header->get_size (message));
+
+        // check the buffer for a reduced message header
+        if (Reduced_Message_Header::reduced_message_header_test (buffer))
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "%s:" \
+            " processing reduced KaRL message from %s\n",
+            print_prefix,
+            remote_host));
+
+          header = new Reduced_Message_Header ();
+          is_reduced = true;
+          update = header->read (buffer, buffer_remaining);
+        }
+        else if (Message_Header::message_header_test (buffer))
+        {
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "%s:" \
+            " processing KaRL message from %s\n",
+            print_prefix,
+            remote_host));
+        
+          header = new Message_Header ();
+          update = header->read (buffer, buffer_remaining);
+        }
+
+        delete [] message;
+      }
     }
   }
 

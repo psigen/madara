@@ -67,6 +67,7 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     include/madara/transport/Packet_Scheduler.cpp
     include/madara/transport/Reduced_Message_Header.cpp
     include/madara/transport/QoS_Transport_Settings.cpp
+    include/madara/transport/Fragmentation.cpp
     include/madara/transport/Transport_Settings.cpp
     include/madara/transport/Transport_Context.cpp
     include/madara/transport/Transport.cpp
@@ -92,6 +93,7 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     include/madara/transport/Message_Header.h
     include/madara/transport/Packet_Scheduler.h
     include/madara/transport/Reduced_Message_Header.h
+    include/madara/transport/Fragmentation.h
     include/madara/transport/QoS_Transport_Settings.h
     include/madara/transport/Transport_Settings.h
     include/madara/transport/Transport_Context.h

@@ -213,6 +213,12 @@ Madara::Transport::Message_Header::write (char * buffer,
   return buffer;
 }
 
+uint64_t
+Madara::Transport::Message_Header::get_size (const char * buffer)
+{
+  return (Madara::Utility::endian_swap (*(uint64_t *)buffer));
+}
+ 
 bool
 Madara::Transport::Message_Header::equals (const Message_Header & other)
 {

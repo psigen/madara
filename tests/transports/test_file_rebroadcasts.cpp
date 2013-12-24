@@ -22,7 +22,7 @@ Madara::Transport::QoS_Transport_Settings settings;
 
 std::string filename =
   Madara::Utility::expand_envs (
-    "$(MADARA_ROOT)/tests/images/manaus_hotel_225x375.jpg");
+    "$(MADARA_ROOT)/tests/images/manaus_hotel_900x1500.jpg");
 
 std::string target_location;
 
@@ -36,7 +36,7 @@ double max_wait = 20.0;
 bool is_terminator = false;
 
 
-Madara::Knowledge_Engine::Compiled_Expression ack;
+Madara::Knowledge_Engine::Variable_Reference ack;
 
 // keep track of time
 ACE_hrtime_t elapsed_time, maximum_time;
@@ -254,7 +254,8 @@ write_file (Madara::Knowledge_Map & records,
   const Madara::Transport::Transport_Context & context,
   Madara::Knowledge_Engine::Variables & vars)
 {
-  if (records.find ("file") != records.end ())
+  Madara::Knowledge_Map::iterator file = records.find ("file");
+  if (file != records.end ())
   {
     std::stringstream filename;
 
@@ -279,15 +280,16 @@ write_file (Madara::Knowledge_Map & records,
 
       size_t size = 0;
 
-      records["file"].to_file (filename.str ());
+      file->second.to_file (filename.str ());
     }
     else
     {
       vars.print ("File already exists in folder. Not saving.\n");
     }
 
-    vars.evaluate (ack);
-    vars.print ("Received file. Sending file ack {file.{.id}.ack} for id {.id}.\n");
+    vars.set (ack, Madara::Knowledge_Record::Integer (file->second.size ()));
+    vars.print (
+      "Received file. Sending file ack {file.{.id}.ack} for id {.id}.\n");
   }
 
   return Madara::Knowledge_Record::Integer (1);
@@ -297,7 +299,7 @@ int main (int argc, char ** argv)
 {
   // set defaults
   settings.type = Madara::Transport::MULTICAST;
-  settings.queue_length = 1000000;
+  settings.queue_length = 1500000;
   settings.enable_participant_ttl (5);
   settings.set_rebroadcast_ttl (5);
 
@@ -330,8 +332,8 @@ int main (int argc, char ** argv)
   knowledge.set (".id", Madara::Knowledge_Record::Integer (settings.id));
   knowledge.set (".target", target_id);
 
-  ack = knowledge.compile (knowledge.expand_statement (
-    "file.{.id}.ack = #size (file)"));
+  ack = knowledge.get_ref (knowledge.expand_statement (
+    "file.{.id}.ack"));
 
   if (is_terminator)
     knowledge.set ("terminated", 1.0);
@@ -373,7 +375,7 @@ int main (int argc, char ** argv)
 
     knowledge.set ("file_location", target_location, delay_sending);
 
-    knowledge.evaluate (ack, suppress_globals);
+    knowledge.evaluate ("file.{.id}.ack = #size (file)", suppress_globals);
 
     knowledge.print (
       "Writing {file_name} to network. "
@@ -435,6 +437,8 @@ int main (int argc, char ** argv)
 
     knowledge.print ("Finished waiting.\n");
   }
+
+  Madara::Utility::sleep (1);
 
   knowledge.print ();
 

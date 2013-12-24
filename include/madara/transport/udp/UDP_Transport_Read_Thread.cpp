@@ -59,7 +59,7 @@ Madara::Transport::UDP_Transport_Read_Thread::UDP_Transport_Read_Thread (
     {
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
         DLINFO "UDP_Transport_Read_Thread::UDP_Transport_Read_Thread:" \
-        " Success subscribing to broadcast address %s:%d\n",
+        " Success subscribing to udp address %s:%d\n",
         local.get_host_addr (), local.get_port_number ()));
       
       int send_buff_size = 0, tar_buff_size (settings_.queue_length);
@@ -217,26 +217,91 @@ Madara::Transport::UDP_Transport_Read_Thread::rebroadcast (
                                  *qos_settings_, print_prefix,
                                  header, records,
                                  packet_scheduler_);
-  
+
   if (result > 0)
   {
-    for (std::map <std::string, ACE_INET_Addr>::const_iterator i =
-            addresses_.begin (); i != addresses_.end (); ++i)
+    uint64_t bytes_sent = 0;
+    uint64_t packet_size = Message_Header::get_size (buffer_.get_ptr ());
+
+    if (packet_size > settings_.max_fragment_size)
     {
-      ssize_t bytes_sent = write_socket_.send (
-        buffer, (ssize_t)result, i->second);
+      Fragment_Map map;
       
       MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-        DLINFO "UDP_Transport_Read_Thread::rebroadcast:" \
-        " Sent packet to %s with size %d\n",
-        i->first.c_str (), bytes_sent));
+        DLINFO "%s:" \
+        " fragmenting %Q byte packet (%d bytes is max fragment size)\n",
+        print_prefix, packet_size, settings_.max_fragment_size));
 
-      send_monitor_.add ((uint32_t)bytes_sent);
-    }
+      // fragment the message
+      frag (buffer_.get_ptr (), settings_.max_fragment_size, map);
+
+      for (Fragment_Map::iterator i = map.begin (); i != map.end (); ++i)
+      {
+        size_t frag_size =
+          (size_t)Message_Header::get_size (i->second);
+
+        for (std::map <std::string, ACE_INET_Addr>::const_iterator addr =
+          addresses_.begin (); addr != addresses_.end (); ++addr)
+        {
+          if (addr->first != settings_.hosts[0])
+          {
+            ssize_t actual_sent = write_socket_.send (
+              i->second, frag_size, addr->second);
+
+            MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+              DLINFO "%s:" \
+              " Send result was %d of %d byte fragment to %s\n",
+              print_prefix, actual_sent, frag_size, addr->first.c_str ()));
+
+            if (actual_sent > 0)
+            {
+              send_monitor_.add ((uint32_t)frag_size);
+              bytes_sent += actual_sent;
+            }
+          }
+        }
+      }
       
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Sent fragments totalling %Q bytes\n",
+        print_prefix, bytes_sent));
+
+      delete_fragments (map);
+    }
+    else
+    {
+      for (std::map <std::string, ACE_INET_Addr>::const_iterator i =
+              addresses_.begin (); i != addresses_.end (); ++i)
+      {
+        if (i->first != settings_.hosts[0])
+        {
+          ssize_t actual_sent = write_socket_.send (buffer_.get_ptr (),
+            (ssize_t)result, i->second);
+            
+          MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+            DLINFO "%s:" \
+            " Sent %Q packet to %s\n",
+            print_prefix, packet_size, i->first.c_str ()));
+
+          if (actual_sent > 0)
+          {
+            send_monitor_.add ((uint32_t)actual_sent);
+            bytes_sent += actual_sent;
+          }
+        }
+      }
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Sent %Q total bytes via rebroadcast\n",
+        print_prefix, bytes_sent));
+    }
+
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "UDP_Transport_Read_Thread::rebroadcast:" \
+      DLINFO "%s:" \
       " Send bandwidth = %d B/s\n",
+      print_prefix,
       send_monitor_.get_bytes_per_second ()));
   }
 }

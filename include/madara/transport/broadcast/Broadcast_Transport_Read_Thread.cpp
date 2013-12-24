@@ -217,16 +217,50 @@ Madara::Transport::Broadcast_Transport_Read_Thread::rebroadcast (
 
   if (result > 0)
   {
-    ssize_t bytes_sent = write_socket_.send(
-      buffer, (ssize_t)result, address_);
+    ssize_t bytes_sent = 0;
+    uint64_t packet_size = Message_Header::get_size (buffer_.get_ptr ());
 
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "%s:" \
-      " Sent packet of size %d\n",
-      print_prefix,
-      bytes_sent));
+    if (packet_size > settings_.max_fragment_size)
+    {
+      Fragment_Map map;
       
-    send_monitor_.add ((uint32_t)bytes_sent);
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " fragmenting %Q byte packet (%d bytes is max fragment size)\n",
+        print_prefix, packet_size, settings_.max_fragment_size));
+
+      // fragment the message
+      frag (buffer_.get_ptr (), settings_.max_fragment_size, map);
+
+      for (Fragment_Map::iterator i = map.begin (); i != map.end (); ++i)
+      {
+        // send the fragment
+        bytes_sent += write_socket_.send(
+          i->second,
+          (ssize_t)Message_Header::get_size (i->second),
+          address_);
+      }
+      
+      send_monitor_.add ((uint32_t)bytes_sent);
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Sent fragments totalling %d bytes\n",
+        print_prefix, 
+        bytes_sent));
+
+      delete_fragments (map);
+    }
+    else
+    {
+      bytes_sent = write_socket_.send(
+        buffer_.get_ptr (), (ssize_t)result, address_);
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Sent packet of size %d\n",
+        print_prefix, bytes_sent));
+      send_monitor_.add ((uint32_t)bytes_sent);
+    }
 
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
       DLINFO "%s:" \

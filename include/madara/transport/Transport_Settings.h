@@ -39,6 +39,7 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/expression_tree/Interpreter.h"
 #include "madara/MADARA_export.h"
+#include "madara/transport/Fragmentation.h"
 
 namespace Madara
 {
@@ -58,7 +59,7 @@ namespace Madara
       TCP          = 3,
       UDP          = 4,
       MULTICAST    = 5,
-      BROADCAST    = 6
+      BROADCAST    = 6,
     };
 
     enum Reliabilities {
@@ -688,6 +689,19 @@ namespace Madara
       /// Type of transport. See Madara::Transport::Types for options
       uint32_t type;
 
+      /// Maximum allowed fragment size for partitioning large messages
+      uint32_t max_fragment_size;
+
+      /**
+       * Indicates queue length for holding clock-keyed fragments. Note
+       * that this does not limit the number of fragments--only how many
+       * clock values we want to queue for defragmentation. So, if you
+       * have a fragment_queue_length of 3, and your last three received
+       * fragmented clock values were 1=4GB, 2=4GB, 3=4GB, then you could
+       * have 12GB, regardless of max_fragment_size.
+       **/
+      uint32_t fragment_queue_length;
+
       /// Reliability required of the transport. 
       /// See Madara::Transport::Reliabilities for options
       uint32_t reliability;
@@ -711,6 +725,8 @@ namespace Madara
 
       /// send the reduced message header (clock, size, updates, KaRL id)
       bool send_reduced_message_header;
+
+      mutable Originator_Fragment_Map fragment_map;
 
 #ifdef _USE_CID_
       /// should we try to gather latencies?

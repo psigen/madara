@@ -68,7 +68,7 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
   if (nodes_.size () > 0)
   {
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      "System call type is returning the size of its first argument.\n"));
+      "System call size is returning the size of its first argument.\n"));
     
     return Madara::Knowledge_Record::Integer (
       nodes_[0]->evaluate (settings).size ());

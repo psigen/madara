@@ -6,6 +6,7 @@
 #include "madara/utility/Utility.h"
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/expression_tree/Interpreter.h"
+#include "madara/transport/Fragmentation.h"
 
 #include <iostream>
 
@@ -152,25 +153,62 @@ long
 Madara::Transport::Multicast_Transport::send_data (
   const Madara::Knowledge_Records & orig_updates)
 {
-  long result =
-    prep_send (orig_updates, "Multicast_Transport::send_data:");
+  const char * print_prefix = "Multicast_Transport::send_data";
+
+  long result = prep_send (orig_updates, print_prefix);
 
   if (addresses_.size () > 0 && result > 0)
   {
-    ssize_t bytes_sent = socket_.send(
-      buffer_.get_ptr (), (ssize_t)result, addresses_[0]);
+    uint64_t bytes_sent = 0;
+    uint64_t packet_size = Message_Header::get_size (buffer_.get_ptr ());
 
-    MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_data:" \
-      " Sent packet of size %d\n",
-      bytes_sent));
+    if (packet_size > settings_.max_fragment_size)
+    {
+      Fragment_Map map;
+      
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " fragmenting %Q byte packet (%d bytes is max fragment size)\n",
+        print_prefix, packet_size, settings_.max_fragment_size));
 
-    send_monitor_.add ((uint32_t)bytes_sent);
+      // fragment the message
+      frag (buffer_.get_ptr (), settings_.max_fragment_size, map);
+
+      for (Fragment_Map::iterator i = map.begin (); i != map.end (); ++i)
+      {
+        // send the fragment
+        bytes_sent += socket_.send(
+          i->second,
+          (ssize_t)Message_Header::get_size (i->second),
+          addresses_[0]);
+
+      }
+      
+      send_monitor_.add ((uint32_t)bytes_sent);
+
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Sent fragments totalling %Q bytes\n",
+        print_prefix, bytes_sent));
+
+      delete_fragments (map);
+    }
+    else
+    {
+      bytes_sent = socket_.send(
+        buffer_.get_ptr (), (ssize_t)result, addresses_[0]);
+      MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "%s:" \
+        " Sent packet of size %Q\n",
+        print_prefix, bytes_sent));
+      send_monitor_.add ((uint32_t)bytes_sent);
+    }
+
 
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 
-      DLINFO "Multicast_Transport::send_data:" \
+      DLINFO "%s:" \
       " Send bandwidth = %d B/s\n",
-      send_monitor_.get_bytes_per_second ()));
+      print_prefix, send_monitor_.get_bytes_per_second ()));
 
     result = (long) bytes_sent;
   }

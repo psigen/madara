@@ -110,6 +110,12 @@ namespace Madara
       virtual bool equals (const Message_Header & other);
       
       /**
+      * Returns the size field of the header
+      * @return  size field of the encoded buffer
+      **/
+      static uint64_t get_size (const char * buffer);
+      
+      /**
        * Tests the buffer for a normal message identifier
        * @return   true if identifier indicates reduced message header
        **/

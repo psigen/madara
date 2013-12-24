@@ -1,10 +1,13 @@
 #include "Transport_Settings.h"
+#include "Fragmentation.h"
 
 Madara::Transport::Settings::Settings () : 
         domains (DEFAULT_DOMAIN), 
         queue_length (DEFAULT_QUEUE_LENGTH), 
         deadline (DEFAULT_DEADLINE), 
         type (DEFAULT_TRANSPORT),
+        max_fragment_size (62000),
+        fragment_queue_length (5),
         reliability (DEFAULT_RELIABILITY),
         id (DEFAULT_ID),
         processes (DEFAULT_PROCESSES),
@@ -33,6 +36,8 @@ Madara::Transport::Settings::Settings (const Settings & settings) :
         queue_length (settings.queue_length), 
         deadline (settings.deadline), 
         type (settings.type),
+        max_fragment_size (settings.max_fragment_size),
+        fragment_queue_length (settings.fragment_queue_length),
         reliability (settings.reliability),
         id (settings.id),
         processes (settings.processes),
@@ -68,6 +73,8 @@ Madara::Transport::Settings::operator= (const Settings & settings)
   queue_length = settings.queue_length;
   deadline = settings.deadline;
   type = settings.type;
+  max_fragment_size = settings.max_fragment_size;
+  fragment_queue_length = settings.fragment_queue_length;
   reliability = settings.reliability;
   id = settings.id;
   processes = settings.processes;
@@ -98,6 +105,14 @@ Madara::Transport::Settings::operator= (const Settings & settings)
 
 Madara::Transport::Settings::~Settings ()
 {
-
+  for (Originator_Fragment_Map::iterator originator = fragment_map.begin ();
+       originator != fragment_map.end (); ++originator)
+  {
+    for (Clock_Fragment_Map::iterator clock = originator->second.begin ();
+        clock != originator->second.end (); ++clock)
+    {
+      delete_fragments (clock->second);
+    }
+  }
 }
 

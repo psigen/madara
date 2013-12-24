@@ -558,7 +558,7 @@ Madara::Knowledge_Record::fragment (unsigned int first, unsigned int last)
 Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
 {
-  Integer result;
+  Integer result (0);
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -643,7 +643,7 @@ Madara::Knowledge_Record::operator< (const Knowledge_Record & rhs) const
 Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
 {
-  Integer result;
+  Integer result (0);
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -728,7 +728,7 @@ Madara::Knowledge_Record::operator<= (const Knowledge_Record & rhs) const
 Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator== (const Knowledge_Record & rhs) const
 {
-  Integer result;
+  Integer result (0);
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -909,7 +909,7 @@ Madara::Knowledge_Record
 Madara::Knowledge_Record::Integer
 Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
 {
-  Integer result;
+  Integer result (0);
 
   // if the left hand side is an integer
   if (is_integer_type ())
@@ -996,7 +996,7 @@ Madara::Knowledge_Record::operator> (const Knowledge_Record & rhs) const
 Madara::Knowledge_Record::Integer 
 Madara::Knowledge_Record::operator>= (const Knowledge_Record & rhs) const
 {
-  Integer result;
+  Integer result (0);
 
   // if the left hand side is an integer
   if (is_integer_type ())

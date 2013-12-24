@@ -101,7 +101,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::setup_unique_hostport (
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Knowledge_Base_Impl::setup_unique_hostport:" \
-      " unique bind to %s\n", id_.c_str ()));
+      " unique bind to %s\n", actual_host.c_str ()));
   }
 
   return actual_host;
@@ -115,7 +115,12 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::attach_transport (const std::stri
   std::string originator (id);
 
   if (originator == "")
-    originator = id_;
+  {
+    if (id_.size () > 0)
+      originator = id_;
+    else
+      originator = id_ = setup_unique_hostport ();
+  }
 
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "Knowledge_Base_Impl::attach_transport:" \
