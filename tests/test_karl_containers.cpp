@@ -8,6 +8,7 @@ namespace engine = Madara::Knowledge_Engine;
 
 void test_vector (void)
 {
+  std::cout << "************* VECTOR: CREATING VECTOR*************\n";
   engine::Knowledge_Base knowledge;
   engine::Vector vector ("test_vector", 10, knowledge);
   unsigned int size = vector.size ();
@@ -42,6 +43,7 @@ void test_vector (void)
 
 void test_map (void)
 {
+  std::cout << "************* MAP: SETTING KEY:VALUE PAIRS*************\n";
   engine::Knowledge_Base knowledge;
   std::vector <std::string> keys;
   engine::Map map ("test_map", knowledge);
@@ -79,7 +81,8 @@ void test_map (void)
     std::cout << "SUCCESS. map values were set and retrieved.\n";
   else
     std::cout << "FAIL. map values were not set and retrieved.\n";
-
+  
+  std::cout << "************* MAP: COPYING MAP FROM KB*************\n";
   engine::Map copy ("test_map", knowledge);
   
   size = map.size ();
@@ -102,6 +105,20 @@ void test_map (void)
     std::cout << "SUCCESS. map copy values were set and retrieved.\n";
   else
     std::cout << "FAIL. map copy values were not set and retrieved.\n";
+
+  
+  std::cout << "************* MAP: SYNCING KEYS*************\n";
+
+  knowledge.set ("test_map.wife", "Mary Helen MacGregor");
+
+  std::vector <std::string> new_keys (map.sync_keys ());
+
+  if (map.exists ("wife") && !copy.exists ("wife") &&
+      new_keys.size () == 1 && new_keys[0] == "wife")
+    std::cout << "SUCCESS. map.sync_keys () worked.\n";
+  else
+    std::cout << "FAIL. map.sync_keys () did not work.\n";
+
 
   knowledge.print ();
 }

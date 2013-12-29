@@ -56,12 +56,26 @@ namespace Madara
        * @return size of the map
        **/
       unsigned int size (void);
+      
+      /**
+       * Syncs the keys from the knowledge base. This can be useful
+       * if you expect other knowledge bases to add variables to the map.
+       * @return a vector of the keys that were added during the sync
+       **/
+      std::vector <std::string> sync_keys (void);
 
       /**
        * Returns the keys within the map
        * @return keys used in the map
        **/
       void keys (std::vector <std::string> & curkeys);
+
+      /**
+       * Checks for the existence of a key
+       * @param key          map key
+       * @return true if key exists in map. False otherwise.
+       **/
+      bool exists (const std::string & key);
 
       /**
        * Read a file into a location in the map

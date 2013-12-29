@@ -65,6 +65,36 @@ Madara::Knowledge_Engine::Map::size (void)
   return map_.size ();
 }
 
+
+std::vector <std::string>
+Madara::Knowledge_Engine::Map::sync_keys (void)
+{
+  std::map <std::string, Knowledge_Record> contents;
+  std::string common = name_ + ".";
+  knowledge_.to_map (common, contents);
+  std::vector <std::string> additions;
+
+  for (std::map <std::string, Knowledge_Record>::iterator i =
+    contents.begin (); i != contents.end (); ++i)
+  {
+    std::string key = i->first.substr (common.size ());
+
+    if (map_.find (key) == map_.end ())
+    {
+      additions.push_back (key);
+      map_[key] = knowledge_.get_ref (i->first, settings_);
+    }
+  }
+
+  return additions;
+}
+
+bool
+Madara::Knowledge_Engine::Map::exists (const std::string & key)
+{
+  return map_.find (key) != map_.end ();
+}
+
 void
 Madara::Knowledge_Engine::Map::keys (std::vector <std::string> & curkeys)
 {
