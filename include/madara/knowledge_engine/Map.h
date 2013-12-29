@@ -2,6 +2,7 @@
 #ifndef _MADARA_MAP_H_
 #define _MADARA_MAP_H_
 
+#include <vector>
 #include <map>
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
