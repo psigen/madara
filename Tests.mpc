@@ -43,6 +43,28 @@ project (Test_Fragmentation) : using_madara, using_ace {
   }
 }
 
+project (Test_KaRL_Containers) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_karl_containers
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_karl_containers.cpp
+  }
+}
+
 project (Test_File_Rebroadcasts) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_file_rebroadcasts
