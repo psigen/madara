@@ -30,6 +30,7 @@ Madara::Knowledge_Engine::Vector::~Vector ()
 void
 Madara::Knowledge_Engine::Vector::resize (unsigned int size)
 {
+  Guard guard (mutex_);
   unsigned int old_size = vector_.size ();
 
   if (old_size != size)
@@ -53,12 +54,21 @@ Madara::Knowledge_Engine::Vector::resize (unsigned int size)
 unsigned int
 Madara::Knowledge_Engine::Vector::size (void)
 {
+  Guard guard (mutex_);
   return vector_.size ();
+}
+
+std::string
+Madara::Knowledge_Engine::Vector::get_name (void)
+{
+  Guard guard (mutex_);
+  return name_;
 }
 
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Vector::operator[] (unsigned int index)
 {
+  Guard guard (mutex_);
   Knowledge_Record result;
 
   if (index < vector_.size ())
@@ -73,6 +83,7 @@ int Madara::Knowledge_Engine::Vector::read_file (unsigned int index,
                 const std::string & filename, 
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
 
   if (index < vector_.size ())
@@ -86,6 +97,7 @@ int Madara::Knowledge_Engine::Vector::set_file (unsigned int index,
   const unsigned char * value, size_t size, 
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -99,6 +111,7 @@ int Madara::Knowledge_Engine::Vector::set_jpeg (unsigned int index,
   const unsigned char * value, size_t size, 
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -112,6 +125,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
   Knowledge_Record::Integer value, 
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -126,6 +140,7 @@ int Madara::Knowledge_Engine::Vector::set_index (unsigned int index,
   Knowledge_Record::Integer value,
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -140,6 +155,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
   uint32_t size,
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -153,6 +169,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
   const std::vector <Knowledge_Record::Integer> & value,
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -165,6 +182,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
 int Madara::Knowledge_Engine::Vector::set (unsigned int index, double value, 
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -179,6 +197,7 @@ int Madara::Knowledge_Engine::Vector::set_index (unsigned int index,
   double value,
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -193,6 +212,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
   uint32_t size,
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -206,6 +226,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
   const std::vector <double> & value,
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -219,6 +240,7 @@ int Madara::Knowledge_Engine::Vector::set (unsigned int index,
   const std::string & value, 
   const Eval_Settings & settings)
 {
+  Guard guard (mutex_);
   int result = -1;
   
   if (index < vector_.size ())
@@ -232,6 +254,7 @@ void Madara::Knowledge_Engine::Vector::set_quality (
   unsigned int index, uint32_t quality,
   const Knowledge_Reference_Settings & settings)
 {
+  Guard guard (mutex_);
   if (index < vector_.size ())
     knowledge_.set_quality (vector_[index].get_name (), quality, settings);
 }

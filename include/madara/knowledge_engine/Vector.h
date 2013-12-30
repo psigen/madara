@@ -58,6 +58,12 @@ namespace Madara
        * @return size of the vector
        **/
       unsigned int size (void);
+      
+      /**
+       * Returns the name of the vector
+       * @return name of the vector
+       **/
+      std::string get_name (void);
 
       /**
        * Retrieves a copy of the record from the map.
@@ -252,6 +258,14 @@ namespace Madara
       
 
     private:
+      /// guard for access and changes
+      typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
+      
+      /**
+       * Mutex for local changes
+       **/
+      mutable ACE_Recursive_Thread_Mutex mutex_;
+
       /**
        * Variable context that we are modifying
        **/

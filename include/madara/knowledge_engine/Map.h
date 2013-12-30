@@ -79,6 +79,18 @@ namespace Madara
       bool exists (const std::string & key);
 
       /**
+       * Returns the name of the map
+       * @return name of the map
+       **/
+      std::string get_name (void);
+
+      /**
+       * Clears the map. This does not change anything within the knowledge
+       * base.
+       **/
+      void clear (void);
+
+      /**
        * Read a file into a location in the map
        * @param filename     file to read
        * @param key          key to store the file into
@@ -260,6 +272,15 @@ namespace Madara
           Eval_Settings (true));
       
     private:
+
+      /// guard for access and changes
+      typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
+      
+      /**
+       * Mutex for local changes
+       **/
+      mutable ACE_Recursive_Thread_Mutex mutex_;
+
       /**
        * Variable context that we are modifying
        **/

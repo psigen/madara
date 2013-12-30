@@ -37,6 +37,11 @@ void test_vector (void)
     std::cout << "SUCCESS. Vector[1] and [7] were set and retrieved.\n";
   else
     std::cout << "FAIL. Vector[1] and [7] were not set and retrieved.\n";
+  
+  if (vector.get_name () == "test_vector")
+    std::cout << "SUCCESS. vector.name () returned test_vector.\n";
+  else
+    std::cout << "FAIL. vector.name () did not return test_vector.\n";
 
   knowledge.print ();
 }
@@ -119,6 +124,10 @@ void test_map (void)
   else
     std::cout << "FAIL. map.sync_keys () did not work.\n";
 
+  if (map.get_name () == "test_map" && copy.get_name () == "test_map")
+    std::cout << "SUCCESS. map.name () returned test_map.\n";
+  else
+    std::cout << "FAIL. map.name () did not return test_map.\n";
 
   knowledge.print ();
 }
