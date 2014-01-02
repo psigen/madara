@@ -307,4 +307,4 @@ namespace Madara
 
 
 
-#endif // _MADARA_AGGREGATE_FILTERS_H_
+#endif // _MADARA_MAP_H_

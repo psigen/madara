@@ -117,7 +117,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::mark_and_signal (
   }
 
   if (settings.signal_changes)
-    changed_.signal ();
+    changed_.broadcast ();
 }
 
 // set the value of a variable

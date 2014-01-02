@@ -30,7 +30,7 @@ Madara::Knowledge_Engine::Timed_Executor::add (const Timed_Event & new_event)
 
   events_.push (new_event);
 
-  changed_.signal ();
+  changed_.broadcast ();
 }
 
 void
@@ -51,7 +51,7 @@ Madara::Knowledge_Engine::Timed_Executor::add (const Event & new_event)
   events_.push (timed_event);
 
   // signal any sleeping threads that a new event has been added
-  changed_.signal ();
+  changed_.broadcast ();
 }
 
 ACE_Time_Value
