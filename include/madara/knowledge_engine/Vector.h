@@ -286,6 +286,9 @@ namespace Madara
        **/
       Eval_Settings settings_;
     };
+
+    /// provide the Array alias for the Vector class
+    typedef  Vector   Array;
   }
 }
 

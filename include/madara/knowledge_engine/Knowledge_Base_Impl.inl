@@ -309,6 +309,11 @@ inline
 std::string 
 Madara::Knowledge_Engine::Knowledge_Base_Impl::get_id (void)
 {
+  if (id_ == "")
+  {
+    id_ = setup_unique_hostport ();
+  }
+
   return id_;
 }
 

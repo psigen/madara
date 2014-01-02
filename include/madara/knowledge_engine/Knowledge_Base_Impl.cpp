@@ -27,7 +27,7 @@
 Madara::Knowledge_Engine::Knowledge_Base_Impl::Knowledge_Base_Impl ()
 : settings_ (), files_ (map_)
 {
-  activate_transport ();
+  //activate_transport ();
   // no hope of transporting, so don't setup uniquehostport
 }
 
@@ -601,7 +601,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
   ACE_Time_Value max_wait, sleep_time, next_epoch;
   ACE_Time_Value poll_frequency, last = current;
 
-  if (settings.max_wait_time >= 0)
+  if (settings.poll_frequency >= 0)
   {
     max_wait.set (settings.max_wait_time);
     max_wait = current + max_wait;
@@ -650,7 +650,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::wait (
 
     // Unlike the other wait statements, we allow for a time based wait.
     // To do this, we allow a user to specify a 
-    if (settings.max_wait_time > 0)
+    if (settings.poll_frequency > 0)
     {
       if (current < next_epoch)
       {
