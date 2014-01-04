@@ -129,8 +129,6 @@ namespace Madara
       
     private:
       
-      /// condition for threads that enter with nothing to do
-      typedef ACE_Condition <ACE_Recursive_Thread_Mutex> Condition;
 
       /// guard for access and changes
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
@@ -152,20 +150,10 @@ namespace Madara
       mutable ACE_Recursive_Thread_Mutex mutex_;
       
       /**
-       * Condition for situations with no work available
-       **/
-      mutable Condition changed_;
-
-      /**
        * Event queue
        **/
       std::priority_queue <Timed_Event, 
         std::vector <Timed_Event> > events_;
-
-      /**
-       * Flag for threads to read shutdown information
-       **/
-      volatile bool terminated_;
 
       /**
        * Vector of thread info
@@ -191,6 +179,16 @@ namespace Madara
        * Reference to the number of threads in the control plane
        **/
       Variable_Reference threads_ref_;
+
+      /**
+       * Reference to queue size in the control plane
+       **/
+      Variable_Reference queue_size_;
+
+      /**
+       * Reference to terminated condition within control plane
+       **/
+      Variable_Reference terminated_;
     };
 
     /**

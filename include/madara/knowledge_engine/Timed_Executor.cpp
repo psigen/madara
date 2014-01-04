@@ -11,10 +11,11 @@ bool operator< (
 
 
 Madara::Knowledge_Engine::Timed_Executor::Timed_Executor ()
-  : changed_ (mutex_), terminated_ (false),
-     thread_info_ (0), threads_ (0), num_threads_ (0)
+  : thread_info_ (0), threads_ (0), num_threads_ (0)
 {
   threads_ref_ = control_plane_.get_ref ("threads");
+  queue_size_ = control_plane_.get_ref ("queued");
+  terminated_ = control_plane_.get_ref ("terminated");
 }
       
 
@@ -29,8 +30,10 @@ Madara::Knowledge_Engine::Timed_Executor::add (const Timed_Event & new_event)
   Guard guard (mutex_);
 
   events_.push (new_event);
-
-  changed_.broadcast ();
+  
+  // inform sleeping threads of new queued events
+  control_plane_.set (
+    queue_size_, Knowledge_Record::Integer (events_.size ()));
 }
 
 void
@@ -49,9 +52,10 @@ Madara::Knowledge_Engine::Timed_Executor::add (const Event & new_event)
 
   // add the timed event to the event queue
   events_.push (timed_event);
-
-  // signal any sleeping threads that a new event has been added
-  changed_.broadcast ();
+  
+  // inform sleeping threads of new queued events
+  control_plane_.set (
+    queue_size_, Knowledge_Record::Integer (events_.size ()));
 }
 
 ACE_Time_Value
@@ -59,9 +63,9 @@ Madara::Knowledge_Engine::Timed_Executor::remove (Timed_Event & cur_event)
 {
   // obtain current time
   ACE_Time_Value cur_time = ACE_OS::gettimeofday ();
-
-  Guard guard (mutex_);
   
+  mutex_.acquire ();
+
   // obtain next event in queue
   if (events_.size () > 0)
   {
@@ -90,21 +94,28 @@ Madara::Knowledge_Engine::Timed_Executor::remove (Timed_Event & cur_event)
       cur_event.second = 0;
       cur_time = cur_event.first - cur_time;
     }
+    
+    // inform sleeping threads of new queued events
+    control_plane_.set (
+      queue_size_, Knowledge_Record::Integer (events_.size ()));
+
+    mutex_.release ();
   }
   // there are no events in queue
   else
   {
+    mutex_.release ();
+
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Timed_Executor::remove: " \
       "Nothing to do. Thread going to sleep.\n"));
     
-    ACE_Time_Value max_wait_time;
-    max_wait_time.set (5.0);
-
-    ACE_Time_Value max_time = cur_time + max_wait_time;
-
-    mutex_.release ();
-    changed_.wait (&max_time);
+    Wait_Settings wait_settings;
+    wait_settings.poll_frequency = -1;
+    wait_settings.max_wait_time = 5.0;
+    
+    // inform sleeping threads of new queued events
+    control_plane_.wait ("queued > 0 || terminated", wait_settings);
 
     MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
       DLINFO "Timed_Executor::remove: " \
@@ -122,9 +133,7 @@ Madara::Knowledge_Engine::Timed_Executor::shutdown (void)
 {
   if (thread_info_)
   {
-    terminated_ = true;
-    
-    changed_.broadcast ();
+    control_plane_.set (terminated_, Knowledge_Record::Integer (1));
 
     // wait for all threads to complete
     enter_barrier ();
@@ -151,14 +160,14 @@ Madara::Knowledge_Engine::Timed_Executor::shutdown (void)
 bool
 Madara::Knowledge_Engine::Timed_Executor::is_shutdown (void)
 {
-  return terminated_;
+  return control_plane_.get (terminated_).to_integer () != 0;
 }
 
 void
 Madara::Knowledge_Engine::Timed_Executor::launch_threads (
   unsigned int num_threads)
 {
-  terminated_ = false;
+  control_plane_.set (terminated_, Knowledge_Record::Integer (0));
 
   // shutdown any existing threads
   if (thread_info_)
