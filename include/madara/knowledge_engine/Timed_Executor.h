@@ -33,11 +33,11 @@ namespace Madara
      */
     struct Event
     {
+      /// delay before first execution
+      ACE_Time_Value delay;
+
       /// time between executions in seconds
       ACE_Time_Value period;
-
-      /// holder of last result
-      Knowledge_Record last_result;
 
       /// expression to be executed
       Compiled_Expression expression;
@@ -53,6 +53,9 @@ namespace Madara
 
       /// intended executions
       int intended_executions;
+
+      /// cancel on false return value
+      bool cancel_on_false;
     };
 
     /// forward declare the struct
@@ -123,10 +126,25 @@ namespace Madara
       void launch_threads (unsigned int threads);
 
       /**
-       * Enter barrier
+       * Enters the barrier
        **/
       void enter_barrier (void);
       
+      /**
+       * Clears the event queue. Note that this only clears the
+       * queue. If there are events currently being processed in timed
+       * event threads, they may be added to the queue once they are 
+       * completed. Consequently, clear_queue is usually only completely
+       * effective if shutdown has been called previously.
+       **/
+      void clear_queue (void);
+
+      /**
+       * Returns the number of threads
+       * @return the number of threads currently running
+       **/
+      Knowledge_Record::Integer num_threads (void);
+
     private:
       
 
@@ -219,6 +237,7 @@ namespace Madara
      * function.
      * @param knowledge  the knowledge base to reference and execute in
      * @param expression KaRL expression to execute
+     * @param delay      time, in seconds, before executing
      * @param period     time, in seconds, between executions
      * @param executions number of executions. -1 means infinite executions
      *                   until a shutdown is called on the timed executor
@@ -226,7 +245,7 @@ namespace Madara
     MADARA_Export Event fill_event (
       Knowledge_Base & knowledge,
       const std::string & expression,
-      double period, int executions = -1);
+      double delay = 0.0, double period = 0.0, int executions = -1);
   }
 }
 

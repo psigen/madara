@@ -6,7 +6,7 @@ bool operator< (
   const Madara::Knowledge_Engine::Timed_Event & lhs,
   const Madara::Knowledge_Engine::Timed_Event & rhs)
 {
-  return lhs.first > lhs.first;
+  return lhs.first > rhs.first;
 }
 
 
@@ -22,6 +22,7 @@ Madara::Knowledge_Engine::Timed_Executor::Timed_Executor ()
 Madara::Knowledge_Engine::Timed_Executor::~Timed_Executor ()
 {
   shutdown ();
+  clear_queue ();
 }
 
 void
@@ -47,7 +48,7 @@ Madara::Knowledge_Engine::Timed_Executor::add (const Event & new_event)
   ACE_Time_Value cur_time = ACE_OS::gettimeofday ();
 
   // create timed_event
-  timed_event.first = cur_time + new_event.period;
+  timed_event.first = cur_time + new_event.delay;
   timed_event.second = new Event (new_event);
 
   // add the timed event to the event queue
@@ -217,13 +218,14 @@ Madara::Knowledge_Engine::Timed_Executor::unlock (void)
 Madara::Knowledge_Engine::Event
 Madara::Knowledge_Engine::fill_event (
   Knowledge_Base & knowledge, const std::string & expression,
-      double period, int executions)
+      double delay, double period, int executions)
 {
   Event new_event;
   new_event.executions = 0;
   new_event.intended_executions = executions;
   new_event.knowledge = &knowledge;
   new_event.period.set (period);
+  new_event.delay.set (delay);
   new_event.expression = knowledge.compile (expression);
 
   return new_event;
@@ -248,4 +250,25 @@ Madara::Knowledge_Engine::Timed_Executor::enter_barrier (void)
   MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
     DLINFO "Timed_Executor::enter_barrier: " \
     "Leaving barrier.\n"));
+}
+
+void 
+Madara::Knowledge_Engine::Timed_Executor::clear_queue (void)
+{
+  Guard guard (mutex_);
+
+  while (events_.size () > 0)
+  {
+    Timed_Event cur_event (events_.top ());
+    delete cur_event.second;
+    events_.pop ();
+  }
+}
+
+Madara::Knowledge_Record::Integer
+Madara::Knowledge_Engine::Timed_Executor::num_threads (void)
+{
+  Guard guard (mutex_);
+
+  return num_threads_;
 }

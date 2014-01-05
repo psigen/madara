@@ -106,7 +106,7 @@ Madara::Knowledge_Engine::Timed_Event_Thread::svc (void)
     if (valid > 0)
     {
       ++valid->executions;
-      valid->knowledge->evaluate (valid->expression);
+      Knowledge_Record result (valid->knowledge->evaluate (valid->expression));
 
       if (valid->intended_executions >= 0 &&
           valid->intended_executions == valid->executions)
@@ -114,6 +114,15 @@ Madara::Knowledge_Engine::Timed_Event_Thread::svc (void)
         MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
           DLINFO "%s: " \
           "Timed Event has expired. Deleting.\n",
+          print_prefix.c_str ()));
+
+        delete valid;
+      }
+      else if (valid->cancel_on_false && result.is_false ())
+      {
+        MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+          DLINFO "%s: " \
+          "Timed Event returned false. User requested a cancel. Deleting.\n",
           print_prefix.c_str ()));
 
         delete valid;
@@ -129,7 +138,7 @@ Madara::Knowledge_Engine::Timed_Event_Thread::svc (void)
         info_.executor->add (cur_event);
       }
     }
-    // otherwise, sleep
+    // otherwise, wait on changes to the queue
     else
     {
       if (sleep_time > zero_time)
@@ -138,8 +147,13 @@ Madara::Knowledge_Engine::Timed_Event_Thread::svc (void)
           DLINFO "%s: " \
           "Not ready for timeout. Thread sleeping.\n",
           print_prefix.c_str ()));
-
-        Madara::Utility::sleep (sleep_time);
+        
+        Wait_Settings wait_settings;
+        wait_settings.poll_frequency = -1;
+        wait_settings.max_wait_time = 5.0;
+    
+        // inform sleeping threads of new queued events
+        info_.control_plane->wait ("queued > 0 || terminated", wait_settings);
       }
     }
   }

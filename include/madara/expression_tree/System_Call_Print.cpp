@@ -76,7 +76,7 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 
     context_.print (statement, 0);
 
-    return Madara::Knowledge_Record::Integer (statement.size ());
+    return_value = Knowledge_Record::Integer (0);
   }
   else if (nodes_.size () == 2)
   {
@@ -90,7 +90,7 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
     
     context_.print (statement, log_level);
 
-    return Madara::Knowledge_Record::Integer (statement.size ());
+    return_value = Knowledge_Record::Integer (0);
   }
   else
   {
