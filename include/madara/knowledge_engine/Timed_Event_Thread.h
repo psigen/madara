@@ -54,6 +54,16 @@ namespace Madara
        * info for service loop
        **/
       Timed_Event_Thread_Info info_;
+
+      /**
+       * expression for checking if events are queued or terminated
+       **/
+      Compiled_Expression queued_or_terminated_;
+      
+      /**
+       * expression for letting control plane know the thread is closed
+       **/
+      Compiled_Expression thread_closed_;
     };
   }
 }

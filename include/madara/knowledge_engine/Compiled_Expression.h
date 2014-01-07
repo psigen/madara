@@ -59,6 +59,11 @@ namespace Madara
        * @param   ce      Compiled expression to copy from
        **/
       void operator= (const Compiled_Expression & ce);
+      
+      /**
+       * Gets the root of the compiled expression
+       **/
+      Expression_Tree::Component_Node * get_root (void);
 
     private:
       std::string logic;

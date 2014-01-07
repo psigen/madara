@@ -226,7 +226,7 @@ Madara::Knowledge_Engine::fill_event (
   new_event.knowledge = &knowledge;
   new_event.period.set (period);
   new_event.delay.set (delay);
-  new_event.expression = knowledge.compile (expression);
+  new_event.root = knowledge.compile (expression).get_root ();
 
   return new_event;
 }

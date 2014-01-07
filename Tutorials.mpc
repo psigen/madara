@@ -329,3 +329,23 @@ project (Tutorial_Deadline_Filtering) : using_madara, using_ace {
     tutorials/advanced/deadline_filtering.cpp
   }
 }
+
+project (Tutorial_Adding_Events) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = tutorial_adding_events
+  
+  requires += tutorials
+
+  Documentation_Files {
+    tutorials
+  }
+  
+  Build_Files {
+    Tutorials.mpc
+  }
+
+  Source_Files {
+    tutorials/timed_executor/adding_events.cpp
+  }
+}
+

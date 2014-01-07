@@ -9,6 +9,7 @@
 #include <queue>
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Eval_Settings.h"
+#include "madara/expression_tree/Component_Node.h"
 
 #include "ace/High_Res_Timer.h"
 #include "ace/Barrier.h"
@@ -39,8 +40,8 @@ namespace Madara
       /// time between executions in seconds
       ACE_Time_Value period;
 
-      /// expression to be executed
-      Compiled_Expression expression;
+      /// expression to be executed (rooted Tree)
+      Expression_Tree::Component_Node * root;
 
       /**
        * knowledge base for executing the expression
@@ -151,6 +152,9 @@ namespace Madara
       /// guard for access and changes
       typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
       
+      /// priority queue typedef
+      typedef std::priority_queue <Timed_Event, std::vector <Timed_Event> >
+        Priority_Queue;
 
       /**
        * Locks the context
@@ -170,8 +174,7 @@ namespace Madara
       /**
        * Event queue
        **/
-      std::priority_queue <Timed_Event, 
-        std::vector <Timed_Event> > events_;
+      Priority_Queue events_;
 
       /**
        * Vector of thread info

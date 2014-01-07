@@ -664,6 +664,18 @@ namespace Madara
         Compiled_Expression & expression,
         const Eval_Settings & settings =
           Eval_Settings ());
+      
+      /**
+       * Evaluates a root-based tree (result of compile)
+       *
+       * @param root            root-based tree
+       * @param settings        Settings for evaluating and printing
+       * @return                value of expression
+       **/
+      Madara::Knowledge_Record evaluate (
+        Expression_Tree::Component_Node * root,
+        const Eval_Settings & settings =
+          Eval_Settings ());
 
       /**
        * Waits for an expression to be non-zero.

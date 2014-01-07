@@ -1230,6 +1230,18 @@ Madara::Knowledge_Engine::Thread_Safe_Context::evaluate (
   return expression.expression.evaluate (settings);
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Thread_Safe_Context::evaluate (
+  Expression_Tree::Component_Node * root,
+  const Knowledge_Update_Settings & settings)
+{
+  Context_Guard guard (mutex_);
+  if (root)
+    return root->evaluate (settings);
+  else
+    return Knowledge_Record (Knowledge_Record::Integer (0));
+}
+
 size_t
   Madara::Knowledge_Engine::Thread_Safe_Context::to_vector (
   const std::string & subject,

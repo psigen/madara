@@ -19,6 +19,16 @@ Madara::Knowledge_Engine::Compiled_Expression::~Compiled_Expression ()
 }
 
 
+/**
+  * Gets the root of the compiled expression
+  **/
+Madara::Expression_Tree::Component_Node *
+Madara::Knowledge_Engine::Compiled_Expression::get_root (void)
+{
+  return expression.get_root ();
+}
+
+
 void
 Madara::Knowledge_Engine::Compiled_Expression::operator= (
   const Compiled_Expression & ce)

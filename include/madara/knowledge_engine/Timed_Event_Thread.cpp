@@ -53,6 +53,15 @@ Madara::Knowledge_Engine::Timed_Event_Thread::Timed_Event_Thread (
       DLINFO "Timed_Event_Thread::Timed_Event_Thread:" \
       " failed to create thread. ERRNO = %d\n", ACE_OS::last_error ()));
   }
+
+  std::stringstream expression;
+  expression << "thread.";
+  expression << info_.id;
+  expression << ".closed = 1";
+
+  thread_closed_ = info_.control_plane->compile (expression.str ());
+  queued_or_terminated_ = info_.control_plane->compile (
+    "queued > 0 || terminated");
 }
 
 Madara::Knowledge_Engine::Timed_Event_Thread::~Timed_Event_Thread ()
@@ -106,7 +115,7 @@ Madara::Knowledge_Engine::Timed_Event_Thread::svc (void)
     if (valid > 0)
     {
       ++valid->executions;
-      Knowledge_Record result (valid->knowledge->evaluate (valid->expression));
+      Knowledge_Record result (valid->knowledge->evaluate (valid->root));
 
       if (valid->intended_executions >= 0 &&
           valid->intended_executions == valid->executions)
@@ -149,20 +158,16 @@ Madara::Knowledge_Engine::Timed_Event_Thread::svc (void)
           print_prefix.c_str ()));
         
         Wait_Settings wait_settings;
-        wait_settings.poll_frequency = -1;
+        wait_settings.poll_frequency = 0.5;
         wait_settings.max_wait_time = 5.0;
     
         // inform sleeping threads of new queued events
-        info_.control_plane->wait ("queued > 0 || terminated", wait_settings);
+        info_.control_plane->wait (queued_or_terminated_, wait_settings);
       }
     }
   }
 
-  std::stringstream expression;
-  expression << "thread.";
-  expression << info_.id;
-  expression << ".closed = 1";
-  info_.control_plane->evaluate (expression.str ());
+  info_.control_plane->evaluate (thread_closed_);
 
   return 0;
 }

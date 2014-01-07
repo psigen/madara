@@ -131,6 +131,13 @@ to stop bursty clients from overwhelming the agent network. In this tutorial,
 we examine the QoS_Transport_Settings class and use send and receive filters
 enforce deadlines.
 
+14.) timed_executor/adding_events.cpp
+
+With version 1.5.3, the KaRL engine includes support for timed event processing.
+Timed events are KaRL logics that can be queued into the system and executed by
+time-sensitive threads with a certain delay, period, and cancellation semantics.
+In this tutorial, we create a simple program that queues two timed events,
+cancel one of them and runs until a certain condition is met.
 
 ======== Additional example programs ==========
 

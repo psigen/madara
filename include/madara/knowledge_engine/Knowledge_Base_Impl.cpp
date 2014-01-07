@@ -748,3 +748,39 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
 
   return last_value;
 }
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base_Impl::evaluate (
+  Expression_Tree::Component_Node * root,
+  const Eval_Settings & settings)
+{
+  Madara::Knowledge_Record last_value;
+
+  MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
+        DLINFO "Knowledge_Base_Impl::evaluate:" \
+        " evaluating Component_Node rooted tree.\n"));
+
+  // iterators and tree for evaluation of interpreter results
+  //Madara::Expression_Tree::Expression_Tree tree;
+
+  // print the post statement at highest log level (cannot be masked)
+  if (settings.pre_print_statement != "")
+    map_.print (settings.pre_print_statement, MADARA_LOG_EMERGENCY);
+
+  // lock the context from being updated by any ongoing threads
+  map_.lock ();
+
+  // interpret the current expression and then evaluate it
+  //tree = interpreter_.interpret (map_, expression);
+  last_value = map_.evaluate (root, settings);
+  
+  send_modifieds ("Knowledge_Base_Impl:evaluate", settings);
+
+  // print the post statement at highest log level (cannot be masked)
+  if (settings.post_print_statement != "")
+    map_.print (settings.post_print_statement, MADARA_LOG_EMERGENCY);
+
+  map_.unlock ();
+
+  return last_value;
+}

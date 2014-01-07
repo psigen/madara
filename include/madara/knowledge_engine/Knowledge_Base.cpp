@@ -601,6 +601,15 @@ Madara::Knowledge_Engine::Knowledge_Base::evaluate (
   return impl_->evaluate (expression, settings);
 }
 
+// evaluate a knowledge expression and choose to send any modifications
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Knowledge_Base::evaluate (
+  Expression_Tree::Component_Node * root,
+  const Eval_Settings & settings)
+{
+  return impl_->evaluate (root, settings);
+}
+
 
 // Defines a function
 void Madara::Knowledge_Engine::Knowledge_Base::define_function (

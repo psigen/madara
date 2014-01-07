@@ -976,6 +976,19 @@ namespace Madara
       Knowledge_Record evaluate (Compiled_Expression expression,
         const Knowledge_Update_Settings & settings = 
               Knowledge_Update_Settings ());
+      
+      /**
+       * Evaluate a component node-rooted tree. Please note that if you update
+       * any variables here, they will not be sent through any transports
+       * until you call through the Knowledge_Base.
+       * @param   root        Root of an expression tree
+       * @param   settings    settings for applying the update
+       * @return              result of the evaluation
+       **/
+      Knowledge_Record evaluate (
+        Expression_Tree::Component_Node * root,
+        const Knowledge_Update_Settings & settings = 
+                    Knowledge_Update_Settings ());
 
       /**
        * Saves the context to a file
