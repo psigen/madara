@@ -113,7 +113,7 @@ int main (int argc, char * argv[])
      ".executions <= 15 || #print ('  Canceling Type B event\n')"
      ,
 
-    // specify a delay from now before executing the logic (5 seconds)
+    // specify a delay from now before executing the logic (2 seconds)
     2.0,
 
     /**
