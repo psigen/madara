@@ -33,7 +33,7 @@ namespace Madara
        * @param  knowledge  the knowledge base that will contain the vector
        * @param  settings   settings for evaluating the vector
        **/
-      Vector (const std::string & name, unsigned int size,
+      Vector (const std::string & name, size_t size,
               Knowledge_Base & knowledge,
               const Eval_Settings & settings = Eval_Settings (true));
       
@@ -51,13 +51,13 @@ namespace Madara
        * Resizes the vector
        * @param   size   maximum size of the vector
        **/
-      void resize (unsigned int size);
+      void resize (size_t size);
       
       /**
        * Returns the size of the vector
        * @return size of the vector
        **/
-      unsigned int size (void);
+      size_t size (void);
       
       /**
        * Returns the name of the vector

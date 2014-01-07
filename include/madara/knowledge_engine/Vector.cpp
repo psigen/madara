@@ -2,7 +2,7 @@
 
 
 Madara::Knowledge_Engine::Vector::Vector (const std::string & name,
-  unsigned int size,
+  size_t size,
   Knowledge_Base & knowledge,
   const Eval_Settings & settings)
 : knowledge_ (knowledge), name_ (name), settings_ (settings) 
@@ -28,10 +28,10 @@ Madara::Knowledge_Engine::Vector::~Vector ()
 
 
 void
-Madara::Knowledge_Engine::Vector::resize (unsigned int size)
+Madara::Knowledge_Engine::Vector::resize (size_t size)
 {
   Guard guard (mutex_);
-  unsigned int old_size = vector_.size ();
+  size_t old_size = vector_.size ();
 
   if (old_size != size)
   {
@@ -51,7 +51,7 @@ Madara::Knowledge_Engine::Vector::resize (unsigned int size)
   }
 }
 
-unsigned int
+size_t
 Madara::Knowledge_Engine::Vector::size (void)
 {
   Guard guard (mutex_);

@@ -56,7 +56,7 @@ namespace Madara
        * Returns the size of the map
        * @return size of the map
        **/
-      unsigned int size (void);
+      size_t size (void);
       
       /**
        * Syncs the keys from the knowledge base. This can be useful

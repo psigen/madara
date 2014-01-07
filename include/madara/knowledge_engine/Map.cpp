@@ -60,7 +60,7 @@ Madara::Knowledge_Engine::Map::operator[] (const std::string & key)
   return knowledge_.get (entry->second, settings_);
 }
 
-unsigned int
+size_t
 Madara::Knowledge_Engine::Map::size (void)
 {
   Guard guard (mutex_);
