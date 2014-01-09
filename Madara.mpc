@@ -58,6 +58,7 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
   Source_Files {
     include/madara/expression_tree
     include/madara/knowledge_engine
+    include/madara/knowledge_engine/containers
     include/madara/transport/tcp
     include/madara/transport/udp
     include/madara/transport/multicast
@@ -83,6 +84,7 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
   Header_Files {
     include/madara/expression_tree
     include/madara/knowledge_engine
+    include/madara/knowledge_engine/containers
     include/madara/utility
     include/madara/transport/tcp
     include/madara/transport/udp

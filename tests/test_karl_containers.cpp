@@ -1,17 +1,18 @@
 
-#include "madara/knowledge_engine/Vector.h"
-#include "madara/knowledge_engine/Vector_N.h"
-#include "madara/knowledge_engine/Map.h"
+#include "madara/knowledge_engine/containers/Vector.h"
+#include "madara/knowledge_engine/containers/Vector_N.h"
+#include "madara/knowledge_engine/containers/Map.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include <iostream>
 
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 void test_vector (void)
 {
   std::cout << "************* VECTOR: CREATING VECTOR*************\n";
   engine::Knowledge_Base knowledge;
-  engine::Vector vector ("test_vector", 10, knowledge);
+  containers::Vector vector ("test_vector", 10, knowledge);
   unsigned int size = vector.size ();
 
   vector.set (1, "value.at.1");
@@ -51,10 +52,10 @@ void test_vector_n (void)
 {
   std::cout << "************* VECTOR_N: CREATING 3-D VECTOR*************\n";
   engine::Knowledge_Base knowledge;
-  engine::Array_N test_vector ("test_vector", knowledge);
+  containers::Array_N test_vector ("test_vector", knowledge);
 
   // create a 3-dimensional vector
-  engine::Vector_N::Index index (3);
+  containers::Vector_N::Index index (3);
 
   // set the elements of the 3 dimensional array to be easily identifiable
   for (Madara::Knowledge_Record::Integer i = 0; i < 10; ++i)
@@ -121,7 +122,7 @@ void test_map (void)
   std::cout << "************* MAP: SETTING KEY:VALUE PAIRS*************\n";
   engine::Knowledge_Base knowledge;
   std::vector <std::string> keys;
-  engine::Map map ("test_map", knowledge);
+  containers::Map map ("test_map", knowledge);
   
   map.set ("name", "Rob Roy");
   map.set ("occupation", "Lord of the MacGregors");
@@ -158,7 +159,7 @@ void test_map (void)
     std::cout << "FAIL. map values were not set and retrieved.\n";
   
   std::cout << "************* MAP: COPYING MAP FROM KB*************\n";
-  engine::Map copy ("test_map", knowledge);
+  containers::Map copy ("test_map", knowledge);
   
   size = map.size ();
   map.keys (keys);

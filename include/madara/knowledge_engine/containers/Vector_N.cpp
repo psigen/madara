@@ -1,7 +1,8 @@
 #include "Vector_N.h"
 
 
-Madara::Knowledge_Engine::Vector_N::Vector_N (const std::string & name,
+Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (
+  const std::string & name,
   Knowledge_Base & knowledge,
   const Eval_Settings & settings)
 : knowledge_ (knowledge), name_ (name), settings_ (settings) 
@@ -9,7 +10,7 @@ Madara::Knowledge_Engine::Vector_N::Vector_N (const std::string & name,
 }
       
 
-Madara::Knowledge_Engine::Vector_N::Vector_N (const Vector_N & rhs)
+Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (const Vector_N & rhs)
   : knowledge_ (rhs.knowledge_),
     name_ (rhs.name_),
     vector_ (rhs.vector_),
@@ -19,20 +20,20 @@ Madara::Knowledge_Engine::Vector_N::Vector_N (const Vector_N & rhs)
 }
 
 
-Madara::Knowledge_Engine::Vector_N::~Vector_N ()
+Madara::Knowledge_Engine::Containers::Vector_N::~Vector_N ()
 {
 
 }
 
 std::string
-Madara::Knowledge_Engine::Vector_N::get_name (void)
+Madara::Knowledge_Engine::Containers::Vector_N::get_name (void)
 {
   Guard guard (mutex_);
   return name_;
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Vector_N::operator[] (const Index & index)
+Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
 {
   Guard guard (mutex_);
   Knowledge_Record result;
@@ -56,8 +57,10 @@ Madara::Knowledge_Engine::Vector_N::operator[] (const Index & index)
       
       
 
-int Madara::Knowledge_Engine::Vector_N::read_file (const Index & index, 
-                const std::string & filename, 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::read_file (
+  const Index & index, 
+  const std::string & filename, 
   const Eval_Settings & settings)
 {
   Guard guard (mutex_);
@@ -81,7 +84,9 @@ int Madara::Knowledge_Engine::Vector_N::read_file (const Index & index,
 }
       
 
-int Madara::Knowledge_Engine::Vector_N::set_file (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_file (
+  const Index & index,
   const unsigned char * value, size_t size, 
   const Eval_Settings & settings)
 {
@@ -106,7 +111,9 @@ int Madara::Knowledge_Engine::Vector_N::set_file (const Index & index,
 }
       
 
-int Madara::Knowledge_Engine::Vector_N::set_jpeg (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
+  const Index & index,
   const unsigned char * value, size_t size, 
   const Eval_Settings & settings)
 {
@@ -131,7 +138,9 @@ int Madara::Knowledge_Engine::Vector_N::set_jpeg (const Index & index,
 }
       
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
   Knowledge_Record::Integer value, 
   const Eval_Settings & settings)
 {
@@ -156,7 +165,9 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
 }
 
 
-int Madara::Knowledge_Engine::Vector_N::set_index (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_index (
+  const Index & index,
   size_t sub_index,
   Knowledge_Record::Integer value,
   const Eval_Settings & settings)
@@ -182,7 +193,9 @@ int Madara::Knowledge_Engine::Vector_N::set_index (const Index & index,
 }
 
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
   const Madara::Knowledge_Record::Integer * value,
   uint32_t size,
   const Eval_Settings & settings)
@@ -208,7 +221,9 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
 }
        
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
   const std::vector <Knowledge_Record::Integer> & value,
   const Eval_Settings & settings)
 {
@@ -233,7 +248,10 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
 }
        
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index, double value, 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  double value, 
   const Eval_Settings & settings)
 {
   Guard guard (mutex_);
@@ -257,7 +275,9 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index, double value,
 }
 
 
-int Madara::Knowledge_Engine::Vector_N::set_index (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_index (
+  const Index & index,
   size_t sub_index,
   double value,
   const Eval_Settings & settings)
@@ -283,7 +303,9 @@ int Madara::Knowledge_Engine::Vector_N::set_index (const Index & index,
 }
 
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
   const double * value,
   uint32_t size,
   const Eval_Settings & settings)
@@ -309,7 +331,9 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
 }
        
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
   const std::vector <double> & value,
   const Eval_Settings & settings)
 {
@@ -334,7 +358,9 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
 }
         
 
-int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
   const std::string & value, 
   const Eval_Settings & settings)
 {
@@ -359,8 +385,10 @@ int Madara::Knowledge_Engine::Vector_N::set (const Index & index,
 }
 
 
-void Madara::Knowledge_Engine::Vector_N::set_quality (
-  const Index & index, uint32_t quality,
+void
+Madara::Knowledge_Engine::Containers::Vector_N::set_quality (
+  const Index & index,
+  uint32_t quality,
   const Knowledge_Reference_Settings & settings)
 {
   Guard guard (mutex_);
