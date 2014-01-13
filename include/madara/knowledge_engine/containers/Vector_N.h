@@ -32,9 +32,15 @@ namespace Madara
       public:
         /// A vector of unsigned ints is the supported indexing method
         typedef  std::vector <unsigned int>   Index;
-
+        
         /**
          * Default constructor
+         * @param  settings     settings for evaluating the vector
+         **/
+        Vector_N (const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
+         * Constructor
          * @param  name         name of the vector in the knowledge base
          * @param  knowledge    the knowledge base that will contain the vector
          * @param  settings     settings for evaluating the vector
@@ -58,6 +64,14 @@ namespace Madara
          * @return name of the vector
          **/
         std::string get_name (void);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param varn_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         **/
+        void set_name (const std::string & var_name,
+          Knowledge_Base & knowledge);
 
         /**
          * Retrieves a copy of the record from the map.
@@ -375,17 +389,12 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Knowledge_Base & knowledge_;
+        Knowledge_Base * knowledge_;
 
         /**
          * Prefix of variable
          **/
-        const std::string name_;
-
-        /**
-         * Values of the array
-         **/
-        std::vector <Variable_Reference> vector_;
+        std::string name_;
 
         /**
          * Settings for modifications

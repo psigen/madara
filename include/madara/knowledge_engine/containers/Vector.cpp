@@ -2,11 +2,17 @@
 
 
 Madara::Knowledge_Engine::Containers::Vector::Vector (
+  const Eval_Settings & settings)
+: knowledge_ (0), settings_ (settings) 
+{
+}
+   
+Madara::Knowledge_Engine::Containers::Vector::Vector (
   const std::string & name,
   size_t size,
   Knowledge_Base & knowledge,
   const Eval_Settings & settings)
-: knowledge_ (knowledge), name_ (name), settings_ (settings) 
+: knowledge_ (&knowledge), name_ (name), settings_ (settings) 
 {
   resize (size);
 }
@@ -31,22 +37,25 @@ Madara::Knowledge_Engine::Containers::Vector::~Vector ()
 void
 Madara::Knowledge_Engine::Containers::Vector::resize (size_t size)
 {
-  Guard guard (mutex_);
-  size_t old_size = vector_.size ();
-
-  if (old_size != size)
+  if (knowledge_ && name_ != "")
   {
-    vector_.resize (size);
+    Guard guard (mutex_);
+    size_t old_size = vector_.size ();
 
-    if (size > old_size)
+    if (old_size != size)
     {
-      for (; old_size < size; ++old_size)
+      vector_.resize (size);
+
+      if (size > old_size)
       {
-        std::stringstream buffer;
-        buffer << name_;
-        buffer << '.';
-        buffer << old_size;
-        vector_[old_size] = knowledge_.get_ref (buffer.str (), settings_);
+        for (; old_size < size; ++old_size)
+        {
+          std::stringstream buffer;
+          buffer << name_;
+          buffer << '.';
+          buffer << old_size;
+          vector_[old_size] = knowledge_->get_ref (buffer.str (), settings_);
+        }
       }
     }
   }
@@ -66,14 +75,30 @@ Madara::Knowledge_Engine::Containers::Vector::get_name (void)
   return name_;
 }
 
+void
+Madara::Knowledge_Engine::Containers::Vector::set_name (
+  const std::string & var_name,
+  Knowledge_Base & knowledge, int size)
+{
+  if (knowledge_ != &knowledge || name_ != var_name)
+  {
+    knowledge_ = &knowledge;
+    name_ = var_name;
+
+    vector_.clear ();
+    if (size > 0)
+      resize (size_t (size));
+  }
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector::operator[] (unsigned int index)
 {
   Guard guard (mutex_);
   Knowledge_Record result;
 
-  if (index < vector_.size ())
-    result = knowledge_.get (vector_[index], settings_);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->get (vector_[index], settings_);
 
   return result;
 }
@@ -89,8 +114,8 @@ Madara::Knowledge_Engine::Containers::Vector::read_file (
   Guard guard (mutex_);
   int result = -1;
 
-  if (index < vector_.size ())
-    result = knowledge_.read_file (vector_[index], filename, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->read_file (vector_[index], filename, settings);
 
   return result;
 }
@@ -105,8 +130,8 @@ Madara::Knowledge_Engine::Containers::Vector::set_file (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set_file (vector_[index], value, size, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set_file (vector_[index], value, size, settings);
   
   return result;
 }
@@ -121,8 +146,8 @@ Madara::Knowledge_Engine::Containers::Vector::set_jpeg (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set_jpeg (vector_[index], value, size, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set_jpeg (vector_[index], value, size, settings);
   
   return result;
 }
@@ -137,8 +162,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, settings);
   
   return result;
 }
@@ -154,8 +179,8 @@ Madara::Knowledge_Engine::Containers::Vector::set_index (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set_index (vector_[index], sub_index, value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set_index (vector_[index], sub_index, value, settings);
   
   return result;
 }
@@ -171,8 +196,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, size, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, size, settings);
   
   return result;
 }
@@ -187,8 +212,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, settings);
   
   return result;
 }
@@ -203,8 +228,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, settings);
   
   return result;
 }
@@ -220,8 +245,8 @@ Madara::Knowledge_Engine::Containers::Vector::set_index (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set_index (vector_[index], sub_index, value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set_index (vector_[index], sub_index, value, settings);
   
   return result;
 }
@@ -237,8 +262,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, size, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, size, settings);
   
   return result;
 }
@@ -253,8 +278,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, settings);
   
   return result;
 }
@@ -269,8 +294,8 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index < vector_.size ())
-    result = knowledge_.set (vector_[index], value, settings);
+  if (index < vector_.size () && knowledge_)
+    result = knowledge_->set (vector_[index], value, settings);
   
   return result;
 }
@@ -283,6 +308,7 @@ Madara::Knowledge_Engine::Containers::Vector::set_quality (
   const Knowledge_Reference_Settings & settings)
 {
   Guard guard (mutex_);
-  if (index < vector_.size ())
-    knowledge_.set_quality (vector_[index].get_name (), quality, settings);
+
+  if (index < vector_.size () && knowledge_)
+    knowledge_->set_quality (vector_[index].get_name (), quality, settings);
 }

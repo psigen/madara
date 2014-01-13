@@ -2,6 +2,7 @@
 #include "madara/knowledge_engine/containers/Vector.h"
 #include "madara/knowledge_engine/containers/Vector_N.h"
 #include "madara/knowledge_engine/containers/Map.h"
+#include "madara/knowledge_engine/containers/Integer.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include <iostream>
 
@@ -203,11 +204,34 @@ void test_map (void)
   knowledge.print ();
 }
 
+void test_integer (void)
+{
+  std::cout << "************* INTEGER: GETTING AND SETTING*************\n";
+  engine::Knowledge_Base knowledge;
+  containers::Integer my_int ("my_int", knowledge);
+
+  std::cout << "Integer value: " << *my_int << "\n";
+  
+  std::cout << "Changing value...\n";
+
+  my_int = 15;
+  
+  std::cout << "Integer value: " << *my_int << "\n";
+  
+  if (my_int.get_name () == "my_int" && *my_int == 15)
+    std::cout << "SUCCESS. my_int was the correct name and value.\n";
+  else
+    std::cout << "FAIL. my_int was not the correct name and value.\n";
+
+  knowledge.print ();
+}
+
 int main (int argc, char * argv[])
 {
   test_vector ();
   test_map ();
   test_vector_n ();
+  test_integer ();
 
   return 0;
 }

@@ -1,16 +1,22 @@
 #include "Map.h"
 
 
+Madara::Knowledge_Engine::Containers::Map::Map (
+  const Eval_Settings & settings)
+: knowledge_ (0), settings_ (settings)
+{
+}
+  
 
 Madara::Knowledge_Engine::Containers::Map::Map (
   const std::string & name,
   Knowledge_Base & knowledge,
   const Eval_Settings & settings)
-: knowledge_ (knowledge), name_ (name), settings_ (settings)
+: knowledge_ (&knowledge), name_ (name), settings_ (settings)
 {
   std::map <std::string, Knowledge_Record> contents;
   std::string common = name + ".";
-  knowledge_.to_map (common, contents);
+  knowledge_->to_map (common, contents);
 
   if (contents.size () > 0)
   {
@@ -52,12 +58,12 @@ Madara::Knowledge_Engine::Containers::Map::operator[] (const std::string & key)
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.get (ref, settings_);
+    return knowledge_->get (ref, settings_);
   }
 
-  return knowledge_.get (entry->second, settings_);
+  return knowledge_->get (entry->second, settings_);
 }
 
 size_t
@@ -74,7 +80,7 @@ Madara::Knowledge_Engine::Containers::Map::sync_keys (void)
   Guard guard (mutex_);
   std::map <std::string, Knowledge_Record> contents;
   std::string common = name_ + ".";
-  knowledge_.to_map (common, contents);
+  knowledge_->to_map (common, contents);
   std::vector <std::string> additions;
 
   for (std::map <std::string, Knowledge_Record>::iterator i =
@@ -85,7 +91,7 @@ Madara::Knowledge_Engine::Containers::Map::sync_keys (void)
     if (map_.find (key) == map_.end ())
     {
       additions.push_back (key);
-      map_[key] = knowledge_.get_ref (i->first, settings_);
+      map_[key] = knowledge_->get_ref (i->first, settings_);
     }
   }
 
@@ -105,6 +111,23 @@ Madara::Knowledge_Engine::Containers::Map::get_name (void)
 {
   Guard guard (mutex_);
   return name_;
+}
+
+void
+Madara::Knowledge_Engine::Containers::Map::set_name (
+  const std::string & var_name,
+  Knowledge_Base & knowledge, bool sync)
+{
+  if (knowledge_ != &knowledge || name_ != var_name)
+  {
+    knowledge_ = &knowledge;
+    name_ = var_name;
+
+    // the old map will no longer be appropriate
+    clear ();
+    if (sync)
+      sync_keys ();
+  }
 }
 
 bool
@@ -147,12 +170,12 @@ Madara::Knowledge_Engine::Containers::Map::read_file (
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.read_file (ref, filename, settings_);
+    return knowledge_->read_file (ref, filename, settings_);
   }
   
-  return knowledge_.read_file (entry->second, filename, settings_);
+  return knowledge_->read_file (entry->second, filename, settings_);
 }
       
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
@@ -171,12 +194,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, settings_);
+    return knowledge_->set (ref, value, settings_);
   }
   
-  return knowledge_.set (entry->second, value, settings_);
+  return knowledge_->set (entry->second, value, settings_);
 }
 
 
@@ -198,12 +221,12 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set_index (ref, index, value, settings_);
+    return knowledge_->set_index (ref, index, value, settings_);
   }
   
-  return knowledge_.set_index (entry->second, index, value, settings_);
+  return knowledge_->set_index (entry->second, index, value, settings_);
 }
 
 
@@ -224,12 +247,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, size, settings_);
+    return knowledge_->set (ref, value, size, settings_);
   }
   
-  return knowledge_.set (entry->second, value, size, settings_);
+  return knowledge_->set (entry->second, value, size, settings_);
 }
        
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
@@ -248,12 +271,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, settings_);
+    return knowledge_->set (ref, value, settings_);
   }
   
-  return knowledge_.set (entry->second, value, settings_);
+  return knowledge_->set (entry->second, value, settings_);
 }
        
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
@@ -272,12 +295,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, settings_);
+    return knowledge_->set (ref, value, settings_);
   }
   
-  return knowledge_.set (entry->second, value, settings_);
+  return knowledge_->set (entry->second, value, settings_);
 }
 
 
@@ -298,12 +321,12 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (const std::string & ke
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set_index (ref, index, value, settings_);
+    return knowledge_->set_index (ref, index, value, settings_);
   }
   
-  return knowledge_.set_index (entry->second, index, value, settings_);
+  return knowledge_->set_index (entry->second, index, value, settings_);
 }
 
 
@@ -324,12 +347,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, size, settings_);
+    return knowledge_->set (ref, value, size, settings_);
   }
   
-  return knowledge_.set (entry->second, value, size, settings_);
+  return knowledge_->set (entry->second, value, size, settings_);
 }
        
 
@@ -349,12 +372,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, settings_);
+    return knowledge_->set (ref, value, settings_);
   }
   
-  return knowledge_.set (entry->second, value, settings_);
+  return knowledge_->set (entry->second, value, settings_);
 }
         
 
@@ -374,12 +397,12 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set (ref, value, settings_);
+    return knowledge_->set (ref, value, settings_);
   }
   
-  return knowledge_.set (entry->second, value, settings_);
+  return knowledge_->set (entry->second, value, settings_);
 }
 
 
@@ -394,7 +417,7 @@ void Madara::Knowledge_Engine::Containers::Map::set_quality (
   buffer << '.';
   buffer << key;
 
-  knowledge_.set_quality (buffer.str (), quality, settings);
+  knowledge_->set_quality (buffer.str (), quality, settings);
 }
       
 
@@ -414,12 +437,12 @@ int Madara::Knowledge_Engine::Containers::Map::set_file (const std::string & key
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set_file (ref, value, size, settings_);
+    return knowledge_->set_file (ref, value, size, settings_);
   }
   
-  return knowledge_.set_file (entry->second, value, size, settings_);
+  return knowledge_->set_file (entry->second, value, size, settings_);
 }
       
 
@@ -439,10 +462,10 @@ int Madara::Knowledge_Engine::Containers::Map::set_jpeg (const std::string & key
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = knowledge_.get_ref (final_key, settings_);
+    Variable_Reference ref = knowledge_->get_ref (final_key, settings_);
     map_[key] = ref;
-    return knowledge_.set_jpeg (ref, value, size, settings_);
+    return knowledge_->set_jpeg (ref, value, size, settings_);
   }
   
-  return knowledge_.set_jpeg (entry->second, value, size, settings_);
+  return knowledge_->set_jpeg (entry->second, value, size, settings_);
 }

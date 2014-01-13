@@ -32,6 +32,11 @@ namespace Madara
         /**
          * Default constructor
          **/
+        Map (const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
+         * Constructor
+         **/
         Map (const std::string & name,
                 Knowledge_Base & knowledge,
                 const Eval_Settings & settings = Eval_Settings (true));
@@ -85,6 +90,15 @@ namespace Madara
          * @return name of the map
          **/
         std::string get_name (void);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param varn_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         * @param sync_keys  sync the keys to existing vars in the new name
+         **/
+        void set_name (const std::string & var_name,
+          Knowledge_Base & knowledge, bool sync_keys = true);
 
         /**
          * Clears the map. This does not change anything within the knowledge
@@ -286,12 +300,12 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Knowledge_Base & knowledge_;
+        Knowledge_Base * knowledge_;
 
         /**
          * Prefix of variable
          **/
-        const std::string name_;
+        std::string name_;
 
         /**
          * Map of variables to values

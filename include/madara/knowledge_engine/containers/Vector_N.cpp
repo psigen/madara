@@ -2,10 +2,16 @@
 
 
 Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (
+  const Eval_Settings & settings)
+: knowledge_ (0), settings_ (settings) 
+{
+}
+ 
+Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (
   const std::string & name,
   Knowledge_Base & knowledge,
   const Eval_Settings & settings)
-: knowledge_ (knowledge), name_ (name), settings_ (settings) 
+: knowledge_ (&knowledge), name_ (name), settings_ (settings) 
 {
 }
       
@@ -13,7 +19,6 @@ Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (
 Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (const Vector_N & rhs)
   : knowledge_ (rhs.knowledge_),
     name_ (rhs.name_),
-    vector_ (rhs.vector_),
     settings_ (rhs.settings_)
 {
 
@@ -32,13 +37,22 @@ Madara::Knowledge_Engine::Containers::Vector_N::get_name (void)
   return name_;
 }
 
+void
+Madara::Knowledge_Engine::Containers::Vector_N::set_name (
+  const std::string & var_name,
+  Knowledge_Base & knowledge)
+{
+  knowledge_ = &knowledge;
+  name_ = var_name;
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
 {
   Guard guard (mutex_);
   Knowledge_Record result;
 
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -49,7 +63,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
       buffer << index[i];
     }
 
-    result = knowledge_.get (buffer.str (), settings_);
+    result = knowledge_->get (buffer.str (), settings_);
   }
 
   return result;
@@ -66,7 +80,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::read_file (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -77,7 +91,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::read_file (
       buffer << index[i];
     }
 
-    result = knowledge_.read_file (buffer.str (), filename, settings);
+    result = knowledge_->read_file (buffer.str (), filename, settings);
   }
 
   return result;
@@ -93,7 +107,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_file (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -104,7 +118,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_file (
       buffer << index[i];
     }
 
-    result = knowledge_.set_file (buffer.str (), value, size, settings);
+    result = knowledge_->set_file (buffer.str (), value, size, settings);
   }
   
   return result;
@@ -120,7 +134,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -131,7 +145,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
       buffer << index[i];
     }
 
-    result = knowledge_.set_jpeg (buffer.str (), value, size, settings);
+    result = knowledge_->set_jpeg (buffer.str (), value, size, settings);
   }
   
   return result;
@@ -147,7 +161,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -158,7 +172,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, settings);
+    result = knowledge_->set (buffer.str (), value, settings);
   }
   
   return result;
@@ -175,7 +189,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -186,7 +200,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
       buffer << index[i];
     }
 
-    result = knowledge_.set_index (buffer.str (), sub_index, value, settings);
+    result = knowledge_->set_index (buffer.str (), sub_index, value, settings);
   }
   
   return result;
@@ -203,7 +217,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -214,7 +228,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, size, settings);
+    result = knowledge_->set (buffer.str (), value, size, settings);
   }
   
   return result;
@@ -230,7 +244,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -241,7 +255,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, settings);
+    result = knowledge_->set (buffer.str (), value, settings);
   }
   
   return result;
@@ -257,7 +271,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -268,7 +282,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, settings);
+    result = knowledge_->set (buffer.str (), value, settings);
   }
   
   return result;
@@ -285,7 +299,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -296,7 +310,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
       buffer << index[i];
     }
 
-    result = knowledge_.set_index (buffer.str (), sub_index, value, settings);
+    result = knowledge_->set_index (buffer.str (), sub_index, value, settings);
   }
   
   return result;
@@ -313,7 +327,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -324,7 +338,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, size, settings);
+    result = knowledge_->set (buffer.str (), value, size, settings);
   }
   
   return result;
@@ -340,7 +354,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -351,7 +365,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, settings);
+    result = knowledge_->set (buffer.str (), value, settings);
   }
   
   return result;
@@ -367,7 +381,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Guard guard (mutex_);
   int result = -1;
   
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -378,7 +392,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
       buffer << index[i];
     }
 
-    result = knowledge_.set (buffer.str (), value, settings);
+    result = knowledge_->set (buffer.str (), value, settings);
   }
   
   return result;
@@ -392,7 +406,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_quality (
   const Knowledge_Reference_Settings & settings)
 {
   Guard guard (mutex_);
-  if (index.size () > 0)
+  if (index.size () > 0 && knowledge_)
   {
     std::stringstream buffer;
     buffer << name_;
@@ -403,6 +417,6 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_quality (
       buffer << index[i];
     }
 
-    knowledge_.set_quality (buffer.str (), quality, settings);
+    knowledge_->set_quality (buffer.str (), quality, settings);
   }
 }
