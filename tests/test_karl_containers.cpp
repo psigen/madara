@@ -3,6 +3,7 @@
 #include "madara/knowledge_engine/containers/Vector_N.h"
 #include "madara/knowledge_engine/containers/Map.h"
 #include "madara/knowledge_engine/containers/Integer.h"
+#include "madara/knowledge_engine/containers/Double.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include <iostream>
 
@@ -250,6 +251,28 @@ void test_integer (void)
   knowledge.print ();
 }
 
+void test_double (void)
+{
+  std::cout << "************* DOUBLE: GETTING AND SETTING*************\n";
+  engine::Knowledge_Base knowledge;
+  containers::Double my_double ("my_double", knowledge);
+
+  std::cout << "Double value: " << *my_double << "\n";
+  
+  std::cout << "Changing value...\n";
+
+  my_double = 3.3;
+  
+  std::cout << "Double value: " << *my_double << "\n";
+  
+  if (my_double.get_name () == "my_double" && *my_double == 3.3)
+    std::cout << "SUCCESS. my_double was the correct name and value.\n";
+  else
+    std::cout << "FAIL. my_double was not the correct name and value.\n";
+
+  knowledge.print ();
+}
+
 void test_exchanges (void)
 {
   std::cout << "************* EXCHANGES: MAPS*************\n";
@@ -317,6 +340,7 @@ int main (int argc, char * argv[])
   test_map ();
   test_vector_n ();
   test_integer ();
+  test_double ();
   test_exchanges ();
 
   return 0;

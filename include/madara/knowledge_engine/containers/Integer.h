@@ -24,7 +24,7 @@ namespace Madara
     {
       /**
        * @class Integer
-       * @brief This class stores a vector of KaRL variables
+       * @brief This class stores an integer within a variable context
        */
       class MADARA_Export Integer
       {
@@ -92,8 +92,8 @@ namespace Madara
         ~Integer ();
 
         /**
-         * Returns the name of the vector
-         * @return name of the vector
+         * Returns the name of the variable
+         * @return name of the variable
          **/
         std::string get_name (void);
         

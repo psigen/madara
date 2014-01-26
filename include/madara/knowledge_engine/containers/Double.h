@@ -1,6 +1,6 @@
 
-#ifndef _MADARA_STRING_H_
-#define _MADARA_STRING_H_
+#ifndef _MADARA_DOUBLE_H_
+#define _MADARA_DOUBLE_H_
 
 #include <vector>
 #include <string>
@@ -9,11 +9,11 @@
 #include "madara/knowledge_engine/Eval_Settings.h"
 
 /**
- * @file String.h
+ * @file Double.h
  * @author James Edmondson <jedmondson@gmail.com>
  *
  * This file contains a C++ object that manages interactions for a
- * string inside a variable context
+ * double inside of a variable context
  **/
 
 namespace Madara
@@ -23,84 +23,77 @@ namespace Madara
     namespace Containers
     {
       /**
-       * @class String
-       * @brief This class stores a string within a variable context
+       * @class Double
+       * @brief This class stores a double within a variable context
        */
-      class MADARA_Export String
+      class MADARA_Export Double
       {
       public:
         /// trait that describes the value type
-        typedef std::string  type;
+        typedef double  type;
         
         /**
          * Default constructor
          **/
-        String (const Eval_Settings & settings = Eval_Settings (true));
+        Double (const Eval_Settings & settings = Eval_Settings (true));
       
         /**
-         * Default constructor
-         * @param  name       name of the variable in the knowledge base
+         * Constructor
+         * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
          * @param  settings   settings for evaluating the vector
          **/
-        String (const std::string & name,
+        Double (const std::string & name,
                 Knowledge_Base & knowledge,
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
-         * Default constructor
-         * @param  name       name of the variable in the knowledge base
-         * @param  knowledge  the knowledge base that will contain the vector
-         * @param  value      new value of the variable
-         * @param  settings   settings for evaluating the vector
+         * Constructor
+         * @param  name      the name of the map within the variable context
+         * @param  knowledge the variable context
+         * @param  settings  settings to apply by default
          **/
-        String (const std::string & name,
-                Knowledge_Base & knowledge,
-                const std::string & value,
-                const Eval_Settings & settings = Eval_Settings (true));
-      
-        /**
-         * Default constructor
-         * @param  name       name of the variable in the knowledge base
-         * @param  knowledge  the knowledge base that will contain the vector
-         * @param  settings   settings for evaluating the vector
-         **/
-        String (const std::string & name,
+        Double (const std::string & name,
                 Variables & knowledge,
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
          * Default constructor
-         * @param  name       name of the variable in the knowledge base
+         * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
-         * @param  value      new value of the variable
+         * @param  value      new value of the variable in the knowledge base
          * @param  settings   settings for evaluating the vector
          **/
-        String (const std::string & name,
+        Double (const std::string & name,
+                Knowledge_Base & knowledge,
+                type value, 
+                const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
+         * Default constructor
+         * @param  name       name of the integer in the knowledge base
+         * @param  knowledge  the knowledge base that will contain the vector
+         * @param  value      new value of the variable in the knowledge base
+         * @param  settings   settings for evaluating the vector
+         **/
+        Double (const std::string & name,
                 Variables & knowledge,
-                const std::string & value,
+                type value, 
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
          * Copy constructor
          **/
-        String (const String & rhs);
+        Double (const Double & rhs);
 
         /**
          * Destructor
          **/
-        ~String ();
+        ~Double ();
 
         /**
-         * Exchanges the string at this location with the string at another
-         * location.
-         * @param  other   the other string to exchange with
-         **/
-        void exchange (String & other);
-
-        /**
-         * Returns the name of the vector
-         * @return name of the vector
+         * Returns the name of the variable
+         * @return name of the variable
          **/
         std::string get_name (void);
         
@@ -121,11 +114,18 @@ namespace Madara
           Variables & knowledge);
 
         /**
+         * Exchanges the integer at this location with the integer at another
+         * location.
+         * @param  other   the other integer to exchange with
+         **/
+        void exchange (Containers::Double & other);
+
+        /**
          * Sets the value of the variable
          * @param  value  the new value of the variable
          * @return the updated value (should be same as value param)
          **/
-        type operator= (const type & value);
+        type operator= (type value);
 
         /**
          * Returns the value of the variable
@@ -137,14 +137,14 @@ namespace Madara
          * Returns the value as an integer
          * @return the value as an integer
          **/
-        Madara::Knowledge_Record::Integer to_integer (void);
+        Knowledge_Record::Integer to_integer (void);
         
         /**
-         * Returns the value as a double
-         * @return the value as a double
+         * Returns the value as a string
+         * @return the value as a string
          **/
-        double to_double (void);
-        
+        std::string to_string (void);
+
         /**
          * Sets the quality of writing to the variable
          *
@@ -192,4 +192,4 @@ namespace Madara
 
 
 
-#endif // _MADARA_STRING_H_
+#endif // _MADARA_DOUBLE_H_
