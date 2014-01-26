@@ -9,22 +9,26 @@ Madara::Knowledge_Engine::Containers::Vector::Vector (
    
 Madara::Knowledge_Engine::Containers::Vector::Vector (
   const std::string & name,
-  size_t size,
   Knowledge_Base & knowledge,
+  int size,
+  bool delete_vars,
   const Eval_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
 {
-  resize (size);
+  size_ = get_size_ref ();
+  resize (size, delete_vars);
 }
   
 Madara::Knowledge_Engine::Containers::Vector::Vector (
   const std::string & name,
-  size_t size,
   Variables & knowledge,
+  int size,
+  bool delete_vars,
   const Eval_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
 {
-  resize (size);
+  size_ = get_size_ref ();
+  resize (size, delete_vars);
 }
 
 Madara::Knowledge_Engine::Containers::Vector::Vector (const Vector & rhs)
@@ -42,28 +46,99 @@ Madara::Knowledge_Engine::Containers::Vector::~Vector ()
 
 }
 
-
-void
-Madara::Knowledge_Engine::Containers::Vector::resize (size_t size)
+Madara::Knowledge_Engine::Variable_Reference
+Madara::Knowledge_Engine::Containers::Vector::get_size_ref (void)
 {
+  Variable_Reference ref;
+  
   if (context_ && name_ != "")
   {
-    Guard guard (mutex_);
-    size_t old_size = vector_.size ();
+    std::stringstream buffer;
+    buffer << name_;
+    buffer << ".size";
 
-    if (old_size != size)
+    ref = context_->get_ref (buffer.str ());
+  }
+
+  return ref;
+}
+
+void
+Madara::Knowledge_Engine::Containers::Vector::resize (
+  int size, bool delete_vars)
+{
+  Guard guard (mutex_);
+  if (context_ && name_ != "")
+  {
+    if (size >= 0)
     {
-      vector_.resize (size);
+      size_t old_size = vector_.size ();
 
-      if (size > old_size)
+      if (old_size != size)
       {
-        for (; old_size < size; ++old_size)
+        vector_.resize (size);
+        
+        context_->set (size_, Knowledge_Record::Integer (size), settings_);
+
+        if ((size_t)size > old_size)
         {
-          std::stringstream buffer;
-          buffer << name_;
-          buffer << '.';
-          buffer << old_size;
-          vector_[old_size] = context_->get_ref (buffer.str (), settings_);
+          for (; old_size < (size_t)size; ++old_size)
+          {
+            std::stringstream buffer;
+            buffer << name_;
+            buffer << '.';
+            buffer << old_size;
+            vector_[old_size] = context_->get_ref (buffer.str (), settings_);
+          }
+        }
+        else if (delete_vars)
+        {
+          for (; (size_t)size < old_size; ++size)
+          {
+            std::stringstream buffer;
+            buffer << name_;
+            buffer << '.';
+            buffer << size;
+
+            context_->delete_variable (buffer.str (), settings_);
+          }
+        }
+      }
+    }
+    else
+    {
+      // dynamically allocate size from the context
+      Knowledge_Record::Integer cur_size =
+        context_->get (size_, settings_).to_integer ();
+
+      size_t old_size = vector_.size ();
+
+      if (old_size != cur_size)
+      {
+        vector_.resize (cur_size);
+
+        if (cur_size > old_size)
+        {
+          for (; old_size < (size_t)cur_size; ++old_size)
+          {
+            std::stringstream buffer;
+            buffer << name_;
+            buffer << '.';
+            buffer << old_size;
+            vector_[old_size] = context_->get_ref (buffer.str (), settings_);
+          }
+        }
+        else if (delete_vars)
+        {
+          for (; (size_t)cur_size < old_size; ++cur_size)
+          {
+            std::stringstream buffer;
+            buffer << name_;
+            buffer << '.';
+            buffer << cur_size;
+
+            context_->delete_variable (buffer.str (), settings_);
+          }
         }
       }
     }
@@ -95,6 +170,9 @@ Madara::Knowledge_Engine::Containers::Vector::set_name (
     name_ = var_name;
 
     vector_.clear ();
+
+    size_ = get_size_ref ();
+
     if (size > 0)
       resize (size_t (size));
   }

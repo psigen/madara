@@ -40,10 +40,13 @@ namespace Madara
          * @param  name       name of the vector in the knowledge base
          * @param  size       size of the vector
          * @param  knowledge  the knowledge base that will contain the vector
+         * @param  delete_vars delete indices outside of the specified range
          * @param  settings   settings for evaluating the vector
          **/
-        Vector (const std::string & name, size_t size,
+        Vector (const std::string & name, 
                 Knowledge_Base & knowledge,
+                int size = -1,
+                bool delete_vars = true,
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
@@ -51,10 +54,13 @@ namespace Madara
          * @param  name       name of the vector in the knowledge base
          * @param  size       size of the vector
          * @param  knowledge  the knowledge base that will contain the vector
+         * @param  delete_vars delete indices outside of the specified range
          * @param  settings   settings for evaluating the vector
          **/
-        Vector (const std::string & name, size_t size,
+        Vector (const std::string & name,
                 Variables & knowledge,
+                int size = -1,
+                bool delete_vars = true,
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
@@ -70,8 +76,9 @@ namespace Madara
         /**
          * Resizes the vector
          * @param   size   maximum size of the vector
+         * @param  delete_vars delete indices outside of the specified range
          **/
-        void resize (size_t size);
+        void resize (int size = -1, bool delete_vars = true);
       
         /**
          * Returns the size of the vector
@@ -294,6 +301,11 @@ namespace Madara
                const Knowledge_Reference_Settings & settings =
                        Knowledge_Reference_Settings (false));
       
+        /**
+         * Returns a reference to the size field of the current name
+         * @return reference to the size field
+         **/
+        Variable_Reference get_size_ref (void);
 
       private:
         /// guard for access and changes
@@ -318,6 +330,11 @@ namespace Madara
          * Values of the array
          **/
         std::vector <Variable_Reference> vector_;
+
+        /**
+         * Reference to the size field of the vector space
+         **/
+        Variable_Reference size_;
 
         /**
          * Settings for modifications

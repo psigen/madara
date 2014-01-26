@@ -13,7 +13,7 @@ void test_vector (void)
 {
   std::cout << "************* VECTOR: CREATING VECTOR*************\n";
   engine::Knowledge_Base knowledge;
-  containers::Vector vector ("test_vector", 10, knowledge);
+  containers::Vector vector ("test_vector", knowledge, 10);
   unsigned int size = vector.size ();
 
   vector.set (1, "value.at.1");
@@ -31,12 +31,12 @@ void test_vector (void)
   std::cout << "\n";
 
   if (size != 10)
-    std::cout << "FAIL. Vector.size != 4\n";
+    std::cout << "FAIL. Vector.size != 10\n";
   else
-    std::cout << "SUCCESS. Vector.size == 4\n";
+    std::cout << "SUCCESS. Vector.size == 10\n";
 
-  if (vector[1].to_string () == "value.at.1" &&
-      vector[7].to_double () == 7.7)
+  if (vector[1] == "value.at.1" &&
+      vector[7] == 7.7)
     std::cout << "SUCCESS. Vector[1] and [7] were set and retrieved.\n";
   else
     std::cout << "FAIL. Vector[1] and [7] were not set and retrieved.\n";
@@ -45,6 +45,30 @@ void test_vector (void)
     std::cout << "SUCCESS. vector.name () returned test_vector.\n";
   else
     std::cout << "FAIL. vector.name () did not return test_vector.\n";
+
+  std::cout << "Resizing to 7 elements.\n";
+
+  vector.resize (7);
+
+  
+  if (vector[1].to_string () == "value.at.1" &&
+      knowledge.get ("test_vector.7") != 7.7 && vector.size () == 7)
+    std::cout << "SUCCESS. Vector [7] no longer exists.\n";
+  else
+    std::cout << "FAIL. Vector [7] still exists after resize.\n";
+  
+  vector.resize (12);
+  
+  vector.set (8, "value.at.8");
+  vector.set (9, "value.at.9");
+
+  if (vector[1] == "value.at.1" &&
+      vector[8] == "value.at.8" &&
+      vector[9] == "value.at.9" && vector.size () == 12)
+    std::cout << "SUCCESS. Resize to 12 was successful.\n";
+  else
+    std::cout << "FAIL. Resize to 12 was unsuccessful.\n";
+  
 
   knowledge.print ();
 }
