@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Eval_Settings.h"
 
 /**
@@ -33,6 +34,7 @@ namespace Madara
          * @param  settings   settings for evaluating the vector
          **/
         Vector (const Eval_Settings & settings = Eval_Settings (true));
+
         /**
          * Constructor
          * @param  name       name of the vector in the knowledge base
@@ -42,6 +44,17 @@ namespace Madara
          **/
         Vector (const std::string & name, size_t size,
                 Knowledge_Base & knowledge,
+                const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
+         * Constructor
+         * @param  name       name of the vector in the knowledge base
+         * @param  size       size of the vector
+         * @param  knowledge  the knowledge base that will contain the vector
+         * @param  settings   settings for evaluating the vector
+         **/
+        Vector (const std::string & name, size_t size,
+                Variables & knowledge,
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
@@ -80,6 +93,15 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Knowledge_Base & knowledge, int size = -1);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param varn_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         * @param size       size of the new vector (-1 to not change size)
+         **/
+        void set_name (const std::string & var_name,
+          Variables & knowledge, int size = -1);
 
         /**
          * Retrieves a copy of the record from the map.
@@ -285,7 +307,7 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Knowledge_Base * knowledge_;
+        Thread_Safe_Context * context_;
 
         /**
          * Prefix of variable

@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Eval_Settings.h"
 
 /**
@@ -36,9 +37,22 @@ namespace Madara
       
         /**
          * Constructor
+         * @param  name      the name of the map within the variable context
+         * @param  knowledge the variable context
+         * @param  settings  settings to apply by default
          **/
         Map (const std::string & name,
                 Knowledge_Base & knowledge,
+                const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
+         * Constructor
+         * @param  name      the name of the map within the variable context
+         * @param  knowledge the variable context
+         * @param  settings  settings to apply by default
+         **/
+        Map (const std::string & name,
+                Variables & knowledge,
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
@@ -50,6 +64,17 @@ namespace Madara
          * Destructor
          **/
         ~Map ();
+        
+        /**
+         * Exchanges the integer at this location with the integer at another
+         * location.
+         * @param  other         the other integer to exchange with
+         * @param  refresh_keys  force a refresh of the keys in both maps to
+         *                       ensure all keys are swapped
+         * @param  delete_keys   delete any unused keys
+         **/
+        void exchange (Map & other,
+          bool refresh_keys = true, bool delete_keys = true);
 
         /**
          * Retrieves a copy of the record from the map.
@@ -99,6 +124,15 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Knowledge_Base & knowledge, bool sync_keys = true);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param varn_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         * @param sync_keys  sync the keys to existing vars in the new name
+         **/
+        void set_name (const std::string & var_name,
+          Variables & knowledge, bool sync_keys = true);
 
         /**
          * Clears the map. This does not change anything within the knowledge
@@ -292,6 +326,9 @@ namespace Madara
         /// guard for access and changes
         typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
       
+        /// internal map of variable references
+        typedef std::map <std::string, Variable_Reference>  Internal_Map;
+
         /**
          * Mutex for local changes
          **/
@@ -300,7 +337,7 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Knowledge_Base * knowledge_;
+        Thread_Safe_Context * context_;
 
         /**
          * Prefix of variable
@@ -310,7 +347,7 @@ namespace Madara
         /**
          * Map of variables to values
          **/
-        std::map <std::string, Variable_Reference> map_;
+        Internal_Map map_;
 
         /**
          * Settings for modifications

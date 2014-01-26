@@ -226,12 +226,74 @@ void test_integer (void)
   knowledge.print ();
 }
 
+void test_exchanges (void)
+{
+  std::cout << "************* EXCHANGES: MAPS*************\n";
+  engine::Knowledge_Base knowledge;
+  std::vector <std::string> keys;
+  containers::Map map ("first_map", knowledge);
+  containers::Map map2 ("second_map", knowledge);
+  
+  std::cout << "Creating two maps...\n";
+  map.set ("a", "key1 contents");
+  map.set ("b", "key2 contents");
+  map.set ("c", "key3 contents");
+
+  map2.set ("d", "key4 contents");
+  map2.set ("e", "key5 contents");
+  map2.set ("f", "key6 contents");
+  map2.set ("g", "key7 contents");
+  
+  std::cout << "Contents of map before exchange...\n";
+  knowledge.print ();
+  
+  std::cout << "Exchanging...\n";
+  map.exchange (map2);
+  
+  if (!map.exists ("a") && !map.exists ("b") && !map.exists ("c")
+    && !map2.exists ("d") && !map2.exists ("e") && !map2.exists ("f")
+    && !map2.exists ("g")
+    && map["d"] == "key4 contents" && map["e"] == "key5 contents"
+    && map["f"] == "key6 contents"
+    && map2["a"] == "key1 contents" && map2["b"] == "key2 contents"
+    && map2["c"] == "key3 contents")
+  {
+    std::cout << "SUCCESS. maps were exchanged.\n";
+  }
+  else
+  {
+    std::cout << "FAIL. maps were not exchanged properly.\n";
+  }
+
+  knowledge.print ();
+
+  map.exchange (map2, false, false);
+
+  if (map2.exists ("a") && map2.exists ("b") && map2.exists ("c")
+    && map.exists ("d") && map.exists ("e") && map.exists ("f")
+    && map.exists ("g")
+    && map2["d"] == "key4 contents" && map2["e"] == "key5 contents"
+    && map2["f"] == "key6 contents"
+    && map["a"] == "key1 contents" && map["b"] == "key2 contents"
+    && map["c"] == "key3 contents")
+  {
+    std::cout << "SUCCESS. maps were exchanged.\n";
+  }
+  else
+  {
+    std::cout << "FAIL. maps were not exchanged properly.\n";
+  }
+  
+  knowledge.print ();
+}
+
 int main (int argc, char * argv[])
 {
   test_vector ();
   test_map ();
   test_vector_n ();
   test_integer ();
+  test_exchanges ();
 
   return 0;
 }

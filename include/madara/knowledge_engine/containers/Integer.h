@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Eval_Settings.h"
 
 /**
@@ -47,6 +48,16 @@ namespace Madara
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
+         * Constructor
+         * @param  name      the name of the map within the variable context
+         * @param  knowledge the variable context
+         * @param  settings  settings to apply by default
+         **/
+        Integer (const std::string & name,
+                Variables & knowledge,
+                const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
          * Default constructor
          * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
@@ -55,6 +66,18 @@ namespace Madara
          **/
         Integer (const std::string & name,
                 Knowledge_Base & knowledge,
+                type value, 
+                const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
+         * Default constructor
+         * @param  name       name of the integer in the knowledge base
+         * @param  knowledge  the knowledge base that will contain the vector
+         * @param  value      new value of the variable in the knowledge base
+         * @param  settings   settings for evaluating the vector
+         **/
+        Integer (const std::string & name,
+                Variables & knowledge,
                 type value, 
                 const Eval_Settings & settings = Eval_Settings (true));
       
@@ -81,6 +104,21 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Knowledge_Base & knowledge);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param varn_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         **/
+        void set_name (const std::string & var_name,
+          Variables & knowledge);
+
+        /**
+         * Exchanges the integer at this location with the integer at another
+         * location.
+         * @param  other   the other integer to exchange with
+         **/
+        void exchange (Containers::Integer & other);
 
         /**
          * Sets the value of the variable
@@ -130,7 +168,7 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Knowledge_Base * knowledge_;
+        Thread_Safe_Context * context_;
 
         /**
          * Prefix of variable

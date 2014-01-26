@@ -63,6 +63,14 @@ namespace Madara
        * Assignment operator
        **/
       void operator= (Variables & rhs);
+      
+      /**
+       * Returns the Thread_Safe_Context associated with this Variables facade.
+       * This is necessary for creating custom transports.
+       *
+       * @return             the context used by the knowledge base
+       **/
+      Thread_Safe_Context * get_context (void);
 
       /**
        * Retrieves the value of a variable.

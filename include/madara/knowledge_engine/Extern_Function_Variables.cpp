@@ -14,6 +14,12 @@ Madara::Knowledge_Engine::Variables::operator= (Variables & rhs)
     context_ = rhs.context_;
 }
 
+Madara::Knowledge_Engine::Thread_Safe_Context *
+Madara::Knowledge_Engine::Variables::get_context (void)
+{
+  return context_;
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::get (const std::string & key,
              const Knowledge_Reference_Settings & settings)

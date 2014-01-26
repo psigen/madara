@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Eval_Settings.h"
 
 /**
@@ -50,6 +51,16 @@ namespace Madara
                 const Eval_Settings & settings = Eval_Settings (true));
       
         /**
+         * Constructor
+         * @param  name         name of the vector in the knowledge base
+         * @param  knowledge    the knowledge base that will contain the vector
+         * @param  settings     settings for evaluating the vector
+         **/
+        Vector_N (const std::string & name,
+                Variables & knowledge,
+                const Eval_Settings & settings = Eval_Settings (true));
+      
+        /**
          * Copy constructor
          **/
         Vector_N (const Vector_N & rhs);
@@ -67,11 +78,19 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          **/
         void set_name (const std::string & var_name,
           Knowledge_Base & knowledge);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param var_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         **/
+        void set_name (const std::string & var_name,
+          Variables & knowledge);
 
         /**
          * Retrieves a copy of the record from the map.
@@ -389,7 +408,7 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Knowledge_Base * knowledge_;
+        Thread_Safe_Context * context_;
 
         /**
          * Prefix of variable
