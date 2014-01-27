@@ -194,6 +194,106 @@ Madara::Knowledge_Engine::Containers::Vector::set_name (
   }
 }
 
+void
+Madara::Knowledge_Engine::Containers::Vector::exchange (
+  Vector & other, bool refresh_keys, bool delete_keys)
+{
+  Guard guard (mutex_), guard2 (other.mutex_);
+
+  if (refresh_keys)
+  {
+    other.resize ();
+    this->resize ();
+  }
+
+  unsigned int other_size = other.vector_.size ();
+  unsigned int this_size = this->vector_.size ();
+
+  for (unsigned int i = 0; i < this_size; ++i)
+  {
+    // temp = this[i];
+    Knowledge_Record temp = context_->get (this->vector_[i], settings_);
+    
+    if (i < other_size)
+    {
+      // this[i] = other[i];
+      context_->set (this->vector_[i],
+        context_->get (other.vector_[i], other.settings_),
+        settings_);
+
+      // other[i] = temp;
+      other.context_->set (other.vector_[i], temp, other.settings_);
+    }
+    else
+    {
+      if (delete_keys)
+      {
+        std::stringstream buffer;
+        buffer << this->name_;
+        buffer << '.';
+        buffer << i;
+        this->context_->delete_variable (buffer.str (), other.settings_);
+      }
+      else
+      {
+        Knowledge_Record zero;
+        this->context_->set (this->vector_[i], zero, this->settings_);
+      }
+
+      {
+        std::stringstream buffer;
+        buffer << other.name_;
+        buffer << '.';
+        buffer << i;
+
+        // other[i] = temp;
+        other.context_->set (buffer.str (), temp, other.settings_);
+      }
+    }
+
+  }
+
+  // copy the other vector's elements to this vector's location
+  for (unsigned int i = this_size; i < other_size; ++i)
+  {
+    std::stringstream buffer;
+    buffer << this->name_;
+    buffer << '.';
+    buffer << i;
+    context_->set (buffer.str (),
+      other.context_->get (other.vector_[i], other.settings_), this->settings_);
+  }
+
+  // set the size appropriately
+  this->context_->set (this->size_,
+    Knowledge_Record::Integer (other_size), this->settings_);
+  other.context_->set (other.size_,
+    Knowledge_Record::Integer (this_size), other.settings_);
+
+  if (refresh_keys)
+  {
+    this->resize (-1, true);
+    other.resize (-1, true);
+  }
+}
+
+void
+Madara::Knowledge_Engine::Containers::Vector::transfer_to (Vector & other)
+{
+  unsigned int other_size = other.vector_.size ();
+  unsigned int this_size = this->vector_.size ();
+
+  int size = other_size + this_size;
+  other.resize (size);
+
+  for (unsigned int i = 0, j = other_size; i < this_size; ++i, ++j)
+  {
+    other.context_->set (other.vector_[j], (*this)[i], other.settings_);
+  }
+
+  this->resize (0, true);
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector::operator[] (unsigned int index)
 {

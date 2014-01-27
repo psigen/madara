@@ -273,7 +273,7 @@ void test_double (void)
   knowledge.print ();
 }
 
-void test_exchanges (void)
+void test_map_exchanges (void)
 {
   std::cout << "************* EXCHANGES: MAPS*************\n";
   engine::Knowledge_Base knowledge;
@@ -334,6 +334,81 @@ void test_exchanges (void)
   knowledge.print ();
 }
 
+void test_vector_exchanges (void)
+{
+  std::cout << "************* EXCHANGES: VECTORS*************\n";
+  engine::Knowledge_Base knowledge;
+  containers::Vector vector ("first_vector", knowledge, 12);
+  containers::Vector vector2 ("second_vector", knowledge, 7);
+  
+  std::cout << "Creating two vectors...\n";
+
+  vector.set (1, "vector1.1 value");
+  vector.set (5, "vector1.5 value");
+  vector.set (10, "vector1.10 value");
+
+  vector2.set (2, "vector2.2 value");
+  vector2.set (3, "vector2.3 value");
+  
+  std::cout << "Exchanging...\n";
+  vector.exchange (vector2);
+  
+  if (vector.size () == 7 && vector2.size () == 12
+    && vector[2] == "vector2.2 value"
+    && vector[3] == "vector2.3 value"
+    && vector2[1] == "vector1.1 value"
+    && vector2[5] == "vector1.5 value"
+    && vector2[10] == "vector1.10 value")
+  {
+    std::cout << "SUCCESS. vectors were exchanged.\n";
+  }
+  else
+  {
+    std::cout << "FAIL. vectors were not exchanged properly.\n";
+  }
+  
+  std::cout << "Exchanging...\n";
+  vector.exchange (vector2);
+  
+  if (vector2.size () == 7 && vector.size () == 12
+    && vector2[2] == "vector2.2 value"
+    && vector2[3] == "vector2.3 value"
+    && vector[1] == "vector1.1 value"
+    && vector[5] == "vector1.5 value"
+    && vector[10] == "vector1.10 value")
+  {
+    std::cout << "SUCCESS. vectors were reverted.\n";
+  }
+  else
+  {
+    std::cout << "FAIL. vectors were not reverted properly.\n";
+  }
+  knowledge.print ();
+}
+
+void test_vector_transfer ()
+{
+  std::cout << "************* TRANSFERS: VECTORS*************\n";
+  engine::Knowledge_Base knowledge;
+  containers::Vector vector ("first_vector", knowledge, 12);
+  containers::Vector vector2 ("second_vector", knowledge, 7);
+  
+  std::cout << "Creating two vectors...\n";
+
+  vector.set (1, "vector1.1 value");
+  vector.set (5, "vector1.5 value");
+  vector.set (10, "vector1.10 value");
+
+  vector2.set (2, "vector2.2 value");
+  vector2.set (3, "vector2.3 value");
+  
+  std::cout << "Transferring one vector to another...\n";
+
+  vector.transfer_to (vector2);
+
+  knowledge.print ();
+}
+
 int main (int argc, char * argv[])
 {
   test_vector ();
@@ -341,7 +416,9 @@ int main (int argc, char * argv[])
   test_vector_n ();
   test_integer ();
   test_double ();
-  test_exchanges ();
-
+  test_map_exchanges ();
+  test_vector_exchanges ();
+  
+  test_vector_transfer ();
   return 0;
 }

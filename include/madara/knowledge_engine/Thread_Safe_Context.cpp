@@ -165,25 +165,33 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
     variable.record_->size_ = value.size_;
     variable.record_->type_ = value.type_;
 
-    // copy the value from the record value
-    if (     value.type () == Knowledge_Record::INTEGER)
-      variable.record_->int_value_ = value.int_value_;
+    if (value.status_ != Knowledge_Record::UNCREATED)
+    {
+      // copy the value from the record value
+      if (     value.type () == Knowledge_Record::INTEGER)
+        variable.record_->int_value_ = value.int_value_;
 
-    else if (value.type () == Knowledge_Record::DOUBLE)
-      variable.record_->double_value_ = value.double_value_;
+      else if (value.type () == Knowledge_Record::DOUBLE)
+        variable.record_->double_value_ = value.double_value_;
     
-    else if (value.type () == Knowledge_Record::INTEGER_ARRAY)
-      variable.record_->int_array_ = value.int_array_;
+      else if (value.type () == Knowledge_Record::INTEGER_ARRAY)
+        variable.record_->int_array_ = value.int_array_;
 
-    else if (value.type () == Knowledge_Record::DOUBLE_ARRAY)
-      variable.record_->double_array_ = value.double_array_;
+      else if (value.type () == Knowledge_Record::DOUBLE_ARRAY)
+        variable.record_->double_array_ = value.double_array_;
     
-    else if (value.is_string_type ())
-      variable.record_->str_value_ = value.str_value_;
+      else if (value.is_string_type ())
+        variable.record_->str_value_ = value.str_value_;
 
-    else if (value.is_binary_file_type ())
-      variable.record_->file_value_ = value.file_value_;
-
+      else if (value.is_binary_file_type ())
+        variable.record_->file_value_ = value.file_value_;
+    }
+    else
+    {
+      variable.record_->status_ = Knowledge_Record::UNCREATED;
+      variable.record_->int_value_ = 0;
+    }
+    
     variable.record_->quality = variable.record_->write_quality;
   
     mark_and_signal (variable.name_.get_ptr (), variable.record_, settings);

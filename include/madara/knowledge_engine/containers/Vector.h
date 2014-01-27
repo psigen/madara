@@ -81,6 +81,23 @@ namespace Madara
         void resize (int size = -1, bool delete_vars = true);
       
         /**
+         * Exchanges the vector at this location with the vector at another
+         * location.
+         * @param  other   the other vector to exchange with
+         * @param  refresh_keys  force a refresh of the keys in both maps to
+         *                       ensure all keys are swapped
+         * @param  delete_keys   delete any unused keys
+         **/
+        void exchange (Vector & other, bool refresh_keys = true,
+          bool delete_keys = true);
+
+        /**
+         * Transfers elements from this vector to another
+         * @param  other  the other vector to transfer to
+         **/
+        void transfer_to (Vector & other);
+
+        /**
          * Returns the size of the vector
          * @return size of the vector
          **/
