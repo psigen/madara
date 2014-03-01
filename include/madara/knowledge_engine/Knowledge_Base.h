@@ -708,8 +708,11 @@ namespace Madara
       /**
        * Applies current time and modified to all global variables and tries
        * to send them.
+       * @param settings        Settings for evaluating and printing
+       * @return 0 if there was not a problem.
        **/
-      int apply_modified (void);
+      int apply_modified (const Eval_Settings & settings =
+          Eval_Settings ());
 
       /**
        * Sets the log level to dictate the detail of MADARA logging. A higher

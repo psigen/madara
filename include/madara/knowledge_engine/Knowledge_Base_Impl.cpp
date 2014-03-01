@@ -256,7 +256,8 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::close_transport (void)
  * will resend all global variables.
  **/
 int
-Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
+Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (
+  const Eval_Settings & settings)
 {
   // lock the context and apply modified flags and current clock to
   // all global variables
@@ -265,7 +266,7 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::apply_modified (void)
 
   int ret = 0;
   
-  send_modifieds ("Knowledge_Base_Impl:apply_modified");
+  send_modifieds ("Knowledge_Base_Impl:apply_modified", settings);
 
   map_.unlock ();
 

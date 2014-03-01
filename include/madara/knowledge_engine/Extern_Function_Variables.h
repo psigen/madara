@@ -408,6 +408,14 @@ namespace Madara
       std::string expand_statement (const std::string & statement) const;
       
       /**
+       * Applies modified to all global variables
+       * @param settings        Settings for evaluating and printing
+       **/
+      void apply_modified (
+        const Knowledge_Update_Settings & settings =
+          Knowledge_Engine::Knowledge_Update_Settings ());
+
+      /**
        * Compiles a KaRL expression into an expression tree. Always do this
        * before calling evaluate because it puts the expression into an
        * optimized format. Best practice is to save the Compiled_Expression

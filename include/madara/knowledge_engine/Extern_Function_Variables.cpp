@@ -53,6 +53,19 @@ Madara::Knowledge_Engine::Variables::get (const Variable_Reference & variable,
   }
 }
 
+void
+Madara::Knowledge_Engine::Variables::apply_modified (
+  const Knowledge_Update_Settings & settings)
+{
+  if (context_)
+    context_->apply_modified ();
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::apply_modified. Context not set correctly.\n"));
+  }
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::retrieve_index (
   const std::string & key,

@@ -6,7 +6,7 @@
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/knowledge_engine/Eval_Settings.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 /**
  * @file String.h
@@ -35,7 +35,8 @@ namespace Madara
         /**
          * Default constructor
          **/
-        String (const Eval_Settings & settings = Eval_Settings (true));
+        String (const Knowledge_Update_Settings & settings =
+          Knowledge_Update_Settings (true));
       
         /**
          * Default constructor
@@ -45,7 +46,8 @@ namespace Madara
          **/
         String (const std::string & name,
                 Knowledge_Base & knowledge,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings =
+                  Knowledge_Update_Settings (true));
       
         /**
          * Default constructor
@@ -57,7 +59,8 @@ namespace Madara
         String (const std::string & name,
                 Knowledge_Base & knowledge,
                 const std::string & value,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings =
+                  Knowledge_Update_Settings (true));
       
         /**
          * Default constructor
@@ -67,7 +70,8 @@ namespace Madara
          **/
         String (const std::string & name,
                 Variables & knowledge,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings =
+                  Knowledge_Update_Settings (true));
       
         /**
          * Default constructor
@@ -79,7 +83,8 @@ namespace Madara
         String (const std::string & name,
                 Variables & knowledge,
                 const std::string & value,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings =
+                  Knowledge_Update_Settings (true));
       
         /**
          * Copy constructor
@@ -126,7 +131,63 @@ namespace Madara
          * @return the updated value (should be same as value param)
          **/
         type operator= (const type & value);
-
+        
+        /**
+         * Checks for equality
+         * @param  value  the value to compare to
+         * @return true if equal, false otherwise
+         **/
+        bool operator== (type value);
+        
+        /**
+         * Checks for inequality
+         * @param  value  the value to compare to
+         * @return true if inequal, false otherwise
+         **/
+        bool operator!= (type value);
+        
+        /**
+         * Checks for equality
+         * @param  value  the value to compare to
+         * @return true if equal, false otherwise
+         **/
+        bool operator== (const String & value);
+        
+        /**
+         * Checks for inequality
+         * @param  value  the value to compare to
+         * @return true if inequal, false otherwise
+         **/
+        bool operator!= (const String & value);
+        
+        /**
+         * Checks for less than relationship
+         * @param  value  the value to compare to
+         * @return true if less than
+         **/
+        bool operator< (type value);
+        
+        /**
+         * Checks for less than or equal to relationship
+         * @param  value  the value to compare to
+         * @return true if less than or equal to
+         **/
+        bool operator<= (type value);
+        
+        /**
+         * Checks for greater than relationship
+         * @param  value  the value to compare to
+         * @return true if greater than
+         **/
+        bool operator> (type value);
+        
+        /**
+         * Checks for greater than or equal to relationship
+         * @param  value  the value to compare to
+         * @return true if greater than or equal to
+         **/
+        bool operator>= (type value);
+        
         /**
          * Returns the value of the variable
          * @return the value of the variable
@@ -183,7 +244,7 @@ namespace Madara
         /**
          * Settings for modifications
          **/
-        Eval_Settings settings_;
+        Knowledge_Update_Settings settings_;
       };
     }
   }

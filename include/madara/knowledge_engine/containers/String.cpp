@@ -1,7 +1,7 @@
 #include "String.h"
 
 Madara::Knowledge_Engine::Containers::String::String (
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (0), settings_ (settings) 
 {
 }
@@ -10,7 +10,7 @@ Madara::Knowledge_Engine::Containers::String::String (
 Madara::Knowledge_Engine::Containers::String::String (
   const std::string & name,
   Knowledge_Base & knowledge,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
 {
   variable_ = knowledge.get_ref (name);
@@ -20,7 +20,7 @@ Madara::Knowledge_Engine::Containers::String::String (
   const std::string & name,
   Knowledge_Base & knowledge,
   const std::string & value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
   : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
 {
   variable_ = knowledge.get_ref (name);
@@ -30,7 +30,7 @@ Madara::Knowledge_Engine::Containers::String::String (
 Madara::Knowledge_Engine::Containers::String::String (
   const std::string & name,
   Variables & knowledge,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
 {
   variable_ = knowledge.get_ref (name);
@@ -40,7 +40,7 @@ Madara::Knowledge_Engine::Containers::String::String (
   const std::string & name,
   Variables & knowledge,
   const std::string & value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
   : context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
 {
   variable_ = knowledge.get_ref (name);
@@ -113,6 +113,114 @@ Madara::Knowledge_Engine::Containers::String::operator= (const type & value)
   return value;
 }
     
+bool
+Madara::Knowledge_Engine::Containers::String::operator== (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) == value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator != (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) != value;
+  }
+
+  return true;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator== (const String & value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return
+      context_->get (variable_, settings_) ==
+        value.context_->get (value.variable_, value.settings_);
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator != (const String & value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return
+      context_->get (variable_, settings_) !=
+        value.context_->get (value.variable_, value.settings_);
+  }
+
+  return true;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator< (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) < value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator<= (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) <= value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator> (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) > value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::String::operator>= (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) >= value;
+  }
+
+  return false;
+}
+
 Madara::Knowledge_Engine::Containers::String::type
 Madara::Knowledge_Engine::Containers::String::operator* (void)
 {

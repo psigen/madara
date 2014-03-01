@@ -561,13 +561,13 @@ namespace Madara
       Madara::Transport::Settings & transport_settings (void);
 
       /**
-       * Updates all global variables to current clock and then
-       * sends them if a transport is available. This is useful
-       * when trying to synchronize to late joiners (this process
-       * will resend all global variables.
-       * @returns     0 if transport was available, -1 if not
+       * Applies current time and modified to all global variables and tries
+       * to send them.
+       * @param settings        Settings for evaluating and printing
+       * @return 0 if there was not a problem.
        **/
-      int apply_modified (void);
+      int apply_modified (const Eval_Settings & settings =
+          Eval_Settings ());
 
       /**
        * Checks if a knowledge location exists in the context

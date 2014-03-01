@@ -2,7 +2,7 @@
 
 
 Madara::Knowledge_Engine::Containers::Double::Double (
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (0), settings_ (settings) 
 {
 }
@@ -10,7 +10,7 @@ Madara::Knowledge_Engine::Containers::Double::Double (
 Madara::Knowledge_Engine::Containers::Double::Double (
   const std::string & name,
   Knowledge_Base & knowledge,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings) 
 {
   variable_ = knowledge.get_ref (name);
@@ -19,7 +19,7 @@ Madara::Knowledge_Engine::Containers::Double::Double (
 Madara::Knowledge_Engine::Containers::Double::Double (
   const std::string & name,
   Variables & knowledge,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name), settings_ (settings) 
 {
   variable_ = knowledge.get_ref (name);
@@ -29,7 +29,7 @@ Madara::Knowledge_Engine::Containers::Double::Double (
   const std::string & name,
   Knowledge_Base & knowledge,
   type value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings) 
 {
   variable_ = knowledge.get_ref (name);
@@ -40,7 +40,7 @@ Madara::Knowledge_Engine::Containers::Double::Double (
   const std::string & name,
   Variables & knowledge,
   type value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name), settings_ (settings) 
 {
   variable_ = knowledge.get_ref (name);
@@ -113,7 +113,115 @@ Madara::Knowledge_Engine::Containers::Double::operator= (type value)
 
   return value;
 }
-    
+  
+bool
+Madara::Knowledge_Engine::Containers::Double::operator== (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) == value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator != (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) != value;
+  }
+
+  return true;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator== (const Double & value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return
+      context_->get (variable_, settings_) ==
+        value.context_->get (value.variable_, value.settings_);
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator != (const Double & value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return
+      context_->get (variable_, settings_) !=
+        value.context_->get (value.variable_, value.settings_);
+  }
+
+  return true;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator< (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) < value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator<= (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) <= value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator> (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) > value;
+  }
+
+  return false;
+}
+
+bool
+Madara::Knowledge_Engine::Containers::Double::operator>= (type value)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->get (variable_, settings_) >= value;
+  }
+
+  return false;
+}
+
 Madara::Knowledge_Engine::Containers::Double::type
 Madara::Knowledge_Engine::Containers::Double::operator* (void)
 {
