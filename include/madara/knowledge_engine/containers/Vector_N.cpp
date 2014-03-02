@@ -85,7 +85,102 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
 
   return result;
 }
+  
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Vector_N::operator () (unsigned int x)
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+
+  if (context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    buffer << ".";
+    buffer << x;
+
+    result = context_->get (buffer.str (), settings_);
+  }
+
+  return result;
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Vector_N::operator () (
+  unsigned int x, unsigned int y)
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+
+  if (context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    buffer << ".";
+    buffer << x;
+    buffer << ".";
+    buffer << y;
+
+    result = context_->get (buffer.str (), settings_);
+  }
+
+  return result;
+}
+  
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Vector_N::operator () (
+  unsigned int x, unsigned int y, unsigned int z)
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+
+  if (context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    buffer << ".";
+    buffer << x;
+    buffer << ".";
+    buffer << y;
+    buffer << ".";
+    buffer << z;
+
+    result = context_->get (buffer.str (), settings_);
+  }
+
+  return result;
+}
       
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Vector_N::operator () (
+  unsigned int i1, unsigned int i2, unsigned int i3, unsigned int i4)
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+
+  if (context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    buffer << ".";
+    buffer << i1;
+    buffer << ".";
+    buffer << i2;
+    buffer << ".";
+    buffer << i3;
+    buffer << ".";
+    buffer << i4;
+
+    result = context_->get (buffer.str (), settings_);
+  }
+
+  return result;
+}
       
 
 int

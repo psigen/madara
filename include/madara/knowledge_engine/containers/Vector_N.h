@@ -108,6 +108,46 @@ namespace Madara
          **/
         Knowledge_Record operator[] (const Index & index);
       
+        
+        /**
+         * Retrieves a copy of the record from the vector.
+         * @param  x      column of a one dimensional array
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record operator () (unsigned int x); 
+      
+        /**
+         * Retrieves a copy of the record from the vector.
+         * @param  x      row of a two dimensional array
+         * @param  y      column of a two dimensional array
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record operator () (unsigned int x, unsigned int y); 
+      
+        /**
+         * Retrieves a copy of the record from the vector.
+         * @param  x      first dimension of a three dimensional array
+         * @param  y      second dimension of a three dimensional array
+         * @param  z      third dimension of a three dimensional array
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record operator () (unsigned int x, unsigned int y,
+          unsigned int z); 
+      
+        /**
+         * Retrieves a copy of the record from the vector.
+         * @param  i1      first dimension index of a four dimensional array
+         * @param  i2      second dimension index of a four dimensional array
+         * @param  i3      third dimension index of a four dimensional array
+         * @param  i4      fourth dimension index of a four dimensional array
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record operator () (unsigned int i1, unsigned int i2,
+          unsigned int i3, unsigned int i4); 
       
         /**
          * Read a file into the index
