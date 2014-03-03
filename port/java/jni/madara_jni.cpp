@@ -19,14 +19,11 @@ MADARA_Export jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 
     madara_JVM = vm;
 
-    std::cout << "Setting the JVM: " << madara_JVM << std::endl;
-
     return env->GetVersion();
 }
 
 MADARA_Export void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved)
 {
-    std::cout << "UNLOAD\n";
     JNIEnv* env;
     vm->GetEnv((void**)&env, JNI_VERSION_1_6);
     env->DeleteGlobalRef(madara_JNI);

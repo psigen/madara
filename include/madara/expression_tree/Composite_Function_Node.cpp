@@ -121,6 +121,10 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
   else if (function_->is_extern_unnamed ())
     return function_->extern_unnamed (args, variables);
 
+#ifdef _MADARA_JAVA_
+  else if (function_->is_java_callable())
+    return function_->call_java(args, variables);
+#endif
   
 #ifdef _MADARA_PYTHON_CALLBACKS_
   else if (function_->is_python_callable ())

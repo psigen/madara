@@ -235,6 +235,16 @@ void Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
   map_.define_function (name, func);
 }
 
+#ifdef _MADARA_JAVA_
+inline
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::define_function (
+  const std::string & name, jobject callable)
+{
+  map_.define_function (name, callable);
+}
+#endif
+
 #ifdef _MADARA_PYTHON_CALLBACKS_
 
 inline

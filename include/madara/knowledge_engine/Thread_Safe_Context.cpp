@@ -1123,6 +1123,32 @@ Madara::Knowledge_Engine::Thread_Safe_Context::define_function (
   functions_[*key_ptr] = Function (func);
 }
 
+#ifdef _MADARA_JAVA_
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::define_function (const std::string & name,
+  jobject callable,
+  const Knowledge_Reference_Settings & settings)
+{
+  // enter the mutex
+  std::string key_actual;
+  const std::string * key_ptr;
+  Context_Guard guard (mutex_);
+  
+  if (settings.expand_variables)
+  {
+    key_actual = expand_statement (name);
+    key_ptr = &key_actual;
+  }
+  else
+    key_ptr = &name;
+  
+  // check for null key
+  if (*key_ptr == "")
+    return;
+  
+  functions_[*key_ptr] = Function (callable);
+}
+#endif
 
 #ifdef _MADARA_PYTHON_CALLBACKS_
 void

@@ -628,6 +628,15 @@ void Madara::Knowledge_Engine::Knowledge_Base::define_function (
   impl_->define_function (name, func);
 }
 
+#ifdef _MADARA_JAVA_
+// Defines a function
+void Madara::Knowledge_Engine::Knowledge_Base::define_function (
+  const std::string & name, jobject func)
+{
+  impl_->define_function (name, func);
+}
+#endif
+
 #ifdef _MADARA_PYTHON_CALLBACKS_
 
 // Defines a function

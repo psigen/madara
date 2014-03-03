@@ -727,7 +727,16 @@ namespace Madara
        **/
       void define_function (const std::string & name,
         Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &));
-              
+      
+#ifdef _MADARA_JAVA_
+      /**
+       * Defines a named python function
+       * @param  name       name of the function
+       * @param  callable   external java object to call with this name
+       **/
+      void define_function (const std::string & name, jobject callable);
+#endif
+      
 #ifdef _MADARA_PYTHON_CALLBACKS_
       /**
        * Defines a named python function
