@@ -3,7 +3,10 @@ feature (java) {
   requires += java
 
   includes += $(JAVA_HOME)/include
+  includes += port/java/jni
   
+  macros += _MADARA_JAVA_
+
   specific (prop:windows) {
     includes += $(JAVA_HOME)/include/win32
   } else {

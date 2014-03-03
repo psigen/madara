@@ -215,6 +215,22 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JL
 }
 
 /*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_defineFunction
+ * Signature: (JLjava/lang/String;Lcom/madara/MadaraFunction;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2Lcom_madara_MadaraFunction_2
+  (JNIEnv * env, jobject obj, jlong cptr, jstring name, jobject func)
+{
+    Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+    const char *nativeName = env->GetStringUTFChars(name, 0);
+
+    knowledge->define_function(std::string(nativeName), func);
+
+    env->ReleaseStringUTFChars(name, nativeName);
+}
+
+/*
 * Class:     com_madara_KnowledgeBase
 * Method:    jni_clear
 * Signature: (J)V

@@ -114,7 +114,15 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JL
  */
 MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2J
   (JNIEnv *, jobject, jlong, jstring, jlong);
-  
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_defineFunction
+ * Signature: (JLjava/lang/String;Lcom/madara/MadaraFunction;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1defineFunction__JLjava_lang_String_2Lcom_madara_MadaraFunction_2
+  (JNIEnv *, jobject, jlong, jstring, jobject);
+
 /*
  * Class:     com_madara_KnowledgeBase
  * Method:    jni_clear
