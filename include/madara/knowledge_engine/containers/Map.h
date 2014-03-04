@@ -7,7 +7,7 @@
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/knowledge_engine/Eval_Settings.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 /**
  * @file Map.h
@@ -33,7 +33,7 @@ namespace Madara
         /**
          * Default constructor
          **/
-        Map (const Eval_Settings & settings = Eval_Settings (true));
+        Map (const Knowledge_Update_Settings & settings = Knowledge_Update_Settings ());
       
         /**
          * Constructor
@@ -43,7 +43,7 @@ namespace Madara
          **/
         Map (const std::string & name,
                 Knowledge_Base & knowledge,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings = Knowledge_Update_Settings ());
       
         /**
          * Constructor
@@ -53,7 +53,7 @@ namespace Madara
          **/
         Map (const std::string & name,
                 Variables & knowledge,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings = Knowledge_Update_Settings ());
       
         /**
          * Copy constructor
@@ -148,8 +148,8 @@ namespace Madara
          */
         int read_file (const std::string & key, 
                        const std::string & filename, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
       
         /**
          * Sets a location within the map to the specified value
@@ -163,8 +163,8 @@ namespace Madara
         int set (const std::string & key,
           Madara::Knowledge_Record::Integer value = 
             Madara::Knowledge_Record::MODIFIED, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets an index within an array to a specified value
@@ -179,8 +179,8 @@ namespace Madara
         int set_index (const std::string & key,
           size_t index,
           Madara::Knowledge_Record::Integer value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets a location within the map to the specified value
@@ -195,8 +195,8 @@ namespace Madara
         int set (const std::string & key,
           const Madara::Knowledge_Record::Integer * value,
           uint32_t size,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
        
         /**
          * Sets a location within the map to the specified value
@@ -209,8 +209,8 @@ namespace Madara
          **/
         int set (const std::string & key,
           const std::vector <Knowledge_Record::Integer> & value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
        
         /**
          * Sets a location within the map to the specified value
@@ -222,8 +222,8 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (const std::string & key, double value, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets an index within a map to a specified value
@@ -238,8 +238,8 @@ namespace Madara
         int set_index (const std::string & key,
           size_t index,
           double value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets a location within the map to the specified value
@@ -254,8 +254,8 @@ namespace Madara
         int set (const std::string & key,
           const double * value,
           uint32_t size,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
        
         /**
          * Sets a location within the map to the specified value
@@ -268,8 +268,8 @@ namespace Madara
          **/
         int set (const std::string & key,
           const std::vector <double> & value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
         
         /**
          * Sets a location within the map to the specified value
@@ -281,8 +281,8 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (const std::string & key, const std::string & value, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets the quality of writing to a certain variable from this entity
@@ -305,8 +305,8 @@ namespace Madara
          **/
         int set_file (const std::string & key,
           const unsigned char * value, size_t size, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
       
         /**
          * Atomically sets the value of an index to a JPEG image
@@ -318,9 +318,15 @@ namespace Madara
          **/
         int set_jpeg (const std::string & key,
           const unsigned char * value, size_t size, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
       
+        /**
+         * Sets the update settings for the variable
+         * @param  settings  the new settings to use
+         **/
+        void set_settings (const Knowledge_Update_Settings & settings);
+
       private:
 
         /// guard for access and changes
@@ -352,7 +358,7 @@ namespace Madara
         /**
          * Settings for modifications
          **/
-        Eval_Settings settings_;
+        Knowledge_Update_Settings settings_;
       };
     }
   }

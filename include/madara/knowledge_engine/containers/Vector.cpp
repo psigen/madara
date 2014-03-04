@@ -2,7 +2,7 @@
 
 
 Madara::Knowledge_Engine::Containers::Vector::Vector (
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (0), settings_ (settings) 
 {
 }
@@ -12,7 +12,7 @@ Madara::Knowledge_Engine::Containers::Vector::Vector (
   Knowledge_Base & knowledge,
   int size,
   bool delete_vars,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
 {
   size_ = get_size_ref ();
@@ -24,7 +24,7 @@ Madara::Knowledge_Engine::Containers::Vector::Vector (
   Variables & knowledge,
   int size,
   bool delete_vars,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
 {
   size_ = get_size_ref ();
@@ -312,7 +312,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::read_file (
   unsigned int index,
   const std::string & filename, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -328,7 +328,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set_file (
   unsigned int index,
   const unsigned char * value, size_t size, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -344,7 +344,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set_jpeg (
   unsigned int index,
   const unsigned char * value, size_t size, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -360,7 +360,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   Knowledge_Record::Integer value, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -377,7 +377,7 @@ Madara::Knowledge_Engine::Containers::Vector::set_index (
   unsigned int index,
   size_t sub_index,
   Knowledge_Record::Integer value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -394,7 +394,7 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   const Madara::Knowledge_Record::Integer * value,
   uint32_t size,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -410,7 +410,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   const std::vector <Knowledge_Record::Integer> & value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -426,7 +426,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   double value, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -443,7 +443,7 @@ Madara::Knowledge_Engine::Containers::Vector::set_index (
   unsigned int index,
   size_t sub_index,
   double value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -460,7 +460,7 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   const double * value,
   uint32_t size,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -476,7 +476,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   const std::vector <double> & value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -492,7 +492,7 @@ int
 Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
   const std::string & value, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   int result = -1;
@@ -501,6 +501,15 @@ Madara::Knowledge_Engine::Containers::Vector::set (
     result = context_->set (vector_[index], value, settings);
   
   return result;
+}
+
+void
+Madara::Knowledge_Engine::Containers::Vector::set_settings (
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  
+  settings_ = settings;
 }
 
 

@@ -262,6 +262,15 @@ Madara::Knowledge_Engine::Containers::Double::to_string (void)
 }
 
 void
+Madara::Knowledge_Engine::Containers::Double::set_settings (
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  
+  settings_ = settings;
+}
+
+void
 Madara::Knowledge_Engine::Containers::Double::set_quality (
   uint32_t quality,
   const Knowledge_Reference_Settings & settings)

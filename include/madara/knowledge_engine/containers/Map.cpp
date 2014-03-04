@@ -3,7 +3,7 @@
 #include <algorithm>
 
 Madara::Knowledge_Engine::Containers::Map::Map (
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (0), settings_ (settings)
 {
 }
@@ -12,7 +12,7 @@ Madara::Knowledge_Engine::Containers::Map::Map (
 Madara::Knowledge_Engine::Containers::Map::Map (
   const std::string & name,
   Knowledge_Base & knowledge,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
 {
   std::map <std::string, Knowledge_Record> contents;
@@ -33,7 +33,7 @@ Madara::Knowledge_Engine::Containers::Map::Map (
 Madara::Knowledge_Engine::Containers::Map::Map (
   const std::string & name,
   Variables & knowledge,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
 {
   std::map <std::string, Knowledge_Record> contents;
@@ -303,7 +303,7 @@ int
 Madara::Knowledge_Engine::Containers::Map::read_file (
   const std::string & key,
   const std::string & filename, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -327,7 +327,7 @@ Madara::Knowledge_Engine::Containers::Map::read_file (
       
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   Madara::Knowledge_Record::Integer value, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -354,7 +354,7 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (
   const std::string & key,
   size_t index,
   Madara::Knowledge_Record::Integer value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -380,7 +380,7 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const Madara::Knowledge_Record::Integer * value,
   uint32_t size,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -404,7 +404,7 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
        
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const std::vector <Knowledge_Record::Integer> & value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -428,7 +428,7 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
        
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   double value, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -454,7 +454,7 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 int Madara::Knowledge_Engine::Containers::Map::set_index (const std::string & key,
   size_t index,
   double value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -480,7 +480,7 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (const std::string & ke
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const double * value,
   uint32_t size,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -505,7 +505,7 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const std::vector <double> & value,
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -530,7 +530,7 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const std::string & value, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -553,6 +553,15 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 }
 
 
+void
+Madara::Knowledge_Engine::Containers::Map::set_settings (
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  
+  settings_ = settings;
+}
+
 void Madara::Knowledge_Engine::Containers::Map::set_quality (
   const std::string & key,
   uint32_t quality,
@@ -570,7 +579,7 @@ void Madara::Knowledge_Engine::Containers::Map::set_quality (
 
 int Madara::Knowledge_Engine::Containers::Map::set_file (const std::string & key,
   const unsigned char * value, size_t size, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -595,7 +604,7 @@ int Madara::Knowledge_Engine::Containers::Map::set_file (const std::string & key
 
 int Madara::Knowledge_Engine::Containers::Map::set_jpeg (const std::string & key,
   const unsigned char * value, size_t size, 
-  const Eval_Settings & settings)
+  const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   std::stringstream buffer;

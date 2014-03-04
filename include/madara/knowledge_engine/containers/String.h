@@ -36,7 +36,7 @@ namespace Madara
          * Default constructor
          **/
         String (const Knowledge_Update_Settings & settings =
-          Knowledge_Update_Settings (true));
+          Knowledge_Update_Settings ());
       
         /**
          * Default constructor
@@ -47,7 +47,7 @@ namespace Madara
         String (const std::string & name,
                 Knowledge_Base & knowledge,
                 const Knowledge_Update_Settings & settings =
-                  Knowledge_Update_Settings (true));
+                  Knowledge_Update_Settings ());
       
         /**
          * Default constructor
@@ -60,7 +60,7 @@ namespace Madara
                 Knowledge_Base & knowledge,
                 const std::string & value,
                 const Knowledge_Update_Settings & settings =
-                  Knowledge_Update_Settings (true));
+                  Knowledge_Update_Settings ());
       
         /**
          * Default constructor
@@ -71,7 +71,7 @@ namespace Madara
         String (const std::string & name,
                 Variables & knowledge,
                 const Knowledge_Update_Settings & settings =
-                  Knowledge_Update_Settings (true));
+                  Knowledge_Update_Settings ());
       
         /**
          * Default constructor
@@ -84,7 +84,7 @@ namespace Madara
                 Variables & knowledge,
                 const std::string & value,
                 const Knowledge_Update_Settings & settings =
-                  Knowledge_Update_Settings (true));
+                  Knowledge_Update_Settings ());
       
         /**
          * Copy constructor
@@ -205,7 +205,13 @@ namespace Madara
          * @return the value as a double
          **/
         double to_double (void);
-        
+                
+        /**
+         * Sets the update settings for the variable
+         * @param  settings  the new settings to use
+         **/
+        void set_settings (const Knowledge_Update_Settings & settings);
+
         /**
          * Sets the quality of writing to the variable
          *

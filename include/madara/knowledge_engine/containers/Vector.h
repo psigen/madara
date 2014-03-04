@@ -6,7 +6,7 @@
 #include <string>
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
-#include "madara/knowledge_engine/Eval_Settings.h"
+#include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 /**
  * @file Vector.h
@@ -33,7 +33,7 @@ namespace Madara
          * Default constructor
          * @param  settings   settings for evaluating the vector
          **/
-        Vector (const Eval_Settings & settings = Eval_Settings (true));
+        Vector (const Knowledge_Update_Settings & settings = Knowledge_Update_Settings ());
 
         /**
          * Constructor
@@ -47,7 +47,7 @@ namespace Madara
                 Knowledge_Base & knowledge,
                 int size = -1,
                 bool delete_vars = true,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings = Knowledge_Update_Settings ());
       
         /**
          * Constructor
@@ -61,7 +61,7 @@ namespace Madara
                 Variables & knowledge,
                 int size = -1,
                 bool delete_vars = true,
-                const Eval_Settings & settings = Eval_Settings (true));
+                const Knowledge_Update_Settings & settings = Knowledge_Update_Settings ());
       
         /**
          * Copy constructor
@@ -144,8 +144,8 @@ namespace Madara
          */
         int read_file (unsigned int index, 
                        const std::string & filename, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
       
         /**
          * Atomically sets the value of an index to an arbitrary string.
@@ -157,8 +157,8 @@ namespace Madara
          **/
         int set_file (unsigned int index,
           const unsigned char * value, size_t size, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
       
         /**
          * Atomically sets the value of an index to a JPEG image
@@ -170,8 +170,8 @@ namespace Madara
          **/
         int set_jpeg (unsigned int index,
           const unsigned char * value, size_t size, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
       
       
         /**
@@ -186,8 +186,8 @@ namespace Madara
         int set (unsigned int index,
           Madara::Knowledge_Record::Integer value = 
             Madara::Knowledge_Record::MODIFIED, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets an index within an array to a specified value
@@ -202,8 +202,8 @@ namespace Madara
         int set_index (unsigned int index,
           size_t sub_index,
           Madara::Knowledge_Record::Integer value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets a knowledge variable to a specified value
@@ -218,8 +218,8 @@ namespace Madara
         int set (unsigned int index,
           const Madara::Knowledge_Record::Integer * value,
           uint32_t size,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
        
         /**
          * Sets a knowledge variable to a specified value
@@ -232,8 +232,8 @@ namespace Madara
          **/
         int set (unsigned int index,
           const std::vector <Knowledge_Record::Integer> & value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
        
         /**
          * Sets a knowledge variable to a specified value
@@ -245,8 +245,8 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (unsigned int index, double value, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets an index within an array to a specified value
@@ -261,8 +261,8 @@ namespace Madara
         int set_index (unsigned int index,
           size_t sub_index,
           double value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
 
         /**
          * Sets a knowledge variable to a specified value
@@ -277,8 +277,8 @@ namespace Madara
         int set (unsigned int index,
           const double * value,
           uint32_t size,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
        
         /**
          * Sets a knowledge variable to a specified value
@@ -291,8 +291,8 @@ namespace Madara
          **/
         int set (unsigned int index,
           const std::vector <double> & value,
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
         
         /**
          * Sets a knowledge variable to a specified value
@@ -304,8 +304,14 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (unsigned int index, const std::string & value, 
-          const Eval_Settings & settings =
-            Eval_Settings (true));
+          const Knowledge_Update_Settings & settings =
+            Knowledge_Update_Settings ());
+
+        /**
+         * Sets the update settings for the variable
+         * @param  settings  the new settings to use
+         **/
+        void set_settings (const Knowledge_Update_Settings & settings);
 
         /**
          * Sets the quality of writing to a certain variable from this entity
@@ -356,7 +362,7 @@ namespace Madara
         /**
          * Settings for modifications
          **/
-        Eval_Settings settings_;
+        Knowledge_Update_Settings settings_;
       };
 
       /// provide the Array alias for the Vector class

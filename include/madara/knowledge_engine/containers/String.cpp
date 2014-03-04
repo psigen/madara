@@ -261,6 +261,15 @@ Madara::Knowledge_Engine::Containers::String::to_integer (void)
 }
 
 void
+Madara::Knowledge_Engine::Containers::String::set_settings (
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  
+  settings_ = settings;
+}
+
+void
 Madara::Knowledge_Engine::Containers::String::set_quality (
   uint32_t quality,
   const Knowledge_Reference_Settings & settings)
