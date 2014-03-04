@@ -324,8 +324,10 @@ namespace Madara
         /**
          * Sets the update settings for the variable
          * @param  settings  the new settings to use
+         * @return the old update settings
          **/
-        void set_settings (const Knowledge_Update_Settings & settings);
+        Knowledge_Update_Settings set_settings (
+          const Knowledge_Update_Settings & settings);
 
       private:
 

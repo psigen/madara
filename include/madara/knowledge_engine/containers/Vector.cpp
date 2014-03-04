@@ -503,15 +503,18 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   return result;
 }
 
-void
+Madara::Knowledge_Engine::Knowledge_Update_Settings
 Madara::Knowledge_Engine::Containers::Vector::set_settings (
   const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   
-  settings_ = settings;
-}
+  Knowledge_Update_Settings old_settings = settings_;
 
+  settings_ = settings;
+
+  return old_settings;
+}
 
 void
 Madara::Knowledge_Engine::Containers::Vector::set_quality (

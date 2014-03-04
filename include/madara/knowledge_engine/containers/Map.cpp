@@ -552,14 +552,17 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   return context_->set (entry->second, value, settings_);
 }
 
-
-void
+Madara::Knowledge_Engine::Knowledge_Update_Settings
 Madara::Knowledge_Engine::Containers::Map::set_settings (
   const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
   
+  Knowledge_Update_Settings old_settings = settings_;
+
   settings_ = settings;
+
+  return old_settings;
 }
 
 void Madara::Knowledge_Engine::Containers::Map::set_quality (

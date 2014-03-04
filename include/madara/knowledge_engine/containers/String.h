@@ -205,12 +205,14 @@ namespace Madara
          * @return the value as a double
          **/
         double to_double (void);
-                
+
         /**
          * Sets the update settings for the variable
          * @param  settings  the new settings to use
+         * @return the old update settings
          **/
-        void set_settings (const Knowledge_Update_Settings & settings);
+        Knowledge_Update_Settings set_settings (
+          const Knowledge_Update_Settings & settings);
 
         /**
          * Sets the quality of writing to the variable
