@@ -22,6 +22,10 @@
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
 
+#ifdef _MADARA_JAVA_
+  #include <jni.h>
+#endif
+
 #ifdef _MADARA_PYTHON_CALLBACKS_
   #include <boost/python.hpp>
 #endif
@@ -81,7 +85,26 @@ namespace Madara
       void add (Knowledge_Record (*function) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Variables &));
-         
+      
+#ifdef _MADARA_JAVA_
+      
+      /**
+       * Adds a java filter to the list of types
+       * @param   types      the types to add the filter to
+       * @param   callable   the function that will take the knowledge record
+       *                     in Function_Arguments.
+       **/
+      void add (uint32_t types,
+                jobject & callable);
+      
+      /**
+       * Adds an aggregate filter
+       * @param callable     the function that will filter the aggregation
+       **/
+      void add (jobject & callable);
+      
+#endif
+      
 #ifdef _MADARA_PYTHON_CALLBACKS_
       
       /**

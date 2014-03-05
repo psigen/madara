@@ -265,6 +265,53 @@ void
   rebroadcast_filters_.add (function);
 }
 
+#ifdef _MADARA_JAVA_
+
+void
+Madara::Transport::QoS_Transport_Settings::add_receive_filter (
+                                                               uint32_t types, jobject & object)
+{
+  receive_filters_.add (types, object);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (
+                                                            uint32_t types, jobject & object)
+{
+  send_filters_.add (types, object);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+                                                                   uint32_t types, jobject & object)
+{
+  rebroadcast_filters_.add (types, object);
+}
+
+
+void
+Madara::Transport::QoS_Transport_Settings::add_receive_filter (
+                                                               jobject & object)
+{
+  receive_filters_.add (object);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (
+                                                            jobject & object)
+{
+  send_filters_.add (object);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+                                                                   jobject & object)
+{
+  rebroadcast_filters_.add (object);
+}
+
+#endif
+
 #ifdef _MADARA_PYTHON_CALLBACKS_
       
 void

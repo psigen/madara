@@ -39,7 +39,6 @@ MADARA_Export JNIEnv* madara_jni_get_env()
     madara_JVM->GetEnv((void**)&env, JNI_VERSION_1_6);
     if (env == 0) //Thread is not attached
     {
-        std::cerr << "Thread not attached, attaching\n";
         madara_JVM->AttachCurrentThread((void**)&env, NULL);
     }
     return env;

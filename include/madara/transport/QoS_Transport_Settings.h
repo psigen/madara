@@ -18,6 +18,10 @@
 #include "madara/MADARA_export.h"
 #include "madara/knowledge_engine/Knowledge_Record_Filters.h"
 
+#ifdef _MADARA_JAVA_
+  #include <jni.h>
+#endif
+
 #ifdef _MADARA_PYTHON_CALLBACKS_
   #include <boost/python.hpp>
 #endif
@@ -131,6 +135,63 @@ namespace Madara
         Knowledge_Map &, const Transport::Transport_Context &,
         Knowledge_Engine::Variables &));
  
+#ifdef _MADARA_JAVA_
+      
+      /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before applying updates to the Knowledge_Base
+       * @param   types      the types to add the filter to
+       * @param   object     a java callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_receive_filter (
+                               uint32_t types, jobject & object);
+      
+      /**
+       * Adds a filter that will be applied to certain types before sending
+       * @param   types      the types to add the filter to
+       * @param   object     a java callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_send_filter (
+                            uint32_t types, jobject & object);
+      
+      /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before rebroadcasting (if TTL > 0)
+       * @param   types      the types to add the filter to
+       * @param   object     a java callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_rebroadcast_filter (
+                                   uint32_t types, jobject & object);
+      
+      /**
+       * Adds an aggregate filter for a map of variables to values
+       * before applying updates to the Knowledge_Base
+       * @param   object     a java callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_receive_filter (jobject & object);
+      
+      /**
+       * Adds an aggregate filter for a map of variables to values
+       * before sending
+       * @param   object     a java callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_send_filter (jobject & object);
+      
+      /**
+       * Adds an aggregate filter for a map of variables to values
+       * after receiving and before rebroadcasting (if TTL > 0)
+       * @param   object     a java callback that takes in a list of args
+       *                     and the Variables interface.
+       **/
+      void add_rebroadcast_filter (jobject & object);
+      
+#endif
+      
 #ifdef _MADARA_PYTHON_CALLBACKS_
       
       /**

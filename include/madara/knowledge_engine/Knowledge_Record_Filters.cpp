@@ -71,6 +71,42 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
   }
 }
 
+#ifdef _MADARA_JAVA_
+
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (uint32_t types,
+                                                         jobject & callable)
+{
+  if (callable != NULL)
+  {
+    // start with 1st bit, check every bit until types is 0
+    for (uint32_t cur = 1; types > 0; cur <<= 1)
+    {
+      // if current is set in the bitmask
+      if (Madara::Utility::bitmask_check (types, cur))
+      {
+        // remove the filter list from the type cur
+        filters_[cur].push_back (Function (callable));
+      }
+      
+      // remove the current flag from the types
+      types = Madara::Utility::bitmask_remove (types, cur);
+    }
+  }
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
+                                                         jobject & callable)
+{
+  if (callable != NULL)
+  {
+    //Disabled at the moment
+    //aggregate_filters_.push_back (Aggregate_Filter (callable));
+  }
+}
+
+#endif
 
 #ifdef _MADARA_PYTHON_CALLBACKS_
       
@@ -228,6 +264,13 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       {
         result = i->extern_unnamed (arguments, variables);
       }
+      
+#ifdef _MADARA_JAVA_
+      else if (i->is_java_callable())
+      {
+        result = i->call_java_filter(arguments, variables);
+      }
+#endif
       
 #ifdef _MADARA_PYTHON_CALLBACKS_
 
