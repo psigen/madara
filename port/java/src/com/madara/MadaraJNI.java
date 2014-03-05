@@ -7,6 +7,8 @@
 package com.madara;
 
 
+import com.madara.transport.TransportFilter;
+
 /**
  * Abstract class that insures loading of libMADARA.so and holds the C pointer
  */
@@ -52,11 +54,19 @@ public abstract class MadaraJNI
         return getClass().getName() + "[" + cptr + "]";
     }
 
-    private static long callback(MadaraFunction func, long[] args, long vars)
+    private static long functionCallback(MadaraFunction func, long[] args, long vars)
     {
         MadaraVariables _vars = MadaraVariables.fromPointer(vars);
         KnowledgeList _args = new KnowledgeList(args);
         KnowledgeRecord ret = func.execute(_args, _vars);
+        return ret == null ? 0 : ret.getCPtr();
+    }
+
+    private static long filterCallback(TransportFilter func, long[] args, long vars)
+    {
+        MadaraVariables _vars = MadaraVariables.fromPointer(vars);
+        KnowledgeList _args = new KnowledgeList(args);
+        KnowledgeRecord ret = func.filter(_args, _vars);
         return ret == null ? 0 : ret.getCPtr();
     }
 

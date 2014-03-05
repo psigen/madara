@@ -7,6 +7,7 @@
 
 #include "com.madara.KnowledgeBase.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
+#include "madara/transport/QoS_Transport_Settings.h"
 
 #include <iostream>
 
@@ -47,7 +48,7 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1KnowledgeBase__Lj
 {
   const char *nativeHost = env->GetStringUTFChars(host, 0);
 
-  Madara::Knowledge_Engine::Knowledge_Base* knowledge = new Madara::Knowledge_Engine::Knowledge_Base(std::string(nativeHost), Madara::Transport::Settings(*(Madara::Transport::Settings*) settings));
+  Madara::Knowledge_Engine::Knowledge_Base* knowledge = new Madara::Knowledge_Engine::Knowledge_Base(std::string(nativeHost), Madara::Transport::QoS_Transport_Settings(*(Madara::Transport::Settings*) settings));
 
   env->ReleaseStringUTFChars(host, nativeHost);
 
