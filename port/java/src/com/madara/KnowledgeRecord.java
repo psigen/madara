@@ -13,6 +13,7 @@ package com.madara;
 public class KnowledgeRecord extends MadaraJNI
 {
     //Constructors
+    private native long jni_KnowledgeRecordDeep(long ptr);
     private native long jni_KnowledgeRecord(String str);
     private native long jni_KnowledgeRecord(double str);
     private native long jni_KnowledgeRecord(long str);
@@ -30,15 +31,15 @@ public class KnowledgeRecord extends MadaraJNI
     //Free
     private native void jni_freeKnowledgeRecord(long cptr);
 
+    private final boolean isNew;
 
     /**
      * No reason to ever create this without a pointer
      */
-    private KnowledgeRecord()
+    private KnowledgeRecord(boolean isNew)
     {
-
+        this.isNew = isNew;
     }
-
 
     /**
      * Constructor for long/integer values
@@ -47,6 +48,7 @@ public class KnowledgeRecord extends MadaraJNI
      */
     public KnowledgeRecord(long lng)
     {
+        isNew = true;
         setCPtr(jni_KnowledgeRecord(lng));
     }
 
@@ -58,6 +60,7 @@ public class KnowledgeRecord extends MadaraJNI
      */
     public KnowledgeRecord(String str)
     {
+        isNew = true;
         setCPtr(jni_KnowledgeRecord(str));
     }
 
@@ -69,6 +72,7 @@ public class KnowledgeRecord extends MadaraJNI
      */
     public KnowledgeRecord(double dbl)
     {
+        isNew = true;
         setCPtr(jni_KnowledgeRecord(dbl));
     }
 
@@ -79,6 +83,7 @@ public class KnowledgeRecord extends MadaraJNI
      */
     public KnowledgeRecord(double[] dbls)
     {
+        isNew = true;
         setCPtr(jni_KnowledgeRecord(dbls));
     }
 
@@ -89,6 +94,7 @@ public class KnowledgeRecord extends MadaraJNI
      */
     public KnowledgeRecord(long[] longs)
     {
+        isNew = true;
         setCPtr(jni_KnowledgeRecord(longs));
     }
 
@@ -192,8 +198,24 @@ public class KnowledgeRecord extends MadaraJNI
      */
     static KnowledgeRecord fromPointer(long cptr)
     {
-        KnowledgeRecord ret = new KnowledgeRecord();
+        KnowledgeRecord ret = new KnowledgeRecord(false);
         ret.setCPtr(cptr);
+        return ret;
+    }
+
+    /**
+     * Will return true if this object was malloced
+     * @return
+     */
+    public boolean isNew()
+    {
+        return isNew;
+    }
+
+    public KnowledgeRecord clone()
+    {
+        KnowledgeRecord ret = new KnowledgeRecord(true);
+        ret.setCPtr(jni_KnowledgeRecordDeep(this.getCPtr()));
         return ret;
     }
 }

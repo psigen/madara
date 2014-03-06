@@ -47,7 +47,8 @@ MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1f
 JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRebroadcastFilter__JILcom_madara_transport_TransportFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jint type, jobject func)
 {
-
+    Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+    settings->add_rebroadcast_filter(type, func);
 }
 
 /*
@@ -58,7 +59,8 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
 JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRebroadcastFilter__JLcom_madara_transport_AggregateFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jobject func)
 {
-
+    Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+    settings->add_rebroadcast_filter(func);
 }
 
 /*
@@ -69,7 +71,8 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
 JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSendFilter__JILcom_madara_transport_TransportFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jint type, jobject func)
 {
-
+    Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+    settings->add_send_filter(type, func);
 }
 
 /*
@@ -80,7 +83,8 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSe
 JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSendFilter__JLcom_madara_transport_AggregateFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jobject func)
 {
-
+    Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+    settings->add_send_filter(func);
 }
 
 /*
@@ -103,5 +107,6 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
 JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addReceiveFilter__JLcom_madara_transport_AggregateFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jobject func)
 {
-
+    Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+    settings->add_receive_filter(func);
 }

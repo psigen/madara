@@ -11,6 +11,17 @@
 #include <stdio.h>
 
 /*
+ * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_KnowledgeRecordDeep
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecordDeep (JNIEnv * env, jobject obj, jlong cptr)
+{
+  Madara::Knowledge_Record* ret = new Madara::Knowledge_Record(*(Madara::Knowledge_Record*)cptr);
+  return (jlong)ret;
+}
+
+/*
 * Class:     com_madara_KnowledgeRecord
 * Method:    jni_KnowledgeRecord
 * Signature: (Ljava/lang/String;)J

@@ -7,6 +7,8 @@
 package com.madara;
 
 
+import com.madara.transport.AggregateFilter;
+import com.madara.transport.TransportContext;
 import com.madara.transport.TransportFilter;
 
 /**
@@ -67,6 +69,18 @@ public abstract class MadaraJNI
         MadaraVariables _vars = MadaraVariables.fromPointer(vars);
         KnowledgeList _args = new KnowledgeList(args);
         KnowledgeRecord ret = func.filter(_args, _vars);
+        return ret == null ? 0 : ret.getCPtr();
+    }
+
+    private static long aggregateFilterCallback(AggregateFilter func, String[] keys, long[] vals, long ctx, long vars)
+    {
+        KnowledgeMap map = new KnowledgeMap(keys, vals);
+        TransportContext context = TransportContext.fromPointer(ctx);
+        MadaraVariables variables = MadaraVariables.fromPointer(vars);
+
+        KnowledgeRecord ret = func.filter(map, context, variables);
+        if (ret != null && !ret.isNew())
+            ret = ret.clone();
         return ret == null ? 0 : ret.getCPtr();
     }
 
