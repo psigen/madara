@@ -9,6 +9,11 @@
 #include "madara/knowledge_engine/Extern_Function_Variables.h"
 #include "madara/transport/Transport_Context.h"
 
+#ifdef _MADARA_JAVA_
+  #include <jni.h>
+  #include "madara_jni.h"
+#endif
+
 #ifdef _MADARA_PYTHON_CALLBACKS_
   #include <boost/python.hpp>
 #endif
@@ -40,7 +45,8 @@ namespace Madara
         UNINITIALIZED = 0,
         EXTERN_UNNAMED = 1,
         EXTERN_NAMED = 2,
-        PYTHON_CALLABLE = 3
+        PYTHON_CALLABLE = 3,
+        JAVA_CALLABLE = 4
       };
 
       /**
@@ -60,6 +66,61 @@ namespace Madara
         : unnamed_filter (extern_func), type (EXTERN_UNNAMED)
       {
       }
+      
+#ifdef _MADARA_JAVA_
+      jobject java_object;
+      
+      /**
+       * Constructor for java
+       **/
+      Aggregate_Filter (jobject& object)
+      : type (JAVA_CALLABLE)
+      {
+        //We have to create a globla ref to the object or we cant call it
+        JNIEnv* env = madara_jni_get_env();
+        java_object = (jobject) env->NewGlobalRef(object);
+      }
+      
+      bool is_java_callable (void) const
+      {
+        return type == JAVA_CALLABLE;
+      }
+      
+      Knowledge_Record call_java(Knowledge_Map & recordsMap, const Transport::Transport_Context & context, Variables & vars) const
+      {
+        //Change the vector to a java array to let MadaraJNI handle it
+        JNIEnv* env = jni_attach();
+        
+        //Create the arrays to pass up
+        jlong records [recordsMap.size()];
+        jlongArray recordsArray = env->NewLongArray(recordsMap.size());
+        jobjectArray keysArray = env->NewObjectArray(recordsMap.size(), jni_string_cls(), NULL);
+        
+        std::map<std::string, Madara::Knowledge_Record>::iterator iter;
+        int counter = 0;
+        for (iter = recordsMap.begin(); iter != recordsMap.end(); ++iter)
+        {
+          env->SetObjectArrayElement(keysArray, counter, env->NewStringUTF(iter->first.c_str()));
+          records[counter++] = (jlong) &(iter->second);
+        }
+        
+        env->SetLongArrayRegion(recordsArray, 0, recordsMap.size(), records);
+        
+        //Attach the tread and make the call
+        jlong ret = env->CallStaticLongMethod(madara_jni_class(), madara_jni_aggregate_callback(), java_object, keysArray, recordsArray, &context, &vars);
+        
+        jni_detach();
+        
+        if (ret <= 0)
+          return Knowledge_Record::Integer(0);
+        
+        //The returned value is a pointer to a knowledge record, so we must free it
+        Knowledge_Record record(*(Knowledge_Record*)ret);
+        delete (Knowledge_Record*)ret;
+        
+        return record;
+      }
+#endif
       
 #ifdef _MADARA_PYTHON_CALLBACKS_
       /**

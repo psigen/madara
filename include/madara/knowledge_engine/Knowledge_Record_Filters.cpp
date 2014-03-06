@@ -101,8 +101,7 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
 {
   if (callable != NULL)
   {
-    //Disabled at the moment
-    //aggregate_filters_.push_back (Aggregate_Filter (callable));
+    aggregate_filters_.push_back (Aggregate_Filter (callable));
   }
 }
 
@@ -338,6 +337,13 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
         result = i->unnamed_filter (records, transport_context, variables);
       }
 
+#ifdef _MADARA_JAVA_
+      else if (i->is_java_callable())
+      {
+        result = i->call_java(records, transport_context, variables);
+      }
+#endif
+      
 #ifdef _MADARA_PYTHON_CALLBACKS_
 
       else if (i->is_python_callable ())
