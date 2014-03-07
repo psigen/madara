@@ -9,8 +9,6 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/transport/QoS_Transport_Settings.h"
 
-#include <iostream>
-
 #include <string>
 #include <map>
 

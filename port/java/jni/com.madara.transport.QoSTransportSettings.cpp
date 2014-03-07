@@ -1,3 +1,9 @@
+/*********************************************************************
+ * Usage of this software requires acceptance of the SMASH-CMU License,
+ * which can be found at the following URL:
+ *
+ * https://code.google.com/p/smash-cmu/wiki/License
+ *********************************************************************/
 
 #include "com.madara.transport.QoSTransportSettings.h"
 #include "madara/transport/QoS_Transport_Settings.h"

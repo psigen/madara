@@ -41,7 +41,7 @@ public abstract class MadaraJNI
     /**
      * @return The C pointer of this object for passing to JNI functions
      */
-    protected long getCPtr()
+    public long getCPtr()
     {
         return cptr;
     }
@@ -74,7 +74,7 @@ public abstract class MadaraJNI
 
     private static long aggregateFilterCallback(AggregateFilter func, String[] keys, long[] vals, long ctx, long vars)
     {
-        KnowledgeMap map = new KnowledgeMap(keys, vals);
+        KnowledgeMap map = new KnowledgeMap(keys, vals, false);
         TransportContext context = TransportContext.fromPointer(ctx);
         MadaraVariables variables = MadaraVariables.fromPointer(vars);
 

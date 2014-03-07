@@ -1,16 +1,30 @@
+/*********************************************************************
+ * Usage of this software requires acceptance of the SMASH-CMU License,
+ * which can be found at the following URL:
+ *
+ * https://code.google.com/p/smash-cmu/wiki/License
+ *********************************************************************/
 package com.madara.transport;
 
 import com.madara.KnowledgeMap;
 import com.madara.KnowledgeRecord;
 import com.madara.MadaraJNI;
 
-/**
- * User: jdroot
- * Date: 3/5/14
- * Time: 11:43 AM
- */
 public class TransportContext extends MadaraJNI
 {
+    private static native void jni_addRecord(long cptr, String key, long record);
+    private static native void jni_clearRecords(long cptr);
+    private static native long jni_getCurrentTime(long cptr);
+    private static native String jni_getDomain(long cptr);
+    private static native long jni_getMessageTime(long cptr);
+    private static native long jni_getOperation(long cptr);
+    private static native String jni_getOriginator(long cptr);
+    private static native long jni_getReceiveBandwidth(long cptr);
+    private static native void jni_getRecords(long cptr, MapReturn ret);
+    private static native long jni_getSendBandwidth(long cptr);
+
+    private KnowledgeMap currentMap = null;
+
     private TransportContext(long cptr)
     {
         setCPtr(cptr);
@@ -28,7 +42,10 @@ public class TransportContext extends MadaraJNI
      */
     public void addRecord(String key, KnowledgeRecord record)
     {
-
+        KnowledgeRecord value = record;
+        if (value != null && !value.isNew())
+            value = record.clone();
+        jni_addRecord(getCPtr(), key, record == null ? 0 : record.getCPtr());
     }
 
     /**
@@ -36,7 +53,7 @@ public class TransportContext extends MadaraJNI
      */
     public void clearRecords()
     {
-
+        jni_clearRecords(getCPtr());
     }
 
     /**
@@ -45,7 +62,7 @@ public class TransportContext extends MadaraJNI
      */
     public long getCurrentTime()
     {
-        return 0;
+        return jni_getCurrentTime(getCPtr());
     }
 
     /**
@@ -54,7 +71,7 @@ public class TransportContext extends MadaraJNI
      */
     public String getDomain()
     {
-        return "";
+        return jni_getDomain(getCPtr());
     }
 
     /**
@@ -63,7 +80,7 @@ public class TransportContext extends MadaraJNI
      */
     public long getMessageTime()
     {
-        return 0;
+        return jni_getMessageTime(getCPtr());
     }
 
     /**
@@ -72,7 +89,7 @@ public class TransportContext extends MadaraJNI
      */
     public long getOperation()
     {
-        return 0;
+        return jni_getOperation(getCPtr());
     }
 
     /**
@@ -81,7 +98,7 @@ public class TransportContext extends MadaraJNI
      */
     public String getOriginator()
     {
-        return "";
+        return jni_getOriginator(getCPtr());
     }
 
     /**
@@ -90,15 +107,19 @@ public class TransportContext extends MadaraJNI
      */
     public long getReceiveBandwidth()
     {
-        return 0;
+        return jni_getReceiveBandwidth(getCPtr());
     }
 
     /**
-     * Returns the additional records stored in the context
+     * Returns the additional records stored in the context. Do not free the resulting map
      * @return the additional records stored in the context
      */
-    public KnowledgeMap getRecords()
+    private KnowledgeMap getRecords()
     {
+        MapReturn jniRet = new MapReturn();
+        jni_getRecords(getCPtr(), jniRet);
+        System.err.println("Got the records: " + jniRet.keys.length);
+//        return new KnowledgeMap(jniRet.keys, jniRet.vals);
         return null;
     }
 
@@ -108,6 +129,12 @@ public class TransportContext extends MadaraJNI
      */
     public long getSendBandwidth()
     {
-        return 0;
+        return jni_getSendBandwidth(getCPtr());
+    }
+
+    private static class MapReturn
+    {
+        public String[] keys;
+        public long[] vals;
     }
 }

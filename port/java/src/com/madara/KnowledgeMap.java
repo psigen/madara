@@ -17,9 +17,17 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
     private native void jni_freeKnowledgeMap(long[] ptrs, int length);
 
     private Set<Map.Entry<String, KnowledgeRecord>> mySet;
+    private final boolean freeable;
 
     public KnowledgeMap(String[] keys, long[] vals)
     {
+        this(keys, vals, true);
+    }
+
+    public KnowledgeMap(String[] keys, long[] vals, boolean freeable)
+    {
+        this.freeable = freeable;
+
         if (keys == null || vals == null || keys.length != vals.length)
             return;
 
@@ -27,9 +35,8 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
 
         for (int x = 0; x < keys.length; x++)
         {
-            mySet.add(new KnowledgeMapEntry(keys[x], vals[x]));
+            mySet.add(new KnowledgeMapEntry(keys[x], vals[x], freeable));
         }
-
     }
 
     /**
@@ -47,6 +54,8 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
      */
     public void free()
     {
+        if (!freeable)
+            return;
         long[] ptrs = new long[mySet == null ? 0 : mySet.size()];
         int pos = 0;
         for (Map.Entry<String, KnowledgeRecord> entry : mySet)
@@ -60,17 +69,16 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
 
     }
 
-
     private static class KnowledgeMapEntry implements Map.Entry<String, KnowledgeRecord>
     {
 
         private String key;
         private KnowledgeRecord record;
 
-        private KnowledgeMapEntry(String key, long val)
+        private KnowledgeMapEntry(String key, long val, boolean isNew)
         {
             this.key = key;
-            record = KnowledgeRecord.fromPointer(val);
+            record = KnowledgeRecord.fromPointer(val, isNew);
         }
 
         /**

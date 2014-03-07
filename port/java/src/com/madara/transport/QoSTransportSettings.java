@@ -1,13 +1,14 @@
+/*********************************************************************
+ * Usage of this software requires acceptance of the SMASH-CMU License,
+ * which can be found at the following URL:
+ *
+ * https://code.google.com/p/smash-cmu/wiki/License
+ *********************************************************************/
 package com.madara.transport;
 
 import com.madara.KnowledgeType;
 import com.madara.MadaraFunction;
 
-/**
- * User: jdroot
- * Date: 3/3/14
- * Time: 10:32 AM
- */
 public class QoSTransportSettings extends TransportSettings
 {
     private static native long jni_QoSTransportSettings();

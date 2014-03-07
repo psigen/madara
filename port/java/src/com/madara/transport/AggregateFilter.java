@@ -1,3 +1,9 @@
+/*********************************************************************
+ * Usage of this software requires acceptance of the SMASH-CMU License,
+ * which can be found at the following URL:
+ *
+ * https://code.google.com/p/smash-cmu/wiki/License
+ *********************************************************************/
 package com.madara.transport;
 
 import com.madara.KnowledgeList;
@@ -5,11 +11,6 @@ import com.madara.KnowledgeMap;
 import com.madara.KnowledgeRecord;
 import com.madara.MadaraVariables;
 
-/**
- * User: jdroot
- * Date: 3/5/14
- * Time: 11:42 AM
- */
 public interface AggregateFilter
 {
     /**
