@@ -145,6 +145,7 @@ namespace Madara
      * @param originator   the originator of the message
      * @param clock        the clock of the message
      * @param update_number fragment identifier within clock message
+     * @param fragment     the fragment to add
      * @param queue_length number of clock entries allowed per originator
      * @param map          a map of existing message fragments
      * @param clear        if true, clears a fragment entry if message

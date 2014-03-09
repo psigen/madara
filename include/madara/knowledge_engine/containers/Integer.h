@@ -104,7 +104,7 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          **/
         void set_name (const std::string & var_name,
@@ -112,7 +112,7 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          **/
         void set_name (const std::string & var_name,
@@ -194,6 +194,20 @@ namespace Madara
          **/
         type operator* (void);
       
+        /**
+         * Increments the value of the variable and returns
+         * the result.
+         * @return the new value of the variable
+         **/
+        type operator++ (void);
+        
+        /**
+         * Decrements the value of the variable and returns
+         * the result.
+         * @return the new value of the variable
+         **/
+        type operator-- (void);
+
         /**
          * Returns the value as a double
          * @return the value as a double

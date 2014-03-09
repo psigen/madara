@@ -234,7 +234,33 @@ Madara::Knowledge_Engine::Containers::Integer::operator* (void)
   else
     return 0;
 }
-   
+
+Madara::Knowledge_Engine::Containers::Integer::type
+Madara::Knowledge_Engine::Containers::Integer::operator++ (void)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->inc (variable_, settings_).to_integer ();
+  }
+  else
+    return 0;
+}
+ 
+Madara::Knowledge_Engine::Containers::Integer::type
+Madara::Knowledge_Engine::Containers::Integer::operator-- (void)
+{
+  Guard guard (mutex_);
+  
+  if (context_)
+  {
+    return context_->dec (variable_, settings_).to_integer ();
+  }
+  else
+    return 0;
+}
+ 
 double
 Madara::Knowledge_Engine::Containers::Integer::to_double (void)
 {

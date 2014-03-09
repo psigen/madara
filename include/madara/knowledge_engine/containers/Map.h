@@ -118,7 +118,7 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          * @param sync_keys  sync the keys to existing vars in the new name
          **/
@@ -127,7 +127,7 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          * @param sync_keys  sync the keys to existing vars in the new name
          **/
@@ -297,7 +297,7 @@ namespace Madara
       
         /**
          * Atomically sets the value of an index to an arbitrary string.
-         * @param   index     index within vector
+         * @param   key       key to store the file into
          * @param   value     new value of the variable
          * @param   size      indicates the size of the value buffer
          * @param   settings  settings for applying the update

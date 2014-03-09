@@ -111,7 +111,7 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          **/
         void set_name (const std::string & var_name,
@@ -119,7 +119,7 @@ namespace Madara
         
         /**
          * Sets the variable name that this refers to
-         * @param varn_name  the name of the variable in the knowledge base
+         * @param var_name  the name of the variable in the knowledge base
          * @param knowledge  the knowledge base the variable is housed in
          **/
         void set_name (const std::string & var_name,

@@ -20,6 +20,7 @@
 #include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
+#include "madara/knowledge_engine/containers/Integer.h"
 
 // command line arguments
 int parse_args (int argc, ACE_TCHAR * argv[]);
@@ -56,6 +57,9 @@ uint64_t test_large_reinforcement (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
 uint64_t test_large_inference (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge,
+     uint32_t iterations);
+uint64_t test_container_increment (
      Madara::Knowledge_Engine::Knowledge_Base & knowledge,
      uint32_t iterations);
 
@@ -317,7 +321,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     exit (-1);
   }
 
-  const int num_test_types = 29;
+  const int num_test_types = 30;
 
   // make everything all pretty and for-loopy
   uint64_t results[num_test_types];
@@ -347,6 +351,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     "KaRL: Normal Set Operation    ",
     "KaRL: Variable Reference Set  ",
     "KaRL: Variables Inc Var Ref   ",
+    "KaRL container: Increment     ",
     "C++: Optimized Assignments    ",
     "C++: Optimized Reinforcements ",
     "C++: Optimized Inferences     ",
@@ -380,6 +385,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     NormalSet,
     VariableReferenceSet,
     VariablesIncVarRef,
+    ContainerIncrement,
     OptimizedAssignment,
     OptimizedReinforcement,
     OptimizedInference,
@@ -419,6 +425,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
   test_functions[NormalSet] = test_normal_set;
   test_functions[VariableReferenceSet] = test_var_ref_set;
   test_functions[VariablesIncVarRef] = test_variables_inc_var_ref;
+  test_functions[ContainerIncrement] = test_container_increment;
   
   test_functions[OptimizedAssignment] = test_optimal_assignment;
   test_functions[OptimizedReinforcement] = test_optimal_reinforcement;
@@ -588,6 +595,38 @@ uint64_t test_simple_reinforcement (
 
   print (measured, knowledge.get (".var1"), iterations,
     "Simple Reinforcement: ");
+
+  return measured;
+}
+
+/// Tests Integer container increment
+uint64_t test_container_increment (
+     Madara::Knowledge_Engine::Knowledge_Base & knowledge, 
+     uint32_t iterations)
+{
+  ACE_TRACE (ACE_TEXT ("test_container_increment"));
+
+  knowledge.clear ();
+
+  Madara::Knowledge_Engine::Containers::Integer var1 (".var1", knowledge,
+    Madara::Knowledge_Engine::Eval_Settings (false, false, false));
+
+  // keep track of time
+  ACE_hrtime_t measured;
+  ACE_High_Res_Timer timer;
+
+  timer.start ();
+
+  for (uint32_t i = 0; i < iterations; ++i)
+  {
+    ++var1;
+  }
+
+  timer.stop ();
+  timer.elapsed_time (measured);
+
+  print (measured, knowledge.get (".var1"), iterations,
+    "Container increment: ");
 
   return measured;
 }
