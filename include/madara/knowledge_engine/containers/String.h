@@ -95,6 +95,12 @@ namespace Madara
          * Destructor
          **/
         ~String ();
+        
+        /**
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const String & rhs);
 
         /**
          * Exchanges the string at this location with the string at another

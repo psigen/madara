@@ -95,6 +95,12 @@ namespace Madara
          * Destructor
          **/
         ~Integer ();
+        
+        /**
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const Integer & rhs);
 
         /**
          * Returns the name of the variable

@@ -72,6 +72,12 @@ namespace Madara
          * Destructor
          **/
         ~Vector ();
+        
+        /**
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const Vector & rhs);
 
         /**
          * Resizes the vector

@@ -97,6 +97,12 @@ namespace Madara
         ~Double ();
 
         /**
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const Double & rhs);
+
+        /**
          * Returns the name of the variable
          * @return name of the variable
          **/

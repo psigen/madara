@@ -65,6 +65,19 @@ Madara::Knowledge_Engine::Containers::Map::~Map ()
 }
 
 
+void
+Madara::Knowledge_Engine::Containers::Map::operator= (
+  const Map & rhs)
+{
+  if (this != &rhs)
+  {
+    this->context_ = rhs.context_;
+    this->name_ = rhs.name_;
+    this->settings_ = rhs.settings_;
+    this->map_ = rhs.map_;
+  }
+}
+
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Map::operator[] (const std::string & key)
 {

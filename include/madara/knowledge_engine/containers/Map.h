@@ -65,8 +65,15 @@ namespace Madara
          **/
         ~Map ();
         
+        
         /**
-         * Exchanges the integer at this location with the integer at another
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const Map & rhs);
+
+        /**
+         * Exchanges the map at this location with the map at another
          * location.
          * @param  other         the other integer to exchange with
          * @param  refresh_keys  force a refresh of the keys in both maps to

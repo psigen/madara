@@ -47,6 +47,20 @@ Madara::Knowledge_Engine::Containers::String_Vector::~String_Vector ()
 
 }
 
+void
+Madara::Knowledge_Engine::Containers::String_Vector::operator= (
+  const String_Vector & rhs)
+{
+  if (this != &rhs)
+  {
+    this->context_ = rhs.context_;
+    this->name_ = rhs.name_;
+    this->settings_ = rhs.settings_;
+    this->size_ = rhs.size_;
+    this->vector_ = rhs.vector_;
+  }
+}
+
 Madara::Knowledge_Engine::Variable_Reference
 Madara::Knowledge_Engine::Containers::String_Vector::get_size_ref (void)
 {

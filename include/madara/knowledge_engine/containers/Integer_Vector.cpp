@@ -47,6 +47,20 @@ Madara::Knowledge_Engine::Containers::Integer_Vector::~Integer_Vector ()
 
 }
 
+void
+Madara::Knowledge_Engine::Containers::Integer_Vector::operator= (
+  const Integer_Vector & rhs)
+{
+  if (this != &rhs)
+  {
+    this->context_ = rhs.context_;
+    this->name_ = rhs.name_;
+    this->settings_ = rhs.settings_;
+    this->size_ = rhs.size_;
+    this->vector_ = rhs.vector_;
+  }
+}
+
 Madara::Knowledge_Engine::Variable_Reference
 Madara::Knowledge_Engine::Containers::Integer_Vector::get_size_ref (void)
 {

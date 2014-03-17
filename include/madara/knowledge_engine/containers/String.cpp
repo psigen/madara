@@ -64,6 +64,18 @@ Madara::Knowledge_Engine::Containers::String::~String ()
 }
 
 void
+Madara::Knowledge_Engine::Containers::String::operator= (const String & rhs)
+{
+  if (this != &rhs)
+  {
+    this->context_ = rhs.context_;
+    this->name_ = rhs.name_;
+    this->settings_ = rhs.settings_;
+    this->variable_ = rhs.variable_;
+  }
+}
+
+void
 Madara::Knowledge_Engine::Containers::String::exchange (String & other)
 {
   Guard guard (mutex_), guard2 (other.mutex_);

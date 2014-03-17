@@ -69,6 +69,12 @@ namespace Madara
          * Destructor
          **/
         ~Vector_N ();
+        
+        /**
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const Vector_N & rhs);
 
         /**
          * Returns the name of the vector

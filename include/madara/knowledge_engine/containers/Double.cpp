@@ -64,6 +64,18 @@ Madara::Knowledge_Engine::Containers::Double::~Double ()
 }
 
 void
+Madara::Knowledge_Engine::Containers::Double::operator= (const Double & rhs)
+{
+  if (this != &rhs)
+  {
+    this->context_ = rhs.context_;
+    this->name_ = rhs.name_;
+    this->settings_ = rhs.settings_;
+    this->variable_ = rhs.variable_;
+  }
+}
+
+void
 Madara::Knowledge_Engine::Containers::Double::exchange (
   Containers::Double & other)
 {

@@ -78,6 +78,12 @@ namespace Madara
          * Destructor
          **/
         ~String_Vector ();
+        
+        /**
+         * Assignment operator
+         * @param  rhs    value to copy
+         **/
+        void operator= (const String_Vector & rhs);
 
         /**
          * Resizes the vector
