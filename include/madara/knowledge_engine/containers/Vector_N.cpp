@@ -38,6 +38,19 @@ Madara::Knowledge_Engine::Containers::Vector_N::~Vector_N ()
 
 }
 
+
+void
+Madara::Knowledge_Engine::Containers::Vector_N::operator= (
+  const Vector_N & rhs)
+{
+  if (this != &rhs)
+  {
+    this->context_ = rhs.context_;
+    this->name_ = rhs.name_;
+    this->settings_ = rhs.settings_;
+  }
+}
+
 std::string
 Madara::Knowledge_Engine::Containers::Vector_N::get_name (void)
 {
