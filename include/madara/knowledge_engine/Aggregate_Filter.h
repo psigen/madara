@@ -89,10 +89,10 @@ namespace Madara
       Knowledge_Record call_java(Knowledge_Map & recordsMap, const Transport::Transport_Context & context, Variables & vars) const
       {
         //Change the vector to a java array to let MadaraJNI handle it
-        JNIEnv* env = jni_attach();
+        JNIEnv * env = jni_attach();
         
         //Create the arrays to pass up
-        jlong records [recordsMap.size()];
+        jlong * records = new jlong [recordsMap.size()];
         jlongArray recordsArray = env->NewLongArray(recordsMap.size());
         jobjectArray keysArray = env->NewObjectArray(recordsMap.size(), jni_string_cls(), NULL);
         
@@ -106,6 +106,8 @@ namespace Madara
         
         env->SetLongArrayRegion(recordsArray, 0, recordsMap.size(), records);
         
+        delete [] records;
+
         //Attach the tread and make the call
         jlong ret = env->CallStaticLongMethod(madara_jni_class(), madara_jni_aggregate_callback(), java_object, keysArray, recordsArray, &context, &vars);
         

@@ -248,7 +248,7 @@ MADARA_Export jobjectArray JNICALL Java_com_madara_transport_TransportSettings_j
 
   jobjectArray ret = (jobjectArray) env->NewObjectArray(settings->hosts.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
 
-  for (int x = 0; x < settings->hosts.size(); x++)
+  for (unsigned int x = 0; x < settings->hosts.size(); x++)
   {
     env->SetObjectArrayElement(ret, x, env->NewStringUTF(settings->hosts[x].c_str()));
   }

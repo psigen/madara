@@ -84,7 +84,6 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
         /**
          * @see java.util.Map.Entry#getKey ()
          */
-        @Override
         public String getKey()
         {
             return key;
@@ -93,7 +92,6 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
         /**
          * @see java.util.Map.Entry#getValue ()
          */
-        @Override
         public KnowledgeRecord getValue()
         {
             return record;
@@ -102,7 +100,6 @@ public class KnowledgeMap extends AbstractMap<String, KnowledgeRecord>
         /**
          * @see java.util.Map.Entry#setValue (java.lang.Object)
          */
-        @Override
         public KnowledgeRecord setValue(KnowledgeRecord value)
         {
             throw new UnsupportedOperationException("This map does not allow modification");

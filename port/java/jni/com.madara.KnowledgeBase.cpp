@@ -144,7 +144,12 @@ MADARA_Export jlong JNICALL Java_com_madara_KnowledgeBase_jni_1compile (JNIEnv *
 Madara::Knowledge_Record default_madara_return_function (const char * name, Madara::Knowledge_Engine::Function_Arguments & args, Madara::Knowledge_Engine::Variables & variables)
 {
   JNIEnv *env;
+
+#ifndef _MADARA_ANDROID_
   jvm->AttachCurrentThread((void **)&env, NULL);
+#else
+  jvm->AttachCurrentThread(&env, NULL);
+#endif
 
   jlong ret;
   jlong * argsArrayNative = new jlong [args.size()];
