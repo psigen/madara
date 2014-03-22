@@ -243,6 +243,17 @@ Madara::Transport::Multicast_Transport_Read_Thread::rebroadcast (
           i->second,
           (ssize_t)Message_Header::get_size (i->second),
           address_);
+#ifdef WIN32
+        /**
+         * Broadcast on windows appears to be keyed by a timestamp. Because
+         * Windows resolution is microseconds and not nanoseconds, this means
+         * we have to sleep slightly or the OS will drop every fragment but
+         * the last one in that resolution. I can't find any documentation of
+         * this "feature", but sleeping for 10us before sending another 
+         * fragment seems to fix the issue.
+         **/
+        Madara::Utility::sleep (0.00001);
+#endif
       }
       
       send_monitor_.add ((uint32_t)bytes_sent);
@@ -266,6 +277,17 @@ Madara::Transport::Multicast_Transport_Read_Thread::rebroadcast (
         print_prefix, bytes_sent));
 
       send_monitor_.add ((uint32_t)bytes_sent);
+#ifdef WIN32
+        /**
+         * Broadcast on windows appears to be keyed by a timestamp. Because
+         * Windows resolution is microseconds and not nanoseconds, this means
+         * we have to sleep slightly or the OS will drop every fragment but
+         * the last one in that resolution. I can't find any documentation of
+         * this "feature", but sleeping for 10us before sending another 
+         * fragment seems to fix the issue.
+         **/
+        Madara::Utility::sleep (0.00001);
+#endif
     }
 
     MADARA_DEBUG (MADARA_LOG_MINOR_EVENT, (LM_DEBUG, 

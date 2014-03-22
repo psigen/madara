@@ -21,6 +21,27 @@ project (Test_Multicast_Mutex) : using_madara, using_ace {
   }
 }
 
+project (Test_Rebroadcast_Ring) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_rebroadcast_ring
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/test_rebroadcast_ring.cpp
+  }
+}
+
 project (Test_Fragmentation) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_fragmentation
