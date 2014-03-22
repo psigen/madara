@@ -116,3 +116,114 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
     settings->add_receive_filter(func);
 }
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_setRebroadcastTtl
+* Signature: (JI)V
+*/
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1setRebroadcastTtl (JNIEnv * env, jobject obj, jlong cptr, jint ttl)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  settings->set_rebroadcast_ttl ((unsigned char)ttl);
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_getRebroadcastTtl
+* Signature: (J)I
+*/
+MADARA_Export jint JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1getRebroadcastTtl (JNIEnv * env, jobject obj, jlong cptr)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  return (jint) settings->get_rebroadcast_ttl ();
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_enableParticipantTtl
+* Signature: (JI)V
+*/
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1enableParticipantTtl (JNIEnv * env, jobject obj, jlong cptr, jint ttl)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  settings->enable_participant_ttl ((unsigned char)ttl);
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_getParticpantTtl
+* Signature: (J)I
+*/
+MADARA_Export jint JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1gettParticpantTtl (JNIEnv * env, jobject obj, jlong cptr)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  return (jint) settings->get_participant_ttl ();
+}
+
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_setSendBandwidthLimit
+* Signature: (JI)V
+*/
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1setSendBandwidthLimit (JNIEnv * env, jobject obj, jlong cptr, jint limit)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  settings->set_send_bandwidth_limit (limit);
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_getSendBandwidthLimit
+* Signature: (J)I
+*/
+MADARA_Export jint JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1getSendBandwidthLimit (JNIEnv * env, jobject obj, jlong cptr)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  return (jint) settings->get_send_bandwidth_limit ();
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_setTotalBandwidthLimit
+* Signature: (JI)V
+*/
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1setTotalBandwidthLimit (JNIEnv * env, jobject obj, jlong cptr, jint limit)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  settings->set_total_bandwidth_limit (limit);
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_getTotalBandwidthLimit
+* Signature: (J)I
+*/
+MADARA_Export jint JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1getTotalBandwidthLimit (JNIEnv * env, jobject obj, jlong cptr)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  return (jint) settings->get_total_bandwidth_limit ();
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_setDeadline
+* Signature: (JI)V
+*/
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1setDeadline (JNIEnv * env, jobject obj, jlong cptr, jint limit)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  settings->set_deadline (limit);
+}
+
+/*
+* Class:     com_madara_transport_QoSTransportSettings
+* Method:    jni_getDeadline
+* Signature: (J)I
+*/
+MADARA_Export jint JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1getDeadline (JNIEnv * env, jobject obj, jlong cptr)
+{
+  Madara::Transport::QoS_Transport_Settings * settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
+  return (jint) settings->get_deadline ();
+}
