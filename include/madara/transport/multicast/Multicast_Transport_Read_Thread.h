@@ -133,7 +133,7 @@ namespace Madara
       ACE_SOCK_Dgram_Mcast               read_socket_;
       
       /// underlying socket for sending
-      ACE_SOCK_Dgram       &             write_socket_;
+      ACE_SOCK_Dgram      &              write_socket_;
 
       /// data received rules, defined in Transport settings
       Madara::Knowledge_Engine::Compiled_Expression  on_data_received_;

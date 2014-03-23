@@ -541,6 +541,90 @@ Madara::Knowledge_Engine::Variables::expand_statement (
   }
 }
 
+
+// Defines a function
+void Madara::Knowledge_Engine::Variables::define_function (
+  const std::string & name,
+  Knowledge_Record (*func) (Function_Arguments &, Variables &))
+{
+  if (context_)
+    return context_->define_function (name, func);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::define_function. Context not set correctly.\n"));
+  }
+}
+
+#ifdef _MADARA_JAVA_
+// Defines a function
+void Madara::Knowledge_Engine::Variables::define_function (
+  const std::string & name, jobject func)
+{
+  if (context_)
+    return context_->define_function (name, func);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::define_function. Context not set correctly.\n"));
+  }
+}
+#endif
+
+#ifdef _MADARA_PYTHON_CALLBACKS_
+
+// Defines a function
+void Madara::Knowledge_Engine::Variables::define_function (
+  const std::string & name, boost::python::object callable)
+{
+  if (context_)
+    return context_->define_function (name, callable);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::define_function. Context not set correctly.\n"));
+  }
+}
+
+#endif
+
+/**
+  * Defines a MADARA KaRL function
+  * @param  name       name of the function
+  * @param  expression KaRL function body       
+  **/
+void
+Madara::Knowledge_Engine::Variables::define_function (const std::string & name,
+  const std::string & expression)
+{
+  if (context_)
+    return context_->define_function (name, expression);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::define_function. Context not set correctly.\n"));
+  }
+}
+      
+/**
+  * Defines a MADARA KaRL function
+  * @param  name       name of the function
+  * @param  expression KaRL function body       
+  **/
+void
+Madara::Knowledge_Engine::Variables::define_function (const std::string & name,
+  const Compiled_Expression & expression)
+{
+  if (context_)
+    return context_->define_function (name, expression);
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::define_function. Context not set correctly.\n"));
+  }
+}
+    
+
 Madara::Knowledge_Engine::Compiled_Expression
 Madara::Knowledge_Engine::Variables::compile (const std::string & expression)
 {

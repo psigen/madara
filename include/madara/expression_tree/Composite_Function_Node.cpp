@@ -13,6 +13,7 @@
 
 #include "madara/utility/Log_Macros.h"
 #include "madara/knowledge_engine/Functions.h"
+#include "madara/knowledge_engine/Extern_Function_Variables.h"
 
 #ifdef _MADARA_PYTHON_CALLBACKS_
 

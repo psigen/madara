@@ -7,7 +7,6 @@
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
-#include "madara/knowledge_engine/Extern_Function_Variables.h"
 
 #ifdef _MADARA_JAVA_
 #include <jni.h>
@@ -30,6 +29,7 @@ namespace Madara
 {
   namespace Knowledge_Engine
   {
+    class Variables;
     class Thread_Safe_Context;
     
     typedef Madara::Knowledge_Record VALUE_TYPE;

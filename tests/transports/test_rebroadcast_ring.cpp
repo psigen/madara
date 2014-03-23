@@ -349,15 +349,12 @@ int main (int argc, char ** argv)
   Madara::Knowledge_Engine::Eval_Settings suppress_globals;
   suppress_globals.treat_globals_as_locals = true;
   
-  std::stringstream host_string;
-  host_string << settings.id;
-
   Madara::Knowledge_Engine::Wait_Settings wait_settings;
   wait_settings.poll_frequency = 4;
   wait_settings.max_wait_time = max_wait;
 
   // create a knowledge base and setup our id
-  Madara::Knowledge_Engine::Knowledge_Base knowledge (host_string.str (), settings);
+  Madara::Knowledge_Engine::Knowledge_Base knowledge (host, settings);
   knowledge.set (".id", Madara::Knowledge_Record::Integer (settings.id));
   knowledge.set (".target", target_id);
 

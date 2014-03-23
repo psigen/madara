@@ -9,6 +9,11 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Variable_Reference.h"
+#include "madara/knowledge_engine/Functions.h"
+
+#ifdef _MADARA_PYTHON_CALLBACKS_
+#include "boost/python/object.hpp"
+#endif
 
 /**
  * @file Functions.h
@@ -464,7 +469,58 @@ namespace Madara
         Compiled_Expression & expression,
         const Knowledge_Update_Settings & settings =
           Knowledge_Engine::Knowledge_Update_Settings ());
+      
+      /**
+       * Defines a function
+       * @param  name       name of the function
+       * @param  func       external function to call with this name
+       **/
+      void define_function (const std::string & name,
+        Knowledge_Record (*func) (Function_Arguments &, Variables &));
+      
+      /**
+       * Defines a named function that can distinguish the name it was called
+       * with in MADARA
+       * @param  name       name of the function
+       * @param  func       external function to call with this name
+       **/
+      void define_function (const std::string & name,
+        Knowledge_Record (*func) (const char *, Function_Arguments &, Variables &));
+      
+#ifdef _MADARA_JAVA_
+      /**
+       * Defines a named java function
+       * @param  name       name of the function
+       * @param  callable   external java object to call with this name
+       **/
+      void define_function (const std::string & name, jobject callable);
+#endif
+      
+#ifdef _MADARA_PYTHON_CALLBACKS_
+      /**
+       * Defines a named python function
+       * @param  name       name of the function
+       * @param  callable   external python function to call with this name
+       **/
+      void define_function (const std::string & name, boost::python::object callable);
+#endif
 
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const std::string & expression);
+      
+      /**
+       * Defines a MADARA KaRL function
+       * @param  name       name of the function
+       * @param  expression KaRL function body       
+       **/
+      void define_function (const std::string & name,
+        const Compiled_Expression & expression);
+      
       /**
        * Fills a vector with Knowledge Records that begin with a common subject
        * and have a finite range of integer values.
