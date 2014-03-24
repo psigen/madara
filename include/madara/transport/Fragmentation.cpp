@@ -391,6 +391,7 @@ Madara::Transport::add_fragment (const char * originator, uint64_t clock,
           if (result && clear)
           {
             delete_fragments (clock_found->second);
+            clock_map.erase (clock);
           }
         }
         else
