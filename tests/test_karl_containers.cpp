@@ -18,14 +18,14 @@ void test_vector (void)
   std::cout << "************* VECTOR: CREATING VECTOR*************\n";
   engine::Knowledge_Base knowledge;
   containers::Vector vector ("test_vector", knowledge, 10);
-  unsigned int size = vector.size ();
+  size_t size = vector.size ();
 
   vector.set (1, "value.at.1");
   vector.set (7, 7.7);
 
   std::cout << "Vector results:\n";
 
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     std::cout << "  ";
     std::cout << vector[i];
@@ -158,7 +158,7 @@ void test_map (void)
   map.set ("age", Madara::Knowledge_Record::Integer (63));
   map.set ("wives", Madara::Knowledge_Record::Integer (1));
 
-  unsigned int size = map.size ();
+  size_t size = map.size ();
   map.keys (keys);
   
   std::cout << "\nMap results:\n";
@@ -417,7 +417,7 @@ void test_integer_vector (void)
   std::cout << "************* VECTOR: CREATING INTEGER_VECTOR*************\n";
   engine::Knowledge_Base knowledge;
   containers::Integer_Vector vector ("test_vector", knowledge, 10);
-  unsigned int size = vector.size ();
+  size_t size = vector.size ();
 
   vector.set (1);
   vector.set (2);
@@ -425,7 +425,7 @@ void test_integer_vector (void)
 
   std::cout << "Vector results:\n";
 
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     std::cout << "  ";
     std::cout << vector[i];
@@ -481,7 +481,7 @@ void test_double_vector (void)
   std::cout << "************* VECTOR: CREATING DOUBLE_VECTOR*************\n";
   engine::Knowledge_Base knowledge;
   containers::Double_Vector vector ("test_vector", knowledge, 10);
-  unsigned int size = vector.size ();
+  size_t size = vector.size ();
 
   vector.set (1, 1.1);
   vector.set (2, 2.2);
@@ -489,7 +489,7 @@ void test_double_vector (void)
 
   std::cout << "Vector results:\n";
 
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     std::cout << "  ";
     std::cout << vector[i];
@@ -545,7 +545,7 @@ void test_string_vector (void)
   std::cout << "************* VECTOR: CREATING STRING_VECTOR*************\n";
   engine::Knowledge_Base knowledge;
   containers::String_Vector vector ("test_vector", knowledge, 10);
-  unsigned int size = vector.size ();
+  size_t size = vector.size ();
 
   vector.set (1, "1.1");
   vector.set (2, "2.2");
@@ -553,7 +553,7 @@ void test_string_vector (void)
 
   std::cout << "Vector results:\n";
 
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     std::cout << "  ";
     std::cout << vector[i];
