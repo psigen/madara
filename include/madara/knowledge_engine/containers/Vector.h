@@ -139,7 +139,7 @@ namespace Madara
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
-        Knowledge_Record operator[] (unsigned int index);
+        Knowledge_Record operator[] (size_t index);
       
       
         /**

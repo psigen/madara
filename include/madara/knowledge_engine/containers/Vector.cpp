@@ -124,7 +124,7 @@ Madara::Knowledge_Engine::Containers::Vector::resize (
     else
     {
       // dynamically allocate size from the context
-      Knowledge_Record::Integer cur_size =
+      size_t cur_size =
         context_->get (size_, settings_).to_integer ();
 
       size_t old_size = vector_.size ();
@@ -135,7 +135,7 @@ Madara::Knowledge_Engine::Containers::Vector::resize (
 
         if (cur_size > old_size)
         {
-          for (; old_size < (size_t)cur_size; ++old_size)
+          for (; old_size < cur_size; ++old_size)
           {
             std::stringstream buffer;
             buffer << name_;
@@ -146,7 +146,7 @@ Madara::Knowledge_Engine::Containers::Vector::resize (
         }
         else if (delete_vars)
         {
-          for (; (size_t)cur_size < old_size; ++cur_size)
+          for (; cur_size < old_size; ++cur_size)
           {
             std::stringstream buffer;
             buffer << name_;
@@ -222,10 +222,10 @@ Madara::Knowledge_Engine::Containers::Vector::exchange (
     this->resize ();
   }
 
-  unsigned int other_size = other.vector_.size ();
-  unsigned int this_size = this->vector_.size ();
+  size_t other_size = other.vector_.size ();
+  size_t this_size = this->vector_.size ();
 
-  for (unsigned int i = 0; i < this_size; ++i)
+  for (size_t i = 0; i < this_size; ++i)
   {
     // temp = this[i];
     Knowledge_Record temp = context_->get (this->vector_[i], settings_);
@@ -270,7 +270,7 @@ Madara::Knowledge_Engine::Containers::Vector::exchange (
   }
 
   // copy the other vector's elements to this vector's location
-  for (unsigned int i = this_size; i < other_size; ++i)
+  for (size_t i = this_size; i < other_size; ++i)
   {
     std::stringstream buffer;
     buffer << this->name_;
@@ -296,13 +296,13 @@ Madara::Knowledge_Engine::Containers::Vector::exchange (
 void
 Madara::Knowledge_Engine::Containers::Vector::transfer_to (Vector & other)
 {
-  unsigned int other_size = other.vector_.size ();
-  unsigned int this_size = this->vector_.size ();
+  size_t other_size = other.vector_.size ();
+  size_t this_size = this->vector_.size ();
 
-  int size = other_size + this_size;
-  other.resize (size);
+  size_t size = other_size + this_size;
+  other.resize ((int)size);
 
-  for (unsigned int i = 0, j = other_size; i < this_size; ++i, ++j)
+  for (size_t i = 0, j = other_size; i < this_size; ++i, ++j)
   {
     other.context_->set (other.vector_[j], (*this)[i], other.settings_);
   }
@@ -311,7 +311,7 @@ Madara::Knowledge_Engine::Containers::Vector::transfer_to (Vector & other)
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Containers::Vector::operator[] (unsigned int index)
+Madara::Knowledge_Engine::Containers::Vector::operator[] (size_t index)
 {
   Guard guard (mutex_);
   Knowledge_Record result;

@@ -145,7 +145,7 @@ namespace Madara
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
-        type operator[] (unsigned int index);
+        type operator[] (size_t index);
       
         /**
          * Sets a knowledge variable to a specified value
