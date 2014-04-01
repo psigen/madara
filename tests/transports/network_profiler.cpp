@@ -109,7 +109,7 @@ public:
 
     ACE_hrtime_t elapsed_time (0);
     Madara::Knowledge_Record::Integer cur_latency (0), received (0);
-    min_latency_ = 500000000000;
+    min_latency_ = 2000000000;
     max_latency_ = 0;
     avg_latency_ = 0;
 
