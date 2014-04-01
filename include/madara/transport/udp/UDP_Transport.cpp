@@ -173,6 +173,10 @@ long
           {
             ssize_t actual_sent = socket_.send (
               i->second, frag_size, addr->second);
+            
+            // sleep between fragments, if such a slack time is specified
+            if (settings_.slack_time > 0)
+              Madara::Utility::sleep (settings_.slack_time);
 
             MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
               DLINFO "%s: Send result was %d of %d byte fragment to %s\n",
@@ -214,17 +218,6 @@ long
             send_monitor_.add ((uint32_t)actual_sent);
             bytes_sent += actual_sent;
           }
-#ifdef WIN32
-          /**
-            * Broadcast on windows appears to be keyed by a timestamp. Because
-            * Windows resolution is microseconds and not nanoseconds, this means
-            * we have to sleep slightly or the OS will drop every fragment but
-            * the last one in that resolution. I can't find any documentation of
-            * this "feature", but sleeping for 10us before sending another 
-            * fragment seems to fix the issue.
-            **/
-          Madara::Utility::sleep (0.00001);
-#endif
         }
       }
     }

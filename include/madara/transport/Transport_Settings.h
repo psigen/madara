@@ -726,7 +726,11 @@ namespace Madara
       /// send the reduced message header (clock, size, updates, KaRL id)
       bool send_reduced_message_header;
 
+      /// map of fragments received by originator
       mutable Originator_Fragment_Map fragment_map;
+
+      /// time to sleep between sends and rebroadcasts
+      double slack_time;
 
 #ifdef _USE_CID_
       /// should we try to gather latencies?

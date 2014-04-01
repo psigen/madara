@@ -176,17 +176,9 @@ Madara::Transport::Broadcast_Transport::send_data (
           (ssize_t)Message_Header::get_size (i->second),
           addresses_[0]);
 
-#ifdef WIN32
-        /**
-         * Broadcast on windows appears to be keyed by a timestamp. Because
-         * Windows resolution is microseconds and not nanoseconds, this means
-         * we have to sleep slightly or the OS will drop every fragment but
-         * the last one in that resolution. I can't find any documentation of
-         * this "feature", but sleeping for 10us before sending another 
-         * fragment seems to fix the issue.
-         **/
-        Madara::Utility::sleep (0.00001);
-#endif
+        // sleep between fragments, if such a slack time is specified
+        if (settings_.slack_time > 0)
+          Madara::Utility::sleep (settings_.slack_time);
       }
       
       send_monitor_.add ((uint32_t)bytes_sent);

@@ -247,6 +247,10 @@ Madara::Transport::UDP_Transport_Read_Thread::rebroadcast (
           {
             ssize_t actual_sent = write_socket_.send (
               i->second, frag_size, addr->second);
+            
+            // sleep between fragments, if such a slack time is specified
+            if (settings_.slack_time > 0)
+              Madara::Utility::sleep (settings_.slack_time);
 
             MADARA_DEBUG (MADARA_LOG_MAJOR_EVENT, (LM_DEBUG, 
               DLINFO "%s:" \

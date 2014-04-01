@@ -15,6 +15,7 @@ Madara::Transport::Settings::Settings () :
         delay_launch (false),
         never_exit (false),
         send_reduced_message_header (false),
+        slack_time (0),
 
 #ifdef _USE_CID_
         latency_enabled (DEFAULT_LATENCY_ENABLED),
@@ -45,6 +46,7 @@ Madara::Transport::Settings::Settings (const Settings & settings) :
         delay_launch (settings.delay_launch),
         never_exit (settings.never_exit),
         send_reduced_message_header (settings.send_reduced_message_header),
+        slack_time (settings.slack_time),
 
 #ifdef _USE_CID_
 
@@ -84,6 +86,7 @@ Madara::Transport::Settings::operator= (const Settings & settings)
   never_exit = settings.never_exit;
 
   send_reduced_message_header = settings.send_reduced_message_header;
+  slack_time = settings.slack_time;
 
 #ifdef _USE_CID_
   latency_enabled = settings.latency_enabled;

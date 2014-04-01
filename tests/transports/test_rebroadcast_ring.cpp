@@ -205,6 +205,16 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-st" || arg1 == "--slack-time")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> settings.slack_time;
+      }
+
+      ++i;
+    }
     else if (arg1 == "-w" || arg1 == "--max-wait")
     {
       if (i + 1 < argc)
@@ -241,6 +251,8 @@ void handle_arguments (int argc, char ** argv)
 " [-s|--size size]         size of packet to send in bytes (overrides file)\n"\
 " [-si|--size-increment inc] increment of size from start to end (see -se)\n"\
 " [-se|--size-end end]     last automated size to test (see -s and -si)\n"\
+" [-st|--slack-time time]  time in seconds to sleep between fragment sends\n" \
+"                          (.001 seconds by default)\n" \
 " [-t|--target path]       file system location to save received files to\n" \
 " [-u|--udp ip:port]       a udp ip to send to (first is self to bind to)\n" \
 " [-w|--max-wait time]     maximum time to wait in seconds (double format)\n"\

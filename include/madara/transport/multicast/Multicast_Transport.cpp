@@ -181,6 +181,10 @@ Madara::Transport::Multicast_Transport::send_data (
           i->second,
           (ssize_t)Message_Header::get_size (i->second),
           addresses_[0]);
+
+        // sleep between fragments, if such a slack time is specified
+        if (settings_.slack_time > 0)
+          Madara::Utility::sleep (settings_.slack_time);
       }
       
       send_monitor_.add ((uint32_t)bytes_sent);
