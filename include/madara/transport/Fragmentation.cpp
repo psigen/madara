@@ -126,8 +126,6 @@ Madara::Transport::Fragment_Message_Header::read (const char * buffer,
   // Remove the time to live field from the buffer
   if (buffer_remaining >= 1)
   {
-    ttl = *(unsigned char *)buffer;
-    
     memcpy (&ttl, buffer, 1);
     buffer += 1;
   }
