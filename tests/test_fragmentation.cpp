@@ -3,9 +3,11 @@
 #include "madara/transport/Message_Header.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/utility/Utility.h"
+#include "madara/utility/Log_Macros.h"
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #define BUFFER_SIZE    1000
 #define LARGE_BUFFER_SIZE 500000
@@ -15,6 +17,35 @@ namespace transport = Madara::Transport;
 char chars[10] = {
   '0', '1', '2', '3', '4',
   '5', '6', '7', '8', '9'};
+  
+void handle_arguments (int argc, char ** argv)
+{
+  for (int i = 1; i < argc; ++i)
+  {
+    std::string arg1 (argv[i]);
+
+    if (arg1 == "-l" || arg1 == "--level")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> MADARA_debug_level;
+      }
+
+      ++i;
+    }
+    else
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        "\nProgram summary for %s:\n\n" \
+        "  Tests the fragment library\n\n" \
+        " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        "\n",
+        argv[0]));
+      exit (0);
+    }
+  }
+}
 
 void test_frag (void)
 {
@@ -308,6 +339,8 @@ void test_records_frag (void)
 
 int main (int argc, char * argv[])
 {
+  handle_arguments (argc, argv);
+
   test_frag ();
   test_add_frag ();
   test_records_frag ();
