@@ -363,10 +363,11 @@ int main (int argc, char ** argv)
       "  ||\n"
       "  terminated)\n"
       " ||\n"
-      "(\n"
+      "((\n"
       "  file = file;\n"
       "  file_name = file_name;\n"
       "  file_location = file_location\n"
+      " ) && 0"
       ")");
     
     knowledge.print (

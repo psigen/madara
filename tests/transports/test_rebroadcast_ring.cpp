@@ -336,6 +336,7 @@ int main (int argc, char ** argv)
   settings.queue_length = 2500000;
   settings.enable_participant_ttl (5);
   settings.set_rebroadcast_ttl (5);
+  settings.slack_time = 0.001;
 
   // add receive filter for writing a file
   settings.add_receive_filter (write_file);
