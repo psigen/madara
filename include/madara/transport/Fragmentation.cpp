@@ -134,7 +134,8 @@ Madara::Transport::Fragment_Message_Header::read (const char * buffer,
   // Remove updates field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (update_number))
   {
-    update_number = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&update_number, buffer, sizeof (update_number));
+    update_number = Madara::Utility::endian_swap (update_number);
     buffer += sizeof (update_number);
   }
   buffer_remaining -= sizeof (update_number);
