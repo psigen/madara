@@ -45,7 +45,8 @@ Madara::Transport::Message_Header::read (const char * buffer,
   // Remove size field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (size))
   {
-    size = Madara::Utility::endian_swap (*(uint64_t *)buffer);
+    memcpy (&size, buffer, sizeof (size));
+    size = Madara::Utility::endian_swap (size);
     buffer += sizeof (size);
   }
   buffer_remaining -= sizeof (size);
@@ -77,7 +78,8 @@ Madara::Transport::Message_Header::read (const char * buffer,
   // Remove type field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (type))
   {
-    type = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&type, buffer, sizeof (type));
+    type = Madara::Utility::endian_swap (type);
     buffer += sizeof (type);
   }
   buffer_remaining -= sizeof (type);
@@ -85,7 +87,8 @@ Madara::Transport::Message_Header::read (const char * buffer,
   // Remove updates field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (updates))
   {
-    updates = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&updates, buffer, sizeof (updates));
+    updates = Madara::Utility::endian_swap (updates);
     buffer += sizeof (updates);
   }
   buffer_remaining -= sizeof (updates);
@@ -93,7 +96,8 @@ Madara::Transport::Message_Header::read (const char * buffer,
   // Remove quality field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (quality))
   {
-    quality = Madara::Utility::endian_swap (*(uint32_t *)buffer);
+    memcpy (&quality, buffer, sizeof (quality));
+    quality = Madara::Utility::endian_swap (quality);
     buffer += sizeof (quality);
   }
   buffer_remaining -= sizeof (quality);
@@ -101,7 +105,8 @@ Madara::Transport::Message_Header::read (const char * buffer,
   // Remove clock field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (clock))
   {
-    clock = Madara::Utility::endian_swap (*(uint64_t *)buffer);
+    memcpy (&clock, buffer, sizeof (clock));
+    clock = Madara::Utility::endian_swap (clock);
     buffer += sizeof (clock);
   }
   buffer_remaining -= sizeof (clock);
@@ -109,7 +114,8 @@ Madara::Transport::Message_Header::read (const char * buffer,
   // Remove timestamp field from the buffer and update accordingly
   if (buffer_remaining >= sizeof (timestamp))
   {
-    timestamp = Madara::Utility::endian_swap (*(uint64_t *)buffer);
+    memcpy (&timestamp, buffer, sizeof (timestamp));
+    timestamp = Madara::Utility::endian_swap (timestamp);
     buffer += sizeof (timestamp);
   }
   buffer_remaining -= sizeof (timestamp);
