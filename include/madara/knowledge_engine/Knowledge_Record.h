@@ -371,12 +371,18 @@ namespace Madara
     void set_modified (void);
 
     /**
+     * resizes an array to a new size
+     * @param  new_size  new size of the array
+     **/
+    void resize (size_t new_size);
+
+    /**
      * reads a file and sets the type appropriately according to
      * the extension
      * @param   filename         location of the file to read from
      * @param   read_as_type     force a type (XML, TEXT, IMAGE_JPEG, or
      *                           UNKNOWN_FILE_TYPE)
-     * @return  
+     * @return  size of file
      **/
     int read_file (const std::string & filename, uint32_t read_as_type = 0);
     

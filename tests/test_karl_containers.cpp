@@ -2,6 +2,7 @@
 #include "madara/knowledge_engine/containers/Vector.h"
 #include "madara/knowledge_engine/containers/Integer_Vector.h"
 #include "madara/knowledge_engine/containers/Double_Vector.h"
+#include "madara/knowledge_engine/containers/Native_Double_Vector.h"
 #include "madara/knowledge_engine/containers/String_Vector.h"
 #include "madara/knowledge_engine/containers/Vector_N.h"
 #include "madara/knowledge_engine/containers/Map.h"
@@ -604,6 +605,71 @@ void test_string_vector (void)
   knowledge.print ();
 }
 
+void test_native_vectors (void)
+{
+  std::cout <<
+    "************* VECTOR: CREATING NATIVE DOUBLE VECTOR*************\n";
+  Madara::Knowledge_Engine::Knowledge_Base knowledge;
+  containers::Native_Double_Vector vector ("test_vector", knowledge, 10);
+  unsigned int size = vector.size ();
+
+  vector.set (1, 1.1);
+  vector.set (2, 2.2);
+  vector.set (7, 7.7);
+
+  std::cout << "Vector results:\n";
+
+  for (unsigned int i = 0; i < size; ++i)
+  {
+    std::cout << "  ";
+    std::cout << vector[i];
+    std::cout << "\n";
+  }
+  
+  std::cout << "\n";
+
+  if (size != 10)
+    std::cout << "FAIL. Vector.size != 10\n";
+  else
+    std::cout << "SUCCESS. Vector.size == 10\n";
+
+  if (vector[0] == 0 && vector[1] == 1.1 && vector[2] == 2.2 &&
+      vector[3] == 0 && vector[4] == 0 && vector[7] == 7.7)
+    std::cout << "SUCCESS. Vector[1],[2],[7] were set and retrieved.\n";
+  else
+    std::cout << "FAIL. Vector[1],[2],[7] were not set and retrieved.\n";
+  
+  if (vector.get_name () == "test_vector")
+    std::cout << "SUCCESS. vector.name () returned test_vector.\n";
+  else
+    std::cout << "FAIL. vector.name () did not return test_vector.\n";
+
+  std::cout << "Resizing to 7 elements.\n";
+
+  vector.resize (7);
+
+  
+  if (vector[0] == 0 && vector[1] == 1.1 && vector[2] == 2.2 &&
+      vector[3] == 0 && vector[4] == 0 && vector[7] == 0)
+    std::cout << "SUCCESS. Vector [7] no longer exists.\n";
+  else
+    std::cout << "FAIL. Vector [7] still exists after resize.\n";
+  
+  vector.resize (12);
+  
+  vector.set (8, 8.8);
+  vector.set (9, 9.9);
+
+  if (vector[1] == 1.1 &&
+      vector[8] == 8.8 && vector[10] == 0 &&
+      vector[9] == 9.9 && vector.size () == 12)
+    std::cout << "SUCCESS. Resize to 12 was successful.\n";
+  else
+    std::cout << "FAIL. Resize to 12 was unsuccessful.\n";
+
+  knowledge.print ();
+}
+
 int main (int argc, char * argv[])
 {
   test_vector ();
@@ -616,6 +682,7 @@ int main (int argc, char * argv[])
   test_double ();
   test_map_exchanges ();
   test_vector_exchanges ();
+  test_native_vectors ();
   
   test_vector_transfer ();
   return 0;

@@ -1867,6 +1867,27 @@ Madara::Knowledge_Record::read (const char * buffer, std::string & key,
   return buffer;
 }
 
+void
+Madara::Knowledge_Record::resize (size_t new_size)
+{
+  if (new_size > size_)
+  {
+    if (type_ == this->DOUBLE_ARRAY)
+    {
+      double zero (0.0);
+      set_index (new_size - 1, zero);
+    }
+    else if (type_ == this->INTEGER_ARRAY)
+    {
+      Integer zero (0);
+      set_index (new_size - 1, zero);
+    }
+  }
+  else if (new_size < size_)
+  {
+    size_ = new_size;
+  }
+}
 
 int
   Madara::Knowledge_Record::apply (
