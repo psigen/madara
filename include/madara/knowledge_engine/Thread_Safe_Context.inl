@@ -23,12 +23,26 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (
   const std::string & key,
   const Knowledge_Reference_Settings & settings) const
 {
-  if (exists (key))
+  std::string cur_key;
+  Knowledge_Record result;
+
+  if (settings.expand_variables)
   {
-    return map_.find (key)->second;
+    cur_key = expand_statement (key);
   }
   else
-    return Knowledge_Record ();
+  {
+    cur_key = key;
+  }
+
+  Knowledge_Map::const_iterator found = map_.find (cur_key);
+
+  if (found != map_.end ())
+  {
+    return found->second;
+  }
+
+  return result;
 }
 
 
