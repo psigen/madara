@@ -106,7 +106,7 @@ namespace Madara
          * Returns the name of the variable
          * @return name of the variable
          **/
-        std::string get_name (void);
+        std::string get_name (void) const;
         
         /**
          * Sets the variable name that this refers to
@@ -142,75 +142,81 @@ namespace Madara
          * Returns the value of the variable
          * @return the value of the variable
          **/
-        type operator* (void);
+        type operator* (void) const;
       
         /**
          * Checks for equality
          * @param  value  the value to compare to
          * @return true if equal, false otherwise
          **/
-        bool operator== (type value);
+        bool operator== (type value) const;
         
         /**
          * Checks for equality
          * @param  value  the value to compare to
          * @return true if equal, false otherwise
          **/
-        bool operator== (const Double & value);
+        bool operator== (const Double & value) const;
         
         /**
          * Checks for inequality
          * @param  value  the value to compare to
          * @return true if inequal, false otherwise
          **/
-        bool operator!= (type value);
+        bool operator!= (type value) const;
         
         /**
          * Checks for inequality
          * @param  value  the value to compare to
          * @return true if inequal, false otherwise
          **/
-        bool operator!= (const Double & value);
+        bool operator!= (const Double & value) const;
         
         /**
          * Checks for less than relationship
          * @param  value  the value to compare to
          * @return true if less than
          **/
-        bool operator< (type value);
+        bool operator< (type value) const;
         
         /**
          * Checks for less than or equal to relationship
          * @param  value  the value to compare to
          * @return true if less than or equal to
          **/
-        bool operator<= (type value);
+        bool operator<= (type value) const;
         
         /**
          * Checks for greater than relationship
          * @param  value  the value to compare to
          * @return true if greater than
          **/
-        bool operator> (type value);
+        bool operator> (type value) const;
         
         /**
          * Checks for greater than or equal to relationship
          * @param  value  the value to compare to
          * @return true if greater than or equal to
          **/
-        bool operator>= (type value);
+        bool operator>= (type value) const;
         
         /**
          * Returns the value as an integer
          * @return the value as an integer
          **/
-        Knowledge_Record::Integer to_integer (void);
+        Knowledge_Record::Integer to_integer (void) const;
         
+        /**
+         * Returns the value as a double (alias of *)
+         * @return the value as a double
+         **/
+        double to_double (void) const;
+
         /**
          * Returns the value as a string
          * @return the value as a string
          **/
-        std::string to_string (void);
+        std::string to_string (void) const;
 
         /**
          * Sets the update settings for the variable

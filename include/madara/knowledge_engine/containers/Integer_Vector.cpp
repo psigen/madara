@@ -161,14 +161,14 @@ Madara::Knowledge_Engine::Containers::Integer_Vector::resize (
 }
 
 size_t
-Madara::Knowledge_Engine::Containers::Integer_Vector::size (void)
+Madara::Knowledge_Engine::Containers::Integer_Vector::size (void) const
 {
   Guard guard (mutex_);
   return vector_.size ();
 }
 
 std::string
-Madara::Knowledge_Engine::Containers::Integer_Vector::get_name (void)
+Madara::Knowledge_Engine::Containers::Integer_Vector::get_name (void) const
 {
   Guard guard (mutex_);
   return name_;
@@ -310,7 +310,8 @@ Madara::Knowledge_Engine::Containers::Integer_Vector::transfer_to (Integer_Vecto
 }
 
 Madara::Knowledge_Engine::Containers::Integer_Vector::type
-Madara::Knowledge_Engine::Containers::Integer_Vector::operator[] (size_t index)
+Madara::Knowledge_Engine::Containers::Integer_Vector::operator[] (
+  size_t index) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;

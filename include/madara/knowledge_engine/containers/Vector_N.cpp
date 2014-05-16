@@ -52,7 +52,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator= (
 }
 
 std::string
-Madara::Knowledge_Engine::Containers::Vector_N::get_name (void)
+Madara::Knowledge_Engine::Containers::Vector_N::get_name (void) const
 {
   Guard guard (mutex_);
   return name_;
@@ -77,7 +77,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_name (
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
+Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;
@@ -100,7 +100,8 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
 }
   
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Containers::Vector_N::operator () (unsigned int x)
+Madara::Knowledge_Engine::Containers::Vector_N::operator () (
+  unsigned int x) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;
@@ -121,7 +122,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (unsigned int x)
 
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
-  unsigned int x, unsigned int y)
+  unsigned int x, unsigned int y) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;
@@ -144,7 +145,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
   
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
-  unsigned int x, unsigned int y, unsigned int z)
+  unsigned int x, unsigned int y, unsigned int z) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;
@@ -170,7 +171,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
 
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
-  unsigned int i1, unsigned int i2, unsigned int i3, unsigned int i4)
+  unsigned int i1, unsigned int i2, unsigned int i3, unsigned int i4) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;

@@ -79,7 +79,8 @@ Madara::Knowledge_Engine::Containers::Map::operator= (
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Containers::Map::operator[] (const std::string & key)
+Madara::Knowledge_Engine::Containers::Map::operator[] (
+  const std::string & key)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -88,7 +89,7 @@ Madara::Knowledge_Engine::Containers::Map::operator[] (const std::string & key)
   buffer << key;
 
   std::string final_key = buffer.str ();
-  std::map <std::string, Variable_Reference>::iterator entry =
+  std::map <std::string, Variable_Reference>::const_iterator entry =
     map_.find (final_key);
 
   if (entry == map_.end ())
@@ -102,7 +103,7 @@ Madara::Knowledge_Engine::Containers::Map::operator[] (const std::string & key)
 }
 
 size_t
-Madara::Knowledge_Engine::Containers::Map::size (void)
+Madara::Knowledge_Engine::Containers::Map::size (void) const
 {
   Guard guard (mutex_);
   return map_.size ();
@@ -250,7 +251,7 @@ Madara::Knowledge_Engine::Containers::Map::clear (void)
 }
 
 std::string
-Madara::Knowledge_Engine::Containers::Map::get_name (void)
+Madara::Knowledge_Engine::Containers::Map::get_name (void) const
 {
   Guard guard (mutex_);
   return name_;
@@ -291,7 +292,8 @@ Madara::Knowledge_Engine::Containers::Map::set_name (
 }
 
 bool
-Madara::Knowledge_Engine::Containers::Map::exists (const std::string & key)
+Madara::Knowledge_Engine::Containers::Map::exists (
+  const std::string & key) const
 {
   Guard guard (mutex_);
   return map_.find (key) != map_.end ();
@@ -299,13 +301,14 @@ Madara::Knowledge_Engine::Containers::Map::exists (const std::string & key)
 
 void
 Madara::Knowledge_Engine::Containers::Map::keys (
-  std::vector <std::string> & curkeys)
+  std::vector <std::string> & curkeys) const
 {
   Guard guard (mutex_);
   curkeys.resize (map_.size ());
   unsigned int j = 0;
 
-  for (std::map <std::string, Variable_Reference>::iterator i = map_.begin ();
+  for (std::map <std::string, Variable_Reference>::const_iterator i =
+         map_.begin ();
        i != map_.end (); ++i, ++j)
   {
     curkeys[j] = i->first;

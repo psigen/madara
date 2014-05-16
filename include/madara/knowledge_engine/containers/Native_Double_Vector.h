@@ -108,13 +108,13 @@ namespace Madara
          * Returns the size of the vector
          * @return size of the vector
          **/
-        size_t size (void);
+        size_t size (void) const;
       
         /**
          * Returns the name of the vector
          * @return name of the vector
          **/
-        std::string get_name (void);
+        std::string get_name (void) const;
         
         /**
          * Sets the variable name that this refers to
@@ -140,7 +140,7 @@ namespace Madara
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
-        type operator[] (size_t index);
+        type operator[] (size_t index) const;
       
         /**
          * Sets a knowledge variable to a specified value

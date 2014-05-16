@@ -72,14 +72,15 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::resize (
 }
 
 size_t
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::size (void)
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::size (void) const
 {
   Guard guard (mutex_);
   return context_->get (vector_).size ();
 }
 
 std::string
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::get_name (void)
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::get_name (
+  void) const
 {
   Guard guard (mutex_);
   return name_;
@@ -133,7 +134,8 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::exchange (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::transfer_to (Native_Double_Vector & other)
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::transfer_to (
+  Native_Double_Vector & other)
 {
   Guard guard (mutex_), guard2 (other.mutex_);
 
@@ -162,7 +164,8 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::transfer_to (Native_
 }
 
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::type
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator[] (size_t index)
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator[] (
+  size_t index) const
 {
   Guard guard (mutex_);
   Knowledge_Record result;

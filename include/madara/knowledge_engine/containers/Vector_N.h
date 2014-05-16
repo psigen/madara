@@ -80,7 +80,7 @@ namespace Madara
          * Returns the name of the vector
          * @return name of the vector
          **/
-        std::string get_name (void);
+        std::string get_name (void) const;
         
         /**
          * Sets the variable name that this refers to
@@ -112,7 +112,7 @@ namespace Madara
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
-        Knowledge_Record operator[] (const Index & index);
+        Knowledge_Record operator[] (const Index & index) const;
       
         
         /**
@@ -121,7 +121,7 @@ namespace Madara
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
-        Knowledge_Record operator () (unsigned int x); 
+        Knowledge_Record operator () (unsigned int x) const; 
       
         /**
          * Retrieves a copy of the record from the vector.
@@ -130,7 +130,7 @@ namespace Madara
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
-        Knowledge_Record operator () (unsigned int x, unsigned int y); 
+        Knowledge_Record operator () (unsigned int x, unsigned int y) const; 
       
         /**
          * Retrieves a copy of the record from the vector.
@@ -141,7 +141,7 @@ namespace Madara
          *         not be reflected in the context. This is a local copy.
          **/
         Knowledge_Record operator () (unsigned int x, unsigned int y,
-          unsigned int z); 
+          unsigned int z) const;
       
         /**
          * Retrieves a copy of the record from the vector.
@@ -153,7 +153,7 @@ namespace Madara
          *         not be reflected in the context. This is a local copy.
          **/
         Knowledge_Record operator () (unsigned int i1, unsigned int i2,
-          unsigned int i3, unsigned int i4); 
+          unsigned int i3, unsigned int i4) const;
       
         /**
          * Read a file into the index

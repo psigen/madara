@@ -86,7 +86,7 @@ Madara::Knowledge_Engine::Containers::String::exchange (String & other)
 }
 
 std::string
-Madara::Knowledge_Engine::Containers::String::get_name (void)
+Madara::Knowledge_Engine::Containers::String::get_name (void) const
 {
   Guard guard (mutex_);
   return name_;
@@ -126,7 +126,7 @@ Madara::Knowledge_Engine::Containers::String::operator= (const type & value)
 }
     
 bool
-Madara::Knowledge_Engine::Containers::String::operator== (type value)
+Madara::Knowledge_Engine::Containers::String::operator== (type value) const
 {
   Guard guard (mutex_);
   
@@ -139,7 +139,7 @@ Madara::Knowledge_Engine::Containers::String::operator== (type value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator != (type value)
+Madara::Knowledge_Engine::Containers::String::operator != (type value) const
 {
   Guard guard (mutex_);
   
@@ -152,7 +152,8 @@ Madara::Knowledge_Engine::Containers::String::operator != (type value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator== (const String & value)
+Madara::Knowledge_Engine::Containers::String::operator== (
+  const String & value) const
 {
   Guard guard (mutex_);
   
@@ -167,7 +168,8 @@ Madara::Knowledge_Engine::Containers::String::operator== (const String & value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator != (const String & value)
+Madara::Knowledge_Engine::Containers::String::operator != (
+  const String & value) const
 {
   Guard guard (mutex_);
   
@@ -182,7 +184,7 @@ Madara::Knowledge_Engine::Containers::String::operator != (const String & value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator< (type value)
+Madara::Knowledge_Engine::Containers::String::operator< (type value) const
 {
   Guard guard (mutex_);
   
@@ -195,7 +197,7 @@ Madara::Knowledge_Engine::Containers::String::operator< (type value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator<= (type value)
+Madara::Knowledge_Engine::Containers::String::operator<= (type value) const
 {
   Guard guard (mutex_);
   
@@ -208,7 +210,7 @@ Madara::Knowledge_Engine::Containers::String::operator<= (type value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator> (type value)
+Madara::Knowledge_Engine::Containers::String::operator> (type value) const
 {
   Guard guard (mutex_);
   
@@ -221,7 +223,7 @@ Madara::Knowledge_Engine::Containers::String::operator> (type value)
 }
 
 bool
-Madara::Knowledge_Engine::Containers::String::operator>= (type value)
+Madara::Knowledge_Engine::Containers::String::operator>= (type value) const
 {
   Guard guard (mutex_);
   
@@ -234,7 +236,13 @@ Madara::Knowledge_Engine::Containers::String::operator>= (type value)
 }
 
 Madara::Knowledge_Engine::Containers::String::type
-Madara::Knowledge_Engine::Containers::String::operator* (void)
+Madara::Knowledge_Engine::Containers::String::operator* (void) const
+{
+  return to_string ();
+}
+
+std::string
+Madara::Knowledge_Engine::Containers::String::to_string (void) const
 {
   Guard guard (mutex_);
   
@@ -247,7 +255,7 @@ Madara::Knowledge_Engine::Containers::String::operator* (void)
 }
    
 double
-Madara::Knowledge_Engine::Containers::String::to_double (void)
+Madara::Knowledge_Engine::Containers::String::to_double (void) const
 {
   Guard guard (mutex_);
   
@@ -260,7 +268,7 @@ Madara::Knowledge_Engine::Containers::String::to_double (void)
 }
    
 Madara::Knowledge_Record::Integer
-Madara::Knowledge_Engine::Containers::String::to_integer (void)
+Madara::Knowledge_Engine::Containers::String::to_integer (void) const
 {
   Guard guard (mutex_);
   

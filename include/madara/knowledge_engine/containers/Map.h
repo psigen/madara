@@ -95,7 +95,7 @@ namespace Madara
          * Returns the size of the map
          * @return size of the map
          **/
-        size_t size (void);
+        size_t size (void) const;
       
         /**
          * Syncs the keys from the knowledge base. This can be useful
@@ -108,20 +108,20 @@ namespace Madara
          * Returns the keys within the map
          * @return keys used in the map
          **/
-        void keys (std::vector <std::string> & curkeys);
+        void keys (std::vector <std::string> & curkeys) const;
 
         /**
          * Checks for the existence of a key
          * @param key          map key
          * @return true if key exists in map. False otherwise.
          **/
-        bool exists (const std::string & key);
+        bool exists (const std::string & key) const;
 
         /**
          * Returns the name of the map
          * @return name of the map
          **/
-        std::string get_name (void);
+        std::string get_name (void) const;
         
         /**
          * Sets the variable name that this refers to
