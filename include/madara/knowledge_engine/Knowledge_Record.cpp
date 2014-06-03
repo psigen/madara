@@ -1924,7 +1924,7 @@ Madara::Knowledge_Record::resize (size_t new_size)
       set_index (new_size - 1, zero);
     }
   }
-  else if (new_size < size_)
+  else if (is_ref_counted () && new_size < size_)
   {
     size_ = new_size;
   }
