@@ -270,7 +270,7 @@ namespace Madara
      * @param   size    size of the unmanaged buffer
      * @return  the unmanaged buffer of size bytes
      **/
-    unsigned char * to_unmanaged_buffer (size_t & size);
+    unsigned char * to_unmanaged_buffer (size_t & size) const;
     
     /**
      * sets the value to a double
@@ -360,6 +360,15 @@ namespace Madara
     void set_file (const unsigned char * new_value, size_t size);
 
     /**
+     * Creates a deep copy of the knowledge record. Because each
+     * Knowledge Record may contain non-thread-safe ref counted values,
+     * user threads that reference knowledge records will want to use
+     * their own ref counts, which can be accomplished via this method.
+     * @param    source   the Knowledge Record we wish to copy
+     **/
+    void deep_copy (const Knowledge_Record & source);
+
+    /**
      * returns the status of the record.
      * @return   1 if modified, 0 if uncreated
      **/
@@ -407,6 +416,19 @@ namespace Madara
      * returns the size of the value
      **/
     int32_t type (void) const;
+    
+    /**
+     * returns if the record has a reference-counted type
+     * @return   true if the record is reference-counted
+     **/
+    bool is_ref_counted (void) const;
+    
+    /**
+     * returns if the record has a reference-counted type
+     * @param   type the type to check
+     * @return   true if the record is reference-counted
+     **/
+    bool is_ref_counted (uint32_t type) const;
     
     /**
      * returns true if the record is a string type (STRING, XML, TEXT_FILE)

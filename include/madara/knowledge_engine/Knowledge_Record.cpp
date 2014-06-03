@@ -114,6 +114,47 @@ Madara::Knowledge_Record::exists (void)
   return status_ != UNCREATED;
 }
 
+
+void
+Madara::Knowledge_Record::deep_copy (const Knowledge_Record & source)
+{
+  if (source.is_ref_counted ())
+  {
+    if (type_ == STRING)
+    {
+      set_value (source.to_string ());
+    }
+    if (type_ == TEXT_FILE)
+    {
+      std::string text = source.to_string ();
+      set_text (text.c_str (), text.size ());
+    }
+    if (type_ == XML)
+    {
+      std::string text = source.to_string ();
+      set_xml (text.c_str (), text.size ());
+    }
+    else if (type_ == DOUBLE_ARRAY)
+    {
+      set_value (source.to_doubles ());
+    }
+    else if (type_ == INTEGER_ARRAY)
+    {
+      set_value (source.to_integers ());
+    }
+    else if (type_ == UNKNOWN_FILE_TYPE || type_ == IMAGE_JPEG)
+    {
+      size_ = source.size_;
+      type_ = source.type_;
+      file_value_ = source.to_unmanaged_buffer (size_);
+    }
+  }
+  else
+  {
+    *this = source;
+  }
+}
+
 int
 Madara::Knowledge_Record::read_file (
   const std::string & filename, uint32_t read_as_type)
@@ -448,7 +489,7 @@ Madara::Knowledge_Record::to_string (const std::string & delimiter) const
 
 // read the value_ in a string format
 unsigned char *
-Madara::Knowledge_Record::to_unmanaged_buffer (size_t & size)
+Madara::Knowledge_Record::to_unmanaged_buffer (size_t & size) const
 {
   if (status_ != UNCREATED)
   {

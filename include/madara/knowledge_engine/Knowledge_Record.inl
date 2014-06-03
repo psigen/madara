@@ -38,6 +38,18 @@ Madara::Knowledge_Record::type (void) const
 }
 
 inline bool
+Madara::Knowledge_Record::is_ref_counted (void) const
+{
+  return is_ref_counted (type_);
+}
+
+inline bool
+Madara::Knowledge_Record::is_ref_counted (uint32_t type) const
+{
+  return type != INTEGER && type != DOUBLE;
+}
+
+inline bool
 Madara::Knowledge_Record::is_string_type (void) const
 {
   return is_string_type (type_);
@@ -214,7 +226,7 @@ Madara::Knowledge_Record::set_text (const char * new_value, size_t size)
   status_ = MODIFIED;
 
   // create a new char array and copy over the string
-  size_ = uint32_t (size + 1);
+  size_ = uint32_t (size);
   char * temp = new char [size_];
   strncpy (temp, new_value, size_ - 1);
   temp[size_ - 1] = 0;

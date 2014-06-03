@@ -20,7 +20,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
   const std::string & t_key,
   const Knowledge_Reference_Settings & settings)
 {
-  return map_.get (t_key, settings);
+  Madara::Knowledge_Record result (map_.get (t_key, settings));
+  
+  // if the result is ref counted, then do a deep copy to prevent cache issues
+  if (result.is_ref_counted ())
+  {
+    result.deep_copy (result);
+  }
+
+  return result;
 }
 
 inline Madara::Knowledge_Record
@@ -28,7 +36,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::get (
   const Variable_Reference & variable,
   const Knowledge_Reference_Settings & settings)
 {
-  return map_.get (variable, settings);
+  Madara::Knowledge_Record result (map_.get (variable, settings));
+  
+  // if the result is ref counted, then do a deep copy to prevent cache issues
+  if (result.is_ref_counted ())
+  {
+    result.deep_copy (result);
+  }
+
+  return result;
 }
 
 inline Madara::Knowledge_Engine::Variable_Reference

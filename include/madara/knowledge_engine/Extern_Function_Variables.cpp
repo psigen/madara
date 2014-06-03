@@ -24,33 +24,39 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::get (const std::string & key,
              const Knowledge_Reference_Settings & settings)
 {
+  Madara::Knowledge_Record result;
+
   if (context_)
   {
     Variable_Reference variable = context_->get_ref (key, settings);
-    return context_->get (variable, settings);
+    result.deep_copy (context_->get (variable, settings));
   }
   else
   {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
       "Variables::get. Context not set correctly.\n"));
-
-    return Madara::Knowledge_Record ();
   }
+
+  return result;
 }
 
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Variables::get (const Variable_Reference & variable,
              const Knowledge_Reference_Settings & settings)
 {
+  Madara::Knowledge_Record result;
+
   if (context_)
-    return context_->get (variable, settings);
+  {
+    result.deep_copy (context_->get (variable, settings));
+  }
   else
   {
     MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
       "Variables::get. Context not set correctly.\n"));
-
-    return Madara::Knowledge_Record ();
   }
+
+  return result;
 }
 
 void
