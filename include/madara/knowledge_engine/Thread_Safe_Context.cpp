@@ -167,24 +167,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::set (
 
     if (value.status_ != Knowledge_Record::UNCREATED)
     {
-      // copy the value from the record value
-      if (     value.type () == Knowledge_Record::INTEGER)
-        variable.record_->int_value_ = value.int_value_;
-
-      else if (value.type () == Knowledge_Record::DOUBLE)
-        variable.record_->double_value_ = value.double_value_;
-    
-      else if (value.type () == Knowledge_Record::INTEGER_ARRAY)
-        variable.record_->int_array_ = value.int_array_;
-
-      else if (value.type () == Knowledge_Record::DOUBLE_ARRAY)
-        variable.record_->double_array_ = value.double_array_;
-    
-      else if (value.is_string_type ())
-        variable.record_->str_value_ = value.str_value_;
-
-      else if (value.is_binary_file_type ())
-        variable.record_->file_value_ = value.file_value_;
+      variable.record_->deep_copy (value);
     }
     else
     {
@@ -963,7 +946,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
       result = -3;
 
     // if we reach this point, then the record is safe to copy
-    found->second = rhs;
+    found->second.deep_copy (rhs);
 
     Knowledge_Record & current_value = found->second;
 
@@ -973,7 +956,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::update_record_from_external (
   {
     // if we reach this point, then we have to create the record
     Knowledge_Record & current_value = map_[*key_ptr];
-    current_value = rhs;
+    current_value.deep_copy (rhs);
     
     mark_and_signal (key_ptr->c_str (), &current_value, settings);
   }

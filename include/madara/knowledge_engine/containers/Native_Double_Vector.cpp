@@ -12,10 +12,11 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector
   Knowledge_Base & knowledge,
   int size,
   const Knowledge_Update_Settings & settings)
-: context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
+: context_ (&(knowledge.get_context ())), name_ (name), settings_ (true, false)
 {
-  vector_ = knowledge.get_ref (name, settings);
+  vector_ = knowledge.get_ref (name, settings_);
   resize (size);
+  settings_ = settings;
 }
   
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector (
@@ -23,10 +24,11 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector
   Variables & knowledge,
   int size,
   const Knowledge_Update_Settings & settings)
-: context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
+: context_ (knowledge.get_context ()), name_ (name), settings_ (true, false)
 {
   vector_ = knowledge.get_ref (name, settings);
   resize (size);
+  settings_ = settings;
 }
 
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector (
@@ -66,7 +68,15 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::resize (
   if (context_ && name_ != "")
   {
     Knowledge_Record value = context_->get (vector_);
-    value.resize (size);
+    if (value.type () != Knowledge_Record::DOUBLE_ARRAY)
+    {
+      std::vector <double> new_array (size, 0.0);
+      value.set_value (new_array);
+    }
+    else
+    {
+      value.resize (size);
+    }
     context_->set (vector_, value, settings_);
   }
 }
