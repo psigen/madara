@@ -81,6 +81,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
 {
   Guard guard (mutex_);
   Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
 
   if (index.size () > 0 && context_)
   {
@@ -93,7 +94,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index)
       buffer << index[i];
     }
 
-    result = context_->get (buffer.str (), settings_);
+    result = context_->get (buffer.str (), keep_local);
   }
 
   return result;
@@ -126,6 +127,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
 {
   Guard guard (mutex_);
   Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
 
   if (context_)
   {
@@ -137,7 +139,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
     buffer << ".";
     buffer << y;
 
-    result = context_->get (buffer.str (), settings_);
+    result = context_->get (buffer.str (), keep_local);
   }
 
   return result;
@@ -149,6 +151,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
 {
   Guard guard (mutex_);
   Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
 
   if (context_)
   {
@@ -162,7 +165,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
     buffer << ".";
     buffer << z;
 
-    result = context_->get (buffer.str (), settings_);
+    result = context_->get (buffer.str (), keep_local);
   }
 
   return result;
@@ -175,6 +178,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
 {
   Guard guard (mutex_);
   Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
 
   if (context_)
   {
@@ -190,7 +194,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
     buffer << ".";
     buffer << i4;
 
-    result = context_->get (buffer.str (), settings_);
+    result = context_->get (buffer.str (), keep_local);
   }
 
   return result;

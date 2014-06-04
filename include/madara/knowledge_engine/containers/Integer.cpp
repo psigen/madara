@@ -11,18 +11,20 @@ Madara::Knowledge_Engine::Containers::Integer::Integer (
   const std::string & name,
   Knowledge_Base & knowledge,
   const Knowledge_Update_Settings & settings)
-: context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings) 
+: context_ (&(knowledge.get_context ())), name_ (name), settings_ (true) 
 {
-  variable_ = knowledge.get_ref (name);
+  variable_ = knowledge.get_ref (name, settings_);
+  settings_ = settings;
 }
  
 Madara::Knowledge_Engine::Containers::Integer::Integer (
   const std::string & name,
   Variables & knowledge,
   const Knowledge_Update_Settings & settings)
-: context_ (knowledge.get_context ()), name_ (name), settings_ (settings) 
+: context_ (knowledge.get_context ()), name_ (name), settings_ (true) 
 {
-  variable_ = knowledge.get_ref (name);
+  variable_ = knowledge.get_ref (name, settings_);
+  settings_ = settings;
 }
  
 Madara::Knowledge_Engine::Containers::Integer::Integer (
@@ -98,9 +100,10 @@ Madara::Knowledge_Engine::Containers::Integer::set_name (
   const std::string & var_name,
   Knowledge_Base & knowledge)
 {
+  Knowledge_Update_Settings keep_local (true);
   context_ = &(knowledge.get_context ());
   name_ = var_name;
-  variable_ = context_->get_ref (name_, settings_);
+  variable_ = context_->get_ref (name_, keep_local);
 }
 
 void
@@ -108,9 +111,10 @@ Madara::Knowledge_Engine::Containers::Integer::set_name (
   const std::string & var_name,
   Variables & knowledge)
 {
+  Knowledge_Update_Settings keep_local (true);
   context_ = knowledge.get_context ();
   name_ = var_name;
-  variable_ = context_->get_ref (name_, settings_);
+  variable_ = context_->get_ref (name_, keep_local);
 }
 
 Madara::Knowledge_Engine::Containers::Integer::type

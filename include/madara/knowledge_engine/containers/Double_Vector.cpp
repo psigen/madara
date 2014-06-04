@@ -68,11 +68,12 @@ Madara::Knowledge_Engine::Containers::Double_Vector::get_size_ref (void)
   
   if (context_ && name_ != "")
   {
+    Knowledge_Update_Settings keep_local (true);
     std::stringstream buffer;
     buffer << name_;
     buffer << ".size";
 
-    ref = context_->get_ref (buffer.str ());
+    ref = context_->get_ref (buffer.str (), keep_local);
   }
 
   return ref;
@@ -315,9 +316,10 @@ Madara::Knowledge_Engine::Containers::Double_Vector::operator[] (
 {
   Guard guard (mutex_);
   Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
 
   if (index < vector_.size () && context_)
-    result = context_->get (vector_[index], settings_);
+    result = context_->get (vector_[index], keep_local);
 
   return result.to_double ();
 }

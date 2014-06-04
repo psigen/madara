@@ -13,10 +13,11 @@ Madara::Knowledge_Engine::Containers::Vector::Vector (
   int size,
   bool delete_vars,
   const Knowledge_Update_Settings & settings)
-: context_ (&(knowledge.get_context ())), name_ (name), settings_ (settings)
+: context_ (&(knowledge.get_context ())), name_ (name), settings_ (true)
 {
   size_ = get_size_ref ();
   resize (size, delete_vars);
+  settings_ = settings;
 }
   
 Madara::Knowledge_Engine::Containers::Vector::Vector (
@@ -25,10 +26,11 @@ Madara::Knowledge_Engine::Containers::Vector::Vector (
   int size,
   bool delete_vars,
   const Knowledge_Update_Settings & settings)
-: context_ (knowledge.get_context ()), name_ (name), settings_ (settings)
+: context_ (knowledge.get_context ()), name_ (name), settings_ (true)
 {
   size_ = get_size_ref ();
   resize (size, delete_vars);
+  settings_ = settings;
 }
 
 Madara::Knowledge_Engine::Containers::Vector::Vector (const Vector & rhs)
@@ -69,11 +71,12 @@ Madara::Knowledge_Engine::Containers::Vector::get_size_ref (void)
   
   if (context_ && name_ != "")
   {
+    Knowledge_Update_Settings keep_local (true);
     std::stringstream buffer;
     buffer << name_;
     buffer << ".size";
 
-    ref = context_->get_ref (buffer.str ());
+    ref = context_->get_ref (buffer.str (), keep_local);
   }
 
   return ref;
@@ -316,9 +319,10 @@ Madara::Knowledge_Engine::Containers::Vector::operator[] (
 {
   Guard guard (mutex_);
   Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
 
   if (index < vector_.size () && context_)
-    result = context_->get (vector_[index], settings_);
+    result = context_->get (vector_[index], keep_local);
 
   return result;
 }

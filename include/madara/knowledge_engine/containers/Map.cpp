@@ -18,14 +18,15 @@ Madara::Knowledge_Engine::Containers::Map::Map (
   std::map <std::string, Knowledge_Record> contents;
   std::string common = name + ".";
   context_->to_map (common, contents);
-
+  
+  Knowledge_Update_Settings keep_local (true);
   if (contents.size () > 0)
   {
     for (std::map <std::string, Knowledge_Record>::iterator i =
       contents.begin (); i != contents.end (); ++i)
     {
       map_[i->first.substr (common.size ())] =
-        knowledge.get_ref (i->first, settings);
+        knowledge.get_ref (i->first, keep_local);
     }
   }
 }
@@ -39,14 +40,15 @@ Madara::Knowledge_Engine::Containers::Map::Map (
   std::map <std::string, Knowledge_Record> contents;
   std::string common = name + ".";
   context_->to_map (common, contents);
-
+  
+  Knowledge_Update_Settings keep_local (true);
   if (contents.size () > 0)
   {
     for (std::map <std::string, Knowledge_Record>::iterator i =
       contents.begin (); i != contents.end (); ++i)
     {
       map_[i->first.substr (common.size ())] =
-        knowledge.get_ref (i->first, settings);
+        knowledge.get_ref (i->first, keep_local);
     }
   }
 }
@@ -87,19 +89,20 @@ Madara::Knowledge_Engine::Containers::Map::operator[] (
   buffer << name_;
   buffer << '.';
   buffer << key;
-
+  
+  Knowledge_Update_Settings keep_local (true);
   std::string final_key = buffer.str ();
   std::map <std::string, Variable_Reference>::const_iterator entry =
     map_.find (final_key);
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    Variable_Reference ref = context_->get_ref (final_key, keep_local);
     map_[key] = ref;
-    return context_->get (ref, settings_);
+    return context_->get (ref, keep_local);
   }
 
-  return context_->get (entry->second, settings_);
+  return context_->get (entry->second, keep_local);
 }
 
 size_t
@@ -118,6 +121,7 @@ Madara::Knowledge_Engine::Containers::Map::sync_keys (void)
   std::string common = name_ + ".";
   context_->to_map (common, contents);
   std::vector <std::string> additions;
+  Knowledge_Update_Settings keep_local (true);
 
   for (std::map <std::string, Knowledge_Record>::iterator i =
     contents.begin (); i != contents.end (); ++i)
@@ -127,7 +131,7 @@ Madara::Knowledge_Engine::Containers::Map::sync_keys (void)
     if (map_.find (key) == map_.end ())
     {
       additions.push_back (key);
-      map_[key] = context_->get_ref (i->first, settings_);
+      map_[key] = context_->get_ref (i->first, keep_local);
     }
   }
 
@@ -326,19 +330,19 @@ Madara::Knowledge_Engine::Containers::Map::read_file (
   buffer << name_;
   buffer << '.';
   buffer << key;
-
+  
   std::string final_key = buffer.str ();
   std::map <std::string, Variable_Reference>::iterator entry =
     map_.find (final_key);
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    Variable_Reference ref = context_->get_ref (final_key, settings);
     map_[key] = ref;
-    return context_->read_file (ref, filename, settings_);
+    return context_->read_file (ref, filename, settings);
   }
   
-  return context_->read_file (entry->second, filename, settings_);
+  return context_->read_file (entry->second, filename, settings);
 }
       
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,

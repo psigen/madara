@@ -67,7 +67,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::resize (
   Guard guard (mutex_);
   if (context_ && name_ != "")
   {
-    Knowledge_Record value = context_->get (vector_);
+    Knowledge_Record value = context_->get (vector_, settings_);
     if (value.type () != Knowledge_Record::DOUBLE_ARRAY)
     {
       std::vector <double> new_array (size, 0.0);
@@ -85,7 +85,7 @@ size_t
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::size (void) const
 {
   Guard guard (mutex_);
-  return context_->get (vector_).size ();
+  return context_->get (vector_, settings_).size ();
 }
 
 std::string
@@ -107,7 +107,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_name (
     context_ = &(knowledge.get_context ());
     name_ = var_name;
 
-    vector_ = knowledge.get_ref (var_name);
+    vector_ = knowledge.get_ref (var_name, settings_);
 
     if (size > 0)
       resize (size_t (size));
@@ -124,7 +124,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_name (
     context_ = knowledge.get_context ();
     name_ = var_name;
     
-    vector_ = knowledge.get_ref (var_name);
+    vector_ = knowledge.get_ref (var_name, settings_);
 
     if (size > 0)
       resize (size_t (size));

@@ -6,7 +6,10 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
   libout = $(MADARA_ROOT)/lib
   
   prebuild = perl $(MADARA_ROOT)/bin/generate_version_include.pl
-
+  
+  specific(prop:microsoft) {
+  }
+ 
   includes += $(MADARA_ROOT)/include
   libpaths += $(MADARA_ROOT)/lib 
 
