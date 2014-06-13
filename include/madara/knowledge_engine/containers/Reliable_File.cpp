@@ -170,21 +170,22 @@ Madara::Knowledge_Engine::Containers::Reliable_File::split (void)
   if (size_ % max_frag_size_ != 0)
   {
     extra = true;
-    fragments_.resize (frags);
+    fragments_.resize ((int)frags);
   }
   else
   {
-    fragments_.resize (frags + 1);
+    fragments_.resize ((int)(frags + 1));
   }
 
   for (; i < frags; ++i, buffer += max_frag_size_)
   {
-    fragments_.set_file (i, buffer, max_frag_size_, settings);
+    fragments_.set_file ((unsigned int)i, buffer, max_frag_size_, settings);
   }
 
   if (extra)
   {
-    fragments_.set_file (i + 1, buffer, size_ % max_frag_size_, settings);
+    fragments_.set_file ((unsigned int)(i + 1), buffer,
+      size_ % max_frag_size_, settings);
   }
 }
 

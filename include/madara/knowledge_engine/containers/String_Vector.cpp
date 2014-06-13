@@ -296,6 +296,8 @@ Madara::Knowledge_Engine::Containers::String_Vector::exchange (
 void
 Madara::Knowledge_Engine::Containers::String_Vector::transfer_to (String_Vector & other)
 {
+  Guard guard (mutex_), guard2 (other.mutex_);
+
   size_t other_size = other.vector_.size ();
   size_t this_size = this->vector_.size ();
 
@@ -327,6 +329,20 @@ Madara::Knowledge_Engine::Containers::String_Vector::operator[] (
 int
 Madara::Knowledge_Engine::Containers::String_Vector::set (
   unsigned int index,
+  const type & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, settings_);
+  
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Containers::String_Vector::set (
+  unsigned int index,
   const type & value, 
   const Knowledge_Update_Settings & settings)
 {
@@ -339,7 +355,29 @@ Madara::Knowledge_Engine::Containers::String_Vector::set (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::String_Vector::set (
+  const std::vector <type> & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (context_)
+  {
+    if (vector_.size () < value.size ())
+      resize ((int)value.size (), false);
 
+    for (unsigned int i = 0; i < value.size (); ++i)
+    {
+      context_->set (vector_[i], value[i], settings_);
+    }
+
+    result = 0;
+  }
+  
+  return result;
+}
+  
 int
 Madara::Knowledge_Engine::Containers::String_Vector::set (
   const std::vector <type> & value,
@@ -363,7 +401,6 @@ Madara::Knowledge_Engine::Containers::String_Vector::set (
   
   return result;
 }
-       
 
 Madara::Knowledge_Engine::Knowledge_Update_Settings
 Madara::Knowledge_Engine::Containers::String_Vector::set_settings (

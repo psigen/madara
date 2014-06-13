@@ -272,7 +272,7 @@ void test_records_frag (void)
   knowledge ["int_var"] = Madara::Knowledge_Record::Integer (254LL);
   knowledge ["double_var"] = Madara::Knowledge_Record (5.235);
 
-  header.updates = knowledge.size ();
+  header.updates = (uint32_t)knowledge.size ();
   header.clock = 10;
   header.ttl = 2;
   memcpy (header.originator, "test_source", strlen ("test_source"));

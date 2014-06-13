@@ -322,6 +322,31 @@ Madara::Knowledge_Engine::Containers::Map::keys (
 int
 Madara::Knowledge_Engine::Containers::Map::read_file (
   const std::string & key,
+  const std::string & filename)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+  
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    map_[key] = ref;
+    return context_->read_file (ref, filename, settings_);
+  }
+  
+  return context_->read_file (entry->second, filename, settings_);
+}
+ 
+int
+Madara::Knowledge_Engine::Containers::Map::read_file (
+  const std::string & key,
   const std::string & filename, 
   const Knowledge_Update_Settings & settings)
 {
@@ -346,8 +371,7 @@ Madara::Knowledge_Engine::Containers::Map::read_file (
 }
       
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
-  Madara::Knowledge_Record::Integer value, 
-  const Knowledge_Update_Settings & settings)
+  Madara::Knowledge_Record::Integer value)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -369,6 +393,54 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   return context_->set (entry->second, value, settings_);
 }
 
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  Madara::Knowledge_Record::Integer value, 
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set (ref, value, settings);
+  }
+  
+  return context_->set (entry->second, value, settings);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set_index (
+  const std::string & key,
+  size_t index,
+  Madara::Knowledge_Record::Integer value)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    map_[key] = ref;
+    return context_->set_index (ref, index, value, settings_);
+  }
+  
+  return context_->set_index (entry->second, index, value, settings_);
+}
 
 int Madara::Knowledge_Engine::Containers::Map::set_index (
   const std::string & key,
@@ -388,19 +460,18 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    Variable_Reference ref = context_->get_ref (final_key, settings);
     map_[key] = ref;
-    return context_->set_index (ref, index, value, settings_);
+    return context_->set_index (ref, index, value, settings);
   }
   
-  return context_->set_index (entry->second, index, value, settings_);
+  return context_->set_index (entry->second, index, value, settings);
 }
 
 
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const Madara::Knowledge_Record::Integer * value,
-  uint32_t size,
-  const Knowledge_Update_Settings & settings)
+  uint32_t size)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -421,7 +492,55 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   
   return context_->set (entry->second, value, size, settings_);
 }
+ 
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  const Madara::Knowledge_Record::Integer * value,
+  uint32_t size,
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set (ref, value, size, settings);
+  }
+  
+  return context_->set (entry->second, value, size, settings);
+}
        
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  const std::vector <Knowledge_Record::Integer> & value)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    map_[key] = ref;
+    return context_->set (ref, value, settings_);
+  }
+  
+  return context_->set (entry->second, value, settings_);
+}
+
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const std::vector <Knowledge_Record::Integer> & value,
   const Knowledge_Update_Settings & settings)
@@ -438,17 +557,16 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    Variable_Reference ref = context_->get_ref (final_key, settings);
     map_[key] = ref;
-    return context_->set (ref, value, settings_);
+    return context_->set (ref, value, settings);
   }
   
-  return context_->set (entry->second, value, settings_);
+  return context_->set (entry->second, value, settings);
 }
-       
+          
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
-  double value, 
-  const Knowledge_Update_Settings & settings)
+  double value)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -469,7 +587,54 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   
   return context_->set (entry->second, value, settings_);
 }
+    
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  double value, 
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
 
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set (ref, value, settings);
+  }
+  
+  return context_->set (entry->second, value, settings);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set_index (const std::string & key,
+  size_t index,
+  double value)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    map_[key] = ref;
+    return context_->set_index (ref, index, value, settings_);
+  }
+  
+  return context_->set_index (entry->second, index, value, settings_);
+}
 
 int Madara::Knowledge_Engine::Containers::Map::set_index (const std::string & key,
   size_t index,
@@ -488,19 +653,17 @@ int Madara::Knowledge_Engine::Containers::Map::set_index (const std::string & ke
 
   if (entry == map_.end ())
   {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    Variable_Reference ref = context_->get_ref (final_key, settings);
     map_[key] = ref;
-    return context_->set_index (ref, index, value, settings_);
+    return context_->set_index (ref, index, value, settings);
   }
   
-  return context_->set_index (entry->second, index, value, settings_);
+  return context_->set_index (entry->second, index, value, settings);
 }
-
 
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   const double * value,
-  uint32_t size,
-  const Knowledge_Update_Settings & settings)
+  uint32_t size)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -521,11 +684,34 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   
   return context_->set (entry->second, value, size, settings_);
 }
-       
 
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
-  const std::vector <double> & value,
+  const double * value,
+  uint32_t size,
   const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set (ref, value, size, settings);
+  }
+  
+  return context_->set (entry->second, value, size, settings);
+}
+ 
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  const std::vector <double> & value)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -546,11 +732,33 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   
   return context_->set (entry->second, value, settings_);
 }
-        
+ 
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  const std::vector <double> & value,
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set (ref, value, settings);
+  }
+  
+  return context_->set (entry->second, value, settings);
+}
 
 int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
-  const std::string & value, 
-  const Knowledge_Update_Settings & settings)
+  const std::string & value)
 {
   Guard guard (mutex_);
   std::stringstream buffer;
@@ -570,6 +778,124 @@ int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
   }
   
   return context_->set (entry->second, value, settings_);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set (const std::string & key,
+  const std::string & value, 
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set (ref, value, settings);
+  }
+  
+  return context_->set (entry->second, value, settings);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set_file (const std::string & key,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    map_[key] = ref;
+    return context_->set_file (ref, value, size, settings_);
+  }
+  
+  return context_->set_file (entry->second, value, size, settings_);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set_file (const std::string & key,
+  const unsigned char * value, size_t size, 
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set_file (ref, value, size, settings);
+  }
+  
+  return context_->set_file (entry->second, value, size, settings);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set_jpeg (const std::string & key,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings_);
+    map_[key] = ref;
+    return context_->set_jpeg (ref, value, size, settings_);
+  }
+  
+  return context_->set_jpeg (entry->second, value, size, settings_);
+}
+
+int Madara::Knowledge_Engine::Containers::Map::set_jpeg (const std::string & key,
+  const unsigned char * value, size_t size, 
+  const Knowledge_Update_Settings & settings)
+{
+  Guard guard (mutex_);
+  std::stringstream buffer;
+  buffer << name_;
+  buffer << '.';
+  buffer << key;
+
+  std::string final_key = buffer.str ();
+  std::map <std::string, Variable_Reference>::iterator entry =
+    map_.find (final_key);
+
+  if (entry == map_.end ())
+  {
+    Variable_Reference ref = context_->get_ref (final_key, settings);
+    map_[key] = ref;
+    return context_->set_jpeg (ref, value, size, settings);
+  }
+  
+  return context_->set_jpeg (entry->second, value, size, settings);
 }
 
 Madara::Knowledge_Engine::Knowledge_Update_Settings
@@ -599,52 +925,3 @@ void Madara::Knowledge_Engine::Containers::Map::set_quality (
   context_->set_quality (buffer.str (), quality, true, settings);
 }
       
-
-int Madara::Knowledge_Engine::Containers::Map::set_file (const std::string & key,
-  const unsigned char * value, size_t size, 
-  const Knowledge_Update_Settings & settings)
-{
-  Guard guard (mutex_);
-  std::stringstream buffer;
-  buffer << name_;
-  buffer << '.';
-  buffer << key;
-
-  std::string final_key = buffer.str ();
-  std::map <std::string, Variable_Reference>::iterator entry =
-    map_.find (final_key);
-
-  if (entry == map_.end ())
-  {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
-    map_[key] = ref;
-    return context_->set_file (ref, value, size, settings_);
-  }
-  
-  return context_->set_file (entry->second, value, size, settings_);
-}
-      
-
-int Madara::Knowledge_Engine::Containers::Map::set_jpeg (const std::string & key,
-  const unsigned char * value, size_t size, 
-  const Knowledge_Update_Settings & settings)
-{
-  Guard guard (mutex_);
-  std::stringstream buffer;
-  buffer << name_;
-  buffer << '.';
-  buffer << key;
-
-  std::string final_key = buffer.str ();
-  std::map <std::string, Variable_Reference>::iterator entry =
-    map_.find (final_key);
-
-  if (entry == map_.end ())
-  {
-    Variable_Reference ref = context_->get_ref (final_key, settings_);
-    map_[key] = ref;
-    return context_->set_jpeg (ref, value, size, settings_);
-  }
-  
-  return context_->set_jpeg (entry->second, value, size, settings_);
-}

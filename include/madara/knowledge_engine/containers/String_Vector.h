@@ -152,15 +152,35 @@ namespace Madara
          *
          * @param index           index to set
          * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index,
+          const type & value);
+
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           value to set at location
          * @param settings        settings for applying the update
          * @return                0 if successful, -1 if key is null, and
          *                        -2 if quality isn't high enough
          **/
         int set (unsigned int index,
           const type & value, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Reads values from a STL vector of integers
+         *
+         * @param value           array of integers to set at the location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (
+          const std::vector <type> & value);
+       
         /**
          * Reads values from a STL vector of integers
          *
@@ -171,8 +191,7 @@ namespace Madara
          **/
         int set (
           const std::vector <type> & value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
        
         /**
          * Sets the update settings for the variable

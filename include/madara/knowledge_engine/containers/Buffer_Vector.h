@@ -143,18 +143,37 @@ namespace Madara
       
       
         /**
-         * Read a file into the index
+         * Read a file into the index using stored settings
+         * @param filename           file to read
+         * @param index              index within vector
+         */
+        int read_file (unsigned int index, 
+                       const std::string & filename);
+      
+        /**
+         * Read a file into the index using temporary settings
          * @param filename           file to read
          * @param index              index within vector
          * @param settings           settings to use when evaluating/updating
          */
         int read_file (unsigned int index, 
                        const std::string & filename, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
       
         /**
-         * Atomically sets the value of an index to an arbitrary string.
+         * Atomically sets the value of an index to an arbitrary string
+         * using stored settings
+         * @param   index     index within vector
+         * @param   value     new value of the variable
+         * @param   size      indicates the size of the value buffer
+         * @return   0 if the value was set. -1 if null key
+         **/
+        int set_file (unsigned int index,
+          const unsigned char * value, size_t size);
+      
+        /**
+         * Atomically sets the value of an index to an arbitrary string
+         * using temporary settings
          * @param   index     index within vector
          * @param   value     new value of the variable
          * @param   size      indicates the size of the value buffer
@@ -163,8 +182,17 @@ namespace Madara
          **/
         int set_file (unsigned int index,
           const unsigned char * value, size_t size, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+      
+        /**
+         * Atomically sets the value of an index to a JPEG image
+         * @param   index     index of the variable to set
+         * @param   value     new value of the variable
+         * @param   size      indicates the size of the value buffer
+         * @return   0 if the value was set. -1 if null key
+         **/
+        int set_jpeg (unsigned int index,
+          const unsigned char * value, size_t size);
       
         /**
          * Atomically sets the value of an index to a JPEG image
@@ -176,8 +204,7 @@ namespace Madara
          **/
         int set_jpeg (unsigned int index,
           const unsigned char * value, size_t size, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
       
         /**
          * Sets the update settings for the variable

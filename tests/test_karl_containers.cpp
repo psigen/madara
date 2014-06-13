@@ -611,7 +611,7 @@ void test_native_vectors (void)
     "************* VECTOR: CREATING NATIVE DOUBLE VECTOR*************\n";
   Madara::Knowledge_Engine::Knowledge_Base knowledge;
   containers::Native_Double_Vector vector ("test_vector", knowledge, 10);
-  unsigned int size = vector.size ();
+  size_t size = vector.size ();
 
   vector.set (1, 1.1);
   vector.set (2, 2.2);
@@ -619,7 +619,7 @@ void test_native_vectors (void)
 
   std::cout << "Vector results:\n";
 
-  for (unsigned int i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     std::cout << "  ";
     std::cout << vector[i];

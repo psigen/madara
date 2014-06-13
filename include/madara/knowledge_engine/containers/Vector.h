@@ -140,7 +140,14 @@ namespace Madara
          *         not be reflected in the context. This is a local copy.
          **/
         Knowledge_Record operator[] (size_t index) const;
-      
+
+        /**
+         * Read a file into the index
+         * @param filename           file to read
+         * @param index              index within vector
+         */
+        int read_file (unsigned int index, 
+                       const std::string & filename);
       
         /**
          * Read a file into the index
@@ -150,8 +157,17 @@ namespace Madara
          */
         int read_file (unsigned int index, 
                        const std::string & filename, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+      
+        /**
+         * Atomically sets the value of an index to an arbitrary string.
+         * @param   index     index within vector
+         * @param   value     new value of the variable
+         * @param   size      indicates the size of the value buffer
+         * @return   0 if the value was set. -1 if null key
+         **/
+        int set_file (unsigned int index,
+          const unsigned char * value, size_t size);
       
         /**
          * Atomically sets the value of an index to an arbitrary string.
@@ -163,9 +179,18 @@ namespace Madara
          **/
         int set_file (unsigned int index,
           const unsigned char * value, size_t size, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
       
+        /**
+         * Atomically sets the value of an index to a JPEG image
+         * @param   index     index of the variable to set
+         * @param   value     new value of the variable
+         * @param   size      indicates the size of the value buffer
+         * @return   0 if the value was set. -1 if null key
+         **/
+        int set_jpeg (unsigned int index,
+          const unsigned char * value, size_t size);
+              
         /**
          * Atomically sets the value of an index to a JPEG image
          * @param   index     index of the variable to set
@@ -176,10 +201,20 @@ namespace Madara
          **/
         int set_jpeg (unsigned int index,
           const unsigned char * value, size_t size, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-      
-      
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index,
+          Madara::Knowledge_Record::Integer value = 
+            Madara::Knowledge_Record::MODIFIED);
+
         /**
          * Sets a knowledge variable to a specified value
          *
@@ -190,11 +225,22 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (unsigned int index,
-          Madara::Knowledge_Record::Integer value = 
-            Madara::Knowledge_Record::MODIFIED, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          Madara::Knowledge_Record::Integer value, 
+          const Knowledge_Update_Settings & settings);
 
+        /**
+         * Sets an index within an array to a specified value
+         *
+         * @param index           index to set in the variable
+         * @param sub_index       index of the location in the array
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set_index (unsigned int index,
+          size_t sub_index,
+          Madara::Knowledge_Record::Integer value);
+        
         /**
          * Sets an index within an array to a specified value
          *
@@ -208,9 +254,21 @@ namespace Madara
         int set_index (unsigned int index,
           size_t sub_index,
           Madara::Knowledge_Record::Integer value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           array of integers to set at the location
+         * @param size            number of elements in the array
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index,
+          const Madara::Knowledge_Record::Integer * value,
+          uint32_t size);
+       
         /**
          * Sets a knowledge variable to a specified value
          *
@@ -224,8 +282,18 @@ namespace Madara
         int set (unsigned int index,
           const Madara::Knowledge_Record::Integer * value,
           uint32_t size,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+       
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           array of integers to set at the location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index,
+          const std::vector <Knowledge_Record::Integer> & value);
        
         /**
          * Sets a knowledge variable to a specified value
@@ -238,9 +306,18 @@ namespace Madara
          **/
         int set (unsigned int index,
           const std::vector <Knowledge_Record::Integer> & value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
        
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index, double value);
+
         /**
          * Sets a knowledge variable to a specified value
          *
@@ -251,8 +328,20 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (unsigned int index, double value, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets an index within an array to a specified value
+         *
+         * @param index           index to set within the variable
+         * @param sub_index       index of the location in the array
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set_index (unsigned int index,
+          size_t sub_index,
+          double value);
 
         /**
          * Sets an index within an array to a specified value
@@ -267,9 +356,21 @@ namespace Madara
         int set_index (unsigned int index,
           size_t sub_index,
           double value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           array of doubles to set at the location
+         * @param size            number of elements in the array
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index,
+          const double * value,
+          uint32_t size);
+       
         /**
          * Sets a knowledge variable to a specified value
          *
@@ -283,9 +384,19 @@ namespace Madara
         int set (unsigned int index,
           const double * value,
           uint32_t size,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
        
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           array of doubles to set at the location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index,
+          const std::vector <double> & value);
+        
         /**
          * Sets a knowledge variable to a specified value
          *
@@ -297,8 +408,17 @@ namespace Madara
          **/
         int set (unsigned int index,
           const std::vector <double> & value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets a knowledge variable to a specified value
+         *
+         * @param index           index to set
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (unsigned int index, const std::string & value);
         
         /**
          * Sets a knowledge variable to a specified value
@@ -310,8 +430,7 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (unsigned int index, const std::string & value, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
         
         /**
          * Sets the update settings for the variable

@@ -299,6 +299,8 @@ Madara::Knowledge_Engine::Containers::Vector::exchange (
 void
 Madara::Knowledge_Engine::Containers::Vector::transfer_to (Vector & other)
 {
+  Guard guard (mutex_), guard2 (other.mutex_);
+
   size_t other_size = other.vector_.size ();
   size_t this_size = this->vector_.size ();
 
@@ -326,8 +328,20 @@ Madara::Knowledge_Engine::Containers::Vector::operator[] (
 
   return result;
 }
-      
-      
+
+int
+Madara::Knowledge_Engine::Containers::Vector::read_file (
+  unsigned int index,
+  const std::string & filename)
+{
+  Guard guard (mutex_);
+  int result = -1;
+
+  if (index < vector_.size () && context_)
+    result = context_->read_file (vector_[index], filename, settings_);
+
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::read_file (
@@ -343,8 +357,21 @@ Madara::Knowledge_Engine::Containers::Vector::read_file (
 
   return result;
 }
-      
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set_file (
+  unsigned int index,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set_file (vector_[index], value, size, settings_);
+  
+  return result;
+}
+  
 int
 Madara::Knowledge_Engine::Containers::Vector::set_file (
   unsigned int index,
@@ -359,8 +386,21 @@ Madara::Knowledge_Engine::Containers::Vector::set_file (
   
   return result;
 }
-      
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set_jpeg (
+  unsigned int index,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set_jpeg (vector_[index], value, size, settings_);
+  
+  return result;
+}
+  
 int
 Madara::Knowledge_Engine::Containers::Vector::set_jpeg (
   unsigned int index,
@@ -375,7 +415,20 @@ Madara::Knowledge_Engine::Containers::Vector::set_jpeg (
   
   return result;
 }
-      
+
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  Knowledge_Record::Integer value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (
@@ -392,6 +445,20 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set_index (
+  unsigned int index,
+  size_t sub_index,
+  Knowledge_Record::Integer value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set_index (vector_[index], sub_index, value, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set_index (
@@ -409,6 +476,20 @@ Madara::Knowledge_Engine::Containers::Vector::set_index (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  const Madara::Knowledge_Record::Integer * value,
+  uint32_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, size, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (
@@ -425,8 +506,21 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   
   return result;
 }
-       
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  const std::vector <Knowledge_Record::Integer> & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, settings_);
+  
+  return result;
+}
+ 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (
   unsigned int index,
@@ -441,7 +535,20 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   
   return result;
 }
-       
+
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  double value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (
@@ -458,6 +565,20 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set_index (
+  unsigned int index,
+  size_t sub_index,
+  double value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set_index (vector_[index], sub_index, value, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set_index (
@@ -475,6 +596,20 @@ Madara::Knowledge_Engine::Containers::Vector::set_index (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  const double * value,
+  uint32_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, size, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (
@@ -491,7 +626,20 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   
   return result;
 }
-       
+
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  const std::vector <double> & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (
@@ -507,7 +655,20 @@ Madara::Knowledge_Engine::Containers::Vector::set (
   
   return result;
 }
-        
+
+int
+Madara::Knowledge_Engine::Containers::Vector::set (
+  unsigned int index,
+  const std::string & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set (vector_[index], value, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector::set (

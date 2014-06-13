@@ -194,6 +194,20 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator[] (
 int
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
   unsigned int index,
+  type value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+
+  if (context_)
+    result = context_->set_index (vector_, index, value, settings_);
+  
+  return result;
+}
+
+int
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
+  unsigned int index,
   type value, 
   const Knowledge_Update_Settings & settings)
 {
@@ -206,7 +220,21 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
   return result;
 }
 
-
+int
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
+  const std::vector <type> & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (context_)
+  {
+    context_->set (vector_, value, settings_);
+  }
+  
+  return result;
+}
+ 
 int
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
   const std::vector <type> & value,
@@ -221,8 +249,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
   }
   
   return result;
-}
-       
+}     
 
 Madara::Knowledge_Engine::Knowledge_Update_Settings
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_settings (

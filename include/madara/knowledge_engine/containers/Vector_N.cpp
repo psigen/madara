@@ -199,8 +199,32 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator () (
 
   return result;
 }
-      
 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::read_file (
+  const Index & index, 
+  const std::string & filename)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->read_file (buffer.str (), filename, settings_);
+  }
+
+  return result;
+}
+  
 int
 Madara::Knowledge_Engine::Containers::Vector_N::read_file (
   const Index & index, 
@@ -226,7 +250,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::read_file (
 
   return result;
 }
-      
+
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_file (
+  const Index & index,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set_file (buffer.str (), value, size, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set_file (
@@ -253,8 +301,32 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_file (
   
   return result;
 }
-      
 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
+  const Index & index,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set_jpeg (buffer.str (), value, size, settings_);
+  }
+  
+  return result;
+}
+  
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
   const Index & index,
@@ -280,7 +352,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
   
   return result;
 }
-      
+
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  Knowledge_Record::Integer value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (
@@ -308,6 +404,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_index (
+  const Index & index,
+  size_t sub_index,
+  Knowledge_Record::Integer value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set_index (buffer.str (), sub_index, value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set_index (
@@ -336,6 +457,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  const Madara::Knowledge_Record::Integer * value,
+  uint32_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, size, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (
@@ -363,7 +509,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   
   return result;
 }
-       
+
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  const std::vector <Knowledge_Record::Integer> & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (
@@ -390,7 +560,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   
   return result;
 }
-       
+
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  double value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (
@@ -418,6 +612,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set_index (
+  const Index & index,
+  size_t sub_index,
+  double value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set_index (buffer.str (), sub_index, value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set_index (
@@ -446,6 +665,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   return result;
 }
 
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  const double * value,
+  uint32_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, size, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (
@@ -473,7 +717,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   
   return result;
 }
-       
+
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  const std::vector <double> & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (
@@ -500,7 +768,31 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   
   return result;
 }
-        
+
+int
+Madara::Knowledge_Engine::Containers::Vector_N::set (
+  const Index & index,
+  const std::string & value)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index.size () > 0 && context_)
+  {
+    std::stringstream buffer;
+    buffer << name_;
+    
+    for (unsigned int i = 0; i < index.size (); ++i)
+    {
+      buffer << ".";
+      buffer << index[i];
+    }
+
+    result = context_->set (buffer.str (), value, settings_);
+  }
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Vector_N::set (

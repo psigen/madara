@@ -146,7 +146,15 @@ namespace Madara
          * base.
          **/
         void clear (void);
-
+        
+        /**
+         * Read a file into a location in the map
+         * @param filename     file to read
+         * @param key          key to store the file into
+         */
+        int read_file (const std::string & key, 
+                       const std::string & filename);
+      
         /**
          * Read a file into a location in the map
          * @param filename     file to read
@@ -155,9 +163,20 @@ namespace Madara
          */
         int read_file (const std::string & key, 
                        const std::string & filename, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
       
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key,
+          Madara::Knowledge_Record::Integer value = 
+            Madara::Knowledge_Record::MODIFIED);
+
         /**
          * Sets a location within the map to the specified value
          *
@@ -168,10 +187,21 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (const std::string & key,
-          Madara::Knowledge_Record::Integer value = 
-            Madara::Knowledge_Record::MODIFIED, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          Madara::Knowledge_Record::Integer value, 
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets an index within an array to a specified value
+         *
+         * @param key             location within the map
+         * @param index           index of the location in the array
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set_index (const std::string & key,
+          size_t index,
+          Madara::Knowledge_Record::Integer value);
 
         /**
          * Sets an index within an array to a specified value
@@ -186,9 +216,21 @@ namespace Madara
         int set_index (const std::string & key,
           size_t index,
           Madara::Knowledge_Record::Integer value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           array of integers to set at the location
+         * @param size            number of elements in the array
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key,
+          const Madara::Knowledge_Record::Integer * value,
+          uint32_t size);
+       
         /**
          * Sets a location within the map to the specified value
          *
@@ -202,8 +244,18 @@ namespace Madara
         int set (const std::string & key,
           const Madara::Knowledge_Record::Integer * value,
           uint32_t size,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+       
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           array of integers to set at the location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key,
+          const std::vector <Knowledge_Record::Integer> & value);
        
         /**
          * Sets a location within the map to the specified value
@@ -216,9 +268,18 @@ namespace Madara
          **/
         int set (const std::string & key,
           const std::vector <Knowledge_Record::Integer> & value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
        
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key, double value);
+
         /**
          * Sets a location within the map to the specified value
          *
@@ -229,8 +290,20 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (const std::string & key, double value, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets an index within a map to a specified value
+         *
+         * @param key             location within the map
+         * @param index           index of the location in the array
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set_index (const std::string & key,
+          size_t index,
+          double value);
 
         /**
          * Sets an index within a map to a specified value
@@ -245,9 +318,21 @@ namespace Madara
         int set_index (const std::string & key,
           size_t index,
           double value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-
+          const Knowledge_Update_Settings & settings);
+        
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           array of doubles to set at the location
+         * @param size            number of elements in the array
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key,
+          const double * value,
+          uint32_t size);
+       
         /**
          * Sets a location within the map to the specified value
          *
@@ -261,9 +346,19 @@ namespace Madara
         int set (const std::string & key,
           const double * value,
           uint32_t size,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
        
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           array of doubles to set at the location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key,
+          const std::vector <double> & value);
+        
         /**
          * Sets a location within the map to the specified value
          *
@@ -275,9 +370,18 @@ namespace Madara
          **/
         int set (const std::string & key,
           const std::vector <double> & value,
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
         
+        /**
+         * Sets a location within the map to the specified value
+         *
+         * @param key             location within the map
+         * @param value           value to set at location
+         * @return                0 if successful, -1 if key is null, and
+         *                        -2 if quality isn't high enough
+         **/
+        int set (const std::string & key, const std::string & value);
+
         /**
          * Sets a location within the map to the specified value
          *
@@ -288,19 +392,17 @@ namespace Madara
          *                        -2 if quality isn't high enough
          **/
         int set (const std::string & key, const std::string & value, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
-
+          const Knowledge_Update_Settings & settings);
+        
         /**
-         * Sets the quality of writing to a certain variable from this entity
-         *
-         * @param key             location within the map
-         * @param quality         quality of writing to this location
-         * @param settings        settings for referring to knowledge variables
+         * Atomically sets the value of an index to an arbitrary string.
+         * @param   key       key to store the file into
+         * @param   value     new value of the variable
+         * @param   size      indicates the size of the value buffer
+         * @return   0 if the value was set. -1 if null key
          **/
-        void set_quality (const std::string & key, uint32_t quality,
-               const Knowledge_Reference_Settings & settings =
-                       Knowledge_Reference_Settings (false));
+        int set_file (const std::string & key,
+          const unsigned char * value, size_t size);
       
         /**
          * Atomically sets the value of an index to an arbitrary string.
@@ -312,8 +414,17 @@ namespace Madara
          **/
         int set_file (const std::string & key,
           const unsigned char * value, size_t size, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+      
+        /**
+         * Atomically sets the value of an index to a JPEG image
+         * @param   key       name of a variable
+         * @param   value     new value of the variable
+         * @param   size      indicates the size of the value buffer
+         * @return   0 if the value was set. -1 if null key
+         **/
+        int set_jpeg (const std::string & key,
+          const unsigned char * value, size_t size);
       
         /**
          * Atomically sets the value of an index to a JPEG image
@@ -325,8 +436,18 @@ namespace Madara
          **/
         int set_jpeg (const std::string & key,
           const unsigned char * value, size_t size, 
-          const Knowledge_Update_Settings & settings =
-            Knowledge_Update_Settings ());
+          const Knowledge_Update_Settings & settings);
+      
+        /**
+         * Sets the quality of writing to a certain variable from this entity
+         *
+         * @param key             location within the map
+         * @param quality         quality of writing to this location
+         * @param settings        settings for referring to knowledge variables
+         **/
+        void set_quality (const std::string & key, uint32_t quality,
+               const Knowledge_Reference_Settings & settings =
+                       Knowledge_Reference_Settings (false));
       
         /**
          * Sets the update settings for the variable

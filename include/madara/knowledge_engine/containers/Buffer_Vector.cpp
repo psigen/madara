@@ -296,6 +296,9 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::exchange (
 void
 Madara::Knowledge_Engine::Containers::Buffer_Vector::transfer_to (Buffer_Vector & other)
 {
+  Guard guard (mutex_);
+  Guard guard2 (other.mutex_);
+
   size_t other_size = other.vector_.size ();
   size_t this_size = this->vector_.size ();
 
@@ -323,7 +326,21 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::operator[] (
   return result;
 }
       
-      
+ 
+int
+Madara::Knowledge_Engine::Containers::Buffer_Vector::read_file (
+  unsigned int index,
+  const std::string & filename)
+{
+  Guard guard (mutex_);
+  int result = -1;
+
+  if (index < vector_.size () && context_)
+    result = context_->read_file (vector_[index], filename, settings_);
+
+  return result;
+}
+       
 
 int
 Madara::Knowledge_Engine::Containers::Buffer_Vector::read_file (
@@ -344,6 +361,20 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::read_file (
 int
 Madara::Knowledge_Engine::Containers::Buffer_Vector::set_file (
   unsigned int index,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set_file (vector_[index], value, size, settings_);
+  
+  return result;
+}
+ 
+int
+Madara::Knowledge_Engine::Containers::Buffer_Vector::set_file (
+  unsigned int index,
   const unsigned char * value, size_t size, 
   const Knowledge_Update_Settings & settings)
 {
@@ -356,6 +387,20 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::set_file (
   return result;
 }
       
+
+int
+Madara::Knowledge_Engine::Containers::Buffer_Vector::set_jpeg (
+  unsigned int index,
+  const unsigned char * value, size_t size)
+{
+  Guard guard (mutex_);
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+    result = context_->set_jpeg (vector_[index], value, size, settings_);
+  
+  return result;
+}
 
 int
 Madara::Knowledge_Engine::Containers::Buffer_Vector::set_jpeg (
