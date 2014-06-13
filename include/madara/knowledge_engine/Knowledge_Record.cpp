@@ -144,7 +144,7 @@ Madara::Knowledge_Record::deep_copy (const Knowledge_Record & source)
     }
     else if (type_ == UNKNOWN_FILE_TYPE || type_ == IMAGE_JPEG)
     {
-      uint32_t temp;
+      size_t temp;
       size_ = source.size_;
       type_ = source.type_;
       file_value_ = source.to_unmanaged_buffer (temp);
