@@ -56,7 +56,7 @@ namespace Madara
          * Constructor
          * @param  name       name of the variable in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
-         * @param  value      new value of the variable
+         * @param  filename   file to read
          * @param  settings   settings for evaluating the vector
          **/
         Reliable_File (const std::string & name,
