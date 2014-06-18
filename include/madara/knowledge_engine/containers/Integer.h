@@ -201,6 +201,13 @@ namespace Madara
         type operator* (void) const;
       
         /**
+         * Checks to see if the variable has ever been assigned a value
+         * @return true if the record has been set to a value. False if
+         *         uninitialized
+         **/
+        bool exists (void) const;
+      
+        /**
          * Increments the value of the variable and returns
          * the result.
          * @return the new value of the variable

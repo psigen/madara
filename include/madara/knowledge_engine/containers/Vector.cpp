@@ -329,6 +329,19 @@ Madara::Knowledge_Engine::Containers::Vector::operator[] (
   return result;
 }
 
+bool
+Madara::Knowledge_Engine::Containers::Vector::exists (
+  size_t index) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (index < vector_.size () && context_)
+    result = context_->exists (vector_[index]);
+
+  return result;
+}
+
 int
 Madara::Knowledge_Engine::Containers::Vector::read_file (
   unsigned int index,

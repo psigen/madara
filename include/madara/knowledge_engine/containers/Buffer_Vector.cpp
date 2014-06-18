@@ -325,7 +325,20 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::operator[] (
 
   return result;
 }
-      
+
+bool
+Madara::Knowledge_Engine::Containers::Buffer_Vector::exists (
+  size_t index) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (index < vector_.size () && context_)
+    result = context_->exists (vector_[index]);
+
+  return result;
+}
+
  
 int
 Madara::Knowledge_Engine::Containers::Buffer_Vector::read_file (

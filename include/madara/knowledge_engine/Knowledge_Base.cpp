@@ -461,10 +461,17 @@ Madara::Knowledge_Engine::Knowledge_Base::set_quality (
 bool
 Madara::Knowledge_Engine::Knowledge_Base::exists (
   const std::string & key,
-  const Knowledge_Reference_Settings & settings)
-
+  const Knowledge_Reference_Settings & settings) const
 {
   return impl_->exists (key, settings);
+}
+
+bool
+Madara::Knowledge_Engine::Knowledge_Base::exists (
+  const Variable_Reference & variable,
+  const Knowledge_Reference_Settings & settings) const
+{
+  return impl_->exists (variable, settings);
 }
 
 #ifdef _USE_CID_

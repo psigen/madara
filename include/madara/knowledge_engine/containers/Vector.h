@@ -140,7 +140,15 @@ namespace Madara
          *         not be reflected in the context. This is a local copy.
          **/
         Knowledge_Record operator[] (size_t index) const;
-
+        
+        /**
+         * Checks to see if the index has ever been assigned a value
+         * @param  index  the index of the variable entry
+         * @return true if the record has been set to a value. False is
+         *         uninitialized
+         **/
+        bool exists (size_t index) const;
+      
         /**
          * Read a file into the index
          * @param filename           file to read

@@ -59,6 +59,44 @@ Madara::Knowledge_Engine::Variables::get (const Variable_Reference & variable,
   return result;
 }
 
+bool
+Madara::Knowledge_Engine::Variables::exists (const std::string & key,
+             const Knowledge_Reference_Settings & settings) const
+{
+  bool result (false);
+
+  if (context_)
+  {
+    result = context_->exists (key, settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::exists. Context not set correctly.\n"));
+  }
+
+  return result;
+}
+
+bool
+Madara::Knowledge_Engine::Variables::exists (const Variable_Reference & variable,
+             const Knowledge_Reference_Settings & settings) const
+{
+  bool result (false);
+
+  if (context_)
+  {
+    result = context_->exists (variable, settings);
+  }
+  else
+  {
+    MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG,
+      "Variables::exists. Context not set correctly.\n"));
+  }
+
+  return result;
+}
+
 void
 Madara::Knowledge_Engine::Variables::apply_modified (
   const Knowledge_Update_Settings & settings)

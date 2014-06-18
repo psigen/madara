@@ -246,6 +246,18 @@ Madara::Knowledge_Engine::Containers::Double::operator* (void) const
   return to_double ();
 }
   
+bool
+Madara::Knowledge_Engine::Containers::Double::exists (void) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (context_)
+    result = context_->exists (variable_);
+
+  return result;
+}
+
 double
 Madara::Knowledge_Engine::Containers::Double::to_double (void) const
 {

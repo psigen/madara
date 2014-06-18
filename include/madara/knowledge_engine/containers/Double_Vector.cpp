@@ -324,6 +324,19 @@ Madara::Knowledge_Engine::Containers::Double_Vector::operator[] (
   return result.to_double ();
 }
 
+bool
+Madara::Knowledge_Engine::Containers::Double_Vector::exists (
+  size_t index) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (index < vector_.size () && context_)
+    result = context_->exists (vector_[index]);
+
+  return result;
+}
+
 int
 Madara::Knowledge_Engine::Containers::Double_Vector::set (
   unsigned int index,

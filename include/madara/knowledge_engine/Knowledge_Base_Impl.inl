@@ -76,9 +76,17 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::retrieve_index (
 inline bool
 Madara::Knowledge_Engine::Knowledge_Base_Impl::exists (
   const std::string & key,
-  const Knowledge_Reference_Settings & settings)
+  const Knowledge_Reference_Settings & settings) const
 {
   return map_.exists (key, settings);
+}
+
+inline bool
+Madara::Knowledge_Engine::Knowledge_Base_Impl::exists (
+  const Variable_Reference & variable,
+  const Knowledge_Reference_Settings & settings) const
+{
+  return map_.exists (variable, settings);
 }
 
 inline std::string

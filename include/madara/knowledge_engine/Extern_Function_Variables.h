@@ -454,6 +454,28 @@ namespace Madara
         const std::string & expression,
         const Knowledge_Update_Settings & settings =
           Knowledge_Engine::Knowledge_Update_Settings ());
+      
+      /**
+       * Checks if a knowledge location exists in the context
+       *
+       * @param key             knowledge variable location
+       * @param settings        settings for referring to knowledge variables
+       * @return                true if location has been set
+       **/
+      bool exists (const std::string & key,
+        const Knowledge_Reference_Settings & settings =
+          Knowledge_Reference_Settings (false)) const;
+      
+      /**
+       * Checks if a knowledge variable exists in the context
+       *
+       * @param variable        knowledge variable reference
+       * @param settings        settings for referring to knowledge variables
+       * @return                true if location has been set
+       **/
+      bool exists (const Variable_Reference & variable,
+        const Knowledge_Reference_Settings & settings =
+          Knowledge_Reference_Settings (false)) const;
 
       /**
        * Evaluates an expression. Recommended best practices are to compile the

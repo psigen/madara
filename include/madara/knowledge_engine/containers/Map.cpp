@@ -300,7 +300,16 @@ Madara::Knowledge_Engine::Containers::Map::exists (
   const std::string & key) const
 {
   Guard guard (mutex_);
-  return map_.find (key) != map_.end ();
+  bool result (false);
+
+  Internal_Map::const_iterator found = map_.find (key);
+
+  if (context_ && found != map_.end ())
+  {
+    result = context_->exists (found->second);
+  }
+
+  return result;
 }
 
 void

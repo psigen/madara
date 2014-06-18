@@ -313,6 +313,19 @@ Madara::Knowledge_Engine::Containers::Integer_Vector::transfer_to (Integer_Vecto
   this->resize (0, true);
 }
 
+bool
+Madara::Knowledge_Engine::Containers::Integer_Vector::exists (
+  size_t index) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (index < vector_.size () && context_)
+    result = context_->exists (vector_[index]);
+
+  return result;
+}
+
 Madara::Knowledge_Engine::Containers::Integer_Vector::type
 Madara::Knowledge_Engine::Containers::Integer_Vector::operator[] (
   size_t index) const

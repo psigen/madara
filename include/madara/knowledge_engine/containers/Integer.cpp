@@ -246,6 +246,18 @@ Madara::Knowledge_Engine::Containers::Integer::operator* (void) const
   return to_integer ();
 }
 
+bool
+Madara::Knowledge_Engine::Containers::Integer::exists (void) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (context_)
+    result = context_->exists (variable_);
+
+  return result;
+}
+
 Madara::Knowledge_Record::Integer
 Madara::Knowledge_Engine::Containers::Integer::to_integer (void) const
 {

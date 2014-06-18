@@ -148,6 +148,14 @@ namespace Madara
         type operator[] (size_t index) const;
       
         /**
+         * Checks to see if the index has ever been assigned a value
+         * @param  index  the index of the variable entry
+         * @return true if the record has been set to a value. False is
+         *         uninitialized
+         **/
+        bool exists (size_t index) const;
+      
+        /**
          * Sets a knowledge variable to a specified value
          *
          * @param index           index to set

@@ -71,6 +71,20 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (
 }
 
 // return the value of a variable
+inline bool
+Madara::Knowledge_Engine::Thread_Safe_Context::exists (
+  const Variable_Reference & variable,
+  const Knowledge_Reference_Settings & settings) const
+{
+  Context_Guard guard (mutex_);
+
+  if (variable.record_)
+    return variable.record_->exists ();
+  else
+    return false;
+}
+
+// return the value of a variable
 inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_index (
   const Variable_Reference & variable,

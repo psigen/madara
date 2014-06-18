@@ -245,6 +245,18 @@ Madara::Knowledge_Engine::Containers::String::operator* (void) const
   return to_string ();
 }
 
+bool
+Madara::Knowledge_Engine::Containers::String::exists (void) const
+{
+  Guard guard (mutex_);
+  bool result (false);
+
+  if (context_)
+    result = context_->exists (variable_);
+
+  return result;
+}
+
 std::string
 Madara::Knowledge_Engine::Containers::String::to_string (void) const
 {
