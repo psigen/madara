@@ -324,6 +324,44 @@ Madara::Knowledge_Engine::Containers::Double_Vector::operator[] (
   return result.to_double ();
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Double_Vector::to_record (
+  size_t index) const
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
+
+  if (index < vector_.size () && context_)
+    result = context_->get (vector_[index], keep_local);
+
+  return result;
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Double_Vector::to_record (void) const
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+  Knowledge_Update_Settings keep_local (true);
+
+  // if we have something to actually set
+  if (vector_.size () > 0 && context_)
+  {
+    // set last element first so we're not constantly resizing
+    result.set_index (vector_.size () - 1,
+      context_->get (vector_[vector_.size () - 1], keep_local).to_double ());
+
+    for (size_t i = 0; i < vector_.size () - 1; ++i)
+    {
+      result.set_index (i,
+        context_->get (vector_[i], keep_local).to_double ());
+    }
+  }
+
+  return result;
+}
+
 bool
 Madara::Knowledge_Engine::Containers::Double_Vector::exists (
   size_t index) const

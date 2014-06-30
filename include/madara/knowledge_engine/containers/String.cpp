@@ -257,6 +257,20 @@ Madara::Knowledge_Engine::Containers::String::exists (void) const
   return result;
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::String::to_record (void) const
+{
+  Guard guard (mutex_);
+  Madara::Knowledge_Record result;
+  
+  if (context_)
+  {
+    result = context_->get (variable_, settings_);
+  }
+  
+  return result;
+}
+ 
 std::string
 Madara::Knowledge_Engine::Containers::String::to_string (void) const
 {

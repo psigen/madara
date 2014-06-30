@@ -81,7 +81,7 @@ Madara::Knowledge_Engine::Containers::Map::operator= (
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Containers::Map::operator[] (
+Madara::Knowledge_Engine::Containers::Map::to_record (
   const std::string & key)
 {
   Guard guard (mutex_);
@@ -103,6 +103,13 @@ Madara::Knowledge_Engine::Containers::Map::operator[] (
   }
 
   return context_->get (entry->second, keep_local);
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Map::operator[] (
+  const std::string & key)
+{
+  return to_record (key);
 }
 
 size_t

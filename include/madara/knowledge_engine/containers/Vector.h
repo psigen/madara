@@ -142,6 +142,16 @@ namespace Madara
         Knowledge_Record operator[] (size_t index) const;
         
         /**
+         * Retrieves a copy of the record from the map. Same functionality
+         * as operator[]. This is provided for convenience to match other
+         * containers way of converting to a record.
+         * @param  index  the index of the variable entry
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record to_record (size_t index) const;
+        
+        /**
          * Checks to see if the index has ever been assigned a value
          * @param  index  the index of the variable entry
          * @return true if the record has been set to a value. False is

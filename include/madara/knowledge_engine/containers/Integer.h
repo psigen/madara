@@ -220,6 +220,13 @@ namespace Madara
          * @return the new value of the variable
          **/
         type operator-- (void);
+        
+        /**
+         * Returns the value as a Knowledge_Record. This
+         * is useful for referencing clock and other record info.
+         * @return the value as a Knowledge_Record
+         **/
+        Knowledge_Record to_record (void) const;
 
         /**
          * Returns the value as a double

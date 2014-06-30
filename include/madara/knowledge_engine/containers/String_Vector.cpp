@@ -326,6 +326,19 @@ Madara::Knowledge_Engine::Containers::String_Vector::operator[] (
   return result.to_string ();
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::String_Vector::to_record (
+  size_t index) const
+{
+  Guard guard (mutex_);
+  Knowledge_Record result;
+
+  if (index < vector_.size () && context_)
+    result = context_->get (vector_[index], settings_);
+
+  return result;
+}
+
 bool
 Madara::Knowledge_Engine::Containers::String_Vector::exists (
   size_t index) const

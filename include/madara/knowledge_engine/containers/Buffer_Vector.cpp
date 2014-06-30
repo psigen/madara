@@ -317,6 +317,13 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Buffer_Vector::operator[] (
   size_t index) const
 {
+  return to_record (index);
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Buffer_Vector::to_record (
+  size_t index) const
+{
   Guard guard (mutex_);
   Knowledge_Record result;
 

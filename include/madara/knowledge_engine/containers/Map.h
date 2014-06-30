@@ -92,6 +92,16 @@ namespace Madara
         Knowledge_Record operator[] (const std::string & key);
       
         /**
+         * Retrieves a copy of the record from the map. Same functionality
+         * as operator[]. This is provided for convenience to match other
+         * containers way of converting to a record.
+         * @param  key  the name of the variable entry
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record to_record (const std::string & key);
+      
+        /**
          * Returns the size of the map
          * @return size of the map
          **/

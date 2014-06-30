@@ -140,12 +140,26 @@ namespace Madara
           Variables & knowledge, int size = -1);
 
         /**
-         * Retrieves a copy of the record from the map.
+         * Retrieves a copy of the record from the vector.
          * @param  index  the index of the variable entry
          * @return the value of the entry. Modifications to this will
          *         not be reflected in the context. This is a local copy.
          **/
         type operator[] (size_t index) const;
+      
+        /**
+         * Retrieves a copy of the record from the vector.
+         * @param  index  the index of the variable entry
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record to_record (size_t index) const;
+      
+        /**
+         * Retrieves the entire vector as a native double array in a record 
+         * @return the vector in native double array format
+         **/
+        Knowledge_Record to_record (void) const;
       
         /**
          * Checks to see if the index has ever been assigned a value

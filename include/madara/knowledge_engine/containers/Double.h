@@ -214,6 +214,13 @@ namespace Madara
         Knowledge_Record::Integer to_integer (void) const;
         
         /**
+         * Returns the value as a Knowledge_Record. This
+         * is useful for referencing clock and other record info.
+         * @return the value as a Knowledge_Record
+         **/
+        Knowledge_Record to_record (void) const;
+
+        /**
          * Returns the value as a double (alias of *)
          * @return the value as a double
          **/

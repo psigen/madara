@@ -258,6 +258,20 @@ Madara::Knowledge_Engine::Containers::Double::exists (void) const
   return result;
 }
 
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Double::to_record (void) const
+{
+  Guard guard (mutex_);
+  Madara::Knowledge_Record result;
+  
+  if (context_)
+  {
+    result = context_->get (variable_, settings_);
+  }
+  
+  return result;
+}
+ 
 double
 Madara::Knowledge_Engine::Containers::Double::to_double (void) const
 {
