@@ -1,4 +1,5 @@
 #include "Vector_N.h"
+#include "madara/knowledge_engine/Context_Guard.h"
 
 
 Madara::Knowledge_Engine::Containers::Vector_N::Vector_N (
@@ -45,6 +46,8 @@ Madara::Knowledge_Engine::Containers::Vector_N::operator= (
 {
   if (this != &rhs)
   {
+    Guard guard (mutex_), guard2 (rhs.mutex_);
+
     this->context_ = rhs.context_;
     this->name_ = rhs.name_;
     this->settings_ = rhs.settings_;
@@ -63,6 +66,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_name (
   const std::string & var_name,
   Knowledge_Base & knowledge)
 {
+  Guard guard (mutex_);
   context_ = &(knowledge.get_context ());
   name_ = var_name;
 }
@@ -72,6 +76,7 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_name (
   const std::string & var_name,
   Variables & knowledge)
 {
+  Guard guard (mutex_);
   context_ = knowledge.get_context ();
   name_ = var_name;
 }
@@ -79,12 +84,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_name (
 Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator[] (const Index & index) const
 {
-  Guard guard (mutex_);
   Knowledge_Record result;
   Knowledge_Update_Settings keep_local (true);
 
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
     std::stringstream buffer;
     buffer << name_;
     
@@ -104,11 +110,13 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
   unsigned int x) const
 {
-  Guard guard (mutex_);
   Knowledge_Record result;
 
   if (context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -125,12 +133,13 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
   unsigned int x, unsigned int y) const
 {
-  Guard guard (mutex_);
   Knowledge_Record result;
   Knowledge_Update_Settings keep_local (true);
 
   if (context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
     std::stringstream buffer;
     buffer << name_;
     
@@ -149,12 +158,14 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
   unsigned int x, unsigned int y, unsigned int z) const
 {
-  Guard guard (mutex_);
   Knowledge_Record result;
   Knowledge_Update_Settings keep_local (true);
 
   if (context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -176,12 +187,14 @@ Madara::Knowledge_Record
 Madara::Knowledge_Engine::Containers::Vector_N::operator () (
   unsigned int i1, unsigned int i2, unsigned int i3, unsigned int i4) const
 {
-  Guard guard (mutex_);
   Knowledge_Record result;
   Knowledge_Update_Settings keep_local (true);
 
   if (context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -205,11 +218,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::read_file (
   const Index & index, 
   const std::string & filename)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -231,11 +246,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::read_file (
   const std::string & filename, 
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -256,11 +273,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_file (
   const Index & index,
   const unsigned char * value, size_t size)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -282,11 +301,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_file (
   const unsigned char * value, size_t size, 
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -307,11 +328,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
   const Index & index,
   const unsigned char * value, size_t size)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -333,11 +356,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_jpeg (
   const unsigned char * value, size_t size, 
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -358,11 +383,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const Index & index,
   Knowledge_Record::Integer value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -384,11 +411,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   Knowledge_Record::Integer value, 
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -410,11 +439,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   size_t sub_index,
   Knowledge_Record::Integer value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -437,11 +468,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   Knowledge_Record::Integer value,
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -463,11 +496,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const Madara::Knowledge_Record::Integer * value,
   uint32_t size)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -490,11 +525,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   uint32_t size,
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -515,11 +552,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const Index & index,
   const std::vector <Knowledge_Record::Integer> & value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -541,11 +580,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const std::vector <Knowledge_Record::Integer> & value,
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -566,11 +607,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const Index & index,
   double value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -592,11 +635,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   double value, 
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -618,11 +663,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   size_t sub_index,
   double value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -645,11 +692,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_index (
   double value,
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -671,11 +720,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const double * value,
   uint32_t size)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -698,11 +749,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   uint32_t size,
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -723,11 +776,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const Index & index,
   const std::vector <double> & value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -749,11 +804,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const std::vector <double> & value,
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -774,11 +831,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const Index & index,
   const std::string & value)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -800,11 +859,13 @@ Madara::Knowledge_Engine::Containers::Vector_N::set (
   const std::string & value, 
   const Knowledge_Update_Settings & settings)
 {
-  Guard guard (mutex_);
   int result = -1;
   
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     
@@ -839,9 +900,11 @@ Madara::Knowledge_Engine::Containers::Vector_N::set_quality (
   uint32_t quality,
   const Knowledge_Reference_Settings & settings)
 {
-  Guard guard (mutex_);
   if (index.size () > 0 && context_)
   {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
     std::stringstream buffer;
     buffer << name_;
     

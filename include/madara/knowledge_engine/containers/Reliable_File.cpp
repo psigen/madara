@@ -1,5 +1,6 @@
 #include "Reliable_File.h"
 #include "madara/transport/Fragmentation.h"
+#include "madara/knowledge_engine/Context_Guard.h"
 
 Madara::Knowledge_Engine::Containers::Reliable_File::Reliable_File (
   const Knowledge_Update_Settings & settings)
@@ -53,6 +54,8 @@ Madara::Knowledge_Engine::Containers::Reliable_File::operator= (const Reliable_F
 {
   if (this != &rhs)
   {
+    Guard guard (mutex_), guard2 (rhs.mutex_);
+
     this->knowledge_ = rhs.knowledge_;
     this->name_ = rhs.name_;
     this->file_ = rhs.file_;
@@ -69,13 +72,16 @@ Madara::Knowledge_Engine::Containers::Reliable_File::operator= (const Reliable_F
 void
 Madara::Knowledge_Engine::Containers::Reliable_File::exchange (Reliable_File & other)
 {
-  Guard guard (mutex_), guard2 (other.mutex_);
+  if (knowledge_ && other.knowledge_)
+  {
+    Guard guard (mutex_), guard2 (other.mutex_);
 
-  char * temp_file = other.file_;
-  other.file_ = file_;
-  file_ = temp_file;
+    char * temp_file = other.file_;
+    other.file_ = file_;
+    file_ = temp_file;
 
-  fragments_.exchange (other.fragments_);
+    fragments_.exchange (other.fragments_);
+  }
 }
 
 std::string
@@ -91,6 +97,10 @@ Madara::Knowledge_Engine::Containers::Reliable_File::set_name (
   Knowledge_Base & knowledge)
 {
   knowledge_ = &knowledge;
+
+  Context_Guard context_guard (knowledge);
+  Guard guard (mutex_);
+
   name_ = var_name;
   fragments_.set_name (name_, knowledge);
 }
@@ -140,15 +150,23 @@ int
 Madara::Knowledge_Engine::Containers::Reliable_File::read (
   const std::string & filename)
 {
-  void * buffer;
-  Transport::Fragment_Map map;
-  Madara::Utility::read_file (filename, buffer, size_);
-  file_ = static_cast <char *> (buffer);
+  int result = -1;
 
-  split ();
-  create_acks ();
+  if (knowledge_)
+  {
+    Context_Guard context_guard (*knowledge_);
+    Guard guard (mutex_);
 
-  return 0;
+    void * buffer;
+    Transport::Fragment_Map map;
+    result = Madara::Utility::read_file (filename, buffer, size_);
+    file_ = static_cast <char *> (buffer);
+
+    split ();
+    create_acks ();
+  }
+
+  return result;
 }
 
 void
@@ -160,46 +178,58 @@ Madara::Knowledge_Engine::Containers::Reliable_File::clear_frags (void)
 void
 Madara::Knowledge_Engine::Containers::Reliable_File::split (void)
 {
-  size_t frags = size_ / max_frag_size_;
-  bool extra = false;
-  size_t i = 0;
-  unsigned char * buffer = (unsigned char *)file_;
-
-  Knowledge_Update_Settings settings (true, false);
-
-  if (size_ % max_frag_size_ != 0)
+  if (knowledge_)
   {
-    extra = true;
-    fragments_.resize ((int)frags);
-  }
-  else
-  {
-    fragments_.resize ((int)(frags + 1));
-  }
+    Context_Guard context_guard (*knowledge_);
+    Guard guard (mutex_);
 
-  for (; i < frags; ++i, buffer += max_frag_size_)
-  {
-    fragments_.set_file ((unsigned int)i, buffer, max_frag_size_, settings);
-  }
+    size_t frags = size_ / max_frag_size_;
+    bool extra = false;
+    size_t i = 0;
+    unsigned char * buffer = (unsigned char *)file_;
 
-  if (extra)
-  {
-    fragments_.set_file ((unsigned int)(i + 1), buffer,
-      size_ % max_frag_size_, settings);
+    Knowledge_Update_Settings settings (true, false);
+
+    if (size_ % max_frag_size_ != 0)
+    {
+      extra = true;
+      fragments_.resize ((int)frags);
+    }
+    else
+    {
+      fragments_.resize ((int)(frags + 1));
+    }
+
+    for (; i < frags; ++i, buffer += max_frag_size_)
+    {
+      fragments_.set_file ((unsigned int)i, buffer, max_frag_size_, settings);
+    }
+
+    if (extra)
+    {
+      fragments_.set_file ((unsigned int)(i + 1), buffer,
+        size_ % max_frag_size_, settings);
+    }
   }
 }
 
 void
 Madara::Knowledge_Engine::Containers::Reliable_File::create_acks (void)
 {
-  for (size_t i = 0; i < fragments_.size (); ++i)
+  if (knowledge_)
   {
-    std::stringstream buffer;
-    buffer << name_;
-    buffer << '.';
-    buffer << i;
+    Context_Guard context_guard (*knowledge_);
+    Guard guard (mutex_);
 
-    acks_[i].set_name (buffer.str (), *knowledge_, (int)processes_);
+    for (size_t i = 0; i < fragments_.size (); ++i)
+    {
+      std::stringstream buffer;
+      buffer << name_;
+      buffer << '.';
+      buffer << i;
+
+      acks_[i].set_name (buffer.str (), *knowledge_, (int)processes_);
+    }
   }
 }
 
@@ -243,5 +273,9 @@ Madara::Knowledge_Engine::Containers::Reliable_File::set_quality (
   Guard guard (mutex_);
 
   if (knowledge_)
+  {
+    Context_Guard context_guard (*knowledge_);
+    Guard guard (mutex_);
     knowledge_->set_quality (name_, quality, settings);
+  }
 }
