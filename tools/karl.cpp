@@ -78,6 +78,31 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
+    else if (arg1 == "-h" || arg1 == "--help")
+    {
+      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
+        "\nProgram summary for %s [options] [Logic]:\n\n" \
+        "Evaluates KaRL logic from command line or file.\n\noptions:\n" \
+        "  [-a|--no-latency]        do not test for latency (throughput only)\n" \
+        "  [-b|--broadcast ip:port] the broadcast ip to send and listen to\n" \
+        "  [-d|--domain domain]     the knowledge domain to send and listen to\n" \
+        "  [--debug]                print all sent, received, and final knowledge\n" \
+        "  [-f|--logfile file]      log to a file\n" \
+        "  [-h|--help]              print help menu (i.e., this menu)\n" \
+        "  [-i|--input file]        file containing MADARA logic to evaluate\n" \
+        "  [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
+        "  [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
+        "  [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
+        "  [-q|--queue-length size] size of network buffers in bytes\n" \
+        "  [-r|--reduced]           use the reduced message header\n" \
+        "  [-s|--size size]         size of data packet to send in bytes\n" \
+        "  [-t|--time time]         time to burst messages for throughput test\n" \
+        "  [-u|--udp ip:port]       the udp ips to send to (first is self to bind to)\n" \
+        "  [-w|--wait seconds]      After evaluating all logics, wait for seconds\n" \
+        "\n",
+        argv[0]));
+      exit (0);
+    }
     else if (arg1 == "-i" || arg1 == "--input")
     {
       if (i + 1 < argc)
@@ -181,30 +206,6 @@ void handle_arguments (int argc, char ** argv)
     else if (logic == "")
     {
       logic = arg1;
-    }
-    else
-    {
-      MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
-        "\nProgram summary for %s [options] [Logic]:\n\n" \
-        "  Evaluates KaRL logic from command line or file.\n\noptions:\n" \
-        " [-a|--no-latency]        do not test for latency (throughput only)\n" \
-        " [-b|--broadcast ip:port] the broadcast ip to send and listen to\n" \
-        " [-d|--domain domain]     the knowledge domain to send and listen to\n" \
-        " [--debug]                print all sent, received, and final knowledge\n" \
-        " [-f|--logfile file]      log to a file\n" \
-        " [-i|--input file]        file containing MADARA logic to evaluate\n" \
-        " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
-        " [-m|--multicast ip:port] the multicast ip to send and listen to\n" \
-        " [-o|--host hostname]     the hostname of this process (def:localhost)\n" \
-        " [-q|--queue-length size] size of network buffers in bytes\n" \
-        " [-r|--reduced]           use the reduced message header\n" \
-        " [-s|--size size]         size of data packet to send in bytes\n" \
-        " [-t|--time time]         time to burst messages for throughput test\n" \
-        " [-u|--udp ip:port]       the udp ips to send to (first is self to bind to)\n" \
-        " [-w|--wait seconds]      After evaluating all logics, wait for seconds\n" \
-        "\n",
-        argv[0]));
-      exit (0);
     }
   }
 }
