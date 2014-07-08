@@ -153,3 +153,22 @@ project (Madara_Jar) : using_madara, using_ace {
   }
 }
 
+
+project (KaRL) : using_ace, using_madara {
+  exeout = $(MADARA_ROOT)/bin
+  exename = karl
+  
+  Documentation_Files {
+  }
+
+  Build_Files {
+    Madara.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tools/karl.cpp
+  }
+}
