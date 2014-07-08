@@ -39,7 +39,7 @@ String_Vector filenames;
 bool debug (false);
 
 // wait information
-bool wait (false);
+bool waiting (false);
 double wait_time (0.0);
 
 // handle command line arguments
@@ -172,7 +172,7 @@ void handle_arguments (int argc, char ** argv)
     {
       if (i + 1 < argc)
       {
-        wait = true;
+        waiting = true;
         std::stringstream buffer (argv[i + 1]);
         buffer >> wait_time;
       }
@@ -243,7 +243,7 @@ int main (int argc, char ** argv)
   }
 
   // if user requests to wait, do so before the debug print
-  if (wait)
+  if (waiting)
   {
     utility::sleep (wait_time);
   }
