@@ -709,6 +709,7 @@ namespace Madara
   };
   
   typedef ::std::map < std::string, Knowledge_Record>   Knowledge_Map;
+  typedef ::std::vector < Knowledge_Record>             Knowledge_Vector;
   typedef ::std::vector < std::string>                  Knowledge_Rules;
   typedef ::std::vector < std::string>                  String_Vector;
   typedef ::std::map < std::string, Knowledge_Record *> Knowledge_Records;

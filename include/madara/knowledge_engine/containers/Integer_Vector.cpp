@@ -336,6 +336,24 @@ Madara::Knowledge_Engine::Containers::Integer_Vector::transfer_to (Integer_Vecto
   }
 }
 
+void
+Madara::Knowledge_Engine::Containers::Integer_Vector::copy_to (
+  Knowledge_Vector & target) const
+{
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    target.resize (vector_.size ());
+
+    for (size_t i = 0; i < vector_.size (); ++i)
+    {
+      target[i].deep_copy ((*this)[i]);
+    }
+  }
+}
+
 bool
 Madara::Knowledge_Engine::Containers::Integer_Vector::exists (
   size_t index) const

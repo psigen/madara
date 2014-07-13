@@ -102,7 +102,13 @@ namespace Madara
          **/
         void exchange (String_Vector & other, bool refresh_keys = true,
           bool delete_keys = true);
-
+        
+        /**
+         * Copies the vector elements to an STL vector of Knowledge Records
+         * @param  target   record values at this instance
+         **/
+        void copy_to (Knowledge_Vector & target) const;
+        
         /**
          * Transfers elements from this vector to another
          * @param  other  the other vector to transfer to

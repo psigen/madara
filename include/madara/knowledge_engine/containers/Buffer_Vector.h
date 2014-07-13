@@ -102,7 +102,13 @@ namespace Madara
          * @param  other  the other vector to transfer to
          **/
         void transfer_to (Buffer_Vector & other);
-
+        
+        /**
+         * Copies the vector elements to an STL vector of Knowledge Records
+         * @param  target   record values at this instance
+         **/
+        void copy_to (Knowledge_Vector & target) const;
+        
         /**
          * Returns the size of the vector
          * @return size of the vector

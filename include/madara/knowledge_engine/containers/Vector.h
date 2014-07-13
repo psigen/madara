@@ -152,6 +152,12 @@ namespace Madara
         Knowledge_Record to_record (size_t index) const;
         
         /**
+         * Copies the vector elements to an STL vector of Knowledge Records
+         * @param  target   record values at this instance
+         **/
+        void copy_to (Knowledge_Vector & target) const;
+        
+        /**
          * Checks to see if the index has ever been assigned a value
          * @param  index  the index of the variable entry
          * @return true if the record has been set to a value. False is

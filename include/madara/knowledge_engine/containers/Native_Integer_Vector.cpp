@@ -1,13 +1,13 @@
-#include "Native_Double_Vector.h"
+#include "Native_Integer_Vector.h"
 #include "madara/knowledge_engine/Context_Guard.h"
 
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::Native_Integer_Vector (
   const Knowledge_Update_Settings & settings)
 : context_ (0), settings_ (settings) 
 {
 }
    
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::Native_Integer_Vector (
   const std::string & name,
   Knowledge_Base & knowledge,
   int size,
@@ -19,7 +19,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector
   settings_ = settings;
 }
   
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::Native_Integer_Vector (
   const std::string & name,
   Variables & knowledge,
   int size,
@@ -31,8 +31,8 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector
   settings_ = settings;
 }
 
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector (
-  const Native_Double_Vector & rhs)
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::Native_Integer_Vector (
+  const Native_Integer_Vector & rhs)
 : context_ (rhs.context_),
     name_ (rhs.name_),
     vector_ (rhs.vector_),
@@ -42,14 +42,14 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::Native_Double_Vector
 }
 
 
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::~Native_Double_Vector ()
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::~Native_Integer_Vector ()
 {
 
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator= (
-  const Native_Double_Vector & rhs)
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::operator= (
+  const Native_Integer_Vector & rhs)
 {
   if (this != &rhs)
   {
@@ -63,7 +63,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator= (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::resize (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::resize (
   size_t size)
 {
   if (context_ && name_ != "")
@@ -86,7 +86,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::resize (
 }
 
 size_t
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::size (void) const
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::size (void) const
 {
   Context_Guard context_guard (*context_);
   Guard guard (mutex_);
@@ -95,7 +95,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::size (void) const
 }
 
 std::string
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::get_name (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::get_name (
   void) const
 {
   Guard guard (mutex_);
@@ -103,7 +103,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::get_name (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_name (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set_name (
   const std::string & var_name,
   Knowledge_Base & knowledge, int size)
 {
@@ -124,7 +124,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_name (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_name (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set_name (
   const std::string & var_name,
   Variables & knowledge, int size)
 {
@@ -145,8 +145,8 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_name (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::exchange (
-  Native_Double_Vector & other)
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::exchange (
+  Native_Integer_Vector & other)
 {
   if (context_ && other.context_)
   {
@@ -162,8 +162,8 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::exchange (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::transfer_to (
-  Native_Double_Vector & other)
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::transfer_to (
+  Native_Integer_Vector & other)
 {
   if (context_ && other.context_)
   {
@@ -198,7 +198,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::transfer_to (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::copy_to (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::copy_to (
   Knowledge_Vector & target) const
 {
   if (context_)
@@ -215,8 +215,8 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::copy_to (
   }
 }
 
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::type
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator[] (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::type
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::operator[] (
   size_t index) const
 {
   Knowledge_Record result;
@@ -235,7 +235,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator[] (
 }
 
 int
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set (
   unsigned int index,
   type value)
 {
@@ -252,7 +252,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
 }
 
 int
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set (
   unsigned int index,
   type value, 
   const Knowledge_Update_Settings & settings)
@@ -270,7 +270,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
 }
 
 int
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set (
   const std::vector <type> & value)
 {
   int result = -1;
@@ -286,7 +286,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
 }
  
 int
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set (
   const std::vector <type> & value,
   const Knowledge_Update_Settings & settings)
 {
@@ -303,7 +303,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set (
 }     
 
 Madara::Knowledge_Engine::Knowledge_Update_Settings
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_settings (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set_settings (
   const Knowledge_Update_Settings & settings)
 {
   Guard guard (mutex_);
@@ -316,7 +316,7 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_settings (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_quality (
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::set_quality (
   unsigned int index,
   uint32_t quality,
   const Knowledge_Reference_Settings & settings)

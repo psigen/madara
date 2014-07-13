@@ -338,6 +338,24 @@ Madara::Knowledge_Engine::Containers::Double_Vector::transfer_to (
   }
 }
 
+void
+Madara::Knowledge_Engine::Containers::Double_Vector::copy_to (
+  Knowledge_Vector & target) const
+{
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    target.resize (vector_.size ());
+    
+    for (size_t i = 0; i < vector_.size (); ++i)
+    {
+      target[i].deep_copy ((*this)[i]);
+    }
+  }
+}
+
 Madara::Knowledge_Engine::Containers::Double_Vector::type
 Madara::Knowledge_Engine::Containers::Double_Vector::operator[] (
   size_t index) const
