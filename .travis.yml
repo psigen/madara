@@ -20,3 +20,31 @@ before_install:
   - tar -xf ndk.tgz
   - export ANDROID_NDK_HOME=`pwd`/android-ndk-r9c
   - export PATH=${PATH}:${ANDROID_NDK_HOME}
+
+install:
+  - pushd $HOME
+  - wget https://github.com/psigen/ace/archive/master.zip
+  - unzip master.zip $HOME/ace
+  - popd
+
+before_script:
+  - export ACE_ROOT=$HOME/ace/ACE_wrappers
+  - export MADARA_ROOT=`pwd`
+  - export LD_LIBRARY_PATH=$ACE_ROOT/lib:$MADARA_ROOT/lib:$LD_LIBRARY_PATH
+  - export PATH=$ACE_ROOT/bin:$MADARA_ROOT/bin:$PATH
+  - export PATH=$NDK_BIN:$PATH
+  - export CORES=4
+
+script:
+  #ACE
+  - cd $ACE_ROOT/ace
+  - echo "#include \"ace/config-android.h\"" > config.h
+  - cd $ACE_ROOT/include/makeinclude
+  - echo -e "versioned_so=0\nstatic_libs_only=0\ninclude \$(ACE_ROOT)/include/makeinclude/platform_android.GNU" > platform_macros.GNU
+  - cd $ACE_ROOT/ace
+  - perl $ACE_ROOT/bin/mwc.pl -type gnuace ace.mwc
+  - make -j $CORES
+  #MADARA
+  - cd $MADARA_ROOT
+  - perl $ACE_ROOT/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
+  - make tests=0 java=1 android=1 -j $CORES
