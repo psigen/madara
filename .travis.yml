@@ -25,7 +25,7 @@ install:
   - pushd $HOME
   - wget https://github.com/psigen/ace/archive/master.zip
   - unzip ./master.zip
-  - export ACE_ROOT=`pwd`/ace_master
+  - export ACE_ROOT=`pwd`/ace-master
   - popd
 
 before_script:
