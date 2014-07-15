@@ -19,19 +19,19 @@ before_install:
 install:
   # ACE
   - wget https://github.com/psigen/ace/archive/master.zip
-  - unzip ./master.zip
+  - unzip -q ./master.zip
   - rm ./master.zip
   - export ACE_ROOT=`pwd`/ace-master
   # MPC
   - pushd ./ace-master
   - wget https://github.com/psigen/mpc/archive/master.zip
-  - unzip master.zip
+  - unzip -q master.zip
   - mv mpc-master MPC
   - rm master.zip
   - popd
   # MADARA
   - wget https://github.com/psigen/madara/archive/master.zip
-  - unzip master.zip
+  - unzip -q master.zip
   - rm master.zip
   - export MADARA_ROOT=`pwd`/madara-master
 
@@ -55,4 +55,5 @@ script:
   - pushd $MADARA_ROOT
   - perl $ACE_ROOT/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
   - make tests=0 java=1 android=1 -j $CORES
+  - find .
   - popd
