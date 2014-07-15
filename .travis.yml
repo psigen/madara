@@ -34,7 +34,6 @@ install:
   - popd
 
 before_script:
-  - echo ${TRAVIS_BUILD_DIR}
   - export MADARA_ROOT=${TRAVIS_BUILD_DIR}
   - export LD_LIBRARY_PATH=${ACE_ROOT}/lib:${MADARA_ROOT}/lib:${LD_LIBRARY_PATH}
   - export PATH=${ACE_ROOT}/bin:${MADARA_ROOT}/bin:${PATH}
@@ -43,14 +42,17 @@ before_script:
 
 script:
   #ACE
-  - cd $ACE_ROOT/ace
+  - pushd $ACE_ROOT/ace
   - echo "#include \"ace/config-android.h\"" > config.h
   - cd $ACE_ROOT/include/makeinclude
   - echo -e "versioned_so=0\nstatic_libs_only=0\ninclude \$(ACE_ROOT)/include/makeinclude/platform_android.GNU" > platform_macros.GNU
   - cd $ACE_ROOT/ace
   - perl $ACE_ROOT/bin/mwc.pl -type gnuace ace.mwc
   - make -j $CORES
+  - popd
   #MADARA
-  - cd $MADARA_ROOT
+  - pushd $MADARA_ROOT
+  - ls
   - perl $ACE_ROOT/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
   - make tests=0 java=1 android=1 -j $CORES
+  - popd
