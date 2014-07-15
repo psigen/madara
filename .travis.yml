@@ -11,10 +11,12 @@ before_install:
   #- sudo apt-get update
   #- sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   # Download and install newest Android NDK.
-  - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9c-linux-x86_64.tar.bz2 -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9c-linux-x86.tar.bz2 -O ndk.tgz; fi
+  - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86_64.tar.bz2 -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2 -O ndk.tgz; fi
   - tar -xf ndk.tgz
-  - export ANDROID_NDK_HOME=`pwd`/android-ndk-r9c
-  - export PATH=${PATH}:${ANDROID_NDK_HOME}
+  - pushd ./android-ndk-r9d
+  - ./build/tools/make-standalone-toolchain.sh --platform=android-19 --install-dir=${HOME}/ndk_toolchain
+  - export NDK_BIN=${HOME}/ndk_toolchain/bin
+  - popd
 
 install:
   - pushd $HOME
