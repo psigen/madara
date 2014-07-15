@@ -11,8 +11,8 @@ before_install:
   # for gradle output style
   - export TERM=dumb
   # Set up NDK installation.
-  echo $(ANDROID_HOME)
-  which adb
+  - echo "Android Home: $(ANDROID_HOME)"
+  - echo "Android Platform Tools: $(which adb)"
   # export ANDROID_HOME=$(pwd)/android-sdk-linux
   # export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # newest Android NDK
@@ -24,7 +24,7 @@ before_install:
 install:
   - pushd $HOME
   - wget https://github.com/psigen/ace/archive/master.zip
-  - unzip master.zip $HOME
+  - unzip ./master.zip
   - export ACE_ROOT=$(pwd)/ace_master
   - popd
 
