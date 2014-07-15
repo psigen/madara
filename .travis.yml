@@ -3,3 +3,20 @@ android:
   components:
     - build-tools-19.0.3
     - android-19
+
+before_install:
+  # required libs for android build tools
+  - sudo apt-get update
+  - sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
+  # for gradle output style
+  - export TERM=dumb
+  # newest Android SDK 22.3
+  # wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
+  # tar -zxf android-sdk_r22.3-linux.tgz
+  # export ANDROID_HOME=`pwd`/android-sdk-linux
+  # export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  # newest Android NDK
+  - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9c-linux-x86_64.tar.bz2 -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9c-linux-x86.tar.bz2 -O ndk.tgz; fi
+  - tar -xf ndk.tgz
+  - export ANDROID_NDK_HOME=`pwd`/android-ndk-r9c
+  - export PATH=${PATH}:${ANDROID_NDK_HOME}
