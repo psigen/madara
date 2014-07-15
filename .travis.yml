@@ -11,15 +11,15 @@ before_install:
   #- sudo apt-get update
   #- sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   # Download and install newest Android NDK.
+  - pushd ${HOME}
   - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86_64.tar.bz2 -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2 -O ndk.tgz; fi
   - tar -xf ndk.tgz
-  - pushd ./android-ndk-r9d
-  - ./build/tools/make-standalone-toolchain.sh --platform=android-19 --install-dir=${HOME}/ndk_toolchain
-  - export NDK_BIN=${HOME}/ndk_toolchain/bin
+  - ./android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=android-9 --install-dir=./ndk_toolchain
+  - export NDK_BIN=`pwd`/ndk_toolchain/bin
   - popd
 
 install:
-  - pushd $HOME
+  - pushd ${HOME}
   - wget https://github.com/psigen/ace/archive/master.zip
   - unzip ./master.zip
   - rm ./master.zip
@@ -32,10 +32,10 @@ install:
   - popd
 
 before_script:
-  - export MADARA_ROOT=`pwd`
-  - export LD_LIBRARY_PATH=$ACE_ROOT/lib:$MADARA_ROOT/lib:$LD_LIBRARY_PATH
-  - export PATH=$ACE_ROOT/bin:$MADARA_ROOT/bin:$PATH
-  - export PATH=$NDK_BIN:$PATH
+  - export MADARA_ROOT=${TRAVIS_BUILD_DIR}
+  - export LD_LIBRARY_PATH=${ACE_ROOT}/lib:${MADARA_ROOT}/lib:${LD_LIBRARY_PATH}
+  - export PATH=${ACE_ROOT}/bin:${MADARA_ROOT}/bin:${PATH}
+  - export PATH=${NDK_BIN}:$PATH
   - export CORES=4
 
 script:
