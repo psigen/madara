@@ -11,8 +11,8 @@ before_install:
   #- sudo apt-get update
   #- sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   # Set up NDK installation.
-  - echo "Android Home: ${ANDROID_HOME}"
-  - echo `which adb`
+  #- echo "Android Home: ${ANDROID_HOME}"
+  #- echo `which adb`
   # export ANDROID_HOME=$(pwd)/android-sdk-linux
   # export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # Download and install newest Android NDK.
