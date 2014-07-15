@@ -20,10 +20,12 @@ before_install:
 
 install:
   - pushd ${HOME}
+  # ACE
   - wget https://github.com/psigen/ace/archive/master.zip
   - unzip ./master.zip
   - rm ./master.zip
   - export ACE_ROOT=`pwd`/ace-master
+  # MPC
   - cd ./ace-master
   - wget https://github.com/psigen/mpc/archive/master.zip
   - unzip master.zip
@@ -32,6 +34,7 @@ install:
   - popd
 
 before_script:
+  - echo ${TRAVIS_BUILD_DIR}
   - export MADARA_ROOT=${TRAVIS_BUILD_DIR}
   - export LD_LIBRARY_PATH=${ACE_ROOT}/lib:${MADARA_ROOT}/lib:${LD_LIBRARY_PATH}
   - export PATH=${ACE_ROOT}/bin:${MADARA_ROOT}/bin:${PATH}
