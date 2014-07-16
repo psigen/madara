@@ -5,11 +5,6 @@ android:
     - android-19
 
 before_install:
-  # for gradle output style
-  - export TERM=dumb
-  # required libs for android build tools
-  #- sudo apt-get update
-  #- sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch
   # Download and install newest Android NDK.
   - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86_64.tar.bz2 -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2 -O ndk.tgz; fi
   - tar -xf ndk.tgz
@@ -19,20 +14,17 @@ before_install:
 install:
   # ACE
   - wget https://github.com/psigen/ace/archive/master.zip
-  - unzip -q ./master.zip
-  - rm ./master.zip
+  - unzip -q master.zip && rm master.zip
   - export ACE_ROOT=`pwd`/ace-master
   # MPC
   - pushd ./ace-master
   - wget https://github.com/psigen/mpc/archive/master.zip
-  - unzip -q master.zip
+  - unzip -q master.zip && rm master.zip
   - mv mpc-master MPC
-  - rm master.zip
   - popd
   # MADARA
   - wget https://github.com/psigen/madara/archive/master.zip
-  - unzip -q master.zip
-  - rm master.zip
+  - unzip -q master.zip && rm master.zip
   - export MADARA_ROOT=`pwd`/madara-master
 
 before_script:
@@ -43,17 +35,17 @@ before_script:
 
 script:
   #ACE
-  - pushd $ACE_ROOT/ace
+  - pushd ${ACE_ROOT}/ace
   - echo "#include \"ace/config-android.h\"" > config.h
-  - cd $ACE_ROOT/include/makeinclude
+  - cd ${ACE_ROOT}/include/makeinclude
   - echo -e "versioned_so=0\nstatic_libs_only=0\ninclude \$(ACE_ROOT)/include/makeinclude/platform_android.GNU" > platform_macros.GNU
-  - cd $ACE_ROOT/ace
-  - perl $ACE_ROOT/bin/mwc.pl -type gnuace ace.mwc
-  - make -j $CORES
+  - cd ${ACE_ROOT}/ace
+  - perl ${ACE_ROOT}/bin/mwc.pl -type gnuace ace.mwc
+  - make -j ${CORES}
   - popd
   #MADARA
-  - pushd $MADARA_ROOT
-  - perl $ACE_ROOT/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
-  - make tests=0 java=1 android=1 -j $CORES
+  - pushd ${MADARA_ROOT}
+  - perl ${ACE_ROOT}/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
+  - make tests=0 java=1 android=1 -j ${CORES}
   - find .
   - popd

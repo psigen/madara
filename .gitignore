@@ -1,3 +1,8 @@
 # Temporary files
 *~
 \#*\#
+
+# Build directories
+ace-master/
+madara-master/
+android-ndk-*/
