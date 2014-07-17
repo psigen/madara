@@ -25,6 +25,7 @@ install:
   # MADARA
   - wget https://github.com/psigen/madara/archive/master.zip
   - unzip -q master.zip && rm master.zip
+  - mkdir -p madara-master/port/java/lib
   - export MADARA_ROOT=`pwd`/madara-master
 
 before_script:
