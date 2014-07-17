@@ -97,7 +97,7 @@ public abstract class MadaraJNI
 
   private static long functionCallback(MadaraFunction func, long[] args, long vars)
   {
-    MadaraVariables _vars = MadaraVariables.fromPointer(vars);
+    Variables _vars = Variables.fromPointer(vars);
     KnowledgeList _args = new KnowledgeList(args);
     KnowledgeRecord ret = func.execute(_args, _vars);
     return ret == null ? 0 : ret.getCPtr();
@@ -105,7 +105,7 @@ public abstract class MadaraJNI
 
   private static long filterCallback(TransportFilter func, long[] args, long vars)
   {
-    MadaraVariables _vars = MadaraVariables.fromPointer(vars);
+    Variables _vars = Variables.fromPointer(vars);
     KnowledgeList _args = new KnowledgeList(args);
     KnowledgeRecord ret = func.filter(_args, _vars);
     return ret == null ? 0 : ret.getCPtr();
@@ -115,7 +115,7 @@ public abstract class MadaraJNI
   {
     KnowledgeMap map = new KnowledgeMap(keys, vals, false);
     TransportContext context = TransportContext.fromPointer(ctx);
-    MadaraVariables variables = MadaraVariables.fromPointer(vars);
+    Variables variables = Variables.fromPointer(vars);
 
     KnowledgeRecord ret = func.filter(map, context, variables);
     if (ret != null && !ret.isNew())

@@ -50,7 +50,7 @@ import com.madara.KnowledgeBase.CompiledExpression;
 /**
  * Provides an interface for external functions into the MADARA KaRL variable settings.
  */
-public class MadaraVariables extends MadaraJNI
+public class Variables extends MadaraJNI
 {
   private native long jni_evaluate(long cptr, long expression, long evalSettings);
   private native long jni_compile(long cptr, String expression);
@@ -58,22 +58,22 @@ public class MadaraVariables extends MadaraJNI
   private native void jni_set(long cptr, String name, long record);
 
   /**
-   * {@link com.madara.MadaraVariables MadaraVariables} should only be created from a pointer
+   * {@link com.madara.Variables Variables} should only be created from a pointer
    */
-  private MadaraVariables()
+  private Variables()
   {
 
   }
 
   /**
-   * Creates a {@link com.madara.MadaraVariables MadaraVariables} from a pointer
+   * Creates a {@link com.madara.Variables Variables} from a pointer
    *
    * @param cptr C pointer to a Variables object
-   * @return new {@link com.madara.MadaraVariables MadaraVariables}
+   * @return new {@link com.madara.Variables Variables}
    */
-  public static MadaraVariables fromPointer(long cptr)
+  public static Variables fromPointer(long cptr)
   {
-    MadaraVariables ret = new MadaraVariables();
+    Variables ret = new Variables();
     ret.setCPtr(cptr);
     return ret;
   }

@@ -5,15 +5,15 @@
 * https://code.google.com/p/smash-cmu/wiki/License
 *********************************************************************/
 
-#include "com.madara.MadaraVariables.h"
+#include "com.madara.Variables.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 
 /*
-* Class:     com_madara_MadaraVariables
+* Class:     com_madara_Variables
 * Method:    jni_evaluate
 * Signature: (JJJ)J
 */
-MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1evaluate__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
+MADARA_Export jlong JNICALL Java_com_madara_Variables_jni_1evaluate__JJJ (JNIEnv * env, jobject obj, jlong cptr, jlong expression, jlong evalSettings)
 {
   Madara::Knowledge_Engine::Variables vars = *(Madara::Knowledge_Engine::Variables*)cptr;
   Madara::Knowledge_Engine::Compiled_Expression compiled_expression = *(Madara::Knowledge_Engine::Compiled_Expression*)expression;
@@ -22,11 +22,11 @@ MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1evaluate__JJJ (
 }
 
 /*
-* Class:     com_madara_MadaraVariables
+* Class:     com_madara_Variables
 * Method:    jni_compile
 * Signature: (JLjava/lang/String;)J
 */
-MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1compile (JNIEnv *env, jobject obj, jlong cptr, jstring expression)
+MADARA_Export jlong JNICALL Java_com_madara_Variables_jni_1compile (JNIEnv *env, jobject obj, jlong cptr, jstring expression)
 {
   const char *nativeExpression = env->GetStringUTFChars(expression, 0);
 
@@ -39,11 +39,11 @@ MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1compile (JNIEnv
 }
 
 /*
-* Class:     com_madara_MadaraVariables
+* Class:     com_madara_Variables
 * Method:    jni_get
 * Signature: (JLjava/lang/String;)J
 */
-MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1get (JNIEnv * env, jobject obj, jlong cptr, jstring var)
+MADARA_Export jlong JNICALL Java_com_madara_Variables_jni_1get (JNIEnv * env, jobject obj, jlong cptr, jstring var)
 {
   const char *nativeVar = env->GetStringUTFChars(var, 0);
 
@@ -55,11 +55,11 @@ MADARA_Export jlong JNICALL Java_com_madara_MadaraVariables_jni_1get (JNIEnv * e
 }
 
 /*
-* Class:     com_madara_MadaraVariables
+* Class:     com_madara_Variables
 * Method:    jni_set
 * Signature: (JLjava/lang/String;J)V
 */
-MADARA_Export void JNICALL Java_com_madara_MadaraVariables_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
+MADARA_Export void JNICALL Java_com_madara_Variables_jni_1set (JNIEnv *env, jobject obj, jlong cptr, jstring var, jlong recordPtr)
 {
   const char *nativeVar = env->GetStringUTFChars(var, 0);
 

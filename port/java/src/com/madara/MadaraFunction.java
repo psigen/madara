@@ -58,6 +58,6 @@ public interface MadaraFunction
    * @param variables Local access to evaluate and compile methods
    * @return A {@link com.madara.KnowledgeRecord KnowledgeRecord} containing the result of the function
    */
-  public KnowledgeRecord execute(KnowledgeList args, MadaraVariables variables);
+  public KnowledgeRecord execute(KnowledgeList args, Variables variables);
 }
 

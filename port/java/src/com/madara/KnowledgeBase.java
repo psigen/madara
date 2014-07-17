@@ -572,7 +572,7 @@ public class KnowledgeBase extends MadaraJNI
    * @param name The name of the defined function
    * @param ptr  Pointer to the KnowledgeBase this function was defined in
    * @param args Pointers to the KnowledgeRecords passed in to the function
-   * @param vars Pointer to the MadaraVariables object to allow execution of evaluate statements
+   * @param vars Pointer to the Variables object to allow execution of evaluate statements
    * @return Pointer to a KnowledgeRecord
    */
   private static long callBack(String name, long ptr, long[] args, long vars)
@@ -580,7 +580,7 @@ public class KnowledgeBase extends MadaraJNI
     KnowledgeBase knowledge = knowledgeBases.get(ptr);
     MadaraFunction callback = knowledge.callbacks.get(name);
 
-    MadaraVariables _vars = MadaraVariables.fromPointer(vars);
+    Variables _vars = Variables.fromPointer(vars);
     KnowledgeList _args = new KnowledgeList(args);
 
     KnowledgeRecord ret = null;

@@ -46,7 +46,7 @@
 package com.madara.transport;
 
 import com.madara.KnowledgeRecord;
-import com.madara.MadaraVariables;
+import com.madara.Variables;
 
 import java.util.List;
 
@@ -58,6 +58,6 @@ public interface TransportFilter
    * @param variables Local access to evaluate and compile methods
    * @return A {@link com.madara.KnowledgeRecord KnowledgeRecord} containing the result of the function
    */
-  public KnowledgeRecord filter(List<KnowledgeRecord> args, MadaraVariables variables);
+  public KnowledgeRecord filter(List<KnowledgeRecord> args, Variables variables);
 }
 
