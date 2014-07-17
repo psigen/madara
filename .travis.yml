@@ -50,3 +50,4 @@ deploy:
   file: madara-master/port/java/lib/Madara.jar
   on:
     repo: psigen/madara
+    branch: android
