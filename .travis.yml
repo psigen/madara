@@ -1,52 +1,53 @@
 language: android
 android:
   components:
-    - build-tools-19.0.3
-    - android-19
-
+  - build-tools-19.0.3
+  - android-19
 before_install:
-  # Download and install newest Android NDK.
-  - if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86_64.tar.bz2 -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2 -O ndk.tgz; fi
-  - tar -xf ndk.tgz
-  - ./android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=android-9 --install-dir=./ndk_toolchain
-  - export NDK_BIN=`pwd`/ndk_toolchain/bin
-
+- if [ `uname -m` = x86_64]; then wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86_64.tar.bz2
+  -O ndk.tgz; else wget http://dl.google.com/android/ndk/android-ndk-r9d-linux-x86.tar.bz2
+  -O ndk.tgz; fi
+- tar -xf ndk.tgz
+- ./android-ndk-r9d/build/tools/make-standalone-toolchain.sh --platform=android-9
+  --install-dir=./ndk_toolchain
+- export NDK_BIN=`pwd`/ndk_toolchain/bin
 install:
-  # ACE
-  - wget https://github.com/psigen/ace/archive/master.zip
-  - unzip -q master.zip && rm master.zip
-  - export ACE_ROOT=`pwd`/ace-master
-  # MPC
-  - pushd ./ace-master
-  - wget https://github.com/psigen/mpc/archive/master.zip
-  - unzip -q master.zip && rm master.zip
-  - mv mpc-master MPC
-  - popd
-  # MADARA
-  - wget https://github.com/psigen/madara/archive/master.zip
-  - unzip -q master.zip && rm master.zip
-  - mkdir -p madara-master/port/java/lib
-  - export MADARA_ROOT=`pwd`/madara-master
-
+- wget https://github.com/psigen/ace/archive/master.zip
+- unzip -q master.zip && rm master.zip
+- export ACE_ROOT=`pwd`/ace-master
+- pushd ./ace-master
+- wget https://github.com/psigen/mpc/archive/master.zip
+- unzip -q master.zip && rm master.zip
+- mv mpc-master MPC
+- popd
+- wget https://github.com/psigen/madara/archive/master.zip
+- unzip -q master.zip && rm master.zip
+- mkdir -p madara-master/port/java/lib
+- export MADARA_ROOT=`pwd`/madara-master
 before_script:
-  - export LD_LIBRARY_PATH=${ACE_ROOT}/lib:${MADARA_ROOT}/lib:${LD_LIBRARY_PATH}
-  - export PATH=${ACE_ROOT}/bin:${MADARA_ROOT}/bin:${PATH}
-  - export PATH=${NDK_BIN}:$PATH
-  - export CORES=1
-
+- export LD_LIBRARY_PATH=${ACE_ROOT}/lib:${MADARA_ROOT}/lib:${LD_LIBRARY_PATH}
+- export PATH=${ACE_ROOT}/bin:${MADARA_ROOT}/bin:${PATH}
+- export PATH=${NDK_BIN}:$PATH
+- export CORES=1
 script:
-  #ACE
-  - pushd ${ACE_ROOT}/ace
-  - echo "#include \"ace/config-android.h\"" > config.h
-  - cd ${ACE_ROOT}/include/makeinclude
-  - echo -e "versioned_so=0\nstatic_libs_only=0\ninclude \$(ACE_ROOT)/include/makeinclude/platform_android.GNU" > platform_macros.GNU
-  - cd ${ACE_ROOT}/ace
-  - perl ${ACE_ROOT}/bin/mwc.pl -type gnuace ace.mwc
-  - make -j ${CORES}
-  - popd
-  #MADARA
-  - pushd ${MADARA_ROOT}
-  - perl ${ACE_ROOT}/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
-  - make tests=0 java=1 android=1 -j ${CORES}
-  - find .
-  - popd
+- pushd ${ACE_ROOT}/ace
+- echo "#include \"ace/config-android.h\"" > config.h
+- cd ${ACE_ROOT}/include/makeinclude
+- echo -e "versioned_so=0\nstatic_libs_only=0\ninclude \$(ACE_ROOT)/include/makeinclude/platform_android.GNU"
+  > platform_macros.GNU
+- cd ${ACE_ROOT}/ace
+- perl ${ACE_ROOT}/bin/mwc.pl -type gnuace ace.mwc
+- make -j ${CORES}
+- popd
+- pushd ${MADARA_ROOT}
+- perl ${ACE_ROOT}/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
+- make tests=0 java=1 android=1 -j ${CORES}
+- find .
+- popd
+deploy:
+  provider: releases
+  api_key:
+    secure: MtzgGvra16+7GmjhHhNYrejk2hUrbuvSPU6eFa32Y207A5vyQnYQHaaMOyvQvWcw+r8c5NHshW5X4icnulmKkFqet6koG6b28D4TjskyYtOuQhvuLhuK2+e0HK0Ek6DNSkJNtpGtGOJVML0eS6sqqh+qb/auEYXUX/rd/K3KBOQ=
+  file: madara-master/port/java/lib/Madara.jar
+  on:
+    repo: psigen/madara
