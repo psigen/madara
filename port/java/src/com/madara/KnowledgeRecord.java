@@ -210,23 +210,7 @@ public class KnowledgeRecord extends MadaraJNI
 
   public String toString()
   {
-    String ret = null;
-    switch (getType())
-    {
-      case INTEGER:
-        ret = "" + toLongValue();
-        break;
-      case DOUBLE:
-        ret = "" + toDoubleValue();
-        break;
-      case STRING:
-        ret = toStringValue();
-        break;
-      default:
-        ret = "Unknown";
-        break;
-    }
-    return ret;
+    return toStringValue ();
   }
 
   /**
@@ -235,7 +219,7 @@ public class KnowledgeRecord extends MadaraJNI
    * @param cptr C pointer to a KnowledgeRecord object
    * @return new KnowledgeRecord
    */
-  static KnowledgeRecord fromPointer(long cptr)
+  public static KnowledgeRecord fromPointer(long cptr)
   {
     return fromPointer(cptr, true);
   }
@@ -246,7 +230,7 @@ public class KnowledgeRecord extends MadaraJNI
    * @param cptr C pointer to a KnowledgeRecord object
    * @return new KnowledgeRecord
    */
-  static KnowledgeRecord fromPointer(long cptr, boolean isNew)
+  public static KnowledgeRecord fromPointer(long cptr, boolean isNew)
   {
     KnowledgeRecord ret = new KnowledgeRecord(isNew);
     ret.setCPtr(cptr);
