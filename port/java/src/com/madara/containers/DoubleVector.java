@@ -76,6 +76,19 @@ public class DoubleVector extends MadaraJNI
   }
 
   /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @return a new java instance of the underlying pointer
+   */
+  public static Vector fromPointer(long cptr)
+  {
+    Vector ret = new Vector();
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
    * Gets the value
    *
    * @return   current value
