@@ -114,35 +114,79 @@ Madara::Knowledge_Record::exists (void)
   return status_ != UNCREATED;
 }
 
+Madara::Knowledge_Record *
+Madara::Knowledge_Record::clone (void) const
+{
+  Knowledge_Record * result = new Knowledge_Record ();
+  
+  if (is_ref_counted ())
+  {
+    if (this->type_ == STRING)
+    {
+      result->set_value (this->to_string ());
+    }
+    else if (this->type_ == TEXT_FILE)
+    {
+      std::string text = this->to_string ();
+      result->set_text (text.c_str (), text.size ());
+    }
+    else if (this->type_ == XML)
+    {
+      std::string text = this->to_string ();
+      result->set_xml (text.c_str (), text.size ());
+    }
+    else if (this->type_ == DOUBLE_ARRAY)
+    {
+      result->set_value (this->to_doubles ());
+    }
+    else if (this->type_ == INTEGER_ARRAY)
+    {
+      result->set_value (this->to_integers ());
+    }
+    else if (this->type_ == UNKNOWN_FILE_TYPE || this->type_ == IMAGE_JPEG)
+    {
+      size_t temp;
+      result->size_ = this->size_;
+      result->type_ = this->type_;
+      result->file_value_ = this->to_unmanaged_buffer (temp);
+    }
+  }
+  else
+  {
+    *result = *this;
+  }
+
+  return result;
+}
 
 void
 Madara::Knowledge_Record::deep_copy (const Knowledge_Record & source)
 {
   if (source.is_ref_counted ())
   {
-    if (type_ == STRING)
+    if (source.type_ == STRING)
     {
       set_value (source.to_string ());
     }
-    if (type_ == TEXT_FILE)
+    else if (source.type_ == TEXT_FILE)
     {
       std::string text = source.to_string ();
       set_text (text.c_str (), text.size ());
     }
-    if (type_ == XML)
+    else if (source.type_ == XML)
     {
       std::string text = source.to_string ();
       set_xml (text.c_str (), text.size ());
     }
-    else if (type_ == DOUBLE_ARRAY)
+    else if (source.type_ == DOUBLE_ARRAY)
     {
       set_value (source.to_doubles ());
     }
-    else if (type_ == INTEGER_ARRAY)
+    else if (source.type_ == INTEGER_ARRAY)
     {
       set_value (source.to_integers ());
     }
-    else if (type_ == UNKNOWN_FILE_TYPE || type_ == IMAGE_JPEG)
+    else if (source.type_ == UNKNOWN_FILE_TYPE || source.type_ == IMAGE_JPEG)
     {
       size_t temp;
       size_ = source.size_;
@@ -1927,7 +1971,7 @@ Madara::Knowledge_Record::resize (size_t new_size)
   }
   else if (is_ref_counted () && new_size < size_)
   {
-    size_ = new_size;
+    size_ = (uint32_t)new_size;
   }
 }
 

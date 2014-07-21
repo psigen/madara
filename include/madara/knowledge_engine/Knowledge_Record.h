@@ -235,6 +235,11 @@ namespace Madara
     ssize_t to_file (const std::string & filename) const;
 
     /**
+     * clones the record
+     **/
+    Knowledge_Record * clone (void) const;
+
+    /**
      * converts the value to an integer
      **/
     Integer to_integer (void) const;

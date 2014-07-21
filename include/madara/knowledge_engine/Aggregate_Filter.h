@@ -93,8 +93,8 @@ namespace Madara
         
         //Create the arrays to pass up
         jlong * records = new jlong [recordsMap.size()];
-        jlongArray recordsArray = env->NewLongArray(recordsMap.size());
-        jobjectArray keysArray = env->NewObjectArray(recordsMap.size(), jni_string_cls(), NULL);
+        jlongArray recordsArray = env->NewLongArray((jsize)recordsMap.size());
+        jobjectArray keysArray = env->NewObjectArray((jsize)recordsMap.size(), jni_string_cls(), NULL);
         
         std::map<std::string, Madara::Knowledge_Record>::iterator iter;
         int counter = 0;
@@ -104,7 +104,7 @@ namespace Madara
           records[counter++] = (jlong) &(iter->second);
         }
         
-        env->SetLongArrayRegion(recordsArray, 0, recordsMap.size(), records);
+        env->SetLongArrayRegion(recordsArray, 0, (jsize)recordsMap.size(), records);
         
         delete [] records;
 

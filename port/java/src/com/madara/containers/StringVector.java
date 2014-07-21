@@ -60,6 +60,9 @@ public class StringVector extends MadaraJNI
   private native void jni_setName(long cptr, long type, long kb, java.lang.String name);
   private native java.lang.String jni_get(long cptr, int index);
   private native long jni_toRecord(long cptr, int index);
+  private native Object[] jni_toArray(long cptr);
+  private native long jni_size(long cptr);
+  private native void jni_resize(long cptr, long length);
 
   public StringVector()
   {
@@ -92,6 +95,16 @@ public class StringVector extends MadaraJNI
   }
 
   /**
+   * Resizes the vector
+   *
+   * @param  length   new number of elements of the vector
+   */
+  public void resize (long length)
+  {
+    jni_resize(getCPtr(), length);
+  }
+  
+  /**
    * Sets the value
    *
    * @param  value   new value
@@ -121,6 +134,33 @@ public class StringVector extends MadaraJNI
   public void setName(Variables vars, java.lang.String name)
   {
     jni_setName(getCPtr(), 1, vars.getCPtr (), name);
+  }
+
+  /**
+   * Returns the size of the vector
+   *
+   * @return  the number of elements in the vector
+   */
+  public long size ()
+  {
+    return jni_size(getCPtr());
+  }
+  
+  /**
+   * Returns a value at the specified index
+   *
+   * @param  index  the index 
+   * @return the value at the index as a knowledge record
+   */
+  public com.madara.KnowledgeRecord[] toArray()
+  {
+    Object[] objs = jni_toArray(getCPtr());
+    KnowledgeRecord[] records = new KnowledgeRecord[objs.length];
+    for (int i = 0; i < objs.length; ++i)
+    {
+      records[i] = (KnowledgeRecord)objs[i];
+    }
+    return records;
   }
 
   /**

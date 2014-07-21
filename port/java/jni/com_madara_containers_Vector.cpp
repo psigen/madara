@@ -1,6 +1,7 @@
 
 #include "com_madara_containers_Vector.h"
 #include "madara/knowledge_engine/containers/Vector.h"
+#include <iostream>
 
 namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
@@ -191,6 +192,36 @@ jlong JNICALL Java_com_madara_containers_Vector_jni_1get
 
 /*
  * Class:     com_madara_containers_Vector
+ * Method:    jni_resize
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1resize
+  (JNIEnv * env, jobject, jlong cptr, jlong length)
+{
+  containers::Vector * current = (containers::Vector *) cptr;
+  if (current)
+    current->resize (length);
+}
+
+/*
+ * Class:     com_madara_containers_Vector
+ * Method:    jni_size
+ * Signature: (J)J
+ */
+jlong JNICALL Java_com_madara_containers_Vector_jni_1size
+  (JNIEnv * env, jobject, jlong cptr)
+{
+  jlong result (0);
+
+  containers::Vector * current = (containers::Vector *) cptr;
+  if (current)
+    result = (jlong) current->size ();
+
+  return (jlong) result;
+}
+
+/*
+ * Class:     com_madara_containers_Vector
  * Method:    jni_toRecord
  * Signature: (JI)J
  */
@@ -204,4 +235,39 @@ jlong JNICALL Java_com_madara_containers_Vector_jni_1toRecord
     result = new Madara::Knowledge_Record (current->to_record (index));
 
   return (jlong) result;
+}
+
+/*
+ * Class:     com_madara_containers_Vector
+ * Method:    jni_toArray
+ * Signature: (JI)[Ljava/lang/Object;
+ */
+jobjectArray JNICALL Java_com_madara_containers_Vector_jni_1toArray
+  (JNIEnv * env, jobject, jlong cptr)
+{
+  jclass kr_class = env->FindClass ("com/madara/KnowledgeRecord");
+  jobjectArray list;
+  if (kr_class && cptr != 0)
+  {
+    jmethodID method = env->GetStaticMethodID (kr_class,
+      "fromPointer", "(J)Lcom/madara/KnowledgeRecord;");
+    Madara::Knowledge_Vector records;
+    containers::Vector * current = (containers::Vector *) cptr;
+    current->copy_to (records);
+    jsize size = (jsize)records.size ();
+
+    list = env->NewObjectArray ((jsize)records.size (), kr_class, 0);
+
+    if (method)
+    {
+      for (jsize i = 0; i < size; ++i)
+      {
+        std::cout << "record[" << i << "] = " << records[i] << "\n";
+        jobject result = env->CallStaticObjectMethod (
+          kr_class, method, (jlong)records[i].clone ());
+        env->SetObjectArrayElement (list, i, result);
+      }
+    }
+  }
+  return list;
 }

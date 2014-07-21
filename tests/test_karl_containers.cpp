@@ -74,7 +74,20 @@ void test_vector (void)
   else
     std::cout << "FAIL. Resize to 12 was unsuccessful.\n";
   
+  std::cout << "Copying records from vector to a knowledge vector.\n";
+  std::cout << "Printing resulting knowledge vector.\n";
 
+  vector.set (11, "value.at.11");
+
+  Madara::Knowledge_Vector records;
+  vector.copy_to (records);
+
+  for (size_t i = 0; i < records.size (); ++i)
+  {
+    std::cout << "  " << i << ": " << records[i] << "\n";
+  }
+  
+  std::cout << "Printing results from knowledge base.\n";
   knowledge.print ();
 }
 

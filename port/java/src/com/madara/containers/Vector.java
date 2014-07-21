@@ -45,6 +45,7 @@
  **/
 package com.madara.containers;
 
+import java.util.Arrays;
 import com.madara.MadaraJNI;
 import com.madara.KnowledgeBase;
 import com.madara.Variables;
@@ -62,6 +63,9 @@ public class Vector extends MadaraJNI
   private native void jni_setName(long cptr, long type, long kb, java.lang.String name);
   private native long jni_get(long cptr, int index);
   private native long jni_toRecord(long cptr, int index);
+  private native Object[] jni_toArray(long cptr);
+  private native long jni_size(long cptr);
+  private native void jni_resize(long cptr, long length);
 
   public Vector()
   {
@@ -76,6 +80,7 @@ public class Vector extends MadaraJNI
   /**
    * Gets the value
    *
+   * @param  index   index for the new value
    * @return   current value
    */
   public KnowledgeRecord get(int index)
@@ -94,8 +99,19 @@ public class Vector extends MadaraJNI
   }
 
   /**
+   * Resizes the vector
+   *
+   * @param  length   new number of elements of the vector
+   */
+  public void resize (long length)
+  {
+    jni_resize(getCPtr(), length);
+  }
+  
+  /**
    * Sets the value
    *
+   * @param  index   index for the new value
    * @param  value   new value
    */
   public void set(int index, java.lang.String value)
@@ -106,6 +122,7 @@ public class Vector extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  index   index for the new value
    * @param  value   new value
    */
   public void set(int index, double value)
@@ -116,6 +133,7 @@ public class Vector extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  index   index for the new value
    * @param  value   new value
    */
   public void set(int index, long value)
@@ -126,6 +144,7 @@ public class Vector extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  index   index for the new value
    * @param  value   new value
    */
   public void set(int index, KnowledgeRecord value)
@@ -156,6 +175,16 @@ public class Vector extends MadaraJNI
   }
 
   /**
+   * Returns the size of the vector
+   *
+   * @return  the number of elements in the vector
+   */
+  public long size ()
+  {
+    return jni_size(getCPtr());
+  }
+  
+  /**
    * Returns a value at the specified index
    *
    * @param  index  the index 
@@ -164,6 +193,23 @@ public class Vector extends MadaraJNI
   public KnowledgeRecord toRecord(int index)
   {
     return KnowledgeRecord.fromPointer(jni_toRecord(getCPtr(), index));
+  }
+
+  /**
+   * Returns a value at the specified index
+   *
+   * @param  index  the index 
+   * @return the value at the index as a knowledge record
+   */
+  public com.madara.KnowledgeRecord[] toArray()
+  {
+    Object[] objs = jni_toArray(getCPtr());
+    KnowledgeRecord[] records = new KnowledgeRecord[objs.length];
+    for (int i = 0; i < objs.length; ++i)
+    {
+      records[i] = (KnowledgeRecord)objs[i];
+    }
+    return records;
   }
 
   /**

@@ -119,8 +119,8 @@ namespace Madara
         {
           argsArrayNative[x] = (jlong)&(args[x]);
         }
-        jlongArray argsArray = env->NewLongArray(args.size());
-        env->SetLongArrayRegion(argsArray, 0, args.size(), argsArrayNative);
+        jlongArray argsArray = env->NewLongArray((jsize)args.size());
+        env->SetLongArrayRegion(argsArray, 0, (jsize)args.size(), argsArrayNative);
         
         //Attach the tread and make the call
         jlong ret = env->CallStaticLongMethod(madara_jni_class(), madara_jni_function_callback(), java_object, argsArray, &vars);
@@ -154,8 +154,8 @@ namespace Madara
         {
           argsArrayNative[x] = (jlong)&(args[x]);
         }
-        jlongArray argsArray = env->NewLongArray(args.size());
-        env->SetLongArrayRegion(argsArray, 0, args.size(), argsArrayNative);
+        jlongArray argsArray = env->NewLongArray((jsize)args.size());
+        env->SetLongArrayRegion(argsArray, 0, (jsize)args.size(), argsArrayNative);
         
         //Attach the tread and make the call
         jlong ret = env->CallStaticLongMethod(madara_jni_class(), madara_jni_filter_callback(), java_object, argsArray, &vars);
