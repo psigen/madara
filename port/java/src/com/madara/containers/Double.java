@@ -72,6 +72,19 @@ public class Double extends MadaraJNI
   }
 
   /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @return a new java instance of the underlying pointer
+   */
+  public static Double fromPointer(long cptr)
+  {
+    Double ret = new Double();
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
    * Gets the value
    *
    * @return   current value
