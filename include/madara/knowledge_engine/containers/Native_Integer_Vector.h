@@ -210,6 +210,20 @@ namespace Madara
                const Knowledge_Reference_Settings & settings =
                        Knowledge_Reference_Settings (false));
       
+        /**
+         * Retrieves a copy of the record from the vector.
+         * @param  index  the index of the variable entry
+         * @return the value of the entry. Modifications to this will
+         *         not be reflected in the context. This is a local copy.
+         **/
+        Knowledge_Record to_record (size_t index) const;
+      
+        /**
+         * Retrieves the entire vector as a native double array in a record 
+         * @return the vector in native double array format
+         **/
+        Knowledge_Record to_record (void) const;
+      
       private:
         /// guard for access and changes
         typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;

@@ -328,3 +328,19 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::set_quality (
     context_->set_quality (name_, quality, true, settings);
   }
 }
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::to_record (
+  size_t index) const
+{
+  Madara::Knowledge_Record result = context_->get (this->vector_, settings_);
+  result = result.retrieve_index (index);
+  return result;
+}
+
+Madara::Knowledge_Record
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::to_record (
+  void) const
+{
+  return context_->get (this->vector_, settings_);
+}
