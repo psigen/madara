@@ -61,6 +61,8 @@ public class Integer extends MadaraJNI
   private native double jni_toDouble(long cptr);
   private native long jni_toLong(long cptr);
 
+  private boolean manageMemory = true;
+
   public Integer()
   {
     setCPtr(jni_Integer());
@@ -80,6 +82,22 @@ public class Integer extends MadaraJNI
   public static Integer fromPointer(long cptr)
   {
     Integer ret = new Integer();
+    ret.manageMemory = true;
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static Integer fromPointer(long cptr, boolean shouldManage)
+  {
+    Integer ret = new Integer();
+    ret.manageMemory=shouldManage;
     ret.setCPtr(cptr);
     return ret;
   }
@@ -168,11 +186,14 @@ public class Integer extends MadaraJNI
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be
-   * called before an instance of WaitSettings gets garbage collected
+   * called before an instance gets garbage collected
    */
   public void free()
   {
-    jni_freeInteger(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeInteger(getCPtr());
+    }
   }
 }
 

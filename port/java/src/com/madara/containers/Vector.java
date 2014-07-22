@@ -67,6 +67,8 @@ public class Vector extends MadaraJNI
   private native long jni_size(long cptr);
   private native void jni_resize(long cptr, long length);
 
+  private boolean manageMemory = true;
+  
   public Vector()
   {
     setCPtr(jni_Vector());
@@ -86,6 +88,22 @@ public class Vector extends MadaraJNI
   public static Vector fromPointer(long cptr)
   {
     Vector ret = new Vector();
+    ret.manageMemory = true;
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static Vector fromPointer(long cptr, boolean shouldManage)
+  {
+    Vector ret = new Vector();
+    ret.manageMemory=shouldManage;
     ret.setCPtr(cptr);
     return ret;
   }
@@ -227,11 +245,14 @@ public class Vector extends MadaraJNI
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be
-   * called before an instance of WaitSettings gets garbage collected
+   * called before an instance gets garbage collected
    */
   public void free()
   {
-    jni_freeVector(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeVector(getCPtr());
+    }
   }
 }
 

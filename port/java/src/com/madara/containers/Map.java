@@ -67,6 +67,8 @@ public class Map extends MadaraJNI
   private native long jni_get(long cptr, java.lang.String key);
   private native long jni_toRecord(long cptr, java.lang.String key);
 
+  private boolean manageMemory = true;
+
   public Map()
   {
     setCPtr(jni_Map());
@@ -86,6 +88,22 @@ public class Map extends MadaraJNI
   public static Map fromPointer(long cptr)
   {
     Map ret = new Map();
+    ret.setCPtr(cptr);
+    ret.manageMemory = true;
+    return ret;
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static Map fromPointer(long cptr, boolean shouldManage)
+  {
+    Map ret = new Map();
+    ret.manageMemory=shouldManage;
     ret.setCPtr(cptr);
     return ret;
   }
@@ -185,11 +203,14 @@ public class Map extends MadaraJNI
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be
-   * called before an instance of WaitSettings gets garbage collected
+   * called before an instance gets garbage collected
    */
   public void free()
   {
-    jni_freeMap(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeMap(getCPtr());
+    }
   }
 }
 

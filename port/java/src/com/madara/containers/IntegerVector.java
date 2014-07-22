@@ -65,6 +65,8 @@ public class IntegerVector extends MadaraJNI
   private native long jni_size(long cptr);
   private native void jni_resize(long cptr, long length);
 
+  private boolean manageMemory = true;
+
   public IntegerVector()
   {
     setCPtr(jni_IntegerVector());
@@ -84,6 +86,22 @@ public class IntegerVector extends MadaraJNI
   public static IntegerVector fromPointer(long cptr)
   {
     IntegerVector ret = new IntegerVector();
+    ret.manageMemory = true;
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static IntegerVector fromPointer(long cptr, boolean shouldManage)
+  {
+    IntegerVector ret = new IntegerVector();
+    ret.manageMemory=shouldManage;
     ret.setCPtr(cptr);
     return ret;
   }
@@ -200,11 +218,14 @@ public class IntegerVector extends MadaraJNI
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be
-   * called before an instance of WaitSettings gets garbage collected
+   * called before an instance gets garbage collected
    */
   public void free()
   {
-    jni_freeIntegerVector(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeIntegerVector(getCPtr());
+    }
   }
 }
 

@@ -65,6 +65,8 @@ public class NativeIntegerVector extends MadaraJNI
   private native long jni_size(long cptr);
   private native void jni_resize(long cptr, long length);
 
+  private boolean manageMemory = true;
+
   public NativeIntegerVector()
   {
     setCPtr(jni_NativeIntegerVector());
@@ -84,6 +86,22 @@ public class NativeIntegerVector extends MadaraJNI
   public static NativeIntegerVector fromPointer(long cptr)
   {
     NativeIntegerVector ret = new NativeIntegerVector();
+    ret.manageMemory = true;
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static NativeIntegerVector fromPointer(long cptr, boolean shouldManage)
+  {
+    NativeIntegerVector ret = new NativeIntegerVector();
+    ret.manageMemory=shouldManage;
     ret.setCPtr(cptr);
     return ret;
   }
@@ -200,11 +218,14 @@ public class NativeIntegerVector extends MadaraJNI
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be
-   * called before an instance of WaitSettings gets garbage collected
+   * called before an instance gets garbage collected
    */
   public void free()
   {
-    jni_freeNativeIntegerVector(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeNativeIntegerVector(getCPtr());
+    }
   }
 }
 

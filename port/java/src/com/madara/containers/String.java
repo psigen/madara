@@ -61,6 +61,8 @@ public class String extends MadaraJNI
   private native double jni_toDouble(long cptr);
   private native long jni_toLong(long cptr);
 
+  private boolean manageMemory = true;
+
   public String()
   {
     setCPtr(jni_String());
@@ -80,10 +82,26 @@ public class String extends MadaraJNI
   public static String fromPointer(long cptr)
   {
     String ret = new String();
+    ret.manageMemory = true;
     ret.setCPtr(cptr);
     return ret;
   }
   
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static String fromPointer(long cptr, boolean shouldManage)
+  {
+    String ret = new String();
+    ret.manageMemory=shouldManage;
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
   /**
    * Gets the value
    *
@@ -168,11 +186,14 @@ public class String extends MadaraJNI
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be
-   * called before an instance of WaitSettings gets garbage collected
+   * called before an instance gets garbage collected
    */
   public void free()
   {
-    jni_freeString(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeString(getCPtr());
+    }
   }
 }
 
