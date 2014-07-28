@@ -79,6 +79,13 @@ public class KnowledgeList extends AbstractList<KnowledgeRecord>
     return knowledgeRecords == null ? 0 : knowledgeRecords.length;
   }
 
+  /**
+   * Returns the underlying C++ pointer array (useful for JNI)
+   **/
+  public long[] toPointerArray ()
+  {
+    return knowledgeRecords;
+  }
 
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be called
