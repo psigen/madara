@@ -85,6 +85,8 @@ public class KnowledgeBase extends MadaraJNI
   private static HashMap<Long, KnowledgeBase> knowledgeBases = new HashMap<Long, KnowledgeBase>();
   private HashMap<String, MadaraFunction> callbacks = new HashMap<String, MadaraFunction>();
 
+  private boolean manageMemory = true;
+
   /**
    * Used to determine if we are inside the context of a MadaraFunction
    */
@@ -133,6 +135,35 @@ public class KnowledgeBase extends MadaraJNI
   {
     setCPtr(jni_KnowledgeBase(original.getCPtr()));
     knowledgeBases.put(getCPtr(), this);
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @return a new java instance of the underlying pointer
+   */
+  public static KnowledgeBase fromPointer(long cptr)
+  {
+    KnowledgeBase ret = new KnowledgeBase();
+    ret.manageMemory = true;
+    ret.setCPtr(cptr);
+    return ret;
+  }
+
+  /**
+   * Creates a java object instance from a C/C++ pointer
+   *
+   * @param cptr C pointer to the object
+   * @param shouldManage  if true, manage the pointer
+   * @return a new java instance of the underlying pointer
+   */
+  public static KnowledgeBase fromPointer(long cptr, boolean shouldManage)
+  {
+    KnowledgeBase ret = new KnowledgeBase();
+    ret.manageMemory=shouldManage;
+    ret.setCPtr(cptr);
+    return ret;
   }
 
   /**
@@ -382,7 +413,10 @@ public class KnowledgeBase extends MadaraJNI
   public void free()
   {
     checkContextLock();
-    jni_freeKnowledgeBase(getCPtr());
+    if (manageMemory)
+    {
+      jni_freeKnowledgeBase(getCPtr());
+    }
   }
 
   /**
