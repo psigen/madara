@@ -1,8 +1,8 @@
 /*********************************************************************
- * Usage of this software requires acceptance of the SMASH-CMU License,
+ * Usage of this software requires acceptance of the MADARA CMU License,
  * which can be found at the following URL:
  *
- * https://code.google.com/p/smash-cmu/wiki/License
+ * https://code.google.com/p/madara/wiki/CMULicense
  *********************************************************************/
 
 import java.text.NumberFormat;
