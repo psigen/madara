@@ -42,12 +42,14 @@ script:
 - pushd ${MADARA_ROOT}
 - perl ${ACE_ROOT}/bin/mwc.pl -type gnuace -features java=1,android=1,tests=0 MADARA.mwc
 - make tests=0 java=1 android=1 -j ${CORES}
+- find . | grep jar
 - popd
+before_deploy: git fetch --tags
 deploy:
   provider: releases
   api_key:
     secure: MtzgGvra16+7GmjhHhNYrejk2hUrbuvSPU6eFa32Y207A5vyQnYQHaaMOyvQvWcw+r8c5NHshW5X4icnulmKkFqet6koG6b28D4TjskyYtOuQhvuLhuK2+e0HK0Ek6DNSkJNtpGtGOJVML0eS6sqqh+qb/auEYXUX/rd/K3KBOQ=
-  file: madara-master/port/java/lib/Madara.jar
+  file: madara-master/lib/Madara.jar
   on:
     repo: psigen/madara
     branch: android
