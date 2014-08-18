@@ -145,7 +145,11 @@ Madara::Knowledge_Record default_madara_return_function (const char * name, Mada
 {
   JNIEnv *env;
 
+#ifndef _USING_OPENJDK_
   jvm->AttachCurrentThread((void **)&env, NULL);
+#else
+  jvm->AttachCurrentThread(&env, NULL);
+#endif
 
   jlong ret;
   jlong * argsArrayNative = new jlong [args.size()];
