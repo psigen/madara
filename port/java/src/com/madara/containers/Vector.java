@@ -12,6 +12,10 @@ import com.madara.KnowledgeBase;
 import com.madara.Variables;
 import com.madara.KnowledgeRecord;
 
+/**
+ * A facade for a dynamically typed vector within a knowledge base.
+ **/
+
 public class Vector extends MadaraJNI
 {	
   private native long jni_Vector();

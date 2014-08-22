@@ -11,6 +11,10 @@ import com.madara.KnowledgeBase;
 import com.madara.Variables;
 import com.madara.KnowledgeRecord;
 
+/**
+ * A facade for a vector of strings within a knowledge base.
+ **/
+
 public class StringVector extends MadaraJNI
 {	
   private native long jni_StringVector();

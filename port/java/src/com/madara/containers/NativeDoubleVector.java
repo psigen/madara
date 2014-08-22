@@ -11,6 +11,14 @@ import com.madara.KnowledgeBase;
 import com.madara.Variables;
 import com.madara.KnowledgeRecord;
 
+/**
+ * A facade for an array of doubles within a single knowledge record
+ * within a knowledge base. Use this type of container if you want to
+ * have an atomic array, such as position coordinates, where changing
+ * one element of the array requres all array elements to be sent as
+ * an update.
+ **/
+
 public class NativeDoubleVector extends MadaraJNI
 {	
   private native long jni_NativeDoubleVector();

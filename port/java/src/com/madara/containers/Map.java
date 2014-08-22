@@ -11,6 +11,10 @@ import com.madara.KnowledgeBase;
 import com.madara.Variables;
 import com.madara.KnowledgeRecord;
 
+/**
+ * A facade for a map of variable names to values within a knowledge base
+ **/
+
 public class Map extends MadaraJNI
 {	
   private native long jni_Map();

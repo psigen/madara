@@ -10,6 +10,10 @@ import com.madara.MadaraJNI;
 import com.madara.KnowledgeBase;
 import com.madara.Variables;
 
+/**
+ * A facade for a double value within a knowledge base
+ **/
+
 public class Double extends MadaraJNI
 {	
   private native long jni_Double();

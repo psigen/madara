@@ -11,6 +11,15 @@ import com.madara.KnowledgeBase;
 import com.madara.Variables;
 import com.madara.KnowledgeRecord;
 
+/**
+ * A facade for a vector of doubles within a knowledge base. Changing
+ * elements of a DoubleVector only sends updates on that subset of changed
+ * values, rather than the entire vector. If you are wanting all elements of
+ * a vector to be sent atomically, you are probably wanting to use
+ * NativeDoubleVector, which operates on a single knowledge record
+ * location within the knowledge base.
+ **/
+
 public class DoubleVector extends MadaraJNI
 {	
   private native long jni_DoubleVector();
