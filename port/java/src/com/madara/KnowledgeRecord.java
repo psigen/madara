@@ -200,7 +200,7 @@ public class KnowledgeRecord extends MadaraJNI
 
   /**
    * Will return true if this object was malloced
-   * @return
+   * @return true if the object must manage itself, false if not
    */
   public boolean isNew()
   {

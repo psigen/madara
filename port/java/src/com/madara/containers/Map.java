@@ -72,6 +72,7 @@ public class Map extends MadaraJNI
   /**
    * Gets the value
    *
+   * @param  key  the location in the map
    * @return   current value
    */
   public KnowledgeRecord get(java.lang.String key)
@@ -82,7 +83,7 @@ public class Map extends MadaraJNI
   /**
    * Gets the name of the variable
    *
-   * @param  name of the variable within the context
+   * @return  name of the variable within the context
    */
   public java.lang.String getName()
   {
@@ -92,6 +93,7 @@ public class Map extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  key  the location in the map
    * @param  value   new value
    */
   public void set(java.lang.String key, java.lang.String value)
@@ -102,6 +104,7 @@ public class Map extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  key  the location in the map
    * @param  value   new value
    */
   public void set(java.lang.String key, double value)
@@ -112,6 +115,7 @@ public class Map extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  key  the location in the map
    * @param  value   new value
    */
   public void set(java.lang.String key, long value)
@@ -122,6 +126,7 @@ public class Map extends MadaraJNI
   /**
    * Sets the value
    *
+   * @param  key  the location in the map
    * @param  value   new value
    */
   public void set(java.lang.String key, KnowledgeRecord value)
@@ -152,9 +157,9 @@ public class Map extends MadaraJNI
   }
 
   /**
-   * Returns a value at the specified index
+   * Returns a value at the specified key
    *
-   * @param  index  the index 
+   * @param  key  the location in the map
    * @return the value at the index as a knowledge record
    */
   public KnowledgeRecord toRecord(java.lang.String key)

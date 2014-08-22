@@ -79,7 +79,7 @@ public class StringVector extends MadaraJNI
   /**
    * Gets the name of the variable
    *
-   * @param  name of the variable within the context
+   * @return  name of the variable within the context
    */
   public java.lang.String getName()
   {
@@ -141,8 +141,7 @@ public class StringVector extends MadaraJNI
   /**
    * Returns a value at the specified index
    *
-   * @param  index  the index 
-   * @return the value at the index as a knowledge record
+   * @return the vector as an array of records
    */
   public com.madara.KnowledgeRecord[] toArray()
   {

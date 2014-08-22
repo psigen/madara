@@ -76,7 +76,7 @@ public class Integer extends MadaraJNI
   /**
    * Gets the name of the variable
    *
-   * @param  name of the variable within the context
+   * @return  name of the variable within the context
    */
   public java.lang.String getName()
   {

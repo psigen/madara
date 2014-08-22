@@ -85,7 +85,7 @@ public class TransportContext extends MadaraJNI
 
   /**
    * Get operation that the context is performing
-   * @return
+   * @return operation type that is being performed
    */
   public long getOperation()
   {
