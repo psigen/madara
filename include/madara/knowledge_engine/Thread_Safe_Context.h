@@ -919,7 +919,6 @@ namespace Madara
 #endif
 
       /**
-      /**
        * Defines a MADARA KaRL function
        * @param  name       name of the function
        * @param  expression KaRL function body      
