@@ -76,11 +76,11 @@ void test_copy (void)
       !dest.exists ("spouse") &&
       !dest.exists ("kids.0"))
   {
-    std::cout << "TEST 2: Add age to copy is SUCCESS.\n";
+    std::cout << "TEST 3: Add age to copy is SUCCESS.\n";
   }
   else
   {
-    std::cout << "TEST 2: Add age to copy is FAIL.\n";
+    std::cout << "TEST 3: Add age to copy is FAIL.\n";
     dest.print ();
   }
 
