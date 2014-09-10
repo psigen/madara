@@ -46,6 +46,14 @@ namespace Madara
   namespace Knowledge_Engine
   { 
     /**
+      * Typedef for set of copyable keys. @see copy. We use map instead
+      * of set so we are not wasting significant memory/time with copying
+      * the key to the value (a STL set uses the type as both the key
+      * and value).
+      **/
+    typedef std::map <std::string, bool> Copy_Set;
+
+    /**
      * @class Thread_Safe_Context
      * @brief This class stores variables and their values for use by any entity
      *        needing state information in a thread safe way
@@ -869,6 +877,29 @@ namespace Madara
        * @return            variable expanded statement
        **/
       std::string expand_statement (const std::string & statement) const;
+      
+      /**
+       * Copies variables and values from source to this context. PERFORMANCE
+       * NOTES: worst case depends on size of copy_set. If empty, performance
+       * is always O (n), where n is number of variables in the source context.
+       * If copy_set is not empty, then performance is O (m log n) where m is
+       * the number of variables in copy_set and n is number of variables in
+       * the source context.
+       * <br>&nbsp;<br>
+       * Note that this is a deep copy due to the fact
+       * that source and destination are expected to have their own thread
+       * management (ref-counted variables can be problematic if shallow copy).
+       *
+       * @param  source    the source context to copy from
+       * @param  copy_set  a map of variables that should be copied. If
+       *                   empty, then everything is copied. If not empty,
+       *                   only the supplied variables will be copied.
+       * @param  clean_copy  if true, clear the destination context (this)
+       *                     before copying.
+       **/
+      void copy (const Thread_Safe_Context & source,
+        const Copy_Set & copy_set = Copy_Set (),
+        bool clean_copy = false);
 
 
       /**

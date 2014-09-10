@@ -120,7 +120,15 @@ Madara::Knowledge_Engine::Knowledge_Base::unlock (void)
 }
 
 
-
+void
+Madara::Knowledge_Engine::Knowledge_Base::copy (
+  const Knowledge_Base & source,
+  const Copy_Set & copy_set,
+  bool clean_copy)
+{
+  if (impl_.get_ptr () && source.impl_.get_ptr () != 0)
+    impl_->copy (*source.impl_.get_ptr (), copy_set, clean_copy);
+}
 
 void
 Madara::Knowledge_Engine::Knowledge_Base::activate_transport (void)

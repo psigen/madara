@@ -96,6 +96,29 @@ namespace Madara
        * Closes the transport mechanism so no dissemination is possible
        **/
       void close_transport (void);
+      
+      /**
+       * Copies variables and values from source to this context. PERFORMANCE
+       * NOTES: worst case depends on size of copy_set. If empty, performance
+       * is always O (n), where n is number of variables in the source context.
+       * If copy_set is not empty, then performance is O (m log n) where m is
+       * the number of variables in copy_set and n is number of variables in
+       * the source context.
+       * <br>&nbsp;<br>
+       * Note that this is a deep copy due to the fact
+       * that source and destination are expected to have their own thread
+       * management (ref-counted variables can be problematic if shallow copy).
+       *
+       * @param  source    the source knowledge base to copy from
+       * @param  copy_set  a map of variables that should be copied. If
+       *                   empty, then everything is copied. If not empty,
+       *                   only the supplied variables will be copied.
+       * @param  clean_copy  if true, clear the destination context (this)
+       *                     before copying.
+       **/
+      void copy (const Knowledge_Base_Impl & source,
+        const Copy_Set & copy_set = Copy_Set (),
+        bool clean_copy = false);
 
       /**
        * Retrieves a knowledge value

@@ -57,7 +57,6 @@ namespace Madara
          * @param  name       name of the vector in the knowledge base
          * @param  size       size of the vector
          * @param  knowledge  the knowledge base that will contain the vector
-         * @param  delete_vars delete indices outside of the specified range
          * @param  settings   settings for evaluating the vector
          **/
         Native_Double_Vector (const std::string & name,

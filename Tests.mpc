@@ -64,6 +64,28 @@ project (Test_Fragmentation) : using_madara, using_ace {
   }
 }
 
+project (Test_Context_Copy) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_context_copy
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/test_context_copy.cpp
+  }
+}
+
 project (Test_Timed_Executor) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_timed_executor

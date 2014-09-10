@@ -98,7 +98,7 @@ namespace Madara
 
       /**
        * Removes a timed event from the queue
-       * @param  a placeholder for the current highest priority event
+       * @param  cur_event a placeholder for the current highest priority event
        * @return time until next event time out (useful when the cur_event
        *         has a zeroed event (the 2nd part of the cur_event pair)
        **/

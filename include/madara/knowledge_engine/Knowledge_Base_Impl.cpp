@@ -221,6 +221,15 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::activate_transport (void)
 }
 
 void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::copy (
+  const Knowledge_Base_Impl & source,
+        const Copy_Set & copy_set,
+        bool clean_copy)
+{
+  map_.copy (source.map_, copy_set, clean_copy);
+}
+
+void
 Madara::Knowledge_Engine::Knowledge_Base_Impl::lock (void)
 {
   map_.lock ();

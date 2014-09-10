@@ -1280,7 +1280,7 @@ size_t
       std::stringstream buffer;
       buffer << subject;
       buffer << start;
-      target[i] = get (buffer.str ());
+      target[i].deep_copy (get (buffer.str ()));
     }
   }
 
@@ -1323,7 +1323,7 @@ size_t
         if (result == 0)
         {
           // we have a match, add this to the map
-          target[i->first] = i->second;
+          target[i->first].deep_copy (i->second);
           matches_found = true;
         }
         else if (matches_found)
@@ -1337,6 +1337,44 @@ size_t
 
 
   return target.size ();
+}
+
+void
+Madara::Knowledge_Engine::Thread_Safe_Context::copy (
+  const Thread_Safe_Context & source,
+  const Copy_Set & copy_set,
+  bool clean_copy)
+{
+  // if we need to clean first, clear the map
+  if (clean_copy)
+    map_.clear ();
+  
+  // if the copy set is empty, copy everything
+  if (copy_set.size () == 0)
+  {
+    for (Knowledge_Map::const_iterator i = source.map_.begin ();
+         i != source.map_.end (); ++i)
+    {
+      // deep copy to prevent issues with ref counting in threads
+      map_[i->first].deep_copy (i->second);
+    }
+  }
+  else
+  {
+    // we have a copy set, so only copy what the user asked for
+    for (Copy_Set::const_iterator key = copy_set.begin ();
+         key != copy_set.end (); ++key)
+    {
+      // check source for existence of the current copy set key
+      Knowledge_Map::const_iterator i = source.map_.find (key->first);
+
+      // if found, make a deep copy of the found entry
+      if (i != source.map_.end ())
+      {
+        map_[i->first].deep_copy (i->second);
+      }
+    }
+  }
 }
 
 int64_t

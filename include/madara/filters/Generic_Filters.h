@@ -72,8 +72,9 @@ namespace Madara
     
     /**
      * Filter for logging aggregate update and context
-     * @param   records     aggregate update
-     * @param   vars        variable context
+     * @param   records           aggregate update
+     * @param   transport_context the transport context
+     * @param   vars              variable context
      * @return  record with status set to UNCREATED if arg is non-file
      **/
     MADARA_Export Knowledge_Record
