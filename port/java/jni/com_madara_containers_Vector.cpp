@@ -44,7 +44,7 @@ void JNICALL Java_com_madara_containers_Vector_jni_1freeVector
  * Method:    jni_set
  * Signature: (JILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1set__JILjava_lang_String_2
+MADARA_Export void JNICALL Java_com_madara_containers_Vector_jni_1set__JILjava_lang_String_2
   (JNIEnv * env, jobject, jlong cptr, jint index, jstring value)
 {
   containers::Vector * current = (containers::Vector *) cptr;
@@ -63,7 +63,7 @@ JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1set__JILjava_lang_
  * Method:    jni_set
  * Signature: (JID)V
  */
-JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1set__JID
+MADARA_Export void JNICALL Java_com_madara_containers_Vector_jni_1set__JID
   (JNIEnv * env, jobject, jlong cptr, jint index, jdouble value)
 {
   containers::Vector * current = (containers::Vector *) cptr;
@@ -78,7 +78,7 @@ JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1set__JID
  * Method:    jni_set
  * Signature: (JIJJ)V
  */
-JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1set__JIJJ
+MADARA_Export void JNICALL Java_com_madara_containers_Vector_jni_1set__JIJJ
   (JNIEnv * env, jobject, jlong cptr, jint index, jlong type, jlong value)
 {
   containers::Vector * current = (containers::Vector *) cptr;
@@ -195,7 +195,7 @@ jlong JNICALL Java_com_madara_containers_Vector_jni_1get
  * Method:    jni_resize
  * Signature: (JJ)V
  */
-JNIEXPORT void JNICALL Java_com_madara_containers_Vector_jni_1resize
+MADARA_Export void JNICALL Java_com_madara_containers_Vector_jni_1resize
   (JNIEnv * env, jobject, jlong cptr, jlong length)
 {
   containers::Vector * current = (containers::Vector *) cptr;

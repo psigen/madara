@@ -42,6 +42,7 @@ public class KnowledgeList extends AbstractList<KnowledgeRecord>
 
   /**
    * Returns the underlying C++ pointer array (useful for JNI)
+   * @return  the C++ pointer array underneath this instance
    **/
   public long[] toPointerArray ()
   {

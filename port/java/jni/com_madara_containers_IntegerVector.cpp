@@ -153,7 +153,7 @@ jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toRecord__J
  * Method:    jni_toArray
  * Signature: (J)[Ljava/lang/Object;
  */
-JNIEXPORT jobjectArray JNICALL Java_com_madara_containers_IntegerVector_jni_1toArray
+MADARA_Export jobjectArray JNICALL Java_com_madara_containers_IntegerVector_jni_1toArray
   (JNIEnv * env, jobject, jlong cptr)
 {
   jclass kr_class = env->FindClass ("com/madara/KnowledgeRecord");
@@ -188,7 +188,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_madara_containers_IntegerVector_jni_1toA
  * Method:    jni_size
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1size
+MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1size
   (JNIEnv * env, jobject, jlong cptr)
 {
   jlong result (0);
@@ -205,7 +205,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1size
  * Method:    jni_resize
  * Signature: (JJ)V
  */
-JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_jni_1resize
+MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1resize
   (JNIEnv * env, jobject, jlong cptr, jlong length)
 {
   containers::Integer_Vector * current = (containers::Integer_Vector *) cptr;

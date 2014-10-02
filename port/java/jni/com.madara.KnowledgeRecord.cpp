@@ -15,7 +15,7 @@
  * Method:    jni_KnowledgeRecordDeep
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecordDeep (JNIEnv * env, jobject obj, jlong cptr)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecordDeep (JNIEnv * env, jobject obj, jlong cptr)
 {
   Madara::Knowledge_Record* ret = new Madara::Knowledge_Record(*(Madara::Knowledge_Record*)cptr);
   return (jlong)ret;
@@ -62,7 +62,7 @@ jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__J (JNIEnv * 
 * Method:    jni_KnowledgeRecord
 * Signature: ([D)J
 */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3D (JNIEnv * env, jclass cls, jdoubleArray data)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3D (JNIEnv * env, jclass cls, jdoubleArray data)
 {
   jsize len = env->GetArrayLength(data);
   jboolean isCopy;
@@ -81,7 +81,7 @@ JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3
 * Method:    jni_KnowledgeRecord
 * Signature: ([J)J
 */
-JNIEXPORT jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3J (JNIEnv * env, jclass cls, jlongArray data)
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord___3J (JNIEnv * env, jclass cls, jlongArray data)
 {
   jsize len = env->GetArrayLength(data);
   jboolean isCopy;
@@ -156,7 +156,7 @@ void JNICALL Java_com_madara_KnowledgeRecord_jni_1freeKnowledgeRecord (JNIEnv * 
 * Method:    jni_toDoubleArray
 * Signature: (J)[D
 */
-JNIEXPORT jdoubleArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleArray (JNIEnv * env, jclass cls, jlong cptr)
+MADARA_Export jdoubleArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleArray (JNIEnv * env, jclass cls, jlong cptr)
 {
   Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
   std::vector<double> vec = record.to_doubles();
@@ -179,7 +179,7 @@ JNIEXPORT jdoubleArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toDoubleArra
 * Method:    jni_toLongArray
 * Signature: (J)[J
 */
-JNIEXPORT jlongArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongArray (JNIEnv * env, jclass cls, jlong cptr)
+MADARA_Export jlongArray JNICALL Java_com_madara_KnowledgeRecord_jni_1toLongArray (JNIEnv * env, jclass cls, jlong cptr)
 {
   Madara::Knowledge_Record record = *(Madara::Knowledge_Record*)cptr;
   std::vector<Madara::Knowledge_Record::Integer> vec = record.to_integers();

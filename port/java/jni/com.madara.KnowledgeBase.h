@@ -181,6 +181,22 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleArray
   
 /*
  * Class:     com_madara_KnowledgeBase
+ * Method:    jni_sendModifieds
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__J
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_sendModifieds
+ * Signature: (JJ)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__JJ
+  (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     com_madara_KnowledgeBase
  * Method:    jni_wait
  * Signature: (JLjava/lang/String;J)J
  */

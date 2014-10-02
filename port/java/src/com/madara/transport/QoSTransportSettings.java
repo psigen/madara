@@ -51,7 +51,7 @@ public class QoSTransportSettings extends TransportSettings
 
   /**
    * Adds a filter that will be applied to certain types after receiving
-   * and before rebroadcasting (if TTL > 0)
+   * and before rebroadcasting, if time-to-live is greater than 0
    * @param type the types to add the filter to
    * @param filter Madara callback function
    */

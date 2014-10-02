@@ -345,6 +345,39 @@ void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleArray (JNIEnv * env, jc
   env->ReleaseStringUTFChars(var, nativeVar);
 }
 
+  
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_sendModifieds
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__J
+  (JNIEnv *, jobject, jlong cptr)
+{
+  Madara::Knowledge_Engine::Knowledge_Base * knowledge =
+    (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+
+  knowledge->send_modifieds ();
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_sendModifieds
+ * Signature: (JJ)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__JJ
+  (JNIEnv *, jobject, jlong cptr, jlong evalSettings)
+{
+  
+  Madara::Knowledge_Engine::Knowledge_Base * knowledge =
+    (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+  Madara::Knowledge_Engine::Eval_Settings settings = 
+    *(Madara::Knowledge_Engine::Eval_Settings*) evalSettings;
+
+  knowledge->send_modifieds ("Knowledge_Base::send_modifieds", evalSettings);
+}
+
+
 /*
 * Class:     com_madara_KnowledgeBase
 * Method:    jni_wait

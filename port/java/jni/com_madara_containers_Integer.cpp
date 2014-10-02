@@ -72,9 +72,9 @@ jstring JNICALL Java_com_madara_containers_Integer_jni_1getName
 /*
  * Class:     com_madara_containers_Integer
  * Method:    jni_setName
- * Signature: (JLcom/madara/KnowledgeBase;Ljava/lang/String;)V
+ * Signature: (JJJLjava/lang/String;)V
  */
-void JNICALL Java_com_madara_containers_Integer_jni_1setName__JLcom_madara_KnowledgeBase_2Ljava_lang_String_2
+void JNICALL Java_com_madara_containers_Integer_jni_1setName
   (JNIEnv * env, jobject, jlong cptr, jlong type, jlong context, jstring name)
 {
   containers::Integer * current = (containers::Integer *) cptr;

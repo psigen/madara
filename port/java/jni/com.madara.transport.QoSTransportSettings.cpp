@@ -50,7 +50,7 @@ MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1f
  * Method:    jni_addRebroadcastFilter
  * Signature: (JILcom/madara/transport/TransportFilter;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRebroadcastFilter__JILcom_madara_transport_TransportFilter_2
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRebroadcastFilter__JILcom_madara_transport_TransportFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jint type, jobject func)
 {
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
  * Method:    jni_addRebroadcastFilter
  * Signature: (JLcom/madara/transport/AggregateFilter;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRebroadcastFilter__JLcom_madara_transport_AggregateFilter_2
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRebroadcastFilter__JLcom_madara_transport_AggregateFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jobject func)
 {
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
@@ -74,7 +74,7 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
  * Method:    jni_addSendFilter
  * Signature: (JILcom/madara/transport/TransportFilter;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSendFilter__JILcom_madara_transport_TransportFilter_2
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSendFilter__JILcom_madara_transport_TransportFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jint type, jobject func)
 {
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
@@ -86,7 +86,7 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSe
  * Method:    jni_addSendFilter
  * Signature: (JLcom/madara/transport/AggregateFilter;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSendFilter__JLcom_madara_transport_AggregateFilter_2
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSendFilter__JLcom_madara_transport_AggregateFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jobject func)
 {
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
@@ -98,7 +98,7 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addSe
  * Method:    jni_addReceiveFilter
  * Signature: (JILcom/madara/transport/TransportFilter;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addReceiveFilter__JILcom_madara_transport_TransportFilter_2
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addReceiveFilter__JILcom_madara_transport_TransportFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jint type, jobject func)
 {
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;
@@ -110,7 +110,7 @@ JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addRe
  * Method:    jni_addReceiveFilter
  * Signature: (JLcom/madara/transport/AggregateFilter;)V
  */
-JNIEXPORT void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addReceiveFilter__JLcom_madara_transport_AggregateFilter_2
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addReceiveFilter__JLcom_madara_transport_AggregateFilter_2
   (JNIEnv * env, jclass cls, jlong cptr, jobject func)
 {
     Madara::Transport::QoS_Transport_Settings* settings = (Madara::Transport::QoS_Transport_Settings*)cptr;

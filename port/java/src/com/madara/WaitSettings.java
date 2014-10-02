@@ -35,7 +35,7 @@ public class WaitSettings extends EvalSettings
   /**
    * Copy constructor
    *
-   * @param waitSettings
+   * @param waitSettings settings to be copied
    */
   public WaitSettings(WaitSettings waitSettings)
   {
@@ -46,7 +46,7 @@ public class WaitSettings extends EvalSettings
   /**
    * C pointer constructor
    *
-   * @param cptr
+   * @param cptr the C ptr to be inherited
    */
   protected WaitSettings(long cptr)
   {
