@@ -148,38 +148,7 @@ namespace Madara
       {
         JNIEnv* env = madara_jni_get_env();
         
-        //Change the vector to a java array to let MadaraJNI handle it
-        jlong * argsArrayNative = new jlong [args.size()];
-        for (unsigned int x = 0; x < args.size(); x++)
-        {
-          argsArrayNative[x] = (jlong)&(args[x]);
-        }
-        jlongArray argsArray = env->NewLongArray((jsize)args.size());
-        env->SetLongArrayRegion(argsArray, 0, (jsize)args.size(), argsArrayNative);
-        
-        //Attach the tread and make the call
-        jlong ret = env->CallStaticLongMethod(madara_jni_class(), madara_jni_filter_callback(), java_object, argsArray, &vars);
-        
-        if (ret <= 0)
-          return Knowledge_Record::Integer(0);
-        
-        bool do_delete = true;
-        //We need to see if they returned an arg we sent them, or a new value
-        for (unsigned int x = 0; x < args.size(); x++)
-        {
-          if (ret == (jlong)&(args[x]))
-          {
-            do_delete = false;
-            break;
-          }
-        }
-        
-        //The returned value is a pointer to a knowledge record, so we must free it
-        Knowledge_Record record(*(Knowledge_Record*)ret);
-        if (do_delete)
-          delete (Knowledge_Record*)ret;
-        
-        return record;
+        return Knowledge_Record ();
       }
 #endif
 

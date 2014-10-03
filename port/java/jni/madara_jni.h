@@ -16,8 +16,6 @@ MADARA_Export JavaVM* madara_jni_jvm();
 
 MADARA_Export jclass madara_jni_class();
 MADARA_Export jmethodID madara_jni_function_callback();
-MADARA_Export jmethodID madara_jni_filter_callback();
-MADARA_Export jmethodID madara_jni_aggregate_callback();
 MADARA_Export jclass jni_string_cls();
 
 MADARA_Export JNIEnv* jni_attach();

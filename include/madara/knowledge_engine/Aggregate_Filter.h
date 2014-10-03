@@ -88,39 +88,7 @@ namespace Madara
       
       Knowledge_Record call_java(Knowledge_Map & recordsMap, const Transport::Transport_Context & context, Variables & vars) const
       {
-        //Change the vector to a java array to let MadaraJNI handle it
-        JNIEnv * env = jni_attach();
-        
-        //Create the arrays to pass up
-        jlong * records = new jlong [recordsMap.size()];
-        jlongArray recordsArray = env->NewLongArray((jsize)recordsMap.size());
-        jobjectArray keysArray = env->NewObjectArray((jsize)recordsMap.size(), jni_string_cls(), NULL);
-        
-        std::map<std::string, Madara::Knowledge_Record>::iterator iter;
-        int counter = 0;
-        for (iter = recordsMap.begin(); iter != recordsMap.end(); ++iter)
-        {
-          env->SetObjectArrayElement(keysArray, counter, env->NewStringUTF(iter->first.c_str()));
-          records[counter++] = (jlong) &(iter->second);
-        }
-        
-        env->SetLongArrayRegion(recordsArray, 0, (jsize)recordsMap.size(), records);
-        
-        delete [] records;
-
-        //Attach the tread and make the call
-        jlong ret = env->CallStaticLongMethod(madara_jni_class(), madara_jni_aggregate_callback(), java_object, keysArray, recordsArray, &context, &vars);
-        
-        jni_detach();
-        
-        if (ret <= 0)
-          return Knowledge_Record::Integer(0);
-        
-        //The returned value is a pointer to a knowledge record, so we must free it
-        Knowledge_Record record(*(Knowledge_Record*)ret);
-        delete (Knowledge_Record*)ret;
-        
-        return record;
+        return Knowledge_Record ();
       }
 #endif
       
