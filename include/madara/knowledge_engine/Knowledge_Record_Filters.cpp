@@ -267,7 +267,51 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
 #ifdef _MADARA_JAVA_
       else if (i->is_java_callable())
       {
-        result = i->call_java_filter(arguments, variables);
+        //result = i->call_java_filter(arguments, variables);
+        JNIEnv * env = jni_attach();
+
+        /**
+         * Create the variables java object
+         **/
+
+        jclass jvarClass = env->FindClass ("com/madara/Variables");
+        jclass jlistClass = env->FindClass ("com/madara/KnowledgeList");
+        
+        jmethodID fromPointerCall = env->GetStaticMethodID (jvarClass,
+          "fromPointer", "(J)Lcom/madara/Variables;");
+        jobject jvariables = env->CallStaticObjectMethod (jvarClass,
+          fromPointerCall, (jlong) &variables);
+        
+        // prep to create the KnowledgeList
+        jmethodID listConstructor = env->GetMethodID(jlistClass,
+          "<init>", "([J)V");
+        
+        jlongArray ret = env->NewLongArray((jsize)arguments.size());
+        jlong * tmp = new jlong [(jsize)arguments.size()];
+
+        for (unsigned int x = 0; x < arguments.size(); x++)
+        {
+          tmp[x] = (jlong) arguments[x].clone ();
+        }
+
+        env->SetLongArrayRegion(ret, 0, (jsize)arguments.size(), tmp);
+        delete [] tmp;
+        
+        // create the KnowledgeList
+        jobject jlist = env->NewObject (jlistClass, listConstructor, ret);
+
+        // get the filter's class
+        jclass filterClass = env->GetObjectClass(i->java_object);
+        
+        // get the filter method
+        jmethodID filterMethod = env->GetMethodID (filterClass,
+          "filter",
+          "(Lcom/madara/KnowledgeList;Lcom/madara/Variables;)Lcom/madara/KnowledgeRecord;");
+        
+        // call the filter and hold the result
+        jobject jresult = env->CallObjectMethod (i->java_object,
+          filterMethod, jlist, jvariables);
+
       }
 #endif
       

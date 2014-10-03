@@ -4,12 +4,13 @@
  *
  * https://code.google.com/p/madara/wiki/CMULicense
  *********************************************************************/
-package com.madara.transport;
+package com.madara.transport.filters;
 
 import com.madara.KnowledgeList;
 import com.madara.KnowledgeMap;
 import com.madara.KnowledgeRecord;
 import com.madara.Variables;
+import com.madara.transport.TransportContext;
 
 public interface AggregateFilter
 {

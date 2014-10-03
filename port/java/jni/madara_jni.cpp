@@ -18,8 +18,8 @@ MADARA_Export jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 
     madara_JNI = (jclass)env->NewGlobalRef(env->FindClass("com/madara/MadaraJNI"));
     madara_JNI_function_callback = env->GetStaticMethodID(madara_JNI, "functionCallback", "(Lcom/madara/MadaraFunction;[JJ)J" );
-    madara_JNI_filter_callback = env->GetStaticMethodID(madara_JNI, "filterCallback", "(Lcom/madara/transport/TransportFilter;[JJ)J" );
-    madara_JNI_aggregate_callback = env->GetStaticMethodID(madara_JNI, "aggregateFilterCallback", "(Lcom/madara/transport/AggregateFilter;[Ljava/lang/String;[JJJ)J");
+    madara_JNI_filter_callback = env->GetStaticMethodID(madara_JNI, "filterCallback", "(Lcom/madara/transport/filters/RecordFilter;[JJ)J" );
+    madara_JNI_aggregate_callback = env->GetStaticMethodID(madara_JNI, "aggregateFilterCallback", "(Lcom/madara/transport/filters/AggregateFilter;[Ljava/lang/String;[JJJ)J");
     jni_string = (jclass)env->NewGlobalRef(env->FindClass("java/lang/String"));
 
     madara_JVM = vm;

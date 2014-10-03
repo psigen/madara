@@ -189,7 +189,7 @@ public class KnowledgeRecord extends MadaraJNI
    * Creates a {@link com.madara.KnowledgeRecord KnowledgeRecord} from a pointer
    *
    * @param cptr C pointer to a KnowledgeRecord object
-   * @param isNew  indicates if the record is meant to be a new record
+   * @param isNew  indicates if the record is meant to be managed
    * @return new KnowledgeRecord
    */
   public static KnowledgeRecord fromPointer(long cptr, boolean isNew)

@@ -28,6 +28,8 @@ public class KnowledgeBase extends MadaraJNI
   private native long jni_compile(long cptr, String expression);
   private native void jni_defineFunction(long cptr, String name, MadaraFunction function);
   private native void jni_defineFunction(long cptr, String name, String expression);
+  private native void jni_print(long cptr, String statement);
+  private native void jni_print(long cptr);
   private native void jni_clear(long cptr);
   private native void jni_sendModifieds(long cptr);
   private native void jni_sendModifieds(long cptr, long evalSettings);
@@ -371,21 +373,39 @@ public class KnowledgeBase extends MadaraJNI
    * Sends all modifications to global variables since last send modifieds,
    * eval, wait, or set statement.
    **/
-   public void sendModifieds ()
-   {
-     checkContextLock();
-     jni_sendModifieds(getCPtr());
-   }
+  public void sendModifieds ()
+  {
+    checkContextLock();
+    jni_sendModifieds(getCPtr());
+  }
   
   /**
    * Sends all modifications to global variables since last send modifieds,
    * eval, wait, or set statement.
    **/
-   public void sendModifieds (EvalSettings evalSettings)
-   {
-     checkContextLock();
-     jni_sendModifieds(getCPtr(), evalSettings.getCPtr());
-   }
+  public void sendModifieds (EvalSettings evalSettings)
+  {
+    checkContextLock();
+    jni_sendModifieds(getCPtr(), evalSettings.getCPtr());
+  }
+
+  /**
+   * Prints a statement with variable expansion
+   *
+   * @param statement The statement to print
+   **/
+  public void print(String statement)
+  {
+    jni_print(getCPtr(), statement);
+  }
+  
+  /**
+   * Prints all knowledge in knowledge base
+   **/
+  public void print()
+  {
+    jni_print(getCPtr());
+  }
   
   /**
    * Deletes the C++ instantiation. To prevent memory leaks, this <b>must</b> be called

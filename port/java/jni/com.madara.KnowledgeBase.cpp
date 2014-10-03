@@ -368,13 +368,44 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__J
 MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__JJ
   (JNIEnv *, jobject, jlong cptr, jlong evalSettings)
 {
-  
   Madara::Knowledge_Engine::Knowledge_Base * knowledge =
     (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
   Madara::Knowledge_Engine::Eval_Settings settings = 
     *(Madara::Knowledge_Engine::Eval_Settings*) evalSettings;
 
   knowledge->send_modifieds ("Knowledge_Base::send_modifieds", evalSettings);
+}
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_print
+ * Signature: (JLjava/lang/String;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1print__JLjava_lang_String_2
+  (JNIEnv * env, jobject, jlong cptr, jstring statement)
+{
+  const char * printable = env->GetStringUTFChars(statement, 0);
+
+  Madara::Knowledge_Engine::Knowledge_Base* knowledge = (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+
+  knowledge->print (printable);
+
+  env->ReleaseStringUTFChars(statement, printable);
+}
+
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_print
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1print__J
+  (JNIEnv *, jobject, jlong cptr)
+{
+  Madara::Knowledge_Engine::Knowledge_Base * knowledge =
+    (Madara::Knowledge_Engine::Knowledge_Base*) cptr;
+
+  knowledge->print ();
 }
 
 

@@ -197,6 +197,22 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1sendModifieds__JJ
 
 /*
  * Class:     com_madara_KnowledgeBase
+ * Method:    jni_print
+ * Signature: (JLjava/lang/String;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1print__JLjava_lang_String_2
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_madara_KnowledgeBase
+ * Method:    jni_print
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1print__J
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_KnowledgeBase
  * Method:    jni_wait
  * Signature: (JLjava/lang/String;J)J
  */

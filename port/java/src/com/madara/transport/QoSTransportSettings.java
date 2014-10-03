@@ -8,6 +8,8 @@ package com.madara.transport;
 
 import com.madara.KnowledgeType;
 import com.madara.MadaraFunction;
+import com.madara.transport.filters.AggregateFilter;
+import com.madara.transport.filters.RecordFilter;
 
 public class QoSTransportSettings extends TransportSettings
 {
@@ -15,13 +17,13 @@ public class QoSTransportSettings extends TransportSettings
   private native long jni_QoSTransportSettings(long cptr);
   private static native void jni_freeQoSTransportSettings(long cptr);
 
-  private native void jni_addRebroadcastFilter(long cptr, int type, TransportFilter filter);
+  private native void jni_addRebroadcastFilter(long cptr, int type, RecordFilter filter);
   private native void jni_addRebroadcastFilter(long cptr, AggregateFilter filter);
 
-  private native void jni_addSendFilter(long cptr, int type, TransportFilter filter);
+  private native void jni_addSendFilter(long cptr, int type, RecordFilter filter);
   private native void jni_addSendFilter(long cptr, AggregateFilter filter);
 
-  private native void jni_addReceiveFilter(long cptr, int type, TransportFilter filter);
+  private native void jni_addReceiveFilter(long cptr, int type, RecordFilter filter);
   private native void jni_addReceiveFilter(long cptr, AggregateFilter filter);
 
   private native void jni_setRebroadcastTtl(long cptr, int ttl);
@@ -55,7 +57,7 @@ public class QoSTransportSettings extends TransportSettings
    * @param type the types to add the filter to
    * @param filter Madara callback function
    */
-  public void addRebroadcastFilter(KnowledgeType type, TransportFilter filter)
+  public void addRebroadcastFilter(KnowledgeType type, RecordFilter filter)
   {
     jni_addRebroadcastFilter(getCPtr(), type.value(), filter);
   }
@@ -75,7 +77,7 @@ public class QoSTransportSettings extends TransportSettings
    * @param type the types to add the filter to
    * @param filter Madara callback function
    */
-  public void addSendFilter(KnowledgeType type, TransportFilter filter)
+  public void addSendFilter(KnowledgeType type, RecordFilter filter)
   {
     jni_addSendFilter(getCPtr(), type.value(), filter);
   }
@@ -96,7 +98,7 @@ public class QoSTransportSettings extends TransportSettings
    * @param type the types to add the filter to
    * @param filter Madara callback function
    */
-  public void addReceiveFilter(KnowledgeType type, TransportFilter filter)
+  public void addReceiveFilter(KnowledgeType type, RecordFilter filter)
   {
     jni_addReceiveFilter(getCPtr(), type.value(), filter);
   }

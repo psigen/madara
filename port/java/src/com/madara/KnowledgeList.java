@@ -9,7 +9,7 @@ package com.madara;
 import java.util.AbstractList;
 
 /**
- * KnowledgeList provides a read-only interface for all KnowledgeRecords
+ * KnowledgeList provides a read-only interface for KnowledgeRecords
  */
 public class KnowledgeList extends AbstractList<KnowledgeRecord>
 {

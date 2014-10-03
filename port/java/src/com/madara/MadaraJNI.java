@@ -7,9 +7,9 @@
 package com.madara;
 
 
-import com.madara.transport.AggregateFilter;
+import com.madara.transport.filters.AggregateFilter;
 import com.madara.transport.TransportContext;
-import com.madara.transport.TransportFilter;
+import com.madara.transport.filters.RecordFilter;
 
 /**
  * Abstract class that insures loading of libMADARA.so and holds the C pointer
@@ -64,7 +64,7 @@ public abstract class MadaraJNI
     return ret == null ? 0 : ret.getCPtr();
   }
 
-  private static long filterCallback(TransportFilter func, long[] args, long vars)
+  private static long filterCallback(RecordFilter func, long[] args, long vars)
   {
     Variables _vars = Variables.fromPointer(vars);
     KnowledgeList _args = new KnowledgeList(args);
