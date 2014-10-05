@@ -167,6 +167,30 @@ MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1s
 MADARA_Export jint JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1getDeadline
   (JNIEnv *, jobject, jlong);
 
+/*
+ * Class:     com_madara_transport_QoSTransportSettings
+ * Method:    jni_addTrustedPeer
+ * Signature: (JLjava/lang/String;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addTrustedPeer
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_madara_transport_QoSTransportSettings
+ * Method:    jni_addBannedPeer
+ * Signature: (JLjava/lang/String;)V
+ */
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1addBannedPeer
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_madara_transport_QoSTransportSettings
+ * Method:    jni_updateDropRate
+ * Signature: (JDII)V
+ */
+MADARA_Export void JNICALL Java_com_madara_transport_QoSTransportSettings_jni_1updateDropRate
+  (JNIEnv *, jobject, jlong, jdouble, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif

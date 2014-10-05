@@ -5,6 +5,8 @@
  * https://code.google.com/p/madara/wiki/CMULicense
  *********************************************************************/
 
+package com.madara.tests;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;

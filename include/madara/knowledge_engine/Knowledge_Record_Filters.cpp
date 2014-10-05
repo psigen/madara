@@ -312,6 +312,11 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
         jobject jresult = env->CallObjectMethod (i->java_object,
           filterMethod, jlist, jvariables);
 
+        jmethodID getPtrMethod = env->GetMethodID (
+          env->GetObjectClass(jresult), "getCPtr", "()J");
+        jlong cptr = env->CallLongMethod (jresult, getPtrMethod);
+
+        result.deep_copy (*(Madara::Knowledge_Record *)cptr);
       }
 #endif
       
@@ -384,7 +389,50 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
 #ifdef _MADARA_JAVA_
       else if (i->is_java_callable())
       {
-        result = i->call_java(records, transport_context, variables);
+        //result = i->call_java_filter(arguments, variables);
+        JNIEnv * env = jni_attach();
+
+        /**
+         * Create the variables java object
+         **/
+        jclass jvarClass = env->FindClass ("com/madara/Variables");
+        jclass jpacketClass = env->FindClass (
+          "com/madara/transport/filters/Packet");
+        jclass jcontextClass = env->FindClass (
+          "com/madara/transport/TransportContext");
+        
+        jmethodID varfromPointerCall = env->GetStaticMethodID (
+          jvarClass,
+          "fromPointer", "(J)Lcom/madara/Variables;");
+        jobject jvariables = env->CallStaticObjectMethod (
+          jvarClass,
+          varfromPointerCall, (jlong) &variables);
+        
+        jmethodID packetfromPointerCall = env->GetStaticMethodID (
+          jpacketClass,
+          "fromPointer", "(J)Lcom/madara/transport/filters/Packet;");
+        jobject jpacket = env->CallStaticObjectMethod (jpacketClass,
+          packetfromPointerCall, (jlong)&records);
+        
+        jmethodID contextfromPointerCall = env->GetStaticMethodID (
+          jcontextClass,
+          "fromPointer", "(J)Lcom/madara/transport/TransportContext;");
+        jobject jcontext = env->CallStaticObjectMethod (jcontextClass,
+          contextfromPointerCall, (jlong)&transport_context);
+
+        // get the filter's class and method
+        jclass filterClass = env->GetObjectClass(i->java_object);
+        jmethodID filterMethod = env->GetMethodID (filterClass,
+          "filter",
+          "(Lcom/madara/transport/filters/Packet;Lcom/madara/transport/TransportContext;Lcom/madara/Variables;)Lcom/madara/KnowledgeRecord;");
+        jobject jresult = env->CallObjectMethod (i->java_object, filterMethod,
+          jpacket, jcontext, jvariables);
+
+        jmethodID getPtrMethod = env->GetMethodID (
+          env->GetObjectClass(jresult), "getCPtr", "()J");
+        jlong cptr = env->CallLongMethod (jresult, getPtrMethod);
+
+        result.deep_copy (*(Madara::Knowledge_Record *)cptr);
       }
 #endif
       

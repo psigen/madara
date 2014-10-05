@@ -37,7 +37,6 @@ public abstract class MadaraJNI
     this.cptr = cptr;
   }
 
-
   /**
    * @return The C pointer of this object for passing to JNI functions
    */
@@ -46,7 +45,6 @@ public abstract class MadaraJNI
     return cptr;
   }
 
-
   /**
    * @return &lt;ClassName&gt;[&lt;C Pointer&gt;]
    * @see java.lang.Object#toString ()
@@ -54,34 +52,6 @@ public abstract class MadaraJNI
   public String toString()
   {
     return getClass().getName() + "[" + cptr + "]";
-  }
-
-  private static long functionCallback(MadaraFunction func, long[] args, long vars)
-  {
-    Variables _vars = Variables.fromPointer(vars);
-    KnowledgeList _args = new KnowledgeList(args);
-    KnowledgeRecord ret = func.execute(_args, _vars);
-    return ret == null ? 0 : ret.getCPtr();
-  }
-
-  private static long filterCallback(RecordFilter func, long[] args, long vars)
-  {
-    Variables _vars = Variables.fromPointer(vars);
-    KnowledgeList _args = new KnowledgeList(args);
-    KnowledgeRecord ret = func.filter(_args, _vars);
-    return ret == null ? 0 : ret.getCPtr();
-  }
-
-  private static long aggregateFilterCallback(AggregateFilter func, String[] keys, long[] vals, long ctx, long vars)
-  {
-    KnowledgeMap map = new KnowledgeMap(keys, vals, false);
-    TransportContext context = TransportContext.fromPointer(ctx);
-    Variables variables = Variables.fromPointer(vars);
-
-    KnowledgeRecord ret = func.filter(map, context, variables);
-    if (ret != null && !ret.isNew())
-      ret = ret.clone();
-    return ret == null ? 0 : ret.getCPtr();
   }
 }
 

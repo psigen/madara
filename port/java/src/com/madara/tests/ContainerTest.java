@@ -5,6 +5,7 @@
  * https://code.google.com/p/madara/wiki/CMULicense
  *********************************************************************/
 
+package com.madara.tests;
 
 import com.madara.KnowledgeBase;
 import com.madara.KnowledgeRecord;

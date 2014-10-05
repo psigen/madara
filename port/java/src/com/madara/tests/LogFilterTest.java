@@ -5,6 +5,7 @@
  * https://code.google.com/p/madara/wiki/CMULicense
  *********************************************************************/
 
+package com.madara.tests;
 
 import com.madara.KnowledgeBase;
 import com.madara.KnowledgeRecord;
@@ -29,10 +30,10 @@ public class LogFilterTest
     
     System.out.println ("Adding individual record log filter to receive.");
     settings.addReceiveFilter(KnowledgeType.ALL_TYPES, new LogRecord());
-    //settings.addReceiveFilter(new LogAggregate());
+    settings.addReceiveFilter(new LogAggregate());
     System.out.println ("Adding individual record log filter to send.");
     settings.addSendFilter(KnowledgeType.ALL_TYPES, new LogRecord());
-    //settings.addSendFilter(new LogAggregate());
+    settings.addSendFilter(new LogAggregate());
     
     KnowledgeBase knowledge = new KnowledgeBase("", settings);
     

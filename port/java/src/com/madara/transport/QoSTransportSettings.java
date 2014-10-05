@@ -40,7 +40,12 @@ public class QoSTransportSettings extends TransportSettings
 
   private native void jni_setDeadline(long cptr, int deadline);
   private native int jni_getDeadline(long cptr);
+  
+  private native void jni_addTrustedPeer(long cptr, java.lang.String host);
+  private native void jni_addBannedPeer(long cptr, java.lang.String host);
 
+  private native void jni_updateDropRate(long cptr, double percentage, int type, int burstamount);
+  
   public QoSTransportSettings()
   {
     setCPtr(jni_QoSTransportSettings());
@@ -204,6 +209,34 @@ public class QoSTransportSettings extends TransportSettings
     return jni_getDeadline(getCPtr());
   }
 
+  /**
+   * Adds a trusted peer
+   * @param  host   the peer to add to the trusted list
+   **/
+  void addTrustedPeer(java.lang.String host)
+  {
+    jni_addTrustedPeer(getCPtr(), host);
+  }
+  
+  /**
+   * Adds a banned peer
+   * @param  host   the peer to add to the banned list
+   **/
+  void addBannedPeer(java.lang.String host)
+  {
+    jni_addBannedPeer(getCPtr(), host);
+  }
+
+  /**
+   * Updates drop rate
+   * @param percentage  the percentage of drops to enforce
+   * @param type        the type of drop policy to use
+   * @param burstamount the amount of bursts of drops to enforce
+   **/
+  void updateDropRate(double percentage, DropType type, int burstamount)
+  {
+    jni_updateDropRate(getCPtr(), percentage, type.value(), burstamount);
+  }
   
   /**
    * Deletes the C instantiation. To prevent memory leaks, this <b>must</b> be called

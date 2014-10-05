@@ -29,11 +29,11 @@ public class LogAggregate implements AggregateFilter
    
   /**
    * Logger of all information
-   * @param map  a map of all variable names to values
+   * @param packet  a collection of variable keys and values in the packet
    * @param context  information about current state of transport layer
    * @param variables facade for current knowledge base
    **/
-  public KnowledgeRecord filter(KnowledgeMap map, TransportContext context, Variables variables)
+  public KnowledgeRecord filter(Packet packet, TransportContext context, Variables variables)
   {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Aggregate Filter args:\n");
@@ -69,12 +69,14 @@ public class LogAggregate implements AggregateFilter
        
     buffer.append("  Updates:\n");
     
-    for(Map.Entry<String, KnowledgeRecord> update : map.entrySet())
+    String [] keys = packet.getKeys();
+    
+    for(int i = 0; i < keys.length; ++i)
     {
       buffer.append("    ");
-      buffer.append(update.getKey());
+      buffer.append(keys[i]);
       buffer.append("=");
-      buffer.append(update.getValue());
+      buffer.append(packet.get(keys[i]));
       buffer.append("\n");
     }
     

@@ -21,6 +21,12 @@
 
 #endif
 
+#ifdef _MADARA_JAVA_
+
+#include "madara_jni.h"
+
+#endif
+
 // Ctor
 
 Madara::Expression_Tree::Composite_Function_Node::Composite_Function_Node (
@@ -124,7 +130,57 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 
 #ifdef _MADARA_JAVA_
   else if (function_->is_java_callable())
-    return function_->call_java(args, variables);
+  {
+    JNIEnv * env = jni_attach();
+
+    /**
+      * Create the variables java object
+      **/
+
+    jclass jvarClass = env->FindClass ("com/madara/Variables");
+    jclass jlistClass = env->FindClass ("com/madara/KnowledgeList");
+        
+    jmethodID fromPointerCall = env->GetStaticMethodID (jvarClass,
+      "fromPointer", "(J)Lcom/madara/Variables;");
+    jobject jvariables = env->CallStaticObjectMethod (jvarClass,
+      fromPointerCall, (jlong) &variables);
+        
+    // prep to create the KnowledgeList
+    jmethodID listConstructor = env->GetMethodID(jlistClass,
+      "<init>", "([J)V");
+        
+    jlongArray ret = env->NewLongArray((jsize)args.size());
+    jlong * tmp = new jlong [(jsize)args.size()];
+
+    for (unsigned int x = 0; x < args.size(); x++)
+    {
+      tmp[x] = (jlong) args[x].clone ();
+    }
+
+    env->SetLongArrayRegion(ret, 0, (jsize)args.size(), tmp);
+    delete [] tmp;
+        
+    // create the KnowledgeList
+    jobject jlist = env->NewObject (jlistClass, listConstructor, ret);
+
+    // get the filter's class
+    jclass filterClass = env->GetObjectClass(function_->java_object);
+        
+    // get the filter method
+    jmethodID filterMethod = env->GetMethodID (filterClass,
+      "filter",
+      "(Lcom/madara/KnowledgeList;Lcom/madara/Variables;)Lcom/madara/KnowledgeRecord;");
+        
+    // call the filter and hold the result
+    jobject jresult = env->CallObjectMethod (function_->java_object,
+      filterMethod, jlist, jvariables);
+
+    jmethodID getPtrMethod = env->GetMethodID (
+      env->GetObjectClass(jresult), "getCPtr", "()J");
+    jlong cptr = env->CallLongMethod (jresult, getPtrMethod);
+
+    return *(Madara::Knowledge_Record *)cptr;
+  }
 #endif
   
 #ifdef _MADARA_PYTHON_CALLBACKS_
@@ -138,10 +194,6 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
   else
   {
     return function_->function_contents.evaluate ();
-    //Madara::Knowledge_Record zero;
-    //MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_ERROR, 
-    //  "Function %s has not been defined.\n", name_.c_str ()));
-    //return zero;
   }
 }
 

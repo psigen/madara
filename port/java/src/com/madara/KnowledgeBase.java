@@ -39,6 +39,11 @@ public class KnowledgeBase extends MadaraJNI
   private static native void jni_setString(long cptr, String name, String value);
   private static native void jni_setIntegerArray(long cptr, String name, long[] value);
   private static native void jni_setDoubleArray(long cptr, String name, double[] value);
+  private static native void jni_setInteger(long cptr, String name, long value, long settings);
+  private static native void jni_setDouble(long cptr, String name, double value, long settings);
+  private static native void jni_setString(long cptr, String name, String value, long settings);
+  private static native void jni_setIntegerArray(long cptr, String name, long[] value, long settings);
+  private static native void jni_setDoubleArray(long cptr, String name, double[] value, long settings);
   private native void jni_freeKnowledgeBase(long cptr);
   private native long jni_wait(long cptr, String expression, long waitSettings);
   private native long jni_wait(long cptr, long expression, long waitSettings);
