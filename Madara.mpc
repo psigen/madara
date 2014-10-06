@@ -112,6 +112,10 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
 project (Madara_Version) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = madara_version
+
+  verbatim (gnuace, local) {
+    CPPFLAGS += -w
+  }
   
   Documentation_Files {
   }
@@ -159,6 +163,10 @@ project (Madara_Jar) : using_madara, using_ace {
 project (KaRL) : using_ace, using_madara {
   exeout = $(MADARA_ROOT)/bin
   exename = karl
+  
+  verbatim (gnuace, local) {
+    CPPFLAGS += -w
+  }
   
   Documentation_Files {
   }

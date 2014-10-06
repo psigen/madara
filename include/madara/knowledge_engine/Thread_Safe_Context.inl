@@ -60,7 +60,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::read_file (
 inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Thread_Safe_Context::get (
   const Variable_Reference & variable,
-  const Knowledge_Reference_Settings & settings) const
+  const Knowledge_Reference_Settings &) const
 {
   Context_Guard guard (mutex_);
 
@@ -74,7 +74,7 @@ Madara::Knowledge_Engine::Thread_Safe_Context::get (
 inline bool
 Madara::Knowledge_Engine::Thread_Safe_Context::exists (
   const Variable_Reference & variable,
-  const Knowledge_Reference_Settings & settings) const
+  const Knowledge_Reference_Settings &) const
 {
   Context_Guard guard (mutex_);
 
@@ -89,7 +89,7 @@ inline Madara::Knowledge_Record
 Madara::Knowledge_Engine::Thread_Safe_Context::retrieve_index (
   const Variable_Reference & variable,
   size_t index,
-  const Knowledge_Reference_Settings & settings)
+  const Knowledge_Reference_Settings &)
 {
   Context_Guard guard (mutex_);
 
