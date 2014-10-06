@@ -43,11 +43,11 @@ public class EraseRecord implements RecordFilter
     settings.setType(TransportType.MULTICAST_TRANSPORT);
     
     System.out.println ("Adding individual erase record filter to receive.");
-    settings.addReceiveFilter(KnowledgeType.ALL_TYPES, new LogAggregate());
+    settings.addReceiveFilter(KnowledgeType.ALL_TYPES, new LogRecord());
     settings.addReceiveFilter(KnowledgeType.INTEGER, new EraseRecord());
     settings.addReceiveFilter(new LogAggregate());
     System.out.println ("Adding individual erase record filter to send.");
-    settings.addSendFilter(KnowledgeType.ALL_TYPES, new LogAggregate());
+    settings.addSendFilter(KnowledgeType.ALL_TYPES, new LogRecord());
     settings.addSendFilter(KnowledgeType.INTEGER, new EraseRecord());
     settings.addSendFilter(new LogAggregate());
     
