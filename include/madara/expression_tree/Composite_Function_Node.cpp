@@ -101,6 +101,8 @@ Madara::Expression_Tree::Composite_Function_Node::evaluate (
 const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
 {
   Madara::Knowledge_Engine::Function_Arguments args;
+  Madara::Knowledge_Record result;
+
   args.resize (nodes_.size ());
 
   int j = 0;
@@ -122,11 +124,11 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
   
   // if the user has defined a named function, return that
   if (function_->is_extern_named ())
-    return function_->extern_named (name_.c_str (), args, variables);
+    result = function_->extern_named (name_.c_str (), args, variables);
 
   // if the user has defined an unnamed function, return that
   else if (function_->is_extern_unnamed ())
-    return function_->extern_unnamed (args, variables);
+    result = function_->extern_unnamed (args, variables);
 
 #ifdef _MADARA_JAVA_
   else if (function_->is_java_callable())
@@ -178,8 +180,22 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
     jmethodID getPtrMethod = env->GetMethodID (
       env->GetObjectClass(jresult), "getCPtr", "()J");
     jlong cptr = env->CallLongMethod (jresult, getPtrMethod);
+    
+    bool do_delete = true;
+    //We need to see if they returned an arg we sent them, or a new value     
+    for (unsigned int x = 0; x < args.size(); x++)
+    {
+      if (cptr == (jlong)&(args[x]))
+      {
+        do_delete = false;
+        break;
+      }
+    }
 
-    return *(Madara::Knowledge_Record *)cptr;
+    result.deep_copy(*(Madara::Knowledge_Record *)cptr);
+
+    //if (do_delete)
+    //  delete (Knowledge_Record*)cptr;
   }
 #endif
   
@@ -193,8 +209,10 @@ const Madara::Knowledge_Engine::Knowledge_Update_Settings & settings)
   // otherwise, assume it is a MADARA function
   else
   {
-    return function_->function_contents.evaluate ();
+    result = function_->function_contents.evaluate ();
   }
+
+  return result;
 }
 
 // accept a visitor

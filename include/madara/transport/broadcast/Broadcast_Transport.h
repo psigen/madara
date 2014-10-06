@@ -62,7 +62,7 @@ namespace Madara
        * @return  result of write operation or -1 if we are shutting down
        **/
       long send_data (const Madara::Knowledge_Records & updates);
-	    
+      
       /**
        * Closes the transport
        **/

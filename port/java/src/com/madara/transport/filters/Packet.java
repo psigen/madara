@@ -20,6 +20,7 @@ public class Packet extends MadaraJNI
   private native void jni_set(long cptr, java.lang.String index, long record);
   private native java.lang.String[] jni_get_keys(long cptr);
   private native boolean jni_exists(long cptr, java.lang.String index);
+  private native void jni_clear(long cptr);
   private native void jni_erase(long cptr, java.lang.String index);
 
   /**
@@ -51,11 +52,18 @@ public class Packet extends MadaraJNI
   {
     return KnowledgeRecord.fromPointer(jni_get(getCPtr(),index));
   }
-   
+     
+  /**
+   * Clears all records from the packet
+   **/
+  public void clear()
+  {
+    jni_clear(getCPtr());
+  }
+  
   /**
    * Erases the record at the specified index
    * @param  index   the index of the record
-   * @return true if the index exists in the packet
    **/
   public void erase(java.lang.String index)
   {
@@ -83,9 +91,8 @@ public class Packet extends MadaraJNI
   }
    
   /**
-   * Gets the record at the specified index
-   * @param  index   the index of the record
-   * @return the record at the index
+   * Gets all keys in the packet
+   * @return the array of all keys in the packet
    **/
   public String[] getKeys()
   {

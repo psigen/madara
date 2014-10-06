@@ -87,7 +87,15 @@ JNIEXPORT jboolean JNICALL Java_com_madara_transport_filters_Packet_jni_1exists
   return result;
 }
 
-MADARA_Export void JNICALL Java_com_madara_transport_filters_Packet_jni_1erase
+void JNICALL Java_com_madara_transport_filters_Packet_jni_1clear
+  (JNIEnv *, jobject, jlong cptr)
+{
+  Madara::Knowledge_Map * packet = (Madara::Knowledge_Map *)cptr;
+
+  packet->clear ();
+}
+
+void JNICALL Java_com_madara_transport_filters_Packet_jni_1erase
   (JNIEnv * env, jobject, jlong cptr, jstring index)
 {
   // get the C string and the underlying map

@@ -145,11 +145,11 @@ Madara::Utility::LQueue_Node<T>::free_list_allocate (size_t n)
     {
       // create a new element avoiding the overwritten new operator
       LQueue_Node<T>* new_node = 
-	reinterpret_cast<LQueue_Node<T>*> (
-	  ::operator new (sizeof (LQueue_Node<T>)));
+  reinterpret_cast<LQueue_Node<T>*> (
+    ::operator new (sizeof (LQueue_Node<T>)));
 
       new_node->next_ = LQueue_Node<T>::free_list_;
-	  
+    
       // make the new element the top of the list
       LQueue_Node<T>::free_list_ = new_node;
     }

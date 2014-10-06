@@ -77,8 +77,8 @@ public class DoubleVector extends MadaraJNI
   }
 
   /**
-   * Gets the value
-   *
+   * Gets the value at the specified index
+   * @param  index  index of the record to retrieve
    * @return   current value
    */
   public double get(int index)
@@ -107,8 +107,8 @@ public class DoubleVector extends MadaraJNI
   }
   
   /**
-   * Sets the value
-   *
+   * Sets the value of an element of the vector
+   * @param  index   index to set the value at
    * @param  value   new value
    */
   public void set(int index, double value)

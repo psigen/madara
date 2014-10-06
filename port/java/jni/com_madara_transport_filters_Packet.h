@@ -42,6 +42,14 @@ MADARA_Export  jboolean JNICALL Java_com_madara_transport_filters_Packet_jni_1ex
 
 /*
  * Class:     com_madara_transport_filters_Packet
+ * Method:    jni_clear
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_transport_filters_Packet_jni_1clear
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_transport_filters_Packet
  * Method:    jni_erase
  * Signature: (JLjava/lang/String;)V
  */

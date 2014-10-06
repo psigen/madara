@@ -10,6 +10,12 @@
 
 #include <stdio.h>
 
+jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__
+  (JNIEnv *, jobject)
+{
+  return (jlong) new Madara::Knowledge_Record();
+}
+
 /*
  * Class:     com_madara_KnowledgeRecord
  * Method:    jni_KnowledgeRecordDeep

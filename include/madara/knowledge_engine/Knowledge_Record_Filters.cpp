@@ -269,7 +269,7 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       {
         //result = i->call_java_filter(arguments, variables);
         JNIEnv * env = jni_attach();
-
+        
         /**
          * Create the variables java object
          **/
@@ -315,8 +315,24 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
         jmethodID getPtrMethod = env->GetMethodID (
           env->GetObjectClass(jresult), "getCPtr", "()J");
         jlong cptr = env->CallLongMethod (jresult, getPtrMethod);
+        
+        bool do_delete = true;
+        //We need to see if they returned an arg we sent them, or a new value     
+        for (unsigned int x = 0; x < arguments.size(); x++)
+        {
+          if (cptr == (jlong)&(arguments[x]))
+          {
+            do_delete = false;
+            break;
+          }
+        }
 
         result.deep_copy (*(Madara::Knowledge_Record *)cptr);
+
+        if (do_delete)
+          delete (Knowledge_Record*)cptr;
+
+        jni_detach ();
       }
 #endif
       
@@ -433,6 +449,8 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
         jlong cptr = env->CallLongMethod (jresult, getPtrMethod);
 
         result.deep_copy (*(Madara::Knowledge_Record *)cptr);
+
+        jni_detach ();
       }
 #endif
       

@@ -76,9 +76,9 @@ public class NativeDoubleVector extends MadaraJNI
   }
 
   /**
-   * Gets the value
-   *
-   * @return   current value
+   * Gets the value at a specified index
+   * @param    index  index of the element to retrieve 
+   * @return   current value at the index
    */
   public double get(int index)
   {
@@ -106,8 +106,8 @@ public class NativeDoubleVector extends MadaraJNI
   }
   
   /**
-   * Sets the value
-   *
+   * Sets the value at the index
+   * @param  index   the index of the element to change
    * @param  value   new value
    */
   public void set(int index, double value)

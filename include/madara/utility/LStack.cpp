@@ -141,11 +141,11 @@ Madara::Utility::LStack_Node<T>::free_list_allocate (size_t n)
     {
       // create a new element avoiding the overwritten new operator
       LStack_Node<T>* new_node = 
-	reinterpret_cast<LStack_Node<T>*> (
-	  ::operator new (sizeof (LStack_Node<T>)));
+  reinterpret_cast<LStack_Node<T>*> (
+    ::operator new (sizeof (LStack_Node<T>)));
 
       new_node->next_ = LStack_Node<T>::free_list_;
-	  
+    
       // make the new element the top of the list
       LStack_Node<T>::free_list_ = new_node;
     }
@@ -239,18 +239,18 @@ Madara::Utility::LStack<T>::copy_list (
       new_node.reset (new LStack_Node<T> (*it));
 
       if (it == rhs.begin ())
-	{
-	  // special case for the first iteration: set the head element of
-	  // temporary stack
-	  temp.head_ = new_node.release ();
-	  prev = temp.head_;
-	}
+  {
+    // special case for the first iteration: set the head element of
+    // temporary stack
+    temp.head_ = new_node.release ();
+    prev = temp.head_;
+  }
       else
-	{
-	  // standard case: add one element to prev
-	  prev->next_ = new_node.release ();
-	  prev = prev->next_;
-	}
+  {
+    // standard case: add one element to prev
+    prev->next_ = new_node.release ();
+    prev = prev->next_;
+  }
       
       // make sure that the element count of temp stays correct
       ++temp.count_;

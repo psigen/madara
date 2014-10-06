@@ -71,8 +71,8 @@ public class StringVector extends MadaraJNI
   }
 
   /**
-   * Gets the value
-   *
+   * Gets the value at the specified index
+   * @param    index  index of the element to retrieve
    * @return   current value
    */
   public java.lang.String get(int index)
@@ -101,8 +101,8 @@ public class StringVector extends MadaraJNI
   }
   
   /**
-   * Sets the value
-   *
+   * Sets the value at the specified index
+   * @param  index   the index of the element to change
    * @param  value   new value
    */
   public void set(int index, java.lang.String value)

@@ -59,8 +59,7 @@ public class WaitSettings extends EvalSettings
    */
   public void setPollFrequency(double freq)
   {
-    if (!constant)
-      jni_setPollFrequency(getCPtr(), freq);
+    jni_setPollFrequency(getCPtr(), freq);
   }
 
 
@@ -78,8 +77,7 @@ public class WaitSettings extends EvalSettings
    */
   public void setMaxWaitTime(double maxWaitTime)
   {
-    if (!constant)
-      jni_setMaxWaitTime(getCPtr(), maxWaitTime);
+    jni_setMaxWaitTime(getCPtr(), maxWaitTime);
   }
 
   /**

@@ -133,6 +133,14 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1clear
 
 /*
  * Class:     com_madara_KnowledgeBase
+ * Method:    jni_exists
+ * Signature: (JLjava/lang/String;)V
+ */
+MADARA_Export jboolean JNICALL Java_com_madara_KnowledgeBase_jni_1exists
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_madara_KnowledgeBase
  * Method:    jni_get
  * Signature: (JLjava/lang/String;)J
  */
@@ -181,42 +189,42 @@ MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleArray
   
 /*
  * Class:     com_madara_KnowledgeBase
- * Method:    jni_setInteger
+ * Method:    jni_setIntegerSettings
  * Signature: (JLjava/lang/String;JJ)V
  */
-MADARA_Export  void JNICALL Java_com_madara_KnowledgeBase_jni_1setInteger__JLjava_lang_String_2JJ
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setIntegerSettings
   (JNIEnv *, jclass, jlong, jstring, jlong, jlong);
 
 /*
  * Class:     com_madara_KnowledgeBase
- * Method:    jni_setDouble
+ * Method:    jni_setDoubleSettings
  * Signature: (JLjava/lang/String;DJ)V
  */
-MADARA_Export  void JNICALL Java_com_madara_KnowledgeBase_jni_1setDouble__JLjava_lang_String_2DJ
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleSettings
   (JNIEnv *, jclass, jlong, jstring, jdouble, jlong);
 
 /*
  * Class:     com_madara_KnowledgeBase
- * Method:    jni_setString
+ * Method:    jni_setStringSettings
  * Signature: (JLjava/lang/String;Ljava/lang/String;J)V
  */
-MADARA_Export  void JNICALL Java_com_madara_KnowledgeBase_jni_1setString__JLjava_lang_String_2Ljava_lang_String_2J
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setStringSettings
   (JNIEnv *, jclass, jlong, jstring, jstring, jlong);
 
 /*
  * Class:     com_madara_KnowledgeBase
- * Method:    jni_setIntegerArray
+ * Method:    jni_setIntegerArraySettings
  * Signature: (JLjava/lang/String;[JJ)V
  */
-MADARA_Export  void JNICALL Java_com_madara_KnowledgeBase_jni_1setIntegerArray__JLjava_lang_String_2_3JJ
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setIntegerArraySettings
   (JNIEnv *, jclass, jlong, jstring, jlongArray, jlong);
 
 /*
  * Class:     com_madara_KnowledgeBase
- * Method:    jni_setDoubleArray
+ * Method:    jni_setDoubleArraySettings
  * Signature: (JLjava/lang/String;[DJ)V
  */
-MADARA_Export  void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleArray__JLjava_lang_String_2_3DJ
+MADARA_Export void JNICALL Java_com_madara_KnowledgeBase_jni_1setDoubleArraySettings
   (JNIEnv *, jclass, jlong, jstring, jdoubleArray, jlong);
 
 /*

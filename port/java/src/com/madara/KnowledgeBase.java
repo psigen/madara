@@ -31,6 +31,7 @@ public class KnowledgeBase extends MadaraJNI
   private native void jni_print(long cptr, String statement);
   private native void jni_print(long cptr);
   private native void jni_clear(long cptr);
+  private native boolean jni_exists(long cptr, String statement);
   private native void jni_sendModifieds(long cptr);
   private native void jni_sendModifieds(long cptr, long evalSettings);
   private native long jni_get(long cptr, String name);
@@ -39,11 +40,11 @@ public class KnowledgeBase extends MadaraJNI
   private static native void jni_setString(long cptr, String name, String value);
   private static native void jni_setIntegerArray(long cptr, String name, long[] value);
   private static native void jni_setDoubleArray(long cptr, String name, double[] value);
-  private static native void jni_setInteger(long cptr, String name, long value, long settings);
-  private static native void jni_setDouble(long cptr, String name, double value, long settings);
-  private static native void jni_setString(long cptr, String name, String value, long settings);
-  private static native void jni_setIntegerArray(long cptr, String name, long[] value, long settings);
-  private static native void jni_setDoubleArray(long cptr, String name, double[] value, long settings);
+  private static native void jni_setIntegerSettings(long cptr, String name, long value, long settings);
+  private static native void jni_setDoubleSettings(long cptr, String name, double value, long settings);
+  private static native void jni_setStringSettings(long cptr, String name, String value, long settings);
+  private static native void jni_setIntegerArraySettings(long cptr, String name, long[] value, long settings);
+  private static native void jni_setDoubleArraySettings(long cptr, String name, double[] value, long settings);
   private native void jni_freeKnowledgeBase(long cptr);
   private native long jni_wait(long cptr, String expression, long waitSettings);
   private native long jni_wait(long cptr, long expression, long waitSettings);
@@ -99,7 +100,7 @@ public class KnowledgeBase extends MadaraJNI
   /**
    * Copy constructor
    *
-   * @param original
+   * @param original knowledge base to copy from
    **/
   public KnowledgeBase(KnowledgeBase original)
   {
@@ -138,7 +139,7 @@ public class KnowledgeBase extends MadaraJNI
 
   /**
    * Evaluates an expression.
-   * <br/>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
+   * <br>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
    * at some point. If it is to be ignored, consider using {@link #evaluateNoReturn (String)}
    *
    * @param expression KaRL expression to evaluate
@@ -258,7 +259,7 @@ public class KnowledgeBase extends MadaraJNI
   }
 
   /**
-   * <b>Currently unsupported</b><br/>
+   * <b>Currently unsupported</b><br>
    * Defines a function.
    *
    * @param name   name of the function
@@ -294,6 +295,16 @@ public class KnowledgeBase extends MadaraJNI
   {
     checkContextLock();
     jni_clear(getCPtr());
+  }
+
+  /**
+   * Checks to see if record exists
+   * @param name name of record to check
+   * @return true if the record exists, false otherwise
+   **/
+  public boolean exists(String name)
+  {
+    return jni_exists(getCPtr(), name);
   }
 
   /**
@@ -374,6 +385,79 @@ public class KnowledgeBase extends MadaraJNI
     jni_setIntegerArray(getCPtr(), name, value);
   }
 
+  
+  
+  /**
+   * Sets a knowledge value to a specified value.
+   *
+   * @param name  knowledge name
+   * @param value value to set
+   * @param settings settings for evaluating the set command
+   * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+   **/
+  public void set(String name, long value, EvalSettings settings)
+  {
+    checkContextLock();
+    jni_setIntegerSettings(getCPtr(), name, value, settings.getCPtr());
+  }
+
+  /**
+   * Sets a knowledge value to a specified value.
+   *
+   * @param name  knowledge name
+   * @param value value to set
+   * @param settings settings for evaluating the set command
+   * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+   **/
+  public void set(String name, double value, EvalSettings settings)
+  {
+    checkContextLock();
+    jni_setDoubleSettings(getCPtr(), name, value, settings.getCPtr());
+  }
+
+  /**
+   * Sets a knowledge value to a specified value.
+   *
+   * @param name  knowledge name
+   * @param value value to set
+   * @param settings settings for evaluating the set command
+   * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+   **/
+  public void set(String name, String value, EvalSettings settings)
+  {
+    checkContextLock();
+    jni_setStringSettings(getCPtr(), name, value, settings.getCPtr());
+  }
+
+  /**
+   * Sets a knowledge value to a specified value.
+   *
+   * @param name  knowledge name
+   * @param value value to set
+   * @param settings settings for evaluating the set command
+   * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+   **/
+  public void set(String name, double[] value, EvalSettings settings)
+  {
+    checkContextLock();
+    jni_setDoubleArraySettings(getCPtr(), name, value, settings.getCPtr());
+  }
+
+  /**
+   * Sets a knowledge value to a specified value.
+   *
+   * @param name  knowledge name
+   * @param value value to set
+   * @param settings settings for evaluating the set command
+   * @throws KnowledgeBaseLockedException If called from a MadaraFunction
+   **/
+  public void set(String name, long[] value, EvalSettings settings)
+  {
+    checkContextLock();
+    jni_setIntegerArraySettings(getCPtr(), name, value, settings.getCPtr());
+  }
+
+  
   /**
    * Sends all modifications to global variables since last send modifieds,
    * eval, wait, or set statement.
@@ -387,11 +471,12 @@ public class KnowledgeBase extends MadaraJNI
   /**
    * Sends all modifications to global variables since last send modifieds,
    * eval, wait, or set statement.
+   * @param settings   settings to use for considering records to send
    **/
-  public void sendModifieds (EvalSettings evalSettings)
+  public void sendModifieds (EvalSettings settings)
   {
     checkContextLock();
-    jni_sendModifieds(getCPtr(), evalSettings.getCPtr());
+    jni_sendModifieds(getCPtr(), settings.getCPtr());
   }
 
   /**
@@ -429,7 +514,7 @@ public class KnowledgeBase extends MadaraJNI
 
   /**
    * Waits for an expression to be non-zero.
-   * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
+   * <br><br>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
    * at some point. If it is to be ignored, consider using {@link #waitNoReturn (String)}
    *
    * @param expression KaRL expression to evaluate
@@ -443,7 +528,7 @@ public class KnowledgeBase extends MadaraJNI
 
   /**
    * Waits for an expression to be non-zero.
-   * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
+   * <br><br>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
    * at some point. If it is to be ignored, consider using {@link #waitNoReturn (CompiledExpression)}
    *
    * @param expression KaRL expression to evaluate  (result of {@link #compile (String)})
@@ -457,8 +542,8 @@ public class KnowledgeBase extends MadaraJNI
 
   /**
    * Waits for an expression to be non-zero.
-   * <br/>Provides additional settings for fine-tuning the time to wait and atomic print statements.
-   * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
+   * <br>Provides additional settings for fine-tuning the time to wait and atomic print statements.
+   * <br><br>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
    * at some point. If it is to be ignored, consider using {@link #waitNoReturn (String,WaitSettings)}
    *
    * @param expression KaRL expression to evaluate
@@ -474,8 +559,8 @@ public class KnowledgeBase extends MadaraJNI
 
   /**
    * Waits for an expression to be non-zero.
-   * <br/>Provides additional settings for fine-tuning the time to wait and atomic print statements.
-   * <br/><br/>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
+   * <br>Provides additional settings for fine-tuning the time to wait and atomic print statements.
+   * <br><br>The returned KnowledgeRecord <b>must</b> be freed  ({@link com.madara.KnowledgeRecord#free () KnowledgeRecord.free ()})
    * at some point. If it is to be ignored, consider using {@link #waitNoReturn (CompiledExpression,WaitSettings)}
    *
    * @param expression KaRL expression to evaluate  (result of {@link #compile (String)})
@@ -541,7 +626,7 @@ public class KnowledgeBase extends MadaraJNI
    * Fills a {@link com.madara.KnowledgeList KnowledgeList} with
    * {@link com.madara.KnowledgeRecord KnowledgeRecords} that begin with
    * a common subject and have a finite range of integer values.
-   * <br/><br/>The returned {@link com.madara.KnowledgeList KnowledgeList}
+   * <br><br>The returned {@link com.madara.KnowledgeList KnowledgeList}
    * <b>must</b> be freed using {@link com.madara.KnowledgeList#free KnowledgeList.free ()}
    * before the object goes out of scope.
    *
@@ -563,7 +648,7 @@ public class KnowledgeBase extends MadaraJNI
   /**
    * Fills a {@link com.madara.KnowledgeMap KnowledgeMap} with
    * {@link com.madara.KnowledgeRecord KnowledgeRecords} that match an expression.
-   * <br/><br/>The returned {@link com.madara.KnowledgeMap KnowledgeMap}
+   * <br><br>The returned {@link com.madara.KnowledgeMap KnowledgeMap}
    * <b>must</b> be freed using {@link com.madara.KnowledgeMap#free KnowledgeMap.free ()}
    * before the object goes out of scope.
    *

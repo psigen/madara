@@ -77,8 +77,8 @@ public class IntegerVector extends MadaraJNI
   }
 
   /**
-   * Gets the value
-   *
+   * Gets the value at a specified index
+   * @param  index  location of the element to retrieve
    * @return   current value
    */
   public long get(int index)
@@ -107,8 +107,8 @@ public class IntegerVector extends MadaraJNI
   }
   
   /**
-   * Sets the value
-   *
+   * Sets the value at an index
+   * @param  index   index to set a value at
    * @param  value   new value
    */
   public void set(int index, long value)

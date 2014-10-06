@@ -16,6 +16,14 @@ extern "C" {
 #endif
 /*
  * Class:     com_madara_KnowledgeRecord
+ * Method:    jni_KnowledgeRecord
+ * Signature: ()J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_KnowledgeRecord_jni_1KnowledgeRecord__
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_madara_KnowledgeRecord
  * Method:    jni_KnowledgeRecordDeep
  * Signature: (J)J
  */

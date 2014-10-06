@@ -33,28 +33,21 @@ public class EvalSettings extends MadaraJNI
   public static final EvalSettings DEFAULT_EVAL_SETTINGS = new EvalSettings(jni_evalSettings());
 
   /**
-   * Used to determine if the current object should be allowed to change or not
-   */
-  protected final boolean constant;
-
-  /**
    * Default constructor
    */
   public EvalSettings()
   {
     setCPtr(jni_evalSettings());
-    constant = false;
   }
 
   /**
    * Copy constructor
    *
-   * @param old
+   * @param input the settings to copy from
    */
-  public EvalSettings(EvalSettings old)
+  public EvalSettings(EvalSettings input)
   {
-    setCPtr(jni_evalSettings(old.getCPtr()));
-    constant = false;
+    setCPtr(jni_evalSettings(input.getCPtr()));
   }
 
   /**
@@ -65,7 +58,6 @@ public class EvalSettings extends MadaraJNI
   protected EvalSettings(long cptr)
   {
     setCPtr(cptr);
-    constant = true;
   }
 
   /**
@@ -73,8 +65,7 @@ public class EvalSettings extends MadaraJNI
    */
   public void setDelaySendingModifieds(boolean delaySendingModifieds)
   {
-    if (!constant)
-      jni_setDelaySendingModifieds(getCPtr(), delaySendingModifieds);
+    jni_setDelaySendingModifieds(getCPtr(), delaySendingModifieds);
   }
 
   /**
@@ -90,8 +81,7 @@ public class EvalSettings extends MadaraJNI
    */
   public void setPrePrintStatement(String prePrintStatement)
   {
-    if (!constant)
-      jni_setPrePrintStatement(getCPtr(), prePrintStatement);
+    jni_setPrePrintStatement(getCPtr(), prePrintStatement);
   }
 
   /**
@@ -107,8 +97,7 @@ public class EvalSettings extends MadaraJNI
    */
   public void setPostPrintStatement(String postPrintStatement)
   {
-    if (!constant)
-      jni_setPostPrintStatement(getCPtr(), postPrintStatement);
+    jni_setPostPrintStatement(getCPtr(), postPrintStatement);
   }
 
   /**
@@ -124,8 +113,7 @@ public class EvalSettings extends MadaraJNI
    */
   public void setAlwaysOverwrite(boolean alwaysOverwrite)
   {
-    if (!constant)
-      jni_setAlwaysOverwrite(getCPtr(), alwaysOverwrite);
+    jni_setAlwaysOverwrite(getCPtr(), alwaysOverwrite);
   }
 
   /**
@@ -141,8 +129,7 @@ public class EvalSettings extends MadaraJNI
    */
   public void setTreatGlobalsAsLocals(boolean treatGlobalsAsLocals)
   {
-    if (!constant)
-      jni_setTreatGlobalsAsLocals(getCPtr(), treatGlobalsAsLocals);
+    jni_setTreatGlobalsAsLocals(getCPtr(), treatGlobalsAsLocals);
   }
 
   /**
@@ -158,8 +145,7 @@ public class EvalSettings extends MadaraJNI
    */
   public void setDefaultClockIncrement(long defaultClockIncrement)
   {
-    if (!constant)
-      jni_setClockIncrement(getCPtr(), defaultClockIncrement);
+    jni_setClockIncrement(getCPtr(), defaultClockIncrement);
   }
 
   /**

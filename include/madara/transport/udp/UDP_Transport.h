@@ -66,7 +66,7 @@ namespace Madara
        * @return  result of write operation or -1 if we are shutting down
        **/
       long send_data (const Madara::Knowledge_Records & updates);
-	  
+    
       /**
        * Accesses reliability setting. If this returns zero, it doesn't
        * make much sense.

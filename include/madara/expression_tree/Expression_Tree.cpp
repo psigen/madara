@@ -281,7 +281,7 @@ Madara::Expression_Tree::Expression_Tree::iterator
 Madara::Expression_Tree::Expression_Tree::end (const std::string &traversal_order)
 {
   return Expression_Tree::iterator 
-	(tree_iterator_factory.make_tree_iterator (*this, 
+  (tree_iterator_factory.make_tree_iterator (*this, 
                                                traversal_order, 
                                                true));
 }

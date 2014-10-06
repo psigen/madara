@@ -15,5 +15,5 @@
  */
 MADARA_Export void JNICALL Java_com_madara_MadaraLog_jni_1setLogLevel (JNIEnv *env, jclass clazz, jint debugLevel)
 {
-	MADARA_debug_level = debugLevel;
+  MADARA_debug_level = debugLevel;
 }

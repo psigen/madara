@@ -13,6 +13,7 @@ package com.madara;
 public class KnowledgeRecord extends MadaraJNI
 {
   //Constructors
+  private native long jni_KnowledgeRecord();
   private native long jni_KnowledgeRecordDeep(long ptr);
   private native long jni_KnowledgeRecord(String str);
   private native long jni_KnowledgeRecord(double str);
@@ -41,6 +42,15 @@ public class KnowledgeRecord extends MadaraJNI
     this.isNew = isNew;
   }
 
+  /**
+   * Default constructor
+   **/
+  public KnowledgeRecord()
+  {
+    isNew = true;
+    setCPtr(jni_KnowledgeRecord());
+  }
+  
   /**
    * Constructor for long/integer values
    *
