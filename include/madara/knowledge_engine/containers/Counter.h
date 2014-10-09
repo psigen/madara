@@ -1,6 +1,6 @@
 
-#ifndef _MADARA_INTEGER_H_
-#define _MADARA_INTEGER_H_
+#ifndef _MADARA_CONTAINERS_COUNTER_H_
+#define _MADARA_CONTAINERS_COUNTER_H_
 
 #include <vector>
 #include <string>
@@ -9,11 +9,11 @@
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 /**
- * @file Integer.h
+ * @file Counter.h
  * @author James Edmondson <jedmondson@gmail.com>
  *
- * This file contains a C++ object that manages interactions for an
- * array of variables
+ * This file contains a distributed counter that may be
+ * updated and read by many nodes
  **/
 
 namespace Madara
@@ -23,10 +23,10 @@ namespace Madara
     namespace Containers
     {
       /**
-       * @class Integer
+       * @class Counter
        * @brief This class stores an integer within a variable context
        */
-      class MADARA_Export Integer
+      class MADARA_Export Counter
       {
       public:
         /// trait that describes the value type
@@ -35,7 +35,7 @@ namespace Madara
         /**
          * Default constructor
          **/
-        Integer (const Knowledge_Update_Settings & settings =
+        Counter (const Knowledge_Update_Settings & settings =
           Knowledge_Update_Settings ());
       
         /**
@@ -44,7 +44,7 @@ namespace Madara
          * @param  knowledge  the knowledge base that will contain the vector
          * @param  settings   settings for evaluating the vector
          **/
-        Integer (const std::string & name,
+        Counter (const std::string & name,
                 Knowledge_Base & knowledge,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
@@ -55,7 +55,7 @@ namespace Madara
          * @param  knowledge the variable context
          * @param  settings  settings to apply by default
          **/
-        Integer (const std::string & name,
+        Counter (const std::string & name,
                 Variables & knowledge,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
@@ -64,12 +64,16 @@ namespace Madara
          * Default constructor
          * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
+         * @param  id         the id of the counter in the counter ring
+         * @param  counters   the number of counters in the counter ring
          * @param  value      new value of the variable in the knowledge base
          * @param  settings   settings for evaluating the vector
          **/
-        Integer (const std::string & name,
+        Counter (const std::string & name,
                 Knowledge_Base & knowledge,
-                type value, 
+                int id,
+                int counters,
+                type value = 0,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
       
@@ -77,36 +81,52 @@ namespace Madara
          * Default constructor
          * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
+         * @param  id         the id of the counter in the counter ring
+         * @param  counters  the number of counters in the counter ring
          * @param  value      new value of the variable in the knowledge base
          * @param  settings   settings for evaluating the vector
          **/
-        Integer (const std::string & name,
+        Counter (const std::string & name,
                 Variables & knowledge,
-                type value, 
+                int id,
+                int counters,
+                type value = 0,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
       
         /**
          * Copy constructor
          **/
-        Integer (const Integer & rhs);
+        Counter (const Counter & rhs);
 
         /**
          * Destructor
          **/
-        ~Integer ();
+        ~Counter ();
         
         /**
          * Assignment operator
          * @param  rhs    value to copy
          **/
-        void operator= (const Integer & rhs);
+        void operator= (const Counter & rhs);
 
         /**
          * Returns the name of the variable
          * @return name of the variable
          **/
         std::string get_name (void) const;
+        
+        /**
+         * Returns the id of the counter in the counter ring
+         * @return the id of the counter
+         **/
+        int get_id (void) const;
+        
+        /**
+         * Returns the number of counters in the counter ring
+         * @return the number of counters counting
+         **/
+        int get_counters (void) const;
         
         /**
          * Sets the variable name that this refers to
@@ -125,13 +145,6 @@ namespace Madara
           Variables & knowledge);
 
         /**
-         * Exchanges the integer at this location with the integer at another
-         * location.
-         * @param  other   the other integer to exchange with
-         **/
-        void exchange (Containers::Integer & other);
-
-        /**
          * Sets the value of the variable
          * @param  value  the new value of the variable
          * @return the updated value (should be same as value param)
@@ -143,14 +156,14 @@ namespace Madara
          * @param  value  the value to compare to
          * @return true if equal, false otherwise
          **/
-        bool operator== (const Integer & value) const;
+        bool operator== (const Counter & value) const;
         
         /**
          * Checks for inequality
          * @param  value  the value to compare to
          * @return true if inequal, false otherwise
          **/
-        bool operator!= (const Integer & value) const;
+        bool operator!= (const Counter & value) const;
         
         /**
          * Checks for equality
@@ -201,39 +214,32 @@ namespace Madara
         type operator* (void) const;
       
         /**
-         * Checks to see if the variable has ever been assigned a value
-         * @return true if the record has been set to a value. False if
-         *         uninitialized
-         **/
-        bool exists (void) const;
-      
-        /**
          * Increments by a value
          * @param  value  the value to add
          * @return the new value
          **/
-        type operator+= (type value);
+        void operator+= (type value);
         
         /**
          * Decrements by a value
          * @param  value  the value to remove
          * @return the new value
          **/
-        type operator-= (type value);
+        void operator-= (type value);
         
         /**
          * Increments the value of the variable and returns
          * the result.
          * @return the new value of the variable
          **/
-        type operator++ (void);
+        void operator++ (void);
         
         /**
          * Decrements the value of the variable and returns
          * the result.
          * @return the new value of the variable
          **/
-        type operator-- (void);
+        void operator-- (void);
         
         /**
          * Returns the value as a Knowledge_Record. This
@@ -269,7 +275,7 @@ namespace Madara
           const Knowledge_Update_Settings & settings);
 
         /**
-         * Sets the quality of writing to the variable
+         * Sets the quality of writing to the counter variables
          *
          * @param quality         quality of writing to this location
          * @param settings        settings for referring to knowledge variables
@@ -278,8 +284,65 @@ namespace Madara
                const Knowledge_Reference_Settings & settings =
                        Knowledge_Reference_Settings (false));
       
+        /**
+         * Resizes the counter, usually when number of counters change
+         * @param id        the id of this counter in the counter ring
+         * @param counters the number of counters in counter ring
+         **/
+        void resize (int id = 0, int counters = 1);
 
       private:
+        /**
+         * Builds the aggregate counter logic
+         **/
+        void build_aggregate_count (void);
+        
+        /**
+         * Builds the variable that is actually incremented
+         **/
+        void build_var (void);
+
+        /**
+         * Initialize the no harm eval settings
+         **/
+        void init_noharm (void);
+
+        /**
+         * Counts all counter variables
+         * @return  total count
+         **/
+        inline type get_count (void) const
+        {
+          return context_->evaluate (aggregate_count_, no_harm).to_integer ();
+        }
+        
+        /**
+         * Counts all counter variables
+         * @return  total count
+         **/
+        inline std::string get_count_string (void) const
+        {
+          return context_->evaluate (aggregate_count_, no_harm).to_string ();
+        }
+        
+        /**
+         * Counts all counter variables
+         * @return  total count
+         **/
+        inline double get_count_double (void) const
+        {
+          return context_->evaluate (aggregate_count_, no_harm).to_double ();
+        }
+        
+        /**
+         * Counts all counter variables
+         * @return  total count
+         **/
+        inline Knowledge_Record get_count_record (void) const
+        {
+          return context_->evaluate (aggregate_count_, no_harm);
+        }
+
         /// guard for access and changes
         typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
       
@@ -291,7 +354,7 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Thread_Safe_Context * context_;
+        mutable Thread_Safe_Context * context_;
 
         /**
          * Prefix of variable
@@ -304,9 +367,29 @@ namespace Madara
         Variable_Reference variable_;
 
         /**
+         * id of this counter in the counter ring
+         **/
+        int id_;
+
+        /**
+         * the number of counters in the counter ring
+         **/
+        int counters_;
+
+        /**
          * Settings for modifications
          **/
         Knowledge_Update_Settings settings_;
+
+        /**
+         * Expression for aggregating count in one atomic operation
+         **/
+        Compiled_Expression aggregate_count_;
+
+        /**
+         * Settings we'll use for all evaluations
+         **/
+        Eval_Settings no_harm;
       };
     }
   }
@@ -315,4 +398,4 @@ namespace Madara
 
 
 
-#endif // _MADARA_INTEGER_H_
+#endif // _MADARA_CONTAINERS_COUNTER_H_

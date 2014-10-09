@@ -674,7 +674,8 @@ namespace Madara
        **/
       void mark_modified (const std::string & key,
         Madara::Knowledge_Record & record,
-        const Knowledge_Reference_Settings & settings);
+        const Knowledge_Reference_Settings & settings =
+          Knowledge_Reference_Settings (false));
       
       /**
        * Changes local variables to modified at current clock.
@@ -684,7 +685,8 @@ namespace Madara
        **/
       void mark_local_modified (const std::string & key,
         Madara::Knowledge_Record & record,
-        const Knowledge_Reference_Settings & settings);
+        const Knowledge_Reference_Settings & settings =
+          Knowledge_Reference_Settings (false));
 
       /**
        * Resets a variable to unmodified

@@ -305,6 +305,41 @@ Madara::Knowledge_Engine::Containers::Integer::to_integer (void) const
 }
 
 Madara::Knowledge_Engine::Containers::Integer::type
+Madara::Knowledge_Engine::Containers::Integer::operator += (type value)
+{
+  Madara::Knowledge_Engine::Containers::Integer::type result (0);
+
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    result = context_->get (variable_, settings_).to_integer ();
+    result += value;
+    context_->set (variable_, result, settings_);
+  }
+
+  return result;
+}
+
+Madara::Knowledge_Engine::Containers::Integer::type
+Madara::Knowledge_Engine::Containers::Integer::operator -= (type value)
+{
+  Madara::Knowledge_Engine::Containers::Integer::type result (0);
+
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    result = context_->get (variable_, settings_).to_integer ();
+    result -= value;
+    context_->set (variable_, result, settings_);
+  }
+
+  return result;
+}
+Madara::Knowledge_Engine::Containers::Integer::type
 Madara::Knowledge_Engine::Containers::Integer::operator++ (void)
 {
   if (context_)

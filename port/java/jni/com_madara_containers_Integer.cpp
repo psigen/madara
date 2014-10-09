@@ -53,6 +53,74 @@ void JNICALL Java_com_madara_containers_Integer_jni_1set
 
 /*
  * Class:     com_madara_containers_Integer
+ * Method:    jni_inc
+ * Signature: (J)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1inc
+  (JNIEnv *, jobject, jlong cptr)
+{
+  jlong result (0);
+  containers::Integer * current = (containers::Integer *) cptr;
+
+  if (current)
+    result = ++(*current);
+
+  return result;
+}
+
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_dec
+ * Signature: (J)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1dec
+  (JNIEnv *, jobject, jlong cptr)
+{
+  jlong result (0);
+  containers::Integer * current = (containers::Integer *) cptr;
+
+  if (current)
+    result = --(*current);
+
+  return result;
+}
+
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_incValue
+ * Signature: (JJ)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1incValue
+  (JNIEnv *, jobject, jlong cptr, jlong value)
+{
+  jlong result (0);
+  containers::Integer * current = (containers::Integer *) cptr;
+
+  if (current)
+    result = ((*current) += value);
+
+  return result;
+}
+
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_decValue
+ * Signature: (JJ)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1decValue
+  (JNIEnv *, jobject, jlong cptr, jlong value)
+{
+  jlong result (0);
+  containers::Integer * current = (containers::Integer *) cptr;
+
+  if (current)
+    result = ((*current) -= value);
+
+  return result;
+}
+
+/*
+ * Class:     com_madara_containers_Integer
  * Method:    jni_getName
  * Signature: (J)Ljava/lang/String;
  */

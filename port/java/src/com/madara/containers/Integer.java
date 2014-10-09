@@ -25,6 +25,10 @@ public class Integer extends MadaraJNI
   private native java.lang.String jni_toString(long cptr);
   private native double jni_toDouble(long cptr);
   private native long jni_toLong(long cptr);
+  private native long jni_inc(long cptr);
+  private native long jni_dec(long cptr);
+  private native long jni_incValue(long cptr, long value);
+  private native long jni_decValue(long cptr, long value);
 
   private boolean manageMemory = true;
 
@@ -85,6 +89,48 @@ public class Integer extends MadaraJNI
   public java.lang.String getName()
   {
     return jni_getName(getCPtr());
+  }
+
+  /**
+   * Increments the container
+   *
+   * @return new value of the container
+   */
+  public long inc()
+  {
+    return jni_inc(getCPtr());
+  }
+
+  /**
+   * Increments by a value
+   *
+   * @param  value   value to increment by
+   * @return new value of the container
+   */
+  public long inc(long value)
+  {
+    return jni_incValue(getCPtr(), value);
+  }
+
+  /**
+   * Decrements the container
+   *
+   * @return new value of the container
+   */
+  public long dec()
+  {
+    return jni_dec(getCPtr());
+  }
+
+  /**
+   * Decrements by a value
+   *
+   * @param  value   value to increment by
+   * @return new value of the container
+   */
+  public long dec(long value)
+  {
+    return jni_decValue(getCPtr(), value);
   }
 
   /**

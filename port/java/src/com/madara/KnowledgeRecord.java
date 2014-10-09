@@ -114,7 +114,7 @@ public class KnowledgeRecord extends MadaraJNI
    *
    * @return current long value
    */
-  public long toLongValue()
+  public long toLong()
   {
     return jni_toLongValue(getCPtr());
   }
@@ -125,7 +125,7 @@ public class KnowledgeRecord extends MadaraJNI
    *
    * @return current double value
    */
-  public double toDoubleValue()
+  public double toDouble()
   {
     return jni_toDoubleValue(getCPtr());
   }
@@ -156,7 +156,7 @@ public class KnowledgeRecord extends MadaraJNI
    *
    * @return current string value
    */
-  public String toStringValue()
+  public String toString()
   {
     return jni_toStringValue(getCPtr());
   }
@@ -177,11 +177,6 @@ public class KnowledgeRecord extends MadaraJNI
   public void free()
   {
     jni_freeKnowledgeRecord(getCPtr());
-  }
-
-  public String toString()
-  {
-    return toStringValue ();
   }
 
   /**

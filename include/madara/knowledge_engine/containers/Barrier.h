@@ -1,6 +1,6 @@
 
-#ifndef _MADARA_INTEGER_H_
-#define _MADARA_INTEGER_H_
+#ifndef _MADARA_CONTAINERS_BARRIER_H_
+#define _MADARA_CONTAINERS_BARRIER_H_
 
 #include <vector>
 #include <string>
@@ -9,11 +9,11 @@
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 
 /**
- * @file Integer.h
+ * @file Barrier.h
  * @author James Edmondson <jedmondson@gmail.com>
  *
- * This file contains a C++ object that manages interactions for an
- * array of variables
+ * This file contains a distributed barrier that may be
+ * updated and read by many nodes
  **/
 
 namespace Madara
@@ -23,10 +23,10 @@ namespace Madara
     namespace Containers
     {
       /**
-       * @class Integer
+       * @class Barrier
        * @brief This class stores an integer within a variable context
        */
-      class MADARA_Export Integer
+      class MADARA_Export Barrier
       {
       public:
         /// trait that describes the value type
@@ -35,7 +35,7 @@ namespace Madara
         /**
          * Default constructor
          **/
-        Integer (const Knowledge_Update_Settings & settings =
+        Barrier (const Knowledge_Update_Settings & settings =
           Knowledge_Update_Settings ());
       
         /**
@@ -44,7 +44,7 @@ namespace Madara
          * @param  knowledge  the knowledge base that will contain the vector
          * @param  settings   settings for evaluating the vector
          **/
-        Integer (const std::string & name,
+        Barrier (const std::string & name,
                 Knowledge_Base & knowledge,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
@@ -55,7 +55,7 @@ namespace Madara
          * @param  knowledge the variable context
          * @param  settings  settings to apply by default
          **/
-        Integer (const std::string & name,
+        Barrier (const std::string & name,
                 Variables & knowledge,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
@@ -64,12 +64,14 @@ namespace Madara
          * Default constructor
          * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
-         * @param  value      new value of the variable in the knowledge base
+         * @param  id         the id of the barrier in the barrier ring
+         * @param  participants   the number of participants in the barrier ring
          * @param  settings   settings for evaluating the vector
          **/
-        Integer (const std::string & name,
+        Barrier (const std::string & name,
                 Knowledge_Base & knowledge,
-                type value, 
+                int id,
+                int participants,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
       
@@ -77,30 +79,32 @@ namespace Madara
          * Default constructor
          * @param  name       name of the integer in the knowledge base
          * @param  knowledge  the knowledge base that will contain the vector
-         * @param  value      new value of the variable in the knowledge base
+         * @param  id         the id of the barrier in the barrier ring
+         * @param  participants  the number of participants in the barrier ring
          * @param  settings   settings for evaluating the vector
          **/
-        Integer (const std::string & name,
+        Barrier (const std::string & name,
                 Variables & knowledge,
-                type value, 
+                int id,
+                int participants,
                 const Knowledge_Update_Settings & settings =
                   Knowledge_Update_Settings ());
       
         /**
          * Copy constructor
          **/
-        Integer (const Integer & rhs);
+        Barrier (const Barrier & rhs);
 
         /**
          * Destructor
          **/
-        ~Integer ();
+        ~Barrier ();
         
         /**
          * Assignment operator
          * @param  rhs    value to copy
          **/
-        void operator= (const Integer & rhs);
+        void operator= (const Barrier & rhs);
 
         /**
          * Returns the name of the variable
@@ -108,6 +112,27 @@ namespace Madara
          **/
         std::string get_name (void) const;
         
+        /**
+         * Returns the id of the barrier in the barrier ring
+         * @return the id of the barrier
+         **/
+        int get_id (void) const;
+        
+        /**
+         * Returns the number of participants in the barrier ring
+         * @return the number of participants barriering
+         **/
+        int get_participants (void) const;
+        
+        /**
+         * Returns the current barrier round
+         * @return the current barrier round number
+         **/
+        inline type get_round (void) const
+        {
+          return to_integer ();
+        }
+
         /**
          * Sets the variable name that this refers to
          * @param var_name  the name of the variable in the knowledge base
@@ -125,13 +150,6 @@ namespace Madara
           Variables & knowledge);
 
         /**
-         * Exchanges the integer at this location with the integer at another
-         * location.
-         * @param  other   the other integer to exchange with
-         **/
-        void exchange (Containers::Integer & other);
-
-        /**
          * Sets the value of the variable
          * @param  value  the new value of the variable
          * @return the updated value (should be same as value param)
@@ -139,126 +157,54 @@ namespace Madara
         type operator= (type value);
         
         /**
-         * Checks for equality
-         * @param  value  the value to compare to
-         * @return true if equal, false otherwise
+         * Goes to the next barrier round
          **/
-        bool operator== (const Integer & value) const;
+        void next (void);
         
         /**
-         * Checks for inequality
-         * @param  value  the value to compare to
-         * @return true if inequal, false otherwise
+         * Wait for all other participants to reach your barrier round
+         * @return true if barrier round is finished. False otherwise.
          **/
-        bool operator!= (const Integer & value) const;
+        bool is_done (void);
         
         /**
-         * Checks for equality
-         * @param  value  the value to compare to
-         * @return true if equal, false otherwise
-         **/
-        bool operator== (type value) const;
-        
-        /**
-         * Checks for inequality
-         * @param  value  the value to compare to
-         * @return true if inequal, false otherwise
-         **/
-        bool operator!= (type value) const;
-        
-        /**
-         * Checks for less than relationship
-         * @param  value  the value to compare to
-         * @return true if less than
-         **/
-        bool operator< (type value) const;
-        
-        /**
-         * Checks for less than or equal to relationship
-         * @param  value  the value to compare to
-         * @return true if less than or equal to
-         **/
-        bool operator<= (type value) const;
-        
-        /**
-         * Checks for greater than relationship
-         * @param  value  the value to compare to
-         * @return true if greater than
-         **/
-        bool operator> (type value) const;
-        
-        /**
-         * Checks for greater than or equal to relationship
-         * @param  value  the value to compare to
-         * @return true if greater than or equal to
-         **/
-        bool operator>= (type value) const;
-        
-        /**
-         * Returns the value of the variable
-         * @return the value of the variable
-         **/
-        type operator* (void) const;
-      
-        /**
-         * Checks to see if the variable has ever been assigned a value
-         * @return true if the record has been set to a value. False if
-         *         uninitialized
-         **/
-        bool exists (void) const;
-      
-        /**
-         * Increments by a value
-         * @param  value  the value to add
-         * @return the new value
-         **/
-        type operator+= (type value);
-        
-        /**
-         * Decrements by a value
-         * @param  value  the value to remove
-         * @return the new value
-         **/
-        type operator-= (type value);
-        
-        /**
-         * Increments the value of the variable and returns
-         * the result.
-         * @return the new value of the variable
-         **/
-        type operator++ (void);
-        
-        /**
-         * Decrements the value of the variable and returns
-         * the result.
-         * @return the new value of the variable
-         **/
-        type operator-- (void);
-        
-        /**
-         * Returns the value as a Knowledge_Record. This
+         * Returns the barrier round number as a Knowledge_Record. This
          * is useful for referencing clock and other record info.
          * @return the value as a Knowledge_Record
          **/
         Knowledge_Record to_record (void) const;
 
         /**
-         * Returns the value as a double
+         * Returns the barrier round number as a double
          * @return the value as a double
          **/
         double to_double (void) const;
         
         /**
-         * Returns the value as an integer (same as *)
+         * Returns the barrier round number as an integer (same as *)
          * @return the value as an integer
          **/
         Knowledge_Record::Integer to_integer (void) const;
         
         /**
-         * Returns the value as a string
+         * Returns the barrier round number as a string
          * @return the value as a string
          **/
         std::string to_string (void) const;
+        
+        /**
+         * Checks for equality
+         * @param  value  the value to compare to
+         * @return true if equal, false otherwise
+         **/
+        bool operator== (const Barrier & value) const;
+        
+        /**
+         * Checks for inequality
+         * @param  value  the value to compare to
+         * @return true if inequal, false otherwise
+         **/
+        bool operator!= (const Barrier & value) const;
         
         /**
          * Sets the update settings for the variable
@@ -269,7 +215,7 @@ namespace Madara
           const Knowledge_Update_Settings & settings);
 
         /**
-         * Sets the quality of writing to the variable
+         * Sets the quality of writing to the barrier variables
          *
          * @param quality         quality of writing to this location
          * @param settings        settings for referring to knowledge variables
@@ -278,8 +224,38 @@ namespace Madara
                const Knowledge_Reference_Settings & settings =
                        Knowledge_Reference_Settings (false));
       
+        /**
+         * Resizes the barrier, usually when number of participants change
+         * @param id        the id of this barrier in the barrier ring
+         * @param participants the number of participants in barrier ring
+         **/
+        void resize (int id = 0, int participants = 1);
 
       private:
+        /**
+         * Builds the aggregate barrier logic
+         **/
+        void build_aggregate_barrier (void);
+        
+        /**
+         * Checks if current barrier is successful
+         * @return  0 if unsuccessful, otherwise it is successful
+         **/
+        inline type barrier_result (void)
+        {
+          return context_->evaluate (aggregate_barrier_, no_harm).to_integer ();
+        }
+
+        /**
+         * Builds the variable that is actually incremented
+         **/
+        void build_var (void);
+
+        /**
+         * Initialize the no harm eval settings
+         **/
+        void init_noharm (void);
+
         /// guard for access and changes
         typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
       
@@ -291,7 +267,7 @@ namespace Madara
         /**
          * Variable context that we are modifying
          **/
-        Thread_Safe_Context * context_;
+        mutable Thread_Safe_Context * context_;
 
         /**
          * Prefix of variable
@@ -304,9 +280,34 @@ namespace Madara
         Variable_Reference variable_;
 
         /**
+         * id of this barrier in the barrier ring
+         **/
+        int id_;
+
+        /**
+         * the number of participants in the barrier ring
+         **/
+        int participants_;
+
+        /**
          * Settings for modifications
          **/
         Knowledge_Update_Settings settings_;
+
+        /**
+         * Expression for aggregating barrier in one atomic operation
+         **/
+        Compiled_Expression aggregate_barrier_;
+        
+        /**
+         * Settings we'll use for all evaluations
+         **/
+        Eval_Settings no_harm;
+
+        /**
+         * Holder for variable name to quickly refresh modified status
+         **/
+        std::string variable_name_;
       };
     }
   }
@@ -315,4 +316,4 @@ namespace Madara
 
 
 
-#endif // _MADARA_INTEGER_H_
+#endif // _MADARA_CONTAINERS_BARRIER_H_

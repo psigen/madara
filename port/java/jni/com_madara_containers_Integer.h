@@ -80,6 +80,38 @@ MADARA_Export jdouble JNICALL Java_com_madara_containers_Integer_jni_1toDouble
 MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1toLong
   (JNIEnv *, jobject, jlong);
 
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_inc
+ * Signature: (J)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1inc
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_dec
+ * Signature: (J)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1dec
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_incValue
+ * Signature: (JJ)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1incValue
+  (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_decValue
+ * Signature: (JJ)J
+ */
+MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1decValue
+  (JNIEnv *, jobject, jlong, jlong);
+
 #ifdef __cplusplus
 }
 #endif

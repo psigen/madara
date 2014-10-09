@@ -42,9 +42,30 @@ project (Test_Rebroadcast_Ring) : using_madara, using_ace {
   }
 }
 
-project (Test_Fragmentation) : using_madara, using_ace {
+project (Test_Barrier) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
-  exename = test_fragmentation
+  exename = test_barrier
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/transports/test_barrier.cpp
+  }
+}
+
+project (Test_Counter) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_counter
   
   
   requires += tests
@@ -60,7 +81,7 @@ project (Test_Fragmentation) : using_madara, using_ace {
   }
 
   Source_Files {
-    tests/test_fragmentation.cpp
+    tests/transports/test_counter.cpp
   }
 }
 
