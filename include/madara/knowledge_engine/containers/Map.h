@@ -65,6 +65,19 @@ namespace Madara
          **/
         ~Map ();
         
+        /**
+         * Mark the vector as modified. The map retains the same values
+         * but will resend values as if they had been modified.
+         **/
+        void modify (void);
+
+        /**
+         * Mark the value as modified. The map element retains its value
+         * but will resend its value as if it had been modified.
+         * @param  index  the index to modify
+         **/
+        void modify (const std::string & index);
+    
         
         /**
          * Assignment operator

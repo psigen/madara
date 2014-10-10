@@ -67,6 +67,16 @@ Madara::Knowledge_Engine::Containers::String::~String ()
 }
 
 void
+Madara::Knowledge_Engine::Containers::String::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (variable_);
+  }
+}
+
+void
 Madara::Knowledge_Engine::Containers::String::operator= (const String & rhs)
 {
   if (this != &rhs)

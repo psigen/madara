@@ -48,7 +48,27 @@ Madara::Knowledge_Engine::Containers::Vector::~Vector ()
 {
 
 }
-
+  
+void
+Madara::Knowledge_Engine::Containers::Vector::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    for (size_t index = 0; index < vector_.size (); ++index)
+      context_->mark_modified (vector_[index]);
+  }
+}
+  
+void
+Madara::Knowledge_Engine::Containers::Vector::modify (size_t index)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "" && index < vector_.size ())
+  {
+    context_->mark_modified (vector_[index]);
+  }
+}
 
 void
 Madara::Knowledge_Engine::Containers::Vector::operator= (

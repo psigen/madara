@@ -46,7 +46,17 @@ Madara::Knowledge_Engine::Containers::Native_Integer_Vector::~Native_Integer_Vec
 {
 
 }
-
+  
+void
+Madara::Knowledge_Engine::Containers::Native_Integer_Vector::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (vector_);
+  }
+}
+ 
 void
 Madara::Knowledge_Engine::Containers::Native_Integer_Vector::operator= (
   const Native_Integer_Vector & rhs)

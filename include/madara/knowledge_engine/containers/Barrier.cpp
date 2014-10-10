@@ -331,6 +331,16 @@ Madara::Knowledge_Engine::Containers::Barrier::is_done (void)
 
   return result;
 }
+  
+void
+Madara::Knowledge_Engine::Containers::Barrier::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (variable_);
+  }
+}
  
 
 double

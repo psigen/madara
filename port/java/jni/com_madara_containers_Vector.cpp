@@ -3,8 +3,8 @@
 #include "madara/knowledge_engine/containers/Vector.h"
 #include <iostream>
 
-namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 /*
  * Class:     com_madara_containers_Vector

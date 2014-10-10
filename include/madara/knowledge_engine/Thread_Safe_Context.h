@@ -665,7 +665,13 @@ namespace Madara
        * Changes all global variables to modified at current clock.
        **/
       void apply_modified (void);
-
+      
+      /**
+       * Marks the variable reference as updated
+       * @param   variable  reference to a variable (@see get_ref)
+       **/
+      void mark_modified (const Variable_Reference & variable);
+      
       /**
        * Changes global variables to modified at current clock.
        * @param  key     the key of the record you are changing

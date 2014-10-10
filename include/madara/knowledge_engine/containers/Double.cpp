@@ -65,7 +65,17 @@ Madara::Knowledge_Engine::Containers::Double::~Double ()
 {
 
 }
-
+  
+void
+Madara::Knowledge_Engine::Containers::Double::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (variable_);
+  }
+}
+ 
 void
 Madara::Knowledge_Engine::Containers::Double::operator= (const Double & rhs)
 {

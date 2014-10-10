@@ -11,39 +11,44 @@ import com.madara.KnowledgeBase;
 import com.madara.Variables;
 
 /**
- * A facade for a double value within a knowledge base
+ * A facade for distributed adder within a knowledge base
  **/
 
-public class Double extends MadaraJNI
+public class Counter extends MadaraJNI
 {	
-  private native long jni_Double();
-  private native long jni_Double(long cptr);
-  private static native void jni_freeDouble(long cptr);
-  private native void jni_set(long cptr, double value);
+  private native long jni_Counter();
+  private native long jni_Counter(long cptr);
+  private static native void jni_freeCounter(long cptr);
+  private native void jni_set(long cptr, long value);
   private native java.lang.String jni_getName(long cptr);
   private native void jni_setName(long cptr, long type, long kb, java.lang.String name);
   private native java.lang.String jni_toString(long cptr);
   private native double jni_toDouble(long cptr);
   private native long jni_toLong(long cptr);
+  private native void jni_inc(long cptr);
+  private native void jni_dec(long cptr);
+  private native void jni_incValue(long cptr, long value);
+  private native void jni_decValue(long cptr, long value);
   private native void jni_modify(long cptr);
+  private native void jni_resize(long cptr, int id, int counters);
 
   private boolean manageMemory = true;
 
   /**
    * Default constructor
    **/
-  public Double()
+  public Counter()
   {
-    setCPtr(jni_Double());
+    setCPtr(jni_Counter());
   }
-
+  
   /**
    * Copy constructor
    * @param input  instance to copy
    **/
-  public Double(Double input)
+  public Counter(Counter input)
   {
-    setCPtr(jni_Double(input.getCPtr()));
+    setCPtr(jni_Counter(input.getCPtr()));
   }
 
   /**
@@ -52,9 +57,9 @@ public class Double extends MadaraJNI
    * @param cptr C pointer to the object
    * @return a new java instance of the underlying pointer
    */
-  public static Double fromPointer(long cptr)
+  public static Counter fromPointer(long cptr)
   {
-    Double ret = new Double();
+    Counter ret = new Counter();
     ret.manageMemory = true;
     ret.setCPtr(cptr);
     return ret;
@@ -67,9 +72,9 @@ public class Double extends MadaraJNI
    * @param shouldManage  if true, manage the pointer
    * @return a new java instance of the underlying pointer
    */
-  public static Double fromPointer(long cptr, boolean shouldManage)
+  public static Counter fromPointer(long cptr, boolean shouldManage)
   {
-    Double ret = new Double();
+    Counter ret = new Counter();
     ret.manageMemory=shouldManage;
     ret.setCPtr(cptr);
     return ret;
@@ -80,9 +85,9 @@ public class Double extends MadaraJNI
    *
    * @return   current value
    */
-  public double get()
+  public long get()
   {
-    return jni_toDouble(getCPtr());
+    return jni_toLong(getCPtr());
   }
 
   /**
@@ -96,15 +101,70 @@ public class Double extends MadaraJNI
   }
 
   /**
+   * Increments the container
+   */
+  public void inc()
+  {
+    jni_inc(getCPtr());
+  }
+
+  /**
+   * Increments by a value
+   *
+   * @param  value   value to increment by
+   */
+  public void inc(long value)
+  {
+    jni_incValue(getCPtr(), value);
+  }
+
+  /**
+   * Decrements the container
+   */
+  public void dec()
+  {
+    jni_dec(getCPtr());
+  }
+
+  /**
+   * Decrements by a value
+   *
+   * @param  value   value to increment by
+   */
+  public void dec(long value)
+  {
+    jni_decValue(getCPtr(), value);
+  }
+
+  /**
    * Sets the value
    *
    * @param  value   new value
    */
-  public void set(double value)
+  public void set(long value)
   {
     jni_set(getCPtr(), value);
   }
 
+  /**
+   * Mark the value as modified. The Counter retains the same value
+   * but will resend its value as if it had been modified.
+   **/
+  public void modify()
+  {
+    jni_modify(getCPtr());
+  }
+      
+  /**
+   * Resizes the counter, usually when number of counters change
+   * @param id        the id of this counter in the counter ring
+   * @param counters the number of counters in counter ring
+   **/
+  public void resize(int id, int counters)
+  {
+   jni_resize(getCPtr(), id, counters); 
+  }
+  
   /**
    * Sets the name and knowledge base being referred to
    *
@@ -127,15 +187,6 @@ public class Double extends MadaraJNI
     jni_setName(getCPtr(), 1, vars.getCPtr (), name);
   }
 
-  /**
-   * Mark the value as modified. The Double retains the same value
-   * but will resend its value as if it had been modified.
-   **/
-  public void modify()
-  {
-    jni_modify(getCPtr());
-  }
-   
   /**
    * Converts the value to a double
    *
@@ -174,7 +225,7 @@ public class Double extends MadaraJNI
   {
     if (manageMemory)
     {
-      jni_freeDouble(getCPtr());
+      jni_freeCounter(getCPtr());
     }
   }
 }

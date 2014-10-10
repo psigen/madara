@@ -2,8 +2,8 @@
 #include "com_madara_containers_StringVector.h"
 #include "madara/knowledge_engine/containers/String_Vector.h"
 
-namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 /*
  * Class:     com_madara_containers_StringVector
@@ -201,4 +201,12 @@ MADARA_Export void JNICALL Java_com_madara_containers_StringVector_jni_1resize
   containers::String_Vector * current = (containers::String_Vector *) cptr;
   if (current)
     current->resize (length);
+}
+
+void JNICALL Java_com_madara_containers_StringVector_jni_1modify
+  (JNIEnv *, jobject, jlong cptr)
+{
+  containers::String_Vector * current = (containers::String_Vector *) cptr;
+  if (current)
+    current->modify ();
 }

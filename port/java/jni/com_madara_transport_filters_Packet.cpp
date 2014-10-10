@@ -1,8 +1,6 @@
 #include "com_madara_transport_filters_Packet.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 
-
-
 /*
  * Class:     com_madara_transport_filters_Packet
  * Method:    jni_get

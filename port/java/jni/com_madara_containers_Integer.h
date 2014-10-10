@@ -112,6 +112,14 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1incValue
 MADARA_Export jlong JNICALL Java_com_madara_containers_Integer_jni_1decValue
   (JNIEnv *, jobject, jlong, jlong);
 
+/*
+ * Class:     com_madara_containers_Integer
+ * Method:    jni_modify
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_containers_Integer_jni_1modify
+  (JNIEnv *, jobject, jlong);
+
 #ifdef __cplusplus
 }
 #endif

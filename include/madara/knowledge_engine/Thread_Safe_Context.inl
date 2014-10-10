@@ -624,9 +624,19 @@ Madara::Knowledge_Engine::Thread_Safe_Context::mark_local_modified (
 
 inline void
 Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
+  const Variable_Reference & variable)
+{
+  Context_Guard guard (mutex_);
+  
+  if (variable.record_ != 0)
+    changed_map_[variable.name_.get_ptr ()] = variable.record_;
+}
+      
+
+inline void
+Madara::Knowledge_Engine::Thread_Safe_Context::mark_modified (
   const std::string & key, Madara::Knowledge_Record & record,
-  const Knowledge_Reference_Settings & settings
-  )
+  const Knowledge_Reference_Settings & settings)
 {
   // enter the mutex
   std::string key_actual;

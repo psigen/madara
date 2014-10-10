@@ -175,7 +175,17 @@ Madara::Knowledge_Engine::Containers::Counter::init_noharm (void)
   no_harm.track_local_changes = false;
   no_harm.treat_globals_as_locals = true;
 }
-
+  
+void
+Madara::Knowledge_Engine::Containers::Counter::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (variable_);
+  }
+}
+ 
 std::string
 Madara::Knowledge_Engine::Containers::Counter::get_name (void) const
 {

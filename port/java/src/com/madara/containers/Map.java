@@ -31,14 +31,23 @@ public class Map extends MadaraJNI
     long type, long kb, java.lang.String name);
   private native long jni_get(long cptr, java.lang.String key);
   private native long jni_toRecord(long cptr, java.lang.String key);
+  private native void jni_modify(long cptr);
+  private native void jni_modifyIndex(long cptr, java.lang.String index);
 
   private boolean manageMemory = true;
 
+  /**
+   * Default constructor
+   **/
   public Map()
   {
     setCPtr(jni_Map());
   }
 
+  /**
+   * Copy constructor
+   * @param input  instance to copy
+   **/
   public Map(Map input)
   {
     setCPtr(jni_Map(input.getCPtr()));
@@ -94,6 +103,25 @@ public class Map extends MadaraJNI
     return jni_getName(getCPtr());
   }
 
+  /**
+   * Mark the map as modified. The maps retains the same values
+   * but will resend all values as if they had been modified.
+   **/
+  public void modify()
+  {
+    jni_modify(getCPtr());
+  }
+  
+  /**
+   * Mark an element as modified. The element retains the same value
+   * but will resend the value as if it had been modified.
+   * @param key  the element key
+   **/
+  public void modify(java.lang.String key)
+  {
+    jni_modifyIndex(getCPtr(), key);
+  }
+  
   /**
    * Sets the value
    *

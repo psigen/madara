@@ -2,8 +2,8 @@
 #include "com_madara_containers_Integer.h"
 #include "madara/knowledge_engine/containers/Integer.h"
 
-namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 /*
  * Class:     com_madara_containers_Integer
@@ -220,3 +220,10 @@ jlong JNICALL Java_com_madara_containers_Integer_jni_1toLong
   return result;
 }
 
+void JNICALL Java_com_madara_containers_Integer_jni_1modify
+  (JNIEnv *, jobject, jlong cptr)
+{
+  containers::Integer * current = (containers::Integer *) cptr;
+  if (current)
+    current->modify ();
+}

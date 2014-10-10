@@ -13,7 +13,7 @@ extern "C" {
  * Method:    jni_IntegerVector
  * Signature: ()J
  */
-MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1IntegerVector__
+JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1IntegerVector__
   (JNIEnv *, jobject);
 
 /*
@@ -21,7 +21,7 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1Intege
  * Method:    jni_IntegerVector
  * Signature: (J)J
  */
-MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1IntegerVector__J
+JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1IntegerVector__J
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -29,7 +29,7 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1Intege
  * Method:    jni_freeIntegerVector
  * Signature: (J)V
  */
-MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1freeIntegerVector
+JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_jni_1freeIntegerVector
   (JNIEnv *, jclass, jlong);
 
 /*
@@ -37,7 +37,7 @@ MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1freeInt
  * Method:    jni_set
  * Signature: (JIJ)V
  */
-MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1set
+JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_jni_1set
   (JNIEnv *, jobject, jlong, jint, jlong);
 
 /*
@@ -45,7 +45,7 @@ MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1set
  * Method:    jni_getName
  * Signature: (J)Ljava/lang/String;
  */
-MADARA_Export jstring JNICALL Java_com_madara_containers_IntegerVector_jni_1getName
+JNIEXPORT jstring JNICALL Java_com_madara_containers_IntegerVector_jni_1getName
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -53,7 +53,7 @@ MADARA_Export jstring JNICALL Java_com_madara_containers_IntegerVector_jni_1getN
  * Method:    jni_setName
  * Signature: (JJJLjava/lang/String;)V
  */
-MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1setName
+JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_jni_1setName
   (JNIEnv *, jobject, jlong, jlong, jlong, jstring);
 
 /*
@@ -61,7 +61,7 @@ MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1setName
  * Method:    jni_get
  * Signature: (JI)J
  */
-MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1get
+JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1get
   (JNIEnv *, jobject, jlong, jint);
 
 /*
@@ -69,7 +69,7 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1get
  * Method:    jni_toRecord
  * Signature: (JI)J
  */
-MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toRecord__JI
+JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toRecord__JI
   (JNIEnv *, jobject, jlong, jint);
 
 /*
@@ -77,7 +77,7 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toReco
  * Method:    jni_toRecord
  * Signature: (J)J
  */
-MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toRecord__J
+JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toRecord__J
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -85,7 +85,7 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1toReco
  * Method:    jni_toArray
  * Signature: (J)[Ljava/lang/Object;
  */
-MADARA_Export jobjectArray JNICALL Java_com_madara_containers_IntegerVector_jni_1toArray
+JNIEXPORT jobjectArray JNICALL Java_com_madara_containers_IntegerVector_jni_1toArray
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -93,7 +93,7 @@ MADARA_Export jobjectArray JNICALL Java_com_madara_containers_IntegerVector_jni_
  * Method:    jni_size
  * Signature: (J)J
  */
-MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1size
+JNIEXPORT jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1size
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -101,8 +101,24 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_IntegerVector_jni_1size
  * Method:    jni_resize
  * Signature: (JJ)V
  */
-MADARA_Export void JNICALL Java_com_madara_containers_IntegerVector_jni_1resize
+JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_jni_1resize
   (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     com_madara_containers_IntegerVector
+ * Method:    modify
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_modify
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_containers_IntegerVector
+ * Method:    modifyIndex
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_com_madara_containers_IntegerVector_modifyIndex
+  (JNIEnv *, jobject, jlong, jint);
 
 #ifdef __cplusplus
 }

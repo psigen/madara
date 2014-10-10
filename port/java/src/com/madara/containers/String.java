@@ -25,14 +25,22 @@ public class String extends MadaraJNI
   private native java.lang.String jni_toString(long cptr);
   private native double jni_toDouble(long cptr);
   private native long jni_toLong(long cptr);
+  private native void jni_modify(long cptr);
 
   private boolean manageMemory = true;
 
+  /**
+   * Default constructor
+   **/
   public String()
   {
     setCPtr(jni_String());
   }
 
+  /**
+   * Copy constructor
+   * @param input  instance to copy
+   **/
   public String(String input)
   {
     setCPtr(jni_String(input.getCPtr()));
@@ -87,6 +95,15 @@ public class String extends MadaraJNI
     return jni_getName(getCPtr());
   }
 
+  /**
+   * Mark the value as modified. The String retains the same value
+   * but will resend its value as if it had been modified.
+   **/
+  public void modify()
+  {
+    jni_modify(getCPtr());
+  }
+  
   /**
    * Sets the value
    *

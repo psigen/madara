@@ -143,6 +143,12 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Variables & knowledge);
+        
+        /**
+         * Mark the value as modified. The Counter retains the same value
+         * but will resend its value as if it had been modified.
+         **/
+        void modify (void);
 
         /**
          * Sets the value of the variable

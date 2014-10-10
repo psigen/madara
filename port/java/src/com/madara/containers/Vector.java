@@ -31,14 +31,23 @@ public class Vector extends MadaraJNI
   private native Object[] jni_toArray(long cptr);
   private native long jni_size(long cptr);
   private native void jni_resize(long cptr, long length);
+  private native void jni_modify(long cptr);
+  private native void jni_modifyIndex(long cptr, int index);
 
   private boolean manageMemory = true;
   
+  /**
+   * Default constructor
+   **/
   public Vector()
   {
     setCPtr(jni_Vector());
   }
 
+  /**
+   * Copy constructor
+   * @param input  instance to copy
+   **/
   public Vector(Vector input)
   {
     setCPtr(jni_Vector(input.getCPtr()));
@@ -148,6 +157,25 @@ public class Vector extends MadaraJNI
     jni_set(getCPtr(), index, 1, value.getCPtr ());
   }
 
+  /**
+   * Mark the vector as modified. The vector retains the same values
+   * but will resend all values as if they had been modified.
+   **/
+  public void modify()
+  {
+    jni_modify(getCPtr());
+  }
+  
+  /**
+   * Mark an element as modified. The element retains the same value
+   * but will resend the value as if it had been modified.
+   * @param index  the element index
+   **/
+  public void modify(int index)
+  {
+    jni_modifyIndex(getCPtr(), index);
+  }
+  
   /**
    * Sets the name and knowledge base being referred to
    *

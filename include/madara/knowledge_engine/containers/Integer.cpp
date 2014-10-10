@@ -64,7 +64,17 @@ Madara::Knowledge_Engine::Containers::Integer::~Integer ()
 {
 
 }
-
+  
+void
+Madara::Knowledge_Engine::Containers::Integer::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (variable_);
+  }
+}
+ 
 void
 Madara::Knowledge_Engine::Containers::Integer::operator= (const Integer & rhs)
 {

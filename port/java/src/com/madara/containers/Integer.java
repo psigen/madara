@@ -29,14 +29,22 @@ public class Integer extends MadaraJNI
   private native long jni_dec(long cptr);
   private native long jni_incValue(long cptr, long value);
   private native long jni_decValue(long cptr, long value);
+  private native void jni_modify(long cptr);
 
   private boolean manageMemory = true;
 
+  /**
+   * Default constructor
+   **/
   public Integer()
   {
     setCPtr(jni_Integer());
   }
 
+  /**
+   * Copy constructor
+   * @param input  instance to copy
+   **/
   public Integer(Integer input)
   {
     setCPtr(jni_Integer(input.getCPtr()));
@@ -143,6 +151,15 @@ public class Integer extends MadaraJNI
     jni_set(getCPtr(), value);
   }
 
+  /**
+   * Mark the value as modified. The Integer retains the same value
+   * but will resend its value as if it had been modified.
+   **/
+  public void modify()
+  {
+    jni_modify(getCPtr());
+  }
+  
   /**
    * Sets the name and knowledge base being referred to
    *

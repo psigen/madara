@@ -86,7 +86,7 @@ namespace Madara
        * necessary if the context has been explicitly locked)
        **/
       void unlock (void);
-
+      
       /**
        * Starts the transport mechanism for dissemination if it is closed
        **/
@@ -153,6 +153,12 @@ namespace Madara
         get_ref (const std::string & key,
              const Knowledge_Reference_Settings & settings =
                      Knowledge_Reference_Settings ());
+      
+      /**
+       * Marks the variable reference as updated
+       * @param   variable  reference to a variable (@see get_ref)
+       **/
+      void mark_modified (const Variable_Reference & variable);
       
       /**
        * Retrieves a value at a specified index within a knowledge array

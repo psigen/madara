@@ -97,6 +97,12 @@ namespace Madara
         ~String ();
         
         /**
+         * Mark the value as modified. The String retains the same value
+         * but will resend its value as if it had been modified.
+         **/
+        void modify (void);
+
+        /**
          * Assignment operator
          * @param  rhs    value to copy
          **/

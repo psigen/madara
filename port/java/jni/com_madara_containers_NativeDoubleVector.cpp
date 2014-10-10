@@ -2,8 +2,8 @@
 #include "com_madara_containers_NativeDoubleVector.h"
 #include "madara/knowledge_engine/containers/Native_Double_Vector.h"
 
-namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 /*
  * Class:     com_madara_containers_NativeDoubleVector
@@ -11,7 +11,7 @@ namespace engine = Madara::Knowledge_Engine;
  * Signature: ()J
  */
 MADARA_Export jlong JNICALL Java_com_madara_containers_NativeDoubleVector_jni_1NativeDoubleVector__
-  (JNIEnv * env, jobject)
+  (JNIEnv *, jobject)
 {
   return (jlong) new containers::Native_Double_Vector ();
 }
@@ -24,7 +24,8 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_NativeDoubleVector_jni_1N
 MADARA_Export jlong JNICALL Java_com_madara_containers_NativeDoubleVector_jni_1NativeDoubleVector__J
   (JNIEnv * env, jobject, jlong cptr)
 {
-  return (jlong) new containers::Native_Double_Vector (*(containers::Native_Double_Vector *)cptr);
+  return (jlong) new containers::Native_Double_Vector (
+    *(containers::Native_Double_Vector *)cptr);
 }
 
 /*

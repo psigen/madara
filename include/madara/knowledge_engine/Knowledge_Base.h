@@ -168,6 +168,12 @@ namespace Madara
                      Knowledge_Reference_Settings (false));
       
       /**
+       * Marks the variable reference as updated
+       * @param   variable  reference to a variable (@see get_ref)
+       **/
+      void mark_modified (const Variable_Reference & variable);
+      
+      /**
        * Retrieves a value at a specified index within a knowledge array
        * @param key              knowledge location
        * @param index            index within the array

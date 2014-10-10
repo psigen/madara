@@ -66,6 +66,30 @@ Madara::Knowledge_Engine::Containers::Map::~Map ()
 {
 
 }
+  
+void
+Madara::Knowledge_Engine::Containers::Map::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    for (Internal_Map::const_iterator index = map_.end ();
+         index != map_.end (); ++index)
+    {
+      context_->mark_modified (index->second);
+    }
+  }
+}
+  
+void
+Madara::Knowledge_Engine::Containers::Map::modify (const std::string & index)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "" && map_.find (index) != map_.end ())
+  {
+    context_->mark_modified (map_[index]);
+  }
+}
 
 
 void

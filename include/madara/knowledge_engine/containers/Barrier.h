@@ -168,6 +168,12 @@ namespace Madara
         bool is_done (void);
         
         /**
+         * Mark the value as modified. The barrier retains the same value
+         * but will resend its value as if it had been modified.
+         **/
+        void modify (void);
+
+        /**
          * Returns the barrier round number as a Knowledge_Record. This
          * is useful for referencing clock and other record info.
          * @return the value as a Knowledge_Record

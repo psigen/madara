@@ -2,8 +2,8 @@
 #include "com_madara_containers_Double.h"
 #include "madara/knowledge_engine/containers/Double.h"
 
-namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 /*
  * Class:     com_madara_containers_Double
@@ -56,7 +56,7 @@ void JNICALL Java_com_madara_containers_Double_jni_1set
  * Method:    jni_getName
  * Signature: (J)Lcom/madara/containers/String;
  */
-jobject JNICALL Java_com_madara_containers_Double_jni_1getName
+jstring JNICALL Java_com_madara_containers_Double_jni_1getName
   (JNIEnv * env, jobject, jlong cptr)
 {
   jstring result;
@@ -102,7 +102,7 @@ void JNICALL Java_com_madara_containers_Double_jni_1setName
  * Method:    jni_toString
  * Signature: (J)Lcom/madara/containers/String;
  */
-jobject JNICALL Java_com_madara_containers_Double_jni_1toString
+jstring JNICALL Java_com_madara_containers_Double_jni_1toString
   (JNIEnv * env, jobject, jlong cptr)
 {
   jstring result;
@@ -146,4 +146,12 @@ jlong JNICALL Java_com_madara_containers_Double_jni_1toLong
     result = current->to_integer ();
 
   return result;
+}
+
+void JNICALL Java_com_madara_containers_Double_jni_1modify
+  (JNIEnv *, jobject, jlong cptr)
+{
+  containers::Double * current = (containers::Double *) cptr;
+  if (current)
+    current->modify ();
 }

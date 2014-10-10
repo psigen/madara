@@ -46,7 +46,17 @@ Madara::Knowledge_Engine::Containers::Native_Double_Vector::~Native_Double_Vecto
 {
 
 }
-
+  
+void
+Madara::Knowledge_Engine::Containers::Native_Double_Vector::modify (void)
+{
+  Context_Guard context_guard (*context_);
+  if (context_ && name_ != "")
+  {
+    context_->mark_modified (vector_);
+  }
+}
+ 
 void
 Madara::Knowledge_Engine::Containers::Native_Double_Vector::operator= (
   const Native_Double_Vector & rhs)

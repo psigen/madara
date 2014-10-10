@@ -33,6 +33,7 @@ public class NativeIntegerVector extends MadaraJNI
   private native Object[] jni_toArray(long cptr);
   private native long jni_size(long cptr);
   private native void jni_resize(long cptr, long length);
+  private native void jni_modify(long cptr);
 
   private boolean manageMemory = true;
 
@@ -115,6 +116,15 @@ public class NativeIntegerVector extends MadaraJNI
     jni_set(getCPtr(), index, value);
   }
 
+  /**
+   * Mark the vector as modified. The vector retains the same values
+   * but will resend all values as if they had been modified.
+   **/
+  public void modify()
+  {
+    jni_modify(getCPtr());
+  }
+  
   /**
    * Sets the name and knowledge base being referred to
    *

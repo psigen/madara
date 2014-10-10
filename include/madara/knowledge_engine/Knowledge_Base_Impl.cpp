@@ -295,6 +295,13 @@ Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   return result;
 }
 
+void
+Madara::Knowledge_Engine::Knowledge_Base_Impl::mark_modified (
+  const Variable_Reference & variable)
+{
+  map_.mark_modified (variable);
+}
+
 int
 Madara::Knowledge_Engine::Knowledge_Base_Impl::set (
   const Variable_Reference & variable, 

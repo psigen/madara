@@ -2,8 +2,8 @@
 #include "com_madara_containers_String.h"
 #include "madara/knowledge_engine/containers/String.h"
 
-namespace containers = Madara::Knowledge_Engine::Containers;
 namespace engine = Madara::Knowledge_Engine;
+namespace containers = engine::Containers;
 
 /*
  * Class:     com_madara_containers_String
@@ -154,3 +154,10 @@ jlong JNICALL Java_com_madara_containers_String_jni_1toLong
   return result;
 }
 
+void JNICALL Java_com_madara_containers_String_jni_1modify
+  (JNIEnv *, jobject, jlong cptr)
+{
+  containers::String * current = (containers::String *) cptr;
+  if (current)
+    current->modify ();
+}

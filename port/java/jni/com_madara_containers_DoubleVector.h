@@ -104,6 +104,22 @@ MADARA_Export jlong JNICALL Java_com_madara_containers_DoubleVector_jni_1size
 MADARA_Export void JNICALL Java_com_madara_containers_DoubleVector_jni_1resize
   (JNIEnv *, jobject, jlong, jlong);
 
+/*
+ * Class:     com_madara_containers_DoubleVector
+ * Method:    modify
+ * Signature: (J)V
+ */
+MADARA_Export void JNICALL Java_com_madara_containers_DoubleVector_modify
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_madara_containers_DoubleVector
+ * Method:    modifyIndex
+ * Signature: (JI)V
+ */
+MADARA_Export void JNICALL Java_com_madara_containers_DoubleVector_modifyIndex
+  (JNIEnv *, jobject, jlong, jint);
+
 #ifdef __cplusplus
 }
 #endif
