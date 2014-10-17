@@ -44,6 +44,8 @@ Madara::Threads::Worker_Thread::Worker_Thread (
       base_string.str () + ".terminated", *control);
     thread->paused.set_name (
       base_string.str () + ".paused", *control);
+    thread->name = name;
+
     finished_.set_name (
       base_string.str () + ".finished", *control);
     started_.set_name (

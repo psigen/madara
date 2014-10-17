@@ -73,6 +73,11 @@ namespace Madara
     protected:
       
       /**
+       * The unique name of your thread
+       **/
+      std::string name;
+
+      /**
        * thread safe terminated flag that may be set by the Threader
        * base
        **/
