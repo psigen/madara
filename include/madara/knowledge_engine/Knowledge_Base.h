@@ -20,7 +20,7 @@
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/transport/Transport.h"
 #include "madara/expression_tree/Interpreter.h"
-#include "madara/utility/Refcounter.h"
+#include "madara/utility/Thread_Safe_Refcounter.h"
 #include "madara/knowledge_engine/Knowledge_Base_Impl.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Variable_Reference.h"
@@ -1048,7 +1048,7 @@ namespace Madara
 
       /// Pointer to actual implementation, i.e., the "bridge", which is
       /// reference counted to automate memory management. 
-      Madara::Utility::Refcounter <Knowledge_Base_Impl> impl_;
+      Madara::Utility::Thread_Safe_Refcounter <Knowledge_Base_Impl> impl_;
     };
 
   }

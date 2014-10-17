@@ -9,6 +9,7 @@
 #include "madara/expression_tree/Expression_Tree.h"
 #include "madara/knowledge_engine/Compiled_Expression.h"
 #include "madara/knowledge_engine/Variable_Reference.h"
+#include "madara/knowledge_engine/Function_Arguments.h"
 #include "madara/knowledge_engine/Functions.h"
 
 #ifdef _MADARA_PYTHON_CALLBACKS_

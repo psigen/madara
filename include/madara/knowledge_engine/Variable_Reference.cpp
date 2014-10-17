@@ -30,6 +30,20 @@ Madara::Knowledge_Engine::Variable_Reference::operator= (
   }
 }
 
+bool
+Madara::Knowledge_Engine::Variable_Reference::operator== (
+  const Variable_Reference & rhs) const
+{
+  return this->record_ == rhs.record_;
+}
+
+bool
+Madara::Knowledge_Engine::Variable_Reference::operator!= (
+  const Variable_Reference & rhs) const
+{
+  return this->record_ != rhs.record_;
+}
+
 const char *
 Madara::Knowledge_Engine::Variable_Reference::get_name (void)
 {

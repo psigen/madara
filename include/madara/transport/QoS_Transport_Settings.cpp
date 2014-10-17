@@ -63,6 +63,8 @@ Madara::Transport::QoS_Transport_Settings::QoS_Transport_Settings (
 
 Madara::Transport::QoS_Transport_Settings::~QoS_Transport_Settings ()
 {
+  // need to clean up functors
+
 
 }
 
@@ -223,6 +225,13 @@ Madara::Transport::QoS_Transport_Settings::add_send_filter (uint32_t types,
 }
 
 void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (uint32_t types,
+  Filters::Record_Filter * functor)
+{
+  send_filters_.add (types, functor);
+}
+
+void
 Madara::Transport::QoS_Transport_Settings::add_send_filter (
   Knowledge_Record (*function) (
         Knowledge_Map &, const Transport::Transport_Context &,
@@ -232,11 +241,25 @@ Madara::Transport::QoS_Transport_Settings::add_send_filter (
 }
 
 void
+Madara::Transport::QoS_Transport_Settings::add_send_filter (
+  Filters::Aggregate_Filter * functor)
+{
+  send_filters_.add (functor);
+}
+
+void
 Madara::Transport::QoS_Transport_Settings::add_receive_filter (uint32_t types,
   Madara::Knowledge_Record (*function) (
     Knowledge_Engine::Function_Arguments &, Knowledge_Engine::Variables &))
 {
   receive_filters_.add (types, function);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_receive_filter (uint32_t types,
+  Filters::Record_Filter * functor)
+{
+  receive_filters_.add (types, functor);
 }
 
 void
@@ -257,12 +280,26 @@ Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (uint32_t type
 }
 
 void
-  Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (uint32_t types,
+  Filters::Record_Filter * functor)
+{
+  rebroadcast_filters_.add (types, functor);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
   Knowledge_Record (*function) (
     Knowledge_Map &, const Transport::Transport_Context &,
     Knowledge_Engine::Variables &))
 {
   rebroadcast_filters_.add (function);
+}
+
+void
+Madara::Transport::QoS_Transport_Settings::add_rebroadcast_filter (
+  Filters::Aggregate_Filter * functor)
+{
+  rebroadcast_filters_.add (functor);
 }
 
 #ifdef _MADARA_JAVA_

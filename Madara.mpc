@@ -58,12 +58,16 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
   Template_Files {
     include/madara/utility/LQueue.cpp
     include/madara/utility/LStack.cpp
+    include/madara/utility/Refcounter.cpp
+    include/madara/utility/Thread_Safe_Refcounter.cpp
   }
 
   Source_Files {
     include/madara/expression_tree
+    include/madara/filters
     include/madara/knowledge_engine
     include/madara/knowledge_engine/containers
+    include/madara/threads
     include/madara/transport/tcp
     include/madara/transport/udp
     include/madara/transport/multicast
@@ -83,14 +87,14 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     include/madara/utility/tinyxml.cpp
     include/madara/utility/tinyxmlerror.cpp
     include/madara/utility/tinyxmlparser.cpp
-    include/madara/filters
   }
 
   Header_Files {
     include/madara/expression_tree
+    include/madara/filters
     include/madara/knowledge_engine
     include/madara/knowledge_engine/containers
-    include/madara/utility
+    include/madara/threads
     include/madara/transport/tcp
     include/madara/transport/udp
     include/madara/transport/multicast
@@ -104,8 +108,8 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     include/madara/transport/QoS_Transport_Settings.h
     include/madara/transport/Transport_Settings.h
     include/madara/transport/Transport_Context.h
+    include/madara/utility
     include/madara/MADARA_export.h
-    include/madara/filters
   }
 }
 

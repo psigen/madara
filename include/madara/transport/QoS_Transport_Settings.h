@@ -16,6 +16,8 @@
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
+#include "madara/filters/Aggregate_Filter.h"
+#include "madara/filters/Record_Filter.h"
 #include "madara/knowledge_engine/Knowledge_Record_Filters.h"
 
 #ifdef _MADARA_JAVA_
@@ -87,6 +89,15 @@ namespace Madara
                                       Knowledge_Engine::Variables &));
       
       /**
+       * Adds a filter that will be applied to certain types before sending
+       * @param   types      the types to add the filter to
+       * @param   filter     an instance of an individual record filter that
+       *                     will be managed by the underlying infrastructure
+       **/
+      void add_send_filter (uint32_t types,
+        Filters::Record_Filter * filter);
+      
+      /**
        * Adds an aggregate update filter that will be applied before sending,
        * after individual record filters.
        * @param   function  an aggregate update filter
@@ -94,7 +105,15 @@ namespace Madara
       void add_send_filter (Knowledge_Record (*function) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Knowledge_Engine::Variables &));
-
+      
+      /**
+       * Adds an aggregate update filter that will be applied before sending,
+       * after individual record filters.
+       * @param   filter     an instance of an aggregate record filter that
+       *                     will be managed by the underlying infrastructure
+       **/
+      void add_send_filter (Filters::Aggregate_Filter * filter);
+      
       /**
        * Adds a filter that will be applied to certain types after receiving
        * and before applying to the local knowledge base
@@ -107,6 +126,15 @@ namespace Madara
                                       Knowledge_Engine::Variables &));
       
       /**
+       * Adds a filter that will be applied to certain types after receiving
+       * @param   types      the types to add the filter to
+       * @param   filter     an instance of an individual record filter that
+       *                     will be managed by the underlying infrastructure
+       **/
+      void add_receive_filter (uint32_t types,
+        Filters::Record_Filter * filter);
+      
+      /**
        * Adds an aggregate update filter that will be applied after receiving,
        * after individual record filters.
        * @param   function  an aggregate update filter
@@ -115,6 +143,14 @@ namespace Madara
         Knowledge_Map &, const Transport::Transport_Context &,
         Knowledge_Engine::Variables &));
  
+      /**
+       * Adds an aggregate update filter that will be applied after receiving,
+       * after individual record filters.
+       * @param   filter     an instance of an aggregate record filter that
+       *                     will be managed by the underlying infrastructure
+       **/
+      void add_receive_filter (Filters::Aggregate_Filter * filter);
+      
       /**
        * Adds a filter that will be applied to certain types after receiving
        * and before rebroadcasting (if TTL > 0)
@@ -127,6 +163,16 @@ namespace Madara
                                       Knowledge_Engine::Variables &));
       
       /**
+       * Adds a filter that will be applied to certain types after receiving
+       * and before rebroadcasting (if TTL > 0)
+       * @param   types      the types to add the filter to
+       * @param   filter     an instance of an individual record filter that
+       *                     will be managed by the underlying infrastructure
+       **/
+      void add_rebroadcast_filter (uint32_t types,
+        Filters::Record_Filter * filter);
+      
+      /**
        * Adds an aggregate update filter that will be applied before
        * rebroadcasting, after individual record filters.
        * @param   function  an aggregate update filter
@@ -135,6 +181,14 @@ namespace Madara
         Knowledge_Map &, const Transport::Transport_Context &,
         Knowledge_Engine::Variables &));
  
+      /**
+       * Adds an aggregate update filter that will be applied before
+       * rebroadcasting, after individual record filters.
+       * @param   filter     an instance of an aggregate record filter that
+       *                     will be managed by the underlying infrastructure
+       **/
+      void add_rebroadcast_filter (Filters::Aggregate_Filter * filter);
+      
 #ifdef _MADARA_JAVA_
       
       /**

@@ -669,6 +669,7 @@ INPUT                  = ../include/madara/knowledge_engine \
                          ../include/madara/transport \
                          ../include/madara/expression_tree \
                          ../include/madara/utility \
+                         ../include/madara/threads \
                          ../include/madara/filters
 
 # This tag can be used to specify the character encoding of the source files

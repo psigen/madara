@@ -116,13 +116,13 @@ namespace Madara
          * Returns the id of the barrier in the barrier ring
          * @return the id of the barrier
          **/
-        int get_id (void) const;
+        size_t get_id (void) const;
         
         /**
          * Returns the number of participants in the barrier ring
          * @return the number of participants barriering
          **/
-        int get_participants (void) const;
+        size_t get_participants (void) const;
         
         /**
          * Returns the current barrier round
@@ -148,6 +148,14 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Variables & knowledge);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param var_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         **/
+        void set_name (const std::string & var_name,
+          Thread_Safe_Context & knowledge);
 
         /**
          * Sets the value of the variable
@@ -235,7 +243,7 @@ namespace Madara
          * @param id        the id of this barrier in the barrier ring
          * @param participants the number of participants in barrier ring
          **/
-        void resize (int id = 0, int participants = 1);
+        void resize (size_t id = 0, size_t participants = 1);
 
       private:
         /**
@@ -288,12 +296,12 @@ namespace Madara
         /**
          * id of this barrier in the barrier ring
          **/
-        int id_;
+        size_t id_;
 
         /**
          * the number of participants in the barrier ring
          **/
-        int participants_;
+        size_t participants_;
 
         /**
          * Settings for modifications

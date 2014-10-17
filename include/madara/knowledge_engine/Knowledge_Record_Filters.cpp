@@ -71,6 +71,39 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
   }
 }
 
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
+  Filters::Aggregate_Filter * functor)
+{
+  if (functor != 0)
+  {
+    aggregate_filters_.push_back (Aggregate_Filter (functor));
+  }
+}
+
+void
+Madara::Knowledge_Engine::Knowledge_Record_Filters::add (
+  uint32_t types,
+  Filters::Record_Filter * functor)
+{
+  if (functor != 0)
+  {
+    // start with 1st bit, check every bit until types is 0
+    for (uint32_t cur = 1; types > 0; cur <<= 1)
+    {
+      // if current is set in the bitmask
+      if (Madara::Utility::bitmask_check (types, cur))
+      {
+        // remove the filter list from the type cur
+        filters_[cur].push_back (Function (functor));
+      }
+
+      // remove the current flag from the types
+      types = Madara::Utility::bitmask_remove (types, cur);
+    }
+  }
+}
+
 #ifdef _MADARA_JAVA_
 
 void
@@ -258,8 +291,13 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
       // setup arguments to the function
       arguments[0] = result;
 
+      // optimize selection for functors, the preferred filter impl
+      if (i->is_functor ())
+      {
+        result = i->functor->filter (arguments, variables);
+      }
       // if the function is not zero
-      if (i->is_extern_unnamed ())
+      else if (i->is_extern_unnamed ())
       {
         result = i->extern_unnamed (arguments, variables);
       }
@@ -395,11 +433,16 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
     
     for (Aggregate_Filters::const_iterator i = aggregate_filters_.begin ();
          i != aggregate_filters_.end (); ++i)
-    { 
-      // if the function is not zero
-      if (i->is_extern_unnamed ())
+    {
+      // optimize selection for functors, the preferred filter impl
+      if (i->is_functor ())
       {
-        result = i->unnamed_filter (records, transport_context, variables);
+        i->functor->filter (records, transport_context, variables);
+      }
+      // if the function is not zero
+      else if (i->is_extern_unnamed ())
+      {
+        i->unnamed_filter (records, transport_context, variables);
       }
 
 #ifdef _MADARA_JAVA_
@@ -462,7 +505,7 @@ Madara::Knowledge_Engine::Knowledge_Record_Filters::filter (
         Python::Acquire_GIL acquire_gil;
 
         // some guides have stated that we should let python handle exceptions
-        result = boost::python::call <Madara::Knowledge_Record> (
+        boost::python::call <Madara::Knowledge_Record> (
           i->python_function.ptr (),
           boost::ref (records), boost::ref (transport_context), boost::ref (variables));
       }

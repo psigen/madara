@@ -21,6 +21,8 @@
 #include "madara/transport/Transport_Context.h"
 #include "madara/utility/stdint.h"
 #include "madara/MADARA_export.h"
+#include "madara/filters/Record_Filter.h"
+#include "madara/filters/Aggregate_Filter.h"
 
 #ifdef _MADARA_JAVA_
   #include <jni.h>
@@ -85,6 +87,19 @@ namespace Madara
       void add (Knowledge_Record (*function) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Variables &));
+      
+      /**
+       * Adds an aggregate filter functor
+       * @param filter     the functor that will filter the aggregation
+       **/
+      void add (Filters::Aggregate_Filter * filter);
+      
+      /**
+       * Adds an individual record filter functor
+       * @param   types      the types to add the filter to
+       * @param   filter     the functor that will filter the aggregation
+       **/
+      void add (uint32_t types, Filters::Record_Filter * filter);
       
 #ifdef _MADARA_JAVA_
       

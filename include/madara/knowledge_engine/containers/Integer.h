@@ -129,6 +129,14 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Variables & knowledge);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param var_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         **/
+        void set_name (const std::string & var_name,
+          Thread_Safe_Context & knowledge);
 
         /**
          * Exchanges the integer at this location with the integer at another

@@ -44,9 +44,9 @@ namespace Madara
       
       /**
        * Copy Constructor
-       * @param   ce      Compiled expression to copy from
+       * @param   rhs      variable reference to copy from
        **/
-      Variable_Reference (const Variable_Reference & ce);
+      Variable_Reference (const Variable_Reference & rhs);
 
       /**
        * Destructor
@@ -55,9 +55,21 @@ namespace Madara
 
       /**
        * Assignment operator
-       * @param   ce      Compiled expression to copy from
+       * @param   input      variable reference to copy from
        **/
-      void operator= (const Variable_Reference & ce);
+      void operator= (const Variable_Reference & input);
+      
+      /**
+       * Equality operator
+       * @param   rhs      variable reference to compare to
+       **/
+      bool operator== (const Variable_Reference & rhs) const;
+      
+      /**
+       * Inequality operator
+       * @param   rhs      variable reference to compare to
+       **/
+      bool operator!= (const Variable_Reference & rhs) const;
 
       /**
        * Returns the name of the variable

@@ -61,7 +61,7 @@ int ACE_TMAIN (int argc, ACE_TCHAR * argv[])
     Madara::Knowledge_Record::INTEGER |
     Madara::Knowledge_Record::DOUBLE |
     Madara::Knowledge_Record::IMAGE_JPEG,
-    0);
+    decrement_primitives);
   
   filters.print_num_filters ();
   

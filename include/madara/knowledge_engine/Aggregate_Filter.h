@@ -8,6 +8,7 @@
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Extern_Function_Variables.h"
 #include "madara/transport/Transport_Context.h"
+#include "madara/filters/Aggregate_Filter.h"
 
 #ifdef _MADARA_JAVA_
   #include <jni.h>
@@ -46,14 +47,15 @@ namespace Madara
         EXTERN_UNNAMED = 1,
         EXTERN_NAMED = 2,
         PYTHON_CALLABLE = 3,
-        JAVA_CALLABLE = 4
+        JAVA_CALLABLE = 4,
+        FUNCTOR = 5
       };
 
       /**
        * Default constructor
        **/
       Aggregate_Filter ()
-        : unnamed_filter (0), type (UNINITIALIZED)
+        : unnamed_filter (0), functor (0), type (UNINITIALIZED)
       {
       }
 
@@ -63,7 +65,15 @@ namespace Madara
       Aggregate_Filter (Knowledge_Record (*extern_func) (
         Knowledge_Map &, const Transport::Transport_Context &,
         Variables &))
-        : unnamed_filter (extern_func), type (EXTERN_UNNAMED)
+        : unnamed_filter (extern_func), functor (0), type (EXTERN_UNNAMED)
+      {
+      }
+      
+      /**
+       * Constructor for functor
+       **/
+      Aggregate_Filter (Filters::Aggregate_Filter * filter)
+        : unnamed_filter (0), functor (filter), type (FUNCTOR)
       {
       }
       
@@ -121,16 +131,21 @@ namespace Madara
       boost::python::object python_function;
 #endif
       
-      bool is_extern_unnamed (void) const
+      inline bool is_extern_unnamed (void) const
       {
         return type == EXTERN_UNNAMED && unnamed_filter;
       }
       
-      bool is_extern_named (void) const
+      inline bool is_extern_named (void) const
       {
         return type == EXTERN_NAMED && named_filter;
       }
   
+      inline bool is_functor (void) const
+      {
+        return functor != 0;
+      }
+
       bool is_uninitialized (void) const
       {
         return type == UNINITIALIZED;
@@ -146,6 +161,9 @@ namespace Madara
         const char *, Knowledge_Map &, 
         const Transport::Transport_Context &,
         Variables &);
+
+      /// mapped functor for aggregate filtering
+      Filters::Aggregate_Filter * functor;
 
       // type of function definition
       int type;

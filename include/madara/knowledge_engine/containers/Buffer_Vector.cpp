@@ -244,6 +244,26 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::set_name (
 }
 
 void
+Madara::Knowledge_Engine::Containers::Buffer_Vector::set_name (
+  const std::string & var_name,
+  Thread_Safe_Context & knowledge, int size)
+{
+  if (context_ != &knowledge || name_ != var_name)
+  {
+    context_ = &knowledge;
+
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    name_ = var_name;
+
+    vector_.clear ();
+    if (size > 0)
+      resize (size_t (size));
+  }
+}
+
+void
 Madara::Knowledge_Engine::Containers::Buffer_Vector::exchange (
   Buffer_Vector & other, bool refresh_keys, bool delete_keys)
 {
@@ -463,6 +483,23 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::set_file (
     Context_Guard context_guard (*context_);
     Guard guard (mutex_);
     result = context_->set_file (vector_[index], value, size, settings_);
+  }
+
+  return result;
+}
+ 
+int
+Madara::Knowledge_Engine::Containers::Buffer_Vector::set (
+  unsigned int index, const Knowledge_Record & value)
+{
+  int result = -1;
+  
+  if (index < vector_.size () && context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    context_->set (vector_[index], value, settings_);
   }
 
   return result;

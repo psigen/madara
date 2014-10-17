@@ -4,9 +4,11 @@
 
 #include <string>
 #include "madara/MADARA_export.h"
+#include "madara/knowledge_engine/Function_Arguments.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
 #include "madara/expression_tree/Expression_Tree.h"
+#include "madara/filters/Record_Filter.h"
 
 #ifdef _MADARA_JAVA_
 #include <jni.h>
@@ -33,8 +35,6 @@ namespace Madara
     class Thread_Safe_Context;
     
     typedef Madara::Knowledge_Record VALUE_TYPE;
-   
-    typedef  std::vector <Knowledge_Record>   Function_Arguments;
      
     /**
      * @class Function
@@ -54,14 +54,16 @@ namespace Madara
         EXTERN_NAMED = 2,
         KARL_EXPRESSION = 3,
         PYTHON_CALLABLE = 4,
-        JAVA_CALLABLE = 5
+        JAVA_CALLABLE = 5,
+        FUNCTOR = 6
       };
 
       /**
        * Default constructor
        **/
       Function ()
-        : extern_named (0), extern_unnamed (0), type (UNINITIALIZED)
+        : extern_named (0), extern_unnamed (0),
+          functor (0), type (UNINITIALIZED)
       {
       }
 
@@ -69,7 +71,8 @@ namespace Madara
        * Constructor for function pointer
        **/
       Function (Knowledge_Record (*func) (Function_Arguments &, Variables &))
-        : extern_named (0), extern_unnamed (func), type (EXTERN_UNNAMED)
+        : extern_named (0), extern_unnamed (func),
+          functor (0), type (EXTERN_UNNAMED)
       {
       }
       
@@ -78,7 +81,8 @@ namespace Madara
        **/
       Function (Knowledge_Record (*func) (const char *, 
         Function_Arguments &, Variables &))
-        : extern_named (func), extern_unnamed (0), type (EXTERN_NAMED)
+        : extern_named (func), extern_unnamed (0),
+          functor (0), type (EXTERN_NAMED)
       {
       }
       
@@ -86,7 +90,19 @@ namespace Madara
        * Constructor for KaRL expression
        **/
       Function (const Madara::Expression_Tree::Expression_Tree & func)
-        : function_contents (func), type (KARL_EXPRESSION)
+        : function_contents (func),
+          extern_unnamed (0), extern_named (0),
+          functor (0), type (KARL_EXPRESSION)
+      {
+      }
+      
+      /**
+       * Constructor for KaRL expression
+       **/
+      Function (Filters::Record_Filter * filter)
+        : function_contents (),
+          extern_unnamed (0), extern_named (0),
+          functor (filter), type (FUNCTOR)
       {
       }
       
@@ -140,22 +156,27 @@ namespace Madara
       boost::python::object python_function;
 #endif
       
-      bool is_extern_unnamed (void) const
+      inline bool is_extern_unnamed (void) const
       {
         return type == EXTERN_UNNAMED && extern_unnamed;
       }
       
-      bool is_extern_named (void) const
+      inline bool is_extern_named (void) const
       {
         return type == EXTERN_NAMED && extern_named;
       }
   
-      bool is_karl_expression (void) const
+      inline bool is_karl_expression (void) const
       {
         return type == KARL_EXPRESSION;
       }
+      
+      inline bool is_functor (void) const
+      {
+        return functor != 0;
+      }
 
-      bool is_uninitialized (void) const
+      inline bool is_uninitialized (void) const
       {
         return type == UNINITIALIZED;
       }
@@ -170,14 +191,13 @@ namespace Madara
       // expression tree
       Madara::Expression_Tree::Expression_Tree function_contents;
 
+      Filters::Record_Filter * functor;
+
       // type of function definition
       int type;
     };
     
   }
 }
-
-
-
 
 #endif

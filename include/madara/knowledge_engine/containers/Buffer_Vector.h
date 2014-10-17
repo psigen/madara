@@ -151,6 +151,15 @@ namespace Madara
          **/
         void set_name (const std::string & var_name,
           Variables & knowledge, int size = -1);
+        
+        /**
+         * Sets the variable name that this refers to
+         * @param var_name  the name of the variable in the knowledge base
+         * @param knowledge  the knowledge base the variable is housed in
+         * @param size       size of the new vector (-1 to not change size)
+         **/
+        void set_name (const std::string & var_name,
+          Thread_Safe_Context & knowledge, int size = -1);
 
         /**
          * Retrieves a copy of the record from the map.
@@ -195,6 +204,14 @@ namespace Madara
         int read_file (unsigned int index, 
                        const std::string & filename, 
           const Knowledge_Update_Settings & settings);
+      
+        /**
+         * Atomically sets the value of an index to a provided record
+         * @param   index     index within vector
+         * @param   value     new value of the variable
+         * @return   0 if the value was set. -1 if null key
+         **/
+        int set (unsigned int index, const Knowledge_Record & value);
       
         /**
          * Atomically sets the value of an index to an arbitrary string

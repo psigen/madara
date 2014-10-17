@@ -142,6 +142,21 @@ Madara::Knowledge_Engine::Containers::String::set_name (
   variable_ = context_->get_ref (name_, keep_local);
 }
 
+void
+Madara::Knowledge_Engine::Containers::String::set_name (
+  const std::string & var_name,
+  Thread_Safe_Context & knowledge)
+{
+  Knowledge_Update_Settings keep_local (true);
+  context_ = &knowledge;
+
+  Context_Guard context_guard (*context_);
+  Guard guard (mutex_);
+
+  name_ = var_name;
+  variable_ = context_->get_ref (name_, keep_local);
+}
+
 Madara::Knowledge_Engine::Containers::String::type
 Madara::Knowledge_Engine::Containers::String::operator= (const type & value)
 {

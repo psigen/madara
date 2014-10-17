@@ -192,14 +192,14 @@ Madara::Knowledge_Engine::Containers::Barrier::get_name (void) const
   return name_;
 }
 
-int
+size_t
 Madara::Knowledge_Engine::Containers::Barrier::get_id (void) const
 {
   Guard guard (mutex_);
   return id_;
 }
 
-int
+size_t
 Madara::Knowledge_Engine::Containers::Barrier::get_participants (void) const
 {
   Guard guard (mutex_);
@@ -241,7 +241,24 @@ Madara::Knowledge_Engine::Containers::Barrier::set_name (
 }
 
 void
-Madara::Knowledge_Engine::Containers::Barrier::resize (int id, int participants)
+Madara::Knowledge_Engine::Containers::Barrier::set_name (
+  const std::string & var_name,
+  Thread_Safe_Context & knowledge)
+{
+  Knowledge_Update_Settings keep_local (true);
+  context_ = &knowledge;
+
+  Context_Guard context_guard (*context_);
+  Guard guard (mutex_);
+
+  name_ = var_name;
+
+  this->build_var ();
+  this->build_aggregate_barrier ();
+}
+
+void
+Madara::Knowledge_Engine::Containers::Barrier::resize (size_t id, size_t participants)
 {
   if (context_)
   {
