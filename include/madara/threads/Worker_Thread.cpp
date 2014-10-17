@@ -37,7 +37,6 @@ Madara::Threads::Worker_Thread::Worker_Thread (
   if (thread && control)
   {
     std::stringstream base_string;
-    base_string << ".";
     base_string << name;
 
     thread->terminated.set_name (

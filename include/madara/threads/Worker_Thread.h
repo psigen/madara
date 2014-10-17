@@ -103,7 +103,6 @@ namespace Madara
        * base on launch of the thread
        **/
       Madara::Knowledge_Engine::Containers::Integer started_;
-
     };
 
     /**

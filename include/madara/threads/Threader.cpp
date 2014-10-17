@@ -79,7 +79,7 @@ Madara::Threads::Threader::pause (const std::string name)
 
   if (found != threads_.end ())
   {
-    found->second->thread_->paused = 1;
+    control_->evaluate (name + ".paused = 1");
   }
 }
 
@@ -89,7 +89,7 @@ Madara::Threads::Threader::pause (void)
   for (Named_Worker_Threads::iterator i = threads_.begin ();
        i != threads_.end (); ++i)
   {
-    i->second->thread_->paused = 1;
+    control_->evaluate (i->first + ".paused = 1");
   }
 }
 
@@ -100,7 +100,7 @@ Madara::Threads::Threader::resume (const std::string name)
 
   if (found != threads_.end ())
   {
-    found->second->thread_->paused = 0;
+    control_->evaluate (name + ".paused = 0");
   }
 }
 
@@ -110,7 +110,7 @@ Madara::Threads::Threader::resume (void)
   for (Named_Worker_Threads::iterator i = threads_.begin ();
        i != threads_.end (); ++i)
   {
-    i->second->thread_->paused = 0;
+    control_->evaluate (i->first + ".paused = 0");
   }
 }
 
@@ -121,7 +121,7 @@ Madara::Threads::Threader::terminate (const std::string name)
 
   if (found != threads_.end ())
   {
-    found->second->thread_->terminated = 1;
+    control_->evaluate (name + ".terminated = 1");
   }
 }
 
@@ -131,6 +131,6 @@ Madara::Threads::Threader::terminate (void)
   for (Named_Worker_Threads::iterator i = threads_.begin ();
        i != threads_.end (); ++i)
   {
-    i->second->thread_->terminated = 1;
+    control_->evaluate (i->first + ".terminated = 1");
   }
 }

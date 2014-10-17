@@ -162,13 +162,13 @@ int main (int argc, char ** argv)
   handle_arguments (argc, argv);
   
   // create a knowledge base and setup our id
-  engine::Knowledge_Base * knowledge = new engine::Knowledge_Base ();
+  engine::Knowledge_Base knowledge;
 
   // create a counter
-  containers::Integer counter ("counter", *knowledge);
+  containers::Integer counter ("counter", knowledge);
 
   // create a threader for running threads
-  threads::Threader * threader = new threads::Threader (*knowledge);
+  threads::Threader threader (knowledge);
 
   for (Integer i = 0; i < counters; ++i)
   {
@@ -176,12 +176,12 @@ int main (int argc, char ** argv)
     buffer << "thread";
     buffer << i;
 
-    threader->run (buffer.str (), new Counter_Thread (), true);
+    threader.run (buffer.str (), new Counter_Thread (), true);
   }
 
-  knowledge->evaluate (".start_time = #get_time()");
+  knowledge.evaluate (".start_time = #get_time()");
 
-  threader->resume ();
+  threader.resume ();
 
   // wait for the counter to reach the target number
   while (*counter < target)
@@ -190,22 +190,19 @@ int main (int argc, char ** argv)
     utility::sleep (0.5);
   }
   
-  knowledge->evaluate (".end_time = #get_time();"
+  knowledge.evaluate (".end_time = #get_time();"
     ".total_time = .end_time - .start_time;"
     ".total_time_in_seconds = #double(.total_time) / 1000000000");
 
   std::cerr << "The final tally of the distributed counter was " <<
     *counter << "\n";
-  knowledge->print ("Distributed count took {.total_time_in_seconds}s\n");
+  knowledge.print ("Distributed count took {.total_time_in_seconds}s\n");
 
 
   // print the aggregate counter to the screen
-  knowledge->print ();
+  knowledge.print ();
 
-  threader->wait ();
-
-  delete threader;
-  delete knowledge;
+  threader.wait ();
 
   return 0;
 }
