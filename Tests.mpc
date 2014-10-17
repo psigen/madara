@@ -125,7 +125,29 @@ project (Test_Threader_Counter) : using_madara, using_ace {
   }
 
   Source_Files {
-    tests/transports/test_threader_counter.cpp
+    tests/threads/test_threader_counter.cpp
+  }
+}
+
+project (Test_Threader_Hello_World) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_threader_hello_world
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/threads/test_threader_hello_world.cpp
   }
 }
 

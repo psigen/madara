@@ -73,13 +73,13 @@ namespace Madara
     protected:
       
       /**
-       * thread safe terminated flag that may be set by the knowledge
+       * thread safe terminated flag that may be set by the Threader
        * base
        **/
       Madara::Knowledge_Engine::Containers::Integer terminated;
 
       /**
-       * thread safe paused flag that may be set by the knowledge base
+       * thread safe paused flag that may be set by the Threader
        **/
       Madara::Knowledge_Engine::Containers::Integer paused;
     };

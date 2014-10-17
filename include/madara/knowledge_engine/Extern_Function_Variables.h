@@ -16,6 +16,11 @@
 #include "boost/python/object.hpp"
 #endif
 
+#ifdef _MADARA_JAVA_
+  #include <jni.h>
+  #include "madara_jni.h"
+#endif
+
 /**
  * @file Functions.h
  * @author James Edmondson <jedmondson@gmail.com>

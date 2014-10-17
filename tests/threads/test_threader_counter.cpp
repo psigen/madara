@@ -131,12 +131,15 @@ public:
   virtual void execute (void)
   {
     while (*counter < target)
-      ++counter;
-
-    if (paused != 0)
     {
-      std::string finished = "!" + paused.get_name ();
-      data.wait (finished);
+      if (paused != 0)
+      {
+        std::string finished = "!" + paused.get_name ();
+        data.wait (finished);
+      }
+
+      // increment counter
+      ++counter;
     }
   }
 
