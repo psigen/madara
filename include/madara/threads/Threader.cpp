@@ -42,6 +42,24 @@ Madara::Threads::Threader::run (
 }
 
 void
+Madara::Threads::Threader::run (double hertz,
+  const std::string name, Base_Thread * thread, bool paused)
+{
+  if (name != "" && thread != 0)
+  {
+    Worker_Thread * worker = new Worker_Thread (name, thread,
+      control_, data_, hertz);
+
+    if (paused)
+      thread->paused = 1;
+
+    threads_[name] = worker;
+
+    worker->run ();
+  }
+}
+
+void
 Madara::Threads::Threader::wait (const std::string name)
 {
   Named_Worker_Threads::iterator found = threads_.find (name);

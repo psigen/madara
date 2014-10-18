@@ -45,12 +45,14 @@ namespace Madara
        * @param    control  the knowledge base that provides a control plane
        *                    between the data knowledge base and threads
        * @param    data     the knowledge base that provides user data access
+       * @param    hertz    the hertz rate to run the thread
        **/
       Worker_Thread (
         const std::string & name,
         Base_Thread * thread,
         Knowledge_Engine::Knowledge_Base * control,
-        Knowledge_Engine::Knowledge_Base * data);
+        Knowledge_Engine::Knowledge_Base * data,
+        double hertz = 0.0);
       
       /**
        * Copy constructor
@@ -75,10 +77,10 @@ namespace Madara
       int svc (void);
       
       /**
-       * Runs the thread
+       * Runs the thread once
        **/
       void run (void);
-
+      
     protected:
       /// the name of the contained thread
       std::string name_;
@@ -103,6 +105,11 @@ namespace Madara
        * base on launch of the thread
        **/
       Madara::Knowledge_Engine::Containers::Integer started_;
+
+      /**
+       * hertz rate for worker thread executions
+       **/
+      double hertz_;
     };
 
     /**

@@ -46,7 +46,10 @@ namespace Madara
       ~Threader ();
 
       /**
-       * Runs a new thread. This thread will be managed by the
+       * Starts a new thread and executes the provided user
+       * thread once. Execution ordering is init -> execute -> cleanup.
+       * 
+       * <br>&nbsp;<br>The thread will be managed by the
        * threader. Please do not pass the address of a thread
        * on the stack and do not delete this memory yourself
        * or your program will crash.
@@ -57,6 +60,27 @@ namespace Madara
        * @param paused  create thread in a paused state.
        **/
       void run (const std::string name, Base_Thread * thread,
+        bool paused = false);
+      
+      /**
+       * Starts a new thread and executes the provided user
+       * thread once. Execution ordering is init -> *execute -> cleanup.
+       * init and cleanup are only called once.
+       * 
+       * <br>&nbsp;<br>The thread will be managed by the
+       * threader. Please do not pass the address of a thread
+       * on the stack and do not delete this memory yourself
+       * or your program will crash.
+       * @param hertz   the intended hertz (frequency) that the thread's
+       *                execute should be ran. Hertz is in operations per
+       *                second.
+       * @param name    unique thread name for the thread.
+       *                If possible, try to use one word or
+       *                words separated by underscores (_)
+       * @param thread  user-created thread implementation
+       * @param paused  create thread in a paused state.
+       **/
+      void run (double hz, const std::string name, Base_Thread * thread,
         bool paused = false);
 
       /**

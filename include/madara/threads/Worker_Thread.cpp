@@ -1,4 +1,6 @@
 #include "Worker_Thread.h"
+#include "ace/High_Res_Timer.h"
+#include "ace/OS_NS_sys_time.h"
 
 #ifdef WIN32
 
@@ -22,7 +24,7 @@ unsigned __stdcall worker_thread_windows_glue (void * param)
 #include <algorithm>
 
 Madara::Threads::Worker_Thread::Worker_Thread ()
-  : thread_ (0), control_ (0), data_ (0) 
+  : thread_ (0), control_ (0), data_ (0), hertz_ (0.0)
 {
 }
 
@@ -31,8 +33,10 @@ Madara::Threads::Worker_Thread::Worker_Thread (
   const std::string & name,
   Base_Thread * thread,
   Knowledge_Engine::Knowledge_Base * control,
-  Knowledge_Engine::Knowledge_Base * data)
-  : name_ (name), thread_ (thread), control_ (control), data_ (data) 
+  Knowledge_Engine::Knowledge_Base * data,
+  double hertz)
+  : name_ (name), thread_ (thread), control_ (control), data_ (data),
+    hertz_ (hertz)
 {
   if (thread && control)
   {
@@ -58,7 +62,8 @@ Madara::Threads::Worker_Thread::Worker_Thread (
 Madara::Threads::Worker_Thread::Worker_Thread (const Worker_Thread & input)
   : name_ (input.name_), thread_ (input.thread_),
     control_ (input.control_), data_ (input.data_),
-    finished_ (input.finished_), started_ (input.started_)
+    finished_ (input.finished_), started_ (input.started_),
+    hertz_ (input.hertz_)
 {
 }
 
@@ -77,6 +82,7 @@ Madara::Threads::Worker_Thread::operator= (const Worker_Thread & input)
     this->data_ = input.data_;
     this->finished_ = input.started_;
     this->started_ = input.started_;
+    this->hertz_ = input.hertz_;
   }
 }
 
@@ -116,7 +122,40 @@ Madara::Threads::Worker_Thread::svc (void)
 
     thread_->init (*data_);
 
-    thread_->execute ();
+    {
+      ACE_Time_Value current = ACE_OS::gettimeofday ();
+      ACE_Time_Value next_epoch, poll_frequency;
+      
+      bool one_shot = true;
+
+      std::string terminated (name_ + ".terminated");
+      std::string paused (name_ + ".paused");
+
+      if (hertz_ > 0.0)
+      {
+        one_shot = false;
+        poll_frequency.set (1.0 / hertz_);
+        next_epoch = current + poll_frequency;
+      }
+
+      while (control_->evaluate (terminated).is_false ())
+      {
+        if (control_->evaluate (paused).is_false ())
+        {
+          thread_->execute ();
+        }
+
+        if (one_shot)
+          break;
+
+        current = ACE_OS::gettimeofday ();
+
+        if (current < next_epoch)
+          Madara::Utility::sleep (next_epoch - current);  
+
+        next_epoch += poll_frequency;
+      }
+    }
 
     thread_->cleanup ();
 
