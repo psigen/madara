@@ -80,7 +80,7 @@ namespace Madara
        * @param thread  user-created thread implementation
        * @param paused  create thread in a paused state.
        **/
-      void run (double hz, const std::string name, Base_Thread * thread,
+      void run (double hertz, const std::string name, Base_Thread * thread,
         bool paused = false);
 
       /**
