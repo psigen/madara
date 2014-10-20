@@ -22,6 +22,9 @@ namespace Madara
   {
     namespace Containers
     {
+      // forward declare a friend class
+      class Queue;
+
       /**
        * @class Vector
        * @brief This class stores a vector of KaRL variables
@@ -29,6 +32,9 @@ namespace Madara
       class MADARA_Export Vector
       {
       public:
+        /// Allow the Queue class to manipulate variables
+        friend class Queue;
+
         /**
          * Default constructor
          * @param  settings   settings for evaluating the vector

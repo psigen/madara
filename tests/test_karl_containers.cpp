@@ -8,6 +8,7 @@
 #include "madara/knowledge_engine/containers/Map.h"
 #include "madara/knowledge_engine/containers/Integer.h"
 #include "madara/knowledge_engine/containers/Double.h"
+#include "madara/knowledge_engine/containers/Queue.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include <iostream>
 
@@ -683,6 +684,135 @@ void test_native_vectors (void)
   knowledge.print ();
 }
 
+void test_queue (void)
+{
+
+  std::cout << "Testing queues.\n";
+  engine::Knowledge_Base knowledge;
+  containers::Queue messages ("queue", knowledge, 7);
+  Madara::Knowledge_Record record;
+  bool check;
+
+  messages.enqueue ("first string");
+  messages.enqueue ("second string");
+  messages.enqueue ("third string");
+  messages.enqueue ("fourth string");
+  messages.enqueue ("fifth string");
+  messages.enqueue ("sixth string");
+  messages.enqueue ("seventh string");
+  check = messages.enqueue ("eighth string");
+
+  if (!check)
+    std::cout << "  SUCCESS: enqueue size check.\n";
+  else
+    std::cout << "  FAIL: enqueue size check.\n";
+
+  record = messages.dequeue ();
+  if (record == "first string")
+    std::cout << "  SUCCESS: first dequeue.\n";
+  else
+    std::cout << "  FAIL: first dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "second string")
+    std::cout << "  SUCCESS: second dequeue.\n";
+  else
+    std::cout << "  FAIL: second dequeue.\n";
+
+  messages.enqueue ("eighth string");
+  messages.enqueue ("ninth string");
+  check = messages.enqueue ("tenth string");
+  
+  if (!check)
+    std::cout << "  SUCCESS: 2nd enqueue size check.\n";
+  else
+    std::cout << "  FAIL: 2nd enqueue size check.\n";
+
+  record = messages.dequeue ();
+  if (record == "third string")
+    std::cout << "  SUCCESS: third dequeue.\n";
+  else
+    std::cout << "  FAIL: third dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "fourth string")
+    std::cout << "  SUCCESS: fourth dequeue.\n";
+  else
+    std::cout << "  FAIL: fourth dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "fifth string")
+    std::cout << "  SUCCESS: fifth dequeue.\n";
+  else
+    std::cout << "  FAIL: fifth dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "sixth string")
+    std::cout << "  SUCCESS: sixth dequeue.\n";
+  else
+    std::cout << "  FAIL: sixth dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "seventh string")
+    std::cout << "  SUCCESS: seventh dequeue.\n";
+  else
+    std::cout << "  FAIL: seventh dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "eighth string")
+    std::cout << "  SUCCESS: eighth dequeue.\n";
+  else
+    std::cout << "  FAIL: eighth dequeue.\n";
+  
+  record = messages.dequeue ();
+  if (record == "ninth string")
+    std::cout << "  SUCCESS: ninth dequeue.\n";
+  else
+    std::cout << "  FAIL: ninth dequeue.\n";
+  
+  messages.enqueue ("first cleared");
+  messages.enqueue ("second cleared");
+
+  if (messages.inspect (0) == "first cleared" &&
+      messages.inspect (1) == "second cleared")
+  {
+    std::cout << "  SUCCESS: inspect on multiple records.\n";
+  }
+  else
+  {
+    std::cout << "  FAIL: inspect on multiple records.\n";
+  }
+
+  messages.clear ();
+
+  if (messages.count () == 0 && messages.size () == 7)
+    std::cout << "  SUCCESS: clear.\n";
+  else
+    std::cout << "  FAIL: clear.\n";
+  
+  messages.enqueue ("first string");
+  messages.enqueue ("second string");
+  messages.enqueue ("third string");
+  messages.enqueue ("fourth string");
+  messages.enqueue ("fifth string");
+  messages.enqueue ("sixth string");
+  messages.enqueue ("seventh string");
+
+  messages.resize (5);
+
+  if (messages.count () == 5 && 
+    messages.count () == messages.size ())
+  {
+    std::cout << "  SUCCESS: resize.\n";
+  }
+  else
+  {
+    std::cout << "  FAIL: resize.\n";
+  }
+
+  knowledge.print ();
+}
+
 int main (int argc, char * argv[])
 {
   test_vector ();
@@ -696,6 +826,7 @@ int main (int argc, char * argv[])
   test_map_exchanges ();
   test_vector_exchanges ();
   test_native_vectors ();
+  test_queue ();
   
   test_vector_transfer ();
   return 0;
