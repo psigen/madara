@@ -704,6 +704,16 @@ namespace Madara
      * @return  true if the record is zero or "". False otherwise.
      **/
     bool is_false (void) const;
+    
+    /**
+     * Checks to see if the record is valid. Valid records have a status
+     * that is not UNCREATED.
+     * @return  true if the record is valid. False otherwise.
+     **/
+    inline bool is_valid (void) const
+    {
+      return status_ != UNCREATED;
+    }
 
     /**
      * Returns the encoded size of the record. This size is what is required

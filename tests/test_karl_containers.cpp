@@ -790,6 +790,16 @@ void test_queue (void)
   else
     std::cout << "  FAIL: clear.\n";
   
+  
+  if (!messages.dequeue (false).is_valid ())
+  {
+    std::cout << "  SUCCESS: asynchronous dequeue empty.\n";
+  }
+  else
+  {
+    std::cout << "  FAIL: asynchronous dequeue empty.\n";
+  }
+
   messages.enqueue ("first string");
   messages.enqueue ("second string");
   messages.enqueue ("third string");

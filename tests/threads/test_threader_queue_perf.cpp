@@ -8,6 +8,8 @@
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/utility/Log_Macros.h"
 #include "madara/threads/Threader.h"
+#include "madara/utility/Utility.h"
+#include "madara/knowledge_engine/containers/Queue.h"
 #include "madara/knowledge_engine/containers/Integer.h"
 
 // shortcuts
@@ -21,12 +23,13 @@ typedef Madara::Knowledge_Record::Integer Integer;
 // default transport settings
 
 double max_wait (10.0);
-double hertz (0.5);
+double hertz (10);
 
 Integer target (50);
+int queue_length (100);
 
-Integer counters (1);
-Integer readers (0);
+Integer producers (1);
+Integer consumers (1);
 
 // handle command line arguments
 void handle_arguments (int argc, char ** argv)
@@ -34,13 +37,13 @@ void handle_arguments (int argc, char ** argv)
   for (int i = 1; i < argc; ++i)
   {
     std::string arg1 (argv[i]);
-
-    if (arg1 == "-c" || arg1 == "--counters")
+    
+    if (arg1 == "-c" || arg1 == "--consumers")
     {
       if (i + 1 < argc)
       {
         std::stringstream buffer (argv[i + 1]);
-        buffer >> counters;
+        buffer >> consumers;
       }
 
       ++i;
@@ -64,12 +67,22 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
-    else if (arg1 == "-r" || arg1 == "--readers")
+    else if (arg1 == "-p" || arg1 == "--producers")
     {
       if (i + 1 < argc)
       {
         std::stringstream buffer (argv[i + 1]);
-        buffer >> readers;
+        buffer >> producers;
+      }
+
+      ++i;
+    }
+    else if (arg1 == "-q" || arg1 == "--queue-length")
+    {
+      if (i + 1 < argc)
+      {
+        std::stringstream buffer (argv[i + 1]);
+        buffer >> queue_length;
       }
 
       ++i;
@@ -94,7 +107,7 @@ void handle_arguments (int argc, char ** argv)
 
       ++i;
     }
-    else if (arg1 == "-h" || arg1 == "--hertz")
+    else if (arg1 == "-z" || arg1 == "--hertz")
     {
       if (i + 1 < argc)
       {
@@ -108,12 +121,14 @@ void handle_arguments (int argc, char ** argv)
     {
       MADARA_DEBUG (MADARA_LOG_EMERGENCY, (LM_DEBUG, 
 "\nProgram summary for %s:\n\n" \
-"  Attempts to start a number of counter and reader threads\n\n" \
-" [-c|--counters counters] the number of counter threads to start\n" \
+"  Attempts to start a number of producer and consumer threads\n\n" \
+" [-c|--consumers consumers] the number of information consumerss to start\n" \
 " [-f|--logfile file]      log to a file\n" \
 " [-l|--level level]       the logger level (0+, higher is higher detail)\n" \
-" [-r|--readers readers]   the number of reader threads to start\n" \
+" [-p|--producers producers] the number of information producers to start\n" \
+" [-c|--consumers consumers]   the number of reader threads to start\n" \
 " [-t|--target target]     the desired distributed count total\n"\
+" [-q|--queue-length len]  the depth of the job queue\n"\
 " [-w|--max-wait time]     maximum time to wait in seconds (double format)\n"\
 " [-z|--hertz hertz]       the frequency of counts per second per thread\n" \
 "\n",
@@ -123,7 +138,7 @@ void handle_arguments (int argc, char ** argv)
   }
 }
 
-class Counter_Thread : public threads::Base_Thread
+class Consumer: public threads::Base_Thread
 {
 public:
   /**
@@ -132,26 +147,66 @@ public:
     **/
   virtual void init (engine::Knowledge_Base & context)
   {
-    counter.set_name ("counter", context);
+    // initialize references to variables in the knowledge base
+    jobs.set_name ("jobs", context);
+    jobs_completed.set_name (".jobs_completed", context);
 
     data = context;
-
-    message = "Counter set to {counter} by thread " + name + "\n";
   }
 
   /**
-    * Executes the main thread logic
+    * Checks the job queue until terminated for new tasks to perform
     **/
   virtual void execute (void)
   {
-    ++counter;
-    data.print (message);
+    // dequeue until terminate
+    Madara::Knowledge_Record job = jobs.dequeue (false);
+
+    if (job.is_valid ())
+    {
+      // Update the global counter of jobs done.
+      ++jobs_completed;
+    }
   }
 
 private:
-  containers::Integer counter;
+  containers::Queue jobs;
+  containers::Integer jobs_completed;
   engine::Knowledge_Base data;
-  std::string message;
+};
+
+class Producer: public threads::Base_Thread
+{
+public:
+  /**
+    * Initializes thread with MADARA context
+    * @param   context   context for querying current program state
+    **/
+  virtual void init (engine::Knowledge_Base & context)
+  {
+    jobs.set_name ("jobs", context);
+
+    data = context;
+  }
+
+  /**
+    * Generate a job. Jobs can be one of four types of events:
+    * 0: Check News
+    * 1: Check Stocks
+    * 2: Check Email
+    * 3: Check Schedule
+    **/
+  virtual void execute (void)
+  {
+    /**
+      * generate job consisting of 4 possible events: (int: 0-3)
+      **/
+    jobs.enqueue (Madara::Utility::rand_int (0, 3, false));
+  }
+
+private:
+  containers::Queue jobs;
+  engine::Knowledge_Base data;
 };
 
 int main (int argc, char ** argv)
@@ -163,48 +218,62 @@ int main (int argc, char ** argv)
   engine::Knowledge_Base knowledge;
 
   std::cerr << "Hertz rate set to " << hertz << "\n";
-  std::cerr << "Counters is set to " << counters << "\n";
+  std::cerr << "Starting " << producers << " producer threads\n";
+  std::cerr << "Starting " << consumers << " consumer threads\n";
+  std::cerr << "Job queue length is " << queue_length << "\n";
   std::cerr << "Target is set to " << target << "\n";
 
-  // create a counter
-  containers::Integer counter ("counter", knowledge);
+  containers::Integer jobs_completed (".jobs_completed", knowledge);
+  containers::Queue jobs ("jobs", knowledge);
+  jobs.resize (queue_length);
 
   // create a threader for running threads
   threads::Threader threader (knowledge);
 
-  for (Integer i = 0; i < counters; ++i)
+  // explicitly set random seed to right now for randomizer engine
+  Madara::Utility::rand_int (0, 1, true);
+
+  for (Integer i = 0; i < producers; ++i)
   {
     std::stringstream buffer;
-    buffer << "thread";
+    buffer << "producer";
     buffer << i;
 
-    threader.run (hertz, buffer.str (), new Counter_Thread (), true);
+    // producers operate at a certain hertz
+    threader.run (hertz, buffer.str (), new Producer (), true);
+  }
+  
+  for (Integer i = 0; i < consumers; ++i)
+  {
+    std::stringstream buffer;
+    buffer << "consumer";
+    buffer << i;
+
+    // consumers consume as quickly as possible
+    threader.run (hertz, buffer.str (), new Consumer (), true);
   }
 
   knowledge.evaluate (".start_time = #get_time()");
 
+  // awaken all threads to start work
   threader.resume ();
 
-  // wait for the counter to reach the target number
-  while (*counter < target)
+  while (jobs_completed < target)
   {
-    // sleep for half a second and try again
+    // sleep until we have the target number of jobs completed
     utility::sleep (0.5);
   }
 
+  // request all threads to terminate
   threader.terminate ();
 
   knowledge.evaluate (".end_time = #get_time();"
     ".total_time = .end_time - .start_time;"
     ".total_time_in_seconds = #double(.total_time) / 1000000000");
 
-  std::cerr << "The final tally of the distributed counter was " <<
-    *counter << "\n";
+  std::cerr << "The consumers completed " <<
+    *jobs_completed << " jobs\n";
   knowledge.print ("Distributed count took {.total_time_in_seconds}s\n");
-
-
-  // print the aggregate counter to the screen
-  knowledge.print ();
 
   threader.wait ();
 

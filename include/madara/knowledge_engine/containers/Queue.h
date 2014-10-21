@@ -14,7 +14,7 @@
  * @file Queue.h
  * @author James Edmondson <jedmondson@gmail.com>
  *
- * This file contains a thread-safe queue
+ * This file contains a high performance thread-safe queue
  **/
 
 namespace Madara
@@ -25,7 +25,10 @@ namespace Madara
     {
       /**
        * @class Queue
-       * @brief This class stores thread-safe queue within the knowledge base
+       * @brief This class stores thread-safe queue within the knowledge base. The
+       *        Queue allows for O(1) enqueue/dequeue time. It also allows for O(1)
+       *        inspection of arbitrary elements and features asynchronous and
+       *        synchronous dequeues.
        */
       class MADARA_Export Queue
       {
@@ -144,11 +147,21 @@ namespace Madara
         bool enqueue (const Knowledge_Record & record);
         
         /**
-         * Dequeues a record from the front of the queue
-         * @return a record from the front of the queue
+         * Dequeues a record from the front of the queue. This method
+         * support both blocking and non-blocking dequeues. The default
+         * operation is to wait for an element to become available in
+         * the queue and only return a valid element. Setting wait
+         * to false enables an asynchronous call that returns immediately
+         * with either a valid record or an UNINITIALIZED record, the
+         * latter of which means there was nothing in queue.
+         * @return a record from the front of the queue. Will return
+         *         an uncreated record if queue was empty on asynchronous
+         *         call. Knowledge_Record::status () can be checked for
+         *         UNCREATED. Can also use Knowledge_Record::is_valid to
+         *         check for valid data on return.
          **/
-        Knowledge_Record dequeue (void);
-
+        Knowledge_Record dequeue (bool wait = true);
+        
         /**
          * Retrieves a record at a position in the queue
          * @param  position  the position of the record in the queue

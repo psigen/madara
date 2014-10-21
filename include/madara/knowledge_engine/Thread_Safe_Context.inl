@@ -592,6 +592,9 @@ Madara::Knowledge_Engine::Thread_Safe_Context::wait_for_change (
     mutex_.release ();
 
   changed_.wait ();
+
+  //if (extra_release)
+  //  mutex_.lock ();
 }
 
 inline void

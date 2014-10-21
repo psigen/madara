@@ -217,9 +217,8 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::set_name (
     vector_.clear ();
 
     size_ = get_size_ref ();
-
-    if (size > 0)
-      resize (size_t (size));
+    
+    resize (size);
   }
 }
 
@@ -238,8 +237,7 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::set_name (
     name_ = var_name;
 
     vector_.clear ();
-    if (size > 0)
-      resize (size_t (size));
+    resize (size);
   }
 }
 
@@ -258,8 +256,7 @@ Madara::Knowledge_Engine::Containers::Buffer_Vector::set_name (
     name_ = var_name;
 
     vector_.clear ();
-    if (size > 0)
-      resize (size_t (size));
+    resize (size);
   }
 }
 

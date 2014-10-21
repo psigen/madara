@@ -14,12 +14,13 @@ Madara::Knowledge_Engine::Containers::Queue::Queue (
   Knowledge_Base & knowledge,
   const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name),
-  count_ (name + ".count", knowledge),
-  head_ (name + ".head", knowledge),
-  tail_ (name + ".tail", knowledge),
+  count_ (name + ".count", knowledge, 0),
+  head_ (name + ".head", knowledge, 0),
+  tail_ (name + ".tail", knowledge, 0),
   queue_ (name, knowledge),
   settings_ (settings) 
 {
+  resize ();
 }
  
 Madara::Knowledge_Engine::Containers::Queue::Queue (
@@ -33,6 +34,7 @@ Madara::Knowledge_Engine::Containers::Queue::Queue (
   queue_ (name, knowledge),
   settings_ (settings) 
 {
+  resize ();
 }
  
 Madara::Knowledge_Engine::Containers::Queue::Queue (
@@ -41,9 +43,9 @@ Madara::Knowledge_Engine::Containers::Queue::Queue (
   int size,
   const Knowledge_Update_Settings & settings)
 : context_ (&(knowledge.get_context ())), name_ (name),
-  count_ (name + ".count", knowledge),
-  head_ (name + ".head", knowledge),
-  tail_ (name + ".tail", knowledge),
+  count_ (name + ".count", knowledge, 0),
+  head_ (name + ".head", knowledge, 0),
+  tail_ (name + ".tail", knowledge, 0),
   queue_ (name, knowledge, size, false, settings),
   settings_ (settings) 
 {
@@ -55,9 +57,9 @@ Madara::Knowledge_Engine::Containers::Queue::Queue (
   int size,
   const Knowledge_Update_Settings & settings)
 : context_ (knowledge.get_context ()), name_ (name),
-  count_ (name + ".count", knowledge),
-  head_ (name + ".head", knowledge),
-  tail_ (name + ".tail", knowledge),
+  count_ (name + ".count", knowledge, 0),
+  head_ (name + ".head", knowledge, 0),
+  tail_ (name + ".tail", knowledge, 0),
   queue_ (name, knowledge, size, false, settings),
   settings_ (settings) 
 {
@@ -120,39 +122,69 @@ Madara::Knowledge_Engine::Containers::Queue::enqueue (
 {
   bool result (false);
 
-  // avoid double retrieval of count_ during check
-  Knowledge_Record::Integer count = *count_;
-
-  if (context_ && name_ != "" && queue_.size () > 0 &&
-      count >= 0 && 
-      count < (Knowledge_Record::Integer)queue_.size ())
+  if (context_)
   {
     Context_Guard context_guard (*context_);
     Guard guard (mutex_);
 
-    context_->set (queue_.vector_[*tail_], record, settings_);
-    tail_ = increment (*tail_, 1);
-    ++count_;
+    if (count_ < 0)
+      count_ = 0;
+    
+    // avoid double retrieval of count_ during check
+    Knowledge_Record::Integer count = *count_;
+
+    if (context_ && name_ != "" && queue_.size () > 0 && 
+        count < (Knowledge_Record::Integer)queue_.size ())
+    {
+      // there's no point in signaling inside of a locked context
+      if (!settings_.signal_changes)
+        settings_.signal_changes = false;
+      
+      Knowledge_Record::Integer tail = *tail_;
+
+      context_->set (queue_.vector_[tail], record, settings_);
+      tail_ = increment (tail, 1);
+      ++count_;
+    }
   }
+
+  // now that we no longer have a lock on context, signal
+  if (context_)
+    context_->signal ();
 
   return result;
 }
 
 Madara::Knowledge_Record
-Madara::Knowledge_Engine::Containers::Queue::dequeue (void)
+Madara::Knowledge_Engine::Containers::Queue::dequeue (bool wait)
 {
   Madara::Knowledge_Record result;
   
-  if (context_ && name_ != "" && count_ > 0)
+  if (context_ && name_ != "")
   {
     Context_Guard context_guard (*context_);
     Guard guard (mutex_);
-
-    result = context_->get (queue_.vector_[*head_], settings_);
     
-    head_ = increment (*head_, 1);
-    --count_;
+    if (wait)
+    {
+      while (count_ <= 0)
+        context_->wait_for_change (true);
+    }
+
+    if (count_ > 0)
+    {
+      Knowledge_Record::Integer head = *head_;
+
+      result = context_->get (queue_.vector_[head], settings_);
+    
+      head_ = increment (head, 1);
+      --count_;
+    }
   }
+  
+  // now that we no longer have a lock on context, signal
+  if (context_)
+    context_->signal ();
 
   return result;
 }

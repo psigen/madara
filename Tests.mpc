@@ -107,6 +107,28 @@ project (Test_Counter) : using_madara, using_ace {
   }
 }
 
+project (Test_Threader_Queue_Perf) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_threader_queue_perf
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/threads/test_threader_queue_perf.cpp
+  }
+}
+
 project (Test_Threader_Counter) : using_madara, using_ace {
   exeout = $(MADARA_ROOT)/bin
   exename = test_threader_counter
@@ -126,6 +148,28 @@ project (Test_Threader_Counter) : using_madara, using_ace {
 
   Source_Files {
     tests/threads/test_threader_counter.cpp
+  }
+}
+
+project (Test_Threader_Producer_Consumer) : using_madara, using_ace {
+  exeout = $(MADARA_ROOT)/bin
+  exename = test_threader_producer_consumer
+  
+  
+  requires += tests
+
+  Documentation_Files {
+  }
+  
+  Build_Files {
+    Tests.mpc
+  }
+
+  Header_Files {
+  }
+
+  Source_Files {
+    tests/threads/test_threader_producer_consumer.cpp
   }
 }
 
