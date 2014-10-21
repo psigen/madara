@@ -128,7 +128,7 @@ public:
   /**
     * Executes the main thread logic
     **/
-  virtual void execute (void)
+  virtual void run (void)
   {
     while (*counter < target)
     {

@@ -11,7 +11,7 @@ namespace threads = Madara::Threads;
 class Hello_World : public threads::Base_Thread
 {
   public:
-    void execute (void)
+    void run (void)
     {
       std::cerr << "Hello World!\n";
     }

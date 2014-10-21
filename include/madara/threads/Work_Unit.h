@@ -51,7 +51,7 @@ namespace Madara
       /**
        * Executes the main thread logic
        **/
-      virtual void execute (void) = 0;
+      virtual void run (void) = 0;
       
       /**
        * Cleans up any thread residue (usually instances created in init).

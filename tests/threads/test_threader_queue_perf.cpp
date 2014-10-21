@@ -157,7 +157,7 @@ public:
   /**
     * Checks the job queue until terminated for new tasks to perform
     **/
-  virtual void execute (void)
+  virtual void run (void)
   {
     // dequeue until terminate
     Madara::Knowledge_Record job = jobs.dequeue (false);
@@ -196,7 +196,7 @@ public:
     * 2: Check Email
     * 3: Check Schedule
     **/
-  virtual void execute (void)
+  virtual void run (void)
   {
     /**
       * generate job consisting of 4 possible events: (int: 0-3)

@@ -142,7 +142,7 @@ Madara::Threads::Worker_Thread::svc (void)
       {
         if (control_->evaluate (paused).is_false ())
         {
-          thread_->execute ();
+          thread_->run ();
         }
 
         if (one_shot)
