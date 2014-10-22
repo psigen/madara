@@ -186,3 +186,27 @@ project (KaRL) : using_ace, using_madara {
     tools/karl.cpp
   }
 }
+
+
+project (MPGen) : using_ace, using_madara {
+  exeout = $(MADARA_ROOT)/bin
+  exename = mpgen
+  
+  verbatim (gnuace, local) {
+    CPPFLAGS += -w
+  }
+  
+  Documentation_Files {
+  }
+
+  Build_Files {
+    Madara.mpc
+  }
+                                                                
+  Header_Files {
+  }
+
+  Source_Files {
+    tools/mpgen.cpp
+  }
+}
