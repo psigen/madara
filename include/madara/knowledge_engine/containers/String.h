@@ -153,6 +153,13 @@ namespace Madara
         type operator= (const type & value);
         
         /**
+         * Increments by a value
+         * @param  value  the value to add
+         * @return the new value
+         **/
+        type operator+= (type value);
+        
+        /**
          * Checks for equality
          * @param  value  the value to compare to
          * @return true if equal, false otherwise

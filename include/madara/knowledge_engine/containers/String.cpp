@@ -169,7 +169,25 @@ Madara::Knowledge_Engine::Containers::String::operator= (const type & value)
 
   return value;
 }
-    
+ 
+Madara::Knowledge_Engine::Containers::String::type
+Madara::Knowledge_Engine::Containers::String::operator += (type value)
+{
+  Madara::Knowledge_Engine::Containers::String::type result;
+
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    result = context_->get (variable_, settings_).to_string ();
+    result += value;
+    context_->set (variable_, result, settings_);
+  }
+
+  return result;
+}
+   
 bool
 Madara::Knowledge_Engine::Containers::String::operator== (type value) const
 {

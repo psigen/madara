@@ -171,6 +171,67 @@ Madara::Knowledge_Engine::Containers::Double::operator= (type value)
   return value;
 }
   
+Madara::Knowledge_Engine::Containers::Double::type
+Madara::Knowledge_Engine::Containers::Double::operator += (type value)
+{
+  Madara::Knowledge_Engine::Containers::Double::type result (0);
+
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    result = context_->get (variable_, settings_).to_double ();
+    result += value;
+    context_->set (variable_, result, settings_);
+  }
+
+  return result;
+}
+
+Madara::Knowledge_Engine::Containers::Double::type
+Madara::Knowledge_Engine::Containers::Double::operator -= (type value)
+{
+  Madara::Knowledge_Engine::Containers::Double::type result (0);
+
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+
+    result = context_->get (variable_, settings_).to_double ();
+    result -= value;
+    context_->set (variable_, result, settings_);
+  }
+
+  return result;
+}
+Madara::Knowledge_Engine::Containers::Double::type
+Madara::Knowledge_Engine::Containers::Double::operator++ (void)
+{
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+    return context_->inc (variable_, settings_).to_double ();
+  }
+  else
+    return 0;
+}
+ 
+Madara::Knowledge_Engine::Containers::Double::type
+Madara::Knowledge_Engine::Containers::Double::operator-- (void)
+{
+  if (context_)
+  {
+    Context_Guard context_guard (*context_);
+    Guard guard (mutex_);
+    return context_->dec (variable_, settings_).to_double ();
+  }
+  else
+    return 0;
+}
+ 
 bool
 Madara::Knowledge_Engine::Containers::Double::operator== (type value) const
 {

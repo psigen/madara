@@ -157,7 +157,35 @@ namespace Madara
          * @return the value of the variable
          **/
         type operator* (void) const;
-      
+            
+        /**
+         * Increments by a value
+         * @param  value  the value to add
+         * @return the new value
+         **/
+        type operator+= (type value);
+        
+        /**
+         * Decrements by a value
+         * @param  value  the value to remove
+         * @return the new value
+         **/
+        type operator-= (type value);
+        
+        /**
+         * Increments the value of the variable and returns
+         * the result.
+         * @return the new value of the variable
+         **/
+        type operator++ (void);
+        
+        /**
+         * Decrements the value of the variable and returns
+         * the result.
+         * @return the new value of the variable
+         **/
+        type operator-- (void);
+        
         /**
          * Checks to see if the variable has ever been assigned a value
          * @return true if the record has been set to a value. False if
