@@ -34,6 +34,7 @@
 
 #endif // _USE_CID_
 
+#include "madara/Lock_Type.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/expression_tree/Expression_Tree.h"
@@ -84,7 +85,7 @@ namespace Madara
     {
     public:
       // for ease-of-use, typedef the templated guard
-      typedef ACE_Guard <ACE_Recursive_Thread_Mutex> Context_Guard;
+      typedef ACE_Guard <MADARA_LOCK_TYPE> Context_Guard;
 
       /// Default knowledge domain
       #define DEFAULT_DOMAIN      "KaRL"
@@ -744,7 +745,7 @@ namespace Madara
       uint64_t latency_default;
 
       /// mutex used for mutating latencies or timers
-      ACE_Recursive_Thread_Mutex mutex;
+      MADARA_LOCK_TYPE mutex;
 
       /// latency information
       Latency_Settings latencies;

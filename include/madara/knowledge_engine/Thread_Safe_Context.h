@@ -21,6 +21,7 @@
 #include <map>
 
 #include "madara/MADARA_export.h"
+#include "madara/Lock_Type.h"
 #include "madara/knowledge_engine/Knowledge_Record.h"
 #include "madara/knowledge_engine/Variable_Reference.h"
 #include "madara/knowledge_engine/Function_Map.h"
@@ -61,7 +62,7 @@ namespace Madara
     class MADARA_Export Thread_Safe_Context
     {
     public:
-      typedef ACE_Condition <ACE_Recursive_Thread_Mutex> Condition;
+      typedef ACE_Condition <MADARA_LOCK_TYPE> Condition;
 
       /**
        * Constructor.
@@ -1100,11 +1101,11 @@ namespace Madara
       void mark_and_signal (const char * name, Knowledge_Record * record,
                             const Knowledge_Update_Settings & settings);
 
-      typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Context_Guard;
+      typedef ACE_Guard<MADARA_LOCK_TYPE> Context_Guard;
 
       /// Hash table containing variable names and values.
       Madara::Knowledge_Map map_;
-      mutable ACE_Recursive_Thread_Mutex mutex_;
+      mutable MADARA_LOCK_TYPE mutex_;
       mutable Condition changed_;
       std::vector< std::string> expansion_splitters_;
       mutable uint64_t clock_;

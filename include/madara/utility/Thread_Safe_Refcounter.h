@@ -4,6 +4,7 @@
 
 #include "ace/Guard_T.h"
 #include "ace/Recursive_Thread_Mutex.h"
+#include "madara/Lock_Type.h"
 
 namespace Madara
 {
@@ -68,7 +69,7 @@ namespace Madara
       /// implementation of the decrement operation
       inline void decrement (void);
 
-      typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
+      typedef ACE_Guard<MADARA_LOCK_TYPE> Guard;
 
       /// A shim class that keeps track of the reference count and a
       /// pointer to the type @a T that's reference counted.
@@ -84,7 +85,7 @@ namespace Madara
         T * t_;
 
         /// mutex for updating refcount_
-        mutable ACE_Recursive_Thread_Mutex mutex_;
+        mutable MADARA_LOCK_TYPE mutex_;
 
         /// Current value of the reference count.
         volatile int refcount_;

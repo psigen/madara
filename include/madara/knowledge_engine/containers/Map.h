@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include "madara/Lock_Type.h"
 #include "madara/knowledge_engine/Knowledge_Base.h"
 #include "madara/knowledge_engine/Thread_Safe_Context.h"
 #include "madara/knowledge_engine/Knowledge_Update_Settings.h"
@@ -483,7 +484,7 @@ namespace Madara
       private:
 
         /// guard for access and changes
-        typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Guard;
+        typedef ACE_Guard<MADARA_LOCK_TYPE> Guard;
       
         /// internal map of variable references
         typedef std::map <std::string, Variable_Reference>  Internal_Map;
@@ -491,7 +492,7 @@ namespace Madara
         /**
          * Mutex for local changes
          **/
-        mutable ACE_Recursive_Thread_Mutex mutex_;
+        mutable MADARA_LOCK_TYPE mutex_;
 
         /**
          * Variable context that we are modifying

@@ -1,5 +1,5 @@
 
-project (Madara) : install, using_ace, using_splice, splice_transport, using_ndds, using_boost, ndds_transport, cid, port/python/using_python, python_callbacks, port/java/using_java, port/java/using_android, port/java/using_openjdk {
+project (Madara) : install, using_ace, using_splice, splice_transport, using_ndds, using_boost, ndds_transport, cid, port/python/using_python, python_callbacks, null_lock, port/java/using_java, port/java/using_android, port/java/using_openjdk {
 
   sharedname = MADARA
   dynamicflags += MADARA_BUILD_DLL MADARA_LOGGER_BUILD_DLL
@@ -34,6 +34,7 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     splice_transport.mpb
     ndds_transport.mpb
     python_callbacks.mpb
+    null_lock.mpb
     using_ace.mpb
     using_boost.mpb
     using_cid.mpb
@@ -110,6 +111,7 @@ project (Madara) : install, using_ace, using_splice, splice_transport, using_ndd
     include/madara/transport/Transport_Context.h
     include/madara/utility
     include/madara/MADARA_export.h
+    include/madara/Lock_Type.h
   }
 }
 

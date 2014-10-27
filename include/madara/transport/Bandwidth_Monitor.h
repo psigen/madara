@@ -14,6 +14,7 @@
 #include <deque>
 #include <time.h>
 
+#include "madara/Lock_Type.h"
 #include "madara/utility/stdint.h"
 #include "ace/Guard_T.h"
 #include "ace/Recursive_Thread_Mutex.h"
@@ -123,12 +124,12 @@ namespace Madara
       /**
        * Convenience typedef for the ACE_Guard
        **/
-      typedef ACE_Guard<ACE_Recursive_Thread_Mutex> Bandwidth_Guard;
+      typedef ACE_Guard<MADARA_LOCK_TYPE> Bandwidth_Guard;
 
       /**
        * Mutex for supporting multithreaded monitor calls
        **/
-      mutable ACE_Recursive_Thread_Mutex mutex_;
+      mutable MADARA_LOCK_TYPE mutex_;
 
       /**
        * Map of timestamps to messages

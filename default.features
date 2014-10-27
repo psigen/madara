@@ -58,3 +58,14 @@ python                  = 0
 /// @feature openjdk
 /// Enable this feature if you want to compile with OpenJDK (requires java=1)
 openjdk                 = 0
+
+/// @feature null_lock
+/// Enable this feature if you want to only use NULL locks instead of recursive
+/// locks. This is a very dangerous feature for novices and should only be done
+/// if you understand the ramifications of having a lock-free database and if
+/// it is appropriate for your applications. It will be a performance boost,
+/// of course, but it is almost unfathomable to enable this unless some kind
+/// of external locking mechanism is used at the appropriate time inside of
+/// a custom network transport (especially a read thread) and around knowledge
+/// accessor methods like get, set, and any MADARA container methods.
+null_lock                 = 0
