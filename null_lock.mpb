@@ -1,3 +1,0 @@
-feature (null_lock) {
-  macros += _MADARA_NULL_LOCK_
-}

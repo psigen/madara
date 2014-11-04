@@ -1,4 +1,0 @@
-<transport>
-    <type>Splice</type>
-    <persistence>Volatile</persistence>
-</transport>

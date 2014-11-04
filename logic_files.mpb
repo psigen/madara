@@ -1,7 +1,0 @@
-project {
-
-  Define_Custom(Logic) {
-    inputext = klf
-  }
-}
-
